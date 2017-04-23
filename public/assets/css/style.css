@@ -6727,7 +6727,7 @@ table.dataTable tbody > tr > .selected {
     background: #2184DA !important;
     border-color: #2184DA !important;
     color: #fff !important;
-    text-shadow: none !important !important;
+    text-shadow: none !important;
 }
 .bootstrap-datetimepicker-widget table td span {
     color: #30373e !important;
