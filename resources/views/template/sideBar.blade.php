@@ -27,24 +27,24 @@
             <li class="">
                 <a href="http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" class="faa-parent animated-hover">
                     <i class="fa fa-home faa-pulse"></i>
-                    <span>Inicio</span>
+                    <span>@lang('Home')</span>
                 </a>
             </li>
             <li class="active">
                 <a href="" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-pulse"></i>
-                    <span>Reportes</span>
+                    <span>@lang('Reports')</span>
                 </a>
                 <ul class="sub-menu" style="display: block;">
                     <li class="has-sub">
                         <a href="javascript:;">
                             <b class="caret pull-right"></b>
-                            Rutas
+                            @lang('Route')
                         </a>
                         <ul class="sub-menu" style="display: block;">
                             <li class="has-sub active">
                                 <a href="javascript:;">
-                                    Reporte Ruta
+                                    @lang('Route reports')
                                 </a>
                             </li>
                         </ul>
@@ -65,9 +65,9 @@
                     <li>
                         <div class="icon"><i class="fa fa-circle-o text-success"></i></div>
                         <div class="info">
-                            <div class="title"><a href="javascript:;">Gestión de <b>Nueva Estrategia</b></a></div>
+                            <div class="title"><a href="javascript:;">@lang('Manage <b>New Strategy</b>')</a></div>
                             <div class="progress progress-striped m-b-10 active">
-                                <div class="progress-bar progress-bar-success" style="width: 80%"></div>
+                                <div class="progress-bar progress-bar-success" style="width: 70%"></div>
                             </div>
                             <div class="desc">
                                 Monitoreo <b>contínuo</b> del estado del vehículo, a nivel de distancias y tiempos estimados,

@@ -10,14 +10,15 @@
 <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
 <link href="assets/plugins/font-awesome/css/font-awesome-animation.min.css" rel="stylesheet">
+<link href="assets/plugins/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link href="assets/plugins/simple-line-icons/simple-line-icons.css" rel="stylesheet">
 <link href="assets/css/animate.min.css" rel="stylesheet" />
 <link href="assets/css/style.min.css" rel="stylesheet" />
 <!-- ================== END BASE CSS STYLE ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
-<link href="assets/plugins/bootstrap-calendar/css/bootstrap_calendar.css" rel="stylesheet" />
-<link href="assets/plugins/jquery-jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
 <link href="assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />
+<link href="css/application.css" rel="stylesheet" />
 <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
 
 <!-- ================== BEGIN BASE JS ================== -->

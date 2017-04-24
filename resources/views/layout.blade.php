@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     @include('template.header')
+    @yield('stylesheets')
 </head>
 <body class="">
 
@@ -24,11 +25,11 @@
 
 @include('template.plugins')
 
+@yield('scripts')
+
 <script>
     $(document).ready(function () {
         App.init();
-        Demo.init();
-        PageDemo.init();
     });
 </script>
 </body>

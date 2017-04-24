@@ -13,20 +13,7 @@
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
-<script src="assets/plugins/bootstrap-calendar/js/bootstrap_calendar.min.js"></script>
-<script src="assets/plugins/sparkline/jquery.sparkline.min.js"></script>
-<script src="assets/plugins/flot/jquery.flot.min.js"></script>
-<script src="assets/plugins/flot/jquery.flot.time.min.js"></script>
-<script src="assets/plugins/flot/jquery.flot.resize.min.js"></script>
-<script src="assets/plugins/flot/jquery.flot.pie.min.js"></script>
-<script src="assets/plugins/flot/jquery.flot.stack.min.js"></script>
-<script src="assets/plugins/flot/jquery.flot.crosshair.min.js"></script>
-<script src="assets/plugins/flot/jquery.flot.categories.js"></script>
-<script src="assets/plugins/flot/CurvedLines/curvedLines.js"></script>
-<script src="assets/plugins/jquery-jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="assets/plugins/jquery-jvectormap/jquery-jvectormap-world-merc-en.js"></script>
 <script src="assets/plugins/gritter/js/jquery.gritter.js"></script>
-<script src="assets/js/page-index.demo.js"></script>
-<script src="assets/js/demo.min.js"></script>
 <script src="assets/js/apps.min.js"></script>
+<script type="text/javascript" src='js/jquery.validate.oiva.js'></script>
 <!-- ================== END PAGE LEVEL JS ================== -->

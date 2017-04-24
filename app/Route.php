@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Route extends Model
 {
-    protected $table = 'empresa';
+    protected $table = 'ruta';
 
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
