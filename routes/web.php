@@ -11,6 +11,5 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'ReportController@index');
+Route::get('/show/', 'ReportController@show')->name('search-report');

@@ -300,9 +300,9 @@ var handleDashboardGritterNotification = function() {
                 image: 'assets/img/user_1.jpg',
                 sticky: true,
                 time: '',
-                class_name: 'my-sticky-class'
+                class_name: 'my-sticky-class success'
             });
-        }, 1000);
+        }, 10);
     });
 };
 
@@ -321,7 +321,7 @@ var PageDemo = function () {
 		    handleWidgetChat();
 		    handleWidgetReload();
 		    handleWidgetTodolist();
-		    handleDashboardGritterNotification();
+		    //handleDashboardGritterNotification();
 		}
     };
 }();

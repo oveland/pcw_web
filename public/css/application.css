@@ -1,0 +1,28 @@
+/* Class for validate required fields*/
+.field-required:after{
+    color: #aa2701;
+    content: " *";
+}
+
+input[readonly="readonly"]{
+    background: white !important;
+}
+
+.yellow{
+    color: yellow !important;
+}
+
+.text-bold{
+    font-weight: bold !important;
+}
+
+.hr{
+    width: 100%;
+    padding: 0px !important;
+    margin-bottom: 10px !important;
+    margin-top: 3px !important;
+}
+
+.page-header{
+    margin-bottom: 1px !important;
+}

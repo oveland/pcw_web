@@ -1,0 +1,19 @@
+{
+  "Home":"Inicio",
+  "Manage <b>New Strategy</b>":"Gestión de <b>Nueva Estrategia</b>",
+  "Route": "Ruta",
+  "Routes": "Rutas",
+  "Reports": "Reportes",
+  "Route reports": "Reporte ruta",
+  "Route times": "Tiempos de ruta",
+  "Search report": "Buscar reporte",
+  "Date report": "Fecha de Reporte",
+  "Search": "Consultar",
+  "Report time route":"Reporte tiempos de ruta",
+  "Vehicle":"Vehículo",
+  "Vehicles":"Vehículos",
+  "Hour dispatch":"Hora despachado",
+  "Round Trip":"Vuelta",
+  "Turn":"turno",
+  "No registers found":"No se encontraron registros"
+}
