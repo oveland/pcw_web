@@ -14,6 +14,8 @@
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <script src="assets/plugins/gritter/js/jquery.gritter.js"></script>
+<script src="assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>
+<script src="assets/plugins/select2/dist/js/select2.min.js"></script>
 <script src="assets/js/apps.min.js"></script>
 <script type="text/javascript" src='js/jquery.validate.oiva.js'></script>
 <!-- ================== END PAGE LEVEL JS ================== -->

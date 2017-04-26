@@ -20,7 +20,7 @@ jQuery.fn.extend({
                 text : 'Los campos con <b>*</b> son obligatorios',
                 sticky : false,
                 time : '1000',
-                class_name : 'gritter-error'
+                class_name : 'gritter-error success my-sticky-class'
             });
         }
         return isValid;
@@ -40,7 +40,7 @@ jQuery.fn.extend({
                 text : 'No puede ingresar campos vacíos',
                 sticky : false,
                 time : '4000',
-                class_name : 'gritter-error'
+                class_name : 'gritter-error success my-sticky-class'
             });
         }
         return isValid;
