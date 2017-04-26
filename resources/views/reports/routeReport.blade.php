@@ -38,7 +38,12 @@
                             <td>{{$dispatchRegister->h_reg_despachado}}</td>
                             <td>{{$dispatchRegister->n_vuelta}}</td>
                             <td>{{$dispatchRegister->n_turno}}</td>
-                            <td data-render="sparkline" data-values="{{ $dispatchRegister->reports->pluck('status_in_minutes')->toJson() }}" data-times="{{ $dispatchRegister->reports->pluck('timed')->toJson() }}"></td>
+                            <td data-render="sparkline"
+                                data-values="{{ $dispatchRegister->reports->pluck('status_in_minutes')->toJson() }}"
+                                data-times="{{ $dispatchRegister->reports->pluck('timed')->toJson() }}"
+                                data-distances="{{ $dispatchRegister->reports->pluck('distancem')->toJson() }}"
+                                data-route-distance="{{ $dispatchRegister->route->distancia*1000 }}"
+                            ></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -53,29 +58,35 @@
         $('[data-render="sparkline"]').each(function() {
             var dataValues = $(this).data('values');
             var dataTimes = $(this).data('times');
+            var dataDistances = $(this).data('distances');
+            var routeDistance = $(this).data('route-distance');
+            var dataPercentDistances = [];
 
-            console.log('dataTimes = ',dataTimes);
-
-            dataValues.forEach(function(e,i){
-                dataValues[i] = e*60;
+            dataValues.forEach(function(e,i){ dataValues[i] = e*60; });
+            dataDistances.forEach(function(e,i){
+                dataPercentDistances[i] = ((dataDistances[i]/routeDistance)*100).toFixed(1);
+                dataDistances[i] = e/1000;
             });
 
+            console.log(dataPercentDistances);
             $(this).sparkline(dataValues, {
                 type: 'line',
                 width: '300%',
                 height: '30px',
                 fillColor: 'transparent',
-                spotColor: '#F04B46',
+                spotColor: '#f0eb54',
                 lineColor: '#17B6A4',
                 minSpotColor: '#F04B46',
-                maxSpotColor: '#F04B46',
+                maxSpotColor: '#259bf0',
                 lineWidth: 2.5,
                 spotRadius: 5,
                 normalRangeMin: -5, normalRangeMax: 5,
-                tooltipFormat: '<?="{{offset:offset}}"?>',
+                tooltipFormat: '<?="{{offset:offset}} <br> Distancia {{offset:distance}} Km <br> Recorrido {{offset:percent}}%"?>',
                 tooltipValueLookups: {
-                    'offset':dataTimes
-                },
+                    'offset':dataTimes,
+                    'distance':dataDistances,
+                    'percent':dataPercentDistances
+                }
             });
         });
     </script>
