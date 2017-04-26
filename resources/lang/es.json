@@ -10,10 +10,12 @@
   "Date report": "Fecha de Reporte",
   "Search": "Consultar",
   "Report time route":"Reporte tiempos de ruta",
+  "Chart report":"Gráfica de repote",
   "Vehicle":"Vehículo",
   "Vehicles":"Vehículos",
   "Hour dispatch":"Hora despachado",
   "Round Trip":"Vuelta",
-  "Turn":"turno",
-  "No registers found":"No se encontraron registros"
+  "Turn":"Turno",
+  "No registers found":"No se encontraron registros",
+  "Select an option":"Seleccione"
 }

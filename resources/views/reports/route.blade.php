@@ -23,7 +23,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <div class="col-md-5">
+        <div class="col-md-8">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -36,16 +36,31 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <form class="form-input-flat form-search-report">
-                        <div class="form-group">
-                            <label for="date-report" class="control-label field-required">@lang('Date report')</label>
-                            <div class="input-group date" id="datetimepicker-report">
-                                <input id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
-                                <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="date-report" class="control-label field-required">@lang('Date report')</label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-actions">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <div class="form-group">
+                                    <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
+                                        <option value="">@lang('Select an option')</option>
+                                        @foreach($routes as $route)
+                                        <option value="{{$route->id_rutas}}">{{ $route->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions col-md-12">
                             <button type="submit" class="btn btn-success btn-sm">
                                 <i class="fa fa-search"></i> @lang('Search')
                             </button>
@@ -83,18 +98,20 @@
                 todayHighlight: true
             });
 
+            $('#route-report').select2();
+
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
-                $('.report-container').slideUp(100);
-                $.ajax({
-                    url: '{{ route('search-report') }}',
-                    data:{
-                        'dateReport':$('#date-report').val()
-                    },
-                    success:function(data){
-                        $('.report-container').empty().hide().html(data).fadeIn();
-                    }
-                });
+                if($(this).isValid()){
+                    $('.report-container').slideUp(100);
+                    $.ajax({
+                        url: '{{ route('search-report') }}',
+                        data: $(this).serialize(),
+                        success: function (data) {
+                            $('.report-container').empty().hide().html(data).fadeIn();
+                        }
+                    });
+                }
             });
         });
     </script>
