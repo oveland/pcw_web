@@ -23,7 +23,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <form class="form-input-flat form-search-report">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
@@ -47,15 +47,25 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="company-report" class="control-label field-required">@lang('Company')</label>
+                                <div class="form-group">
+                                    <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select an option')</option>
+                                        @foreach($companies as $company)
+                                        <option value="{{$company->id_empresa}}">{{ $company->des_corta }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
                                     <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
-                                        <option value="">@lang('Select an option')</option>
-                                        @foreach($routes as $route)
-                                        <option value="{{$route->id_rutas}}">{{ $route->nombre }}</option>
-                                        @endforeach
+                                        <option value="null">@lang('Select a company')</option>
                                     </select>
                                 </div>
                             </div>
@@ -98,7 +108,7 @@
                 todayHighlight: true
             });
 
-            $('#route-report').select2();
+            $('.default-select2').select2();
 
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
@@ -112,6 +122,17 @@
                         }
                     });
                 }
+            });
+
+            $('#company-report').change(function () {
+                var roouteSelect = $('#route-report');
+                roouteSelect.html($('#select-loading').html()).trigger('change.select2');
+                roouteSelect.load('{{route('ajax-action')}}', {
+                    option: 'loadRoutes',
+                    company: $(this).val()
+                },function () {
+                    roouteSelect.trigger('change.select2');
+                });
             });
         });
     </script>

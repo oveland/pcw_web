@@ -13,3 +13,4 @@
 
 Route::get('/', 'ReportController@index');
 Route::get('/show/', 'ReportController@show')->name('search-report');
+Route::any('/ajax/', 'ReportController@ajax')->name('ajax-action');

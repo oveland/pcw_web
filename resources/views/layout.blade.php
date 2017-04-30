@@ -23,6 +23,10 @@
 </div>
 <!-- end #page-container -->
 
+<template id="select-loading">
+    <option value=""><i class="fa fa-spinner fa-pulse fa-fw"></i> @lang('Loading...')</option>
+</template>
+
 @include('template.plugins')
 
 @yield('scripts')
