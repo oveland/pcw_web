@@ -1,8 +1,9 @@
 <meta charset="utf-8" />
 <title>@yield('title','PCW | Servicios GPS')</title>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-<meta content="" name="description" />
-<meta content="" name="author" />
+<meta content="PCW | Servicios GPS" name="description" />
+<meta content="Oscar Velásquez" name="author" />
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- ================== BEGIN BASE CSS STYLE ================== -->
 <link href="http://fonts.googleapis.com/css?family=Nunito:400,300,700" rel="stylesheet" id="fontFamilySrc" />

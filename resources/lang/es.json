@@ -2,6 +2,7 @@
   "Home":"Inicio",
   "Manage <b>New Strategy</b>":"Gestión de <b>Nueva Estrategia</b>",
   "Route": "Ruta",
+  "Company": "Empresa",
   "Routes": "Rutas",
   "Reports": "Reportes",
   "Route reports": "Reporte ruta",
@@ -17,5 +18,7 @@
   "Round Trip":"Vuelta",
   "Turn":"Turno",
   "No registers found":"No se encontraron registros",
-  "Select an option":"Seleccione"
+  "Select an option":"Seleccione",
+  "Select a company":"Seleccione una empresa",
+  "Loading...":"Cargando..."
 }
