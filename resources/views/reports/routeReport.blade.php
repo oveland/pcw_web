@@ -83,7 +83,7 @@
                 maxSpotColor: '#259bf0',
                 lineWidth: 2.5,
                 spotRadius: 5,
-                normalRangeMin: -5, normalRangeMax: 5,
+                normalRangeMin: -40, normalRangeMax: 40,
                 tooltipFormat: '<?="<b>Estado:</b> {{offset:offset}} <br><b>Hora:</b> {{offset:dates}} <br> <b>Distancia:</b> {{offset:distance}} Km <br> <b>Recorrido:</b> {{offset:percent}}%"?>',
                 tooltipValueLookups: {
                     'dates':dataDates,
