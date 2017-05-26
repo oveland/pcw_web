@@ -19,9 +19,15 @@
     @include('template.sideBar')
     @include('template.content')
     {{--@include('template.rightSidebar')--}}
-    @include('template.panelBox')
+    {{--@include('template.panelBox')--}}
 </div>
 <!-- end #page-container -->
+
+<template id="loading">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
+    </div>
+</template>
 
 <template id="select-loading">
     <option value=""><i class="fa fa-spinner fa-pulse fa-fw"></i> @lang('Loading...')</option>
@@ -32,6 +38,7 @@
 @yield('scripts')
 
 <script>
+    var loading = $('#loading').html();
     $(document).ready(function () {
         App.init();
     });

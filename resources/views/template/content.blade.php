@@ -7,7 +7,7 @@
                         <i class="fa fa-arrow-up"></i> <span class="hidden-xs">Back to Top</span>
                     </a>
                 </span>
-        © 2015 <b>Source Admin</b> All Right Reserved
+        © 2017 <b>PCW Ditech Integradores Tenológicos</b> @lang('All Right Reserved')
     </div>
     <!-- end #footer -->
 </div>
