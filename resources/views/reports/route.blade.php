@@ -32,7 +32,7 @@
                             <i class="fa fa-minus"></i>
                         </a>
                     </div>
-                    <button type="submit" class="btn btn-success btn-sm">
+                    <button type="submit" class="btn btn-success btn-sm btn-search-report">
                         <i class="fa fa-search"></i> @lang('Search report')
                     </button>
                 </div>
@@ -105,7 +105,12 @@
                     </div>
                 </div>
                 <div class="modal-body" style="width:90%;">
-                    <h4><i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')</h4>
+                    <h4>
+                        <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
+                        <span class="pull-right"><img src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>
+                        &nbsp;&nbsp;
+                        <span class="pull-right p-r-20"><img src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
+                    </h4>
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -176,6 +181,10 @@
     <script type="application/javascript">
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
+        var controlPointIcon = [
+            '{{ asset('img/control-point-0.png') }}',
+            '{{ asset('img/control-point-1.png') }}'
+        ];
 
         $(document).ready(function () {
             $('#datetimepicker-report').datepicker({
@@ -228,6 +237,7 @@
         });
 
         $('body').on('click', '.btn-show-chart-route-report', function () {
+            //map.clearAllMarkers();
             var chartRouteReport = $("#chart-route-report");
             chartRouteReport.html(loading);
             $('.report-info').html(loading);
@@ -242,7 +252,6 @@
                         $('.modal-report-route-name').html(data.route);
                         $('.modal-report-route-percent').html(data.routePercent);
                         $('.modal-report-route-percent-progress').css('width',parseInt(data.routePercent)+'%');
-                        //$('.modal-report-').html(data.);
 
                         var dataValues = data.values;
                         var dataDates = data.dates;
@@ -252,6 +261,17 @@
                         var latitudes = data.latitudes;
                         var longitudes = data.longitudes;
                         var dataPercentDistances = [];
+                        var controlPoints = data.controlPoints;
+
+                        controlPoints.forEach(function(cp,i){
+                            new google.maps.Marker({
+                                title:cp.nombre,
+                                map: map,
+                                icon: controlPointIcon[cp.trayecto],
+                                animation: google.maps.Animation.DROP,
+                                position:{lat: parseFloat(cp.lat), lng: parseFloat(cp.lng)}
+                            });
+                        });
 
                         dataDates.forEach(function(e,i){ dataDates[i] = e; });
                         dataValues.forEach(function(e,i){ dataValues[i] = e*60; });
@@ -310,8 +330,8 @@
                                 //map.setCenter(busMarker.getPosition());
                             },10);
                         }).bind('mouseleave', function() {
-                            busMarker?busMarker.setMap(null):null;
-                            busMarker = null;
+                            //busMarker?busMarker.setMap(null):null;
+                            //busMarker = null;
                             //map.setCenter(mapDefaultOptions.center);
                         });
                     }else{

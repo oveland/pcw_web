@@ -6,24 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class DispatchRegister extends Model
 {
+    use Mapping;
+
     protected $table = 'registrodespacho';
     protected $primaryKey = 'id_registro';
 
-    public function getIdAttribute(){
-        return $this->attributes['id_registro'];
-    }
-    public function getVehicleAttribute(){
-        return $this->attributes['n_vehiculo'];
-    }
-    public function getPlateAttribute(){
-        return $this->attributes['n_placa'];
-    }
-    public function getRoundTripAttribute(){
-        return $this->attributes['n_vuelta'];
-    }
-    public function getTurnAttribute(){
-        return $this->attributes['n_turno'];
-    }
+    protected $mapping = [
+        'id' => 'id_registro',
+        'vehicle' => 'n_vehiculo',
+        'plate' => 'n_placa',
+        'round_trip' => 'n_vuelta',
+        'turn' => 'n_turno',
+        'dispatch_time' => 'h_reg_despachado'
+    ];
+
     public function getDispatchTimeAttribute(){
         return $this->attributes['h_reg_despachado'];
     }

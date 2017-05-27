@@ -3,21 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\CrearVehiculo;
+use App\ControlPoints;
 use App\DispatchRegister;
-use App\Report;
 use App\Route;
-use App\Vehicle;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $companies = Company::where('estado', '=', true)->orderBy('des_corta','asc')->get();
         return view('reports.route', compact('companies'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show(Request $request)
     {
         $roundTripDispatchRegisters = DispatchRegister::where('fecha', '=', $request->get('date-report'))
@@ -27,6 +32,10 @@ class ReportController extends Controller
         return view('reports.routeReport', compact('roundTripDispatchRegisters'));
     }
 
+    /**
+     * @param DispatchRegister $dispatchRegister
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function chart(DispatchRegister $dispatchRegister)
     {
         $dataReport = ['empty'=>true];
@@ -35,6 +44,7 @@ class ReportController extends Controller
         if( $report->isNotEmpty() ){
             $routeDistance = $dispatchRegister->route->distance*1000;
             $totalDistance = $report->last()->distancem;
+            $controlPoints = ControlPoints::where('id_ruta','=',$dispatchRegister->route->id)->get();
 
             $dataReport = [
                 'vehicle' => $dispatchRegister->vehicle,
@@ -48,7 +58,8 @@ class ReportController extends Controller
                 'distances' => $report->pluck('distancem'),
                 'values' => $report->pluck('status_in_minutes'),
                 'latitudes' => $report->pluck('location.latitude'),
-                'longitudes' => $report->pluck('location.longitude')
+                'longitudes' => $report->pluck('location.longitude'),
+                'controlPoints' => $controlPoints
             ];
         }
 

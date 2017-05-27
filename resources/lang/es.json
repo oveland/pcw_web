@@ -43,5 +43,7 @@
   "No report found for this vehicle": "No se ha encontrado ningún reporte para este vehículo",
   "Vehicle current status":"Estado actual del vehículo",
   "Route info":"Información de la ruta",
-  "Route report": "Reporte de ruta"
+  "Route report": "Reporte de ruta",
+  "Control point going": "Ida",
+  "Control point return": "Regreso"
 }
