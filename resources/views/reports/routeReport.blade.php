@@ -1,99 +1,62 @@
-@if(count($dispatchRegisters))
-    <div class="panel panel-success ">
+@if(count($roundTripDispatchRegisters))
+    <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand" title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"
-                   data-original-title="" title="Ocultar / Mostrar">
-                    <i class="fa fa-minus"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove">
-                    <i class="fa fa-times"></i>
-                </a>
             </div>
-            <h4 class="panel-title">@lang('Report time route')</h4>
+            <div class="row">
+                <div class="col-md-11">
+                    <ul class="nav nav-pills nav-pills-success">
+                        @foreach($roundTripDispatchRegisters as $dispatchRegisters)
+                            <li class="{{$loop->first?'active':''}}">
+                                <a href="#report-tab-{{$dispatchRegisters->first()->round_trip}}" data-toggle="tab" aria-expanded="true">
+                                    @lang('Round trip') {{$dispatchRegisters->first()->round_trip}}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="panel-body p-b-15">
-            <!-- begin panel -->
-            <div class="panel pagination-inverse bg-white clearfix no-rounded-corner m-b-0">
-                <!-- begin table -->
-                <table id="data-table" data-order='[[1,"asc"]]' class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th class="col-md-2">@lang('Route')</th>
-                        <th>@lang('Vehicle')</th>
-                        <th class="col-md-2">@lang('Hour dispatch')</th>
-                        <th>@lang('Round Trip')</th>
-                        <th data-sorting="disabled">@lang('Turn')</th>
-                        <th class="col-md-5" data-sorting="disabled">@lang('Chart report')</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach( $dispatchRegisters as $dispatchRegister )
-                        <tr>
-                            <td>{{$dispatchRegister->route->nombre}}</td>
-                            <td>{{$dispatchRegister->n_vehiculo}}</td>
-                            <td>{{$dispatchRegister->h_reg_despachado}}</td>
-                            <td>{{$dispatchRegister->n_vuelta}}</td>
-                            <td>{{$dispatchRegister->n_turno}}</td>
-                            <td data-render="sparkline"
-                                data-values="{{ $dispatchRegister->reports->pluck('status_in_minutes')->toJson() }}"
-                                data-dates="{{ $dispatchRegister->reports->pluck('date')->toJson() }}"
-                                data-times="{{ $dispatchRegister->reports->pluck('timed')->toJson() }}"
-                                data-distances="{{ $dispatchRegister->reports->pluck('distancem')->toJson() }}"
-                                data-route-distance="{{ $dispatchRegister->route->distancia*1000 }}"
-                            ></td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-                <!-- end table -->
-            </div>
-            <!-- end panel -->
+        <div class="tab-content panel p-0">
+            @foreach($roundTripDispatchRegisters as $dispatchRegisters)
+                <div id="report-tab-{{$dispatchRegisters->first()->round_trip}}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}}">
+                    <!-- begin table -->
+                    <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle">
+                        <thead>
+                            <tr class="inverse">
+                                <th>@lang('Vehicle')</th>
+                                <th class="col-md-2">@lang('Hour dispatch')</th>
+                                <th>@lang('Round Trip')</th>
+                                <th data-sorting="disabled">@lang('Turn')</th>
+                                <th data-sorting="disabled">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach( $dispatchRegisters as $dispatchRegister )
+                            <tr>
+                                <td>{{$dispatchRegister->vehicle}} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{$dispatchRegister->plate}}</td>
+                                <td>{{$dispatchRegister->dispatch_time}}</td>
+                                <td>{{$dispatchRegister->round_trip}}</td>
+                                <td>{{$dispatchRegister->turn}}</td>
+                                <td>
+                                    <a href="#modal-route-report" data-toggle="modal"
+                                       data-url="{{ route('chart-report',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                       class="btn btn-sm btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report">
+                                        <i class="fa fa-area-chart faa-pulse"></i> @lang('Report detail')
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <!-- end table -->
+                </div>
+            @endforeach
         </div>
     </div>
-
-    <script type="application/javascript">
-        $('[data-render="sparkline"]').each(function() {
-            var dataValues = $(this).data('values');
-            var dataDates = $(this).data('dates');
-            var dataTimes = $(this).data('times');
-            var dataDistances = $(this).data('distances');
-            var routeDistance = $(this).data('route-distance');
-            var dataPercentDistances = [];
-
-            dataDates.forEach(function(e,i){ dataDates[i] = e; });
-            dataValues.forEach(function(e,i){ dataValues[i] = e*60; });
-            dataDistances.forEach(function(e,i){
-                dataPercentDistances[i] = ((dataDistances[i]/routeDistance)*100).toFixed(1);
-                dataDistances[i] = e/1000;
-            });
-
-            console.log(dataPercentDistances);
-            $(this).sparkline(dataValues, {
-                type: 'line',
-                width: '400%',
-                height: '40px',
-                fillColor: 'transparent',
-                spotColor: '#f0eb54',
-                lineColor: '#17B6A4',
-                minSpotColor: '#F04B46',
-                maxSpotColor: '#259bf0',
-                lineWidth: 2.5,
-                spotRadius: 5,
-                normalRangeMin: -40, normalRangeMax: 40,
-                tooltipFormat: '<?="<b>Estado:</b> {{offset:offset}} <br><b>Hora:</b> {{offset:dates}} <br> <b>Distancia:</b> {{offset:distance}} Km <br> <b>Recorrido:</b> {{offset:percent}}%"?>',
-                tooltipValueLookups: {
-                    'dates':dataDates,
-                    'offset':dataTimes,
-                    'distance':dataDistances,
-                    'percent':dataPercentDistances
-                }
-            });
-        });
-    </script>
 @else
     <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
         <div class="col-md-2" style="padding-top: 10px">

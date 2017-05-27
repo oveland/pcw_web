@@ -12,5 +12,6 @@
 */
 
 Route::get('/', 'ReportController@index');
-Route::get('/show/', 'ReportController@show')->name('search-report');
-Route::any('/ajax/', 'ReportController@ajax')->name('ajax-action');
+Route::get('/report/show/', 'ReportController@show')->name('search-report');
+Route::any('/report/chart/{dispatchRegister}', 'ReportController@chart')->name('chart-report');
+Route::any('/report/ajax/', 'ReportController@ajax')->name('report-ajax-action');
