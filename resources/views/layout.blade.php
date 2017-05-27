@@ -19,7 +19,7 @@
     @include('template.sideBar')
     @include('template.content')
     {{--@include('template.rightSidebar')--}}
-    @include('template.panelBox')
+    {{-- @include('template.panelBox') --}}
 </div>
 <!-- end #page-container -->
 

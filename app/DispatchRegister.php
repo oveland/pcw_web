@@ -10,7 +10,7 @@ class DispatchRegister extends Model
 
     public function reports()
     {
-        return $this->hasMany(Report::class,'dispatch_register_id','id_registro');
+        return $this->hasMany(Report::class,'dispatch_register_id','id_registro')->orderBy('date','asc');
     }
 
     public function route()
