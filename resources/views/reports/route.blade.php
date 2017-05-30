@@ -354,8 +354,9 @@
                                 }
                                 busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
                                 //map.setCenter(busMarker.getPosition());
-                            }, 10);
-                        }).bind('mouseleave', function () {
+                            },10);
+                        }).bind('mouseleave', function() {
+
                             busMarker?busMarker.setMap(null):null;
                             busMarker = null;
                             //map.setCenter(mapDefaultOptions.center);
