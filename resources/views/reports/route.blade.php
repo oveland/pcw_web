@@ -330,8 +330,8 @@
                                 //map.setCenter(busMarker.getPosition());
                             },10);
                         }).bind('mouseleave', function() {
-                            //busMarker?busMarker.setMap(null):null;
-                            //busMarker = null;
+                            busMarker?busMarker.setMap(null):null;
+                            busMarker = null;
                             //map.setCenter(mapDefaultOptions.center);
                         });
                     }else{
