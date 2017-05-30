@@ -40,9 +40,11 @@
                     <div class="form-input-flat">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="date-report" class="control-label field-required">@lang('Date report')</label>
+                                <label for="date-report"
+                                       class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control"
+                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -51,12 +53,14 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="company-report" class="control-label field-required">@lang('Company')</label>
+                                <label for="company-report"
+                                       class="control-label field-required">@lang('Company')</label>
                                 <div class="form-group">
-                                    <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                    <select name="company-report" id="company-report"
+                                            class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select an option')</option>
                                         @foreach($companies as $company)
-                                        <option value="{{$company->id_empresa}}">{{ $company->des_corta }}</option>
+                                            <option value="{{$company->id_empresa}}">{{ $company->des_corta }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -66,7 +70,8 @@
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
+                                    <select name="route-report" id="route-report"
+                                            class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select a company')</option>
                                     </select>
                                 </div>
@@ -98,7 +103,7 @@
                         <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
                         <h4 class="modal-title">
                             <i class="fa fa-area-chart"></i> @lang('Historic time chart')
-                       </h4>
+                        </h4>
                         <div class="col-md-12 p-5">
                             <div id="chart-route-report" style="height: 80px"></div>
                         </div>
@@ -107,16 +112,19 @@
                 <div class="modal-body" style="width:90%;">
                     <h4>
                         <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
-                        <span class="pull-right"><img src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>
+                        <span class="pull-right"><img
+                                    src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>
                         &nbsp;&nbsp;
-                        <span class="pull-right p-r-20"><img src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
+                        <span class="pull-right p-r-20"><img
+                                    src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
                     </h4>
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <!-- begin widget -->
                                 <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
-                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
+                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i
+                                                    class="fa fa-repeat"></i></a></div>
                                     <div class="widget-stat-icon"><i class="ion-clipboard fa-fw"></i></div>
                                     <div class="widget-stat-info">
                                         <div class="widget-stat-title">@lang('Route info')</div>
@@ -124,11 +132,13 @@
                                     </div>
                                     <div class="widget-stat-progress">
                                         <div class="progress progress-striped progress-xs active">
-                                            <div class="progress-bar progress-bar-lime modal-report-route-percent-progress report-info" style="width: 50%"></div>
+                                            <div class="progress-bar progress-bar-lime modal-report-route-percent-progress report-info"
+                                                 style="width: 50%"></div>
                                         </div>
                                     </div>
                                     <div class="widget-stat-footer text-left">
-                                        <i class="fa fa-flag-checkered" aria-hidden="true"></i> <span class="modal-report-route-percent report-info"></span>% @lang('of the route')
+                                        <i class="fa fa-flag-checkered" aria-hidden="true"></i> <span
+                                                class="modal-report-route-percent report-info"></span>% @lang('of the route')
                                     </div>
                                 </div>
                                 <!-- end widget -->
@@ -136,7 +146,8 @@
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <!-- begin widget -->
                                 <div class="widget widget-stat widget-stat-right bg-inverse text-white">
-                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
+                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i
+                                                    class="fa fa-repeat"></i></a></div>
                                     <div class="widget-stat-icon"><i class="fa fa-bus"></i></div>
                                     <div class="widget-stat-info">
                                         <div class="widget-stat-title">@lang('Vehicle current status')</div>
@@ -144,11 +155,13 @@
                                     </div>
                                     <div class="widget-stat-progress">
                                         <div class="progress progress-striped progress-xs active">
-                                            <div class="progress-bar progress-success modal-report-vehicle-speed-progress report-info" style="width: 50%"></div>
+                                            <div class="progress-bar progress-success modal-report-vehicle-speed-progress report-info"
+                                                 style="width: 50%"></div>
                                         </div>
                                     </div>
                                     <div class="widget-stat-footer text-left">
-                                        <i class="fa fa-tachometer" aria-hidden="true"></i> <span class="modal-report-vehicle-speed report-info"></span> Km/h
+                                        <i class="fa fa-tachometer" aria-hidden="true"></i> <span
+                                                class="modal-report-vehicle-speed report-info"></span> Km/h
                                     </div>
                                 </div>
                                 <!-- end widget -->
@@ -161,7 +174,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer hide"  style="width:90%;">
+                <div class="modal-footer hide" style="width:90%;">
                     <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
                 </div>
             </div>
@@ -181,6 +194,7 @@
     <script type="application/javascript">
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
+
         var controlPointIcon = [
             '{{ asset('img/control-point-0.png') }}',
             '{{ asset('img/control-point-1.png') }}'
@@ -202,7 +216,7 @@
 
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
-                if($(this).isValid()){
+                if ($(this).isValid()) {
                     $('.report-container').slideUp(100);
                     $.ajax({
                         url: '{{ route('search-report') }}',
@@ -220,19 +234,20 @@
                 roouteSelect.load('{{route('report-ajax-action')}}', {
                     option: 'loadRoutes',
                     company: $(this).val()
-                },function () {
+                }, function () {
                     roouteSelect.trigger('change.select2');
                 });
             });
 
             $('#route-report').change(function () {
                 $('.report-container').slideUp();
-                if( is_not_null($(this).val()) ){$('.form-search-report').submit();}
+                if (is_not_null($(this).val())) {
+                    $('.form-search-report').submit();
+                }
             });
 
-            $('#modal-route-report').on('shown.bs.modal',function () {
+            $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
-                showRouteLayer();
             });
         });
 
@@ -244,14 +259,14 @@
             $.ajax({
                 url: $(this).data('url'),
                 success: function (data) {
-                    if( !data.empty ){
-                        $('.modal-report-vehicle').html(data.vehicle+' <i class="fa fa-hand-o-right" aria-hidden="true"></i> '+data.plate);
+                    if (!data.empty) {
+                        $('.modal-report-vehicle').html(data.vehicle + ' <i class="fa fa-hand-o-right" aria-hidden="true"></i> ' + data.plate);
                         $('.modal-report-vehicle-speed').html(data.vehicleSpeed);
-                        $('.modal-report-vehicle-speed-progress').css('width',parseInt(data.vehicleSpeed)+'%');
+                        $('.modal-report-vehicle-speed-progress').css('width', parseInt(data.vehicleSpeed) + '%');
 
                         $('.modal-report-route-name').html(data.route);
                         $('.modal-report-route-percent').html(data.routePercent);
-                        $('.modal-report-route-percent-progress').css('width',parseInt(data.routePercent)+'%');
+                        $('.modal-report-route-percent-progress').css('width', parseInt(data.routePercent) + '%');
 
                         var dataValues = data.values;
                         var dataDates = data.dates;
@@ -262,22 +277,32 @@
                         var longitudes = data.longitudes;
                         var dataPercentDistances = [];
                         var controlPoints = data.controlPoints;
+                        var urlLayerMap = data.urlLayerMap;
 
-                        controlPoints.forEach(function(cp,i){
+                        new google.maps.KmlLayer({
+                            url: urlLayerMap,
+                            map: map
+                        });
+
+                        controlPoints.forEach(function (cp, i) {
                             new google.maps.Marker({
-                                title:cp.nombre,
+                                title: cp.nombre,
                                 map: map,
                                 icon: controlPointIcon[cp.trayecto],
                                 animation: google.maps.Animation.DROP,
-                                position:{lat: parseFloat(cp.lat), lng: parseFloat(cp.lng)}
+                                position: {lat: parseFloat(cp.lat), lng: parseFloat(cp.lng)}
                             });
                         });
 
-                        dataDates.forEach(function(e,i){ dataDates[i] = e; });
-                        dataValues.forEach(function(e,i){ dataValues[i] = e*60; });
-                        dataDistances.forEach(function(e,i){
-                            dataPercentDistances[i] = ((dataDistances[i]/routeDistance)*100).toFixed(1);
-                            dataDistances[i] = e/1000;
+                        dataDates.forEach(function (e, i) {
+                            dataDates[i] = e;
+                        });
+                        dataValues.forEach(function (e, i) {
+                            dataValues[i] = e * 60;
+                        });
+                        dataDistances.forEach(function (e, i) {
+                            dataPercentDistances[i] = ((dataDistances[i] / routeDistance) * 100).toFixed(1);
+                            dataDistances[i] = e / 1000;
                         });
 
                         chartRouteReport.empty().hide().sparkline(dataValues, {
@@ -303,17 +328,18 @@
                             '</div>'+
                         '"?>',
                             tooltipValueLookups: {
-                                'times':dataTimes,
-                                'dates':dataDates,
-                                'distance':dataDistances,
-                                'percent':dataPercentDistances,
-                                'latitude':latitudes,
-                                'longitude':longitudes
+                                'times': dataTimes,
+                                'dates': dataDates,
+                                'distance': dataDistances,
+                                'percent': dataPercentDistances,
+                                'latitude': latitudes,
+                                'longitude': longitudes
                             }
                         }).slideDown();
 
-                        chartRouteReport.bind('sparklineRegionChange', function(ev) {
+                        chartRouteReport.bind('sparklineRegionChange', function (ev) {
                             //var sparkline = ev.sparklines[0],info = sparkline.getCurrentRegionFields();
+
                             setTimeout(function () {
                                 var t = $('.info-route-report');
                                 var latitude = t.find('.latitude').html();
@@ -328,19 +354,19 @@
                                 }
                                 busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
                                 //map.setCenter(busMarker.getPosition());
-                            },10);
-                        }).bind('mouseleave', function() {
-                            //busMarker?busMarker.setMap(null):null;
-                            //busMarker = null;
+                            }, 10);
+                        }).bind('mouseleave', function () {
+                            busMarker?busMarker.setMap(null):null;
+                            busMarker = null;
                             //map.setCenter(mapDefaultOptions.center);
                         });
-                    }else{
+                    } else {
                         gerror('@lang('No report found for this vehicle')');
                         $('.report-info').empty();
                         $('.modal').modal('hide');
                     }
                 },
-                error:function(){
+                error: function () {
                     chartRouteReport.empty();
                     $('.report-info').empty();
                     $('.modal').modal('hide');
@@ -348,13 +374,5 @@
                 }
             });
         });
-
-        function showRouteLayer(){
-            routeLayerKML?routeLayerKML.setMap(null):null;
-            routeLayerKML = new google.maps.KmlLayer({
-                url:"http://www.pcwserviciosgps.com/google/126_20170510.kmz",
-                map:map
-            });
-        }
     </script>
 @endsection

@@ -6,6 +6,7 @@ use App\Company;
 use App\ControlPoints;
 use App\DispatchRegister;
 use App\Route;
+use App\RouteGoogle;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -45,7 +46,7 @@ class ReportController extends Controller
             $routeDistance = $dispatchRegister->route->distance*1000;
             $totalDistance = $report->last()->distancem;
             $controlPoints = ControlPoints::where('id_ruta','=',$dispatchRegister->route->id)->get();
-
+            $urlLayerMap = RouteGoogle::find($dispatchRegister->route->id);
             $dataReport = [
                 'vehicle' => $dispatchRegister->vehicle,
                 'plate' => $dispatchRegister->plate,
@@ -59,7 +60,8 @@ class ReportController extends Controller
                 'values' => $report->pluck('status_in_minutes'),
                 'latitudes' => $report->pluck('location.latitude'),
                 'longitudes' => $report->pluck('location.longitude'),
-                'controlPoints' => $controlPoints
+                'controlPoints' => $controlPoints,
+                'urlLayerMap' => $urlLayerMap?$urlLayerMap->url:''
             ];
         }
 
