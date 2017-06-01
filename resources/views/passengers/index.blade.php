@@ -9,13 +9,13 @@
     <!-- begin breadcrumb -->
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
-        <li><a href="javascript:;">@lang('Routes')</a></li>
-        <li class="active">@lang('Route times')</li>
+        <li><a href="javascript:;">@lang('Passengers')</a></li>
+        <li class="active">@lang('Register historic')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
-    <h1 class="page-header">@lang('Route report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Route times')</small>
+    <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Passengers report')
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Register historic')</small>
     </h1>
     <hr class="col-md-12 hr">
     <!-- end page-header -->
@@ -66,7 +66,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 hide">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
@@ -88,98 +88,6 @@
         <!-- end content report -->
     </div>
     <!-- end row -->
-
-    <div class="modal modal-message fade" id="modal-route-report">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="width: 90%">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        <i class="fa fa-times"></i>
-                    </button>
-                    <div class="row">
-                        <blockquote class="m-0">
-                            <h3 class="m-3">@lang('Route report')</h3>
-                        </blockquote>
-                        <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
-                        <h4 class="modal-title">
-                            <i class="fa fa-area-chart"></i> @lang('Historic time chart')
-                        </h4>
-                        <div class="col-md-12 p-5">
-                            <div id="chart-route-report" style="height: 80px"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-body" style="width:90%;">
-                    <h4>
-                        <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
-                        <span class="pull-right"><img
-                                    src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>
-                        &nbsp;&nbsp;
-                        <span class="pull-right p-r-20"><img
-                                    src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
-                    </h4>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <!-- begin widget -->
-                                <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
-                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i
-                                                    class="fa fa-repeat"></i></a></div>
-                                    <div class="widget-stat-icon"><i class="ion-clipboard fa-fw"></i></div>
-                                    <div class="widget-stat-info">
-                                        <div class="widget-stat-title">@lang('Route info')</div>
-                                        <div class="widget-stat-number modal-report-route-name report-info"></div>
-                                    </div>
-                                    <div class="widget-stat-progress">
-                                        <div class="progress progress-striped progress-xs active">
-                                            <div class="progress-bar progress-bar-lime modal-report-route-percent-progress report-info"
-                                                 style="width: 50%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="widget-stat-footer text-left">
-                                        <i class="fa fa-flag-checkered" aria-hidden="true"></i> <span
-                                                class="modal-report-route-percent report-info"></span>% @lang('of the route')
-                                    </div>
-                                </div>
-                                <!-- end widget -->
-                            </div>
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <!-- begin widget -->
-                                <div class="widget widget-stat widget-stat-right bg-inverse text-white">
-                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i
-                                                    class="fa fa-repeat"></i></a></div>
-                                    <div class="widget-stat-icon"><i class="fa fa-bus"></i></div>
-                                    <div class="widget-stat-info">
-                                        <div class="widget-stat-title">@lang('Vehicle current status')</div>
-                                        <div class="widget-stat-number modal-report-vehicle report-info"></div>
-                                    </div>
-                                    <div class="widget-stat-progress">
-                                        <div class="progress progress-striped progress-xs active">
-                                            <div class="progress-bar progress-success modal-report-vehicle-speed-progress report-info"
-                                                 style="width: 50%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="widget-stat-footer text-left">
-                                        <i class="fa fa-tachometer" aria-hidden="true"></i> <span
-                                                class="modal-report-vehicle-speed report-info"></span> Km/h
-                                    </div>
-                                </div>
-                                <!-- end widget -->
-                            </div>
-                        </div>
-                        <div class="col-md-8 col-sm-6 col-xs-12">
-                            <div class="col-md-12 p-5">
-                                <div id="google-map-light-dream" class="height-sm"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer hide" style="width:90%;">
-                    <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 
@@ -189,10 +97,8 @@
 
     @include('template.google.maps')
 
-    <script src="assets/plugins/sparkline/jquery.sparkline.min.js"></script>
-
     <script type="application/javascript">
-        $('.menu-routes').addClass('active');
+        $('.menu-passengers').addClass('active');
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
 
@@ -207,7 +113,7 @@
                 if ($(this).isValid()) {
                     $('.report-container').slideUp(100);
                     $.ajax({
-                        url: '{{ route('route-search-report') }}',
+                        url: '{{ route('passengers-search-report') }}',
                         data: $(this).serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();

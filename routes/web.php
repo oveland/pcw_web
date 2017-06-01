@@ -11,7 +11,16 @@
 |
 */
 
-Route::get('/', 'ReportController@index');
-Route::get('/report/show/', 'ReportController@show')->name('search-report');
-Route::any('/report/chart/{dispatchRegister}', 'ReportController@chart')->name('chart-report');
-Route::any('/report/ajax/', 'ReportController@ajax')->name('report-ajax-action');
+Route::get('/', function(){
+    return redirect(route('route-report'));
+})->name('home');
+
+/* Routes for route report */
+Route::get('/ruta', 'ReportController@index')->name('route-report');
+Route::get('/report/show/', 'ReportController@show')->name('route-search-report');
+Route::any('/report/chart/{dispatchRegister}', 'ReportController@chart')->name('route-chart-report');
+Route::any('/report/ajax/', 'ReportController@ajax')->name('route-ajax-action');
+
+/* Routes for route report */
+Route::get('/pasajeros', 'ReportPassengerController@index')->name('passengers-report');
+Route::get('/passengers/show/', 'ReportPassengerController@show')->name('passengers-search-report');

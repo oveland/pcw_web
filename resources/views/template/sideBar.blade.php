@@ -31,20 +31,35 @@
                 </a>
             </li>
             <li class="active">
-                <a href="" class="faa-parent animated-hover">
+                <a href="javascritp:;" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-pulse"></i>
                     <span>@lang('Reports')</span>
                 </a>
                 <ul class="sub-menu" style="display: block;">
-                    <li class="has-sub">
-                        <a href="javascript:;">
+                    <li class="has-sub menu-routes">
+                        <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
+                            <i class="fa fa-bus faa-pulse"></i>
                             @lang('Route')
                         </a>
                         <ul class="sub-menu" style="display: block;">
-                            <li class="has-sub active">
-                                <a href="javascript:;">
-                                    @lang('Route reports')
+                            <li class="has-sub menu-routes">
+                                <a href="{{ route('route-report')  }}">
+                                    @lang('Route report')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-sub menu-passengers">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-users faa-pulse"></i>
+                            @lang('Passengers')
+                        </a>
+                        <ul class="sub-menu" style="display: block;">
+                            <li class="has-sub menu-passengers">
+                                <a href="{{ route('passengers-report')  }}">
+                                    @lang('Passengers report')
                                 </a>
                             </li>
                         </ul>
