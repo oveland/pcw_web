@@ -13,25 +13,25 @@
                 <!-- begin table -->
                 <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle">
                     <thead>
-                        <tr class="inverse">
-                            <th>@lang('Vehicle')</th>
-                            <th>@lang('Seat')</th>
-                            <th>@lang('Event active time')</th>
-                            <th>@lang('Event inactive time')</th>
-                            <th>@lang('Active time')</th>
-                            <th>@lang('Active kilometers')</th>
-                            <th>@lang('Actions')</th>
-                        </tr>
+                    <tr class="inverse">
+                        <th>@lang('Vehicle')</th>
+                        <th>@lang('Seat')</th>
+                        <th>@lang('Event active time')</th>
+                        <th>@lang('Event inactive time')</th>
+                        <th>@lang('Active time')</th>
+                        <th>@lang('Active kilometers')</th>
+                        <th>@lang('Actions')</th>
+                    </tr>
                     </thead>
                     <tbody>
                     @foreach($historySeats as $historySeat)
                         <tr>
                             <td>{{$historySeat->plate}}</td>
                             <td>{{$historySeat->seat}}</td>
-                            <td>{{date('H:i:s',strtotime($historySeat->active_time))}}</td>
-                            <td>{{date('H:i:s',strtotime($historySeat->inactive_time))}}</td>
-                            <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
-                            <td>{{number_format($historySeat->busy_km/1000, 2, '.', ',')}}</td>
+                            <td>{{$historySeat->active_time?date('H:i:s',strtotime(explode(" ",$historySeat->active_time)[1])):__('Still busy')}}</td>
+                            <td>{{$historySeat->inactive_time?date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1])):__('Still busy')}}</td>
+                            <td>{{$historySeat->inactive_time?date('H:i:s',strtotime($historySeat->busy_time)):__('Still busy')}}</td>
+                            <td>{{$historySeat->inactive_time?number_format($historySeat->busy_km/1000, 2, '.', ','):__('Still busy')}}</td>
                             <td>
                                 <a href="javascript:;" class="btn btn-sm btn-grey btn-link" onclick="gsuccess('@lang('Feature on development')')">
                                     <i class="fa fa-cog fa-spin"></i> @lang('Report detail')
