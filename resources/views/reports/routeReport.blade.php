@@ -43,7 +43,7 @@
                                 <td>{{$dispatchRegister->turn}}</td>
                                 <td>
                                     <a href="#modal-route-report" data-toggle="modal"
-                                       data-url="{{ route('chart-report',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                       data-url="{{ route('route-chart-report',['dispatchRegister'=>$dispatchRegister->id]) }}"
                                        class="btn btn-sm btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report">
                                         <i class="fa fa-area-chart faa-pulse"></i> @lang('Report detail')
                                     </a>
