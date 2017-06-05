@@ -14,6 +14,7 @@
                 <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle">
                     <thead>
                     <tr class="inverse">
+                        <th>N°</th>
                         <th>@lang('Vehicle')</th>
                         <th>@lang('Seat')</th>
                         <th>@lang('Event active time')</th>
@@ -26,12 +27,17 @@
                     <tbody>
                     @foreach($historySeats as $historySeat)
                         <tr>
+                            <td>{{$loop->index+1}}</td>
                             <td>{{$historySeat->plate}}</td>
                             <td>{{$historySeat->seat}}</td>
                             <td>{{$historySeat->active_time?date('H:i:s',strtotime(explode(" ",$historySeat->active_time)[1])):__('Still busy')}}</td>
-                            <td>{{$historySeat->inactive_time?date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1])):__('Still busy')}}</td>
-                            <td>{{$historySeat->inactive_time?date('H:i:s',strtotime($historySeat->busy_time)):__('Still busy')}}</td>
-                            <td>{{$historySeat->inactive_time?number_format($historySeat->busy_km/1000, 2, '.', ','):__('Still busy')}}</td>
+                            @if($historySeat->inactive_time)
+                            <td>{{date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1]))}}</td>
+                            <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
+                            <td>{{number_format($historySeat->busy_km/1000, 2, '.', ',')}}</td>
+                            @else
+                                <td class="text-center" colspan="3">@lang('Still busy')</td>
+                            @endif
                             <td>
                                 <a href="javascript:;" class="btn btn-sm btn-grey btn-link" onclick="gsuccess('@lang('Feature on development')')">
                                     <i class="fa fa-cog fa-spin"></i> @lang('Report detail')
