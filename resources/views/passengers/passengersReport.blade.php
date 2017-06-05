@@ -25,6 +25,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @php($totalKm = 0)
                     @foreach($historySeats as $historySeat)
                         <tr>
                             <td>{{$loop->index+1}}</td>
@@ -32,9 +33,11 @@
                             <td>{{$historySeat->seat}}</td>
                             <td>{{$historySeat->active_time?date('H:i:s',strtotime(explode(" ",$historySeat->active_time)[1])):__('Still busy')}}</td>
                             @if($historySeat->inactive_time)
-                            <td>{{date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1]))}}</td>
-                            <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
-                            <td>{{number_format($historySeat->busy_km/1000, 2, '.', ',')}}</td>
+                                <td>{{date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1]))}}</td>
+                                <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
+                                @php($km=$historySeat->busy_km/1000)
+                                @php($totalKm += $km)
+                                <td>{{number_format($km, 2, '.', ',')}}</td>
                             @else
                                 <td class="text-center" colspan="3">@lang('Still busy')</td>
                             @endif
@@ -45,6 +48,10 @@
                             </td>
                         </tr>
                     @endforeach
+                        <tr class="inverse bg-inverse text-white">
+                            <td colspan="6" class="text-right">@lang('Total Km')</td>
+                            <td colspan="2" class="text-left">{{number_format($totalKm, 2, '.', ',')}}</td>
+                        </tr>
                     </tbody>
                 </table>
                 <!-- end table -->
