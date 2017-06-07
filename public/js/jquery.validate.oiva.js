@@ -8,7 +8,7 @@ jQuery.fn.extend({
     isValid: function(e) {
         var isValid = true;
         var el = $(this);
-        $(el).find('.field-required').each(function(i,e) {
+        $(el).find('.field-required:visible').each(function(i,e) {
             var labelFor = $(e).attr('for');
             if( labelFor ){
                 if( !input_validate_parent( el, labelFor,$(e).text() ) )isValid=false;

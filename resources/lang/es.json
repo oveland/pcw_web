@@ -11,7 +11,6 @@
   "Company": "Empresa",
   "Routes": "Rutas",
   "Reports": "Reportes",
-  "Route reports": "Reporte ruta",
   "Route times": "Tiempos de ruta",
   "Search report": "Consultar reporte",
   "Date report": "Fecha de Reporte",
@@ -45,5 +44,15 @@
   "Route info":"Información de la ruta",
   "Route report": "Reporte de ruta",
   "Control point going": "Ida",
-  "Control point return": "Regreso"
+  "Control point return": "Regreso",
+  "Passengers report":"Reporte de pasajeros",
+  "Register historic": "Histórico de registro",
+  "Passengers": "Pasajeros",
+  "Seat":"Asiento",
+  "Event active time":"Ocupado a las",
+  "Event inactive time":"Libre a las",
+  "Active time":"Activo durante",
+  "Active kilometers":"Kilómetros",
+  "Feature on development": "Funcionalidad en desarrollo",
+  "Still busy":"Ocupado aún"
 }
