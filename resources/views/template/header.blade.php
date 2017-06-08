@@ -1,6 +1,7 @@
 <meta charset="utf-8" />
 <title>@yield('title','PCW | Servicios GPS')</title>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="PCW | Servicios GPS" name="description" />
 <meta content="Oscar Velásquez" name="author" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -27,3 +28,10 @@
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="assets/plugins/pace/pace.min.js"></script>
 <!-- ================== END BASE JS ================== -->
+
+<!-- Scripts -->
+<script>
+    window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+</script>

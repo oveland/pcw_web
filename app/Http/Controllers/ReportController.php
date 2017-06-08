@@ -8,6 +8,7 @@ use App\DispatchRegister;
 use App\Route;
 use App\RouteGoogle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -16,7 +17,9 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $companies = Company::where('estado', '=', true)->orderBy('des_corta','asc')->get();
+        if( Auth::user()->isAdmin() ){
+            $companies = Company::where('active', '=', true)->orderBy('shortName','asc')->get();
+        }
         return view('reports.route', compact('companies'));
     }
 
@@ -72,8 +75,12 @@ class ReportController extends Controller
     {
         switch ($request->get('option')){
             case 'loadRoutes':
-                $company = $request->get('company');
-                $routes = $company!='null'?Route::where('id_empresa', '=', $company)->orderBy('nombre','asc')->get():[];
+                if(Auth::user()->isAdmin()){
+                    $company = $request->get('company');
+                }else{
+                    $company = Auth::user()->company->id;
+                }
+                $routes = $company!='null'?Route::where('company_id', '=', $company)->orderBy('name','asc')->get():[];
                 return view('reports.routeSelect', compact('routes'));
             break;
             default:

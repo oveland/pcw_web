@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="{{ config('app.locale') }}">
 <head>
     @include('template.header')
     @yield('stylesheets')

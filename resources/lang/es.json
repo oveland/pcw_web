@@ -54,5 +54,15 @@
   "Active time":"Activo durante",
   "Active kilometers":"Kilómetros",
   "Feature on development": "Funcionalidad en desarrollo",
-  "Still busy":"Ocupado aún"
+  "Still busy":"Ocupado aún",
+  "Username":"Usuario",
+  "Password":"Contraseña",
+  "Remember Me":"Recuérdame",
+  "Login":"Ingresar",
+  "Log In": "Inicia sesión",
+  "Type your credentials":"Ingresa tus credenciales",
+  "Confirm Password":"Confirma Contraseña",
+  "Register":"Regístrate",
+  "Name":"Nombre",
+  "Logout":"Cierra Sesión"
 }

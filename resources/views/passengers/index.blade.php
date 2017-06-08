@@ -51,6 +51,7 @@
                                 </div>
                             </div>
                         </div>
+                        @if(Auth::user()->isAdmin())
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="company-report"
@@ -60,12 +61,13 @@
                                             class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select an option')</option>
                                         @foreach($companies as $company)
-                                            <option value="{{$company->id_empresa}}">{{ $company->des_corta }}</option>
+                                            <option value="{{$company->id}}">{{ $company->shortName }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <div class="col-md-4 hide">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>

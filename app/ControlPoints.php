@@ -23,6 +23,6 @@ class ControlPoints extends Model
 
     public function route()
     {
-        return $this->belongsTo(Route::class, 'id_ruta', 'id_rutas');
+        return $this->belongsTo(Route::class, 'id_ruta', 'id');
     }
 }

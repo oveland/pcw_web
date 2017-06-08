@@ -10,11 +10,12 @@ class Vehicle extends Model
 {
     use Mapping;
     protected $table = 'crear_vehiculo';
+    protected $primaryKey = 'id_crear_vehiculo';
     /**
      * @var array
      */
     protected $mapping = [
-        'id' =>  'vehicle.id_crear_vehiculo',
+        'id' =>  'id_crear_vehiculo',
         'propertyExpeditionDate' => 'fecha_ex_propiedad',
         'numberProperty' => 'vehicle.n_propiedad'
     ];
