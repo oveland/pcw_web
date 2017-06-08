@@ -56,9 +56,10 @@ class ReportPassengerController extends Controller
                 ];
             }
             $dataExport = (object)[
+                'fileName' => __('Passengers_Report_'). str_replace(' ','_',$company->name).'.'.str_replace('-','',$dateReport),
                 'header' => [__('Passengers Report') .' '. $company->name.'. '.$dateReport],
                 'data' => $data,
-                'totalKm' => [__('Total KM: ').' '.$totalKm]
+                'totalKm' => [__('Total KM: ').' '.number_format($totalKm,2,',','.')]
             ];
             $this->export($dataExport);
         }
@@ -68,8 +69,7 @@ class ReportPassengerController extends Controller
 
     public function export($dataExport)
     {
-        $name = str_replace(' ','_',Auth::user()->company->name);
-        Excel::create(__('Passengers_Report_').$name, function($excel) use($dataExport) {
+        Excel::create($dataExport->fileName, function($excel) use($dataExport) {
             /* INFO DOCUMENT */
             $excel->setTitle(__('Passengers Report'));
             $excel->setCreator(__('PCW Ditech Integradores Tecnológicos'))->setCompany(__('PCW Ditech Integradores Tecnológicos'));
@@ -80,8 +80,8 @@ class ReportPassengerController extends Controller
                 $totalRows = count($dataExport->data)+3;
 
                 $sheet->fromArray($dataExport->data);
+                $sheet->prependRow($dataExport->totalKm);
                 $sheet->prependRow($dataExport->header);
-                $sheet->appendRow($dataExport->totalKm);
 
                 /* GENEREAL STYLE */
                 $sheet->setOrientation('landscape');
@@ -95,8 +95,10 @@ class ReportPassengerController extends Controller
                 $sheet->setColumnFormat(array(
                     'D' => 'h:mm:ss',
                     'E' => 'h:mm:ss',
-                    'F' => 'h:mm:ss'
+                    'F' => 'h:mm:ss',
+                    'G' => '#,##0.00'
                 ));
+                $sheet->setAutoFilter('A3:G'.($totalRows));
 
                 /*  HEADER */
                 $sheet->setHeight(1, 50);
@@ -113,12 +115,13 @@ class ReportPassengerController extends Controller
                     ));
                 });
 
-                /* HEADER COLUMNS */
+                /* HEADER TOTAL */
                 $sheet->setHeight(2, 25);
+                $sheet->mergeCells('A2:G2');
                 $sheet->cells('A2:G2', function($cells) {
                     $cells->setValignment('center');
-                    $cells->setAlignment('center');
-                    $cells->setBackground('#099585');
+                    $cells->setAlignment('right');
+                    $cells->setBackground('#0d4841');
                     $cells->setFontColor('#eeeeee');
                     $cells->setFont(array(
                         'family'     => 'Segoe UI Light',
@@ -127,12 +130,11 @@ class ReportPassengerController extends Controller
                     ));
                 });
 
-                /* FOOTER */
-                $sheet->setHeight($totalRows, 25);
-                $sheet->mergeCells('A'.$totalRows.':G'.$totalRows);
-                $sheet->cells('A'.$totalRows.':G'.$totalRows, function($cells) {
+                /* HEADER COLUMNS */
+                $sheet->setHeight(3, 25);
+                $sheet->cells('A3:G3', function($cells) {
                     $cells->setValignment('center');
-                    $cells->setAlignment('right');
+                    $cells->setAlignment('center');
                     $cells->setBackground('#0d4841');
                     $cells->setFontColor('#eeeeee');
                     $cells->setFont(array(
