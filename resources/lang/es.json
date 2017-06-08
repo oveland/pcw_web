@@ -64,5 +64,10 @@
   "Confirm Password":"Confirma Contraseña",
   "Register":"Regístrate",
   "Name":"Nombre",
-  "Logout":"Cierra Sesión"
+  "Logout":"Cierra Sesión",
+  "Passengers_Report_":"Reporte_Pasajeros_",
+  "Passengers Report":"Reporte de pasajeros",
+  "Report travel time and travel distance for vehicle seats":"Reporte de tiempo y recorrido de los asientos del vehículo",
+  "Export excel":"Exportar a excel",
+  "Date":"Fecha"
 }

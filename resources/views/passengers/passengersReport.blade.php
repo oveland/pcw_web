@@ -2,6 +2,10 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
+                <a href="{{ route('passengers-search-report')  }}?export=true" class="btn btn-lime bg-lime-dark btn-export btn-sm"
+                   onclick="$(this).attr('href',$(this).attr('href')+'&'+$('.form-search-report').serialize())">
+                    <i class="fa fa-file-excel-o"></i> @lang('Export excel')
+                </a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand" title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
@@ -37,7 +41,7 @@
                                 <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
                                 @php($km=$historySeat->busy_km/1000)
                                 @php($totalKm += $km)
-                                <td>{{number_format($km, 2, '.', ',')}}</td>
+                                <td>{{number_format($km, 2, ',', '.')}}</td>
                             @else
                                 <td class="text-center" colspan="3">@lang('Still busy')</td>
                             @endif
@@ -50,7 +54,7 @@
                     @endforeach
                         <tr class="inverse bg-inverse text-white">
                             <td colspan="6" class="text-right">@lang('Total Km')</td>
-                            <td colspan="2" class="text-left">{{number_format($totalKm, 2, '.', ',')}}</td>
+                            <td colspan="2" class="text-left">{{number_format($totalKm, 2, ',', '.')}}</td>
                         </tr>
                     </tbody>
                 </table>
