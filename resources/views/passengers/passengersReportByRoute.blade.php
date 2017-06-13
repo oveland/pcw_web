@@ -26,13 +26,13 @@
                     <!-- begin table -->
                     <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle">
                         <thead>
-                            <tr class="inverse">
-                                <th>@lang('Vehicle')</th>
-                                <th class="col-md-2">@lang('Hour dispatch')</th>
-                                <th>@lang('Round Trip')</th>
-                                <th data-sorting="disabled">@lang('Turn')</th>
-                                <th data-sorting="disabled">@lang('Actions')</th>
-                            </tr>
+                        <tr class="inverse">
+                            <th>@lang('Vehicle')</th>
+                            <th class="col-md-2">@lang('Hour dispatch')</th>
+                            <th>@lang('Round Trip')</th>
+                            <th data-sorting="disabled">@lang('Turn')</th>
+                            <th data-sorting="disabled">@lang('Actions')</th>
+                        </tr>
                         </thead>
                         <tbody>
                         @foreach( $dispatchRegisters as $dispatchRegister )
@@ -42,10 +42,10 @@
                                 <td>{{$dispatchRegister->round_trip}}</td>
                                 <td>{{$dispatchRegister->turn}}</td>
                                 <td>
-                                    <a href="#modal-route-report" data-toggle="modal"
-                                       data-url="{{ route('route-chart-report',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                                       class="btn btn-sm btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report">
-                                        <i class="fa fa-area-chart faa-pulse"></i> @lang('Report detail')
+                                    <a href="#modal-passengers-route-report" data-toggle="modal"
+                                       data-url="{{ route('passengers-by-dispatch',['id'=>$dispatchRegister->id]) }}"
+                                       class="btn btn-sm btn-primary faa-parent animated-hover btn-show-passengers-route-report">
+                                        <i class="fa fa-users faa-pulse"></i> @lang('Passenger report detail')
                                     </a>
                                 </td>
                             </tr>

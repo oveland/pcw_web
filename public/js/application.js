@@ -9,6 +9,13 @@ $(document).ready(function () {
         }
     });
 
+    $(document).ajaxError(function(event,request,settings){
+        if( request.statusText == "Unauthorized" || request.status == 401 ){
+            gerror('Acceso no autorizado');
+            location.reload();
+        }
+    });
+
     $('#datetimepicker-report').datepicker({
         format: "yyyy-mm-dd",
         todayBtn: "linked",

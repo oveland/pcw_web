@@ -7,14 +7,14 @@
 <body class="">
 
 <!-- begin #page-loader -->
-<div id="page-loader" class="fade">
+<div id="page-loader" class="fade in">
     <span class="spinner"></span>
 </div>
 <!-- end #page-loader -->
 
 <!-- begin #page-container -->
-<!-- <div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-two-sidebar page-with-footer page-footer-fixed in"> -->
-<div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-footer page-footer-fixed in">
+<!-- <div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-two-sidebar page-with-footer page-footer-fixed"> -->
+<div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-footer page-footer-fixed">
     @include('template.navbar')
     @include('template.sideBar')
     @include('template.content')

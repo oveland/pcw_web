@@ -13,6 +13,8 @@
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
 <script src="assets/plugins/gritter/js/jquery.gritter.js"></script>
 <script src="assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>
 <script src="assets/plugins/select2/dist/js/select2.min.js"></script>

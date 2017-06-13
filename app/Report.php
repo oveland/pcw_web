@@ -8,7 +8,7 @@ class Report extends Model
 {
     public function dispatchRegister()
     {
-        return $this->belongsTo(DispatchRegister::class,'dispatch_register_id','id_registro');
+        return $this->belongsTo(DispatchRegister::class,'dispatch_register_id','id');
     }
 
     public function location()

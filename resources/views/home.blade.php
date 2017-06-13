@@ -29,6 +29,8 @@
                             <a  class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{$loop->index}}" aria-expanded="false">
                                 <i class="fa fa-plus-circle pull-right"></i>
                                 @lang('Table') <b class="text-uppercase">{{ $table->name }}</b>
+                                @php($news = $table->total - $table->total_migrated)
+                                <button class="btn btn-xs pull-right btn-warning {{$news<=0?'hide':'active'}}">{{ $news }} @lang('News')</button>
                             </a>
                         </h3>
                     </div>
@@ -40,6 +42,7 @@
                                     <i class="fa fa-database"></i> @lang('Migrate')
                                 </button>
                                 <div class="widget-stat-number">{{ $table->total }} @lang('Registers')</div>
+                                <div class="widget-stat-number">{{ $table->total_migrated }} @lang('Migrated')</div>
                             </div>
                         </div>
                     </div>

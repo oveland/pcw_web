@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\ControlPoints;
+use App\ControlPoint;
 use App\DispatchRegister;
 use App\Route;
 use App\RouteGoogle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ReportController extends Controller
+class RouteReportController extends Controller
 {
+    const DISPATCH_COMPLETE = 'Terminó';
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -29,9 +30,10 @@ class ReportController extends Controller
      */
     public function show(Request $request)
     {
-        $roundTripDispatchRegisters = DispatchRegister::where('fecha', '=', $request->get('date-report'))
-            ->where('id_ruta', '=', $request->get('route-report'))
-            ->get()->groupBy('n_vuelta');
+        $route_id = $request->get('route-report');
+        $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $request->get('date-report'))
+            ->where('route_id', '=', $route_id)->where('status','=',self::DISPATCH_COMPLETE)
+            ->orderBy('round_trip','asc')->get()->groupBy('round_trip');
 
         return view('reports.routeReport', compact('roundTripDispatchRegisters'));
     }
@@ -48,10 +50,10 @@ class ReportController extends Controller
         if( $report->isNotEmpty() ){
             $routeDistance = $dispatchRegister->route->distance*1000;
             $totalDistance = $report->last()->distancem;
-            $controlPoints = ControlPoints::where('id_ruta','=',$dispatchRegister->route->id)->get();
+            $controlPoints = ControlPoint::where('route_id','=',$dispatchRegister->route->id)->get();
             $urlLayerMap = RouteGoogle::find($dispatchRegister->route->id);
             $dataReport = [
-                'vehicle' => $dispatchRegister->vehicle,
+                'vehicle' => $dispatchRegister->vehicle->number,
                 'plate' => $dispatchRegister->plate,
                 'vehicleSpeed' => round($report->last()->location->speed,2),
                 'route' => $dispatchRegister->route->name,
@@ -71,6 +73,10 @@ class ReportController extends Controller
         return response()->json($dataReport);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
     public function ajax(Request $request)
     {
         switch ($request->get('option')){
