@@ -264,11 +264,11 @@
 
                             controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
-                                    title: cp.nombre,
+                                    title: cp.name,
                                     map: map,
-                                    icon: controlPointIcon[cp.trayecto],
+                                    icon: controlPointIcon[cp.trajectory],
                                     animation: google.maps.Animation.DROP,
-                                    position: {lat: parseFloat(cp.lat), lng: parseFloat(cp.lng)}
+                                    position: {lat: parseFloat(cp.latitude), lng: parseFloat(cp.longitude)}
                                 });
                             });
 

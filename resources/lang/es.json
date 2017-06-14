@@ -82,5 +82,10 @@
   "Total route distance": "Distancia total de la ruta",
   "Active by": "Activo por",
   "From": "Desde",
-  "to": "hasta"
+  "to": "hasta",
+  "Table":"Tabla",
+  "Count trajectory": "Trayectoria de conteo",
+  "Active seat": "Asiento ocupado",
+  "Free seat": "Asiento libre",
+  "No seat report found": "No se ha encontrado reporte para el asiento seleccionado"
 }

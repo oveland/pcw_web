@@ -46,7 +46,9 @@
                                 <td class="text-center" colspan="3">@lang('Still busy')</td>
                             @endif
                             <td>
-                                <a href="javascript:;" class="btn btn-sm btn-grey btn-link" onclick="gsuccess('@lang('Feature on development')')">
+                                <a href="javascript:;"
+                                   data-url="{{ route('passengers-seat-detail',['historySeat'=>$historySeat->id]) }}"
+                                   class="btn btn-sm btn-grey btn-link btn-show-trajectory-seat-report">
                                     <i class="fa fa-cog fa-spin"></i> @lang('Report detail')
                                 </a>
                             </td>

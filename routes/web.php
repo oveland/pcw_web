@@ -30,7 +30,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pasajeros', 'PassengerReportController@index')->name('passengers-report');
     Route::get('/passengers/show', 'PassengerReportController@show')->name('passengers-search-report');
     Route::any('/passengers/dispatch/show/{dispatchRegister}', 'PassengerReportController@showByDispatch')->name('passengers-by-dispatch');
-    Route::any('/passengers/ajax', 'PassengerReportController@ajax')->name('passengers-ajax-action');
+    Route::any('/passengers/seat/show/{historySeat}', 'PassengerReportController@showHistorySeat')->name('passengers-seat-detail');
+    Route::any('/passengers/ajax/{action}', 'PassengerReportController@ajax')->name('passengers-ajax');
 
     Route::get('/migrate/', 'MigrationController@index')->name('migrate');
     Route::get('/migrate/companies', 'MigrationController@migrateCompanies')->name('migrate-companies');

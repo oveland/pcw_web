@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4.4 (17249) - http://www.bohemiancoding.com/sketch -->
+    <title>Official_4</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#000000" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="2.07261029" in="SourceGraphic" result="blur"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="48.2139587%" y1="-23.7988281%" x2="48.2139587%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#5AD2F2" offset="0%"></stop>
+            <stop stop-color="#262A6C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Official_4" sketch:type="MSArtboardGroup">
+            <g id="Bulle-01" sketch:type="MSLayerGroup" transform="translate(2.000000, 4.000000)">
+                <g id="Ombre" transform="translate(0.000000, 17.000000)" filter="url(#filter-2)" fill-opacity="0.75" fill="url(#linearGradient-1)" sketch:type="MSShapeGroup">
+                    <g id="Triangle-1">
+                        <path d="M24.9915435,22 L20.6717206,16.0416667 L13.9419313,16.0416667 C9.69459375,16.0416667 5.17564942,13.8782161 3.85271353,11.2177638 L0.673303794,4.82390288 C-0.651479741,2.15973488 2.65579674,0 8.06935076,0 L33.1122376,0 C38.521745,0 42.689631,2.16345054 42.4223052,4.82390288 L41.7798417,11.2177638 C41.5121427,13.8819318 37.8551594,16.0416667 33.6046447,16.0416667 L26.9554156,16.0416667 L24.9915435,22 Z"></path>
+                    </g>
+                </g>
+                <g id="Bulle" transform="translate(2.000000, 0.000000)" stroke-width="0.5" stroke="#FFFFFF" fill="url(#linearGradient-3)" sketch:type="MSShapeGroup">
+                    <g id="Triangle-1">
+                        <path d="M23.6321839,29.1666667 L20.045977,40 L16.4597701,29.1666667 L9.00170731,29.1666667 C4.03020164,29.1666667 0,25.1417888 0,20.1578097 L0,9.00885696 C0,4.03340265 4.03700043,0 9.00170731,0 L30.9982927,0 C35.9697984,0 40,4.02487783 40,9.00885696 L40,20.1578097 C40,25.133264 35.9629996,29.1666667 30.9982927,29.1666667 L23.6321839,29.1666667 Z"></path>
+                    </g>
+                </g>
+            </g>
+            <g id="Page-1" sketch:type="MSLayerGroup" transform="translate(13.000000, 7.000000)" fill="#FFFFFF">
+                <path d="M11.00022,0.382706897 L0.561953333,6.21056897 L21.4399533,6.21056897 L11.00022,0.382706897 Z" id="Fill-1" sketch:type="MSShapeGroup"></path>
+                <path d="M0.561733333,8.48472414 L21.4404667,8.48472414 L21.4404667,6.86265517 L0.561733333,6.86265517 L0.561733333,8.48472414 Z" id="Fill-2" sketch:type="MSShapeGroup"></path>
+                <path d="M17.21082,9.1119 L17.21082,18.0050379 L14.95362,18.0050379 L14.95362,9.1119 L12.1324867,9.1119 L12.1324867,18.0050379 L9.87528667,18.0050379 L9.87528667,9.1119 L7.05488667,9.1119 L7.05488667,18.0050379 L4.79622,18.0050379 L4.79622,9.1119 L1.97508667,9.1119 L1.97288667,18.0050379 L0.88022,18.0050379 L0.88022,18.9601759 L0.00022,18.9601759 L0.00022,21.0000724 L21.9994867,21.0000724 L21.9994867,18.9601759 L21.12022,18.9601759 L21.12022,18.0050379 L20.0326867,18.0050379 L20.0326867,9.1119 L17.21082,9.1119 Z" id="Fill-3" sketch:type="MSShapeGroup"></path>
+            </g>
+        </g>
+    </g>
+</svg>

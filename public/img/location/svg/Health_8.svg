@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4.4 (17249) - http://www.bohemiancoding.com/sketch -->
+    <title>Health_8</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#000000" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="2.07261029" in="SourceGraphic" result="blur"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="50%" y1="-25.3637695%" x2="50%" y2="115.036621%" id="linearGradient-3">
+            <stop stop-color="#6441A5" offset="0%"></stop>
+            <stop stop-color="#442260" offset="100%"></stop>
+        </linearGradient>
+        <path id="path-4" d="M0,0.308 L22,0.308 L22,21.2666667 L0,21.2666667 L0,0.308 Z"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Health_8" sketch:type="MSArtboardGroup">
+            <g id="Bulle-01" sketch:type="MSLayerGroup" transform="translate(2.000000, 4.000000)">
+                <g id="Ombre" transform="translate(0.000000, 17.000000)" filter="url(#filter-2)" fill-opacity="0.75" fill="url(#linearGradient-1)" sketch:type="MSShapeGroup">
+                    <g id="Triangle-1">
+                        <path d="M24.9915435,22 L20.6717206,16.0416667 L13.9419313,16.0416667 C9.69459375,16.0416667 5.17564942,13.8782161 3.85271353,11.2177638 L0.673303794,4.82390288 C-0.651479741,2.15973488 2.65579674,0 8.06935076,0 L33.1122376,0 C38.521745,0 42.689631,2.16345054 42.4223052,4.82390288 L41.7798417,11.2177638 C41.5121427,13.8819318 37.8551594,16.0416667 33.6046447,16.0416667 L26.9554156,16.0416667 L24.9915435,22 Z"></path>
+                    </g>
+                </g>
+                <g id="Bulle" transform="translate(2.000000, 0.000000)" stroke-width="0.5" stroke="#FFFFFF" fill="url(#linearGradient-3)" sketch:type="MSShapeGroup">
+                    <g id="Triangle-1">
+                        <path d="M23.6321839,29.1666667 L20.045977,40 L16.4597701,29.1666667 L9.00170731,29.1666667 C4.03020164,29.1666667 0,25.1417888 0,20.1578097 L0,9.00885696 C0,4.03340265 4.03700043,0 9.00170731,0 L30.9982927,0 C35.9697984,0 40,4.02487783 40,9.00885696 L40,20.1578097 C40,25.133264 35.9629996,29.1666667 30.9982927,29.1666667 L23.6321839,29.1666667 Z"></path>
+                    </g>
+                </g>
+            </g>
+            <g id="Page-1" sketch:type="MSLayerGroup" transform="translate(13.000000, 8.000000)">
+                <mask id="mask-5" sketch:name="Clip 2" fill="white">
+                    <use xlink:href="#path-4"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M10.0689234,16.51236 L9.08681999,8.3244314 L7.58741475,11.8622438 L1.87119479,11.8622438 C3.35449997,14.4501528 6.1699098,17.4020631 10.9999267,20.7900749 C15.8838437,17.365663 18.7055536,14.3850526 20.1769587,11.7761435 L12.7744329,11.7761435 L10.0689234,16.51236 Z M16.7728468,0.83300524 C16.4347456,0.803605137 16.1183445,0.784005069 15.8222435,0.784005069 C13.4436352,0.784005069 12.3033312,1.81230866 10.9999267,3.36701409 C9.69442211,1.81230866 8.55341812,0.784005069 6.17760983,0.784005069 C5.88010879,0.784005069 5.56370768,0.803605137 5.2256065,0.83300524 C3.16829932,1.03320594 0.789691012,2.91761252 0.49989,6.52682512 L0.49989,7.73012933 C0.574790262,8.68633266 0.830991156,9.70693623 1.32239287,10.79474 L6.87901228,10.79474 L9.66852202,4.21261704 L10.7444258,13.1768483 L12.1549307,10.7086397 L20.7152606,10.7086397 C21.1814622,9.65373604 21.4271631,8.66113258 21.4999633,7.73012933 L21.4999633,6.52682512 C21.2101623,2.91761252 18.830854,1.03320594 16.7728468,0.83300524 L16.7728468,0.83300524 Z" id="Fill-1" fill="#FFFFFF" sketch:type="MSShapeGroup" mask="url(#mask-5)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -45,7 +45,7 @@
                                 </a>
                                 <ul class="dropdown-menu pull-right">
                                     <li>
-                                        <a href="javascript:;" class="" onclick="gsuccess('@lang('Feature on development')')">
+                                        <a href="javascript:;" class="btn-show-trajectory-seat-report" onclick="gsuccess('@lang('Feature on development')')">
                                             <i class="fa fa-file-pdf-o"></i> @lang('Export PDF')
                                             <i class="fa fa-cog fa-spin"></i>
                                         </a>
@@ -120,13 +120,15 @@
                             @php($activeSeatRouteKm = number_format($activeSeatRouteDistance/1000,'2',',','.'))
                             @php($inactiveSeatRouteKm = number_format($inactiveSeatRouteDistance/1000,'2',',','.'))
 
-                            @php($html_toltip = "
+                            @php($html_tooltip = "
                                 <div style='font-size:90% !important'>
                                     <b class='text-warning'>".__('Seat')."</b> $historySeat->seat<br>
                                     <b class='text-warning'>".__('Active by')."</b> $activeKm Km<br>
                                     <b class='text-muted'>".__('From')."</b> $activeSeatRouteKm Km <b class='text-muted'>".__('to')."</b> $inactiveSeatRouteKm Km
                                 </div>
                             ")
+
+                            @php($controlPoints = $dispatchRegister->route->controlPoints)
                             <div class="bg-white p-0" style="height: auto;padding: 5px;">
                                 @if($loop->first)
                                     <div class="progress progress-striped p-0 m-0 no-rounded-corner progress-lg active">
@@ -137,22 +139,34 @@
                                     </div>
                                 </div>
                                 @endif
-                                <div class="progress progress-striped p-0 m-0 no-rounded-corner progress-{{$loop->first?'lg':'sm'}}" style="opacity: {{$loop->first?1:0.8}};">
-                                    <div class="progress-bar bg-inverse-dark p-0" style="width: 33.3%;"><b class="{{$loop->first?'show':'hide'}}">Control Point 1</b></div>
-                                    <div class="progress-bar bg-inverse-light p-0" style="width: 33.3%"><b class="{{$loop->first?'show':'hide'}}">Control Point 2</b></div>
-                                    <div class="progress-bar bg-inverse-dark p-0" style="width: 33.3%"><b class="{{$loop->first?'show':'hide'}}">Control Point 3</b></div>
+                                <div class="progress progress-striped p-0 m-0 no-rounded-corner progress-{{$loop->first?'lg':'sm'}}" style="opacity: {{$loop->first?1:0.8}}">
+                                    @php($parentLoop = $loop)
+                                    @php($width = 0)
+                                    @foreach($controlPoints as $controlPoint)
+                                        @php($width = $controlPoint->distance_next_point*100/$routeDistance )
+                                        @php($trajectory = $controlPoint->name.' ➤ '.($loop->index+1<count($controlPoints)?$controlPoints[$loop->index + 1]->name:'') )
+                                        <div class="progress-bar bg-inverse-{{ $loop->index%2==0?'dark':'light' }} p-0" style="width:{{ number_format(( $width-0.1 ),'1','.','') }}%"
+                                             data-toggle="tooltip" data-html="true" data-placement="top"
+                                             data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
+                                             title="{{ '<i class="m-t-40 icon-direction"></i> '.$trajectory }}"
+                                        >
+                                            <b class="{{$parentLoop->first?'':'hide'}}" style="font-size: 50% !important;">
+                                                {{ $trajectory }}
+                                            </b>
+                                        </div>
+                                    @endforeach
                                 </div>
                                 <div class="progress progress-striped m-0 p-1 progress-md">
-                                    <div class="progress-bar progress-bar-grey bg-grey-light" style="width: {{ $inactivePercent }}%"></div>
+                                    <div class="progress-bar" style="width: {{ $inactivePercent }}%;background: #f1f1f1 !important;"></div>
                                     <div class="progress-bar bg-warning-dark active--" style="width: {{ $activePercent }}%"
                                          data-toggle="tooltip" data-html="true" data-placement="bottom"
                                          data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
-                                         title="{{ $html_toltip }}">
+                                         title="{{ $html_tooltip }}">
                                         <b class="m-l-10 pull-left">{{$activeSeatRouteKm}} Km</b>
                                         <b class="m-t-20 text-white">@lang('Seat') {{ $historySeat->seat }}. @lang('Active by') {{ $activeKm }} Km</b>
                                         <b class="m-r-10 pull-right">{{$inactiveSeatRouteKm}} Km</b>
                                     </div>
-                                    <div class="progress-bar progress-bar-grey bg-grey-light" style="width: {{ (100-($inactivePercent+$activePercent)) }}%"></div>
+                                    <div class="progress-bar " style="width: {{ (100-($inactivePercent+$activePercent)) }}%;background: #f1f1f1 !important;"></div>
                                 </div>
                             </div>
                         </div>

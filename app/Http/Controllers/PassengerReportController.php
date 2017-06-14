@@ -178,13 +178,18 @@ class PassengerReportController extends Controller
         })->export('xlsx');
     }
 
+    public function showHistorySeat(HistorySeat $historySeat)
+    {
+        return $historySeat;
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function ajax(Request $request)
+    public function ajax($action, Request $request)
     {
-        switch ($request->get('option')){
+        switch ($action){
             case 'loadRoutes':
                 if(Auth::user()->isAdmin()){
                     $company = $request->get('company');
