@@ -1,4 +1,5 @@
 @if(count($historySeats))
+    @php($threshold_km = 20000)
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -10,7 +11,12 @@
                     <i class="fa fa-expand"></i>
                 </a>
             </div>
-            <h5 class="text-white m-t-10"><i class="fa fa-user-circle" aria-hidden="true"></i> @lang('Register historic')</h5>
+            <h5 class="text-white m-t-10">
+                <i class="fa fa-user-circle" aria-hidden="true"></i> @lang('Register historic') - @lang('All Routes'):
+                {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }} @lang('passengers')
+                {{ number_format(collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')
+
+            </h5>
         </div>
         <div class="panel-content row">
             <div id="report-tab-table" class="table-responsive col-md-12x">
@@ -31,7 +37,7 @@
                     <tbody>
                     @php($totalKm = 0)
                     @foreach($historySeats as $historySeat)
-                        <tr>
+                        <tr class="{{ $historySeat->busy_km>$threshold_km?'':'text-danger' }}">
                             <td>{{$loop->index+1}}</td>
                             <td>{{$historySeat->plate}}</td>
                             <td>{{$historySeat->seat}}</td>
@@ -40,8 +46,8 @@
                                 <td>{{date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1]))}}</td>
                                 <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
                                 @php($km=$historySeat->busy_km/1000)
-                                @php($totalKm += $km)
-                                <td>{{number_format($km, 2, ',', '.')}}</td>
+                                @php($historySeat->busy_km>$threshold_km?($totalKm += $km):null )
+                                <td class="{{ $historySeat->busy_km>$threshold_km?'':'danger' }}">{{number_format($km, 2, ',', '.')}}</td>
                             @else
                                 <td class="text-center" colspan="3">@lang('Still busy')</td>
                             @endif

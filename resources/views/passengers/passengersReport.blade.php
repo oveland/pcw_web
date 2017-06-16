@@ -1,4 +1,5 @@
 @if(count($historySeats))
+    @php($threshold_km = 20000)
     <div class="panel panel-inverse col-md-12">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -11,7 +12,8 @@
                     <h5 class="text-white m-t-10">
                         <i class="fa fa-user-circle" aria-hidden="true"></i>
                         {{ $dispatchRegister->route->name }} <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                        {{ number_format(collect($historySeats->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total'),
+                        {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }} @lang('passengers'),
+                        {{ number_format(collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')
                         @lang('between') {{ $dispatchRegister->departure_time }} @lang('and') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchRegister->arrival_time_scheduled }}
                     </h5>
                 </div>
@@ -58,7 +60,7 @@
             </div>
         </div>
         <div class="tab-content p-0">
-            <div id="report-tab-table" class="table-responsive tab-pane fade in">
+            <div id="report-tab-table" class="table-responsive tab-pane active fade in">
                 <!-- begin table -->
                 <table class="table table-bordered table-striped table-hover table-valign-middle">
                     <thead>
@@ -76,7 +78,7 @@
                     <tbody>
                     @php($totalKm = 0)
                     @foreach($historySeats as $historySeat)
-                        <tr>
+                        <tr class="{{ $historySeat->busy_km>$threshold_km?'':'text-danger' }}">
                             <td>{{$loop->index+1}}</td>
                             <td>{{$historySeat->plate}}</td>
                             <td>{{$historySeat->seat}}</td>
@@ -85,8 +87,8 @@
                                 <td>{{date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1]))}}</td>
                                 <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
                                 @php($km=$historySeat->busy_km/1000)
-                                @php($totalKm += $km)
-                                <td>{{number_format($km, 2, ',', '.')}}</td>
+                                @php($historySeat->busy_km>$threshold_km?($totalKm += $km):null )
+                                <td class="{{ $historySeat->busy_km>$threshold_km?'':'danger' }}">{{number_format($km, 2, ',', '.')}}</td>
                             @else
                                 <td class="text-center" colspan="3">@lang('Still busy')</td>
                             @endif
@@ -105,7 +107,7 @@
                 </table>
                 <!-- end table -->
             </div>
-            <div id="report-tab-chart" class="tab-pane fade active in">
+            <div id="report-tab-chart" class="tab-pane fade in">
                 <div class="row p-20">
                     @foreach($historySeats as $historySeat)
                         <div class="col-md-12 p-0">
@@ -117,6 +119,9 @@
                             @php($inactivePercent = number_format($activeSeatRouteDistance*100/$routeDistance,'2','.',''))
                             @php($activePercent = number_format($historySeat->busy_km*100/$routeDistance,'2','.',''))
                             @php($activeKm = number_format($historySeat->busy_km/1000,'2',',','.'))
+                            @php($activeTimeBy = explode('.', $historySeat->busy_time)[0] )
+                            @php($activeTimeFrom = explode('.', $historySeat->active_time)[0] )
+                            @php($activeTimeTo = explode('.', $historySeat->inactive_time)[0] )
                             @php($activeSeatRouteKm = number_format($activeSeatRouteDistance/1000,'2',',','.'))
                             @php($inactiveSeatRouteKm = number_format($inactiveSeatRouteDistance/1000,'2',',','.'))
 
@@ -125,6 +130,8 @@
                                     <b class='text-warning'>".__('Seat')."</b> $historySeat->seat<br>
                                     <b class='text-warning'>".__('Active by')."</b> $activeKm Km<br>
                                     <b class='text-muted'>".__('From')."</b> $activeSeatRouteKm Km <b class='text-muted'>".__('to')."</b> $inactiveSeatRouteKm Km
+                                    <b class='text-warning'>".__('Active time')."</b> $activeTimeBy<br>
+                                    <b class='text-muted'>".__('From')."</b> $activeTimeFrom <b class='text-muted'>".__('to')."</b> $activeTimeTo
                                 </div>
                             ")
 
@@ -158,7 +165,7 @@
                                 </div>
                                 <div class="progress progress-striped m-0 p-1 progress-md">
                                     <div class="progress-bar" style="width: {{ $inactivePercent }}%;background: #f1f1f1 !important;"></div>
-                                    <div class="progress-bar bg-warning-dark active--" style="width: {{ $activePercent }}%"
+                                    <div class="progress-bar bg-{{ $historySeat->busy_km>$threshold_km?'warning':'danger' }}-dark active--" style="width: {{ $activePercent }}%"
                                          data-toggle="tooltip" data-html="true" data-placement="bottom"
                                          data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                          title="{{ $html_tooltip }}">
