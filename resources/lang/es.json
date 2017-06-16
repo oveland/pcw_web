@@ -87,5 +87,6 @@
   "Count trajectory": "Trayectoria de conteo",
   "Active seat": "Asiento ocupado",
   "Free seat": "Asiento libre",
-  "No seat report found": "No se ha encontrado reporte para el asiento seleccionado"
+  "No seat report found": "No se ha encontrado reporte para el asiento seleccionado",
+  "passengers": "Pasajeros"
 }
