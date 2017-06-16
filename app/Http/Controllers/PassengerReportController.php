@@ -42,7 +42,7 @@ class PassengerReportController extends Controller
 
         if($routeId!='all'){
             $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
-                ->where('route_id', '=', $routeId)->where('status','=',self::DISPATCH_COMPLETE)
+                ->where('route_id', '=', $routeId)//->where('status','=',self::DISPATCH_COMPLETE)
                 ->orderBy('round_trip','asc')->get()->groupBy('round_trip');
             return view('passengers.passengersReportByRoute', compact('roundTripDispatchRegisters'));
         }
@@ -62,10 +62,10 @@ class PassengerReportController extends Controller
         if($dispatchArrivaltime > "23:59:59")$dispatchArrivaltime= "23:59:59";
         $historySeats = HistorySeat::where('plate',$dispatchRegister->vehicle->plate)
             ->where('date','=',$dispatchRegister->date)
-            ->whereBetween('active_time',
+            ->whereBetween('time',
                 [
-                    $dispatchRegister->date.' '.$dispatchRegister->departure_time,
-                    $dispatchRegister->date.' '.($dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivaltime)
+                    $dispatchRegister->departure_time,
+                    ($dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivaltime)
                 ])
             ->get()->sortBy('active_time');
 
