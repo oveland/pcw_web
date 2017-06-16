@@ -14,11 +14,11 @@ class CreateRoutesTable extends Migration
     public function up()
     {
         Schema::create('routes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name');
             $table->integer('distance')->default(0)->comment('Distance in meters');
-            $table->integer('roadTime')->default(0)->comment('Road time in minutes');
-            $table->integer('company_id')->unsigned()->default(6);
+            $table->integer('road_time')->default(0)->comment('Road time in minutes');
+            $table->bigInteger('company_id')->unsigned()->default(6);
             $table->integer('dispatch_id')->default(0);
             $table->boolean('active')->default(true);
             $table->timestamps();

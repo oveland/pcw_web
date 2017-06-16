@@ -92,7 +92,7 @@ class MigrationController extends Controller
             }
             $company->id = $companyOLD->id_empresa;
             $company->name = $companyOLD->des_empresa;
-            $company->shortName = $companyOLD->des_corta;
+            $company->short_name = $companyOLD->des_corta;
             $company->nit = $companyOLD->nit;
             $company->address = $companyOLD->direccion;
             $company->link = $companyOLD->url;
@@ -133,7 +133,7 @@ class MigrationController extends Controller
             $route->id = $routeOLD->id_rutas;
             $route->name = $routeOLD->nombre;
             $route->distance = $routeOLD->distancia;
-            $route->roadTime = $routeOLD->tiempo_recorrido;
+            $route->road_time = $routeOLD->tiempo_recorrido;
             $route->company_id = $routeOLD->id_empresa;
             $route->dispatch_id = $routeOLD->id_despacho;
             $route->active = $routeOLD->estado==0?false:true;

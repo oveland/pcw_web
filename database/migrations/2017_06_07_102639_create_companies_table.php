@@ -14,9 +14,9 @@ class CreateCompaniesTable extends Migration
     public function up()
     {
         Schema::create('companies', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name');
-            $table->string('shortName');
+            $table->string('short_name');
             $table->string('nit')->unique();
             $table->string('address')->nullable();
             $table->string('link')->default('http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php');

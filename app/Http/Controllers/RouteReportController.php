@@ -88,10 +88,10 @@ class RouteReportController extends Controller
                 }
                 $routes = $company!='null'?Route::where('company_id', '=', $company)->orderBy('name','asc')->get():[];
                 return view('reports.routeSelect', compact('routes'));
-            break;
+                break;
             default:
                 return "Nothing to do";
-            break;
+                break;
         }
     }
 }
