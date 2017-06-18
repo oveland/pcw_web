@@ -229,4 +229,9 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
+    /*
+     * SET DATABASE DATE TIME FORMAT
+     *
+     */
+    'date_format' => env('DB_DATE_TIME_FORMAT', 'Y-m-d H:i:s'),
 ];

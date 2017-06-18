@@ -88,5 +88,6 @@
   "Active seat": "Asiento ocupado",
   "Free seat": "Asiento libre",
   "No seat report found": "No se ha encontrado reporte para el asiento seleccionado",
-  "passengers": "Pasajeros"
+  "passengers": "Pasajeros",
+  "No registers location found": "No se encontraron registros de coordenadas"
 }
