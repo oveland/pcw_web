@@ -21,7 +21,7 @@ class PassengerReportController extends Controller
     public function index()
     {
         if( Auth::user()->isAdmin() ){
-            $companies = Company::where('active', '=', true)->orderBy('shortName','asc')->get();
+            $companies = Company::where('active', '=', true)->orderBy('short_name','asc')->get();
         }
         return view('passengers.index', compact('companies'));
     }

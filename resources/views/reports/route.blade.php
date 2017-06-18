@@ -60,7 +60,7 @@
                                             class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select an option')</option>
                                         @foreach($companies as $company)
-                                            <option value="{{$company->id}}">{{ $company->shortName }}</option>
+                                            <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
