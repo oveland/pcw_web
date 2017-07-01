@@ -253,15 +253,20 @@
                             var routeDistance = data.routeDistance;
                             var latitudes = data.latitudes;
                             var longitudes = data.longitudes;
+                            var offRoads = data.offRoads;
                             var dataPercentDistances = [];
                             var controlPoints = data.controlPoints;
                             var urlLayerMap = data.urlLayerMap;
-
+                            console.log('offRoads = ',offRoads);
                             new google.maps.KmlLayer({
                                 url: urlLayerMap,
                                 map: map
                             });
 
+                            offRoads.forEach(function (or, i) {
+                                offRoads[i] = or?'':'hide';
+                            });
+                            console.log('offRoads = ',offRoads);
                             controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
                                     title: cp.name,
@@ -297,7 +302,8 @@
                                 normalRangeMin: -50, normalRangeMax: 50,
                                 tooltipFormat: '<?="'+
                             '<div class=\"info-route-report\">'+
-                                '<b>Estado:</b> {{offset:times}} <br>'+
+                                '<span class=\"{{offset:offRoads}}\"><span class=\"label label-danger f-s-10 m-b-10\"><i class=\"ion-merge m-r-5 fs-12 fa-fw\"></i> Vehículo fuera de la Ruta</span><hr class=\"m-5\"></span>'+
+                                '<b class=\"m-t-10\">Estado:</b> {{offset:times}} <br>'+
                                 '<b>Hora:</b> {{offset:dates}} <br>'+
                                 '<b>Distancia:</b> {{offset:distance}} Km <br>'+
                                 '<b>Recorrido:</b> {{offset:percent}}% <br>'+
@@ -306,6 +312,7 @@
                             '</div>'+
                         '"?>',
                                 tooltipValueLookups: {
+                                    'offRoads': offRoads,
                                     'times': dataTimes,
                                     'dates': dataDates,
                                     'distance': dataDistances,

@@ -32,7 +32,7 @@ class RouteReportController extends Controller
     {
         $route_id = $request->get('route-report');
         $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $request->get('date-report'))
-            ->where('route_id', '=', $route_id)->where('status','=',self::DISPATCH_COMPLETE)
+            ->where('route_id', '=', $route_id)//->where('status','=',self::DISPATCH_COMPLETE)
             ->orderBy('round_trip','asc')->get()->groupBy('round_trip');
 
         return view('reports.routeReport', compact('roundTripDispatchRegisters'));
@@ -51,10 +51,9 @@ class RouteReportController extends Controller
             $routeDistance = $dispatchRegister->route->distance*1000;
             $totalDistance = $report->last()->distancem;
             $controlPoints = ControlPoint::where('route_id','=',$dispatchRegister->route->id)->get();
-            $urlLayerMap = RouteGoogle::find($dispatchRegister->route->id);
-            $dataReport = [
+            $dataReport = collect([
                 'vehicle' => $dispatchRegister->vehicle->number,
-                'plate' => $dispatchRegister->plate,
+                'plate' => $dispatchRegister->vehicle->plate,
                 'vehicleSpeed' => round($report->last()->location->speed,2),
                 'route' => $dispatchRegister->route->name,
                 'routeDistance' => $routeDistance,
@@ -65,9 +64,10 @@ class RouteReportController extends Controller
                 'values' => $report->pluck('status_in_minutes'),
                 'latitudes' => $report->pluck('location.latitude'),
                 'longitudes' => $report->pluck('location.longitude'),
+                'offRoads' => $report->pluck('location.off_road'),
                 'controlPoints' => $controlPoints,
-                'urlLayerMap' => $urlLayerMap?$urlLayerMap->url:''
-            ];
+                'urlLayerMap' => $dispatchRegister->route->url
+            ]);
         }
 
         return response()->json($dataReport);
