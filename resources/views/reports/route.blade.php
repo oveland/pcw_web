@@ -1,8 +1,7 @@
 @extends('layout')
 
 @section('stylesheets')
-    <link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet"/>
-    <link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet"/>
+
 @endsection
 
 @section('content')
@@ -10,11 +9,11 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Routes')</a></li>
-        <li class="active">@lang('Route reports')</li>
+        <li class="active">@lang('Route times')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
-    <h1 class="page-header">@lang('Route reports')
+    <h1 class="page-header">@lang('Route report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Route times')</small>
     </h1>
     <hr class="col-md-12 hr">
@@ -51,6 +50,7 @@
                                 </div>
                             </div>
                         </div>
+                        @if(Auth::user()->isAdmin())
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="company-report"
@@ -60,12 +60,13 @@
                                             class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select an option')</option>
                                         @foreach($companies as $company)
-                                            <option value="{{$company->id_empresa}}">{{ $company->des_corta }}</option>
+                                            <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
@@ -184,14 +185,12 @@
 
 
 @section('scripts')
-    <script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
-
     @include('template.google.maps')
 
     <script src="assets/plugins/sparkline/jquery.sparkline.min.js"></script>
 
     <script type="application/javascript">
+        $('.menu-routes').addClass('active');
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
 
@@ -201,25 +200,12 @@
         ];
 
         $(document).ready(function () {
-            $('#datetimepicker-report').datepicker({
-                format: "yyyy-mm-dd",
-                todayBtn: "linked",
-                language: "es",
-                orientation: "bottom auto",
-                daysOfWeekHighlighted: "0,6",
-                calendarWeeks: true,
-                autoclose: true,
-                todayHighlight: true
-            });
-
-            $('.default-select2').select2();
-
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
                 if ($(this).isValid()) {
                     $('.report-container').slideUp(100);
                     $.ajax({
-                        url: '{{ route('search-report') }}',
+                        url: '{{ route('route-search-report') }}',
                         data: $(this).serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();
@@ -229,14 +215,7 @@
             });
 
             $('#company-report').change(function () {
-                var roouteSelect = $('#route-report');
-                roouteSelect.html($('#select-loading').html()).trigger('change.select2');
-                roouteSelect.load('{{route('report-ajax-action')}}', {
-                    option: 'loadRoutes',
-                    company: $(this).val()
-                }, function () {
-                    roouteSelect.trigger('change.select2');
-                });
+                loadRouteReport($(this).val());
             });
 
             $('#route-report').change(function () {
@@ -249,77 +228,82 @@
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
             });
-        });
 
-        $('body').on('click', '.btn-show-chart-route-report', function () {
-            //map.clearAllMarkers();
-            var chartRouteReport = $("#chart-route-report");
-            chartRouteReport.html(loading);
-            $('.report-info').html(loading);
-            $.ajax({
-                url: $(this).data('url'),
-                success: function (data) {
-                    if (!data.empty) {
-                        $('.modal-report-vehicle').html(data.vehicle + ' <i class="fa fa-hand-o-right" aria-hidden="true"></i> ' + data.plate);
-                        $('.modal-report-vehicle-speed').html(data.vehicleSpeed);
-                        $('.modal-report-vehicle-speed-progress').css('width', parseInt(data.vehicleSpeed) + '%');
+            $('body').on('click', '.btn-show-chart-route-report', function () {
+                //map.clearAllMarkers();
+                var chartRouteReport = $("#chart-route-report");
+                chartRouteReport.html(loading);
+                $('.report-info').html(loading);
+                $.ajax({
+                    url: $(this).data('url'),
+                    success: function (data) {
+                        if (!data.empty) {
+                            $('.modal-report-vehicle').html(data.vehicle + ' <i class="fa fa-hand-o-right" aria-hidden="true"></i> ' + data.plate);
+                            $('.modal-report-vehicle-speed').html(data.vehicleSpeed);
+                            $('.modal-report-vehicle-speed-progress').css('width', parseInt(data.vehicleSpeed) + '%');
 
-                        $('.modal-report-route-name').html(data.route);
-                        $('.modal-report-route-percent').html(data.routePercent);
-                        $('.modal-report-route-percent-progress').css('width', parseInt(data.routePercent) + '%');
+                            $('.modal-report-route-name').html(data.route);
+                            $('.modal-report-route-percent').html(data.routePercent);
+                            $('.modal-report-route-percent-progress').css('width', parseInt(data.routePercent) + '%');
 
-                        var dataValues = data.values;
-                        var dataDates = data.dates;
-                        var dataTimes = data.times;
-                        var dataDistances = data.distances;
-                        var routeDistance = data.routeDistance;
-                        var latitudes = data.latitudes;
-                        var longitudes = data.longitudes;
-                        var dataPercentDistances = [];
-                        var controlPoints = data.controlPoints;
-                        var urlLayerMap = data.urlLayerMap;
-
-                        new google.maps.KmlLayer({
-                            url: urlLayerMap,
-                            map: map
-                        });
-
-                        controlPoints.forEach(function (cp, i) {
-                            new google.maps.Marker({
-                                title: cp.nombre,
-                                map: map,
-                                icon: controlPointIcon[cp.trayecto],
-                                animation: google.maps.Animation.DROP,
-                                position: {lat: parseFloat(cp.lat), lng: parseFloat(cp.lng)}
+                            var dataValues = data.values;
+                            var dataDates = data.dates;
+                            var dataTimes = data.times;
+                            var dataDistances = data.distances;
+                            var routeDistance = data.routeDistance;
+                            var latitudes = data.latitudes;
+                            var longitudes = data.longitudes;
+                            var offRoads = data.offRoads;
+                            var dataPercentDistances = [];
+                            var controlPoints = data.controlPoints;
+                            var urlLayerMap = data.urlLayerMap;
+                            console.log('offRoads = ',offRoads);
+                            new google.maps.KmlLayer({
+                                url: urlLayerMap,
+                                map: map
                             });
-                        });
 
-                        dataDates.forEach(function (e, i) {
-                            dataDates[i] = e;
-                        });
-                        dataValues.forEach(function (e, i) {
-                            dataValues[i] = e * 60;
-                        });
-                        dataDistances.forEach(function (e, i) {
-                            dataPercentDistances[i] = ((dataDistances[i] / routeDistance) * 100).toFixed(1);
-                            dataDistances[i] = e / 1000;
-                        });
+                            offRoads.forEach(function (or, i) {
+                                offRoads[i] = or?'':'hide';
+                            });
+                            console.log('offRoads = ',offRoads);
+                            controlPoints.forEach(function (cp, i) {
+                                new google.maps.Marker({
+                                    title: cp.name,
+                                    map: map,
+                                    icon: controlPointIcon[cp.trajectory],
+                                    animation: google.maps.Animation.DROP,
+                                    position: {lat: parseFloat(cp.latitude), lng: parseFloat(cp.longitude)}
+                                });
+                            });
 
-                        chartRouteReport.empty().hide().sparkline(dataValues, {
-                            type: 'line',
-                            width: '1180px',
-                            height: '80px',
-                            fillColor: 'transparent',
-                            spotColor: '#f0eb54',
-                            lineColor: '#68a8b6',
-                            minSpotColor: '#F04B46',
-                            maxSpotColor: '#259bf0',
-                            lineWidth: 3.5,
-                            spotRadius: 7,
-                            normalRangeMin: -50, normalRangeMax: 50,
-                            tooltipFormat: '<?="'+
+                            dataDates.forEach(function (e, i) {
+                                dataDates[i] = e;
+                            });
+                            dataValues.forEach(function (e, i) {
+                                dataValues[i] = e * 60;
+                            });
+                            dataDistances.forEach(function (e, i) {
+                                dataPercentDistances[i] = ((dataDistances[i] / routeDistance) * 100).toFixed(1);
+                                dataDistances[i] = e / 1000;
+                            });
+
+                            chartRouteReport.empty().hide().sparkline(dataValues, {
+                                type: 'line',
+                                width: '1180px',
+                                height: '80px',
+                                fillColor: 'transparent',
+                                spotColor: '#f0eb54',
+                                lineColor: '#68a8b6',
+                                minSpotColor: '#F04B46',
+                                maxSpotColor: '#259bf0',
+                                lineWidth: 3.5,
+                                spotRadius: 7,
+                                normalRangeMin: -50, normalRangeMax: 50,
+                                tooltipFormat: '<?="'+
                             '<div class=\"info-route-report\">'+
-                                '<b>Estado:</b> {{offset:times}} <br>'+
+                                '<span class=\"{{offset:offRoads}}\"><span class=\"label label-danger f-s-10 m-b-10\"><i class=\"ion-merge m-r-5 fs-12 fa-fw\"></i> Vehículo fuera de la Ruta</span><hr class=\"m-5\"></span>'+
+                                '<b class=\"m-t-10\">Estado:</b> {{offset:times}} <br>'+
                                 '<b>Hora:</b> {{offset:dates}} <br>'+
                                 '<b>Distancia:</b> {{offset:distance}} Km <br>'+
                                 '<b>Recorrido:</b> {{offset:percent}}% <br>'+
@@ -327,53 +311,70 @@
                                 '<span class=\"hide longitude\">{{offset:longitude}}</span>'+
                             '</div>'+
                         '"?>',
-                            tooltipValueLookups: {
-                                'times': dataTimes,
-                                'dates': dataDates,
-                                'distance': dataDistances,
-                                'percent': dataPercentDistances,
-                                'latitude': latitudes,
-                                'longitude': longitudes
-                            }
-                        }).slideDown();
-
-                        chartRouteReport.bind('sparklineRegionChange', function (ev) {
-                            //var sparkline = ev.sparklines[0],info = sparkline.getCurrentRegionFields();
-
-                            setTimeout(function () {
-                                var t = $('.info-route-report');
-                                var latitude = t.find('.latitude').html();
-                                var longitude = t.find('.longitude').html();
-
-                                if(!busMarker){
-                                    busMarker = new google.maps.Marker({
-                                        map: map,
-                                        icon: iconbus,
-                                        animation: google.maps.Animation.DROP
-                                    });
+                                tooltipValueLookups: {
+                                    'offRoads': offRoads,
+                                    'times': dataTimes,
+                                    'dates': dataDates,
+                                    'distance': dataDistances,
+                                    'percent': dataPercentDistances,
+                                    'latitude': latitudes,
+                                    'longitude': longitudes
                                 }
-                                busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
-                                //map.setCenter(busMarker.getPosition());
-                            },10);
-                        }).bind('mouseleave', function() {
+                            }).slideDown();
 
-                            busMarker?busMarker.setMap(null):null;
-                            busMarker = null;
-                            //map.setCenter(mapDefaultOptions.center);
-                        });
-                    } else {
-                        gerror('@lang('No report found for this vehicle')');
+                            chartRouteReport.bind('sparklineRegionChange', function (ev) {
+                                //var sparkline = ev.sparklines[0],info = sparkline.getCurrentRegionFields();
+
+                                setTimeout(function () {
+                                    var t = $('.info-route-report');
+                                    var latitude = t.find('.latitude').html();
+                                    var longitude = t.find('.longitude').html();
+
+                                    if(!busMarker){
+                                        busMarker = new google.maps.Marker({
+                                            map: map,
+                                            icon: iconbus,
+                                            animation: google.maps.Animation.DROP
+                                        });
+                                    }
+                                    busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
+                                    //map.setCenter(busMarker.getPosition());
+                                },10);
+                            }).bind('mouseleave', function() {
+
+                                busMarker?busMarker.setMap(null):null;
+                                busMarker = null;
+                                //map.setCenter(mapDefaultOptions.center);
+                            });
+                        } else {
+                            gerror('@lang('No report found for this vehicle')');
+                            $('.report-info').empty();
+                            $('.modal').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        chartRouteReport.empty();
                         $('.report-info').empty();
                         $('.modal').modal('hide');
+                        gerror('@lang('Oops, something went wrong!')');
                     }
-                },
-                error: function () {
-                    chartRouteReport.empty();
-                    $('.report-info').empty();
-                    $('.modal').modal('hide');
-                    gerror('@lang('Oops, something went wrong!')');
-                }
+                });
             });
+
+            @if(!Auth::user()->isAdmin())
+                loadRouteReport(null);
+            @endif
         });
+
+        function loadRouteReport(company){
+            var roouteSelect = $('#route-report');
+            roouteSelect.html($('#select-loading').html()).trigger('change.select2');
+            roouteSelect.load('{{route('route-ajax-action')}}', {
+                option: 'loadRoutes',
+                company: company
+            }, function () {
+                roouteSelect.trigger('change.select2');
+            });
+        }
     </script>
 @endsection

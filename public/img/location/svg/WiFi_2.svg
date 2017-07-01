@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4.4 (17249) - http://www.bohemiancoding.com/sketch -->
+    <title>WiFi_2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#000000" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="2.07261029" in="SourceGraphic" result="blur"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="WiFi_2" sketch:type="MSArtboardGroup">
+            <g id="Bulle-01" sketch:type="MSLayerGroup" transform="translate(2.000000, 4.000000)">
+                <g id="Ombre" transform="translate(0.000000, 17.000000)" filter="url(#filter-2)" fill-opacity="0.75" fill="url(#linearGradient-1)" sketch:type="MSShapeGroup">
+                    <g id="Triangle-1">
+                        <path d="M24.9915435,22 L20.6717206,16.0416667 L13.9419313,16.0416667 C9.69459375,16.0416667 5.17564942,13.8782161 3.85271353,11.2177638 L0.673303794,4.82390288 C-0.651479741,2.15973488 2.65579674,0 8.06935076,0 L33.1122376,0 C38.521745,0 42.689631,2.16345054 42.4223052,4.82390288 L41.7798417,11.2177638 C41.5121427,13.8819318 37.8551594,16.0416667 33.6046447,16.0416667 L26.9554156,16.0416667 L24.9915435,22 Z"></path>
+                    </g>
+                </g>
+                <g id="Bulle" transform="translate(2.000000, 0.000000)" stroke-width="0.5" stroke="#FFFFFF" fill="#778BA3" sketch:type="MSShapeGroup">
+                    <g id="Triangle-1">
+                        <path d="M23.6321839,29.1666667 L20.045977,40 L16.4597701,29.1666667 L9.00170731,29.1666667 C4.03020164,29.1666667 0,25.1417888 0,20.1578097 L0,9.00885696 C0,4.03340265 4.03700043,0 9.00170731,0 L30.9982927,0 C35.9697984,0 40,4.02487783 40,9.00885696 L40,20.1578097 C40,25.133264 35.9629996,29.1666667 30.9982927,29.1666667 L23.6321839,29.1666667 Z"></path>
+                    </g>
+                </g>
+            </g>
+            <path d="M33.332,21.744 L34.165,21.744 L34.165,17.832 L33.332,17.832 L33.332,21.744 Z M33.332,16.919 L34.165,16.919 L34.165,15.872 L33.332,15.872 L33.332,16.919 Z M27.849,21.744 L29.288,21.744 L29.288,18.913 L31.892,18.913 L31.892,17.859 L29.288,17.859 L29.288,16.927 L32.304,16.927 L32.304,15.872 L27.849,15.872 L27.849,21.744 Z M38.032,21.678 C38.032,23.28 36.732,24.581 35.129,24.581 L23.516,24.521 C23.516,24.521 22.245,24.552 20.613,24.581 C25.169,22.062 24.202,19.627 24.479,17.165 C24.634,13.844 25.279,13.129 27.326,12.968 C25.331,12.907 35.129,12.968 35.129,12.968 C36.732,12.968 38.032,14.269 38.032,15.871 L38.032,21.678 Z M20.598,17.894 L21.581,17.894 L21.581,21.755 L20.598,21.755 L20.598,17.894 Z M18.662,21.665 L17.326,21.665 L16.085,17.537 L14.847,21.665 L13.482,21.665 L11.994,15.902 L13.282,15.902 L14.223,20.245 L15.361,15.902 L16.858,15.902 L17.951,20.318 L18.908,15.902 L20.176,15.902 L18.662,21.665 Z M20.598,15.902 L21.581,15.902 L21.581,16.856 L20.598,16.856 L20.598,15.902 Z M35.129,12 L12.87,12 C10.733,12 9,13.734 9,15.871 L9,21.678 C9,23.816 10.733,25.548 12.87,25.548 L35.129,25.548 C37.267,25.548 39,23.816 39,21.678 L39,15.871 C39,13.734 37.267,12 35.129,12 L35.129,12 Z" id="Page-1" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

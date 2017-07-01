@@ -54,7 +54,7 @@
             <li class="dropdown navbar-user">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="image"><img src="assets/img/logo.png" alt=""/></span>
-                    <span class="hidden-xs">Usuario NE</span> <b class="caret"></b>
+                    <span class="hidden-xs text-capitalize">{{ Auth::user()->name }}</span> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu pull-right">
                     <li><a href="javascript:;">Editar perfil</a></li>
@@ -64,7 +64,14 @@
                     <li><a href="javascript:;">Calendario</a></li>
                     <li><a href="javascript:;">Configuración</a></li>
                     <li class="divider"></li>
-                    <li><a href="http://www.pcwserviciosgps.com/">Cerrar Sesión</a></li>
+                    <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            @lang('Logout')
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hide">
+                            {{ csrf_field() }}
+                        </form>
+                    </li>
                 </ul>
             </li>
             <li class="hide">

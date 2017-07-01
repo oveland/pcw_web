@@ -1,6 +1,7 @@
 <meta charset="utf-8" />
 <title>@yield('title','PCW | Servicios GPS')</title>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="PCW | Servicios GPS" name="description" />
 <meta content="Oscar Velásquez" name="author" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,9 +22,18 @@
 <link href="assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />
 <link href="assets/plugins/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
 <link href="assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet">
+<link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet"/>
+<link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet"/>
 <link href="css/application.css" rel="stylesheet" />
 <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
 
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="assets/plugins/pace/pace.min.js"></script>
 <!-- ================== END BASE JS ================== -->
+
+<!-- Scripts -->
+<script>
+    window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+</script>

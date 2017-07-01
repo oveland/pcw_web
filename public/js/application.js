@@ -8,6 +8,26 @@ $(document).ready(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    $(document).ajaxError(function(event,request,settings){
+        if( request.statusText == "Unauthorized" || request.status == 401 ){
+            gerror('Acceso no autorizado');
+            location.reload();
+        }
+    });
+
+    $('#datetimepicker-report').datepicker({
+        format: "yyyy-mm-dd",
+        todayBtn: "linked",
+        language: "es",
+        orientation: "bottom auto",
+        daysOfWeekHighlighted: "0,6",
+        calendarWeeks: true,
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    $('.default-select2').select2();
 });
 
 

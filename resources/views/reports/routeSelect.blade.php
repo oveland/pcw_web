@@ -1,6 +1,8 @@
-<option value="">@lang('Select a route')</option>
-@forelse ($routes as $route)
-    <option value="{{ $route->id_rutas }}">{{ $route->nombre }}</option>
-@empty
+@if(empty($routes))
     <option value="">@lang('No routes found')</option>
-@endforelse
+@else
+    <option value="">@lang('Select a route')</option>
+    @foreach($routes as $route)
+        <option value="{{ $route->id }}">{{ $route->name }}</option>
+    @endforeach
+@endif

@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    protected $table = 'empresa';
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class,'company_id','id');
+    }
 
-    const CREATED_AT = 'date_created';
-    const UPDATED_AT = 'last_updated';
+    public function activeVehicles()
+    {
+        return $this->hasMany(Vehicle::class,'company_id','id')->where('active',true);
+    }
 }

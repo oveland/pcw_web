@@ -10,17 +10,24 @@
                 </div>
                 <div class="info">
                     <div class="name dropdown">
-                        <a href="javascript:;" data-toggle="dropdown">Usuario NE <b class="caret"></b></a>
+                        <a href="javascript:;" data-toggle="dropdown" class="text-capitalize">{{ Auth::user()->name }}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="javascript:;">Editar Perfil</a></li>
                             <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>
                             <li><a href="javascript:;">Calendario</a></li>
                             <li><a href="javascript:;">Configuración</a></li>
                             <li class="divider"></li>
-                            <li><a href="http://www.pcwserviciosgps.com/">Cerrar Sesión</a></li>
+                            <li>
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    @lang('Logout')
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hide">
+                                    {{ csrf_field() }}
+                                </form>
+                            </li>
                         </ul>
                     </div>
-                    <div class="position">Admin/Soporte PCW</div>
+                    <div class="position">{!! Auth::user()->company?Auth::user()->company->name:__('Unasigned') !!}</div>
                 </div>
             </li>
             <li class="nav-header">MENÚ</li>
@@ -31,20 +38,35 @@
                 </a>
             </li>
             <li class="active">
-                <a href="" class="faa-parent animated-hover">
+                <a href="javascritp:;" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-pulse"></i>
                     <span>@lang('Reports')</span>
                 </a>
                 <ul class="sub-menu" style="display: block;">
-                    <li class="has-sub">
-                        <a href="javascript:;">
+                    <li class="has-sub menu-routes">
+                        <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
+                            <i class="fa fa-bus faa-pulse"></i>
                             @lang('Route')
                         </a>
                         <ul class="sub-menu" style="display: block;">
-                            <li class="has-sub active">
-                                <a href="javascript:;">
-                                    @lang('Route reports')
+                            <li class="has-sub menu-routes">
+                                <a href="{{ route('route-report')  }}">
+                                    @lang('Route report')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-sub menu-passengers">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-users faa-pulse"></i>
+                            @lang('Passengers')
+                        </a>
+                        <ul class="sub-menu" style="display: block;">
+                            <li class="has-sub menu-passengers">
+                                <a href="{{ route('passengers-report')  }}">
+                                    @lang('Passengers report')
                                 </a>
                             </li>
                         </ul>

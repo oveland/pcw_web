@@ -6,17 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Route extends Model
 {
-    use Mapping;
+    public function company(){
+        return $this->belongsTo(Company::class);
+    }
 
-    protected $table = 'ruta';
-    protected $primaryKey = 'id_rutas';
-
-    protected $mapping = [
-        'id' => 'id_rutas',
-        'distance' => 'distancia',
-        'name' => 'nombre'
-    ];
-
-    const CREATED_AT = 'date_created';
-    const UPDATED_AT = 'last_updated';
+    public function controlPoints(){
+        return $this->hasMany(ControlPoint::class)->orderBy('order','asc');
+    }
 }
