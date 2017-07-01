@@ -37,8 +37,8 @@
                         <tbody>
                         @foreach( $dispatchRegisters as $dispatchRegister )
                             <tr>
-                                <td>{{$dispatchRegister->vehicle}} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{$dispatchRegister->plate}}</td>
-                                <td>{{$dispatchRegister->dispatch_time}}</td>
+                                <td>{{$dispatchRegister->vehicle->number}} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{$dispatchRegister->vehicle->plate}}</td>
+                                <td>{{$dispatchRegister->departure_time}}</td>
                                 <td>{{$dispatchRegister->round_trip}}</td>
                                 <td>{{$dispatchRegister->turn}}</td>
                                 <td>

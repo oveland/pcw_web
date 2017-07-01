@@ -1,8 +1,7 @@
 @extends('layout')
 
 @section('stylesheets')
-    <link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet"/>
-    <link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet"/>
+
 @endsection
 
 @section('content')
@@ -61,7 +60,7 @@
                                             class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select an option')</option>
                                         @foreach($companies as $company)
-                                            <option value="{{$company->id}}">{{ $company->shortName }}</option>
+                                            <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -186,9 +185,6 @@
 
 
 @section('scripts')
-    <script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
-
     @include('template.google.maps')
 
     <script src="assets/plugins/sparkline/jquery.sparkline.min.js"></script>
@@ -257,22 +253,27 @@
                             var routeDistance = data.routeDistance;
                             var latitudes = data.latitudes;
                             var longitudes = data.longitudes;
+                            var offRoads = data.offRoads;
                             var dataPercentDistances = [];
                             var controlPoints = data.controlPoints;
                             var urlLayerMap = data.urlLayerMap;
-
+                            console.log('offRoads = ',offRoads);
                             new google.maps.KmlLayer({
                                 url: urlLayerMap,
                                 map: map
                             });
 
+                            offRoads.forEach(function (or, i) {
+                                offRoads[i] = or?'':'hide';
+                            });
+                            console.log('offRoads = ',offRoads);
                             controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
-                                    title: cp.nombre,
+                                    title: cp.name,
                                     map: map,
-                                    icon: controlPointIcon[cp.trayecto],
+                                    icon: controlPointIcon[cp.trajectory],
                                     animation: google.maps.Animation.DROP,
-                                    position: {lat: parseFloat(cp.lat), lng: parseFloat(cp.lng)}
+                                    position: {lat: parseFloat(cp.latitude), lng: parseFloat(cp.longitude)}
                                 });
                             });
 
@@ -301,7 +302,8 @@
                                 normalRangeMin: -50, normalRangeMax: 50,
                                 tooltipFormat: '<?="'+
                             '<div class=\"info-route-report\">'+
-                                '<b>Estado:</b> {{offset:times}} <br>'+
+                                '<span class=\"{{offset:offRoads}}\"><span class=\"label label-danger f-s-10 m-b-10\"><i class=\"ion-merge m-r-5 fs-12 fa-fw\"></i> Vehículo fuera de la Ruta</span><hr class=\"m-5\"></span>'+
+                                '<b class=\"m-t-10\">Estado:</b> {{offset:times}} <br>'+
                                 '<b>Hora:</b> {{offset:dates}} <br>'+
                                 '<b>Distancia:</b> {{offset:distance}} Km <br>'+
                                 '<b>Recorrido:</b> {{offset:percent}}% <br>'+
@@ -310,6 +312,7 @@
                             '</div>'+
                         '"?>',
                                 tooltipValueLookups: {
+                                    'offRoads': offRoads,
                                     'times': dataTimes,
                                     'dates': dataDates,
                                     'distance': dataDistances,

@@ -61,14 +61,14 @@
                                             class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select an option')</option>
                                         @foreach($companies as $company)
-                                            <option value="{{$company->id}}">{{ $company->shortName }}</option>
+                                            <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
                         @endif
-                        <div class="col-md-4 hide">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
@@ -90,6 +90,112 @@
         <!-- end content report -->
     </div>
     <!-- end row -->
+
+    <div class="modal modal-message fade" id="modal-passengers-route-report">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="width: 90%">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <div class="row">
+                        <blockquote class="m-0">
+                            <h3 class="m-3">@lang('Passengers report by route')</h3>
+                        </blockquote>
+                        <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
+                    </div>
+                </div>
+                <div class="modal-body" style="width:90%;">
+                    <div class="row">
+                        <div class="col-md-12 p-5">
+                            <div id="google-map-light-dream" class="height-sm hide"></div>
+                            <div id="passengers-route-report" class="height-sm"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer hide" style="width:90%;">
+                    <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-message fade" id="modal-report-seat">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="width: 90%">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <div class="row">
+                        <blockquote class="m-0">
+                            <h3 class="m-3">@lang('Count trajectory')</h3>
+                        </blockquote>
+                        <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
+                    </div>
+                </div>
+                <div class="modal-body" style="width:90%;">
+                    <h4>
+                        <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <!-- begin widget -->
+                                <div class="widget widget-stat widget-stat-right bg-primary-dark text-white">
+                                    <div class="widget-stat-btn">
+                                        <a href="javascript:;" data-click="widget-reload"><i class="fa fa-repeat"></i></a>
+                                    </div>
+                                    <div class="widget-stat-icon">
+                                        <img src="{{ asset('img/location/svg/Flag_8.svg') }}"/>
+                                    </div>
+                                    <div class="widget-stat-info">
+                                        <div class="widget-stat-title">@lang('Active seat')</div>
+                                        <div class="widget-stat-number modal-report-seat-active-km report-info"></div>
+                                    </div>
+                                    <div class="widget-stat-footer text-left">
+                                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                        <span class="modal-report-seat-active-time report-info"></span>
+                                    </div>
+                                </div>
+                                <!-- end widget -->
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <!-- begin widget -->
+                                <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
+                                    <div class="widget-stat-btn">
+                                        <a href="javascript:;" data-click="widget-reload">
+                                            <i class="fa fa-repeat"></i>
+                                        </a>
+                                    </div>
+                                    <div class="widget-stat-icon">
+                                        <img src="{{ asset('img/location/svg/Flag_8.svg') }}"/>
+                                    </div>
+                                    <div class="widget-stat-info">
+                                        <div class="widget-stat-title">@lang('Free seat')</div>
+                                        <div class="widget-stat-number modal-report-seat-inactive-km report-info"></div>
+                                    </div>
+                                    <div class="widget-stat-footer text-left">
+                                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                        <span class="modal-report-seat-inactive-time report-info"></span>
+                                    </div>
+                                </div>
+                                <!-- end widget -->
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <div class="col-md-12 p-5">
+                                <div id="google-map-light-dream" class="height-md"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer hide" style="width:90%;">
+                    <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -104,9 +210,9 @@
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
 
-        var controlPointIcon = [
-            '{{ asset('img/control-point-0.png') }}',
-            '{{ asset('img/control-point-1.png') }}'
+        var seatPointIcon = [
+            '{{ asset('img/location/svg/Flag_6.svg') }}',
+            '{{ asset('img/location/svg/Flag_8.svg') }}'
         ];
 
         $(document).ready(function () {
@@ -125,14 +231,7 @@
             });
 
             $('#company-report').change(function () {
-                var roouteSelect = $('#route-report');
-                roouteSelect.html($('#select-loading').html()).trigger('change.select2');
-                roouteSelect.load('{{route('route-ajax-action')}}', {
-                    option: 'loadRoutes',
-                    company: $(this).val()
-                }, function () {
-                    roouteSelect.trigger('change.select2');
-                });
+                loadRouteReport($(this).val());
             });
 
             $('#route-report').change(function () {
@@ -142,123 +241,66 @@
                 }
             });
 
-            $('#modal-route-report').on('shown.bs.modal', function () {
+            $('#modal-report-seat').on('shown.bs.modal', function () {
                 initializeMap();
             });
         });
 
-        $('body').on('click', '.btn-show-chart-route-report', function () {
+        $('body').on('click', '.btn-show-passengers-route-report', function () {
+            var passengersRouteReport = $("#passengers-route-report");
+            passengersRouteReport.html(loading);
+            $('.report-info').html(loading);
+            $.ajax({
+                url: $(this).data('url'),
+                success: function (data) {
+                    passengersRouteReport.hide().html(data).fadeIn();
+                    if (!data.empty) {
+
+                    } else {
+                        gerror('@lang('No passengers report found for this vehicle')');
+                        $('.report-info').empty();
+                        $('.modal').modal('hide');
+                    }
+                },
+                error: function () {
+                    passengersRouteReport.empty();
+                    $('.modal').modal('hide');
+                    gerror('@lang('Oops, something went wrong!')');
+                }
+            });
+        });
+
+        $('body').on('click', '.btn-show-trajectory-seat-report', function () {
             //map.clearAllMarkers();
-            var chartRouteReport = $("#chart-route-report");
-            chartRouteReport.html(loading);
             $('.report-info').html(loading);
             $.ajax({
                 url: $(this).data('url'),
                 success: function (data) {
                     if (!data.empty) {
-                        $('.modal-report-vehicle').html(data.vehicle + ' <i class="fa fa-hand-o-right" aria-hidden="true"></i> ' + data.plate);
-                        $('.modal-report-vehicle-speed').html(data.vehicleSpeed);
-                        $('.modal-report-vehicle-speed-progress').css('width', parseInt(data.vehicleSpeed) + '%');
-
-                        $('.modal-report-route-name').html(data.route);
-                        $('.modal-report-route-percent').html(data.routePercent);
-                        $('.modal-report-route-percent-progress').css('width', parseInt(data.routePercent) + '%');
-
-                        var dataValues = data.values;
-                        var dataDates = data.dates;
-                        var dataTimes = data.times;
-                        var dataDistances = data.distances;
-                        var routeDistance = data.routeDistance;
-                        var latitudes = data.latitudes;
-                        var longitudes = data.longitudes;
-                        var dataPercentDistances = [];
-                        var controlPoints = data.controlPoints;
                         var urlLayerMap = data.urlLayerMap;
-
                         new google.maps.KmlLayer({
                             url: urlLayerMap,
                             map: map
                         });
 
-                        controlPoints.forEach(function (cp, i) {
-                            new google.maps.Marker({
-                                title: cp.nombre,
-                                map: map,
-                                icon: controlPointIcon[cp.trayecto],
-                                animation: google.maps.Animation.DROP,
-                                position: {lat: parseFloat(cp.lat), lng: parseFloat(cp.lng)}
-                            });
+                        new google.maps.Marker({
+                            title: cp.name,
+                            map: map,
+                            icon: seatPointIcon[0],
+                            animation: google.maps.Animation.DROP,
+                            position: {lat: parseFloat(data.active_latitude), lng: parseFloat(data.active_longitude)}
                         });
 
-                        dataDates.forEach(function (e, i) {
-                            dataDates[i] = e;
-                        });
-                        dataValues.forEach(function (e, i) {
-                            dataValues[i] = e * 60;
-                        });
-                        dataDistances.forEach(function (e, i) {
-                            dataPercentDistances[i] = ((dataDistances[i] / routeDistance) * 100).toFixed(1);
-                            dataDistances[i] = e / 1000;
+                        new google.maps.Marker({
+                            title: cp.name,
+                            map: map,
+                            icon: seatPointIcon[1],
+                            animation: google.maps.Animation.DROP,
+                            position: {lat: parseFloat(data.inactive_latitude), lng: parseFloat(data.inactive_longitude)}
                         });
 
-                        chartRouteReport.empty().hide().sparkline(dataValues, {
-                            type: 'line',
-                            width: '1180px',
-                            height: '80px',
-                            fillColor: 'transparent',
-                            spotColor: '#f0eb54',
-                            lineColor: '#68a8b6',
-                            minSpotColor: '#F04B46',
-                            maxSpotColor: '#259bf0',
-                            lineWidth: 3.5,
-                            spotRadius: 7,
-                            normalRangeMin: -50, normalRangeMax: 50,
-                            tooltipFormat: '<?="'+
-                            '<div class=\"info-route-report\">'+
-                                '<b>Estado:</b> {{offset:times}} <br>'+
-                                '<b>Hora:</b> {{offset:dates}} <br>'+
-                                '<b>Distancia:</b> {{offset:distance}} Km <br>'+
-                                '<b>Recorrido:</b> {{offset:percent}}% <br>'+
-                                '<span class=\"hide latitude\">{{offset:latitude}}</span><br>'+
-                                '<span class=\"hide longitude\">{{offset:longitude}}</span>'+
-                            '</div>'+
-                        '"?>',
-                            tooltipValueLookups: {
-                                'times': dataTimes,
-                                'dates': dataDates,
-                                'distance': dataDistances,
-                                'percent': dataPercentDistances,
-                                'latitude': latitudes,
-                                'longitude': longitudes
-                            }
-                        }).slideDown();
-
-                        chartRouteReport.bind('sparklineRegionChange', function (ev) {
-                            //var sparkline = ev.sparklines[0],info = sparkline.getCurrentRegionFields();
-
-                            setTimeout(function () {
-                                var t = $('.info-route-report');
-                                var latitude = t.find('.latitude').html();
-                                var longitude = t.find('.longitude').html();
-
-                                if(!busMarker){
-                                    busMarker = new google.maps.Marker({
-                                        map: map,
-                                        icon: iconbus,
-                                        animation: google.maps.Animation.DROP
-                                    });
-                                }
-                                busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
-                                //map.setCenter(busMarker.getPosition());
-                            },10);
-                        }).bind('mouseleave', function() {
-
-                            busMarker?busMarker.setMap(null):null;
-                            busMarker = null;
-                            //map.setCenter(mapDefaultOptions.center);
-                        });
                     } else {
-                        gerror('@lang('No report found for this vehicle')');
+                        gerror('@lang('No seat report found')');
                         $('.report-info').empty();
                         $('.modal').modal('hide');
                     }
@@ -271,5 +313,19 @@
                 }
             });
         });
+
+        @if(!Auth::user()->isAdmin())
+            loadRouteReport(null);
+        @endif
+
+        function loadRouteReport(company) {
+            var roouteSelect = $('#route-report');
+            roouteSelect.html($('#select-loading').html()).trigger('change.select2');
+            roouteSelect.load('{{ route('passengers-ajax',['action'=>'loadRoutes']) }}', {
+                company: company
+            }, function () {
+                roouteSelect.trigger('change.select2');
+            });
+        }
     </script>
 @endsection
