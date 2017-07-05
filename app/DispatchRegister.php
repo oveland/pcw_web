@@ -11,16 +11,25 @@ class DispatchRegister extends Model
         return config('app.date_format');
     }
 
-    public function reports()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function locations()
     {
-        return $this->hasMany(Report::class,'dispatch_register_id','id')->orderBy('date','asc');
+        return $this->hasMany(Location::class,'dispatch_register_id','id')->orderBy('date','asc');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function route()
     {
         return $this->belongsTo(Route::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);

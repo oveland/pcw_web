@@ -51,21 +51,21 @@
                             </div>
                         </div>
                         @if(Auth::user()->isAdmin())
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="company-report"
-                                       class="control-label field-required">@lang('Company')</label>
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <select name="company-report" id="company-report"
-                                            class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select an option')</option>
-                                        @foreach($companies as $company)
-                                            <option value="{{$company->id}}">{{ $company->short_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="company-report"
+                                           class="control-label field-required">@lang('Company')</label>
+                                    <div class="form-group">
+                                        <select name="company-report" id="company-report"
+                                                class="default-select2 form-control col-md-12">
+                                            <option value="null">@lang('Select an option')</option>
+                                            @foreach($companies as $company)
+                                                <option value="{{$company->id}}">{{ $company->short_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endif
                         <div class="col-md-4">
                             <div class="form-group">
@@ -246,28 +246,7 @@
                             $('.modal-report-route-percent').html(data.routePercent);
                             $('.modal-report-route-percent-progress').css('width', parseInt(data.routePercent) + '%');
 
-                            var dataValues = data.values;
-                            var dataDates = data.dates;
-                            var dataTimes = data.times;
-                            var dataDistances = data.distances;
-                            var routeDistance = data.routeDistance;
-                            var latitudes = data.latitudes;
-                            var longitudes = data.longitudes;
-                            var offRoads = data.offRoads;
-                            var dataPercentDistances = [];
-                            var controlPoints = data.controlPoints;
-                            var urlLayerMap = data.urlLayerMap;
-                            console.log('offRoads = ',offRoads);
-                            new google.maps.KmlLayer({
-                                url: urlLayerMap,
-                                map: map
-                            });
-
-                            offRoads.forEach(function (or, i) {
-                                offRoads[i] = or?'':'hide';
-                            });
-                            console.log('offRoads = ',offRoads);
-                            controlPoints.forEach(function (cp, i) {
+                            data.controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
                                     title: cp.name,
                                     map: map,
@@ -277,15 +256,29 @@
                                 });
                             });
 
-                            dataDates.forEach(function (e, i) {
-                                dataDates[i] = e;
+                            new google.maps.KmlLayer({
+                                url: data.urlLayerMap,
+                                map: map
                             });
-                            dataValues.forEach(function (e, i) {
-                                dataValues[i] = e * 60;
-                            });
-                            dataDistances.forEach(function (e, i) {
-                                dataPercentDistances[i] = ((dataDistances[i] / routeDistance) * 100).toFixed(1);
-                                dataDistances[i] = e / 1000;
+
+                            var dataDates = [];
+                            var dataTimes = [];
+                            var dataValues = [];
+                            var dataDistances = [];
+                            var dataPercentDistances = [];
+                            var latitudes = [];
+                            var longitudes = [];
+                            var offRoads = [];
+
+                            data.reports.forEach(function (report, i) {
+                                dataDates[i] = report.date;
+                                dataTimes[i] = report.time;
+                                dataValues[i] = report.value * 60;
+                                dataDistances[i] = report.distance / 1000;
+                                dataPercentDistances[i] = ((report.distance / data.routeDistance) * 100).toFixed(1);
+                                latitudes[i] = report.latitude;
+                                longitudes[i] = report.longitude;
+                                offRoads[i] = report.offRoad ? '' : 'hide';
                             });
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {
@@ -307,8 +300,8 @@
                                 '<b>Hora:</b> {{offset:dates}} <br>'+
                                 '<b>Distancia:</b> {{offset:distance}} Km <br>'+
                                 '<b>Recorrido:</b> {{offset:percent}}% <br>'+
-                                '<span class=\"hide latitude\">{{offset:latitude}}</span><br>'+
-                                '<span class=\"hide longitude\">{{offset:longitude}}</span>'+
+                                '<span class=\"latitude\">{{offset:latitude}}</span><br>'+
+                                '<span class=\"longitude\">{{offset:longitude}}</span>'+
                             '</div>'+
                         '"?>',
                                 tooltipValueLookups: {
@@ -324,13 +317,12 @@
 
                             chartRouteReport.bind('sparklineRegionChange', function (ev) {
                                 //var sparkline = ev.sparklines[0],info = sparkline.getCurrentRegionFields();
-
                                 setTimeout(function () {
                                     var t = $('.info-route-report');
                                     var latitude = t.find('.latitude').html();
                                     var longitude = t.find('.longitude').html();
 
-                                    if(!busMarker){
+                                    if (!busMarker) {
                                         busMarker = new google.maps.Marker({
                                             map: map,
                                             icon: iconbus,
@@ -338,13 +330,10 @@
                                         });
                                     }
                                     busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
-                                    //map.setCenter(busMarker.getPosition());
-                                },10);
-                            }).bind('mouseleave', function() {
-
-                                busMarker?busMarker.setMap(null):null;
+                                }, 10);
+                            }).bind('mouseleave', function () {
+                                busMarker ? busMarker.setMap(null) : null;
                                 busMarker = null;
-                                //map.setCenter(mapDefaultOptions.center);
                             });
                         } else {
                             gerror('@lang('No report found for this vehicle')');
@@ -366,7 +355,7 @@
             @endif
         });
 
-        function loadRouteReport(company){
+        function loadRouteReport(company) {
             var roouteSelect = $('#route-report');
             roouteSelect.html($('#select-loading').html()).trigger('change.select2');
             roouteSelect.load('{{route('route-ajax-action')}}', {

@@ -11,7 +11,7 @@ $(document).ready(function () {
 
     $(document).ajaxError(function(event,request,settings){
         if( request.statusText == "Unauthorized" || request.status == 401 ){
-            gerror('Acceso no autorizado');
+            gerror('Acceso no autorizado o sesión caducada');
             location.reload();
         }
     });
