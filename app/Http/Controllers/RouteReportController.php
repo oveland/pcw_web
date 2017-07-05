@@ -45,6 +45,7 @@ class RouteReportController extends Controller
     {
         $dataReport = ['empty' => true];
         $locations = collect($dispatchRegister->locations);
+        $report_list = collect($dispatchRegister->reports);
 
         if ($locations->isNotEmpty()) {
             $route = $dispatchRegister->route;
@@ -56,7 +57,8 @@ class RouteReportController extends Controller
 
             $reports = array();
             foreach ($locations as $location) {
-                $report = $location->report;
+                $report = $report_list->where('location_id','=',$location->id)->first();
+                //$report = $location->report;
                 /* The first location haven´t a report */
                 if ($report) {
                     $reports[] = (object)[
@@ -208,7 +210,6 @@ class RouteReportController extends Controller
                 }
             }
         }
-
         return $offRoad;
     }
 
