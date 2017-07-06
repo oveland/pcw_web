@@ -162,7 +162,8 @@ class RouteReportController extends Controller
 
         $dataExport = (object)[
             'fileName' => __('Off_Road_Report_') . str_replace(' ', '_', $company->name) . '.' . str_replace('-', '', $dateReport),
-            'header' => [__('Off road report') . ' ' . $company->name . '. ' . $route->name . '. ' . $dateReport],
+            'header' => [strtoupper(__('Off road report')) . ' ' . $company->name . '. ' . __('Vehicle') . ' ' . $dispatchRegister->vehicle->number . ' ➜ ' . $dispatchRegister->vehicle->plate],
+            'infoRoute' => [$route->name . ': ' . __('Round Trip') .' '. ($dispatchRegister->round_trip == 0 ? '0' : $dispatchRegister->round_trip) . ', ' . __('Turn') . ' ' . $dispatchRegister->turn],
             'data' => $data,
         ];
 
@@ -174,9 +175,10 @@ class RouteReportController extends Controller
 
             /* FIRST SHEET */
             $excel->sheet(__('Off road report'), function ($sheet) use ($dataExport) {
-                $totalRows = count($dataExport->data) + 2;
+                $totalRows = count($dataExport->data) + 3;
 
                 $sheet->fromArray($dataExport->data);
+                $sheet->prependRow($dataExport->infoRoute);
                 $sheet->prependRow($dataExport->header);
 
                 /* GENEREAL STYLE */
@@ -186,9 +188,11 @@ class RouteReportController extends Controller
                 $sheet->cells('A1:F' . $totalRows, function ($cells) {
                     $cells->setFontFamily('Segoe UI Light');
                 });
-                $sheet->setAutoFilter('A2:F' . ($totalRows));
 
-                /*  HEADER */
+                /* SORTABLE COLUMN HEADERS */
+                $sheet->setAutoFilter('A3:F' . ($totalRows));
+
+                /*  MAIN HEADER */
                 $sheet->setHeight(1, 50);
                 $sheet->mergeCells('A1:F1');
                 $sheet->cells('A1:F1', function ($cells) {
@@ -203,9 +207,24 @@ class RouteReportController extends Controller
                     ));
                 });
 
-                /* HEADER COLUMNS */
-                $sheet->setHeight(2, 40);
+                /* INFO HEADER */
+                $sheet->setHeight(2, 25);
+                $sheet->mergeCells('A2:F2');
                 $sheet->cells('A2:F2', function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                    $cells->setBackground('#0d4841');
+                    $cells->setFontColor('#eeeeee');
+                    $cells->setFont(array(
+                        'family' => 'Segoe UI Light',
+                        'size' => '12',
+                        'bold' => true
+                    ));
+                });
+
+                /* HEADER COLUMNS */
+                $sheet->setHeight(3, 40);
+                $sheet->cells('A3:F3', function ($cells) {
                     $cells->setValignment('center');
                     $cells->setAlignment('center');
                     $cells->setBackground('#0d4841');
@@ -399,12 +418,13 @@ class RouteReportController extends Controller
      * @param $longitude
      * @return mixed
      */
-    public static function getAddressFromCoordinates($latitude, $longitude){
-        $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=".config('road.google_api_token');
+    public static function getAddressFromCoordinates($latitude, $longitude)
+    {
+        $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=" . config('road.google_api_token');
         $response = file_get_contents($url);
-        $json = collect(json_decode($response,true));
+        $json = collect(json_decode($response, true));
         $address = (object)collect($json->first())->first();
-        $address = explode(',',$address->formatted_address);
+        $address = explode(',', $address->formatted_address);
         return $address[0];
     }
 }

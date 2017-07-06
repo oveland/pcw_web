@@ -9,8 +9,8 @@
                     <i class="fa fa-expand"></i>
                 </a>
             </div>
-            <h5 class="text-white m-t-10">
-                @lang('Off road report') @lang('Vehicle') {{ $dispatchRegister->vehicle->number  }} <i class="fa fa-hand-o-right"></i> {{ $dispatchRegister->vehicle->plate  }}
+            <h5 class="text-white m-t-10 text-uppercase">
+                @lang('Off road report') @lang('Vehicle') {{ $dispatchRegister->vehicle->number  }} <i class="fa fa-hand-o-right"></i> {{ $dispatchRegister->vehicle->plate  }}. @lang('Route') {{ $dispatchRegister->route->name  }}: @lang('Round Trip') {{ $dispatchRegister->round_trip  }}, @lang('Turn') {{ $dispatchRegister->turn }}
             </h5>
         </div>
         <div class="tab-content panel p-0">
