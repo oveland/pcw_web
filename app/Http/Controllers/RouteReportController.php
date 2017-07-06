@@ -190,7 +190,7 @@ class RouteReportController extends Controller
 
                 /*  HEADER */
                 $sheet->setHeight(1, 50);
-                $sheet->mergeCells('A1:E1');
+                $sheet->mergeCells('A1:F1');
                 $sheet->cells('A1:F1', function ($cells) {
                     $cells->setValignment('center');
                     $cells->setAlignment('center');
