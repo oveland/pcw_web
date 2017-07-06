@@ -15,7 +15,6 @@
                 <i class="fa fa-user-circle" aria-hidden="true"></i> @lang('Register historic') - @lang('All Routes'):
                 {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }} @lang('passengers')
                 {{ number_format(collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')
-
             </h5>
         </div>
         <div class="panel-content row">

@@ -113,11 +113,11 @@
                 <div class="modal-body" style="width:90%;">
                     <h4>
                         <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
-                        <span class="pull-right"><img
-                                    src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>
-                        &nbsp;&nbsp;
-                        <span class="pull-right p-r-20"><img
-                                    src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
+                        <span class="pull-right"><img src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>                        &nbsp;&nbsp;
+                        <span class="pull-right p-r-20"><img src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
+                        <a href="" class="btn-primary btn btn-show-off-road-report pull-right">
+                            <i class="ion-merge m-r-5 fa-fw"></i> @lang('See off road report')
+                        </a>
                     </h4>
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-12">
@@ -181,6 +181,25 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-off-road-report" style="background: #535353;opacity: 0.96;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">@lang('Off road report')</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 modal-off-road-report-table"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn width-100 btn-default" data-dismiss="modal">@lang('Close')</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -229,8 +248,29 @@
                 initializeMap();
             });
 
+            $('body').on('click', '.btn-show-off-road-report', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                var tableOffRoadReport = $('.modal-off-road-report-table');
+                tableOffRoadReport.empty().html(loading);
+                if(is_not_null(url)){
+                    $('#modal-off-road-report').modal('show');
+                    $.ajax({
+                        url: url,
+                        success: function (data) {
+                            tableOffRoadReport.hide().html(data).slideDown();
+                        },
+                        error: function () {
+                            $('.modal').modal('hide');
+                            gerror('@lang('Oops, something went wrong!')');
+                        }
+                    });
+                }
+            });
+
             $('body').on('click', '.btn-show-chart-route-report', function () {
                 //map.clearAllMarkers();
+                $('.btn-show-off-road-report').attr('href',$(this).data('url-off-road-report'));
                 var chartRouteReport = $("#chart-route-report");
                 chartRouteReport.html(loading);
                 $('.report-info').html(loading);
@@ -353,6 +393,10 @@
             @if(!Auth::user()->isAdmin())
                 loadRouteReport(null);
             @endif
+
+            setTimeout(function(){
+                $('.btn-show-off-road-report').click();
+            },500);
         });
 
         function loadRouteReport(company) {

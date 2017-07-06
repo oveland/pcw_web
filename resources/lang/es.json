@@ -89,5 +89,14 @@
   "Free seat": "Asiento libre",
   "No seat report found": "No se ha encontrado reporte para el asiento seleccionado",
   "passengers": "Pasajeros",
-  "No registers location found": "No se encontraron registros de coordenadas"
+  "No registers location found": "No se encontraron registros de coordenadas",
+  "The vehicle haven´t off roads list": "El vehículo no presenta salidas de ruta",
+  "Off road report": "Reporte de salidas de ruta",
+  "Status":"Estado en la ruta",
+  "See off road report": "Ver reporte de salidas de ruta",
+  "Report vehicle off road": "Reporte de salidas de ruta del vehículo",
+  "Off_Road_Report_": "Reporte_Salida_Ruta_",
+  "Address": "Dirección",
+  "Longitude":"Longitud",
+  "Latitude":"Latitud"
 }

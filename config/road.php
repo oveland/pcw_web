@@ -30,5 +30,13 @@ return [
     |
     */
 
-    'route_sampling_radius' => 800
+    'route_sampling_radius' => 800,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google Api token for google maps
+    |--------------------------------------------------------------------------
+    |
+    */
+    'google_api_token' => 'AIzaSyC_BkN0qt9j8gUEe7GdW2Bxu3vgQPTrSP8'
 ];

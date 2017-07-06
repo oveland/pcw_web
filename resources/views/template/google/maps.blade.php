@@ -6,7 +6,7 @@
  */
  --}}
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_BkN0qt9j8gUEe7GdW2Bxu3vgQPTrSP8&callback=initializeMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('road.google_api_token') }}&callback=initializeMap" async defer></script>
 <script type="text/javascript">
     var map;
     var routeLayerKML;

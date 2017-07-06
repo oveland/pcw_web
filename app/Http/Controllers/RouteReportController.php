@@ -8,6 +8,7 @@ use App\DispatchRegister;
 use App\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class RouteReportController extends Controller
@@ -44,8 +45,8 @@ class RouteReportController extends Controller
     public function chart(DispatchRegister $dispatchRegister)
     {
         $dataReport = ['empty' => true];
-        $locations = collect($dispatchRegister->locations);
-        $report_list = collect($dispatchRegister->reports);
+        $locations = $dispatchRegister->locations;
+        $reportList = $dispatchRegister->reports;
 
         if ($locations->isNotEmpty()) {
             $route = $dispatchRegister->route;
@@ -57,7 +58,7 @@ class RouteReportController extends Controller
 
             $reports = array();
             foreach ($locations as $location) {
-                $report = $report_list->where('location_id','=',$location->id)->first();
+                $report = $reportList->where('location_id', '=', $location->id)->first();
                 //$report = $location->report;
                 /* The first location haven´t a report */
                 if ($report) {
@@ -73,7 +74,7 @@ class RouteReportController extends Controller
                 }
             }
 
-            $dataReport = collect([
+            $dataReport = (object)[
                 'vehicle' => $vehicle->number,
                 'plate' => $vehicle->plate,
                 'vehicleSpeed' => round($locations->last()->report->speed, 2),
@@ -83,15 +84,140 @@ class RouteReportController extends Controller
                 'controlPoints' => $controlPoints,
                 'urlLayerMap' => $route->url,
                 'reports' => $reports
-            ]);
+            ];
         }
 
         return response()->json($dataReport);
     }
 
-    public function offRoadReport()
+    /**
+     * @param DispatchRegister $dispatchRegister
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
     {
+        $locations = $dispatchRegister->locations;
 
+        $off_road_report_list = array();
+
+        if ($locations->isNotEmpty()) {
+            $reportList = $dispatchRegister->reports;
+            $route = $dispatchRegister->route;
+            $vehicle = $dispatchRegister->vehicle;
+
+            $route_coordinates = $this->getRouteCoordinates($route->url);
+            $reports = array();
+            foreach ($locations as $location) {
+                $report = $reportList->where('location_id', '=', $location->id)->first();
+                if ($report) {
+                    $reports[] = (object)[
+                        'date' => $report->date,
+                        'time' => $report->timed,
+                        'distance' => $report->distancem,
+                        'value' => $report->status_in_minutes,
+                        'latitude' => $location->latitude,
+                        'longitude' => $location->longitude,
+                        'offRoad' => $this->checkOffRoad($location, $route_coordinates)
+                    ];
+                }
+            }
+
+            $offRoad = false;
+            foreach ($reports as $report) {
+                $offRoad = (!$offRoad) ? $report->offRoad : false;
+                if ($offRoad) $off_road_report_list[] = $report;
+                $offRoad = $report->offRoad;
+            }
+
+            if ($request->get('export')) $this->export($dispatchRegister, $off_road_report_list);
+        }
+        return view('reports.offRoadReport', compact('off_road_report_list', 'dispatchRegister'));
+    }
+
+    /**
+     * Export report to excel file
+     *
+     * @param $dispatchRegister
+     * @param $off_road_report_list
+     */
+    public function export($dispatchRegister, $off_road_report_list)
+    {
+        $route = $dispatchRegister->route;
+        $company = $route->company;
+        $dateReport = $dispatchRegister->date;
+
+        $data = [];
+        $number = 1;
+        foreach ($off_road_report_list as $off_road_report) {
+            $data[] = [
+                'N°' => $number++,
+                __('Date') => $off_road_report->date,
+                __('Status') => $off_road_report->time,
+                __('Latitude') => $off_road_report->latitude,
+                __('Longitude') => $off_road_report->longitude,
+                __('Address') => $this::getAddressFromCoordinates($off_road_report->latitude, $off_road_report->longitude),
+            ];
+        }
+
+        $dataExport = (object)[
+            'fileName' => __('Off_Road_Report_') . str_replace(' ', '_', $company->name) . '.' . str_replace('-', '', $dateReport),
+            'header' => [__('Off road report') . ' ' . $company->name . '. ' . $route->name . '. ' . $dateReport],
+            'data' => $data,
+        ];
+
+        Excel::create($dataExport->fileName, function ($excel) use ($dataExport) {
+            /* INFO DOCUMENT */
+            $excel->setTitle(__('Off road report'));
+            $excel->setCreator(__('PCW Ditech Integradores Tecnológicos'))->setCompany(__('PCW Ditech Integradores Tecnológicos'));
+            $excel->setDescription(__('Report vehicle off road'));
+
+            /* FIRST SHEET */
+            $excel->sheet(__('Off road report'), function ($sheet) use ($dataExport) {
+                $totalRows = count($dataExport->data) + 2;
+
+                $sheet->fromArray($dataExport->data);
+                $sheet->prependRow($dataExport->header);
+
+                /* GENEREAL STYLE */
+                $sheet->setOrientation('landscape');
+                $sheet->setFontFamily('Segoe UI Light');
+                $sheet->setBorder('A1:F' . $totalRows, 'thin');
+                $sheet->cells('A1:F' . $totalRows, function ($cells) {
+                    $cells->setFontFamily('Segoe UI Light');
+                });
+                $sheet->setAutoFilter('A2:F' . ($totalRows));
+
+                /*  HEADER */
+                $sheet->setHeight(1, 50);
+                $sheet->mergeCells('A1:E1');
+                $sheet->cells('A1:F1', function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                    $cells->setBackground('#0e6d62');
+                    $cells->setFontColor('#eeeeee');
+                    $cells->setFont(array(
+                        'family' => 'Segoe UI Light',
+                        'size' => '14',
+                        'bold' => true
+                    ));
+                });
+
+                /* HEADER COLUMNS */
+                $sheet->setHeight(2, 40);
+                $sheet->cells('A2:F2', function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                    $cells->setBackground('#0d4841');
+                    $cells->setFontColor('#eeeeee');
+                    $cells->setFont(array(
+                        'family' => 'Segoe UI Light',
+                        'size' => '12',
+                        'bold' => true
+                    ));
+                });
+            });
+        })->export('xlsx');
     }
 
     /**
@@ -263,5 +389,22 @@ class RouteReportController extends Controller
     public function getThresholdAngleC($threshold_distance, $a, $b)
     {
         return rad2deg(acos($threshold_distance / $a) + acos($threshold_distance / $b));
+    }
+
+
+    /**
+     * Get Address from coordinates
+     *
+     * @param $latitude
+     * @param $longitude
+     * @return mixed
+     */
+    public static function getAddressFromCoordinates($latitude, $longitude){
+        $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=".config('road.google_api_token');
+        $response = file_get_contents($url);
+        $json = collect(json_decode($response,true));
+        $address = (object)collect($json->first())->first();
+        $address = explode(',',$address->formatted_address);
+        return $address[0];
     }
 }
