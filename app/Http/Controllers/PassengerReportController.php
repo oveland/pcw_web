@@ -58,7 +58,9 @@ class PassengerReportController extends Controller
 
     public function showByDispatch(DispatchRegister $dispatchRegister, Request $request){
         $dispatchArrivaltime = $dispatchRegister->arrival_time_scheduled;
-
+        if(self::DISPATCH_COMPLETE == $dispatchRegister->status){
+            $dispatchArrivaltime = $dispatchRegister->arrival_time;
+        }
         if($dispatchArrivaltime > "23:59:59")$dispatchArrivaltime= "23:59:59";
         $historySeats = HistorySeat::where('plate',$dispatchRegister->vehicle->plate)
             ->where('date','=',$dispatchRegister->date)
@@ -71,7 +73,7 @@ class PassengerReportController extends Controller
 
         if( $request->get('export') ) $this->export($historySeats,$dispatchRegister->route->company,$dispatchRegister->date, $dispatchRegister);
 
-        return view('passengers.passengersReport', compact(['historySeats','dispatchRegister']));
+        return view('passengers.passengersReport', compact(['historySeats','dispatchRegister','dispatchArrivaltime']));
     }
 
     public function export($historySeats,$company,$dateReport,$dispatchRegister)

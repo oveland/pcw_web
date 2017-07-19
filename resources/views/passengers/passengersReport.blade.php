@@ -14,7 +14,7 @@
                         {{ $dispatchRegister->route->name }} <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                         {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }} @lang('passengers'),
                         {{ number_format(collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')
-                        @lang('between') {{ $dispatchRegister->departure_time }} @lang('and') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchRegister->arrival_time_scheduled }}
+                        @lang('between') {{ $dispatchRegister->departure_time }} @lang('and') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivaltime }}
                     </h5>
                 </div>
                 <div class="col-md-3">
@@ -109,9 +109,8 @@
             </div>
             <div id="report-tab-chart" class="tab-pane fade in">
                 @php($routeDistance = $dispatchRegister->route->distance*1000)
-                @php($location = $dispatchRegister->reports->first())
-                @php($reference_location = $location?$location->location:null)
-
+                @php($reference_location = $dispatchRegister->locations->first())
+                
                 @if($reference_location)
                 <div class="row p-20">
                     @foreach($historySeats as $historySeat)
