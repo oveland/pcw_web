@@ -53,7 +53,7 @@
             </li>
             <li class="dropdown navbar-user">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="image"><img src="assets/img/logo.png" alt=""/></span>
+                    <span class="image"><img src="{{asset('assets/img/logo.png')}}" alt=""/></span>
                     <span class="hidden-xs text-capitalize">{{ Auth::user()->name }}</span> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu pull-right">

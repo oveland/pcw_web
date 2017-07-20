@@ -11,6 +11,8 @@
 |
 */
 
+Auth::routes();
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function(){
         return redirect(route('route-report'));
@@ -34,12 +36,24 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('/passengers/seat/show/{historySeat}', 'PassengerReportController@showHistorySeat')->name('passengers-seat-detail');
     Route::any('/passengers/ajax/{action}', 'PassengerReportController@ajax')->name('passengers-ajax');
 
+
+
+    /****************** MIGRATION ROUTES *******************/
+
+    /* Routes for migrate Tables */
     Route::get('/migrate/', 'MigrationController@index')->name('migrate');
     Route::get('/migrate/companies', 'MigrationController@migrateCompanies')->name('migrate-companies');
     Route::get('/migrate/routes', 'MigrationController@migrateRoutes')->name('migrate-routes');
     Route::get('/migrate/users', 'MigrationController@migrateUsers')->name('migrate-users');
     Route::get('/migrate/vehicles', 'MigrationController@migrateVehicles')->name('migrate-vehicles');
     Route::get('/migrate/control-points', 'MigrationController@migrateControlPoints')->name('migrate-control-points');
-});
+    Route::get('/migrate/control-point-time', 'MigrationController@migrateControlPointTimes')->name('migrate-control-point-times');
 
-Auth::routes();
+    /* Routes for migrate Control Points (CP) */
+    Route::get('/migrate/cp/','MigrationControlPointController@getControlPoints')->name('migrate-cp');
+    Route::get('/migrate/cp/compare/{route}', 'MigrationControlPointController@compare')->name('compare-control-point');
+    Route::get('/migrate/coordinates/{route}', 'MigrationControlPointController@exportCoordinates')->name('export-coordinates');
+
+    /* Routes for tools */
+    Route::get('/tools/map', 'ToolsController@map')->name('map-tool');
+});

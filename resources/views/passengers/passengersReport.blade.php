@@ -115,8 +115,8 @@
                 <div class="row p-20">
                     @foreach($historySeats as $historySeat)
                         <div class="col-md-12 p-0">
-                            @php($activeSeatRouteDistance = $historySeat->active_km - $reference_location->odometer)
-                            @php($inactiveSeatRouteDistance = $historySeat->inactive_km - $reference_location->odometer)
+                            @php($activeSeatRouteDistance = $historySeat->active_km)
+                            @php($inactiveSeatRouteDistance = $historySeat->inactive_km)
 
                             @php($inactivePercent = number_format($activeSeatRouteDistance*100/$routeDistance,'2','.',''))
                             @php($activePercent = number_format($historySeat->busy_km*100/$routeDistance,'2','.',''))
@@ -154,7 +154,7 @@
                                     @foreach($controlPoints as $controlPoint)
                                         @php($width = $controlPoint->distance_next_point*100/$routeDistance )
                                         @php($trajectory = $controlPoint->name.' ➤ '.($loop->index+1<count($controlPoints)?$controlPoints[$loop->index + 1]->name:'') )
-                                        <div class="progress-bar bg-inverse-{{ $loop->index%2==0?'dark':'light' }} p-0" style="width:{{ number_format(( $width-0.1 ),'1','.','') }}%"
+                                        <div class="progress-bar bg-inverse-{{ $loop->index%2==0?'dark':'light' }} p-0" style="width:{{ number_format(( $width-0.05 ),'1','.','') }}%"
                                              data-toggle="tooltip" data-html="true" data-placement="top"
                                              data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                              title="{{ '<i class="m-t-40 icon-direction"></i> '.$trajectory }}"

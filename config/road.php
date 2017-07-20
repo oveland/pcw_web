@@ -22,6 +22,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Distance Threshold for check seat coordinates | ONLY TAXCENTRAL
+    |--------------------------------------------------------------------------
+    |
+    | Defines the distance threshold that checks if active/inactive location is on road
+    | The distance threshold should be specified in meters
+    |
+    */
+
+    'seat_distance_threshold' => 100,
+
+    /*
+    |--------------------------------------------------------------------------
     | Route Sampling Radius
     |--------------------------------------------------------------------------
     |

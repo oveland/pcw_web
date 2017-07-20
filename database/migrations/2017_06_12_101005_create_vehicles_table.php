@@ -26,7 +26,7 @@ class CreateVehiclesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             /*Indexes*/
-            $table->index(['number', 'plate']); // One plate has a unique vehicle number
+            $table->unique(['number', 'plate']); // One plate has a unique vehicle number
         });
     }
 

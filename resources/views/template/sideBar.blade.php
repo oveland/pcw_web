@@ -6,7 +6,7 @@
         <ul class="nav">
             <li class="nav-user">
                 <div class="image">
-                    <img src="assets/img/logo.png" alt="" />
+                    <img src="{{asset('assets/img/logo.png')}}" alt="" />
                 </div>
                 <div class="info">
                     <div class="name dropdown">

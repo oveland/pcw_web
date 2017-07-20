@@ -30,7 +30,7 @@ class CreateControlPointsTable extends Migration
             $table->foreign('route_id')->references('id')->on('routes');
 
             /*Indexes*/
-            $table->index(['name', 'route_id']); // One route has a unique control point name
+            $table->unique(['name', 'route_id']); // One route has a unique control point name
         });
     }
 

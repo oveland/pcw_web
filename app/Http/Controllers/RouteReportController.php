@@ -53,7 +53,7 @@ class RouteReportController extends Controller
             $controlPoints = $route->controlPoints;
             $vehicle = $dispatchRegister->vehicle;
 
-            $route_coordinates = $this->getRouteCoordinates($route->url);
+            $route_coordinates = self::getRouteCoordinates($route->url);
             $routeDistance = $route->distance * 1000;
 
             $reports = array();
@@ -106,7 +106,7 @@ class RouteReportController extends Controller
             $route = $dispatchRegister->route;
             $vehicle = $dispatchRegister->vehicle;
 
-            $route_coordinates = $this->getRouteCoordinates($route->url);
+            $route_coordinates = self::getRouteCoordinates($route->url);
             $reports = array();
             foreach ($locations as $location) {
                 $report = $reportList->where('location_id', '=', $location->id)->first();
@@ -267,7 +267,7 @@ class RouteReportController extends Controller
      * @param $url
      * @return array
      */
-    public function getRouteCoordinates($url)
+    public static function getRouteCoordinates($url)
     {
         $milliseconds = round(microtime(true) * 1000);
         $dir_name = "ziptmp$milliseconds";
@@ -367,7 +367,7 @@ class RouteReportController extends Controller
      * @param $longitude2
      * @return int
      */
-    public function getDistance($latitude1, $longitude1, $latitude2, $longitude2)
+    public static function getDistance($latitude1, $longitude1, $latitude2, $longitude2)
     {
         $earth_radius = 6371;
 
@@ -389,7 +389,7 @@ class RouteReportController extends Controller
      * @param $c
      * @return float
      */
-    public function getAngleC($a, $b, $c)
+    public static function getAngleC($a, $b, $c)
     {
         $argument = (pow($a, 2) + pow($b, 2) - pow($c, 2)) / (2 * $a * $b);
         if (abs($argument) > 1) return 180;/* Assumes on road */
@@ -405,7 +405,7 @@ class RouteReportController extends Controller
      * @param $b
      * @return float
      */
-    public function getThresholdAngleC($threshold_distance, $a, $b)
+    public static function getThresholdAngleC($threshold_distance, $a, $b)
     {
         return rad2deg(acos($threshold_distance / $a) + acos($threshold_distance / $b));
     }
