@@ -40,6 +40,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTurn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTypeOfDay($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereVehicleId($value)
+ * @property string|null $time
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTime($value)
  */
 class DispatchRegister extends Model
 {

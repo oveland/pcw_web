@@ -15,8 +15,9 @@ class CreateControlPointTimes extends Migration
     {
         Schema::create('control_point_times', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('time');
-            $table->string('time_from_dispatch');
+            $table->time('time');
+            $table->time('time_from_dispatch');
+            $table->time('time_next_point');
             $table->integer('day_type_id')->unsigned();
             $table->bigInteger('control_point_id')->unsigned();
             $table->bigInteger('fringe_id')->unsigned()->nullable(true);

@@ -159,7 +159,7 @@ class MigrationController extends Controller
             $route->active = $routeOLD->estado == 0 ? true : false;
 
             $routeGoogle = RouteGoogle::find($route->id);
-            $route->url = $routeGoogle?$routeGoogle->url:"";
+            $route->url = $routeGoogle ? $routeGoogle->url : "";
 
             try {
                 $route->save();
@@ -333,7 +333,7 @@ class MigrationController extends Controller
 
         $day_type = 0;
         $last_time = "00:00:00";
-        foreach ($controlPointTimes as $controlPointTimesOLD) {
+        foreach ($controlPointTimes as $index => $controlPointTimesOLD) {
             $new = false;
             $controlPointTime = ControlPointTime::find($controlPointTimesOLD->id);
             if (!$controlPointTime) {
@@ -347,8 +347,9 @@ class MigrationController extends Controller
             }
 
             $controlPointTime->id = $controlPointTimesOLD->id;
-            $controlPointTime->time = $controlPointTimesOLD->time1 == "" ? "00:00" : $controlPointTimesOLD->time1;
-            $controlPointTime->time_from_dispatch = date("H:i:s", strtotime($last_time) + strtotime("00:" . $controlPointTime->time) - strtotime("00:00:00"));
+            $controlPointTime->time = $controlPointTimesOLD->time1 == "" ? "00:00" : "00:".$controlPointTimesOLD->time1;
+            $controlPointTime->time_next_point = (!isset($controlPointTimes[$index + 1]) || $controlPointTimes[$index + 1]->time1 == "") ? "00:00:00" : "00:".$controlPointTimes[$index + 1]->time1;
+            $controlPointTime->time_from_dispatch = date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00"));
             $controlPointTime->day_type_id = $controlPointTimesOLD->day_type;
             $controlPointTime->control_point_id = $controlPointTimesOLD->control_point_id;
             $controlPointTime->fringe_id = null;
