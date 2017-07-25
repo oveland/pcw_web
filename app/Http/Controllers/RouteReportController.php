@@ -146,24 +146,25 @@ class RouteReportController extends Controller
         $route = $dispatchRegister->route;
         $company = $route->company;
         $dateReport = $dispatchRegister->date;
-
         $data = [];
         $number = 1;
         foreach ($off_road_report_list as $off_road_report) {
-            $data[] = [
-                'N°' => $number++,
-                __('Date') => $off_road_report->date,
-                __('Status') => $off_road_report->time,
-                __('Latitude') => $off_road_report->latitude,
-                __('Longitude') => $off_road_report->longitude,
-                __('Address') => $this::getAddressFromCoordinates($off_road_report->latitude, $off_road_report->longitude),
-            ];
+            if ($off_road_report->latitude != 0 && $off_road_report->longitude != 0) {
+                $data[] = [
+                    'N°' => $number++,
+                    __('Date') => $off_road_report->date,
+                    __('Status') => $off_road_report->time,
+                    __('Latitude') => $off_road_report->latitude,
+                    __('Longitude') => $off_road_report->longitude,
+                    __('Address') => $this::getAddressFromCoordinates($off_road_report->latitude, $off_road_report->longitude),
+                ];
+            }
         }
 
         $dataExport = (object)[
             'fileName' => __('Off_Road_Report_') . str_replace(' ', '_', $company->name) . '.' . str_replace('-', '', $dateReport),
             'header' => [strtoupper(__('Off road report')) . ' ' . $company->name . '. ' . __('Vehicle') . ' ' . $dispatchRegister->vehicle->number . ' ➜ ' . $dispatchRegister->vehicle->plate],
-            'infoRoute' => [$route->name . ': ' . __('Round Trip') .' '. ($dispatchRegister->round_trip == 0 ? '0' : $dispatchRegister->round_trip) . ', ' . __('Turn') . ' ' . $dispatchRegister->turn],
+            'infoRoute' => [$route->name . ': ' . __('Round Trip') . ' ' . ($dispatchRegister->round_trip == 0 ? '0' : $dispatchRegister->round_trip) . ', ' . __('Turn') . ' ' . $dispatchRegister->turn],
             'data' => $data,
         ];
 
@@ -292,7 +293,7 @@ class RouteReportController extends Controller
 
         $dataXML = simplexml_load_string($data);
         $documents = $dataXML->Document->Folder;
-        $documents = $documents ? $documents : $dataXML->Document;
+        $documents = $documents->Placemark ? $documents : $dataXML->Document;
 
         /* Extract coordinates for xml file */
         $route_coordinates = array();
@@ -420,6 +421,7 @@ class RouteReportController extends Controller
      */
     public static function getAddressFromCoordinates($latitude, $longitude)
     {
+        if ($latitude == 0 || $longitude == 0) return 'Invalid Address';
         $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=" . config('road.google_api_token');
         $response = file_get_contents($url);
         $json = collect(json_decode($response, true));
