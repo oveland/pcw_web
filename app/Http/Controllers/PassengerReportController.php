@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\DispatchRegister;
 use App\HistorySeat;
+use app\Http\Controllers\Utils\Geolocation;
 use App\Report;
 use App\Route;
 use App\Vehicle;
@@ -105,19 +106,19 @@ class PassengerReportController extends Controller
             if ($index > 0) {
                 $prev_route_latitude = $route_coordinates[$index - 1]['latitude'];
                 $prev_route_longitude = $route_coordinates[$index - 1]['longitude'];
-                $prev_distance = RouteReportController::getDistance($route_latitude, $route_longitude, $prev_route_latitude, $prev_route_longitude);
+                $prev_distance = Geolocation::getDistance($route_latitude, $route_longitude, $prev_route_latitude, $prev_route_longitude);
 
                 /* Process active seat locations */
                 if (!$found_active_seat_location) {
-                    $radius_distance_active_seat_location = RouteReportController::getDistance($historySeat->active_latitude, $historySeat->active_longitude, $route_latitude, $route_longitude);
+                    $radius_distance_active_seat_location = Geolocation::getDistance($historySeat->active_latitude, $historySeat->active_longitude, $route_latitude, $route_longitude);
                     if ($radius_distance_active_seat_location <= config('road.seat_distance_threshold')) {
                         $found_active_seat_location = true;
                     } else if ($radius_distance_active_seat_location < config('road.route_sampling_radius')) {
                         $a = (double)$radius_distance_active_seat_location;
-                        $b = (double)RouteReportController::getDistance($historySeat->active_latitude, $historySeat->active_longitude, $prev_route_latitude, $prev_route_longitude);
+                        $b = (double)Geolocation::getDistance($historySeat->active_latitude, $historySeat->active_longitude, $prev_route_latitude, $prev_route_longitude);
                         $c = (double)$prev_distance;
-                        $angle = RouteReportController::getAngleC($a, $b, $c);
-                        $thresholdAngle = RouteReportController::getThresholdAngleC(config('road.seat_distance_threshold'), $a, $b);
+                        $angle = Geolocation::getAngleC($a, $b, $c);
+                        $thresholdAngle = Geolocation::getThresholdAngleC(config('road.seat_distance_threshold'), $a, $b);
                         if ($angle >= $thresholdAngle) {
                             $found_active_seat_location = true;
                         }
@@ -127,15 +128,15 @@ class PassengerReportController extends Controller
 
                 /* Process inactive seat locations */
                 if (!$found_inactive_seat_location) {
-                    $radius_distance_inactive_seat_location = RouteReportController::getDistance($historySeat->inactive_latitude, $historySeat->inactive_longitude, $route_latitude, $route_longitude);
+                    $radius_distance_inactive_seat_location = Geolocation::getDistance($historySeat->inactive_latitude, $historySeat->inactive_longitude, $route_latitude, $route_longitude);
                     if ($radius_distance_inactive_seat_location <= config('road.seat_distance_threshold')) {
                         $found_inactive_seat_location = true;
                     } else if ($radius_distance_inactive_seat_location < config('road.route_sampling_radius')) {
                         $a = (double)$radius_distance_inactive_seat_location;
-                        $b = (double)RouteReportController::getDistance($historySeat->inactive_latitude, $historySeat->inactive_longitude, $prev_route_latitude, $prev_route_longitude);
+                        $b = (double)Geolocation::getDistance($historySeat->inactive_latitude, $historySeat->inactive_longitude, $prev_route_latitude, $prev_route_longitude);
                         $c = (double)$prev_distance;
-                        $angle = RouteReportController::getAngleC($a, $b, $c);
-                        $thresholdAngle = RouteReportController::getThresholdAngleC(config('road.seat_distance_threshold'), $a, $b);
+                        $angle = Geolocation::getAngleC($a, $b, $c);
+                        $thresholdAngle = Geolocation::getThresholdAngleC(config('road.seat_distance_threshold'), $a, $b);
 
                         if ($angle >= $thresholdAngle) {
                             $found_inactive_seat_location = true;

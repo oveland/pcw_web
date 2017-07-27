@@ -39,7 +39,7 @@
                                 <td>{{ $off_road_report->time }}</td>
                                 <td>{{ $off_road_report->latitude }}</td>
                                 <td>{{ $off_road_report->longitude }}</td>
-                                <td>{{ \App\Http\Controllers\RouteReportController::getAddressFromCoordinates($off_road_report->latitude,$off_road_report->longitude)}}</td>
+                                <td>{{ \App\Http\Controllers\Utils\Geolocation::getAddressFromCoordinates($off_road_report->latitude,$off_road_report->longitude)}}</td>
                             </tr>
                         @endif
                     @endforeach

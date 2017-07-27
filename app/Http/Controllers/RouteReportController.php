@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\ControlPoint;
 use App\DispatchRegister;
+use app\Http\Controllers\Utils\Geolocation;
 use App\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,7 +104,6 @@ class RouteReportController extends Controller
         if ($locations->isNotEmpty()) {
             $reportList = $dispatchRegister->reports;
             $route = $dispatchRegister->route;
-            $vehicle = $dispatchRegister->vehicle;
 
             $route_coordinates = self::getRouteCoordinates($route->url);
             $reports = array();
@@ -156,7 +155,7 @@ class RouteReportController extends Controller
                     __('Status') => $off_road_report->time,
                     __('Latitude') => $off_road_report->latitude,
                     __('Longitude') => $off_road_report->longitude,
-                    __('Address') => $this::getAddressFromCoordinates($off_road_report->latitude, $off_road_report->longitude),
+                    __('Address') => Geolocation::getAddressFromCoordinates($off_road_report->latitude, $off_road_report->longitude),
                 ];
             }
         }
@@ -177,7 +176,6 @@ class RouteReportController extends Controller
             /* FIRST SHEET */
             $excel->sheet(__('Off road report'), function ($sheet) use ($dataExport) {
                 $totalRows = count($dataExport->data) + 3;
-
                 $sheet->fromArray($dataExport->data);
                 $sheet->prependRow($dataExport->infoRoute);
                 $sheet->prependRow($dataExport->header);
@@ -248,11 +246,7 @@ class RouteReportController extends Controller
     {
         switch ($request->get('option')) {
             case 'loadRoutes':
-                if (Auth::user()->isAdmin()) {
-                    $company = $request->get('company');
-                } else {
-                    $company = Auth::user()->company->id;
-                }
+                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
                 $routes = $company != 'null' ? Route::where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
                 return view('reports.routeSelect', compact('routes'));
                 break;
@@ -336,7 +330,7 @@ class RouteReportController extends Controller
             $route_latitude = $route_coordinate['latitude'];
             $route_longitude = $route_coordinate['longitude'];
 
-            $radius_distance = $this->getDistance($location_latitude, $location_longitude, $route_latitude, $route_longitude);
+            $radius_distance = Geolocation::getDistance($location_latitude, $location_longitude, $route_latitude, $route_longitude);
 
             if ($radius_distance <= config('road.route_distance_threshold')) {
                 $offRoad = false;
@@ -345,10 +339,10 @@ class RouteReportController extends Controller
                 $prev_route_latitude = $route_coordinates[$index - 1]['latitude'];
                 $prev_route_longitude = $route_coordinates[$index - 1]['longitude'];
                 $a = (double)$radius_distance;
-                $b = (double)$this->getDistance($location_latitude, $location_longitude, $prev_route_latitude, $prev_route_longitude);
-                $c = (double)$this->getDistance($route_latitude, $route_longitude, $prev_route_latitude, $prev_route_longitude);
-                $angle = $this->getAngleC($a, $b, $c);
-                $thresholdAngle = $this->getThresholdAngleC(config('road.route_distance_threshold'), $a, $b);
+                $b = (double)Geolocation::getDistance($location_latitude, $location_longitude, $prev_route_latitude, $prev_route_longitude);
+                $c = (double)Geolocation::getDistance($route_latitude, $route_longitude, $prev_route_latitude, $prev_route_longitude);
+                $angle = Geolocation::getAngleC($a, $b, $c);
+                $thresholdAngle = Geolocation::getThresholdAngleC(config('road.route_distance_threshold'), $a, $b);
 
                 if ($angle >= $thresholdAngle) {
                     $offRoad = false;
@@ -357,76 +351,5 @@ class RouteReportController extends Controller
             }
         }
         return $offRoad;
-    }
-
-    /**
-     * Get distance in meters from two coordinates in decimal
-     *
-     * @param $latitude1
-     * @param $longitude1
-     * @param $latitude2
-     * @param $longitude2
-     * @return int
-     */
-    public static function getDistance($latitude1, $longitude1, $latitude2, $longitude2)
-    {
-        $earth_radius = 6371;
-
-        $dLat = deg2rad($latitude2 - $latitude1);
-        $dLon = deg2rad($longitude2 - $longitude1);
-
-        $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * sin($dLon / 2) * sin($dLon / 2);
-        $c = 2 * asin(sqrt($a));
-        $d = $earth_radius * $c;
-
-        return $d * 1000;
-    }
-
-    /**
-     * Get angle of C between three distances (a,b,c) through Law of Cosines
-     *
-     * @param $a
-     * @param $b
-     * @param $c
-     * @return float
-     */
-    public static function getAngleC($a, $b, $c)
-    {
-        $argument = (pow($a, 2) + pow($b, 2) - pow($c, 2)) / (2 * $a * $b);
-        if (abs($argument) > 1) return 180;/* Assumes on road */
-        $angle_radians = acos($argument);
-        return rad2deg($angle_radians);
-    }
-
-    /**
-     * Get the angle C for threshold distance from route road
-     *
-     * @param $threshold_distance
-     * @param $a
-     * @param $b
-     * @return float
-     */
-    public static function getThresholdAngleC($threshold_distance, $a, $b)
-    {
-        return rad2deg(acos($threshold_distance / $a) + acos($threshold_distance / $b));
-    }
-
-
-    /**
-     * Get Address from coordinates
-     *
-     * @param $latitude
-     * @param $longitude
-     * @return mixed
-     */
-    public static function getAddressFromCoordinates($latitude, $longitude)
-    {
-        if ($latitude == 0 || $longitude == 0) return 'Invalid Address';
-        $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=" . config('road.google_api_token');
-        $response = file_get_contents($url);
-        $json = collect(json_decode($response, true));
-        $address = (object)collect($json->first())->first();
-        $address = explode(',', $address->formatted_address);
-        return $address[0];
     }
 }
