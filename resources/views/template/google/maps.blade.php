@@ -38,14 +38,16 @@
     ];
 
     function initializeMap() {
-        var mapOptions = {
-            zoom: 14,
-            center: new google.maps.LatLng(3.455608, -76.58943),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
+        setTimeout(function(){
+            var mapOptions = {
+                zoom: 14,
+                center: new google.maps.LatLng(3.455608, -76.58943),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
 
-        map = new google.maps.Map(document.getElementById('google-map-light-dream'), mapOptions);
-        map.setOptions({styles: mapLightDreamStyles});
-        routeLayerKML = new google.maps.KmlLayer();
+            map = new google.maps.Map(document.getElementById('google-map-light-dream'), mapOptions);
+            map.setOptions({styles: mapLightDreamStyles});
+            routeLayerKML = new google.maps.KmlLayer();
+        },500);
     }
 </script>

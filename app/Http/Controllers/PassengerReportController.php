@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\DispatchRegister;
 use App\HistorySeat;
-use app\Http\Controllers\Utils\Geolocation;
+use App\Http\Controllers\Utils\Geolocation;
 use App\Report;
 use App\Route;
 use App\Vehicle;

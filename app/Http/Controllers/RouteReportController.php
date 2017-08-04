@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
-use app\Http\Controllers\Utils\Geolocation;
+use App\Http\Controllers\Utils\Geolocation;
 use App\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

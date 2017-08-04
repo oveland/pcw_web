@@ -6,8 +6,7 @@
  * Time: 10:23 PM
  */
 
-namespace app\Http\Controllers\Utils;
-
+namespace App\Http\Controllers\Utils;
 
 class Geolocation
 {
