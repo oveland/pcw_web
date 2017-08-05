@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\ControlPoint;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Route;
@@ -57,6 +58,7 @@ class RouteReportController extends Controller
             $routeDistance = $route->distance * 1000;
 
             $reports = array();
+            $lastReport = $locations->last()->report;
             foreach ($locations as $location) {
                 $report = $reportList->where('location_id', '=', $location->id)->first();
                 //$report = $location->report;
@@ -72,15 +74,16 @@ class RouteReportController extends Controller
                         'offRoad' => $this->checkOffRoad($location, $route_coordinates)
                     ];
                 }
+                $lastReport = $report ? $report : $lastReport;
             }
 
             $dataReport = (object)[
                 'vehicle' => $vehicle->number,
                 'plate' => $vehicle->plate,
-                'vehicleSpeed' => round($locations->last()->report->speed, 2),
+                'vehicleSpeed' => round($lastReport ? $lastReport->speed : 0, 2),
                 'route' => $route->name,
                 'routeDistance' => $routeDistance,
-                'routePercent' => round(($locations->last()->report->distancem / $routeDistance) * 100, 1),
+                'routePercent' => round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1),
                 'controlPoints' => $controlPoints,
                 'urlLayerMap' => $route->url,
                 'reports' => $reports
@@ -104,6 +107,7 @@ class RouteReportController extends Controller
         if ($locations->isNotEmpty()) {
             $reportList = $dispatchRegister->reports;
             $route = $dispatchRegister->route;
+            $vehicle = $dispatchRegister->vehicle;
 
             $route_coordinates = self::getRouteCoordinates($route->url);
             $reports = array();
@@ -176,6 +180,7 @@ class RouteReportController extends Controller
             /* FIRST SHEET */
             $excel->sheet(__('Off road report'), function ($sheet) use ($dataExport) {
                 $totalRows = count($dataExport->data) + 3;
+
                 $sheet->fromArray($dataExport->data);
                 $sheet->prependRow($dataExport->infoRoute);
                 $sheet->prependRow($dataExport->header);

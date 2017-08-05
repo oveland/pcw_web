@@ -358,43 +358,52 @@ class MigrationController extends Controller
         $totalUpdated = 0;
         $totalErrors = 0;
         //$controlPointTimes = DB::table(self::OLD_TABLES['control_point_times'])->where('id_ruta','=',126)->get();
-        $controlPointTimes = collect(DB::select("SELECT tpc.id_tiempos_punto_control id,tpc.id_punto_control control_point_id, pc.orden, pc.nombre, tpc.tiempo1 time1, tpc.tipo_dia day_type FROM puntos_control_ruta AS pc, tiempos_punto_control AS tpc WHERE tpc.id_punto_control = pc.secpuntos_control_ruta AND pc.id_ruta = 126 GROUP BY pc.secpuntos_control_ruta, tpc.id_tiempos_punto_control  ORDER BY tpc.tipo_dia, pc.orden"));
+        $routesMigration = [126,135,136];
+        foreach ($routesMigration as $route){
+            $controlPointTimes = collect(DB::select("
+            SELECT tpc.id_tiempos_punto_control id,tpc.id_punto_control control_point_id, pc.orden, pc.nombre, tpc.tiempo1 time1, tpc.tipo_dia day_type 
+            FROM puntos_control_ruta AS pc, tiempos_punto_control AS tpc 
+            WHERE tpc.id_punto_control = pc.secpuntos_control_ruta AND pc.id_ruta = $route
+            GROUP BY pc.secpuntos_control_ruta, tpc.id_tiempos_punto_control  
+            ORDER BY tpc.tipo_dia, pc.orden")
+            );
 
-        $day_type = 0;
-        $last_time = "00:00:00";
-        foreach ($controlPointTimes as $index => $controlPointTimesOLD) {
-            $new = false;
-            $controlPointTime = ControlPointTime::find($controlPointTimesOLD->id);
-            if (!$controlPointTime) {
-                $controlPointTime = new ControlPointTime();
-                $new = true;
+            $day_type = 0;
+            $last_time = "00:00:00";
+            foreach ($controlPointTimes as $index => $controlPointTimesOLD) {
+                $new = false;
+                $controlPointTime = ControlPointTime::find($controlPointTimesOLD->id);
+                if (!$controlPointTime) {
+                    $controlPointTime = new ControlPointTime();
+                    $new = true;
+                }
+
+                if ($day_type != $controlPointTimesOLD->day_type) {
+                    $day_type = $controlPointTimesOLD->day_type;
+                    $last_time = "00:00:00";
+                }
+
+                $controlPointTime->id = $controlPointTimesOLD->id;
+                $controlPointTime->time = $controlPointTimesOLD->time1 == "" ? "00:00" : "00:".$controlPointTimesOLD->time1;
+                $controlPointTime->time_next_point = (!isset($controlPointTimes[$index + 1]) || $controlPointTimes[$index + 1]->time1 == "") ? "00:00:00" : "00:".$controlPointTimes[$index + 1]->time1;
+                $controlPointTime->time_from_dispatch = date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00"));
+                $controlPointTime->day_type_id = $controlPointTimesOLD->day_type;
+                $controlPointTime->control_point_id = $controlPointTimesOLD->control_point_id;
+                $controlPointTime->fringe_id = null;
+
+                try {
+                    $controlPointTime->save();
+                    $new ? $totalCreated++ : $totalUpdated++;
+                } catch (QueryException $e) {
+                    $totalErrors++;
+                    dump($e->getMessage());
+                } catch (\PDOException $e) {
+                    $totalErrors++;
+                    dump($e->getMessage());
+                }
+
+                $last_time = $controlPointTime->time_from_dispatch;
             }
-
-            if ($day_type != $controlPointTimesOLD->day_type) {
-                $day_type = $controlPointTimesOLD->day_type;
-                $last_time = "00:00:00";
-            }
-
-            $controlPointTime->id = $controlPointTimesOLD->id;
-            $controlPointTime->time = $controlPointTimesOLD->time1 == "" ? "00:00" : "00:" . $controlPointTimesOLD->time1;
-            $controlPointTime->time_next_point = (!isset($controlPointTimes[$index + 1]) || $controlPointTimes[$index + 1]->time1 == "") ? "00:00:00" : "00:" . $controlPointTimes[$index + 1]->time1;
-            $controlPointTime->time_from_dispatch = date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00"));
-            $controlPointTime->day_type_id = $controlPointTimesOLD->day_type;
-            $controlPointTime->control_point_id = $controlPointTimesOLD->control_point_id;
-            $controlPointTime->fringe_id = null;
-
-            try {
-                $controlPointTime->save();
-                $new ? $totalCreated++ : $totalUpdated++;
-            } catch (QueryException $e) {
-                $totalErrors++;
-                dump($e->getMessage());
-            } catch (\PDOException $e) {
-                $totalErrors++;
-                dump($e->getMessage());
-            }
-
-            $last_time = $controlPointTime->time_from_dispatch;
         }
 
         dd([
