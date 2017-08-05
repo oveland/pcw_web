@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\CobanVehicle;
 use App\Company;
 use App\ControlPoint;
 use App\ControlPointTime;
+use App\GpsVehicle;
 use App\Route;
 use App\RouteGoogle;
 use App\User;
 use App\Vehicle;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Mockery\Exception;
-use PhpParser\Node\Stmt\DeclareDeclare;
 
 class MigrationController extends Controller
 {
@@ -30,11 +29,10 @@ class MigrationController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -229,13 +227,21 @@ class MigrationController extends Controller
     public function migrateVehicles(Request $request)
     {
         if ($request->get('delete')) {
+            $deleted = DB::delete('DELETE FROM gps_vehicles');
+            dump($deleted . ' registers has ben deleted from gps_vehicles!');;
             $deleted = DB::delete('DELETE FROM vehicles');
             dd($deleted . ' registers has ben deleted!');;
         }
-
+        /* For vehicles table */
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
+
+        /* For gps_vehicles table */
+        $gpsVehicleTotalCreated = 0;
+        $gpsVehicleTotalUpdated = 0;
+        $gpsVehicleTotalErrors = 0;
+
         $vehicles = DB::table(self::OLD_TABLES['vehicles'])->get();
         foreach ($vehicles as $vehicleOLD) {
             $new = false;
@@ -254,6 +260,25 @@ class MigrationController extends Controller
             try {
                 $vehicle->save();
                 $new ? $totalCreated++ : $totalUpdated++;
+
+                /* Migrate data for gps_vehicle */
+
+                $gpsVehicleNew = false;
+                $gpsVehicle = GpsVehicle::whereVehicleId($vehicleOLD->id_crear_vehiculo)->get()->first();
+                if (!$gpsVehicle) {
+                    $gpsVehicle = new GpsVehicle();
+                    $gpsVehicleNew = true;
+                }
+                $gpsVehicle->imei = $vehicleOLD->imei_gps;
+                $gpsVehicle->vehicle_id = $vehicleOLD->id_crear_vehiculo;
+
+                try {
+                    $gpsVehicle->save();
+                    $gpsVehicleNew ? $gpsVehicleTotalCreated++ : $gpsVehicleTotalUpdated++;
+                } catch (Exception $e_gps) {
+                    $gpsVehicleTotalErrors++;
+                    dd('GPS VEHICLE ERROR: ', $e_gps->getMessage());
+                }
             } catch (QueryException $e) {
                 $totalErrors++;
                 dump($e->getMessage());
@@ -266,7 +291,11 @@ class MigrationController extends Controller
         dd([
             'Total Created' => $totalCreated,
             'Total Updated' => $totalUpdated,
-            'Total Errors' => $totalErrors
+            'Total Errors' => $totalErrors,
+            '------------------------------',
+            'Gps Vehicle Total Created' => $gpsVehicleTotalCreated,
+            'Gps Vehicle Total Updated' => $gpsVehicleTotalUpdated,
+            'Gps Vehicle Total Errors' => $gpsVehicleTotalErrors,
         ]);
     }
 
@@ -347,8 +376,8 @@ class MigrationController extends Controller
             }
 
             $controlPointTime->id = $controlPointTimesOLD->id;
-            $controlPointTime->time = $controlPointTimesOLD->time1 == "" ? "00:00" : "00:".$controlPointTimesOLD->time1;
-            $controlPointTime->time_next_point = (!isset($controlPointTimes[$index + 1]) || $controlPointTimes[$index + 1]->time1 == "") ? "00:00:00" : "00:".$controlPointTimes[$index + 1]->time1;
+            $controlPointTime->time = $controlPointTimesOLD->time1 == "" ? "00:00" : "00:" . $controlPointTimesOLD->time1;
+            $controlPointTime->time_next_point = (!isset($controlPointTimes[$index + 1]) || $controlPointTimes[$index + 1]->time1 == "") ? "00:00:00" : "00:" . $controlPointTimes[$index + 1]->time1;
             $controlPointTime->time_from_dispatch = date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00"));
             $controlPointTime->day_type_id = $controlPointTimesOLD->day_type;
             $controlPointTime->control_point_id = $controlPointTimesOLD->control_point_id;
