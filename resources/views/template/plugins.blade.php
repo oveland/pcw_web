@@ -20,5 +20,5 @@
 <script src="{{asset('assets/plugins/select2/dist/js/select2.min.js')}}"></script>
 <script src="{{asset('assets/js/apps.min.js')}}"></script>
 <script src="{{asset('js/application.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/jquery.validate.oiva.js')}}"></script>
+<script src="{{asset('js/jquery.validate.oiva.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->

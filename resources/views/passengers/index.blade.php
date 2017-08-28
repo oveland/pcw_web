@@ -1,8 +1,7 @@
 @extends('layout')
 
 @section('stylesheets')
-    <link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet"/>
-    <link href="assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet"/>
+
 @endsection
 
 @section('content')
@@ -200,8 +199,6 @@
 
 
 @section('scripts')
-    <script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
 
     @include('template.google.maps')
 
