@@ -31,6 +31,7 @@
                                 <th class="col-md-2">@lang('Hour dispatch')</th>
                                 <th>@lang('Round Trip')</th>
                                 <th data-sorting="disabled">@lang('Turn')</th>
+                                <th data-sorting="disabled">@lang('Status')</th>
                                 <th data-sorting="disabled">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -41,6 +42,7 @@
                                 <td>{{$dispatchRegister->departure_time}}</td>
                                 <td>{{$dispatchRegister->round_trip}}</td>
                                 <td>{{$dispatchRegister->turn}}</td>
+                                <td>{{$dispatchRegister->status}}</td>
                                 <td>
                                     <a href="#modal-route-report" data-toggle="modal"
                                        data-url="{{ route('route-chart-report',['dispatchRegister'=>$dispatchRegister->id]) }}"
