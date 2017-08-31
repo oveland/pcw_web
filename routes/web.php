@@ -56,4 +56,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Routes for tools */
     Route::get('/tools/map', 'ToolsController@map')->name('map-tool');
+
+    /* Routes for logs */
+    Route::get('logs/access','AccessLogController@index')->name('logs-access');
+    Route::get('logs/access/{date}','AccessLogController@report')->name('logs-access-export');
 });

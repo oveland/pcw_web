@@ -98,5 +98,10 @@
   "Off_Road_Report_": "Reporte_Salida_Ruta_",
   "Address": "Dirección",
   "Longitude":"Longitud",
-  "Latitude":"Latitud"
+  "Latitude":"Latitud",
+  "Oops... The page you're looking for doesn't exist.":"Ooops... La página que buscas no existe",
+  "Go Back": "Regresa",
+  "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable":"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.",
+  "Oops... You don't have access permissions": "Ooops... No tiene permisos de acceso.",
+  "The page you are looking for might have been protected with admin permissions":"La página que estás buscando podría haber sido protegida con permisos de administrador"
 }

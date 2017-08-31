@@ -1,6 +1,6 @@
 <style>
     .map-header-bg{
-        background: url(img/map-bg.jpg) top center fixed !important;
+        background: url({{ asset('img/map-bg.jpg') }}) top center fixed !important;
     }
 </style>
 <!-- begin #header -->
