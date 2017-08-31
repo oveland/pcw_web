@@ -34,6 +34,9 @@ class RouteReportController extends Controller
         $route_id = $request->get('route-report');
         $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $request->get('date-report'))
             ->where('route_id', '=', $route_id)
+            ->where(function($query){
+                $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
+            })
             ->orderBy('round_trip', 'asc')->get()->groupBy('round_trip');
 
         return view('reports.routeReport', compact('roundTripDispatchRegisters'));
