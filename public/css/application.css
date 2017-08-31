@@ -1,28 +1,36 @@
 /* Class for validate required fields*/
-.field-required:after{
+.field-required:after {
     color: #aa2701;
     content: " *";
 }
 
-input[readonly="readonly"]{
+input[readonly="readonly"] {
     background: white !important;
 }
 
-.yellow{
+.yellow {
     color: yellow !important;
 }
 
-.text-bold{
+.text-bold {
     font-weight: bold !important;
 }
 
-.hr{
+.hr {
     width: 100%;
     padding: 0px !important;
     margin-bottom: 10px !important;
     margin-top: 3px !important;
 }
 
-.page-header{
+.page-header {
     margin-bottom: 1px !important;
+}
+
+.transparent {
+    background: rgba(0, 0, 0, 0.3) !important;
+}
+
+.transparent-header {
+    background: rgba(0, 0, 0, 0.67) !important;
 }
