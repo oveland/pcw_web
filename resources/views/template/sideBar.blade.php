@@ -71,6 +71,22 @@
                             </li>
                         </ul>
                     </li>
+                    @if( Auth::user()->isAdmin() )
+                    <li class="has-sub menu-passengers">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-user faa-pulse"></i>
+                            @lang('Users')
+                        </a>
+                        <ul class="sub-menu" style="display: block;">
+                            <li class="has-sub menu-passengers">
+                                <a href="{{ route('logs-access')  }}">
+                                    @lang('Access log')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
                 </ul>
             </li>
             <br>

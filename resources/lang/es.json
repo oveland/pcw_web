@@ -103,5 +103,10 @@
   "Go Back": "Regresa",
   "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable":"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.",
   "Oops... You don't have access permissions": "Ooops... No tiene permisos de acceso.",
-  "The page you are looking for might have been protected with admin permissions":"La página que estás buscando podría haber sido protegida con permisos de administrador"
+  "The page you are looking for might have been protected with admin permissions":"La página que estás buscando podría haber sido protegida con permisos de administrador",
+  "Access log": "Logs de acceso",
+  "Users":"Usuarios",
+  "Download report":"Descargar reporte",
+  "Logs report":"Reportes de usuarios",
+  "Access Logs": "Logs de acceso"
 }

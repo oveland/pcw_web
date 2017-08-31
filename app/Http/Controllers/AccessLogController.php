@@ -11,7 +11,10 @@ class AccessLogController extends Controller
 {
     public function index()
     {
-        return view('logs.index');
+        if( \Auth::user()->isAdmin() ){
+            return view('logs.index');
+        }
+        abort(403);
     }
 
     public function report($date)
