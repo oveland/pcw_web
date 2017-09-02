@@ -20,7 +20,8 @@ class AccessLogController extends Controller
     public function report($date)
     {
         if( \Auth::user()->isAdmin() ){
-            $logs = AccessLog::where('date', '=', Carbon::createFromFormat('Y-m-d', $date))->with('user')->get();
+            $logs = AccessLog::where('date', '=', Carbon::createFromFormat('Y-m-d', $date))->with('user')->orderBy('time','asc')->get();
+            
             //return view('logs.access',compact('logs'));
             $pdf = PDF::loadView('logs.access', ['logs' => $logs, 'date' => $date]);
             $date = str_replace('-','',$date);

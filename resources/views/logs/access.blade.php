@@ -55,7 +55,7 @@
                     <td>{{ $log->user->usuario??'SIN ASIGNAR' }}</td>
                     <td>{{ $log->user->nombre??'SIN ASIGNAR' }}</td>
                     <td>{{ $log->date }}</td>
-                    <td>{{ \DateTime::createFromFormat('H:i:s.u',$log->time)->format('H:i:s')??$log->time }}</td>
+                    <td>{{ explode('.',$log->time)[0] }}</td>
                 </tr>
             @endforeach
             </tbody>
