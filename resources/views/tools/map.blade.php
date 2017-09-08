@@ -42,7 +42,6 @@
                 if( is_null(coordinates) ){
                     alert_type('@lang('Type coordinates!')')
                 }else{
-
                     (coordinates.split("\n")).forEach(function (c,i) {
                         c = c.split(", ");
                         var latitude = c[0];
@@ -55,7 +54,6 @@
                             position: {lat: parseFloat(latitude), lng: parseFloat(longitude)}
                         });
                     });
-
                 }
             })
         });
