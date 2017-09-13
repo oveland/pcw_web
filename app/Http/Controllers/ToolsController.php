@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\HistoryMarker;
+use App\Http\Controllers\Utils\Geolocation;
+use Carbon\Carbon;
 
 class ToolsController extends Controller
 {
@@ -13,9 +15,9 @@ class ToolsController extends Controller
         $markers = HistoryMarker::limit(10)->get();
         $coordinatesGPS = array();
         $path = "";
-        foreach ($markers as $marker){
-            $coordinatesGPS[] = collect($marker)->only(['lat','lng'])->toArray();
-            $path .= $marker->lat.','.$marker->lng.'|';
+        foreach ($markers as $marker) {
+            $coordinatesGPS[] = collect($marker)->only(['lat', 'lng'])->toArray();
+            $path .= $marker->lat . ',' . $marker->lng . '|';
         }
         $path = rtrim($path, '|');
         $coordinates = $this->googleSnapToRoad($path);

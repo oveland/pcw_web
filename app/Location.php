@@ -55,6 +55,16 @@ class Location extends Model
         return $this->hasOne(Report::class,'location_id','id');
     }
 
+    /**
+     * Check valid coordinates
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        return ($this->latitude != 0 && $this->longitude != 0)?true:false;
+    }
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }

@@ -34,7 +34,7 @@ class RouteReportController extends Controller
         $route_id = $request->get('route-report');
         $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $request->get('date-report'))
             ->where('route_id', '=', $route_id)
-            ->where(function($query){
+            ->where(function ($query) {
                 $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
             })
             ->orderBy('round_trip', 'asc')->get()->groupBy('round_trip');
@@ -49,24 +49,26 @@ class RouteReportController extends Controller
     public function chart(DispatchRegister $dispatchRegister)
     {
         $dataReport = ['empty' => true];
-        $locations = $dispatchRegister->locations;
-        $reportList = $dispatchRegister->reports;
+        $locations = $dispatchRegister->locations()->with('report')->get();
 
         if ($locations->isNotEmpty()) {
-            $route = $dispatchRegister->route;
-            $controlPoints = $route->controlPoints;
             $vehicle = $dispatchRegister->vehicle;
 
-            $route_coordinates = self::getRouteCoordinates($route->url);
+            $route = $dispatchRegister->route;
             $routeDistance = $route->distance * 1000;
+            $controlPoints = $route->controlPoints;
+            $route_coordinates = self::getRouteCoordinates($route->url);
 
             $reports = array();
-            $lastReport = $locations->last()->report;
+            $lastReport = null;
+            $lastLocation = null;
+            $startM = microtime(true);
+            $incremnt = 0;
             foreach ($locations as $location) {
-                $report = $reportList->where('location_id', '=', $location->id)->first();
-                //$report = $location->report;
+                $report = $location->report;
                 /* The first location haven´t a report */
-                if ($report) {
+                if ($report && $location->isValid()) {
+                    //$report = (object)$report;
                     $reports[] = (object)[
                         'date' => $report->date,
                         'time' => $report->timed,
@@ -76,14 +78,16 @@ class RouteReportController extends Controller
                         'longitude' => $location->longitude,
                         'offRoad' => $this->checkOffRoad($location, $route_coordinates)
                     ];
+
+                    $lastReport = $report ? $report : $lastReport;
+                    $lastLocation = $location;
                 }
-                $lastReport = $report ? $report : $lastReport;
             }
 
             $dataReport = (object)[
                 'vehicle' => $vehicle->number,
                 'plate' => $vehicle->plate,
-                'vehicleSpeed' => round($lastReport ? $lastReport->speed : 0, 2),
+                'vehicleSpeed' => round($lastLocation ? $lastLocation->speed : 0, 2),
                 'route' => $route->name,
                 'routeDistance' => $routeDistance,
                 'routePercent' => round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1),
@@ -103,20 +107,18 @@ class RouteReportController extends Controller
      */
     public function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
     {
-        $locations = $dispatchRegister->locations;
+        $locations = $dispatchRegister->locations()->with('report')->get();
 
         $off_road_report_list = array();
 
         if ($locations->isNotEmpty()) {
-            $reportList = $dispatchRegister->reports;
             $route = $dispatchRegister->route;
-            $vehicle = $dispatchRegister->vehicle;
 
             $route_coordinates = self::getRouteCoordinates($route->url);
             $reports = array();
             foreach ($locations as $location) {
-                $report = $reportList->where('location_id', '=', $location->id)->first();
-                if ($report) {
+                $report = $location->report;
+                if ($report && $location->isValid()) {
                     $reports[] = (object)[
                         'date' => $report->date,
                         'time' => $report->timed,
@@ -331,8 +333,28 @@ class RouteReportController extends Controller
     public function checkOffRoad($location, $route_coordinates)
     {
         $offRoad = true;
-        $location_longitude = $location->longitude;
         $location_latitude = $location->latitude;
+        $location_longitude = $location->longitude;
+        //dump($location_latitude.', '.$location_longitude);
+        $threshold = 0.003;
+        $threshold_location = [
+            'la_up' => $location_latitude + $threshold,
+            'la_down' => $location_latitude - $threshold,
+            'lo_up' => $location_longitude + $threshold,
+            'lo_down' => $location_longitude - $threshold
+        ];
+        /*dump($threshold_location['la_up'].', '.$threshold_location['lo_up']);
+        dump($threshold_location['la_up'].', '.$threshold_location['lo_down']);
+        dump($threshold_location['la_down'].', '.$threshold_location['lo_up']);
+        dd($threshold_location['la_down'].', '.$threshold_location['lo_down']);*/
+
+
+        $route_coordinates = collect($route_coordinates);
+        $route_coordinates = $route_coordinates->filter(function ($value, $key) use ($threshold_location) {
+            return
+                $value['latitude'] > $threshold_location['la_down'] && $value['latitude'] < $threshold_location['la_up'] &&
+                $value['longitude'] > $threshold_location['lo_down'] && $value['longitude'] < $threshold_location['lo_up'];
+        })->values()->toArray();
 
         foreach ($route_coordinates as $index => $route_coordinate) {
             $route_latitude = $route_coordinate['latitude'];
