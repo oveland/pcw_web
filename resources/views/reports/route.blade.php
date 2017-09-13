@@ -340,8 +340,8 @@
                                 '<b>Hora:</b> {{offset:dates}} <br>'+
                                 '<b>Distancia:</b> {{offset:distance}} Km <br>'+
                                 '<b>Recorrido:</b> {{offset:percent}}% <br>'+
-                                '<span class=\"latitude\">{{offset:latitude}}</span><br>'+
-                                '<span class=\"longitude\">{{offset:longitude}}</span>'+
+                                '<span class=\"hide latitude\">{{offset:latitude}}</span><br>'+
+                                '<span class=\"hide longitude\">{{offset:longitude}}</span>'+
                             '</div>'+
                         '"?>',
                                 tooltipValueLookups: {

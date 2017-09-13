@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * App\DispatchRegister
@@ -55,7 +56,26 @@ class DispatchRegister extends Model
      */
     public function reports()
     {
-        return $this->hasMany(Report::class,'dispatch_register_id','id')->orderBy('date','asc');
+        $relationClass = Report::class;
+        if ($this->vehicle->company->id == 14) {
+            $monthDate = Carbon::createFromFormat(config('app.date_format'), $this->date . ' 00:00:00')->month;
+            switch ($monthDate) {
+                case 6:
+                    $relationClass = AlamedaJuneReport::class;
+                    break;
+                case 7:
+                    $relationClass = AlamedaJulyReport::class;
+                    break;
+                case 8:
+                    $relationClass = AlamedaAugustReport::class;
+                    break;
+                default:
+                    $relationClass = Report::class;
+                    break;
+            }
+        }
+
+        return $this->hasMany($relationClass, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**
@@ -63,7 +83,26 @@ class DispatchRegister extends Model
      */
     public function locations()
     {
-        return $this->hasMany(Location::class,'dispatch_register_id','id')->orderBy('date','asc');
+        $relationClass = Location::class;
+        if ($this->vehicle->company->id == 14) {
+            $monthDate = Carbon::createFromFormat(config('app.date_format'), $this->date . ' 00:00:00')->month;
+            switch ($monthDate) {
+                case 6:
+                    $relationClass = AlamedaJuneLocation::class;
+                    break;
+                case 7:
+                    $relationClass = AlamedaJulyLocation::class;
+                    break;
+                case 8:
+                    $relationClass = AlamedaAugustLocation::class;
+                    break;
+                default:
+                    $relationClass = Location::class;
+                    break;
+            }            
+        }
+
+        return $this->hasMany($relationClass, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**
