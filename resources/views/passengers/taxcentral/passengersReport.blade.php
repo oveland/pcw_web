@@ -30,7 +30,7 @@
                                 <ul class="dropdown-menu pull-right">
                                     <li>
                                         <a href="" class="bg-lime-dark" style="color: white !important;"
-                                           onclick="$(this).attr('href','{{ route('passengers-by-dispatch',[$dispatchRegister->id])  }}?export=true&'+$('.form-search-report').serialize())">
+                                           onclick="$(this).attr('href','{{ route('tc-passengers-by-dispatch',[$dispatchRegister->id])  }}?export=true&'+$('.form-search-report').serialize())">
                                             <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                                         </a>
                                     </li>

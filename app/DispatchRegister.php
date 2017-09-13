@@ -42,6 +42,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereVehicleId($value)
  * @property string|null $time
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTime($value)
+ * @property int|null $start_recorder
+ * @property int|null $end_recorder
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereEndRecorder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereStartRecorder($value)
  */
 class DispatchRegister extends Model
 {

@@ -23,18 +23,31 @@ Route::group(['middleware' => ['auth']], function () {
     })->name('index');
 
     /* Routes for route report */
-    Route::get('/ruta', 'RouteReportController@index')->name('route-report');
-    Route::get('/report/show', 'RouteReportController@show')->name('route-search-report');
-    Route::any('/report/chart/{dispatchRegister}', 'RouteReportController@chart')->name('route-chart-report');
-    Route::any('/report/off_road/{dispatchRegister}', 'RouteReportController@offRoadReport')->name('route-off-road-report');
-    Route::any('/report/ajax', 'RouteReportController@ajax')->name('route-ajax-action');
+    Route::prefix('route')->group(function () {
+        Route::get('/', 'RouteReportController@index')->name('route-report');
+        Route::get('/report/show', 'RouteReportController@show')->name('route-search-report');
+        Route::any('/report/chart/{dispatchRegister}', 'RouteReportController@chart')->name('route-chart-report');
+        Route::any('/report/off_road/{dispatchRegister}', 'RouteReportController@offRoadReport')->name('route-off-road-report');
+        Route::any('/report/ajax', 'RouteReportController@ajax')->name('route-ajax-action');
+    });
 
     /* Routes for passenger report */
-    Route::get('/pasajeros', 'PassengerReportController@index')->name('passengers-report');
-    Route::get('/passengers/show', 'PassengerReportController@show')->name('passengers-search-report');
-    Route::any('/passengers/dispatch/show/{dispatchRegister}', 'PassengerReportController@showByDispatch')->name('passengers-by-dispatch');
-    Route::any('/passengers/seat/show/{historySeat}', 'PassengerReportController@showHistorySeat')->name('passengers-seat-detail');
-    Route::any('/passengers/ajax/{action}', 'PassengerReportController@ajax')->name('passengers-ajax');
+    Route::prefix('passengers')->group(function () {
+        /* Router for Tax Central Reports */
+        Route::prefix('taxcentral')->group(function () {
+            Route::get('/', 'TaxCentralPassengerReportController@index')->name('tc-passengers-report');
+            Route::get('/show', 'TaxCentralPassengerReportController@show')->name('tc-passengers-search-report');
+            Route::any('/dispatch/show/{dispatchRegister}', 'TaxCentralPassengerReportController@showByDispatch')->name('tc-passengers-by-dispatch');
+            Route::any('/seat/show/{historySeat}', 'TaxCentralPassengerReportController@showHistorySeat')->name('tc-passengers-seat-detail');
+            Route::any('/ajax/{action}', 'TaxCentralPassengerReportController@ajax')->name('tc-passengers-ajax');
+        });
+        /* Router for General Reports */
+        Route::prefix('consolidated')->group(function () {
+            Route::get('/','PassengerReportController@index')->name('passengers-report');
+            Route::get('/show', 'PassengerReportController@show')->name('passengers-search-report');
+            Route::any('/ajax/{action}', 'PassengerReportController@ajax')->name('passengers-ajax');
+        });
+    });
 
 
 

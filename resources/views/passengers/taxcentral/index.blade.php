@@ -203,7 +203,7 @@
     @include('template.google.maps')
 
     <script type="application/javascript">
-        $('.menu-passengers').addClass('active');
+        $('.menu-passengers, .menu-passengers-taxcentral').addClass('active');
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
 
@@ -218,7 +218,7 @@
                 if ($(this).isValid()) {
                     $('.report-container').slideUp(100);
                     $.ajax({
-                        url: '{{ route('passengers-search-report') }}',
+                        url: '{{ route('tc-passengers-search-report') }}',
                         data: $(this).serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();
@@ -238,87 +238,86 @@
                 }
             });
 
+            $('body').on('click', '.btn-show-passengers-route-report', function () {
+                var passengersRouteReport = $("#passengers-route-report");
+                passengersRouteReport.html(loading);
+                $('.report-info').html(loading);
+                $.ajax({
+                    url: $(this).data('url'),
+                    success: function (data) {
+                        passengersRouteReport.hide().html(data).fadeIn();
+                        if (!data.empty) {
+
+                        } else {
+                            gerror('@lang('No passengers report found for this vehicle')');
+                            $('.report-info').empty();
+                            $('.modal').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        passengersRouteReport.empty();
+                        $('.modal').modal('hide');
+                        gerror('@lang('Oops, something went wrong!')');
+                    }
+                });
+            });
+
+            $('body').on('click', '.btn-show-trajectory-seat-report', function () {
+                //map.clearAllMarkers();
+                $('.report-info').html(loading);
+                $.ajax({
+                    url: $(this).data('url'),
+                    success: function (data) {
+                        if (!data.empty) {
+                            var urlLayerMap = data.urlLayerMap;
+                            new google.maps.KmlLayer({
+                                url: urlLayerMap,
+                                map: map
+                            });
+
+                            new google.maps.Marker({
+                                title: cp.name,
+                                map: map,
+                                icon: seatPointIcon[0],
+                                animation: google.maps.Animation.DROP,
+                                position: {lat: parseFloat(data.active_latitude), lng: parseFloat(data.active_longitude)}
+                            });
+
+                            new google.maps.Marker({
+                                title: cp.name,
+                                map: map,
+                                icon: seatPointIcon[1],
+                                animation: google.maps.Animation.DROP,
+                                position: {lat: parseFloat(data.inactive_latitude), lng: parseFloat(data.inactive_longitude)}
+                            });
+
+                        } else {
+                            gerror('@lang('No seat report found')');
+                            $('.report-info').empty();
+                            $('.modal').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        $('.report-info').empty();
+                        $('.modal').modal('hide');
+                        gerror('@lang('Oops, something went wrong!')');
+                    }
+                });
+            });
+
             $('#modal-report-seat').on('shown.bs.modal', function () {
                 initializeMap();
             });
+
+            @if(!Auth::user()->isAdmin())
+                loadRouteReport(null);
+            @endif
         });
-
-        $('body').on('click', '.btn-show-passengers-route-report', function () {
-            var passengersRouteReport = $("#passengers-route-report");
-            passengersRouteReport.html(loading);
-            $('.report-info').html(loading);
-            $.ajax({
-                url: $(this).data('url'),
-                success: function (data) {
-                    passengersRouteReport.hide().html(data).fadeIn();
-                    if (!data.empty) {
-
-                    } else {
-                        gerror('@lang('No passengers report found for this vehicle')');
-                        $('.report-info').empty();
-                        $('.modal').modal('hide');
-                    }
-                },
-                error: function () {
-                    passengersRouteReport.empty();
-                    $('.modal').modal('hide');
-                    gerror('@lang('Oops, something went wrong!')');
-                }
-            });
-        });
-
-        $('body').on('click', '.btn-show-trajectory-seat-report', function () {
-            //map.clearAllMarkers();
-            $('.report-info').html(loading);
-            $.ajax({
-                url: $(this).data('url'),
-                success: function (data) {
-                    if (!data.empty) {
-                        var urlLayerMap = data.urlLayerMap;
-                        new google.maps.KmlLayer({
-                            url: urlLayerMap,
-                            map: map
-                        });
-
-                        new google.maps.Marker({
-                            title: cp.name,
-                            map: map,
-                            icon: seatPointIcon[0],
-                            animation: google.maps.Animation.DROP,
-                            position: {lat: parseFloat(data.active_latitude), lng: parseFloat(data.active_longitude)}
-                        });
-
-                        new google.maps.Marker({
-                            title: cp.name,
-                            map: map,
-                            icon: seatPointIcon[1],
-                            animation: google.maps.Animation.DROP,
-                            position: {lat: parseFloat(data.inactive_latitude), lng: parseFloat(data.inactive_longitude)}
-                        });
-
-                    } else {
-                        gerror('@lang('No seat report found')');
-                        $('.report-info').empty();
-                        $('.modal').modal('hide');
-                    }
-                },
-                error: function () {
-                    chartRouteReport.empty();
-                    $('.report-info').empty();
-                    $('.modal').modal('hide');
-                    gerror('@lang('Oops, something went wrong!')');
-                }
-            });
-        });
-
-        @if(!Auth::user()->isAdmin())
-            loadRouteReport(null);
-        @endif
 
         function loadRouteReport(company) {
             var roouteSelect = $('#route-report');
             roouteSelect.html($('#select-loading').html()).trigger('change.select2');
-            roouteSelect.load('{{ route('passengers-ajax',['action'=>'loadRoutes']) }}', {
+            roouteSelect.load('{{ route('tc-passengers-ajax',['action'=>'loadRoutes']) }}', {
                 company: company
             }, function () {
                 roouteSelect.trigger('change.select2');

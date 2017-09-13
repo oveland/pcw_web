@@ -65,6 +65,7 @@
 
 @section('scripts')
     <script type="application/javascript">
+        $('.menu-logs').addClass('active');
         $(document).ready(function () {
             $('.form-download-report').submit(function () {
                 event.preventDefault();

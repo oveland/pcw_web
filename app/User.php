@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->company?$this->company->id === 6:false;
     }
+
+    public function belongsToTaxcentral()
+    {
+        return $this->company?$this->company->id === 21:false;
+    }
 }

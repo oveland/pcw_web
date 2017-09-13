@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\HistoryMarker whereOrientacion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\HistoryMarker whereVelocidad($value)
  * @mixin \Eloquent
+ * @property int|null $km_gps
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\HistoryMarker whereKmGps($value)
  */
 class HistoryMarker extends Model
 {

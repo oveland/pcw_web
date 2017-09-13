@@ -37,19 +37,19 @@
                     <span>@lang('Home')</span>
                 </a>
             </li>
-            <li class="active">
+            <li class="has-sub active">
                 <a href="javascritp:;" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-pulse"></i>
                     <span>@lang('Reports')</span>
                 </a>
-                <ul class="sub-menu" style="display: block;">
+                <ul class="sub-menu">
                     <li class="has-sub menu-routes">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
                             <i class="fa fa-bus faa-pulse"></i>
                             @lang('Route')
                         </a>
-                        <ul class="sub-menu" style="display: block;">
+                        <ul class="sub-menu">
                             <li class="has-sub menu-routes">
                                 <a href="{{ route('route-report')  }}">
                                     @lang('Route report')
@@ -63,23 +63,39 @@
                             <i class="fa fa-users faa-pulse"></i>
                             @lang('Passengers')
                         </a>
-                        <ul class="sub-menu" style="display: block;">
-                            <li class="has-sub menu-passengers">
+                        <ul class="sub-menu">
+                            @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
+                            <li class="has-sub menu-passengers-taxcentral">
+                                <a href="javascript:;" class="faa-parent animated-hover">
+                                    <b class="caret pull-right"></b>
+                                    <i class="fa fa-users faa-pulse"></i>
+                                    @lang('Taxcentral')
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="has-sub menu-passengers-taxcentral">
+                                        <a href="{{ route('tc-passengers-report')  }}">
+                                            @lang('Passengers report')
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @endif
+                            <li class="has-sub menu-passengers-general">
                                 <a href="{{ route('passengers-report')  }}">
-                                    @lang('Passengers report')
+                                    @lang('Consolidated per day')
                                 </a>
                             </li>
                         </ul>
                     </li>
                     @if( Auth::user()->isAdmin() )
-                    <li class="has-sub menu-passengers">
+                    <li class="has-sub menu-logs">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
                             <i class="fa fa-user faa-pulse"></i>
                             @lang('Users')
                         </a>
-                        <ul class="sub-menu" style="display: block;">
-                            <li class="has-sub menu-passengers">
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-logs">
                                 <a href="{{ route('logs-access')  }}">
                                     @lang('Access log')
                                 </a>
@@ -89,6 +105,7 @@
                     @endif
                 </ul>
             </li>
+
             <br>
             <li class="divider has-minify-btn">
                 <!-- begin sidebar minify button -->

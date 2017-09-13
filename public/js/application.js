@@ -6,6 +6,9 @@ $(document).ready(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        complete:function () {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 
@@ -28,6 +31,7 @@ $(document).ready(function () {
     });
 
     $('.default-select2').select2();
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 

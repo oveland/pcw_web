@@ -400,13 +400,13 @@
         });
 
         function loadRouteReport(company) {
-            var roouteSelect = $('#route-report');
-            roouteSelect.html($('#select-loading').html()).trigger('change.select2');
-            roouteSelect.load('{{route('route-ajax-action')}}', {
+            var routeSelect = $('#route-report');
+            routeSelect.html($('#select-loading').html()).trigger('change.select2');
+            routeSelect.load('{{route('route-ajax-action')}}', {
                 option: 'loadRoutes',
                 company: company
             }, function () {
-                roouteSelect.trigger('change.select2');
+                routeSelect.trigger('change.select2');
             });
         }
     </script>

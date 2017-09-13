@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereNit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereShortName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Company active()
  */
 class Company extends Model
 {
@@ -45,5 +46,9 @@ class Company extends Model
     public function activeVehicles()
     {
         return $this->hasMany(Vehicle::class,'company_id','id')->where('active',true);
+    }
+
+    public function scopeActive($query){
+        return $query->where('active','=',true);
     }
 }

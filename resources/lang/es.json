@@ -108,5 +108,11 @@
   "Users":"Usuarios",
   "Download report":"Descargar reporte",
   "Logs report":"Reportes de usuarios",
-  "Access Logs": "Logs de acceso"
+  "Access Logs": "Logs de acceso",
+  "Consolidated per day":"Consolidado por día",
+  "Recorder":"Registradora",
+  "All":"Todos",
+  "Total passengers":"Total pasajeros",
+  "Average per vehicle":"Promedio por vehículos",
+  "Difference":"Diferencia"
 }
