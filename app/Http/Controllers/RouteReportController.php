@@ -50,7 +50,8 @@ class RouteReportController extends Controller
     public function chart(DispatchRegister $dispatchRegister)
     {
         $dataReport = ['empty' => true];
-        $locations = $dispatchRegister->locations()->with('report')->get();
+        //$locations = $dispatchRegister->locations()->with('report')->get();
+        $locations = $dispatchRegister->locationReports()->get();
         $offRoadLocation = true;
         if ($locations->isNotEmpty()) {
             $vehicle = $dispatchRegister->vehicle;
@@ -70,7 +71,8 @@ class RouteReportController extends Controller
             $lastLocation = null;
 
             foreach ($locations as $location) {
-                $report = $location->report;
+                //$report = $location->report;
+                $report = $location;
                 if ($report && $location->isValid()) {
                     $offRoad = $location->off_road == 't'?true:false;
                     if ($route_coordinates != false) {
@@ -84,7 +86,7 @@ class RouteReportController extends Controller
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
-                        'offRoad' => $offRoad//$this->checkOffRoad($location, $route_coordinates)
+                        'offRoad' => $offRoad
                     ];
 
                     $lastReport = $report ? $report : $lastReport;
@@ -116,7 +118,8 @@ class RouteReportController extends Controller
      */
     public function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
     {
-        $locations = $dispatchRegister->locations()->with('report')->get();
+        //$locations = $dispatchRegister->locations()->with('report')->get();
+        $locations = $dispatchRegister->locationReports()->get();
 
         $off_road_report_list = array();
 
@@ -130,7 +133,8 @@ class RouteReportController extends Controller
 
             $reports = array();
             foreach ($locations as $location) {
-                $report = $location->report;
+                //$report = $location->report;
+                $report = $location;
                 if ($report && $location->isValid()) {
                     $offRoad = $location->off_road == 't'?true:false;
                     if ($route_coordinates != false) {

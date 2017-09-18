@@ -85,6 +85,15 @@ class DispatchRegister extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function locationReports()
+    {
+        $relationClass = LocationReport::class;
+        return $this->hasMany($relationClass, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function locations()
     {
         $relationClass = Location::class;
