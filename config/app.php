@@ -237,4 +237,5 @@ return [
      *
      */
     'date_format' => env('DB_DATE_TIME_FORMAT', 'Y-m-d H:i:s'),
+    'simple_date_format' => env('DB_DATE_FORMAT', 'Y-m-d'),
 ];

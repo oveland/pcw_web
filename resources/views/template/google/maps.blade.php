@@ -5,7 +5,9 @@
  * Time: 2:49 PM
  */
  --}}
+
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('road.google_api_token') }}" async defer></script>
+
 <script type="text/javascript">
     var map;
     var routeLayerKML;
