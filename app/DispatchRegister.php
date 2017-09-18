@@ -125,6 +125,16 @@ class DispatchRegister extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
+    public function getParsedDate()
+    {
+        return Carbon::createFromFormat(config('app.simple_date_format'),$this->date);
+    }
+
+    public function dateLessThanDateNewOffRoadReport()
+    {
+        return $this->getParsedDate()->format('Y-m-d') < '2017-09-16';
+    }
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }
