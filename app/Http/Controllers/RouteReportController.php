@@ -7,6 +7,7 @@ use App\ControlPoint;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Route;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -50,25 +51,32 @@ class RouteReportController extends Controller
     {
         $dataReport = ['empty' => true];
         $locations = $dispatchRegister->locations()->with('report')->get();
-
+        $offRoadLocation = true;
         if ($locations->isNotEmpty()) {
             $vehicle = $dispatchRegister->vehicle;
 
             $route = $dispatchRegister->route;
             $routeDistance = $route->distance * 1000;
             $controlPoints = $route->controlPoints;
-            $route_coordinates = self::getRouteCoordinates($route->url);
+
+            $route_coordinates = false;
+            if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
+                $route_coordinates = self::getRouteCoordinates($route->url);
+                $offRoadLocation = false;
+            }
 
             $reports = array();
             $lastReport = null;
             $lastLocation = null;
-            $startM = microtime(true);
-            $incremnt = 0;
+
             foreach ($locations as $location) {
                 $report = $location->report;
-                /* The first location haven´t a report */
                 if ($report && $location->isValid()) {
-                    //$report = (object)$report;
+                    $offRoad = $location->off_road == 't'?true:false;
+                    if ($route_coordinates != false) {
+                        $offRoad = $this->checkOffRoad($location, $route_coordinates);
+                    }
+
                     $reports[] = (object)[
                         'date' => $report->date,
                         'time' => $report->timed,
@@ -76,7 +84,7 @@ class RouteReportController extends Controller
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
-                        'offRoad' => $this->checkOffRoad($location, $route_coordinates)
+                        'offRoad' => $offRoad//$this->checkOffRoad($location, $route_coordinates)
                     ];
 
                     $lastReport = $report ? $report : $lastReport;
@@ -93,7 +101,8 @@ class RouteReportController extends Controller
                 'routePercent' => round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1),
                 'controlPoints' => $controlPoints,
                 'urlLayerMap' => $route->url,
-                'reports' => $reports
+                'reports' => $reports,
+                'offRoadFromLocation' => $offRoadLocation
             ];
         }
 
@@ -114,11 +123,19 @@ class RouteReportController extends Controller
         if ($locations->isNotEmpty()) {
             $route = $dispatchRegister->route;
 
-            $route_coordinates = self::getRouteCoordinates($route->url);
+            $route_coordinates = false;
+            if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
+                $route_coordinates = self::getRouteCoordinates($route->url);
+            }
+
             $reports = array();
             foreach ($locations as $location) {
                 $report = $location->report;
                 if ($report && $location->isValid()) {
+                    $offRoad = $location->off_road == 't'?true:false;
+                    if ($route_coordinates != false) {
+                        $offRoad = $this->checkOffRoad($location, $route_coordinates);
+                    }
                     $reports[] = (object)[
                         'date' => $report->date,
                         'time' => $report->timed,
@@ -126,7 +143,7 @@ class RouteReportController extends Controller
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
-                        'offRoad' => $this->checkOffRoad($location, $route_coordinates)
+                        'offRoad' => $offRoad//$this->checkOffRoad($location, $route_coordinates)
                     ];
                 }
             }
@@ -336,7 +353,7 @@ class RouteReportController extends Controller
         $location_latitude = $location->latitude;
         $location_longitude = $location->longitude;
         //dump($location_latitude.', '.$location_longitude);
-        $threshold = 0.003;
+        $threshold = 0.005;
         $threshold_location = [
             'la_up' => $location_latitude + $threshold,
             'la_down' => $location_latitude - $threshold,
