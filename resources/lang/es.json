@@ -88,10 +88,11 @@
   "Active seat": "Asiento ocupado",
   "Free seat": "Asiento libre",
   "No seat report found": "No se ha encontrado reporte para el asiento seleccionado",
-  "passengers": "Pasajeros",
+  "passengers": "pasajeros",
   "No registers location found": "No se encontraron registros de coordenadas",
   "The vehicle haven´t off roads list": "El vehículo no presenta salidas de ruta",
   "Off road report": "Reporte de salidas de ruta",
+  "Off road": "Salidas de ruta",
   "Status":"Estado en la ruta",
   "See off road report": "Ver reporte de salidas de ruta",
   "Report vehicle off road": "Reporte de salidas de ruta del vehículo",
@@ -114,5 +115,13 @@
   "All":"Todos",
   "Total passengers":"Total pasajeros",
   "Average per vehicle":"Promedio por vehículos",
-  "Difference":"Diferencia"
+  "Difference":"Diferencia",
+  "reports":"reportes",
+  "routes":"rutas",
+  "route":"ruta",
+  "consolidated":"consolidado",
+  "off-road":"salidas-de-ruta",
+  "access-log":"logs-de-acceso",
+  "route-report":"reporte-de-ruta",
+  "users":"usuarios"
 }

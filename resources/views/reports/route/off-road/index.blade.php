@@ -206,10 +206,10 @@
 @section('scripts')
     @include('template.google.maps')
 
-    <script src="assets/plugins/sparkline/jquery.sparkline.min.js"></script>
+    <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-routes').addClass('active');
+        $('.menu-routes, .menu-off-road-report').addClass('active');
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
 
@@ -224,7 +224,7 @@
                 if ($(this).isValid()) {
                     $('.report-container').slideUp(100);
                     $.ajax({
-                        url: '{{ route('route-search-report') }}',
+                        url: '{{ route('off-road-search-report') }}',
                         data: $(this).serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();
@@ -402,7 +402,7 @@
         function loadRouteReport(company) {
             var routeSelect = $('#route-report');
             routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{route('route-ajax-action')}}', {
+            routeSelect.load('{{route('off-road-ajax-action')}}', {
                 option: 'loadRoutes',
                 company: company
             }, function () {

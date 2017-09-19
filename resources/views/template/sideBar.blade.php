@@ -32,7 +32,7 @@
             </li>
             <li class="nav-header">MENÚ</li>
             <li class="">
-                <a href="http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" class="faa-parent animated-hover">
+                <a href="http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" target="_blank" class="faa-parent animated-hover">
                     <i class="fa fa-home faa-pulse"></i>
                     <span>@lang('Home')</span>
                 </a>
@@ -50,9 +50,16 @@
                             @lang('Route')
                         </a>
                         <ul class="sub-menu">
-                            <li class="has-sub menu-routes">
+                            <li class="has-sub menu-route-report">
                                 <a href="{{ route('route-report')  }}">
+                                    <i class="fa fa-line-chart" aria-hidden="true"></i>
                                     @lang('Route report')
+                                </a>
+                            </li>
+                            <li class="has-sub menu-off-road-report">
+                                <a href="{{ route('off-road-report')  }}">
+                                    <i class="fa fa-road" aria-hidden="true"></i>
+                                    @lang('Off road')
                                 </a>
                             </li>
                         </ul>
@@ -68,12 +75,13 @@
                             <li class="has-sub menu-passengers-taxcentral">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
-                                    <i class="fa fa-users faa-pulse"></i>
+                                    <i class="fa fa-building faa-pulse"></i>
                                     @lang('Taxcentral')
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-taxcentral">
                                         <a href="{{ route('tc-passengers-report')  }}">
+                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                                             @lang('Passengers report')
                                         </a>
                                     </li>
@@ -82,6 +90,7 @@
                             @endif
                             <li class="has-sub menu-passengers-general">
                                 <a href="{{ route('passengers-report')  }}">
+                                    <i class="fa fa-file-archive-o" aria-hidden="true"></i>
                                     @lang('Consolidated per day')
                                 </a>
                             </li>
@@ -97,6 +106,7 @@
                         <ul class="sub-menu">
                             <li class="has-sub menu-logs">
                                 <a href="{{ route('logs-access')  }}">
+                                    <i class="fa fa-sign-in" aria-hidden="true"></i>
                                     @lang('Access log')
                                 </a>
                             </li>

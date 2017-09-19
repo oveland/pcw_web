@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\ControlPoint;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Route;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -23,7 +21,7 @@ class RouteReportController extends Controller
         if (Auth::user()->isAdmin()) {
             $companies = Company::where('active', '=', true)->orderBy('short_name', 'asc')->get();
         }
-        return view('reports.route', compact('companies'));
+        return view('reports.route.route.index', compact('companies'));
     }
 
     /**
@@ -40,7 +38,7 @@ class RouteReportController extends Controller
             })
             ->orderBy('round_trip', 'asc')->get()->groupBy('round_trip');
 
-        return view('reports.routeReport', compact('roundTripDispatchRegisters'));
+        return view('reports.route.route.routeReport', compact('roundTripDispatchRegisters'));
     }
 
     /**
@@ -161,7 +159,7 @@ class RouteReportController extends Controller
 
             if ($request->get('export')) $this->export($dispatchRegister, $off_road_report_list);
         }
-        return view('reports.offRoadReport', compact('off_road_report_list', 'dispatchRegister'));
+        return view('reports.route.route.offRoadReport', compact('off_road_report_list', 'dispatchRegister'));
     }
 
     /**
@@ -279,7 +277,7 @@ class RouteReportController extends Controller
             case 'loadRoutes':
                 $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
                 $routes = $company != 'null' ? Route::where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('reports.routeSelect', compact('routes'));
+                return view('reports.route.route.routeSelect', compact('routes'));
                 break;
             default:
                 return "Nothing to do";
