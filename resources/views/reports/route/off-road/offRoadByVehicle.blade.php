@@ -18,7 +18,7 @@
         <div class="tab-content panel">
             <div class="row">
                 <div class="col-md-6 col-lg-4 col-sm-12 col-xs-12">
-                    <div class="widge p-t-0">
+                    <div class="widge p-t-0 report-by-vehicle-container">
                         <div class="widget-header bg-inverse m-0">
                             <h4 class="text-white label-vehicles">{{ count($offRoadsByVehicles) }} @lang('Vehicles')
                                 <div class="col-md-1 pull-right p-0">
@@ -138,7 +138,7 @@
     </div>
     <script type="application/javascript">
         //handleSlimScroll();
-        $('div[data-scrollbar="true"]').slimScroll({
+        $('.report-by-vehicle-container div[data-scrollbar="true"]').slimScroll({
             width: 'auto',
             height: '350px',
             size: '3px',
