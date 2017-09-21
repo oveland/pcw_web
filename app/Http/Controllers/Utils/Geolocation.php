@@ -48,6 +48,7 @@ class Geolocation
         $json = collect(json_decode($response, true));
         $address = (object)collect($json->first())->first();
         $address = explode(',', $address->formatted_address);
+        sleep(0.02);
         return $address[0];
     }
 

@@ -1,7 +1,36 @@
 @extends('layout')
 
 @section('stylesheets')
-
+    <style>
+        .accordion-toggle[aria-expanded="true"]{
+            background:rgba(213, 208, 208, 0.14) !important;
+        }
+        .accordion-toggle[aria-expanded="true"]:after{
+            content:'➤';
+            color:rgba(211, 211, 211, 0.17);
+            font-size:150%;
+            position:relative;
+            float:right;
+            bottom:30px;
+            right:8px;
+        }
+        .icon-vehicle-list i{
+            font-size: 120% !important;
+            margin: 10px;
+        }
+        .info-vehicle-list{
+            margin-left: 70px !important;
+        }
+        .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+            color: #cabf52 !important;
+        }
+        .btn-clear-search{
+            position: absolute !important;
+            right: 55px !important;
+            color: rgba(0, 0, 0, 0.14) !important;
+            z-index: 1 !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -69,11 +98,11 @@
                         @endif
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <label for="type-report" class="control-label field-required">@lang('Type report')</label>
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report"
-                                            class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company')</option>
+                                    <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
+                                        <option value="vehicle">@lang('By vehicle')</option>
+                                        <option value="route">@lang('By route')</option>
                                     </select>
                                 </div>
                             </div>
@@ -200,12 +229,29 @@
             </div>
         </div>
     </div>
+
+    <template id="warning-template-old-dates">
+        <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
+            <div class="col-md-2 p-0 text-center" style="padding-top: 10px">
+                <i class="fa fa-3x fa-exclamation-circle"></i>
+                <div class="col-md- p-0 text-center">
+                    <i class="fa fa-cog fa-spin p-20"></i>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <span class="close pull-right" data-dismiss="alert">×</span>
+                <h4><strong>@lang('Warning')</strong></h4>
+                <hr class="hr">
+                For dates less than to 2017-09-17 this process may take around <strong>15 seconds</strong>
+            </div>
+        </div>
+    </template>
 @endsection
 
 
 @section('scripts')
     @include('template.google.maps')
-
+    <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
@@ -222,7 +268,12 @@
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
                 if ($(this).isValid()) {
-                    $('.report-container').slideUp(100);
+                        $('.report-container').slideUp(100, function () {
+                            if ($('#date-report').val() <= '2017-09-16') {// TODO: Tempora until 2018-03-16
+                                $('.report-container').html($('#warning-template-old-dates').html()).slideDown();
+                            }
+                        });
+
                     $.ajax({
                         url: '{{ route('off-road-search-report') }}',
                         data: $(this).serialize(),
@@ -233,16 +284,48 @@
                 }
             });
 
-            $('#company-report').change(function () {
-                loadRouteReport($(this).val());
+            $('body').on('click','.btn-show-address',function(){
+                var el = $(this);
+                el.attr('disabled',true);
+                el.find('span').hide();
+                el.find('i').removeClass('hide');
+                $($(this).data('target')).load($(this).data('url'),function(response, status, xhr){
+                    console.log(status);
+                    el.attr('disabled',false);
+                    if ( status == "error" ) {
+                        if(el.hasClass('second-time')){
+                            el.removeClass('second-time');
+                        }else{
+                            el.addClass('second-time',true).click();
+                        }
+                    }else{
+                        el.fadeOut(1000);
+                    }
+                });
             });
 
-            $('#route-report').change(function () {
-                $('.report-container').slideUp();
-                if (is_not_null($(this).val())) {
-                    $('.form-search-report').submit();
+            $('#company-report').change(function () {
+
+            });
+
+            $('body').on('click','.accordion-vehicles',function(){
+                $($(this).data('parent'))
+                    .find('.collapse').collapse('hide')
+                    .find($(this).data('target')).collapse('show');
+            });
+
+            $('body').on('keyup','.search-vehicle-list',function(){
+                var vehicle = $(this).val();
+                if (is_not_null(vehicle)) {
+                    $('.vehicle-list').slideUp("fast",function(){
+                        $('#vehicle-list-' + vehicle).slideDown();
+                    });
+                } else {
+                    $('.vehicle-list').slideDown();
                 }
             });
+
+
 
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
@@ -390,24 +473,9 @@
                 });
             });
 
-            @if(!Auth::user()->isAdmin())
-                loadRouteReport(null);
-            @endif
-
             setTimeout(function(){
                 $('.btn-show-off-road-report').click();
             },500);
         });
-
-        function loadRouteReport(company) {
-            var routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{route('off-road-ajax-action')}}', {
-                option: 'loadRoutes',
-                company: company
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        }
     </script>
 @endsection

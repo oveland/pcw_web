@@ -49,7 +49,7 @@ class HistorySeat extends Model
 {
     protected function getDateFormat()
     {
-        return config('app.date_format');
+        return config('app.date_time_format');
     }
     /*protected $dates = [
       'date','time','active_time','inactive_time','busy_time'

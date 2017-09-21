@@ -36,7 +36,10 @@ class RouteReportController extends Controller
             ->where(function ($query) {
                 $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
             })
-            ->orderBy('round_trip', 'asc')->get()->groupBy('round_trip');
+            ->orderBy('round_trip')
+            ->orderBy('turn')
+            ->get()
+            ->groupBy('round_trip');
 
         return view('reports.route.route.routeReport', compact('roundTripDispatchRegisters'));
     }
@@ -72,9 +75,9 @@ class RouteReportController extends Controller
                 //$report = $location->report;
                 $report = $location;
                 if ($report && $location->isValid()) {
-                    $offRoad = $location->off_road == 't'?true:false;
+                    $offRoad = $location->off_road == 't' ? true : false;
                     if ($route_coordinates != false) {
-                        $offRoad = $this->checkOffRoad($location, $route_coordinates);
+                        $offRoad = self::checkOffRoad($location, $route_coordinates);
                     }
 
                     $reports[] = (object)[
@@ -134,9 +137,9 @@ class RouteReportController extends Controller
                 //$report = $location->report;
                 $report = $location;
                 if ($report && $location->isValid()) {
-                    $offRoad = $location->off_road == 't'?true:false;
+                    $offRoad = $location->off_road == 't' ? true : false;
                     if ($route_coordinates != false) {
-                        $offRoad = $this->checkOffRoad($location, $route_coordinates);
+                        $offRoad = self::checkOffRoad($location, $route_coordinates);
                     }
                     $reports[] = (object)[
                         'date' => $report->date,
@@ -152,8 +155,7 @@ class RouteReportController extends Controller
 
             $offRoad = false;
             foreach ($reports as $report) {
-                $offRoad = (!$offRoad) ? $report->offRoad : false;
-                if ($offRoad) $off_road_report_list[] = $report;
+                if ((!$offRoad) ? $report->offRoad : false) $off_road_report_list[] = $report;
                 $offRoad = $report->offRoad;
             }
 
@@ -349,13 +351,13 @@ class RouteReportController extends Controller
      * @param $route_coordinates
      * @return bool
      */
-    public function checkOffRoad($location, $route_coordinates)
+    public static function checkOffRoad($location, $route_coordinates)
     {
         $offRoad = true;
         $location_latitude = $location->latitude;
         $location_longitude = $location->longitude;
         //dump($location_latitude.', '.$location_longitude);
-        $threshold = 0.005;
+        $threshold = config('road.route_sampling_area');
         $threshold_location = [
             'la_up' => $location_latitude + $threshold,
             'la_down' => $location_latitude - $threshold,

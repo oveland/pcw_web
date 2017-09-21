@@ -24,6 +24,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Routes for route report */
     Route::prefix(__('reports'))->group(function () {
+        Route::prefix(__('geolocation'))->group(function () {
+            Route::get('/address/{offRoad}', 'GeolocationController@getAddressFromCoordinates')->name('geolocation-address');
+            Route::get('/image/{offRoad}', 'GeolocationController@getImageFromCoordinate')->name('geolocation-image');
+        });
+
         /* General reports */
         Route::prefix(__('routes'))->group(function () {
             /* Route report */

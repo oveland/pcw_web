@@ -46,6 +46,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Route Sampling Area
+    |--------------------------------------------------------------------------
+    |
+    | Defines the side of square that define for sampling filter route coordinates
+    | This distance should be calculated from decode distance between two geolocation points
+    |
+    */
+    'route_sampling_area' => 0.005,
+
+    /*
+    |--------------------------------------------------------------------------
     | Google Api token for google maps
     |--------------------------------------------------------------------------
     |

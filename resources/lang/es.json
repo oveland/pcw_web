@@ -91,8 +91,13 @@
   "passengers": "pasajeros",
   "No registers location found": "No se encontraron registros de coordenadas",
   "The vehicle haven´t off roads list": "El vehículo no presenta salidas de ruta",
+  "The date haven´t off roads list": "No se presentaron salidas de ruta en la fecha seleccionada",
+  "Off Road": "Salida de ruta",
+  "Off Roads": "Salidas de ruta",
+  "Off road time": "Hora de salida de ruta",
   "Off road report": "Reporte de salidas de ruta",
   "Off road": "Salidas de ruta",
+  "Off road report by Vehicle": "Salidas de ruta por vehículos",
   "Status":"Estado en la ruta",
   "See off road report": "Ver reporte de salidas de ruta",
   "Report vehicle off road": "Reporte de salidas de ruta del vehículo",
@@ -123,5 +128,13 @@
   "off-road":"salidas-de-ruta",
   "access-log":"logs-de-acceso",
   "route-report":"reporte-de-ruta",
-  "users":"usuarios"
+  "users":"usuarios",
+  "Type report": "Tipo de reporte",
+  "By vehicle":"Por vehículo",
+  "By route":"Por ruta",
+  "Time":"Hora",
+  "In":"En",
+  "in":"en",
+  "Location":"Ubicación",
+  "outs":"salidas"
 }

@@ -44,7 +44,7 @@ class Location extends Model
 {
     protected function getDateFormat()
     {
-        return config('app.date_format');
+        return config('app.date_time_format');
     }
 
     /**

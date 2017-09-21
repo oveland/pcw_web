@@ -27,10 +27,9 @@
                     <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle">
                         <thead>
                             <tr class="inverse">
+                                <th data-sorting="disabled">@lang('Turn')</th>
                                 <th>@lang('Vehicle')</th>
                                 <th class="col-md-2">@lang('Hour dispatch')</th>
-                                <th>@lang('Round Trip')</th>
-                                <th data-sorting="disabled">@lang('Turn')</th>
                                 <th data-sorting="disabled">@lang('Status')</th>
                                 <th data-sorting="disabled">@lang('Actions')</th>
                             </tr>
@@ -38,10 +37,9 @@
                         <tbody>
                         @foreach( $dispatchRegisters as $dispatchRegister )
                             <tr>
+                                <td>{{$dispatchRegister->turn}}</td>
                                 <td>{{$dispatchRegister->vehicle->number}} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{$dispatchRegister->vehicle->plate}}</td>
                                 <td>{{$dispatchRegister->departure_time}}</td>
-                                <td>{{$dispatchRegister->round_trip}}</td>
-                                <td>{{$dispatchRegister->turn}}</td>
                                 <td>{{$dispatchRegister->status}}</td>
                                 <td>
                                     <a href="#modal-route-report" data-toggle="modal"

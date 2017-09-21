@@ -52,7 +52,7 @@ class DispatchRegister extends Model
 {
     protected function getDateFormat()
     {
-        return config('app.date_format');
+        return config('app.simple_date_time_format');
     }
 
     /**
@@ -60,26 +60,7 @@ class DispatchRegister extends Model
      */
     public function reports()
     {
-        $relationClass = Report::class;
-        if ($this->vehicle->company->id == 14) {
-            $monthDate = Carbon::createFromFormat(config('app.date_format'), $this->date . ' 00:00:00')->month;
-            switch ($monthDate) {
-                case 6:
-                    $relationClass = AlamedaJuneReport::class;
-                    break;
-                case 7:
-                    $relationClass = AlamedaJulyReport::class;
-                    break;
-                case 8:
-                    $relationClass = AlamedaAugustReport::class;
-                    break;
-                default:
-                    $relationClass = Report::class;
-                    break;
-            }
-        }
-
-        return $this->hasMany($relationClass, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        return $this->hasMany(Report::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**
@@ -87,8 +68,7 @@ class DispatchRegister extends Model
      */
     public function locationReports()
     {
-        $relationClass = LocationReport::class;
-        return $this->hasMany($relationClass, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        return $this->hasMany(LocationReport::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**
@@ -96,26 +76,15 @@ class DispatchRegister extends Model
      */
     public function locations()
     {
-        $relationClass = Location::class;
-        if ($this->vehicle->company->id == 14) {
-            $monthDate = Carbon::createFromFormat(config('app.date_format'), $this->date . ' 00:00:00')->month;
-            switch ($monthDate) {
-                case 6:
-                    $relationClass = AlamedaJuneLocation::class;
-                    break;
-                case 7:
-                    $relationClass = AlamedaJulyLocation::class;
-                    break;
-                case 8:
-                    $relationClass = AlamedaAugustLocation::class;
-                    break;
-                default:
-                    $relationClass = Location::class;
-                    break;
-            }            
-        }
+        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+    }
 
-        return $this->hasMany($relationClass, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function offRoads()
+    {
+        return $this->hasMany(OffRoad::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**
@@ -136,7 +105,8 @@ class DispatchRegister extends Model
 
     public function getParsedDate()
     {
-        return Carbon::createFromFormat(config('app.simple_date_format'),$this->date);
+        if($this->date == null)dd($this->id,$this->date);
+        return Carbon::createFromFormat(config('app.date_format'),$this->date);
     }
 
     public function dateLessThanDateNewOffRoadReport()

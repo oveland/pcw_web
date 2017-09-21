@@ -32,12 +32,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerDays whereStartRecorderCurrent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerDays whereVehicleId($value)
  * @mixin \Eloquent
+ * @property int|null $start_recorder_prev
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerDays whereStartRecorderPrev($value)
  */
 class RecorderCounterPerDays extends Model
 {
     protected function getDateFormat()
     {
-        return config('app.date_format');
+        return config('app.date_time_format');
     }
 
     public function vehicle()

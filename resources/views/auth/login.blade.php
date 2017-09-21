@@ -40,7 +40,7 @@
             <form action="{{ route('login') }}" method="POST" name="login_form" class="form-input-flat">
                 {{ csrf_field() }}
                 <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                    <input id="username" type="text" class="form-control input-lg" placeholder="@lang('Username')" name="username" value="{{ old('username') }}" required onchange="$(this).val($(this).val().toUpperCase())" onkeypress="$(this).addClass('text-uppercase')"/>
+                    <input id="username" type="text" class="form-control input-lg" placeholder="@lang('Username')" name="username" value="{{ old('username') }}" required onchange="$(this).val($(this).val().toUpperCase())" onkeypress="$(this).addClass('text-uppercase')" autofocus/>
                     @if ($errors->has('username'))
                         <span class="help-block">
                             <strong>{{ $errors->first('username') }}</strong>
@@ -78,4 +78,6 @@
     <!-- end login -->
 </div>
 <!-- end page container -->
+
+<script>setTimeout(function(){$('#username').focus()},500)</script>
 @endsection

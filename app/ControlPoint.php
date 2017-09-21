@@ -38,7 +38,7 @@ class ControlPoint extends Model
 {
     protected function getDateFormat()
     {
-        return config('app.date_format');
+        return config('app.simple_date_time_format');
     }
 
     public function times()

@@ -180,6 +180,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -230,12 +231,16 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
     /*
      * SET DATABASE DATE TIME FORMAT
      *
      */
-    'date_format' => env('DB_DATE_TIME_FORMAT', 'Y-m-d H:i:s'),
-    'simple_date_format' => env('DB_DATE_FORMAT', 'Y-m-d'),
+    'date_format' => env('DB_DATE_FORMAT', 'Y-m-d'),
+    'time_format' => env('DB_TIME_FORMAT', 'H:i:s.u'),
+    'simple_time_format' => env('DB_SIMPLE_TIME_FORMAT', 'H:i:s'),
+    'date_time_format' => env('DB_DATE_FORMAT', 'Y-m-d').' '.env('DB_TIME_FORMAT', 'H:i:s.u'),
+    'simple_date_time_format' => env('DB_DATE_FORMAT', 'Y-m-d').' '.env('DB_SIMPLE_TIME_FORMAT', 'H:i:s'),
 ];
