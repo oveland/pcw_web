@@ -34,7 +34,7 @@ class OffRoadController extends Controller
         $dateReport = $request->get('date-report');
 
         $allOffRoads = OffRoad::validCoordinates()
-            ->where('date', '>', $dateReport)
+            ->whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
             ->orderBy('date')
             ->get();
@@ -46,7 +46,7 @@ class OffRoadController extends Controller
                 foreach ($allOffRoadsByVehicles as $vehicleId => $offRoadsByVehicle) {
                     $recheckOffRoad = $this->dateLessThanNewOffRoadCalculateProcess($dateReport);
                     $offRoadsByVehicles[$vehicleId] = self::groupByFirstOffRoad($offRoadsByVehicle, $recheckOffRoad);
-                    if($recheckOffRoad && count($offRoadsByVehicles[$vehicleId]) == 0)unset($offRoadsByVehicles[$vehicleId]); /* TODO: Temporal until 2018-03-16 */
+                    if ($recheckOffRoad && count($offRoadsByVehicles[$vehicleId]) == 0) unset($offRoadsByVehicles[$vehicleId]); /* TODO: Temporal until 2018-03-16 */
                 }
                 return view('reports.route.off-road.offRoadByVehicle', compact('offRoadsByVehicles'));
                 break;
@@ -110,7 +110,7 @@ class OffRoadController extends Controller
                         $checkedOffRoadReport[] = $offRoad;
                     }
                 }
-                if(count($checkedOffRoadReport) > 0)$offRoadsReport[$routeId] = $checkedOffRoadReport;
+                if (count($checkedOffRoadReport) > 0) $offRoadsReport[$routeId] = $checkedOffRoadReport;
                 else unset($offRoadsReport[$routeId]);
             }
         }
