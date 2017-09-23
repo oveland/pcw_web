@@ -57,12 +57,16 @@
                             $sensor > 0 ? $totalSensor->push($sensor):null;
                             $recorder > 0 ? $totalRecorder->push($recorder):null;
                             $invalidRecorder = $recorder > 1000 || $recorder < 0;
+                            $messageRecorder = $invalidRecorder
+                                                ? ('Verificar posible error en los datos de registradora')
+                                                :($report->passengers->end_recorder.' <strong style="display:none;font-size:80%">('.$report->date.')</strong>'.' - '.$report->passengers->start_recorder.' <strong style="font-size:80%">('.$report->passengers->date_start_recorder.')</strong>');
+
                         @endphp
                         <tr class="text-center">
                             <td >{{ $loop->index + 1 }}</td>
                             <td>{{ $report->number }} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{  $report->plate }}</td>
                             <td class="sensor">{{ $sensor }}</td>
-                            <td class="recorder"><span {{ $invalidRecorder ? 'class=text-warning data-toggle=tooltip data-html=true':"" }} title="{{ $invalidRecorder ? 'Verificar posible error en los datos de registradora':'' }}">{{ $recorder }}</span></td>
+                            <td class="recorder"><span class="{{ $invalidRecorder ? "text-warning":""  }}" data-toggle="tooltip" data-html="true" title="{{ $messageRecorder }}">{{ $recorder }}</span></td>
                             <td class="sensor recorder">{{ abs($sensor - $recorder) }}</td>
                         </tr>
                     @endforeach

@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad whereVersion($value)
  * @mixin \Eloquent
+ * @property-read \App\DispatchRegister|null $dispatchRegister
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad validCoordinates()
  */
 class OffRoad extends Model
 {

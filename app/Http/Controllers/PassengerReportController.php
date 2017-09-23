@@ -52,9 +52,13 @@ class PassengerReportController extends Controller
             $reports[] = (object)[
                 'plate' => $recorderCounterPerDay->vehicle->plate,
                 'number' => $recorderCounterPerDay->vehicle->number,
+                'date' => $dateReport,
                 'passengers' => (object)[
                     'sensor' => $sensor ? $sensor->total : 0,
-                    'recorder' => $recorderCounterPerDay->passengers ?? 0
+                    'recorder' => $recorderCounterPerDay->passengers ?? 0,
+                    'start_recorder' => ($recorderCounterPerDay->start_recorder == 0?$recorderCounterPerDay->start_recorder_prev:$recorderCounterPerDay->start_recorder) ?? 0,
+                    'date_start_recorder' => $recorderCounterPerDay->date_start_recorder_prev ?? 0,
+                    'end_recorder' => $recorderCounterPerDay->end_recorder ?? 0
                 ]
             ];
         }

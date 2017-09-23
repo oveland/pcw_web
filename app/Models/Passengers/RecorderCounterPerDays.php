@@ -34,6 +34,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $start_recorder_prev
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerDays whereStartRecorderPrev($value)
+ * @property string|null $date_start_recorder_prev
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerDays whereDateStartRecorderPrev($value)
  */
 class RecorderCounterPerDays extends Model
 {

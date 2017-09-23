@@ -47,6 +47,8 @@ use Carbon\Carbon;
  * @property int|null $end_recorder
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereEndRecorder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereStartRecorder($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\LocationReport[] $locationReports
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
  */
 class DispatchRegister extends Model
 {
