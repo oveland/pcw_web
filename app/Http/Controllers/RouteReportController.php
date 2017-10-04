@@ -6,6 +6,7 @@ use App\Company;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Route;
+use App\Services\PCWExporter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -30,9 +31,10 @@ class RouteReportController extends Controller
      */
     public function show(Request $request)
     {
-        $route_id = $request->get('route-report');
-        $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $request->get('date-report'))
-            ->where('route_id', '=', $route_id)
+        $route = Route::find($request->get('route-report'));
+        $dateReport = $request->get('date-report');
+        $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
+            ->where('route_id', '=', $route->id)
             ->where(function ($query) {
                 $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
             })
@@ -41,14 +43,55 @@ class RouteReportController extends Controller
             ->get()
             ->groupBy('round_trip');
 
-        return view('reports.route.route.routeReport', compact('roundTripDispatchRegisters'));
+        $export = $request->get('export');
+        if ($export) $this->export($roundTripDispatchRegisters, $route, $dateReport);
+
+        return view('reports.route.route.routeReport', compact(['roundTripDispatchRegisters', 'route_id', 'dateReport']));
+    }
+
+    public function export($roundTripDispatchRegisters, $route, $dateReport)
+    {
+        //dd($roundTripDispatchRegisters);
+        Excel::create(__('Dispatch report') . " $dateReport", function ($excel) use ($roundTripDispatchRegisters, $dateReport, $route) {
+            foreach ($roundTripDispatchRegisters as $roundTrip => $dispatchRegisters) {
+
+                $dataExcel = array();
+                foreach ($dispatchRegisters as $dispatchRegister) {
+                    //$dispatchRegister = new DispatchRegister();
+                    $vehicle = $dispatchRegister->vehicle;
+                    $dataExcel[] = [
+                        __('N°') => count($dataExcel) + 1,                                          # A CELL
+                        __('Turn') => $dispatchRegister->turn,                                          # A CELL
+                        __('Vehicle') => intval($vehicle->number),                                  # B CELL
+                        __('Plate') => $vehicle->plate,                                             # C CELL
+                        __('Departure time') => $dispatchRegister->departure_time,                  # D CELL
+                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,  # E CELL
+                        __('Arrival Time') => $dispatchRegister->arrival_time,                      # F CELL
+                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,# G CELL
+                    ];
+                }
+
+                $dataExport = (object)[
+                    'fileName' => __('Dispatch report') . " $dateReport",
+                    'title' => __('Dispatch report') . " $dateReport",
+                    'subTitle' => $route->name." ".__('Round Trip')." $roundTrip",
+                    'data' => $dataExcel
+                ];
+                //foreach ()
+                /* SHEETS */
+                $excel = PCWExporter::createHeaders($excel, $dataExport);
+                $excel = PCWExporter::createSheet($excel, $dataExport);
+            }
+        })->
+        export('xlsx');
     }
 
     /**
      * @param DispatchRegister $dispatchRegister
      * @return \Illuminate\Http\JsonResponse
      */
-    public function chart(DispatchRegister $dispatchRegister)
+    public
+    function chart(DispatchRegister $dispatchRegister)
     {
         $dataReport = ['empty' => true];
         //$locations = $dispatchRegister->locations()->with('report')->get();
@@ -117,7 +160,8 @@ class RouteReportController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
+    public
+    function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
     {
         //$locations = $dispatchRegister->locations()->with('report')->get();
         $locations = $dispatchRegister->locationReports()->get();
@@ -154,12 +198,13 @@ class RouteReportController extends Controller
             }
 
             $offRoad = false;
+            $export = $request->get('export');
             foreach ($reports as $report) {
-                if ((!$offRoad) ? $report->offRoad : false) $off_road_report_list[] = $report;
+                if ((!$offRoad || $export) ? $report->offRoad : false) $off_road_report_list[] = $report;
                 $offRoad = $report->offRoad;
             }
 
-            if ($request->get('export')) $this->export($dispatchRegister, $off_road_report_list);
+            if ($export) $this->exportOffRoads($dispatchRegister, $off_road_report_list);
         }
         return view('reports.route.route.offRoadReport', compact('off_road_report_list', 'dispatchRegister'));
     }
@@ -170,7 +215,8 @@ class RouteReportController extends Controller
      * @param $dispatchRegister
      * @param $off_road_report_list
      */
-    public function export($dispatchRegister, $off_road_report_list)
+    public
+    function exportOffRoads($dispatchRegister, $off_road_report_list)
     {
         $route = $dispatchRegister->route;
         $company = $route->company;
@@ -273,7 +319,8 @@ class RouteReportController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function ajax(Request $request)
+    public
+    function ajax(Request $request)
     {
         switch ($request->get('option')) {
             case 'loadRoutes':
@@ -293,7 +340,8 @@ class RouteReportController extends Controller
      * @param $url
      * @return array
      */
-    public static function getRouteCoordinates($url)
+    public
+    static function getRouteCoordinates($url)
     {
         $milliseconds = round(microtime(true) * 1000);
         $dir_name = "ziptmp$milliseconds";
@@ -351,7 +399,8 @@ class RouteReportController extends Controller
      * @param $route_coordinates
      * @return bool
      */
-    public static function checkOffRoad($location, $route_coordinates)
+    public
+    static function checkOffRoad($location, $route_coordinates)
     {
         $offRoad = true;
         $location_latitude = $location->latitude;

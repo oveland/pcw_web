@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\LocationReport;
 use App\OffRoad;
 use App\Route;
-use Carbon\Carbon;
+use App\Services\PCWExporter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Excel;
 
 class OffRoadController extends Controller
 {
@@ -48,7 +48,10 @@ class OffRoadController extends Controller
                     $offRoadsByVehicles[$vehicleId] = self::groupByFirstOffRoad($offRoadsByVehicle, $recheckOffRoad);
                     if ($recheckOffRoad && count($offRoadsByVehicles[$vehicleId]) == 0) unset($offRoadsByVehicles[$vehicleId]); /* TODO: Temporal until 2018-03-16 */
                 }
-                return view('reports.route.off-road.offRoadByVehicle', compact('offRoadsByVehicles'));
+
+                //if ($request->get('export')) $this->export($offRoadsByVehicles,$dateReport);
+
+                return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','dateReport','company']));
                 break;
             case 'route':
                 //$offRoadsByVehicle = $allOffRoads->groupBy('dispatch_register_id');
@@ -57,6 +60,29 @@ class OffRoadController extends Controller
         }
 
         return redirect(route('off-road-report'));
+    }
+
+    /**
+     * Export report to excel format
+     *
+     * @param $offRoadsByVehicles
+     */
+    public function export($offRoadsByVehicles,$dateReport)
+    {
+
+        dd($offRoadsByVehicles);
+
+        Excel::create(__('Off road report')." $dateReport", function ($excel) use ($offRoadsByVehicles) {
+            foreach ($offRoadsByVehicles as $offRoadsByVehicle){
+                $dataExport = array();
+                //foreach ()
+                /* SHEETS */
+                $excel = PCWExporter::createHeaders($excel,$dataExport);
+                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $dataExport = (object)$dataExport;
+            }
+        })->export('xlsx');
+
     }
 
     /**

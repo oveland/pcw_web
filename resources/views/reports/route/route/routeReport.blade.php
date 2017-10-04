@@ -2,12 +2,15 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand" title="@lang('Expand / Compress')">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime pull-left" data-click="panel-expand" title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
             </div>
             <div class="row">
                 <div class="col-md-11">
+                    <a href="{{ route('route-search-report') }}?date-report={{ $dateReport }}&route-report={{ $route_id }}&export=true" class="btn btn-lime bg-lime-dark pull-right">
+                        <i class="fa fa-file-excel-o"></i> @lang('Export excel')
+                    </a>
                     <ul class="nav nav-pills nav-pills-success">
                         @foreach($roundTripDispatchRegisters as $dispatchRegisters)
                             <li class="{{$loop->first?'active':''}}">

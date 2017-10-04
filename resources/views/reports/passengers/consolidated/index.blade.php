@@ -117,7 +117,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-passengers, .menu-passengers-general').addClass('active');
+        $('.menu-passengers, .menu-passengers-consolidated').addClass('active');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
@@ -136,6 +136,9 @@
 
             $('#company-report').change(function () {
                 loadRouteReport($(this).val());
+                if (is_not_null($(this).val())) {
+                    $('.form-search-report').submit();
+                }
             });
 
             $('#route-report').change(function () {

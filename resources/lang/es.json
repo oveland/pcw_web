@@ -113,10 +113,13 @@
   "Access log": "Logs de acceso",
   "Users":"Usuarios",
   "Download report":"Descargar reporte",
+  "Download excel report":"Descargar reporte en excel",
   "Logs report":"Reportes de usuarios",
   "Access Logs": "Logs de acceso",
   "Consolidated per day":"Consolidado por día",
   "Recorder":"Registradora",
+  "Start Recorder":"Registradora inicial",
+  "End Recorder":"Registradora final",
   "All":"Todos",
   "Total passengers":"Total pasajeros",
   "Average per vehicle":"Promedio por vehículos",
@@ -136,5 +139,15 @@
   "In":"En",
   "in":"en",
   "Location":"Ubicación",
-  "outs":"salidas"
+  "outs":"salidas",
+  "Plate":"Placa",
+
+  "Dispatch report":"Reporte de despacho",
+  "Departure time":"Hora despachado",
+  "Arrival Time Scheduled":"Llegada programada",
+  "Arrival Time":"Hora de llegada",
+  "Arrival Time Difference":"Diferencia de llegada",
+
+
+  "":""
 }

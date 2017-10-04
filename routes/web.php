@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('consolidated'))->group(function () {
                 Route::get('/','PassengerReportController@index')->name('passengers-report');
                 Route::get('/show', 'PassengerReportController@show')->name('passengers-search-report');
+                Route::get('/export', 'PassengerReportController@export')->name('passengers-export-report');
                 Route::any('/ajax/{action}', 'PassengerReportController@ajax')->name('passengers-ajax');
             });
         });

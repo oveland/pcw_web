@@ -23,7 +23,7 @@ class TaxCentralPassengerReportController extends Controller
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
-        return view('passengers.taxcentral.index', compact('companies'));
+        return view('reports.passengers.taxcentral.index', compact('companies'));
     }
 
     /**
@@ -44,7 +44,7 @@ class TaxCentralPassengerReportController extends Controller
             $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
                 ->where('route_id', '=', $routeId)//->where('status','=',self::DISPATCH_COMPLETE)
                 ->orderBy('round_trip')->get()->groupBy('round_trip');
-            return view('passengers.taxcentral.passengersReportByRoute', compact('roundTripDispatchRegisters'));
+            return view('reports.passengers.taxcentral.passengersReportByRoute', compact('roundTripDispatchRegisters'));
         }
         //$historySeats = $historySeats->whereBetween('active_time',[$dateReport.' '.$dispatchRegister->departure_time,$dateReport.' '.$dispatchRegister->arrival_time_scheduled]);
 
@@ -53,7 +53,7 @@ class TaxCentralPassengerReportController extends Controller
             ->get()->sortBy('active_time');
 
         if ($request->get('export')) $this->export($historySeats, $company, $dateReport, null);
-        return view('passengers.taxcentral.passengersReportByAll', compact('historySeats'));
+        return view('reports.passengers.taxcentral.passengersReportByAll', compact('historySeats'));
     }
 
     public function showByDispatch(DispatchRegister $dispatchRegister, Request $request)
@@ -276,7 +276,7 @@ class TaxCentralPassengerReportController extends Controller
                     $company = Auth::user()->company->id;
                 }
                 $routes = $company != 'null' ? Route::whereCompanyId($company)->orderBy('name', 'asc')->get() : [];
-                return view('passengers.routeSelect', compact('routes'));
+                return view('reports.passengers.routeSelect', compact('routes'));
                 break;
             default:
                 return "Nothing to do";

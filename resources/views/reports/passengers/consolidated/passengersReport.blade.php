@@ -1,16 +1,20 @@
+@php($reports = $passengerReport->reports)
 @if(count($reports))
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand" title="@lang('Expand / Compress')">
+                <a href="{{ route('passengers-export-report') }}?date-report={{ $passengerReport->date }}&company-report={{ $passengerReport->companyId }}" class="btn btn-lime bg-lime-dark btn-sm">
+                    <i class="fa fa-file-excel-o"></i> @lang('Export excel')
+                </a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-info " data-click="panel-expand" title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
             </div>
             <h5 class="text-white m-t-10">
                 <span class="hide">
-                <i class="fa fa-user-circle" aria-hidden="true"></i>
-                Title <i class="fa fa-angle-double-right" aria-hidden="true"></i> Subtitle
-                <hr class="text-inverse-light">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    Title <i class="fa fa-angle-double-right" aria-hidden="true"></i> Subtitle
+                    <hr class="text-inverse-light">
                 </span>
 
                 <ul class="nav nav-pills nav-pills-success">

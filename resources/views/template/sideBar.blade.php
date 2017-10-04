@@ -88,7 +88,7 @@
                                 </ul>
                             </li>
                             @endif
-                            <li class="has-sub menu-passengers-general">
+                            <li class="has-sub menu-passengers-consolidated">
                                 <a href="{{ route('passengers-report')  }}">
                                     <i class="fa fa-file-archive-o" aria-hidden="true"></i>
                                     @lang('Consolidated per day')

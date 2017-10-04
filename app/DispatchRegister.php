@@ -8,13 +8,9 @@ use Carbon\Carbon;
 /**
  * App\DispatchRegister
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Report[] $reports
- * @property-read \App\Route $route
- * @property-read \App\Vehicle $vehicle
- * @mixin \Eloquent
  * @property int $id
  * @property string|null $date
+ * @property string|null $time
  * @property int|null $route_id
  * @property int|null $type_of_day
  * @property int|null $turn
@@ -23,32 +19,38 @@ use Carbon\Carbon;
  * @property int|null $dispatch_id
  * @property string|null $departure_time
  * @property string|null $arrival_time_scheduled
+ * @property string|null $arrival_time_difference
  * @property string|null $arrival_time
  * @property bool|null $canceled
  * @property string|null $time_canceled
  * @property string|null $status
+ * @property int|null $start_recorder
+ * @property int|null $end_recorder
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\LocationReport[] $locationReports
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Report[] $reports
+ * @property-read \App\Route|null $route
+ * @property-read \App\Vehicle|null $vehicle
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTimeDifference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTimeScheduled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereCanceled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDepartureTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDispatchId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereEndRecorder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereRoundTrip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereRouteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereStartRecorder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTimeCanceled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTurn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTypeOfDay($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereVehicleId($value)
- * @property string|null $time
- * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTime($value)
- * @property int|null $start_recorder
- * @property int|null $end_recorder
- * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereEndRecorder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereStartRecorder($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\LocationReport[] $locationReports
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
+ * @mixin \Eloquent
  */
 class DispatchRegister extends Model
 {

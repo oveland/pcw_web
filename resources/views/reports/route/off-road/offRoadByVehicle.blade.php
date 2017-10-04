@@ -2,9 +2,6 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="?export=true" class="btn btn-lime bg-lime-dark btn-sm hide" style="color: white !important;">
-                    <i class="fa fa-file-excel-o"></i> @lang('Export excel')
-                </a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand"
                    title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
@@ -96,6 +93,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @php($dispatchRegister = null)
                                                         @foreach($offRoadReport as $offRoad)
                                                             @php($dispatchRegister = $offRoad->dispatchRegister)
                                                             <tr>
@@ -103,6 +101,9 @@
                                                                 <td>{{ $dispatchRegister->round_trip }}</td>
                                                                 <td>{{ $offRoad->date }}</td>
                                                                 <td>
+                                                                    <a href="{{ route('route-off-road-report',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-xs">
+                                                                        <i class="fa fa-file-excel-o"></i>
+                                                                    </a>
                                                                     <button class="btn btn-xs btn-warning btn-location btn-off-road-show-image-location" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" title="@lang('Location')">
                                                                         <i class="fa fa-map-marker"></i>
                                                                         <span>@lang('Location')</span>
@@ -123,6 +124,13 @@
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
+                                                    <tfoot class="hide">
+                                                        <tr>
+                                                            <td colspan="4" class="text-right">
+
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
                                                 </table>
                                             </div>
                                         </div>
