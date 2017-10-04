@@ -13,6 +13,7 @@ class CreateDispatchRegistersView extends Migration
      */
     public function up()
     {
+        DB::statement("DROP VIEW IF EXISTS dispatch_registers");
         DB::statement("
             CREATE OR REPLACE VIEW dispatch_registers AS SELECT rd.id_registro AS id,
                 rd.fecha AS date,
