@@ -48,7 +48,7 @@ class PCWExporter
             $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', '...'];
 
             $config = (object)[
-                'type' => isset($config->type)?$dataExport->type:null,
+                'type' => isset($dataExport->type)?$dataExport->type:null,
                 'startIndex' => $startIndex,
                 'lastLetter' => $letters[count(array_keys($dataExport->data[0])) - 1],
                 'totalRows' => count($dataExport->data) + $startIndex,

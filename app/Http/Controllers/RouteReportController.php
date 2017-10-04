@@ -46,7 +46,7 @@ class RouteReportController extends Controller
         $export = $request->get('export');
         if ($export) $this->export($roundTripDispatchRegisters, $route, $dateReport);
 
-        return view('reports.route.route.routeReport', compact(['roundTripDispatchRegisters', 'route_id', 'dateReport']));
+        return view('reports.route.route.routeReport', compact(['roundTripDispatchRegisters', 'route', 'dateReport']));
     }
 
     public function export($roundTripDispatchRegisters, $route, $dateReport)

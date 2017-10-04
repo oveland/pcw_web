@@ -8,7 +8,7 @@
             </div>
             <div class="row">
                 <div class="col-md-11">
-                    <a href="{{ route('route-search-report') }}?date-report={{ $dateReport }}&route-report={{ $route_id }}&export=true" class="btn btn-lime bg-lime-dark pull-right">
+                    <a href="{{ route('route-search-report') }}?date-report={{ $dateReport }}&route-report={{ $route->id }}&export=true" class="btn btn-lime bg-lime-dark pull-right">
                         <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                     </a>
                     <ul class="nav nav-pills nav-pills-success">
