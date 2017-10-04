@@ -11,6 +11,7 @@
 <script type="text/javascript">
     var map;
     var routeLayerKML;
+    var trafficLayer;
     var mapLightDreamStyles = [
         {
             "featureType": "landscape",
@@ -49,6 +50,7 @@
             map = new google.maps.Map(document.getElementById('google-map-light-dream'), mapOptions);
             map.setOptions({styles: mapLightDreamStyles});
             routeLayerKML = new google.maps.KmlLayer();
+            trafficLayer = new google.maps.TrafficLayer();
         },500);
     }
 </script>

@@ -22,6 +22,13 @@
     <div class="row">
         <div class="col-md-4">
             <label for="input-coordinates" class="">@lang('Coordinates')</label>
+            <button class="btn btn-sm btn-info pull-right btn-traffic" onclick="showTraffic()">
+                <i class="fa fa-map-marker"></i> @lang('Show Traffic')
+            </button>
+            <button class="btn btn-sm btn-warning pull-right btn-traffic" onclick="hideTraffic()" style="display: none">
+                <i class="fa fa-map-marker"></i> @lang('Hide Traffic')
+            </button>
+
             <hr>
 
             <div class="btn-group-vertical m-r-5">
@@ -38,8 +45,6 @@
                     <i class="fa fa-trash"></i> @lang('Delete Markers')
                 </button>
             </div>
-
-
             <hr>
             <textarea id="input-coordinates" title="@lang('Coordinates')" rows="40" class="form-control"></textarea>
         </div>
@@ -53,6 +58,7 @@
         var infowindows = [];
         $(document).ready(function () {
             initializeMap();
+
 
             $('.btn-paint-coordinates').on('click',function () {
                 var coordinates = $('#input-coordinates').val();
@@ -73,6 +79,15 @@
                 addMarker(event.latLng);
             });
         },1500);
+
+        function showTraffic(){
+            $('.btn-traffic').toggle();
+            trafficLayer.setMap(map);
+        }
+        function hideTraffic(){
+            $('.btn-traffic').toggle();
+            trafficLayer.setMap(null);
+        }
 
         // Adds a marker to the map and push to the array.
         function addMarker(location) {
