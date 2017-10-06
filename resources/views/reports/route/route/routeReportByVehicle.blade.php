@@ -94,9 +94,18 @@
                                 <td>{{ $dispatchRegister->status }}</td>
                                 @php($currentRecorder = $dispatchRegister->recorderCounter->end_recorder)
                                 @php($total = $dispatchRegister->recorderCounter->passengers)
+                                @php($invalid = ($total<0 || $total > 1000)?true:false )
                                 <td width="15%">{{ $currentRecorder }}</td>
-                                <td width="5%">{{ $loop->index > 0?$currentRecorder - $lastRecorder:$total }}</td>
-                                <td width="5%">{{ $dispatchRegister->recorderCounter->passengers }}</td>
+                                <td width="5%">
+                                    <span class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
+                                        {{ $loop->index > 0?$currentRecorder - $lastRecorder:$total }}
+                                    </span>
+                                </td>
+                                <td width="5%">
+                                    <span class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
+                                        {{ $total }}
+                                    </span>
+                                </td>
                                 @php($lastRecorder = $currentRecorder)
                                 <td width="10%" class="text-center">
                                     <a href="#modal-route-report"

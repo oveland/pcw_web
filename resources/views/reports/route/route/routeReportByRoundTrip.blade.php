@@ -84,7 +84,7 @@
                                 @php($invalid = ($total<0 || $total > 1000)?true:false )
                                 <td width="5%" class="text-center">
                                     <span class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
-                                        {{ $dispatchRegister->recorderCounter->passengers }}
+                                        {{ $total }}
                                     </span>
                                 </td>
                                 <td width="10%" class="text-center">
