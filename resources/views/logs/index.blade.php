@@ -69,9 +69,24 @@
         $(document).ready(function () {
             $('.form-download-report').submit(function () {
                 event.preventDefault();
-                var url = $(this).data('action');
-                var date = $('#date-report').val();
-                window.location.href = url + '/' + date;
+                var form = $(this);
+                if (form.isValid()) {
+                    var url = form.data('action');
+                    var date = $('#date-report').val();
+
+                    form.find('.btn-search-report').addClass(loadingClass);
+                    setTimeout(function () {
+                        form.find('.btn-search-report').removeClass(loadingClass);
+                    }, 1000);
+
+                    window.location.href = url + '/' + date;
+                }
+            });
+
+            $('#date-report').change(function () {
+                var form = $('.form-download-report');
+                $('.report-container').slideUp();
+                form.isValid(false);
             });
         });
     </script>

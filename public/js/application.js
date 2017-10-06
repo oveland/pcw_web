@@ -2,14 +2,18 @@
  * Created by Oscar on 30/04/2017.
  */
 
+var loadingClass = 'disabled faa-tada animated';
+
 $(document).ready(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        complete:function () {
-            $('[data-toggle="tooltip"]').tooltip();
         }
+    });
+
+    $(document).ajaxComplete(function(){
+        $('.tooltips').tooltip();
+        $('[data-toggle="tooltip"]').tooltip();
     });
 
     $(document).ajaxError(function(event,request,settings){
@@ -32,6 +36,7 @@ $(document).ready(function () {
 
     $('.default-select2').select2();
     $('[data-toggle="tooltip"]').tooltip();
+    $('.tooltips').tooltip();
 });
 
 
@@ -84,4 +89,8 @@ function gerror( message ){
         time: '4000',
         class_name: 'gritter-error gritter-danger danger'
     });
+}
+
+function hideSideBar(){
+    $('.slimScrollDiv .sidebar-minify-btn').click();
 }

@@ -214,14 +214,19 @@
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
+                var form = $(this);
                 e.preventDefault();
-                if ($(this).isValid()) {
+                if (form.isValid()) {
+                    form.find('.btn-search-report').addClass(loadingClass);
                     $('.report-container').slideUp(100);
                     $.ajax({
-                        url: '{{ route('tc-passengers-search-report') }}',
-                        data: $(this).serialize(),
+                        url: '{{ route('route-search-report') }}',
+                        data: form.serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();
+                        },
+                        complete:function(){
+                            form.find('.btn-search-report').removeClass(loadingClass);
                         }
                     });
                 }
@@ -231,10 +236,11 @@
                 loadRouteReport($(this).val());
             });
 
-            $('#route-report').change(function () {
+            $('#date-report, #route-report').change(function () {
+                var form = $('.form-search-report');
                 $('.report-container').slideUp();
-                if (is_not_null($(this).val())) {
-                    $('.form-search-report').submit();
+                if (form.isValid(false)) {
+                    form.submit();
                 }
             });
 

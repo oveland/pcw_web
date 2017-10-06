@@ -15,7 +15,9 @@ class CreateRecorderCounterPerDaysView extends Migration
     {
         DB::statement("
             CREATE OR REPLACE VIEW recorder_counter_per_days AS 
-            SELECT dr.date,
+            SELECT 
+            dr.id dispatch_register_id,
+            dr.date,
             v.id AS vehicle_id,
             v.company_id,
             v.number,
@@ -81,7 +83,7 @@ class CreateRecorderCounterPerDaysView extends Migration
             JOIN vehicles v ON ((v.id = dr.vehicle_id)))
             WHERE (((dr.status)::text = 'Terminó'::text) OR ((dr.status)::text = 'En camino'::text))
             --AND dr.date = '2017-09-18' AND v.number = '381'
-            GROUP BY v.id, dr.date, v.company_id
+            GROUP BY v.id, dr.id, dr.date, v.company_id
         ");
     }
 

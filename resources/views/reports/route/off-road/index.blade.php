@@ -267,65 +267,72 @@
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
-                if ($(this).isValid()) {
-                        $('.report-container').slideUp(100, function () {
-                            if ($('#date-report').val() <= '2017-09-16') {// TODO: Tempora until 2018-03-16
-                                $('.report-container').html($('#warning-template-old-dates').html()).slideDown();
-                            }
-                        });
+                var form = $(this);
+                if (form.isValid()) {
+                    form.find('.btn-search-report').addClass(loadingClass);
+                    $('.report-container').slideUp(100, function () {
+                        if ($('#date-report').val() <= '2017-09-16') {// TODO: Tempora until 2018-03-16
+                            $('.report-container').html($('#warning-template-old-dates').html()).slideDown();
+                        }
+                    });
 
                     $.ajax({
                         url: '{{ route('off-road-search-report') }}',
-                        data: $(this).serialize(),
+                        data: form.serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();
+                        },
+                        complete: function () {
+                            form.find('.btn-search-report').removeClass(loadingClass);
                         }
                     });
                 }
             });
 
-            $('body').on('click','.btn-show-address',function(){
+            $('body').on('click', '.btn-show-address', function () {
                 var el = $(this);
-                el.attr('disabled',true);
+                el.attr('disabled', true);
                 el.find('span').hide();
                 el.find('i').removeClass('hide');
-                $($(this).data('target')).load($(this).data('url'),function(response, status, xhr){
+                $($(this).data('target')).load($(this).data('url'), function (response, status, xhr) {
                     console.log(status);
-                    el.attr('disabled',false);
-                    if ( status == "error" ) {
-                        if(el.hasClass('second-time')){
+                    el.attr('disabled', false);
+                    if (status == "error") {
+                        if (el.hasClass('second-time')) {
                             el.removeClass('second-time');
-                        }else{
-                            el.addClass('second-time',true).click();
+                        } else {
+                            el.addClass('second-time', true).click();
                         }
-                    }else{
+                    } else {
                         el.fadeOut(1000);
                     }
                 });
             });
 
-            $('#company-report').change(function () {
-
+            $('#date-report, #type-report, #company-report').change(function () {
+                var form = $('.form-search-report');
+                $('.report-container').slideUp();
+                if (form.isValid(false)) {
+                    form.submit();
+                }
             });
 
-            $('body').on('click','.accordion-vehicles',function(){
+            $('body').on('click', '.accordion-vehicles', function () {
                 $($(this).data('parent'))
                     .find('.collapse').collapse('hide')
                     .find($(this).data('target')).collapse('show');
             });
 
-            $('body').on('keyup','.search-vehicle-list',function(){
+            $('body').on('keyup', '.search-vehicle-list', function () {
                 var vehicle = $(this).val();
                 if (is_not_null(vehicle)) {
-                    $('.vehicle-list').slideUp("fast",function(){
+                    $('.vehicle-list').slideUp("fast", function () {
                         $('#vehicle-list-' + vehicle).slideDown();
                     });
                 } else {
                     $('.vehicle-list').slideDown();
                 }
             });
-
-
 
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
@@ -336,7 +343,7 @@
                 var url = $(this).attr('href');
                 var tableOffRoadReport = $('.modal-off-road-report-table');
                 tableOffRoadReport.empty().html(loading);
-                if(is_not_null(url)){
+                if (is_not_null(url)) {
                     $('#modal-off-road-report').modal('show');
                     $.ajax({
                         url: url,
@@ -353,7 +360,7 @@
 
             $('body').on('click', '.btn-show-chart-route-report', function () {
                 //map.clearAllMarkers();
-                $('.btn-show-off-road-report').attr('href',$(this).data('url-off-road-report'));
+                $('.btn-show-off-road-report').attr('href', $(this).data('url-off-road-report'));
                 var chartRouteReport = $("#chart-route-report");
                 chartRouteReport.html(loading);
                 $('.report-info').html(loading);
@@ -473,9 +480,9 @@
                 });
             });
 
-            setTimeout(function(){
+            setTimeout(function () {
                 $('.btn-show-off-road-report').click();
-            },500);
+            }, 500);
         });
     </script>
 @endsection

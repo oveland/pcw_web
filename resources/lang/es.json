@@ -98,7 +98,7 @@
   "Off road report": "Reporte de salidas de ruta",
   "Off road": "Salidas de ruta",
   "Off road report by Vehicle": "Salidas de ruta por vehículos",
-  "Status":"Estado en la ruta",
+  "Status":"Estado",
   "See off road report": "Ver reporte de salidas de ruta",
   "Report vehicle off road": "Reporte de salidas de ruta del vehículo",
   "Off_Road_Report_": "Reporte_Salida_Ruta_",
@@ -119,7 +119,9 @@
   "Consolidated per day":"Consolidado por día",
   "Recorder":"Registradora",
   "Start Recorder":"Registradora inicial",
+  "Start Rec.":"Reg. inicial",
   "End Recorder":"Registradora final",
+  "End Rec.":"Reg. final",
   "All":"Todos",
   "Total passengers":"Total pasajeros",
   "Average per vehicle":"Promedio por vehículos",
@@ -146,8 +148,13 @@
   "Departure time":"Hora despachado",
   "Arrival Time Scheduled":"Llegada programada",
   "Arrival Time":"Hora de llegada",
-  "Arrival Time Difference":"Diferencia de llegada",
-
-
+  "Arrival Time Difference":"Diferencia llegada",
+  "Group By": "Agrupar por",
+  "New": "Nuevo",
+  "Day": "Día",
+  "Pass.": "Psj.",
+  "New feature": "Nueva funcionalidad",
+  "Graph report detail": "Ver gráfico de reporte",
+  "Verify possible error in register data": "Verificar posible error en los datos de registradora",
   "":""
 }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Passengers\RecorderCounterPerDays;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
@@ -26,6 +27,7 @@ use Carbon\Carbon;
  * @property string|null $status
  * @property int|null $start_recorder
  * @property int|null $end_recorder
+ * @property-read \App\Models\Passengers\RecorderCounterPerDays|null $recorderCounter
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\LocationReport[] $locationReports
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
@@ -109,13 +111,18 @@ class DispatchRegister extends Model
 
     public function getParsedDate()
     {
-        if($this->date == null)dd($this->id,$this->date);
-        return Carbon::createFromFormat(config('app.date_format'),$this->date);
+        if ($this->date == null) dd($this->id, $this->date);
+        return Carbon::createFromFormat(config('app.date_format'), $this->date);
     }
 
     public function dateLessThanDateNewOffRoadReport()
     {
         return $this->getParsedDate()->format('Y-m-d') < '2017-09-16';
+    }
+
+    public function recorderCounter()
+    {
+        return $this->hasOne(RecorderCounterPerDays::class);
     }
 
     const CREATED_AT = 'date_created';

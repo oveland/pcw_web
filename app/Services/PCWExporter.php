@@ -26,7 +26,7 @@ class PCWExporter
 
         Excel::create($dataExport->fileName, function ($excel) use ($dataExport) {
             /* SHEETS */
-            $excel = self::createHeaders($excel,$dataExport);
+            $excel = self::createHeaders($excel, $dataExport);
             $excel = self::createSheet($excel, $dataExport);
         })->export('xlsx');
     }
@@ -43,12 +43,13 @@ class PCWExporter
 
     public static function createSheet($excel, $dataExport)
     {
-        return $excel->sheet($dataExport->subTitle, function ($sheet) use ($dataExport) {
+        $sheetTitle = isset($dataExport->sheetTitle) ? $dataExport->sheetTitle : $dataExport->subTitle;
+        return $excel->sheet($sheetTitle, function ($sheet) use ($dataExport) {
             $startIndex = 3;
             $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', '...'];
 
             $config = (object)[
-                'type' => isset($dataExport->type)?$dataExport->type:null,
+                'type' => isset($dataExport->type) ? $dataExport->type : null,
                 'startIndex' => $startIndex,
                 'lastLetter' => $letters[count(array_keys($dataExport->data[0])) - 1],
                 'totalRows' => count($dataExport->data) + $startIndex,
@@ -120,25 +121,38 @@ class PCWExporter
     public static function sheetCustomReport($sheet, $config)
     {
         switch ($config->type) {
-                case 'passengerReportTotalFooter':
-                    $lastRow = $config->totalRows + 1;
-                    $starData = $config->startIndex + 1;
+            case 'passengerReportTotalFooter':
+                $lastRow = $config->totalRows + 1;
+                $starData = $config->startIndex + 1;
 
-                    // Set general formulas
-                    foreach (['F', 'G', 'H'] as $totalLetterPosition) {
-                        $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
-                    }
-                    for ($i = $starData; $i < $lastRow; $i++) {
-                        // Set formula to calculate recorder from end - start recorders
-                        $sheet->setCellValue("F$i", "=E$i-D$i");
-                        // Set formula to calculate difference between recorder and sensor
-                        $sheet->setCellValue("H$i", "=ABS(F$i-G$i)");
-                    }
+                // Set general formulas
+                foreach (['F', 'G', 'H'] as $totalLetterPosition) {
+                    $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
+                }
+                for ($i = $starData; $i < $lastRow; $i++) {
+                    // Set formula to calculate recorder from end - start recorders
+                    $sheet->setCellValue("F$i", "=E$i-D$i");
+                    // Set formula to calculate difference between recorder and sensor
+                    $sheet->setCellValue("H$i", "=ABS(F$i-G$i)");
+                }
 
-                    $sheet->setCellValue("A$lastRow", "TOTAL");
-                    $sheet = self::styleFooter($sheet, $config);
-                    break;
-            }
+                $sheet->setCellValue("A$lastRow", "TOTAL");
+                $sheet = self::styleFooter($sheet, $config);
+                break;
+
+            case 'routeReportByVehicle':
+                $lastRow = $config->totalRows + 1;
+                $starData = $config->startIndex + 1;
+
+                // Set general formulas
+                for ($i = $starData; $i < $lastRow; $i++) {
+                    // Set formula to calculate recorder from end - start recorders
+                    $sheet->setCellValue("K$i", "=I$i-H$i");
+                    // Set formula to calculate difference between recorder and sensor
+                    $sheet->setCellValue("J$i", "=K$i-" . (($i > $starData) ? ("K" . ($i - 1)) : "0"));
+                }
+                break;
+        }
         return $sheet;
     }
 

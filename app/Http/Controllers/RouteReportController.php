@@ -7,6 +7,7 @@ use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Route;
 use App\Services\PCWExporter;
+use App\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -33,49 +34,122 @@ class RouteReportController extends Controller
     {
         $route = Route::find($request->get('route-report'));
         $dateReport = $request->get('date-report');
-        $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
+        $typeReport = $request->get('type-report');
+
+        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
             ->where('route_id', '=', $route->id)
             ->where(function ($query) {
                 $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
             })
+            ->with('recorderCounter')
             ->orderBy('round_trip')
             ->orderBy('turn')
-            ->get()
-            ->groupBy('round_trip');
+            ->get();
 
-        $export = $request->get('export');
-        if ($export) $this->export($roundTripDispatchRegisters, $route, $dateReport);
+        switch ($typeReport) {
+            case 'round_trip':
+                $roundTripDispatchRegisters = $dispatchRegisters->groupBy('round_trip');
 
-        return view('reports.route.route.routeReport', compact(['roundTripDispatchRegisters', 'route', 'dateReport']));
+                if ($request->get('export')) $this->exportByRoundTrip($roundTripDispatchRegisters, $route, $dateReport);
+
+                return view('reports.route.route.routeReportByRoundTrip', compact(['roundTripDispatchRegisters', 'route', 'dateReport']));
+                break;
+            case 'vehicle':
+                $vehiclesDispatchRegisters = $dispatchRegisters->groupBy('vehicle_id');
+
+                if ($request->get('export')) $this->exportByVehicle($vehiclesDispatchRegisters, $route, $dateReport);
+
+                return view('reports.route.route.routeReportByVehicle', compact(['vehiclesDispatchRegisters', 'route', 'dateReport']));
+                break;
+        }
     }
 
-    public function export($roundTripDispatchRegisters, $route, $dateReport)
+    /**
+     * Export excel by Round Trip option
+     *
+     * @param $roundTripDispatchRegisters
+     * @param $route
+     * @param $dateReport
+     */
+    public function exportByRoundTrip($roundTripDispatchRegisters, $route, $dateReport)
     {
         //dd($roundTripDispatchRegisters);
-        Excel::create(__('Dispatch report') . " $dateReport", function ($excel) use ($roundTripDispatchRegisters, $dateReport, $route) {
+        Excel::create(__('Dispatch report') . " A " . " $dateReport", function ($excel) use ($roundTripDispatchRegisters, $dateReport, $route) {
             foreach ($roundTripDispatchRegisters as $roundTrip => $dispatchRegisters) {
-
                 $dataExcel = array();
                 foreach ($dispatchRegisters as $dispatchRegister) {
-                    //$dispatchRegister = new DispatchRegister();
                     $vehicle = $dispatchRegister->vehicle;
                     $dataExcel[] = [
-                        __('N°') => count($dataExcel) + 1,                                          # A CELL
-                        __('Turn') => $dispatchRegister->turn,                                          # A CELL
-                        __('Vehicle') => intval($vehicle->number),                                  # B CELL
-                        __('Plate') => $vehicle->plate,                                             # C CELL
-                        __('Departure time') => $dispatchRegister->departure_time,                  # D CELL
-                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,  # E CELL
-                        __('Arrival Time') => $dispatchRegister->arrival_time,                      # F CELL
-                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,# G CELL
+                        __('N°') => count($dataExcel) + 1,                                                                      # A CELL
+                        __('Turn') => $dispatchRegister->turn,                                                                  # B CELL
+                        __('Vehicle') => intval($vehicle->number),                                                              # C CELL
+                        __('Plate') => $vehicle->plate,                                                                         # D CELL
+                        __('Departure time') => $dispatchRegister->departure_time,                                              # E CELL
+                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,                              # F CELL
+                        __('Arrival Time') => $dispatchRegister->arrival_time,                                                  # G CELL
+                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,                            # H CELL
+                        __('Status') => $dispatchRegister->status,                                                              # I CELL
+                        __('Passengers') . ' | ' . __('Day') => intval($dispatchRegister->recorderCounter->passengers),    # J CELL
+                    ];
+                }
+
+                $dataExport = (object)[
+                    'fileName' => __('Dispatch report') . " $dateReport",
+                    'title' => __('Dispatch report') . " | $route->name: $dateReport",
+                    'subTitle' => __('Round Trip') . " $roundTrip",
+                    'data' => $dataExcel
+                ];
+
+                /* SHEETS */
+                $excel = PCWExporter::createHeaders($excel, $dataExport);
+                $excel = PCWExporter::createSheet($excel, $dataExport);
+            }
+        })->
+        export('xlsx');
+    }
+
+    /**
+     * Export excel by Vehicle option
+     *
+     * @param $roundTripDispatchRegisters
+     * @param $route
+     * @param $dateReport
+     */
+    public function exportByVehicle($vehiclesDispatchRegisters, $route, $dateReport)
+    {
+        //dd($roundTripDispatchRegisters);
+        Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport, $route) {
+            foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
+                $vehicle = Vehicle::find($vehicleId);
+                $dataExcel = array();
+                foreach ($dispatchRegisters as $dispatchRegister) {
+                    $startRecorder = $dispatchRegister->recorderCounter->getStartRecorder();
+                    $currentRecorder = $dispatchRegister->recorderCounter->end_recorder;
+                    $totalDay = $dispatchRegister->recorderCounter->passengers;
+                    $totalRoundTrip = isset($lastRecorder) ? $currentRecorder - $lastRecorder : $totalDay;
+                    $lastRecorder = $currentRecorder;
+                    $dataExcel[] = [
+                        __('Round Trip') => $dispatchRegister->round_trip,                                  # A CELL
+                        __('Turn') => $dispatchRegister->turn,                                              # B CELL
+                        __('Departure time') => $dispatchRegister->departure_time,                          # C CELL
+                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,          # D CELL
+                        __('Arrival Time') => $dispatchRegister->arrival_time,                              # E CELL
+                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,        # F CELL
+                        __('Status') => $dispatchRegister->status,                                          # G CELL
+                        __('Start Rec.') => intval($startRecorder),                                         # H CELL
+                        __('End Rec.') => intval($dispatchRegister->end_recorder),                          # I CELL
+                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),          # J CELL
+                        __('Pass.') . " " . __('Day') => intval($totalDay),                       # K CELL
                     ];
                 }
 
                 $dataExport = (object)[
                     'fileName' => __('Dispatch report') . " $dateReport",
                     'title' => __('Dispatch report') . " $dateReport",
-                    'subTitle' => $route->name." ".__('Round Trip')." $roundTrip",
-                    'data' => $dataExcel
+                    'subTitle' => "$vehicle->number | $vehicle->plate",
+                    'sheetTitle' => "$vehicle->number",
+                    'data' => $dataExcel,
+                    'type' => 'routeReportByVehicle'
                 ];
                 //foreach ()
                 /* SHEETS */

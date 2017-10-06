@@ -34,3 +34,9 @@ input[readonly="readonly"] {
 .transparent-header {
     background: rgba(0, 0, 0, 0.67) !important;
 }
+.sidebar{
+    transition: all 1s !important;
+}
+.content{
+    transition: position 1s !important;
+}

@@ -62,7 +62,7 @@
                             $recorder > 0 ? $totalRecorder->push($recorder):null;
                             $invalidRecorder = $recorder > 1000 || $recorder < 0;
                             $messageRecorder = $invalidRecorder
-                                                ? ('Verificar posible error en los datos de registradora')
+                                                ? __('Verify possible error in register data')
                                                 :($report->passengers->end_recorder.' <strong style="display:none;font-size:80%">('.$report->date.')</strong>'.' - '.$report->passengers->start_recorder.' <strong style="font-size:80%">('.$report->passengers->date_start_recorder.')</strong>');
 
                         @endphp

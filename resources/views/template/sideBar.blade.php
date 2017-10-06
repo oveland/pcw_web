@@ -132,7 +132,7 @@
                         <div class="info">
                             <div class="title"><a href="javascript:;">@lang('Manage <b>New Strategy</b>')</a></div>
                             <div class="progress progress-striped m-b-10 active">
-                                <div class="progress-bar progress-bar-success" style="width: 70%"></div>
+                                <div class="progress-bar progress-bar-success" style="width: 90%"></div>
                             </div>
                             <div class="desc">
                                 Monitoreo <b>contínuo</b> del estado del vehículo, a nivel de distancias y tiempos estimados,
@@ -147,7 +147,7 @@
                                 <a href="javascript:;">Migración a nueva plataforma</a>
                             </div>
                             <div class="progress progress-striped m-b-10 active">
-                                <div class="progress-bar progress-bar-danger" style="width: 10%"></div>
+                                <div class="progress-bar progress-bar-danger" style="width: 50%"></div>
                             </div>
                             <div class="desc">
                                 Mejoras e integración de nuevas funcionalidades

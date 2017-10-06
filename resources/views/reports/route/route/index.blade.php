@@ -1,7 +1,32 @@
 @extends('layout')
 
 @section('stylesheets')
-
+    <style>
+        .icon-report{
+            position: absolute !important;
+            left: 40%;
+            bottom: 10%;
+        }
+        span.icon-report{
+            color: #ddddd5 !important;
+            font-weight: bold;
+            left: 7%;
+            top: 2%;
+        }
+        .nav-vehicles li{
+            margin:0 5px 5px 0  !important;
+        }
+        .table-report th{
+            text-align: center !important;
+        }
+        .table-report th i{
+            font-size: 200%;
+            color: rgba(211, 211, 211, 0.16);
+            position: relative;
+            top: -5px;
+            float: unset;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -26,8 +51,7 @@
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
-                           data-click="panel-collapse" data-original-title="" title="@lang('Expand / Compress')">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" data-original-title="" title="@lang('Expand / Compress')">
                             <i class="fa fa-minus"></i>
                         </a>
                     </div>
@@ -37,13 +61,11 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="date-report"
-                                       class="control-label field-required">@lang('Date report')</label>
+                                <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control"
-                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -51,14 +73,11 @@
                             </div>
                         </div>
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="company-report"
-                                           class="control-label field-required">@lang('Company')</label>
+                                    <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
-                                        <select name="company-report" id="company-report"
-                                                class="default-select2 form-control col-md-12">
-                                            <option value="null">@lang('Select an option')</option>
+                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                             @endforeach
@@ -67,13 +86,25 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
                                     <select name="route-report" id="route-report"
                                             class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select a company')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <span class="badge badge-danger pull-right tooltips" data-original-title="@lang('New feature')">@lang('New') <i class="fa fa-bell faa-ring animated"></i></span>
+                                <label for="type-report" class="control-label">@lang('Group By')</label>
+                                <div class="form-group">
+                                    <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
+                                        <option value="round_trip">@lang('Round Trip')</option>
+                                        <option value="vehicle">@lang('Vehicle')</option>
                                     </select>
                                 </div>
                             </div>
@@ -220,14 +251,20 @@
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
+                var form = $(this);
                 e.preventDefault();
-                if ($(this).isValid()) {
+                if (form.isValid()) {
+                    form.find('.btn-search-report').addClass(loadingClass);
                     $('.report-container').slideUp(100);
                     $.ajax({
                         url: '{{ route('route-search-report') }}',
-                        data: $(this).serialize(),
+                        data: form.serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();
+                            hideSideBar();
+                        },
+                        complete:function(){
+                            form.find('.btn-search-report').removeClass(loadingClass);
                         }
                     });
                 }
@@ -237,10 +274,13 @@
                 loadRouteReport($(this).val());
             });
 
-            $('#route-report').change(function () {
+            $('#company-report').change();
+
+            $('#date-report, #route-report, #type-report').change(function () {
+                var form = $('.form-search-report');
                 $('.report-container').slideUp();
-                if (is_not_null($(this).val())) {
-                    $('.form-search-report').submit();
+                if (form.isValid(false)) {
+                    form.submit();
                 }
             });
 
@@ -402,7 +442,7 @@
         function loadRouteReport(company) {
             var routeSelect = $('#route-report');
             routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{route('route-ajax-action')}}', {
+            routeSelect.load('{{ route('route-ajax-action') }}', {
                 option: 'loadRoutes',
                 company: company
             }, function () {
