@@ -127,7 +127,7 @@
                     form.find('.btn-search-report').addClass(loadingClass);
                     $('.report-container').slideUp(100);
                     $.ajax({
-                        url: $(this).attr('action'),
+                        url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();

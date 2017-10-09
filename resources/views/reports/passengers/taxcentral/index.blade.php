@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report">
+        <form class="col-md-12 form-search-report" action="{{ route('tc-passengers-search-report') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -220,7 +220,7 @@
                     form.find('.btn-search-report').addClass(loadingClass);
                     $('.report-container').slideUp(100);
                     $.ajax({
-                        url: '{{ route('route-search-report') }}',
+                        url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();

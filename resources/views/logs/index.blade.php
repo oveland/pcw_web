@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-download-report" data-action="{{ route('logs-access-export',['date'=>'']) }}">
+        <form class="col-md-12 form-download-report" action="{{ route('logs-access-export',['date'=>'']) }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -71,7 +71,7 @@
                 event.preventDefault();
                 var form = $(this);
                 if (form.isValid()) {
-                    var url = form.data('action');
+                    var url = form.attr('action');
                     var date = $('#date-report').val();
 
                     form.find('.btn-search-report').addClass(loadingClass);
