@@ -45,10 +45,16 @@ class Geolocation
         if ($latitude == 0 || $longitude == 0) return 'Invalid Address';
         $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=" . config('road.google_api_token');
         $response = file_get_contents($url);
+
+        sleep(1);
+
         $json = collect(json_decode($response, true));
         $address = (object)collect($json->first())->first();
-        $address = explode(',', $address->formatted_address);
-        sleep(0.02);
+        try{
+            $address = explode(',', $address->formatted_address);
+        }catch (\Exception $e){
+            return "No disponible";
+        }
         return $address[0];
     }
 

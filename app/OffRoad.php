@@ -53,7 +53,7 @@ class OffRoad extends Model
 
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'),$date);
+        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
     }
 
     /**
