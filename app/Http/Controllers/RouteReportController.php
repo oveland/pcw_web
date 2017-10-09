@@ -41,7 +41,7 @@ class RouteReportController extends Controller
             ->where(function ($query) {
                 $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
             })
-            ->with('recorderCounter')
+            ->with('recorderCounterPerRoundTrip')
             ->orderBy('round_trip')
             ->orderBy('turn')
             ->get();
@@ -80,16 +80,16 @@ class RouteReportController extends Controller
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $vehicle = $dispatchRegister->vehicle;
                     $dataExcel[] = [
-                        __('N°') => count($dataExcel) + 1,                                                                      # A CELL
-                        __('Turn') => $dispatchRegister->turn,                                                                  # B CELL
-                        __('Vehicle') => intval($vehicle->number),                                                              # C CELL
-                        __('Plate') => $vehicle->plate,                                                                         # D CELL
-                        __('Departure time') => $dispatchRegister->departure_time,                                              # E CELL
-                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,                              # F CELL
-                        __('Arrival Time') => $dispatchRegister->arrival_time,                                                  # G CELL
-                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,                            # H CELL
-                        __('Status') => $dispatchRegister->status,                                                              # I CELL
-                        __('Passengers') . ' | ' . __('Day') => intval($dispatchRegister->recorderCounter->passengers),    # J CELL
+                        __('N°') => count($dataExcel) + 1,                                                                                  # A CELL
+                        __('Turn') => $dispatchRegister->turn,                                                                              # B CELL
+                        __('Vehicle') => intval($vehicle->number),                                                                          # C CELL
+                        __('Plate') => $vehicle->plate,                                                                                     # D CELL
+                        __('Departure time') => $dispatchRegister->departure_time,                                                          # E CELL
+                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,                                          # F CELL
+                        __('Arrival Time') => $dispatchRegister->arrival_time,                                                              # G CELL
+                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,                                        # H CELL
+                        __('Status') => $dispatchRegister->status,                                                                          # I CELL
+                        __('Passengers') . ' | ' . __('Day') => intval($dispatchRegister->recorderCounterPerRoundTrip->passengers),    # J CELL
                     ];
                 }
 
@@ -123,9 +123,9 @@ class RouteReportController extends Controller
                 $vehicle = Vehicle::find($vehicleId);
                 $dataExcel = array();
                 foreach ($dispatchRegisters as $dispatchRegister) {
-                    $startRecorder = $dispatchRegister->recorderCounter->getStartRecorder();
-                    $currentRecorder = $dispatchRegister->recorderCounter->end_recorder;
-                    $totalDay = $dispatchRegister->recorderCounter->passengers;
+                    $startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->getStartRecorder();
+                    $currentRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder;
+                    $totalDay = $dispatchRegister->recorderCounterPerRoundTrip->passengers;
                     $totalRoundTrip = isset($lastRecorder) ? $currentRecorder - $lastRecorder : $totalDay;
                     $lastRecorder = $currentRecorder;
                     $dataExcel[] = [

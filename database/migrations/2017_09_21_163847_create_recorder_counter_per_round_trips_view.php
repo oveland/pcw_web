@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRecorderCounterPerDaysView extends Migration
+class CreateRecorderCounterPerRoundTripsView extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,9 @@ class CreateRecorderCounterPerDaysView extends Migration
     public function up()
     {
         DB::statement("
-            CREATE OR REPLACE VIEW recorder_counter_per_days AS 
+            CREATE OR REPLACE VIEW recorder_counter_per_round_trips AS 
             SELECT 
-            max(dr.id) dispatch_register_id,
+            dr.id dispatch_register_id,
             dr.date,
             v.id AS vehicle_id,
             v.company_id,
@@ -83,7 +83,7 @@ class CreateRecorderCounterPerDaysView extends Migration
             JOIN vehicles v ON ((v.id = dr.vehicle_id)))
             WHERE (((dr.status)::text = 'Terminó'::text) OR ((dr.status)::text = 'En camino'::text))
             --AND dr.date = '2017-09-18' AND v.number = '381'
-            GROUP BY v.id, dr.date, v.company_id
+            GROUP BY v.id, dr.id, dr.date, v.company_id
         ");
     }
 
@@ -94,6 +94,6 @@ class CreateRecorderCounterPerDaysView extends Migration
      */
     public function down()
     {
-        DB::statement("DROP VIEW IF EXISTS recorder_counter_per_days");
+        DB::statement("DROP VIEW IF EXISTS recorder_counter_per_round_trips");
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Models\Passengers\PassengerCounterPerDay;
 use App\Models\Passengers\PassengerCounterPerDaySixMonth;
-use App\Models\Passengers\RecorderCounterPerDays;
+use App\Models\Passengers\RecorderCounterPerDay;
 use App\Route;
 use App\Services\PCWExporter;
 use Carbon\Carbon;
@@ -94,7 +94,7 @@ class PassengerReportController extends Controller
             ->get();
 
         // Query passenger by recorder counter
-        $recorderCounterPerDays = RecorderCounterPerDays::where('date', $dateReport)
+        $recorderCounterPerDays = RecorderCounterPerDay::where('date', $dateReport)
             ->where('company_id', $company->id)
             ->get();
 

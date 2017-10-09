@@ -2,7 +2,8 @@
 
 namespace App;
 
-use App\Models\Passengers\RecorderCounterPerDays;
+use App\Models\Passengers\RecorderCounterPerDay;
+use App\Models\Passengers\RecorderCounterPerRoundTrip;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
@@ -27,7 +28,7 @@ use Carbon\Carbon;
  * @property string|null $status
  * @property int|null $start_recorder
  * @property int|null $end_recorder
- * @property-read \App\Models\Passengers\RecorderCounterPerDays|null $recorderCounter
+ * @property-read \App\Models\Passengers\RecorderCounterPerDay|null $recorderCounter
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\LocationReport[] $locationReports
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
@@ -53,6 +54,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTypeOfDay($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereVehicleId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Passengers\RecorderCounterPerRoundTrip $recorderCounterPerRoundTrip
  */
 class DispatchRegister extends Model
 {
@@ -120,9 +122,9 @@ class DispatchRegister extends Model
         return $this->getParsedDate()->format('Y-m-d') < '2017-09-16';
     }
 
-    public function recorderCounter()
+    public function recorderCounterPerRoundTrip()
     {
-        return $this->hasOne(RecorderCounterPerDays::class);
+        return $this->hasOne(RecorderCounterPerRoundTrip::class);
     }
 
     const CREATED_AT = 'date_created';

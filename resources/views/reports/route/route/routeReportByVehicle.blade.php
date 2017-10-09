@@ -66,7 +66,7 @@
                                 @lang('Status')
                             </th>
                             <th data-sorting="disabled" class="text-center">
-                                @lang('Start Rec.'): {{ $dispatchRegisters->first()->recorderCounter->getStartRecorder() }}
+                                @lang('Start Rec.'): {{ $dispatchRegisters->first()->recorderCounterPerRoundTrip->getStartRecorder() }}
                                 <hr class="hr">
                                 @lang('End Rec.')
                             </th>
@@ -92,8 +92,8 @@
                                 <td>{{ $dispatchRegister->arrival_time }}</td>
                                 <td>{{ $dispatchRegister->arrival_time_difference }}</td>
                                 <td>{{ $dispatchRegister->status }}</td>
-                                @php($currentRecorder = $dispatchRegister->recorderCounter->end_recorder)
-                                @php($total = $dispatchRegister->recorderCounter->passengers)
+                                @php($currentRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder)
+                                @php($total = $dispatchRegister->recorderCounterPerRoundTrip->passengers)
                                 @php($invalid = ($total<0 || $total > 1000)?true:false )
                                 <td width="15%">{{ $currentRecorder }}</td>
                                 <td width="5%">

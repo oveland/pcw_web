@@ -7,7 +7,7 @@ use App\Vehicle;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Passengers\PassengerCounterPerDays
+ * App\Models\Passengers\PassengerCounterPerDay
  *
  * @property int $id
  * @property int|null $total
@@ -15,15 +15,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $date
  * @property int|null $vehicle_id
  * @property int|null $company_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDays whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDays whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDays whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDays whereIpk($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDays whereTotal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDays whereVehicleId($value)
- * @mixin \Eloquent
  * @property-read \App\Company|null $company
  * @property-read \App\Vehicle|null $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereIpk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereVehicleId($value)
+ * @mixin \Eloquent
  */
 class PassengerCounterPerDay extends Model
 {
