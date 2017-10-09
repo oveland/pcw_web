@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ControlPointTime extends Model
 {
+    protected $hidden = ['created_at','updated_at'];
+
     protected function getDateFormat()
     {
         return config('app.date_time_format');

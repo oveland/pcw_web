@@ -14,7 +14,8 @@ class CreateOffRoadsTable extends Migration
     public function up()
     {
         /* Create off_road table from locations with off_road */
-        DB::statement("CREATE TABLE off_roads AS SELECT l.* FROM locations AS l WHERE off_road = TRUE");
+        $dateChangedOffRoadMethod = '2017-09-17';
+        DB::statement("CREATE TABLE off_roads AS SELECT l.* FROM locations AS l WHERE date < '$dateChangedOffRoadMethod' OR (off_road = TRUE AND date >= '$dateChangedOffRoadMethod')");
 
         /* Create function that save off_roads from INSERT locations */
         DB::statement("
