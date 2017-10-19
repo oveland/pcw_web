@@ -122,12 +122,12 @@ class RouteReportController extends Controller
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
                 $dataExcel = array();
+                $totalDay = 0;
                 foreach ($dispatchRegisters as $dispatchRegister) {
-                    $startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->getStartRecorder();
+                    $startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder_prev;
                     $currentRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder;
-                    $totalDay = $dispatchRegister->recorderCounterPerRoundTrip->passengers;
-                    $totalRoundTrip = isset($lastRecorder) ? $currentRecorder - $lastRecorder : $totalDay;
-                    $lastRecorder = $currentRecorder;
+                    $totalRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip->passengers_round_trip;
+                    $totalDay+=$totalRoundTrip;
                     $dataExcel[] = [
                         __('Round Trip') => $dispatchRegister->round_trip,                                  # A CELL
                         __('Turn') => $dispatchRegister->turn,                                              # B CELL
@@ -137,7 +137,7 @@ class RouteReportController extends Controller
                         __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,        # F CELL
                         __('Status') => $dispatchRegister->status,                                          # G CELL
                         __('Start Rec.') => intval($startRecorder),                                         # H CELL
-                        __('End Rec.') => intval($dispatchRegister->end_recorder),                          # I CELL
+                        __('End Rec.') => intval($currentRecorder),                                         # I CELL
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),          # J CELL
                         __('Pass.') . " " . __('Day') => intval($totalDay),                       # K CELL
                     ];

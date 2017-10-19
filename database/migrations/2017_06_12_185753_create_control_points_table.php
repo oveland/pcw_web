@@ -27,10 +27,10 @@ class CreateControlPointsTable extends Migration
             $table->timestamps();
 
             /* table relations */
-            $table->foreign('route_id')->references('id')->on('routes');
+            $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
 
             /*Indexes*/
-            $table->unique(['name', 'route_id']); // One route has a unique control point name
+            $table->unique(['name', 'route_id', 'trajectory']); // One route has a unique control point name
         });
     }
 

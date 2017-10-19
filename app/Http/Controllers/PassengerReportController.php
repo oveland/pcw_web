@@ -97,7 +97,6 @@ class PassengerReportController extends Controller
         $recorderCounterPerDays = RecorderCounterPerDay::where('date', $dateReport)
             ->where('company_id', $company->id)
             ->get();
-
         // Build report data
         $reports = array();
         foreach ($recorderCounterPerDays as $recorderCounterPerDay) {
@@ -110,7 +109,7 @@ class PassengerReportController extends Controller
                 'passengers' => (object)[
                     'sensor' => $sensor ? $sensor->total : 0,
                     'recorder' => $recorderCounterPerDay->passengers ?? 0,
-                    'start_recorder' => ($recorderCounterPerDay->start_recorder == 0 ? $recorderCounterPerDay->start_recorder_prev : $recorderCounterPerDay->start_recorder) ?? 0,
+                    'start_recorder' => $recorderCounterPerDay->getStartRecorder(),
                     'date_start_recorder' => $recorderCounterPerDay->date_start_recorder_prev ?? 0,
                     'end_recorder' => $recorderCounterPerDay->end_recorder ?? 0
                 ]

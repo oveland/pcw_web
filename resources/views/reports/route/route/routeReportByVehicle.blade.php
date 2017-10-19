@@ -65,16 +65,16 @@
                                 <i class="fa fa-tachometer text-muted"></i><br>
                                 @lang('Status')
                             </th>
-                            <th data-sorting="disabled" class="text-center">
-                                @lang('Start Rec.'): {{ $dispatchRegisters->first()->recorderCounterPerRoundTrip->getStartRecorder() }}
+                            <th colspan="2" data-sorting="disabled" class="text-center">
+                                @lang('Registradora')
                                 <hr class="hr">
-                                @lang('End Rec.')
+                                @lang('Inicial') | @lang('Final')
                             </th>
                             <th colspan="2" data-sorting="disabled" class="text-center">
                                 <i class="fa fa-users text-muted"></i><br>
                                 @lang('Passengers')
                                 <hr class="hr">
-                                @lang('Round Trip') | @lang('Day')
+                                @lang('Round Trip') | @lang('Route')
                             </th>
                             <th data-sorting="disabled">
                                 <i class="fa fa-rocket text-muted"></i><br>
@@ -83,7 +83,16 @@
                         </tr>
                         </thead>
                         <tbody>
+                        @php($totalPerRoute = 0)
                         @foreach( $dispatchRegisters as $dispatchRegister )
+                            @php
+                                $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
+                                $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
+                                $startRecorderPrev= $recorderCounterPerRoundTrip->end_recorder_prev;
+                                $passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+                                $totalPerRoute+=$passengersPerRoundTrip;
+                                $invalid = ($totalPerRoute > 1000)?true:false;
+                            @endphp
                             <tr>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td>{{ $dispatchRegister->turn }}</td>
@@ -92,21 +101,18 @@
                                 <td>{{ $dispatchRegister->arrival_time }}</td>
                                 <td>{{ $dispatchRegister->arrival_time_difference }}</td>
                                 <td>{{ $dispatchRegister->status }}</td>
-                                @php($currentRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder)
-                                @php($total = $dispatchRegister->recorderCounterPerRoundTrip->passengers)
-                                @php($invalid = ($total<0 || $total > 1000)?true:false )
+                                <td width="15%">{{ $startRecorderPrev }}</td>
                                 <td width="15%">{{ $currentRecorder }}</td>
                                 <td width="5%">
-                                    <span class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
-                                        {{ $loop->index > 0?$currentRecorder - $lastRecorder:$total }}
+                                    <span title="{{ $currentRecorder.'-'.$startRecorderPrev }}" class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
+                                        {{ $currentRecorder - $startRecorderPrev }}
                                     </span>
                                 </td>
                                 <td width="5%">
                                     <span class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
-                                        {{ $total }}
+                                        {{ $totalPerRoute }}
                                     </span>
                                 </td>
-                                @php($lastRecorder = $currentRecorder)
                                 <td width="10%" class="text-center">
                                     <a href="#modal-route-report"
                                        class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"

@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ControlPointTime whereTimeNextPoint($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ControlPointTime whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Fringe|null $fringe
  */
 class ControlPointTime extends Model
 {
@@ -40,5 +41,10 @@ class ControlPointTime extends Model
     public function controlPoint()
     {
         return $this->belongsTo(ControlPoint::class);
+    }
+
+    public function fringe()
+    {
+        return $this->belongsTo(Fringe::class);
     }
 }

@@ -8,9 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 /**
  * App\User
  *
- * @property-read \App\Company $company
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property string|null $email
@@ -22,6 +19,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property int|null $company_id
+ * @property-read \App\Company|null $company
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCreatedAt($value)
@@ -33,6 +32,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUsername($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {

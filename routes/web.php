@@ -80,18 +80,22 @@ Route::group(['middleware' => ['auth']], function () {
     /****************** MIGRATION ROUTES *******************/
 
     /* Routes for migrate Tables */
-    Route::get('/migrate/', 'MigrationController@index')->name('migrate');
-    Route::get('/migrate/companies', 'MigrationController@migrateCompanies')->name('migrate-companies');
-    Route::get('/migrate/routes', 'MigrationController@migrateRoutes')->name('migrate-routes');
-    Route::get('/migrate/users', 'MigrationController@migrateUsers')->name('migrate-users');
-    Route::get('/migrate/vehicles', 'MigrationController@migrateVehicles')->name('migrate-vehicles');
-    Route::get('/migrate/control-points', 'MigrationController@migrateControlPoints')->name('migrate-control-points');
-    Route::get('/migrate/control-point-time', 'MigrationController@migrateControlPointTimes')->name('migrate-control-point-times');
-
-    /* Routes for migrate Control Points (CP) */
-    Route::get('/migrate/cp/','MigrationControlPointController@getControlPoints')->name('migrate-cp');
-    Route::get('/migrate/cp/compare/{route}', 'MigrationControlPointController@compare')->name('compare-control-point');
-    Route::get('/migrate/coordinates/{route}', 'MigrationControlPointController@exportCoordinates')->name('export-coordinates');
+    Route::prefix(__('migrate'))->group(function () {
+        Route::get('/', 'MigrationController@index')->name('migrate');
+        Route::get('/companies', 'MigrationController@migrateCompanies')->name('migrate-companies');
+        Route::get('/routes', 'MigrationController@migrateRoutes')->name('migrate-routes');
+        Route::get('/users', 'MigrationController@migrateUsers')->name('migrate-users');
+        Route::get('/vehicles', 'MigrationController@migrateVehicles')->name('migrate-vehicles');
+        Route::get('/control-points', 'MigrationController@migrateControlPoints')->name('migrate-control-points');
+        Route::get('/control-point-time', 'MigrationController@migrateControlPointTimes')->name('migrate-control-point-times');
+        Route::get('/fringes', 'MigrationController@migrateFringes')->name('migrate-fringes');
+        Route::get('/coordinates/{route}', 'MigrationControlPointController@exportCoordinates')->name('export-coordinates');
+        /* Routes for migrate Control Points (CP) */
+        Route::prefix(__('cp'))->group(function () {
+            Route::get('/', 'MigrationControlPointController@getControlPoints')->name('migrate-cp');
+            Route::get('/compare/{route}', 'MigrationControlPointController@compare')->name('compare-control-point');
+        });
+    });
 
     /* Routes for tools */
     Route::get('/tools/map', 'ToolsController@map')->name('map-tool');

@@ -21,10 +21,10 @@ class CreateRecorderCounterPerDaysView extends Migration
             v.id AS vehicle_id,
             v.company_id,
             v.number,
-            max(dr.start_recorder) AS start_recorder,
+            min(dr.start_recorder) AS start_recorder,
             (
             CASE
-            WHEN (max(dr.start_recorder) = 0) THEN
+            WHEN (min(dr.start_recorder) = 0) THEN
               (
                 SELECT max(drp.end_recorder)
                 FROM dispatch_registers as drp
@@ -36,13 +36,13 @@ class CreateRecorderCounterPerDaysView extends Migration
                 DESC LIMIT 1
               )
             ELSE
-              max(dr.start_recorder)
+              min(dr.start_recorder)
             END
             ) AS start_recorder_prev,
             
             (
             CASE
-            WHEN (max(dr.start_recorder) = 0) THEN
+            WHEN (min(dr.start_recorder) = 0) THEN
               (
                 SELECT drp.date
                 FROM dispatch_registers as drp
@@ -63,7 +63,7 @@ class CreateRecorderCounterPerDaysView extends Migration
             max(dr.end_recorder) -
             (
               CASE
-              WHEN (max(dr.start_recorder) = 0) THEN
+              WHEN (min(dr.start_recorder) = 0) THEN
                 (
                   SELECT max(drp.end_recorder)
                   FROM dispatch_registers as drp
@@ -75,7 +75,7 @@ class CreateRecorderCounterPerDaysView extends Migration
                   DESC LIMIT 1
                 )
               ELSE
-                max(dr.start_recorder)
+                min(dr.start_recorder)
               END
             )
             ) AS passengers

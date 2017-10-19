@@ -7,24 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Report
  *
- * @property-read \App\DispatchRegister $dispatchRegister
- * @property-read \App\Location $location
- * @mixin \Eloquent
  * @property int $id
  * @property int $version
  * @property string $date
- * @property \Carbon\Carbon $date_created
+ * @property string $date_created
  * @property int $dispatch_register_id
  * @property int $distanced
  * @property int $distancem
  * @property int $distancep
- * @property \Carbon\Carbon $last_updated
+ * @property string $last_updated
  * @property string $status
  * @property string $timed
  * @property string $timem
  * @property string $timep
  * @property int|null $location_id
  * @property float|null $status_in_minutes
+ * @property-read \App\DispatchRegister $dispatchRegister
+ * @property-read \App\Location|null $location
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereDateCreated($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereDispatchRegisterId($value)
@@ -40,6 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereTimem($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereTimep($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereVersion($value)
+ * @mixin \Eloquent
  */
 class Report extends Model
 {

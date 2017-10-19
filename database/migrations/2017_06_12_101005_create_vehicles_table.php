@@ -23,7 +23,7 @@ class CreateVehiclesTable extends Migration
             $table->timestamps();
 
             /* table relations */
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             /*Indexes*/
             $table->unique(['number', 'plate']); // One plate has a unique vehicle number

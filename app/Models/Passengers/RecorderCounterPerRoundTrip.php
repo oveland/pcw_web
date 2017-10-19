@@ -6,7 +6,6 @@ use App\Company;
 use App\Vehicle;
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
  * App\Models\Passengers\RecorderCounterPerRoundTrip
  *
@@ -53,7 +52,7 @@ class RecorderCounterPerRoundTrip extends Model
 
     public function getStartRecorder()
     {
-        return $this->start_recorder == 0 ? $this->start_recorder_prev : $this->start_recorder;
+        return $this->start_recorder;
     }
 
     public function getComputedPassengers()

@@ -44,7 +44,7 @@
             <div class="tab-content panel p-0">
                 @foreach($companies as $company)
                     <div id="company-tab-{{$loop->index}}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}} p-10">
-                        <div class="col-md-10 col-md-offset-1">
+                        <div class="col-md-12">
                             <!-- begin panel-group -->
                             <div class="panel-group" id="accordion-{{$company->id}}">
                             @if($company->routes)
@@ -68,9 +68,9 @@
                                                 </span>
                                             </h3>
                                         </div>
-                                        <div id="collapse-{{$route->id}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <div id="collapse-{{ $route->id }}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                                             <div class="panel-body">
-                                                <div class="widget widget-stat bg-inverse-light text-white">
+                                                <div class="widget widget-stat bg-inverse-light text-white p-b-30">
                                                     <div class="widget-stat-btn"><a href="#" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
                                                     <button class="btn btn-success" onclick="alert('Migrating...')" data-toggle="modal" data-target="#modal-migration">
                                                         <i class="fa fa-database"></i> @lang('Process migration')
@@ -78,7 +78,23 @@
                                                     <button class="btn btn-default" onclick="$('.compare-{{$route->id}}').load('{{ route('compare-control-point',['route'=>$route->id]) }}')">
                                                         <i class="fa fa-angle-double-left"></i> <i class="fa fa-angle-double-right"></i> @lang('Compare')
                                                     </button>
-                                                    <div class="widget-stat-number">{{ $route->controlPoints->count() }} @lang('Control Points')</div>
+                                                    <div class="widget-stat-number">
+                                                        {{ $route->controlPoints->count() }} @lang('Control Points')
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="panel">
+                                                            <ul class="nav nav-tabs nav-tabs-primary nav-justified">
+                                                                @foreach(\App\DayType::all()->sortBy('id') as $dayType)
+                                                                    <li class="{{ $loop->first ? 'active': '' }}">
+                                                                        <a href=".day-type-{{ $dayType->id }}-{{ $route->id }}" data-toggle="tab">
+                                                                            <i class="fa fa-calendar-check-o text-info" aria-hidden="true"></i>
+                                                                            {{ $dayType->description }}
+                                                                        </a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                     @if($route->controlPoints)
                                                         @include('migrations._controlPoints')
                                                     @endif

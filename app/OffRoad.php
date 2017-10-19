@@ -23,8 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $status
  * @property int|null $vehicle_id
  * @property bool|null $off_road
- * @property mixed $dispatch_register
+ * @property-read \App\DispatchRegister|null $dispatchRegister
  * @property-read \App\Report $report
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad validCoordinates()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad whereDateCreated($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad whereDispatchRegisterId($value)
@@ -41,8 +42,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad whereVersion($value)
  * @mixin \Eloquent
- * @property-read \App\DispatchRegister|null $dispatchRegister
- * @method static \Illuminate\Database\Eloquent\Builder|\App\OffRoad validCoordinates()
  */
 class OffRoad extends Model
 {

@@ -9,8 +9,6 @@ use Sofa\Eloquence\Mappable;
 /**
  * App\Vehicle
  *
- * @property-read \App\Company $company
- * @mixin \Eloquent
  * @property int $id
  * @property string $plate
  * @property string $number
@@ -19,6 +17,8 @@ use Sofa\Eloquence\Mappable;
  * @property bool $in_repair
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Company $company
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle active()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle whereCreatedAt($value)
@@ -27,7 +27,7 @@ use Sofa\Eloquence\Mappable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle whereNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle wherePlate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle active()
+ * @mixin \Eloquent
  */
 class Vehicle extends Model
 {

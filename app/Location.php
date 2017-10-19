@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Location
  *
- * @property-read \App\Report $report
- * @mixin \Eloquent
  * @property int $id
  * @property int $version
  * @property string|null $date
@@ -24,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $status
  * @property int|null $vehicle_id
  * @property bool|null $off_road
+ * @property-read \App\Report $report
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereDateCreated($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereDispatchRegisterId($value)
@@ -39,6 +38,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereVersion($value)
+ * @mixin \Eloquent
  */
 class Location extends Model
 {

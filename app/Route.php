@@ -7,19 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Route
  *
- * @property-read \App\Company $company
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\ControlPoint[] $controlPoints
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property int $distance
  * @property int $road_time
+ * @property string $url
  * @property int $company_id
  * @property int $dispatch_id
  * @property bool $active
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property string|null $url
+ * @property-read \App\Company $company
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ControlPoint[] $controlPoints
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereCreatedAt($value)
@@ -30,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereRoadTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereUrl($value)
+ * @mixin \Eloquent
  */
 class Route extends Model
 {

@@ -20,7 +20,7 @@ class CreateGpsVehiclesTable extends Migration
             $table->timestamps();
 
             /* table relations */
-            $table->foreign('vehicle_id')->references('id')->on('vehicles');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
 
             /*Indexes*/
             $table->unique(['vehicle_id', 'imei']); // One imei is assigned to unique vehicle

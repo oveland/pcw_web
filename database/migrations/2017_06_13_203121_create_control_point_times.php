@@ -24,10 +24,11 @@ class CreateControlPointTimes extends Migration
             $table->timestamps();
             /* table relations */
             $table->foreign('day_type_id')->references('id')->on('day_types');
-            $table->foreign('control_point_id')->references('id')->on('control_points');
+            $table->foreign('control_point_id')->references('id')->on('control_points')->onDelete('cascade');
+            $table->foreign('fringe_id')->references('id')->on('fringes')->onDelete('cascade');
 
             /*Indexes*/
-            $table->unique(['day_type_id', 'control_point_id']); // A control point has a unique time for a day type
+            $table->unique(['control_point_id', 'day_type_id', 'fringe_id']); // A control point has a unique time for a day type in a specific fringe
         });
     }
 

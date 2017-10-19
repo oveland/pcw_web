@@ -6,7 +6,9 @@ use App\CobanVehicle;
 use App\Company;
 use App\ControlPoint;
 use App\ControlPointTime;
+use App\Fringe;
 use App\GpsVehicle;
+use App\Http\Controllers\Utils\Database;
 use App\Route;
 use App\RouteGoogle;
 use App\User;
@@ -23,8 +25,11 @@ class MigrationController extends Controller
         'users' => 'acceso',
         'vehicles' => 'crear_vehiculo',
         'control_points' => 'puntos_control_ruta',
-        'control_point_times' => 'tiempos_punto_control'
+        'fringes' => 'franjas_rutas',
+        'control_point_times' => 'tiempos_punto_control',
     ];
+
+    const ROUTES_FOR_MIGRATE = [126, 135, 136, 137];
 
     /**
      * Create a new controller instance.
@@ -52,7 +57,7 @@ class MigrationController extends Controller
             (object)[
                 'name' => self::OLD_TABLES['routes'],
                 'route' => route('migrate-routes'),
-                'total' => DB::table(self::OLD_TABLES['routes'])->count(),
+                'total' => DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', self::ROUTES_FOR_MIGRATE)->count(),
                 'total_migrated' => Route::count()
             ],
             (object)[
@@ -70,13 +75,20 @@ class MigrationController extends Controller
             (object)[
                 'name' => self::OLD_TABLES['control_points'],
                 'route' => route('migrate-control-points'),
-                'total' => DB::table(self::OLD_TABLES['control_points'])->count(),
+                'total' => DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->count(),
                 'total_migrated' => ControlPoint::count()
+            ],
+
+            (object)[
+                'name' => self::OLD_TABLES['fringes'],
+                'route' => route('migrate-fringes'),
+                'total' => DB::table(self::OLD_TABLES['fringes'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->count(),
+                'total_migrated' => Fringe::count()
             ],
             (object)[
                 'name' => self::OLD_TABLES['control_point_times'],
                 'route' => route('migrate-control-point-times'),
-                'total' => DB::table(self::OLD_TABLES['control_point_times'])->count(),
+                'total' => DB::table(self::OLD_TABLES['control_point_times'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->count(),
                 'total_migrated' => ControlPointTime::count()
             ],
         ]);
@@ -269,7 +281,7 @@ class MigrationController extends Controller
                     $gpsVehicle = new GpsVehicle();
                     $gpsVehicleNew = true;
                 }
-                $gpsVehicle->imei = $vehicleOLD->imei_gps;
+                $gpsVehicle->imei = $vehicleOLD->imei_gps ?? $vehicleOLD->placa;
                 $gpsVehicle->vehicle_id = $vehicleOLD->id_crear_vehiculo;
 
                 try {
@@ -309,7 +321,7 @@ class MigrationController extends Controller
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
-        $controlPoints = DB::table(self::OLD_TABLES['control_points'])->get();
+        $controlPoints = DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->get();
         foreach ($controlPoints as $controlPointOLD) {
             $new = false;
             $controlPoint = ControlPoint::find($controlPointOLD->secpuntos_control_ruta);
@@ -347,52 +359,38 @@ class MigrationController extends Controller
         ]);
     }
 
-    public function migrateControlPointTimes(Request $request)
+    public function migrateFringes(Request $request)
     {
-        if ($request->get('delete')) {
-            $deleted = DB::delete('DELETE FROM control_point_times');
-            dd($deleted . ' registers has ben deleted!');
-        }
+        $new = true;
+        DB::statement("TRUNCATE control_point_times");
+        DB::statement("DELETE FROM fringes");
+        DB::statement("SELECT pg_catalog.setval('fringes_id_seq', 1, false)");
 
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
-        //$controlPointTimes = DB::table(self::OLD_TABLES['control_point_times'])->where('id_ruta','=',126)->get();
-        $routesMigration = [126,135,136];
-        foreach ($routesMigration as $route){
-            $controlPointTimes = collect(DB::select("
-            SELECT tpc.id_tiempos_punto_control id,tpc.id_punto_control control_point_id, pc.orden, pc.nombre, tpc.tiempo1 time1, tpc.tipo_dia day_type 
-            FROM puntos_control_ruta AS pc, tiempos_punto_control AS tpc 
-            WHERE tpc.id_punto_control = pc.secpuntos_control_ruta AND pc.id_ruta = $route
-            GROUP BY pc.secpuntos_control_ruta, tpc.id_tiempos_punto_control  
-            ORDER BY tpc.tipo_dia, pc.orden")
-            );
 
-            $day_type = 0;
-            $last_time = "00:00:00";
-            foreach ($controlPointTimes as $index => $controlPointTimesOLD) {
-                $new = false;
-                $controlPointTime = ControlPointTime::find($controlPointTimesOLD->id);
-                if (!$controlPointTime) {
-                    $controlPointTime = new ControlPointTime();
-                    $new = true;
-                }
+        $fringes = DB::table(self::OLD_TABLES['fringes'])
+            ->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)
+            ->get();
 
-                if ($day_type != $controlPointTimesOLD->day_type) {
-                    $day_type = $controlPointTimesOLD->day_type;
-                    $last_time = "00:00:00";
-                }
+        foreach ($fringes as $fringeOLD) {
+            for ($i = 1; $i <= 15; $i++) {
+                $fringeI = $fringeOLD->{"franja_$i"};
+                if ($fringeI == "") break;
 
-                $controlPointTime->id = $controlPointTimesOLD->id;
-                $controlPointTime->time = $controlPointTimesOLD->time1 == "" ? "00:00" : "00:".$controlPointTimesOLD->time1;
-                $controlPointTime->time_next_point = (!isset($controlPointTimes[$index + 1]) || $controlPointTimes[$index + 1]->time1 == "") ? "00:00:00" : "00:".$controlPointTimes[$index + 1]->time1;
-                $controlPointTime->time_from_dispatch = date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00"));
-                $controlPointTime->day_type_id = $controlPointTimesOLD->day_type;
-                $controlPointTime->control_point_id = $controlPointTimesOLD->control_point_id;
-                $controlPointTime->fringe_id = null;
+                $fringeTime = explode(" a ", $fringeI);
+
+                $fringe = new Fringe();
+                $fringe->name = $fringeI;
+                $fringe->from = $fringeTime[0];
+                $fringe->to = $fringeTime[1];
+                $fringe->sequence = $i;
+                $fringe->route_id = $fringeOLD->id_ruta;
+                $fringe->day_type_id = $fringeOLD->tipo_de_dia;
 
                 try {
-                    $controlPointTime->save();
+                    $fringe->save();
                     $new ? $totalCreated++ : $totalUpdated++;
                 } catch (QueryException $e) {
                     $totalErrors++;
@@ -401,8 +399,103 @@ class MigrationController extends Controller
                     $totalErrors++;
                     dump($e->getMessage());
                 }
+            }
+        }
 
-                $last_time = $controlPointTime->time_from_dispatch;
+        dd([
+            'Total Created' => $totalCreated,
+            'Total Updated' => $totalUpdated,
+            'Total Errors' => $totalErrors
+        ]);
+    }
+
+    public function migrateControlPointTimes(Request $request)
+    {
+        $new = true;
+        DB::statement("TRUNCATE control_point_times");
+        DB::statement("SELECT pg_catalog.setval('control_point_times_id_seq', 1, false)");
+        DB::statement("UPDATE tiempos_punto_control SET tiempo1 = '00:00' WHERE tiempo1 = ''");
+        $totalCreated = 0;
+        $totalUpdated = 0;
+        $totalErrors = 0;
+        //$controlPointTimes = DB::table(self::OLD_TABLES['control_point_times'])->where('id_ruta','=',126)->get();
+
+        foreach (self::ROUTES_FOR_MIGRATE as $route) {
+            $controlPointTimesByDays = collect(
+                DB::select("
+                    SELECT 
+                      tpc.id_tiempos_punto_control id,
+                      tpc.id_punto_control control_point_id,
+                      pc.orden, 
+                      pc.nombre, 
+                      tpc.tiempo1 time1, 
+                      tpc.tiempo2 time2, 
+                      tpc.tiempo3 time3, 
+                      tpc.tiempo4 time4, 
+                      tpc.tiempo5 time5, 
+                      tpc.tiempo6 time6, 
+                      tpc.tiempo7 time7, 
+                      tpc.tiempo8 time8, 
+                      tpc.tiempo9 time9, 
+                      tpc.tiempo10 time10, 
+                      tpc.tiempo11 time11, 
+                      tpc.tiempo12 time12, 
+                      tpc.tiempo13 time13, 
+                      tpc.tiempo14 time14, 
+                      tpc.tiempo15 time15, 
+                      tpc.tipo_dia day_type, 
+                      tpc.id_ruta route_id 
+                    FROM 
+                      puntos_control_ruta AS pc, 
+                      tiempos_punto_control AS tpc 
+                    WHERE tpc.id_punto_control = pc.secpuntos_control_ruta AND pc.id_ruta = $route
+                    GROUP BY pc.secpuntos_control_ruta, tpc.id_tiempos_punto_control  
+                    ORDER BY tpc.tipo_dia, pc.orden"
+                )
+            )->groupBy('day_type');
+
+            foreach ($controlPointTimesByDays as $controlPointTimes){
+                for ($i = 1; $i <= 15; $i++) {
+                    $day_type = 0;
+                    $last_time = "00:00:00";
+
+                    foreach ($controlPointTimes as $index => $controlPointTimesOLD) {
+                        if ($day_type != $controlPointTimesOLD->day_type) {
+                            $day_type = $controlPointTimesOLD->day_type;
+                            $last_time = "00:00:00";
+                        }
+
+                        $timeFringeI = $controlPointTimesOLD->{"time$i"};
+
+                        $fringe = Fringe::where('route_id', $route)
+                            ->where('day_type_id', $day_type)
+                            ->where('sequence', $i)
+                            ->get()->first();
+
+                        if ($fringe && $timeFringeI != "") {
+                            $controlPointTime = new ControlPointTime();
+                            $controlPointTime->time = Database::parseIntervalToTime($timeFringeI);
+                            $controlPointTime->time_next_point = Database::parseIntervalToTime(($index == (count($controlPointTimes) - 1)) ? $controlPointTime->time : $controlPointTimes[$index + 1]->{"time$i"});
+                            $controlPointTime->time_from_dispatch = Database::parseIntervalToTime(date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00")));
+                            $controlPointTime->day_type_id = $day_type;
+                            $controlPointTime->control_point_id = $controlPointTimesOLD->control_point_id;
+                            $controlPointTime->fringe_id = $fringe->id;
+
+                            $last_time = $controlPointTime->time_from_dispatch;
+
+                            try {
+                                $controlPointTime->save();
+                                $new ? $totalCreated++ : $totalUpdated++;
+                            } catch (QueryException $e) {
+                                $totalErrors++;
+                                dump($e->getMessage());
+                            } catch (\PDOException $e) {
+                                $totalErrors++;
+                                dump($e->getMessage());
+                            }
+                        }
+                    }
+                }
             }
         }
 
