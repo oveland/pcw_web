@@ -127,7 +127,7 @@ class RouteReportController extends Controller
                     $startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder_prev;
                     $currentRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder;
                     $totalRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip->passengers_round_trip;
-                    $totalDay+=$totalRoundTrip;
+                    $totalDay += $totalRoundTrip;
                     $dataExcel[] = [
                         __('Round Trip') => $dispatchRegister->round_trip,                                  # A CELL
                         __('Turn') => $dispatchRegister->turn,                                              # B CELL
@@ -191,7 +191,7 @@ class RouteReportController extends Controller
             foreach ($locations as $location) {
                 //$report = $location->report;
                 $report = $location;
-                if ($report && $location->isValid()) {
+                if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem) {
                     $offRoad = $location->off_road == 't' ? true : false;
                     if ($route_coordinates != false) {
                         $offRoad = self::checkOffRoad($location, $route_coordinates);
@@ -207,7 +207,7 @@ class RouteReportController extends Controller
                         'offRoad' => $offRoad
                     ];
 
-                    $lastReport = $report ? $report : $lastReport;
+                    $lastReport = $report;
                     $lastLocation = $location;
                 }
             }
