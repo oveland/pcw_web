@@ -185,13 +185,13 @@ class RouteReportController extends Controller
             }
 
             $reports = array();
-            $lastReport = null;
-            $lastLocation = null;
+            $lastReport = $locations->first();
+            $lastLocation = $locations->first();
 
             foreach ($locations as $location) {
                 //$report = $location->report;
                 $report = $location;
-                if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem) {
+                if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
                     $offRoad = $location->off_road == 't' ? true : false;
                     if ($route_coordinates != false) {
                         $offRoad = self::checkOffRoad($location, $route_coordinates);
