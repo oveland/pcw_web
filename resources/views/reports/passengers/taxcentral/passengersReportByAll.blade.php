@@ -61,7 +61,7 @@
                     @endforeach
                         <tr class="inverse bg-inverse text-white">
                             <td colspan="6" class="text-right">@lang('Total Km')</td>
-                            <td colspan="2" class="text-left">{{number_format($totalKm, 2, ',', '.')}} Km</td>
+                            <td colspan="2" class="text-left">{{ number_format($totalKm, 2, ',', '.') }} Km</td>
                         </tr>
                         <tr class="inverse bg-inverse text-white">
                             <td colspan="6" class="text-right">@lang('Total passengers')</td>
@@ -79,7 +79,9 @@
                                        data-total-km="{{ $totalKm }}"
                                        placeholder="@lang('Route distance')"
                                        value="{{ $routeTaxCentral->distance }}" style="width:50%"
-                                       onchange="$('#passengers_by_total_km').html( Math.round(parseInt($(this).data('total-km')) / parseInt($(this).val())) )"
+                                       onchange="$('#passengers_by_total_km').html(
+                                           (numeral( parseInt( $(this).data('total-km') ) / parseInt( $(this).val() ) ).format('0.00')).toString().replace('.',',')
+                                       )"
                                 >
                             </td>
                         </tr>
@@ -87,7 +89,7 @@
                             <td colspan="6" class="text-right">@lang('Passengers by Km')</td>
                             <td colspan="2" class="text-left">
                                 <span id="passengers_by_total_km">
-                                    {{ round($totalKm/$routeTaxCentral->distance) }}
+                                    {{ number_format($totalKm/$routeTaxCentral->distance, 2, ',', '.') }}
                                 </span>
                             </td>
                         </tr>
