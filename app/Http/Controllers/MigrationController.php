@@ -30,6 +30,7 @@ class MigrationController extends Controller
     ];
 
     const ROUTES_FOR_MIGRATE = [126, 135, 136, 137];
+    const ROUTES_FOR_MIGRATE_CP = [124,125,126,127,128,129,155,156, 135, 136, 137];
 
     /**
      * Create a new controller instance.
@@ -57,7 +58,7 @@ class MigrationController extends Controller
             (object)[
                 'name' => self::OLD_TABLES['routes'],
                 'route' => route('migrate-routes'),
-                'total' => DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', self::ROUTES_FOR_MIGRATE)->count(),
+                'total' => DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', self::ROUTES_FOR_MIGRATE_CP)->count(),
                 'total_migrated' => Route::count()
             ],
             (object)[
@@ -75,7 +76,7 @@ class MigrationController extends Controller
             (object)[
                 'name' => self::OLD_TABLES['control_points'],
                 'route' => route('migrate-control-points'),
-                'total' => DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->count(),
+                'total' => DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE_CP)->count(),
                 'total_migrated' => ControlPoint::count()
             ],
 
@@ -321,7 +322,7 @@ class MigrationController extends Controller
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
-        $controlPoints = DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->get();
+        $controlPoints = DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE_CP)->get();
         foreach ($controlPoints as $controlPointOLD) {
             $new = false;
             $controlPoint = ControlPoint::find($controlPointOLD->secpuntos_control_ruta);
