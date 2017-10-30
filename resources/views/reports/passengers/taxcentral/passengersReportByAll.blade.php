@@ -61,7 +61,22 @@
                     @endforeach
                         <tr class="inverse bg-inverse text-white">
                             <td colspan="6" class="text-right">@lang('Total Km')</td>
-                            <td colspan="2" class="text-left">{{number_format($totalKm, 2, ',', '.')}}</td>
+                            <td colspan="2" class="text-left">{{number_format($totalKm, 2, ',', '.')}} Km</td>
+                        </tr>
+                        <tr class="inverse bg-inverse text-white">
+                            <td colspan="6" class="text-right">@lang('Total passengers')</td>
+                            <td colspan="2" class="text-left">
+                                {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }}
+                            </td>
+                        </tr>
+                        @php($routeTaxCentral = \App\Route::find(158))
+                        <tr class="inverse bg-inverse text-white">
+                            <td colspan="6" class="text-right">@lang('Route distance')</td>
+                            <td colspan="2" class="text-left">{{number_format($routeTaxCentral->distance, 2, ',', '.')}} Km</td>
+                        </tr>
+                        <tr class="inverse bg-inverse text-white">
+                            <td colspan="6" class="text-right">@lang('Passengers by Km')</td>
+                            <td colspan="2" class="text-left">{{number_format($totalKm/$routeTaxCentral->distance, 2, ',', '.')}}</td>
                         </tr>
                     </tbody>
                 </table>
