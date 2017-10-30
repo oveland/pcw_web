@@ -71,12 +71,25 @@
                         </tr>
                         @php($routeTaxCentral = \App\Route::find(158))
                         <tr class="inverse bg-inverse text-white">
-                            <td colspan="6" class="text-right">@lang('Route distance')</td>
-                            <td colspan="2" class="text-left">{{number_format($routeTaxCentral->distance, 2, ',', '.')}} Km</td>
+                            <td colspan="6" class="text-right">@lang('Route distance') (Km)</td>
+                            <td colspan="2" class="text-left">
+                                <input type="number" class="form-control input-sm"
+                                       min="0"
+                                       max="1000"
+                                       data-total-km="{{ $totalKm }}"
+                                       placeholder="@lang('Route distance')"
+                                       value="{{ $routeTaxCentral->distance }}" style="width:50%"
+                                       onchange="$('#passengers_by_total_km').html( Math.round(parseInt($(this).data('total-km')) / parseInt($(this).val())) )"
+                                >
+                            </td>
                         </tr>
                         <tr class="inverse bg-inverse text-white">
                             <td colspan="6" class="text-right">@lang('Passengers by Km')</td>
-                            <td colspan="2" class="text-left">{{number_format($totalKm/$routeTaxCentral->distance, 2, ',', '.')}}</td>
+                            <td colspan="2" class="text-left">
+                                <span id="passengers_by_total_km">
+                                    {{ round($totalKm/$routeTaxCentral->distance) }}
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
