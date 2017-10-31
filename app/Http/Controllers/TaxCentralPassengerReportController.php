@@ -176,7 +176,8 @@ class TaxCentralPassengerReportController extends Controller
             'fileName' => __('Passengers_Report_') . str_replace(' ', '_', $company->name) . '.' . str_replace('-', '', $dateReport),
             'header' => [__('Passengers Report') . ' ' . $company->name . '. ' . ($dispatchRegister ? $dispatchRegister->route->name : '') . '. ' . $dateReport],
             'data' => $data,
-            'totalKm' => [__('Total KM: ') . ' ' . number_format($totalKm, 2, ',', '.')]
+            'totalKm' => [__('Total Km: ') . ' ' . number_format($totalKm, 2, ',', '.')],
+            'routeTotalKm' => [__('Route distance') . ' Km: ' . number_format(Route::find(158)->distance, 2, ',', '.')]
         ];
 
         Excel::create($dataExport->fileName, function ($excel) use ($dataExport) {
@@ -187,9 +188,11 @@ class TaxCentralPassengerReportController extends Controller
 
             /* FIRST SHEET */
             $excel->sheet(__('PCW Report'), function ($sheet) use ($dataExport) {
-                $totalRows = count($dataExport->data) + 3;
+                $totalRowsHeader = 4;
+                $totalRows = count($dataExport->data) + $totalRowsHeader;
 
                 $sheet->fromArray($dataExport->data);
+                $sheet->prependRow($dataExport->routeTotalKm);
                 $sheet->prependRow($dataExport->totalKm);
                 $sheet->prependRow($dataExport->header);
 
@@ -208,7 +211,7 @@ class TaxCentralPassengerReportController extends Controller
                     'F' => 'h:mm:ss',
                     'G' => '#,##0.00'
                 ));
-                $sheet->setAutoFilter('A3:G' . ($totalRows));
+                $sheet->setAutoFilter("A$totalRowsHeader:G" . ($totalRows));
 
                 /*  HEADER */
                 $sheet->setHeight(1, 50);
@@ -240,9 +243,24 @@ class TaxCentralPassengerReportController extends Controller
                     ));
                 });
 
+                /* HEADER TOTAL ROUTE KM */
+                $sheet->setHeight(2, 25);
+                $sheet->mergeCells('A3:G3');
+                $sheet->cells('A3:G3', function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('right');
+                    $cells->setBackground('#0d4841');
+                    $cells->setFontColor('#eeeeee');
+                    $cells->setFont(array(
+                        'family' => 'Segoe UI Light',
+                        'size' => '12',
+                        'bold' => true
+                    ));
+                });
+
                 /* HEADER COLUMNS */
                 $sheet->setHeight(3, 40);
-                $sheet->cells('A3:G3', function ($cells) {
+                $sheet->cells("A$totalRowsHeader:G$totalRowsHeader", function ($cells) {
                     $cells->setValignment('center');
                     $cells->setAlignment('center');
                     $cells->setBackground('#0d4841');

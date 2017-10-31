@@ -40,7 +40,8 @@ class CreateDispatchRegistersView extends Migration
                 rd.h_reg_cancelado             AS time_canceled,
                 rd.observaciones               AS status,
                 rd.registradora_salida         AS start_recorder,
-                rd.registradora_llegada        AS end_recorder
+                rd.registradora_llegada        AS end_recorder,
+                rd.codigo_interno_conductor    AS driver_code
               FROM
                 registrodespacho rd,
                 crear_vehiculo cv,
