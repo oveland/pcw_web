@@ -140,7 +140,7 @@
                 }
             });
 
-            $('#company-report,#initial-date, #final-date').change(function () {
+            $('#company-report').change(function () {
                 var form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {
