@@ -29,7 +29,7 @@ class MigrationController extends Controller
         'control_point_times' => 'tiempos_punto_control',
     ];
 
-    const ROUTES_FOR_MIGRATE = [126, 135, 136, 137];
+    const ROUTES_FOR_MIGRATE = [124,126,128,129, 135, 136, 137,155,156];
     const ROUTES_FOR_MIGRATE_CP = [124,125,126,127,128,129,155,156, 135, 136, 137];
 
     /**
@@ -44,7 +44,6 @@ class MigrationController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
