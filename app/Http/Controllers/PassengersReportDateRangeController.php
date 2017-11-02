@@ -62,8 +62,8 @@ class PassengersReportDateRangeController extends Controller
             SELECT rcd.date, sum(rcd.passengers) passengers, rcd.vehicle_id, rcd.dispatch_register_id
             FROM recorder_counter_per_days rcd
             WHERE rcd.date BETWEEN '$initialDate' AND '$finalDate' AND rcd.company_id = $company->id
-            GROUP BY rcd.date, rcd.vehicle_id, rcd.dispatch_register_id
-        "))->sortBy('date')->groupBy('date');
+            GROUP BY rcd.date, rcd.vehicle_id, rcd.dispatch_register_id, ORDER BY rcd.date ASC 
+        "))->groupBy('date');
 
         $reports = collect([]);
         foreach ($recorderCounterPerDates as $date => $recorderCounterPerDate) {
