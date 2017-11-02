@@ -23,7 +23,7 @@ class PassengerReportController extends Controller
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
-        return view('reports.passengers.consolidated.index', compact('companies'));
+        return view('reports.passengers.consolidated.days.index', compact('companies'));
     }
 
     /**
@@ -37,7 +37,7 @@ class PassengerReportController extends Controller
 
         $passengerReport = $this->buildPassengerReport($company, $dateReport);
 
-        return view('reports.passengers.consolidated.passengersReport', compact('passengerReport'));
+        return view('reports.passengers.consolidated.days.passengersReport', compact('passengerReport'));
     }
 
     /**
@@ -124,6 +124,8 @@ class PassengerReportController extends Controller
 
         return $passengerReport;
     }
+
+
 
     /**
      * @param Request $request

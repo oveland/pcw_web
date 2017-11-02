@@ -9,12 +9,12 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Passengers')</a></li>
-        <li class="active">@lang('Consolidated per day')</li>
+        <li class="active">@lang('Consolidated per date range')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Passengers report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Consolidated per day')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Consolidated per date range')</small>
     </h1>
     <hr class="col-md-12 hr">
     <!-- end page-header -->
@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('passengers-search-report') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('passengers-search-report-range') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -37,39 +37,40 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
+                        @if(Auth::user()->isAdmin())
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="company-report" class="control-label field-required">@lang('Company')</label>
+                                    <div class="form-group">
+                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                            <option value="null">@lang('Select an option')</option>
+                                            @foreach($companies as $company)
+                                                <option value="{{$company->id}}">{{ $company->short_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="date-report" class="control-label field-required">@lang('Date report')</label>
-                                <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
+                                <div class="input-group date datepicker" data-less="true" data-than="#final-date">
+                                    <input name="initial-date" id="initial-date" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        @if(Auth::user()->isAdmin())
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="company-report" class="control-label field-required">@lang('Company')</label>
-                                <div class="form-group">
-                                    <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select an option')</option>
-                                        @foreach($companies as $company)
-                                            <option value="{{$company->id}}">{{ $company->short_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                        <div class="col-md-4 hide">
-                            <div class="form-group">
-                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
-                                <div class="form-group">
-                                    <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company')</option>
-                                    </select>
+                                <label for="final-date" class="control-label field-required">@lang('Final date')</label>
+                                <div class="input-group date datepicker" data-greater="true" data-than="#initial-date">
+                                    <input name="final-date" id="final-date" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +118,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-passengers, .menu-passengers-consolidated').addClass('active');
+        $('.menu-passengers, .menu-passengers-consolidated, .menu-passengers-consolidated-range').addClass('active');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
@@ -139,10 +140,11 @@
                 }
             });
 
-            $('#company-report').change(function () {
-                loadRouteReport($(this).val());
-                if (is_not_null($(this).val())) {
-                    $('.form-search-report').submit();
+            $('#company-report,#initial-date, #final-date').change(function () {
+                var form = $('.form-search-report');
+                $('.report-container').slideUp();
+                if (form.isValid(false)) {
+                    form.submit();
                 }
             });
 

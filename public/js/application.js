@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#datetimepicker-report').datepicker({
+    $('#datetimepicker-report, .datepicker').datepicker({
         format: "yyyy-mm-dd",
         todayBtn: "linked",
         language: "es",
@@ -38,7 +38,6 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $('.tooltips').tooltip();
 });
-
 
 function alert(message){
     $.gritter.add({

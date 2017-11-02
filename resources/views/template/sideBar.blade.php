@@ -71,29 +71,44 @@
                             @lang('Passengers')
                         </a>
                         <ul class="sub-menu">
-                            @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
-                            <li class="has-sub menu-passengers-taxcentral">
+                            <li class="has-sub menu-passengers-consolidated">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
-                                    <i class="fa fa-building faa-pulse"></i>
-                                    @lang('Taxcentral')
+                                    <i class="fa fa-archive faa-pulse"></i>
+                                    @lang('Consolidated')
                                 </a>
                                 <ul class="sub-menu">
-                                    <li class="has-sub menu-passengers-taxcentral">
-                                        <a href="{{ route('tc-passengers-report')  }}">
-                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                                            @lang('Passengers report')
+                                    <li class="has-sub menu-passengers-consolidated-days">
+                                        <a href="{{ route('passengers-report-consolidated-days')  }}">
+                                            <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+                                            @lang('Daily')
+                                        </a>
+                                    </li>
+                                    <li class="has-sub menu-passengers-consolidated-range">
+                                        <a href="{{ route('passengers-report-consolidated-range')  }}">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            @lang('Date range')
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+                            @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
+                                <li class="has-sub menu-passengers-taxcentral">
+                                    <a href="javascript:;" class="faa-parent animated-hover">
+                                        <b class="caret pull-right"></b>
+                                        <i class="fa fa-building faa-pulse"></i>
+                                        @lang('Taxcentral')
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="has-sub menu-passengers-taxcentral">
+                                            <a href="{{ route('tc-passengers-report')  }}">
+                                                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                                @lang('Passengers report')
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             @endif
-                            <li class="has-sub menu-passengers-consolidated">
-                                <a href="{{ route('passengers-report')  }}">
-                                    <i class="fa fa-file-archive-o" aria-hidden="true"></i>
-                                    @lang('Consolidated per day')
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     @if( Auth::user()->isAdmin() )
