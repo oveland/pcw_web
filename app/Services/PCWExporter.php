@@ -120,11 +120,11 @@ class PCWExporter
 
     public static function sheetCustomReport($sheet, $config)
     {
+        $lastRow = $config->totalRows + 1;
+        $starData = $config->startIndex + 1;
+
         switch ($config->type) {
             case 'passengerReportTotalFooter':
-                $lastRow = $config->totalRows + 1;
-                $starData = $config->startIndex + 1;
-
                 // Set general formulas
                 foreach (['F', 'G', 'H'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
@@ -140,10 +140,17 @@ class PCWExporter
                 $sheet = self::styleFooter($sheet, $config);
                 break;
 
-            case 'routeReportByVehicle':
-                $lastRow = $config->totalRows + 1;
-                $starData = $config->startIndex + 1;
+            case 'passengerReportByRangeTotalFooter':
+                // Set general formulas
+                foreach (['C'] as $totalLetterPosition) {
+                    $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
+                }
 
+                $sheet->setCellValue("A$lastRow", "TOTAL");
+                $sheet = self::styleFooter($sheet, $config);
+                break;
+
+            case 'routeReportByVehicle':
                 // Set general formulas
                 for ($i = $starData; $i < $lastRow; $i++) {
                     // Set formula to calculate recorder from end - start recorders

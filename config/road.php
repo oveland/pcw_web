@@ -61,5 +61,26 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'google_api_token' => 'AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA'
+    'google_api_token' => 'AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Threshold for invalid recorder counter per day
+    |--------------------------------------------------------------------------
+    |
+    | Defines the max value for a valid recorder counter total per day
+    |
+    */
+    'max_recorder_counter_per_day_threshold' => 10000,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Threshold for invalid recorder counter per vehicle    |
+    |--------------------------------------------------------------------------
+    |
+    | Defines the max value for a valid recorder counter total per vehicle
+    |
+    */
+    'max_recorder_counter_per_vehicle_threshold' => 1000,
+
 ];
