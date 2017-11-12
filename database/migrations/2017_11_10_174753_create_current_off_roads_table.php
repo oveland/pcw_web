@@ -56,7 +56,7 @@ class CreateCurrentOffRoadsTable extends Migration
                     off_road_exists := TRUE;
             
                     alert_off_road_vehicle := FALSE;
-                    IF (NEW.date - ov.date)::TIME > '00:01:00'::TIME THEN
+                    IF (NEW.date - ov.date)::TIME > '00:03:00'::TIME THEN
                       alert_off_road_vehicle := TRUE;
                     END IF;
             
