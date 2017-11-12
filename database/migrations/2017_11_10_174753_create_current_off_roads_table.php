@@ -70,7 +70,8 @@ class CreateCurrentOffRoadsTable extends Migration
                       odometer = NEW.odometer,
                       speed = NEW.speed,
                       off_road = NEW.off_road,
-                      alert_off_road = alert_off_road_vehicle;
+                      alert_off_road = alert_off_road_vehicle
+                     WHERE vehicle_id = NEW.vehicle_id;
                 END LOOP;
             
                 IF off_road_exists IS FALSE THEN
