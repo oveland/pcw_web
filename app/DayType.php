@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DayType whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DayType whereName($value)
  * @mixin \Eloquent
+ * @property string|null $description
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DayType whereDescription($value)
  */
 class DayType extends Model
 {

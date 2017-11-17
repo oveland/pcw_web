@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport whereStatusInMinutes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport whereTimed($value)
  * @mixin \Eloquent
+ * @property string|null $location_date
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport whereLocationDate($value)
  */
 class LocationReport extends Model
 {

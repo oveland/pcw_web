@@ -55,9 +55,16 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereVehicleId($value)
  * @mixin \Eloquent
  * @property-read \App\Models\Passengers\RecorderCounterPerRoundTrip $recorderCounterPerRoundTrip
+ * @property string|null $driver_code
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister active()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDriverCode($value)
+ * @property-read mixed $passengers
  */
 class DispatchRegister extends Model
 {
+    const IN_PROGRESS = "En camino";
+    const COMPLETE = "Terminó";
+
     protected function getDateFormat()
     {
         return config('app.simple_date_time_format');
@@ -125,6 +132,10 @@ class DispatchRegister extends Model
     public function recorderCounterPerRoundTrip()
     {
         return $this->hasOne(RecorderCounterPerRoundTrip::class);
+    }
+
+    public function scopeActive($query){
+        return $query->where('status',$this::COMPLETE)->orWhere('status',$this::IN_PROGRESS);
     }
 
     const CREATED_AT = 'date_created';

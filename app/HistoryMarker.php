@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $km_gps
  * @method static \Illuminate\Database\Eloquent\Builder|\App\HistoryMarker whereKmGps($value)
+ * @property string|null $frame
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\HistoryMarker whereFrame($value)
  */
 class HistoryMarker extends Model
 {

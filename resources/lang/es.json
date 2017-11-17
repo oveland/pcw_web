@@ -170,5 +170,14 @@
   "Final date":"Fecha final",
   "Initial date":"Fecha inicial",
   "The date range is not valid":"El rango de fechas no es válido",
+  "Detailed":"Detallado",
+  "detailed":"detallado",
+  "Detailed per day":"Detallado por día",
+  "Warning":"Advertencia",
+  "There are issues in data recorder":"Existen inconsistencias en los datos de registradora",
+  "See details":"Ver detalles",
+  "Error in":"Error en",
+  "Passengers by Route":"Pasajeros por Ruta",
+  "High count":"Conteo demasiado alto",
   "":""
 }

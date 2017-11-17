@@ -162,6 +162,16 @@ class PCWExporter
                     $sheet->setCellValue("K$i", "=J$i+" . (($i > $starData) ? ("K" . ($i - 1)) : "0"));
                 }
                 break;
+
+            case 'passengersReportByRoute':
+                // Set general formulas
+                foreach (['D'] as $totalLetterPosition) {
+                    $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
+                }
+
+                $sheet->setCellValue("C$lastRow", "TOTAL");
+                $sheet = self::styleFooter($sheet, $config);
+                break;
         }
         return $sheet;
     }

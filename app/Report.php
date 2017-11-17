@@ -40,6 +40,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereTimep($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereVersion($value)
  * @mixin \Eloquent
+ * @property int|null $control_point_id
+ * @property int|null $fringe_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereControlPointId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereFringeId($value)
  */
 class Report extends Model
 {

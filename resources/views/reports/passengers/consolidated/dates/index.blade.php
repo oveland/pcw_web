@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('passengers-search-report-range') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('passengers-consolidated-search-report-range') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">

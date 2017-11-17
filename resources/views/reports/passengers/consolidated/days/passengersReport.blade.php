@@ -3,7 +3,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('passengers-export-report-days') }}?date-report={{ $passengerReport->date }}&company-report={{ $passengerReport->companyId }}" class="btn btn-lime bg-lime-dark btn-sm">
+                <a href="{{ route('passengers-consolidated-export-report-days') }}?date-report={{ $passengerReport->date }}&company-report={{ $passengerReport->companyId }}" class="btn btn-lime bg-lime-dark btn-sm">
                     <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                 </a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-info " data-click="panel-expand" title="@lang('Expand / Compress')">
@@ -101,15 +101,5 @@
         $('[data-toggle="tooltip"]').tooltip();
     </script>
 @else
-    <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
-        <div class="col-md-2" style="padding-top: 10px">
-            <i class="fa fa-3x fa-exclamation-circle"></i>
-        </div>
-        <div class="col-md-10">
-            <span class="close pull-right" data-dismiss="alert">×</span>
-            <h4><strong>@lang('Ups!')</strong></h4>
-            <hr class="hr">
-            @lang('No registers found')
-        </div>
-    </div>
+    @include('partials.alerts.noRegistersFound')
 @endif

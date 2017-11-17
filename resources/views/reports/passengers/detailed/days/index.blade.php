@@ -9,12 +9,12 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Passengers')</a></li>
-        <li class="active">@lang('Consolidated per day')</li>
+        <li class="active">@lang('Detailed per day')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Passengers report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Consolidated per day')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Detailed per day')</small>
     </h1>
     <hr class="col-md-12 hr">
     <!-- end page-header -->
@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('passengers-consolidated-search-report-days') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('passengers-detailed-search-days') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -107,7 +107,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-passengers, .menu-passengers-consolidated, .menu-passengers-consolidated-days').addClass('active');
+        $('.menu-passengers, .menu-passengers-detailed, .menu-passengers-detailed-days').addClass('active');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {

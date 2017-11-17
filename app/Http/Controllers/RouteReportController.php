@@ -73,7 +73,6 @@ class RouteReportController extends Controller
      */
     public function exportByRoundTrip($roundTripDispatchRegisters, $route, $dateReport)
     {
-        //dd($roundTripDispatchRegisters);
         Excel::create(__('Dispatch report') . " A " . " $dateReport", function ($excel) use ($roundTripDispatchRegisters, $dateReport, $route) {
             foreach ($roundTripDispatchRegisters as $roundTrip => $dispatchRegisters) {
                 $dataExcel = array();
@@ -117,7 +116,6 @@ class RouteReportController extends Controller
      */
     public function exportByVehicle($vehiclesDispatchRegisters, $route, $dateReport)
     {
-        //dd($roundTripDispatchRegisters);
         Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport, $route) {
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);

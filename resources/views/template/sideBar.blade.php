@@ -79,15 +79,30 @@
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-consolidated-days">
-                                        <a href="{{ route('passengers-report-consolidated-days')  }}">
+                                        <a href="{{ route('passengers-consolidated-report-days')  }}">
                                             <i class="fa fa-file-archive-o" aria-hidden="true"></i>
                                             @lang('Daily')
                                         </a>
                                     </li>
                                     <li class="has-sub menu-passengers-consolidated-range">
-                                        <a href="{{ route('passengers-report-consolidated-range')  }}">
+                                        <a href="{{ route('passengers-consolidated-report-range')  }}">
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                             @lang('Date range')
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="has-sub menu-passengers-detailed">
+                                <a href="javascript:;" class="faa-parent animated-hover">
+                                    <b class="caret pull-right"></b>
+                                    <i class="fa fa-list-alt faa-pulse"></i>
+                                    @lang('Detailed')
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="has-sub menu-passengers-detailed-days">
+                                        <a href="{{ route('passengers-detailed-report-days')  }}">
+                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                            @lang('Daily')
                                         </a>
                                     </li>
                                 </ul>

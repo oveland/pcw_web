@@ -40,3 +40,17 @@ input[readonly="readonly"] {
 .content{
     transition: position 1s !important;
 }
+
+.click{
+    cursor: pointer;
+}
+.issue-index{
+    position: absolute;
+    right: 10px;
+    color: #ffffffb3;
+    font-size: 70%;
+    top: 13px;
+}
+.text-issue{
+    color: #7f0000 !important;
+}
