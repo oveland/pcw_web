@@ -1,4 +1,5 @@
 @php($reports = $passengerReport->reports)
+@php($issues = $passengerReport->issues)
 @if(count($reports))
     <div class="panel panel-inverse">
         <div class="panel-heading">
@@ -61,9 +62,9 @@
                             $sensor > 0 ? $totalSensor->push($sensor):null;
                             $recorder > 0 ? $totalRecorder->push($recorder):null;
                             $invalidRecorder = $recorder > 1000 || $recorder < 0;
-                            $message = ($report->passengers->end_recorder.' <strong style="display:none;font-size:80%">('.$report->date.')</strong>'.' - '.$report->passengers->start_recorder.' <strong style="font-size:80%">('.$report->passengers->date_start_recorder.')</strong>');
+                            $message = "";
                             $messageRecorder = $invalidRecorder
-                                                ? __('Verify possible error in register data')."<br>$message"
+                                                ? __('Verify possible error in register data')." $message"
                                                 :$message;
 
                         @endphp
