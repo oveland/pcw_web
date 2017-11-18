@@ -62,11 +62,9 @@ class PassengerReportController extends Controller
                 __('N°') => count($dataExcel) + 1,                                      # A CELL
                 __('Vehicle') => intval($report->number),                               # B CELL
                 __('Plate') => $report->plate,                                          # C CELL
-                __('Start Recorder') => intval($report->passengers->start_recorder),    # D CELL
-                __('End Recorder') => intval($report->passengers->end_recorder),        # E CELL
-                __('Recorder') => intval($recorder),                                    # F CELL
-                __('Sensor') => intval($sensor),                                        # G CELL
-                __('Difference') => abs($sensor - $recorder),                   # H CELL
+                __('Recorder') => intval($recorder),                                    # D CELL
+                __('Sensor') => intval($sensor),                                        # E CELL
+                __('Difference') => abs($sensor - $recorder),                   # F CELL
             ];
         }
 

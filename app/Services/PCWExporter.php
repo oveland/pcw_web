@@ -126,14 +126,12 @@ class PCWExporter
         switch ($config->type) {
             case 'passengerReportTotalFooter':
                 // Set general formulas
-                foreach (['F', 'G', 'H'] as $totalLetterPosition) {
+                foreach (['D', 'E', 'F'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
                 for ($i = $starData; $i < $lastRow; $i++) {
-                    // Set formula to calculate recorder from end - start recorders
-                    $sheet->setCellValue("F$i", "=E$i-D$i");
                     // Set formula to calculate difference between recorder and sensor
-                    $sheet->setCellValue("H$i", "=ABS(F$i-G$i)");
+                    $sheet->setCellValue("F$i", "=ABS(D$i-E$i)");
                 }
 
                 $sheet->setCellValue("A$lastRow", "TOTAL");
