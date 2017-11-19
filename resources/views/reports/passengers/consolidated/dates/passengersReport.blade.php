@@ -58,26 +58,34 @@
                         @php
                             $sensor = 0;
                             $recorder = $report->total;
+                            $issuesByVehicles = $report->issues;
                             $sensor > 0 ? $totalSensor->push($sensor):null;
                             $recorder > 0 ? $totalRecorder->push($recorder):null;
-                            $invalidRecorder = count($report->violations);
-                            $messageRecorder = $invalidRecorder?
-                                "<br>".__('Verify possible error in register data')."<hr class='hr'>".
-                                "<div class='text-left'>".
-                                    "<b>".$report->violations->first()->route->name."</b><br>".
-                                    "<b>".__('Turn')."</b> ".$report->violations->first()->turn."<br>".
-                                    "<b>".__('Round Trip')."</b> ".$report->violations->first()->round_trip."<br>".
-                                    "<b>".__('Vehicle')."</b> ".$report->violations->first()->vehicle->number."<br>".
-                                    "<b>".__('Arrived Recorder')."</b> ".$report->violations->first()->end_recorder."<br>".
-                                "</div>"
-                                :"";
                         @endphp
+
+                        @if(count($issuesByVehicles))
+                            <tr>
+                                <td colspan="3">
+                                    <div class="alert alert-warning alert-bordered fade in m-b-0" style="border-radius: 0px">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        <strong>@lang('Warning'):</strong>
+                                        @lang('There are issues in data recorder') ({{ $date }}). <a data-toggle="collapse" data-target="#issue-{{ $date }}" class="text-bold text-warning click">@lang('See details')</a>
+                                    </div>
+                                    <div id="issue-{{ $date }}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <div class="panel-body p-0">
+                                            @include('partials.alerts.reports.passengers.issuesByVehicles',compact('issuesByVehicles'))
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
+
                         <tr class="text-center">
-                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $date }} </td>
-                            <td class="sensor hide">{{ $sensor }}</td>
-                            <td class="recorder">
-                                <span class="{{ $invalidRecorder ? "text-warning":""  }}" data-toggle="tooltip" data-html="true" title="{{ $messageRecorder }}">
+                            <td class="recorder text-center">
+                                <span class="{{ count($issuesByVehicles) ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
+                                      onclick="{{ count($issuesByVehicles) ? "$('#issue-$date').collapse('show');":""  }}">
                                     {{ $recorder }}
                                 </span>
                             </td>

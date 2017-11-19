@@ -6,10 +6,9 @@ use App\Company;
 use App\DispatchRegister;
 use App\Models\Passengers\PassengerCounterPerDay;
 use App\Models\Passengers\PassengerCounterPerDaySixMonth;
-use App\Models\Passengers\RecorderCounterPerDay;
 use App\Route;
 use App\Services\PCWExporter;
-use App\Vehicle;
+use App\Traits\CounterByRecorder;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -17,6 +16,8 @@ use Illuminate\Http\Request;
 
 class PassengerReportController extends Controller
 {
+    use CounterByRecorder;
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -93,13 +94,6 @@ class PassengerReportController extends Controller
             ->where('company_id', $company->id)
             ->get();
 
-        /*
-        // Query passenger by recorder counter
-        $recorderCounterPerDays = RecorderCounterPerDay::where('date', $dateReport)
-            ->where('company_id', $company->id)
-            ->get();
-        */
-
         $recorderCounterPerDays = $this->buildPassengersByRecorder($company, $dateReport);
 
         // Build report data
@@ -114,7 +108,8 @@ class PassengerReportController extends Controller
                 'passengers' => (object)[
                     'sensor' => $sensor ? $sensor->total : 0,
                     'recorder' => $recorderCounterPerDay->passengers ?? 0,
-                    'start_recorder' => $recorderCounterPerDay->start_recorder
+                    'start_recorder' => $recorderCounterPerDay->start_recorder,
+                    'issue' => $recorderCounterPerDay->issue
                 ]
             ];
         }
@@ -138,72 +133,12 @@ class PassengerReportController extends Controller
         $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
             ->sortBy('id');
 
-        $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
-
-        $report = array();
-        $issues = collect([]);
-        foreach ($dispatchRegistersByVehicles as $vehicle_id => $dispatchRegistersByVehicle) {
-            $firstDispatchRegisterByVehicle = $dispatchRegistersByVehicle->first();
-            $start_recorder = $firstDispatchRegisterByVehicle->start_recorder;
-            $first_start_recorder = $start_recorder;
-
-            $totalPassengersByVehicle = 0;
-
-            $lastDispatchRegister = null;
-            $last_route_id = null;
-            foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
-                $start_recorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $start_recorder;
-
-                /* For change route on prev dispatch register */
-                if( $last_route_id && $last_route_id != $dispatchRegister->route->id ){
-                    $endRecorderByOtherRoutes = $dispatchRegisters
-                            ->where('vehicle_id', $vehicle_id)
-                            ->where('id', '<', $dispatchRegister->id)
-                            ->where('id', '>=', $lastDispatchRegister->id ?? 0)
-                            ->last()->end_recorder ?? null;
-
-                    $start_recorder = $endRecorderByOtherRoutes > $start_recorder ? $endRecorderByOtherRoutes : $start_recorder;
-                }
-
-                $end_recorder = $dispatchRegister->end_recorder;
-                $passengersByRoundTrip = $end_recorder - $start_recorder;
-
-                $totalPassengersByVehicle += $passengersByRoundTrip;
-
-                $issue = $start_recorder <= 0 ? __('Start Recorder') : ($end_recorder <= 0 ? __('End Recorder') : ($passengersByRoundTrip > 1000 ? __('High count') : null));
-                if ($issue) {
-                    $issues->push((object)[
-                        'field' => $issue,
-                        'route_id' => $dispatchRegister->route_id,
-                        'vehicle_id' => $vehicle_id,
-                        'start_recorder' => $start_recorder,
-                        'end_recorder' => $end_recorder,
-                        'passengers' => $passengersByRoundTrip,
-                        'dispatchRegister' => $dispatchRegister
-                    ]);
-                }
-                $start_recorder = $end_recorder > 0 ? $end_recorder : $start_recorder;
-
-                $lastDispatchRegister = $dispatchRegister;
-                $last_route_id = $dispatchRegister->route->id;
-            }
-            $vehicle = Vehicle::find($vehicle_id);
-            $report[] = (object)[
-                'vehicle' => $vehicle,
-                'start_recorder' => $first_start_recorder,
-                'passengers' => $totalPassengersByVehicle,
-                'issue' => $issues->where('vehicle_id', $vehicle_id)->first()->field ?? null
-            ];
-        }
-
-        return (object)[
-            'report' => collect($report)->sortBy(function ($report) {
-                return $report->vehicle->number;
-            }),
-            'issues' => $issues
-        ];
+        return self::report($dispatchRegisters);
     }
 
+    static function report($dispatchRegisters){
+        return CounterByRecorder::report($dispatchRegisters);
+    }
 
     /**
      * @param Request $request

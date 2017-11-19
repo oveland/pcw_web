@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\DispatchRegister;
 use App\Models\Passengers\RecorderCounterPerDay;
+use App\Route;
 use App\Services\PCWExporter;
+use App\Traits\CounterByRecorder;
 use App\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,6 +15,8 @@ use App\Company;
 
 class PassengersReportDateRangeController extends Controller
 {
+    use CounterByRecorder;
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -51,40 +55,11 @@ class PassengersReportDateRangeController extends Controller
      */
     public function buildPassengerReport($company, $initialDate, $finalDate)
     {
-        // Query passenger by sensor counter
-        /*$ageReport = Carbon::parse($dateReport)->diffInDays(Carbon::now());
-        $model = $ageReport <= 5 ? PassengerCounterPerDay::class : PassengerCounterPerDaySixMonth::class;
-        $passengersCounterPerDay = $model::whereBetween('date', $initialDate, $finalDate)
-            ->where('company_id', $company->id)
-            ->get();*/
+        $routes = Route::where('company_id', $company->id)->get();
+        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->whereBetween('date', [$initialDate, $finalDate])->active()->get()
+            ->sortBy('departure_time');
 
-        // Query passenger by recorder counter
-        $recorderCounterPerDates = collect(\DB::select("
-            SELECT rcd.date, sum(rcd.passengers) passengers, rcd.vehicle_id, rcd.dispatch_register_id
-            FROM recorder_counter_per_days rcd
-            WHERE rcd.date BETWEEN '$initialDate' AND '$finalDate' AND rcd.company_id = $company->id
-            GROUP BY rcd.date, rcd.vehicle_id, rcd.dispatch_register_id ORDER BY rcd.date ASC 
-        "))->groupBy('date');
-
-        $reports = collect([]);
-        foreach ($recorderCounterPerDates as $date => $recorderCounterPerDate) {
-            $date = Carbon::createFromFormat(config('app.date_format'), $date)->format('Y-m-d');
-            $violations = array();
-            $totalPerDate = $recorderCounterPerDate->sum('passengers');
-            if ($totalPerDate < 0 || $totalPerDate > config('road.max_recorder_counter_per_day_threshold')) {
-                foreach ($recorderCounterPerDate as $recorderPassengersByVehicle) {
-                    $totalPerVehicle = $recorderPassengersByVehicle->passengers;
-                    if ($totalPerVehicle < 0 || $totalPerVehicle > config('road.max_recorder_counter_per_vehicle_threshold')) {
-                        $violations[] = DispatchRegister::find($recorderPassengersByVehicle->dispatch_register_id);
-                    }
-                }
-            }
-
-            $reports[$date] = (object)[
-                'total' => $totalPerDate,
-                'violations' => collect($violations),
-            ];
-        }
+        $reports = self::report($dispatchRegisters);
 
         $passengerReport = (object)[
             'initialDate' => $initialDate,
@@ -111,20 +86,37 @@ class PassengersReportDateRangeController extends Controller
 
         $dataExcel = array();
         foreach ($passengerReports->reports as $date => $report) {
-            $recorder = $report->total;
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                      # A CELL
                 __('Date') => $date,                               # B CELL
-                __('Recorder') => $recorder,                                    # F CELL
+                __('Recorder') => $report->total,                                    # F CELL
             ];
         }
 
         PCWExporter::excel([
             'fileName' => __('Consolidated per date range'),
-            'title' => __('Passengers report'."\n $initialDate - $finalDate"),
+            'title' => __('Passengers report' . "\n $initialDate - $finalDate"),
             'subTitle' => __('Consolidated per date range'),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
         ]);
+    }
+
+    static function report($dispatchRegisters)
+    {
+        $dispatchRegistersByDates = $dispatchRegisters->groupBy('date');
+
+        $reports = array();
+        foreach ($dispatchRegistersByDates as $date => $dispatchRegistersByDate) {
+            $reportByDate = PassengerReportController::report($dispatchRegistersByDate);
+
+            $reports[$date] = (object)[
+                'date' => $date,
+                'total' => $reportByDate->report->sum('passengers'),
+                'issues' => $reportByDate->issues,
+            ];
+        }
+
+        return collect($reports)->sortBy('date');
     }
 }

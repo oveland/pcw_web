@@ -56,7 +56,7 @@
                         </a>
                     </div>
                     <button type="submit" class="btn btn-success btn-sm btn-search-report">
-                        <i class="fa fa-search"></i> @lang('Search report')
+                        <i class="fa fa-search"></i> @lang('Search')
                     </button>
                 </div>
                 <div class="panel-body p-b-15">

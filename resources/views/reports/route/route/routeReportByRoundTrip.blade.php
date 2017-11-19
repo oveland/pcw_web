@@ -62,7 +62,7 @@
                                 <i class="fa fa-users text-muted"></i><br>
                                 @lang('Passengers')
                                 <hr class="hr">
-                                @lang('Day')
+                                @lang('Accumulated') @lang('Day')
                             </th>
                             <th data-sorting="disabled">
                                 <i class="fa fa-rocket text-muted"></i><br>

@@ -93,7 +93,7 @@ class RouteReportController extends Controller
                 }
 
                 $dataExport = (object)[
-                    'fileName' => __('Dispatch report') . " $dateReport",
+                    'fileName' => __('Dispatch report') . " R $dateReport",
                     'title' => __('Dispatch report') . " | $route->name: $dateReport",
                     'subTitle' => __('Round Trip') . " $roundTrip",
                     'data' => $dataExcel
@@ -136,14 +136,14 @@ class RouteReportController extends Controller
                         __('Status') => $dispatchRegister->status,                                          # G CELL
                         __('Start Rec.') => intval($startRecorder),                                         # H CELL
                         __('End Rec.') => intval($currentRecorder),                                         # I CELL
-                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),          # J CELL
-                        __('Pass.') . " " . __('Day') => intval($totalDay),                       # K CELL
+                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),               # J CELL
+                        __('Pass.') . " " . __('Day') => intval($totalDay),                            # K CELL
                     ];
                 }
 
                 $dataExport = (object)[
-                    'fileName' => __('Dispatch report') . " $dateReport",
-                    'title' => __('Dispatch report') . " $dateReport",
+                    'fileName' => __('Dispatch report') . " V $dateReport",
+                    'title' => __('Dispatch report') . " | $route->name: $dateReport",
                     'subTitle' => "$vehicle->number | $vehicle->plate",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
