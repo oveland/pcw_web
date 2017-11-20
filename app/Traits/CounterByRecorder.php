@@ -37,6 +37,7 @@ trait CounterByRecorder
 
     static function totalByVehicle($vehicle_id, $dispatchRegisters, $dispatchRegistersByVehicle)
     {
+        $vehicle = Vehicle::find($vehicle_id);
         $totalPassengersByVehicle = 0;
         $issues = collect([]);
 
@@ -51,7 +52,7 @@ trait CounterByRecorder
             $start_recorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $start_recorder;
 
             /* For change route on prev dispatch register */
-            if($index > 0){
+            if ($index > 0) {
                 if ($last_route_id && $last_route_id != $dispatchRegister->route->id) {
                     $endRecorderByOtherRoutes = $dispatchRegisters
                             ->where('vehicle_id', $vehicle_id)
@@ -59,13 +60,13 @@ trait CounterByRecorder
                             ->where('id', '>=', $lastDispatchRegister->id ?? 0)
                             ->last()->end_recorder ?? null;
 
-                    $start_recorder = $endRecorderByOtherRoutes > $start_recorder ? $endRecorderByOtherRoutes : $start_recorder;
+                    $start_recorder = ($endRecorderByOtherRoutes > $start_recorder || ($endRecorderByOtherRoutes > 0 && ($start_recorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $start_recorder;
                 }
-            }else{
-                if($start_recorder == 0){
+            } else {
+                if ($start_recorder == 0) {
                     $start_recorder = DispatchRegister::
-                        where('vehicle_id',$vehicle_id)
-                        ->where('date','<',$dispatchRegister->date)
+                    where('vehicle_id', $vehicle_id)
+                        ->where('date', '<', $dispatchRegister->date)
                         ->orderByDesc('end_recorder')
                         ->limit(1)->get()->first()
                         ->end_recorder;
@@ -77,10 +78,20 @@ trait CounterByRecorder
 
             $totalPassengersByVehicle += $passengersByRoundTrip;
 
-            $issue = $start_recorder <= 0 ? __('Start Recorder') : ($end_recorder <= 0 ? __('End Recorder') : ($passengersByRoundTrip > 1000 ? __('High count') : null));
-            if ($issue) {
+            $issueField = null;
+            if ($start_recorder <= 0) {
+                $issueField = __('Start Recorder');
+            } else if ($end_recorder <= 0) {
+                $issueField = __('End Recorder');
+            } else if ($passengersByRoundTrip > 1000) {
+                $issueField = __('A high count');
+            } else if ($passengersByRoundTrip < 0) {
+                $issueField = __('A negative count');
+            }
+
+            if ($issueField) {
                 $issues->push((object)[
-                    'field' => $issue,
+                    'field' => $issueField,
                     'route_id' => $dispatchRegister->route_id,
                     'vehicle_id' => $vehicle_id,
                     'start_recorder' => $start_recorder,
@@ -88,6 +99,10 @@ trait CounterByRecorder
                     'passengers' => $passengersByRoundTrip,
                     'dispatchRegister' => $dispatchRegister
                 ]);
+
+                if ($vehicle->number == 349) {
+                    //dd($issues);
+                }
             }
             $start_recorder = $end_recorder > 0 ? $end_recorder : $start_recorder;
 
@@ -98,7 +113,7 @@ trait CounterByRecorder
 
         $totalByVehicle = (object)[
             'report' => (object)[
-                'vehicle' => Vehicle::find($vehicle_id),
+                'vehicle' => $vehicle,
                 'start_recorder' => $first_start_recorder,
                 'passengers' => $totalPassengersByVehicle,
                 'issue' => $issues->first()

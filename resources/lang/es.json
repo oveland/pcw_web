@@ -178,7 +178,8 @@
   "See details":"Ver detalles",
   "Error in":"Error en",
   "Passengers by Route":"Pasajeros por Ruta",
-  "High count":"Conteo demasiado alto",
+  "A high count":"un conteo demasiado alto",
+  "A negative count":"un conteo negativo",
   "Accumulated":"Acumulado",
   "":""
 }
