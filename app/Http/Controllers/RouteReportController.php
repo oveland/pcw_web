@@ -32,7 +32,11 @@ class RouteReportController extends Controller
      */
     public function show(Request $request)
     {
+        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $route = Route::find($request->get('route-report'));
+
+        if (!$route->belongsToCompany($company)) abort(404);
+
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
 
@@ -398,7 +402,7 @@ class RouteReportController extends Controller
             case 'loadRoutes':
                 $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
                 $routes = $company != 'null' ? Route::where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('reports.route.route.routeSelect', compact('routes'));
+                return view('partials.selects.routes', compact('routes'));
                 break;
             default:
                 return "Nothing to do";

@@ -154,7 +154,7 @@ class PassengerReportController extends Controller
                     $company = Auth::user()->company->id;
                 }
                 $routes = $company != 'null' ? Route::whereCompanyId($company)->orderBy('name')->get() : [];
-                return view('reports.passengers.routeSelect', compact('routes'));
+                return view('partials.selects.routes', compact('routes'));
                 break;
             default:
                 return "Nothing to do";

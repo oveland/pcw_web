@@ -62,6 +62,12 @@
                                     @lang('Off road')
                                 </a>
                             </li>
+                            <li class="has-sub menu-report-control-points">
+                                <a href="{{ route('report-route-control-points')  }}">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    @lang('Control Points')
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="has-sub menu-passengers">
@@ -71,6 +77,7 @@
                             @lang('Passengers')
                         </a>
                         <ul class="sub-menu">
+                            @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToAlameda() )
                             <li class="has-sub menu-passengers-consolidated">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
@@ -92,6 +99,7 @@
                                     </li>
                                 </ul>
                             </li>
+
                             <li class="has-sub menu-passengers-detailed">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
@@ -107,25 +115,35 @@
                                     </li>
                                 </ul>
                             </li>
+                            @endif
+
                             @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
-                                <li class="has-sub menu-passengers-taxcentral">
-                                    <a href="javascript:;" class="faa-parent animated-hover">
-                                        <b class="caret pull-right"></b>
-                                        <i class="fa fa-building faa-pulse"></i>
-                                        @lang('Taxcentral')
+                            <li class="has-sub menu-passengers-taxcentral">
+                                <a href="javascript:;" class="faa-parent animated-hover">
+                                    <b class="caret pull-right"></b>
+                                    <i class="fa fa-building faa-pulse"></i>
+                                    @lang('Taxcentral')
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="has-sub menu-passengers-taxcentral">
+                                        <a href="{{ route('tc-passengers-report')  }}">
+                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                            @lang('Passengers report')
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @else
+                                <li class="has-sub menu-passengers-consolidated-days">
+                                    <a href="javascript:void(0)">
+                                        <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
+                                        @lang('Coming soon')
                                     </a>
-                                    <ul class="sub-menu">
-                                        <li class="has-sub menu-passengers-taxcentral">
-                                            <a href="{{ route('tc-passengers-report')  }}">
-                                                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                                                @lang('Passengers report')
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </li>
                             @endif
                         </ul>
                     </li>
+
                     @if( Auth::user()->isAdmin() )
                     <li class="has-sub menu-logs">
                         <a href="javascript:;" class="faa-parent animated-hover">

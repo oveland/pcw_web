@@ -46,6 +46,14 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/show', 'OffRoadController@searchReport')->name('off-road-search-report');
                 Route::any('/ajax', 'OffRoadController@ajax')->name('off-road-ajax-action');
             });
+
+            /* Control Points report */
+            Route::prefix(__('control-points'))->group(function () {
+                Route::get('/', 'ControlPointsReportController@index')->name('report-route-control-points');
+                Route::get('/show', 'ControlPointsReportController@searchReport')->name('report-route-control-points-search-report');
+                Route::get('/export', 'ControlPointsReportController@export')->name('report-route-control-points-export-report');
+                Route::any('/ajax', 'ControlPointsReportController@ajax')->name('report-route-control-points-ajax-action');
+            });
         });
 
         /* Routes for passenger report */

@@ -155,7 +155,7 @@ class OffRoadController extends Controller
             case 'loadRoutes':
                 $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
                 $routes = $company != 'null' ? Route::where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('reports.route.off-road.routeSelect', compact('routes'));
+                return view('partials.selects.routes', compact('routes'));
                 break;
             default:
                 return "Nothing to do";

@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->company?$this->company->id === 21:false;
     }
+
+    public function belongsToAlameda()
+    {
+        return $this->company?$this->company->id === 14:false;
+    }
 }

@@ -40,4 +40,12 @@ class Route extends Model
     public function controlPoints(){
         return $this->hasMany(ControlPoint::class)->orderBy('order','asc');
     }
+
+    /**
+     * @param Company $company
+     * @return bool
+     */
+    public function belongsToCompany($company){
+        return $this->company->id == $company->id;
+    }
 }

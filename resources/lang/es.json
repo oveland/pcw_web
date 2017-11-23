@@ -92,6 +92,7 @@
   "No registers location found": "No se encontraron registros de coordenadas",
   "The vehicle haven´t off roads list": "El vehículo no presenta salidas de ruta",
   "The date haven´t off roads list": "No se presentaron salidas de ruta en la fecha seleccionada",
+  "The date haven´t a control point time report": "No existe un reporte de puntos de control en la fecha seleccionada",
   "Off Road": "Salida de ruta",
   "Off Roads": "Salidas de ruta",
   "Off road time": "Hora de salida de ruta",
@@ -181,5 +182,9 @@
   "A high count":"un conteo demasiado alto",
   "A negative count":"un conteo negativo",
   "Accumulated":"Acumulado",
+  "control-points":"puntos-de-control",
+  "Control Points":"Puntos de Control",
+  "Control point time report by Route":"Reporte de puntos de control por ruta",
+  "Information":"Información",
   "":""
 }
