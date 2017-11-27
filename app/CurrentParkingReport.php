@@ -62,6 +62,11 @@ class CurrentParkingReport extends Model
      */
     protected $fillable = ['*'];
 
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     public function scopeFindByVehicleId($query, $vehicle_id)
     {
         return $query->where('vehicle_id', $vehicle_id)->limit(1)->get();

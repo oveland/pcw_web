@@ -57,6 +57,11 @@ class ParkingReport extends Model
 {
     protected $dates = ['date'];
 
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
