@@ -58,7 +58,7 @@ class LogParkedVehicles extends Command
         $parkedVehicles = DB::select($query);
 
         if (count($parkedVehicles)) {
-            DB::statement("UPDATE markers SET parked_reported = TRUE, ignore_trigger = TRUE WHERE $queryConditions");
+            DB::statement("UPDATE markers as m SET m.parked_reported = TRUE, m.ignore_trigger = TRUE WHERE $queryConditions");
 
             foreach ($parkedVehicles as $parkedVehicle) {
                 $checked = true;
