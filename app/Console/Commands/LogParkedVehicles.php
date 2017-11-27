@@ -41,7 +41,8 @@ class LogParkedVehicles extends Command
     public function handle()
     {
         $timeParkedVehicleThreshold = config('road.time_parked_vehicle_threshold');
-        $queryConditions = "m.status = 3 AND m.hora_status < (current_time - '$timeParkedVehicleThreshold'::TIME)";
+
+        $this->info("timeParkedVehicleThreshold = $timeParkedVehicleThreshold");
         $query = "
             SELECT
               current_timestamp date,
@@ -53,12 +54,12 @@ class LogParkedVehicles extends Command
               JOIN vehicles as v ON (v.plate = m.name)
               LEFT JOIN current_locations as cl ON (cl.vehicle_id = v.id)
               LEFT JOIN current_reports as cr ON (cr.vehicle_id = v.id)
-            WHERE $queryConditions AND m.parked_reported IS FALSE
+            WHERE m.status = 3 AND m.hora_status < (current_time - '$timeParkedVehicleThreshold'::TIME) AND m.parked_reported IS FALSE
         ";
         $parkedVehicles = DB::select($query);
 
         if (count($parkedVehicles)) {
-            DB::statement("UPDATE markers as m SET m.parked_reported = TRUE, m.ignore_trigger = TRUE WHERE $queryConditions");
+            DB::statement("UPDATE markers SET parked_reported = TRUE, ignore_trigger = TRUE WHERE status = 3 AND hora_status < (current_time - '$timeParkedVehicleThreshold'::TIME)");
 
             foreach ($parkedVehicles as $parkedVehicle) {
                 $checked = true;
