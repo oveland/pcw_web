@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\ParkingReport;
-use App\Services\PCWExporter;
 use Auth;
 use Illuminate\Http\Request;
 use Route;
@@ -35,7 +34,7 @@ class ParkedVehiclesReportController extends Controller
         $dateReport = $request->get('date-report');
 
         $parkedReports = ParkingReport::whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+            //->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
             ->get();
 
         if ($request->get('export')) $this->export($parkedReports, $dateReport);
@@ -54,24 +53,24 @@ class ParkedVehiclesReportController extends Controller
     public function export($parkedReports, $dateReport)
     {
         $dataExcel = array();
-        foreach ($parkedReports as $parkedReport) {
+        foreach ($parkedReports->reports as $parkedReport) {
             $vehicle = $parkedReport->vehicle;
             $dispatchRegister = $parkedReport->dispatchRegister;
-            $route = $dispatchRegister->route ?? null;
+            $route = $dispatchRegister->route;
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                       # A CELL
-                __('Date') => $parkedReport->date,                                       # B CELL
+                __('Date') => $parkedReport->date,                               # B CELL
                 __('Vehicle') => intval($vehicle->number),                               # C CELL
-                __('Plate') => $vehicle->plate,                                          # D CELL
-                __('Route') => $route->name ?? __('Without assigned route'),        # E CELL
-                __('Status') => $parkedReport->timed,                                    # F CELL
+                __('Plate') => $vehicle->plate,                               # C CELL
+                __('Route') => $route->name ?? __('Without assigned route'),        # C CELL
+                __('Status') => $parkedReport->timed,                                    # C CELL
             ];
         }
 
         PCWExporter::excel([
-            'fileName' => __('Parked Report') . " $dateReport",
-            'title' => __('Parked Report') . " $dateReport",
-            'subTitle' => __('Parked Report'),
+            'fileName' => __('Parked report') . " $dateReport",
+            'title' => __('Parked report') . " $dateReport",
+            'subTitle' => __('Parked report'),
             'data' => $dataExcel
         ]);
     }

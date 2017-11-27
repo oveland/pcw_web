@@ -16,4 +16,9 @@ class Database
         if ($interval == "") return '00:00:00';
         return \DB::select("SELECT parse_interval_to_time('$interval') as parsedTime")[0]->parsedtime;
     }
+
+    public static function addStringTimes($firstStringTime, $secondStringTime)
+    {
+        return \DB::select("SELECT ('$firstStringTime'::INTERVAL + '$secondStringTime'::INTERVAL)::TIME as finalTime")[0]->finaltime;
+    }
 }

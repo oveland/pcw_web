@@ -95,7 +95,9 @@
                                                 <strong>{{ $dispatchRegister->route->name }}</strong>
                                             </div>
                                             <div class="widget-stat-text">
-                                                <strong>@lang('Turn')</strong> {{ $dispatchRegister->turn }}, <strong>@lang('Round Trip')</strong> {{ $dispatchRegister->round_trip }}
+                                                <strong>@lang('Turn')</strong> {{ $dispatchRegister->turn }},
+                                                <strong>@lang('Round Trip')</strong> {{ $dispatchRegister->round_trip }},
+                                                <strong class="tooltips" data-title="@lang('Departure time')" data-placement="bottom">{{ $dispatchRegister->departure_time }}</strong>
                                             </div>
                                         </div>
                                     </div>
@@ -120,11 +122,11 @@
                                             </div>
                                             <div class="widget-stat-text">
                                                 <strong class="tooltips" data-title="@lang('Time scheduled')" data-placement="bottom">
-                                                    {{ $parkedReportByVehicle->timep }}
+                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parkedReportByVehicle->timep) }}
                                                 </strong>
                                                 ,
                                                 <strong class="tooltips" data-title="@lang('Time reported')" data-placement="bottom">
-                                                    {{ $parkedReportByVehicle->timem }}
+                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parkedReportByVehicle->timem) }}
                                                 </strong>
                                             </div>
                                         </div>
