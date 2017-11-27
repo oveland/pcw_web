@@ -16,7 +16,7 @@
                         @php( $vehicle = $parkedReportsByVehicle->first()->vehicle )
                         <li class="{{$loop->first?'active':''}}">
                             <a href="#report-tab-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-title="{{ $vehicle->plate }}" data-title="{{ $vehicle->plate }}">
-                                @lang('Vehicle') {{ $vehicle->number }}
+                                {{ $vehicle->number }}
                             </a>
                         </li>
                     @endforeach
