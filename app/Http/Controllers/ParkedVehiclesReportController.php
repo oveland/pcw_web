@@ -34,7 +34,7 @@ class ParkedVehiclesReportController extends Controller
         $dateReport = $request->get('date-report');
 
         $parkedReports = ParkingReport::whereIn('vehicle_id', $vehicles->pluck('id'))
-            //->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
             ->get();
 
         if ($request->get('export')) $this->export($parkedReports, $dateReport);
