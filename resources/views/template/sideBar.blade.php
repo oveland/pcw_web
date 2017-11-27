@@ -74,7 +74,7 @@
                             <li class="has-sub menu-report-vehicles-parked">
                                 <a href="{{ route('report-vehicle-parked')  }}">
                                     <i class="fa fa-product-hunt" aria-hidden="true"></i>
-                                    @lang('Parking report')
+                                    @lang('Parked Report')
                                 </a>
                             </li>
                         </ul>
