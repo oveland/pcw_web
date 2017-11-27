@@ -40,7 +40,8 @@ class LogParkedVehicles extends Command
      */
     public function handle()
     {
-        $queryConditions = "m.status = 3 AND m.hora_status < (current_time - '00:01:00'::TIME)";
+        $timeParkedVehicleThreshold = config('road.time_parked_vehicle_threshold');
+        $queryConditions = "m.status = 3 AND m.hora_status < (current_time - '$timeParkedVehicleThreshold'::TIME)";
         $query = "
             SELECT
               current_timestamp date,

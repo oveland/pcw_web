@@ -83,4 +83,13 @@ return [
     */
     'max_recorder_counter_per_vehicle_threshold' => 1000,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Threshold for report a vehicle as parked   |
+    |--------------------------------------------------------------------------
+    |
+    | Defines the time for report a vehicle as parked
+    |
+    */
+    'time_parked_vehicle_threshold' => '00:10:00',
 ];
