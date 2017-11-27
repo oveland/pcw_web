@@ -18,6 +18,7 @@
   "Chart report": "Gráfica de repote",
   "Vehicle": "Vehículo",
   "Vehicles": "Vehículos",
+  "vehicles": "vehículos",
   "Hour dispatch": "Hora despachado",
   "Round Trip": "Vuelta",
   "Turn": "Turno",
@@ -181,5 +182,14 @@
   "A high count":"un conteo demasiado alto",
   "A negative count":"un conteo negativo",
   "Accumulated":"Acumulado",
+  "parked":"parqueados",
+  "Parked Report":"Reporte de Parqueados",
+  "Vehicles Report":"Reporte de Vehículos",
+  "Details":"Detalles",
+  "Route Information":"Información de ruta",
+  "Near of":"Cerca a",
+  "Time scheduled": "Hora programada",
+  "Time reported": "Hora reportada",
+  "Without assigned route":"Sin ruta asignada",
   "":""
 }

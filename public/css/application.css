@@ -54,3 +54,6 @@ input[readonly="readonly"] {
 .text-issue{
     color: #7f0000 !important;
 }
+.slimScrollDiv{
+    width: 100% !important;
+}

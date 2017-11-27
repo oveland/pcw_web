@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Http\Controllers\Utils\Geolocation;
 use App\OffRoad;
 use App\Route;
 use App\Services\PCWExporter;
@@ -142,6 +143,26 @@ class OffRoadController extends Controller
         }
 
         return $offRoadsReport;
+    }
+
+    /**
+     * @param OffRoad $offRoad
+     * @return mixed
+     */
+    public function getAddressFromCoordinates(OffRoad $offRoad)
+    {
+        sleep(1); // Because google (Free layer) only lets 50 request/second
+        return Geolocation::getAddressFromCoordinates($offRoad->latitude, $offRoad->longitude);
+    }
+
+    /**
+     * @param OffRoad $offRoad
+     * @return mixed
+     */
+    public function getImageFromCoordinate(OffRoad $offRoad)
+    {
+        $route = $offRoad->dispatchRegister->route;
+        return Geolocation::getImageRouteWithANearLocation($route, $offRoad);
     }
 
     /**

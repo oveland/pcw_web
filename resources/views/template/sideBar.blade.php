@@ -46,7 +46,7 @@
                     <li class="has-sub menu-routes">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="fa fa-bus faa-pulse"></i>
+                            <i class="fa fa-flag faa-pulse"></i>
                             @lang('Route')
                         </a>
                         <ul class="sub-menu">
@@ -60,6 +60,21 @@
                                 <a href="{{ route('off-road-report')  }}">
                                     <i class="fa fa-road" aria-hidden="true"></i>
                                     @lang('Off road')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-sub menu-report-vehicles">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-bus faa-pulse"></i>
+                            @lang('Vehicles')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-report-vehicles-parked">
+                                <a href="{{ route('report-vehicle-parked')  }}">
+                                    <i class="fa fa-product-hunt" aria-hidden="true"></i>
+                                    @lang('Parking report')
                                 </a>
                             </li>
                         </ul>
