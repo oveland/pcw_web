@@ -8,6 +8,9 @@
 
 namespace App\Http\Controllers\Utils;
 
+use App\Http\Controllers\RouteReportController;
+use Image;
+
 class Geolocation
 {
     /**
@@ -50,9 +53,9 @@ class Geolocation
 
         $json = collect(json_decode($response, true));
         $address = (object)collect($json->first())->first();
-        try{
+        try {
             $address = explode(',', $address->formatted_address);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return "No disponible";
         }
         return $address[0];
@@ -85,5 +88,49 @@ class Geolocation
     public static function getThresholdAngleC($threshold_distance, $a, $b)
     {
         return rad2deg(acos($threshold_distance / $a) + acos($threshold_distance / $b));
+    }
+
+    public static function getImageRouteWithANearLocation($route, $location)
+    {
+        $routeCoordinates = RouteReportController::getRouteCoordinates($route->url);
+        $nearestRouteCoordinates = self::filterNearestRouteCoordinates($location, $routeCoordinates);
+
+        $routePath = "path=color:0x0000ff";
+        foreach ($nearestRouteCoordinates as $nearestRouteCoordinate) {
+            $routePath .= '|' . $nearestRouteCoordinate['latitude'] . ',' . $nearestRouteCoordinate['longitude'];
+        }
+
+        $url = "https://maps.googleapis.com/maps/api/staticmap?size=500x200&maptype=roadmap\&center=$location->latitude,$location->longitude&zoom=16&$routePath&markers=size:mid%7Ccolor:0xCC2701|$location->latitude,$location->longitude&key=" . config('road.google_api_token');
+
+        $image = Image::make($url);
+        return $image->response('jpg');
+    }
+
+    /**
+     * @param $location
+     * @param $route_coordinates
+     * @return array|\Illuminate\Support\Collection
+     */
+    private static function filterNearestRouteCoordinates($location, $route_coordinates)
+    {
+        $location_latitude = $location->latitude;
+        $location_longitude = $location->longitude;
+        $threshold = config('road.route_sampling_area');
+
+        $threshold_location = [
+            'la_up' => $location_latitude + $threshold,
+            'la_down' => $location_latitude - $threshold,
+            'lo_up' => $location_longitude + $threshold,
+            'lo_down' => $location_longitude - $threshold
+        ];
+
+        $route_coordinates = collect($route_coordinates);
+        $route_coordinates = $route_coordinates->filter(function ($value, $key) use ($threshold_location) {
+            return
+                $value['latitude'] > $threshold_location['la_down'] && $value['latitude'] < $threshold_location['la_up'] &&
+                $value['longitude'] > $threshold_location['lo_down'] && $value['longitude'] < $threshold_location['lo_up'];
+        })->values();
+
+        return $route_coordinates;
     }
 }

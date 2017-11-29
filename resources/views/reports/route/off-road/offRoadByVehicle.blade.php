@@ -101,23 +101,23 @@
                                                                 <td>{{ $dispatchRegister->round_trip }}</td>
                                                                 <td>{{ $offRoad->date }}</td>
                                                                 <td>
-                                                                    <a href="{{ route('route-off-road-report',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-xs">
+                                                                    <a href="{{ route('route-off-road-report',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-sm">
                                                                         <i class="fa fa-file-excel-o"></i>
                                                                     </a>
-                                                                    <button class="btn btn-xs btn-warning btn-location btn-off-road-show-image-location" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" title="@lang('Location')">
+                                                                    <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" data-title="@lang('Location')">
                                                                         <i class="fa fa-map-marker"></i>
                                                                         <span>@lang('Location')</span>
                                                                     </button>
-                                                                    <span id="address-{{ $offRoad->id }}"></span>
-                                                                    <button class="btn btn-xs btn-info btn-show-address" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
-                                                                            data-url="{{ route('geolocation-address',['offRoad'=>$offRoad->id]) }}"
+                                                                    <span id="address-{{ $offRoad->id }}" class="tooltips" data-title="@lang('Address')"></span>
+                                                                    <button class="btn btn-sm btn-info btn-show-address" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
+                                                                            data-url="{{ route('off-road-geolocation-address',['offRoad'=>$offRoad->id]) }}"
                                                                             data-target="#address-{{ $offRoad->id }}">
                                                                         <i class="fa fa-refresh faa-spin animated-hover hide"></i>
                                                                         <span>@lang('Address')</span>
                                                                     </button>
                                                                 </td>
                                                             </tr>
-                                                            <tr id="image-{{ $offRoad->id }}" class="collapse fade collapse-off-road-image" data-url="{{ route('geolocation-image',['offRoad'=>$offRoad->id]) }}">
+                                                            <tr id="image-{{ $offRoad->id }}" class="collapse fade collapse-off-road-image" data-url="{{ route('off-road-geolocation-image',['offRoad'=>$offRoad->id]) }}">
                                                                 <td colspan="4" class="text-center">
                                                                     <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
                                                                 </td>

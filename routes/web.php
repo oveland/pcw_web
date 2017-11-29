@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('off-road'))->group(function () {
                 Route::get('/', 'OffRoadController@index')->name('off-road-report');
                 Route::get('/show', 'OffRoadController@searchReport')->name('off-road-search-report');
+                Route::get('/address/{offRoad}', 'OffRoadController@getAddressFromCoordinates')->name('off-road-geolocation-address');
+                Route::get('/image/{offRoad}', 'OffRoadController@getImageFromCoordinate')->name('off-road-geolocation-image');
                 Route::any('/ajax', 'OffRoadController@ajax')->name('off-road-ajax-action');
             });
 
@@ -53,6 +55,17 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/show', 'ControlPointsReportController@searchReport')->name('report-route-control-points-search-report');
                 Route::get('/export', 'ControlPointsReportController@export')->name('report-route-control-points-export-report');
                 Route::any('/ajax', 'ControlPointsReportController@ajax')->name('report-route-control-points-ajax-action');
+            });
+        });
+
+        Route::prefix(__('vehicles'))->group(function(){
+            /* Off Road report */
+            Route::prefix(__('parked'))->group(function () {
+                Route::get('/', 'ParkedVehiclesReportController@index')->name('report-vehicle-parked');
+                Route::get('/show', 'ParkedVehiclesReportController@searchReport')->name('report-vehicle-parked-search-report');
+                Route::get('/address/{parkingReport}', 'ParkedVehiclesReportController@getAddressFromCoordinates')->name('report-vehicle-parked-geolocation-address');
+                Route::get('/image/{parkingReport}', 'ParkedVehiclesReportController@getImageFromCoordinate')->name('report-vehicle-parked-geolocation-image');
+                Route::any('/ajax', 'ParkedVehiclesReportController@ajax')->name('report-vehicle-parked-ajax-action');
             });
         });
 
