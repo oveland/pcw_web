@@ -44,7 +44,7 @@
                             </th>
                             <th class="col-md-2">
                                 <i class="fa fa-clock-o text-muted"></i><br>
-                                @lang('Arrival Time Scheduled')
+                                @lang('StrTime')
                             </th>
                             <th class="col-md-2">
                                 <i class="fa fa-clock-o text-muted"></i><br>

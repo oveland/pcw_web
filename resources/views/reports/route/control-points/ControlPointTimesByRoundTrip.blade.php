@@ -2,7 +2,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-control-points-export-report') }}?date-report={{ '' }}&company-report={{ '' }}" class="btn btn-lime bg-lime-dark btn-sm">
+                <a href="{{ route('report-route-control-points-export-report') }}?date-report={{ '' }}&company-report={{ '' }}" class="btn btn-lime bg-lime-dark btn-sm hide">
                     <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                 </a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-info " data-click="panel-expand" title="@lang('Expand / Compress')">
@@ -37,21 +37,21 @@
                             @php( $reportsByControlPoint =  $controlPointTimeReportByRoundTrip->groupBy('control_point_id') )
                             @php( $reportsByVehicles = $controlPointTimeReportByRoundTrip->groupBy('vehicle_id') )
 
-                            <table class="table table-bordered table-striped table-hover table-valign-middle table-report-control-point">
+                            <table class="table table-bordered table-striped table-hover table-valign-middle table-report-control-point data-table-report">
                                 <thead>
-                                <tr class="inverse">
-                                    <th class="text-center">
-                                        <i class="fa fa-list text-muted"></i>
+                                <tr class="">
+                                    <th class="text-center bg-inverse-dark text-muted">
+                                        <i class="fa fa-list"></i>
                                         @lang('Turn')
                                     </th>
-                                    <th class="text-center">
-                                        <i class="fa fa-car text-muted"></i>
+                                    <th class="text-center bg-inverse-dark text-muted">
+                                        <i class="fa fa-car"></i>
                                         @lang('Vehicle')
                                     </th>
                                     @foreach($reportsByControlPoint->keys() as $controlPointId)
                                         @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
-                                        <th>
-                                            <i class="fa fa-map-marker text-muted"></i><br>
+                                        <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}">
+                                            <i class="fa fa-map-marker"></i><br>
                                             {{ $controlPoint->name }}
                                         </th>
                                     @endforeach
@@ -69,37 +69,54 @@
                                                 {{ $vehicle->number }} <br> {{ $vehicle->plate }}
                                             </th>
                                             @foreach($reportsByControlPoint->keys() as $controlPointId)
+                                                @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
                                                 @php( $report = $reportByVehicles->where('control_point_id',$controlPointId)->first() ?? null )
                                                 <td class="text-center">
                                                     @if( $report )
                                                         @php
-                                                            $measuredInterval = \Carbon\Carbon::parse(date('Y-m-d')." $report->timem");
-                                                            $scheduledInterval = \Carbon\Carbon::parse(date('Y-m-d')." $report->timep");
+                                                            $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPointId)
+                                                                ->where('fringe_id',$report->fringe_id)
+                                                                ->get()->first();
 
-                                                            $measuredTime = \Carbon\Carbon::parse(date('Y-m-d')." $dispatchRegister->departure_time");
-                                                            $scheduledTime = \Carbon\Carbon::parse(date('Y-m-d')." $dispatchRegister->departure_time");
+                                                            $strTime = new \App\Http\Controllers\Utils\StrTime();
+                                                            $measuredTime = $strTime::addStrTime($dispatchRegister->departure_time,$report->timem);
+                                                            $scheduledTime = $strTime::addStrTime($dispatchRegister->departure_time,$report->timep);
 
-                                                            $measuredTime->addHours($measuredInterval->hour);
-                                                            $measuredTime->addMinutes($measuredInterval->minute);
-                                                            $measuredTime->addSecond($measuredInterval->second);
+                                                            $scheduledControlPointTime = $strTime::addStrTime($dispatchRegister->departure_time,$controlPointTime->time_from_dispatch);
 
-                                                            $scheduledTime->addHours($scheduledInterval->hour);
-                                                            $scheduledTime->addMinutes($scheduledInterval->minute);
-                                                            $scheduledTime->addSecond($scheduledInterval->second);
-
-                                                            $statusColor =  'lime';
-                                                            if( substr($report->timed,1) > '00:00:40' ){
-                                                                $statusColor = substr($report->timed,0,1) == '+' ? 'primary':'danger';
+                                                            $measuredControlPointTime = "";
+                                                            if( $loop->first ){
+                                                                $measuredControlPointTime = $dispatchRegister->departure_time;
+                                                            }else if( $loop->last ){
+                                                                $measuredControlPointTime = $dispatchRegister->arrival_time;
+                                                            }
+                                                            else{
+                                                                $measuredControlPointTime = $strTime::segToStrTime(
+                                                                    $strTime::toSeg($scheduledControlPointTime)*$strTime::toSeg($measuredTime)/
+                                                                    $strTime::toSeg($scheduledTime)
+                                                                );
                                                             }
 
+                                                            $statusColor =  'lime';
+                                                            if( $strTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00' ){
+                                                                $statusColor = substr($report->timed,0,1) == '+' ? 'primary':'danger';
+                                                            }
                                                         @endphp
-                                                        <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
-                                                        <br>
-                                                        <span class="f-s-10">
-                                                        {{ $measuredTime->toTimeString() }} <br>
-                                                        {{ $scheduledTime->toTimeString() }} <br>
-                                                        <strong class="f-s-12">{{ $report->timed }}</strong>
-                                                        </span>
+                                                        <div class="tooltips" data-title="{{ $controlPoint->name }}">
+                                                            <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
+                                                            <br>
+                                                            <strong class="f-s-12 btn text-{{ $statusColor }} btn-xs tooltips" data-title="@lang('Status')" data-placement="bottom">
+                                                                {{ $strTime::difference($measuredControlPointTime, $scheduledControlPointTime) }}
+                                                            </strong>
+                                                            <br>
+                                                            <span class="f-s-10 tooltips" data-title="@lang('Scheduled Time')" data-placement="bottom">
+                                                                {{ $scheduledControlPointTime }}
+                                                            </span>
+                                                            <br>
+                                                            <span class="f-s-10 tooltips" data-title="@lang('Reported Time')" data-placement="bottom">
+                                                                {{ $measuredControlPointTime }}
+                                                            </span>
+                                                        </div>
                                                     @else
                                                         @lang('--:--:--')
                                                     @endif

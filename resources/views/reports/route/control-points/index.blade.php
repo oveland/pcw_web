@@ -12,6 +12,7 @@
             position: sticky;
         }
     </style>
+
 @endsection
 
 @section('content')
@@ -115,6 +116,7 @@
 
 
 @section('scripts')
+
     <script type="application/javascript">
         $('.menu-routes, .menu-report-control-points').addClass('active');
 

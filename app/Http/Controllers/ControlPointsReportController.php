@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\ControlPointTimeReport;
 use App\DispatchRegister;
+use App\Http\Controllers\Utils\StrTime;
 use App\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,6 @@ class ControlPointsReportController extends Controller
             ->get();
 
         $controlPointTimeReports = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-
             ->get();
 
         $controlPointTimeReportsByRoundTrip = $controlPointTimeReports->groupBy(function ($controlPointTimeReport) {
