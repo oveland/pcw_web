@@ -101,14 +101,15 @@
                                                                     $strTime::toSeg($scheduledTime)
                                                                 );
                                                             }
-
-                                                            $statusColor =  'lime';
-                                                            if( $strTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00' ){
-                                                                $statusColor = $report->fast() ? 'info':'danger';
-                                                            }
                                                         @endphp
 
-                                                        @if( $measuredControlPointTime )
+                                                        @if( $measuredControlPointTime && $scheduledControlPointTime )
+                                                            @php
+                                                                $statusColor =  'lime';
+                                                                if( $strTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00' ){
+                                                                    $statusColor = $report->fast() ? 'info':'danger';
+                                                                }
+                                                            @endphp
                                                             <div class="tooltips" data-title="{{ $controlPoint->name }}">
                                                                 <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
                                                                 <br>
