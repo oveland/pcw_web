@@ -129,8 +129,10 @@
                                                                             <b class='f-s-12 text-{{ $statusColor }}'>{{ $statusText }}</b>
                                                                         "
                                                                         data-content="
-                                                                            <strong>@lang('Scheduled Time'):</strong> {{ $scheduledControlPointTime }}<br>
-                                                                            <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $measuredControlPointTime }}
+                                                                            <div style='width:200px'>
+                                                                                <strong>@lang('Scheduled Time'):</strong> {{ $scheduledControlPointTime }}<br>
+                                                                                <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $measuredControlPointTime }}
+                                                                            </div>
                                                                         "
                                                                         >
                                                                     <span>
