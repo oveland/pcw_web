@@ -138,6 +138,16 @@ class DispatchRegister extends Model
         return $query->where('status',$this::COMPLETE)->orWhere('status',$this::IN_PROGRESS);
     }
 
+    public function complete()
+    {
+        return $this->status == $this::COMPLETE;
+    }
+
+    public function inProgress()
+    {
+        return $this->status == $this::IN_PROGRESS;
+    }
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }

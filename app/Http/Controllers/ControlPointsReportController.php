@@ -37,9 +37,6 @@ class ControlPointsReportController extends Controller
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
             ->where('route_id', '=', $route->id)
-            ->where(function ($query) {
-                $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
-            })
             ->orderBy('departure_time')
             ->get();
 

@@ -76,4 +76,12 @@ class ControlPointTimeReport extends Model
     function vehicle(){
         return $this->belongsTo(Vehicle::class);
     }
+
+    public function fast(){
+        return $this->status == 'fast';
+    }
+
+    public function slow(){
+        return $this->status == 'slow';
+    }
 }

@@ -59,11 +59,16 @@
                                 </thead>
                                 <tbody>
                                     @foreach( $reportsByVehicles as $vehicleId => $reportByVehicles )
-                                        @php( $vehicle = \App\Vehicle::find($vehicleId) )
-                                        @php( $dispatchRegister = $reportByVehicles->first()->dispatchRegister )
-                                        <tr class="inverse">
-                                            <th class="text-uppercase">
-                                                {{ $dispatchRegister->turn }}
+                                        @php
+                                            $vehicle = \App\Vehicle::find($vehicleId);
+                                            $dispatchRegister = $reportByVehicles->first()->dispatchRegister;
+                                            $departure_time = $dispatchRegister->departure_time;
+                                            $arrival_time = $dispatchRegister->arrival_time;
+                                        @endphp
+                                        <tr class="">
+                                            <th class="text-capitalize {{ $dispatchRegister->inProgress() ? 'warning':'' }}">
+                                                {{ $dispatchRegister->turn }}<br>
+                                                {{ $dispatchRegister->status }}
                                             </th>
                                             <th class="text-uppercase">
                                                 {{ $vehicle->number }} <br> {{ $vehicle->plate }}
@@ -79,16 +84,16 @@
                                                                 ->get()->first();
 
                                                             $strTime = new \App\Http\Controllers\Utils\StrTime();
-                                                            $measuredTime = $strTime::addStrTime($dispatchRegister->departure_time,$report->timem);
-                                                            $scheduledTime = $strTime::addStrTime($dispatchRegister->departure_time,$report->timep);
+                                                            $measuredTime = $strTime::addStrTime($departure_time,$report->timem);
+                                                            $scheduledTime = $strTime::addStrTime($departure_time,$report->timep);
 
-                                                            $scheduledControlPointTime = $strTime::addStrTime($dispatchRegister->departure_time,$controlPointTime->time_from_dispatch);
+                                                            $scheduledControlPointTime = $strTime::addStrTime($departure_time,$controlPointTime->time_from_dispatch);
 
                                                             $measuredControlPointTime = "";
                                                             if( $loop->first ){
-                                                                $measuredControlPointTime = $dispatchRegister->departure_time;
-                                                            }else if( $loop->last ){
-                                                                $measuredControlPointTime = $dispatchRegister->arrival_time;
+                                                                $measuredControlPointTime = $departure_time;
+                                                            }else if( $loop->last && $dispatchRegister->complete() ){
+                                                                $measuredControlPointTime = $arrival_time;
                                                             }
                                                             else{
                                                                 $measuredControlPointTime = $strTime::segToStrTime(
@@ -99,24 +104,29 @@
 
                                                             $statusColor =  'lime';
                                                             if( $strTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00' ){
-                                                                $statusColor = substr($report->timed,0,1) == '+' ? 'primary':'danger';
+                                                                $statusColor = $report->fast() ? 'info':'danger';
                                                             }
                                                         @endphp
-                                                        <div class="tooltips" data-title="{{ $controlPoint->name }}">
-                                                            <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
-                                                            <br>
-                                                            <strong class="f-s-12 btn text-{{ $statusColor }} btn-xs tooltips" data-title="@lang('Status')" data-placement="bottom">
-                                                                {{ $strTime::difference($measuredControlPointTime, $scheduledControlPointTime) }}
-                                                            </strong>
-                                                            <br>
-                                                            <span class="f-s-10 tooltips" data-title="@lang('Scheduled Time')" data-placement="bottom">
-                                                                {{ $scheduledControlPointTime }}
-                                                            </span>
-                                                            <br>
-                                                            <span class="f-s-10 tooltips" data-title="@lang('Reported Time')" data-placement="bottom">
-                                                                {{ $measuredControlPointTime }}
-                                                            </span>
-                                                        </div>
+
+                                                        @if( $measuredControlPointTime )
+                                                            <div class="tooltips" data-title="{{ $controlPoint->name }}">
+                                                                <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
+                                                                <br>
+                                                                <strong class="f-s-12 btn text-{{ $statusColor }} btn-xs tooltips" data-title="@lang('Status')" data-placement="bottom">
+                                                                    {{ $strTime::difference($measuredControlPointTime, $scheduledControlPointTime) }}
+                                                                </strong>
+                                                                <br>
+                                                                <span class="f-s-10 tooltips" data-title="@lang('Scheduled Time')" data-placement="bottom">
+                                                                    {{ $scheduledControlPointTime }}
+                                                                </span>
+                                                                <br>
+                                                                <span class="f-s-10 tooltips" data-title="@lang('Reported Time')" data-placement="bottom">
+                                                                    {{ $measuredControlPointTime }}
+                                                                </span>
+                                                            </div>
+                                                        @else
+                                                            @lang('--!--!--')
+                                                        @endif
                                                     @else
                                                         @lang('--:--:--')
                                                     @endif
