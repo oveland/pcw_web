@@ -150,6 +150,7 @@
 
   "Dispatch report":"Reporte de despacho",
   "Departure time":"Hora despachado",
+  "Departure Time":"Hora despachado",
   "Arrival Time Scheduled":"Llegada programada",
   "Arrival Time":"Hora de llegada",
   "Arrival Time Difference":"Diferencia llegada",
@@ -199,5 +200,11 @@
   "Time scheduled": "Hora programada",
   "Time reported": "Hora reportada",
   "Without assigned route":"Sin ruta asignada",
+  "fast":"Adelantado",
+  "slow":"Atrasado",
+  "on time":"A Tiempo",
+  "Fringe":"Franja",
+  "Time from dispatch":"Tiempo desde despacho",
+  "Km from dispatch":"Km desde despacho",
   "":""
 }

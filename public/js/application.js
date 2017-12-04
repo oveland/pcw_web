@@ -14,6 +14,7 @@ $(document).ready(function () {
     $(document).ajaxComplete(function(){
         $('.tooltips').tooltip();
         $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="popover"]').popover();
     });
 
     $(document).ajaxError(function(event,request,settings){

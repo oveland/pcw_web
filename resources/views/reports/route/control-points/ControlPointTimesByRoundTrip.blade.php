@@ -33,7 +33,7 @@
             @foreach($controlPointTimeReportsByRoundTrip as $roundTrip => $controlPointTimeReportByRoundTrip)
                 <div id="report-tab-{{ $roundTrip }}" class="tab-pane fade {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
-                        <div class="table-responsive col-md-12">
+                        <div class="table-responsive col-md-12" style="padding-bottom: 90px">
                             @php( $reportsByControlPoint =  $controlPointTimeReportByRoundTrip->groupBy('control_point_id') )
                             @php( $reportsByVehicles = $controlPointTimeReportByRoundTrip->groupBy('vehicle_id') )
 
@@ -62,7 +62,7 @@
                                         @php
                                             $vehicle = \App\Vehicle::find($vehicleId);
                                             $dispatchRegister = $reportByVehicles->first()->dispatchRegister;
-                                            $departure_time = $dispatchRegister->departure_time;
+                                            $departureTime = $dispatchRegister->departure_time;
                                             $arrival_time = $dispatchRegister->arrival_time;
                                         @endphp
                                         <tr class="">
@@ -84,14 +84,14 @@
                                                                 ->get()->first();
 
                                                             $strTime = new \App\Http\Controllers\Utils\StrTime();
-                                                            $measuredTime = $strTime::addStrTime($departure_time,$report->timem);
-                                                            $scheduledTime = $strTime::addStrTime($departure_time,$report->timep);
+                                                            $measuredTime = $strTime::addStrTime($departureTime,$report->timem);
+                                                            $scheduledTime = $strTime::addStrTime($departureTime,$report->timep);
 
-                                                            $scheduledControlPointTime = $strTime::addStrTime($departure_time,$controlPointTime->time_from_dispatch);
+                                                            $scheduledControlPointTime = $strTime::addStrTime($departureTime,$controlPointTime->time_from_dispatch);
 
                                                             $measuredControlPointTime = "";
                                                             if( $loop->first ){
-                                                                $measuredControlPointTime = $departure_time;
+                                                                $measuredControlPointTime = $departureTime;
                                                             }else if( $loop->last && $dispatchRegister->complete() ){
                                                                 $measuredControlPointTime = $arrival_time;
                                                             }
@@ -106,24 +106,38 @@
                                                         @if( $measuredControlPointTime && $scheduledControlPointTime )
                                                             @php
                                                                 $statusColor =  'lime';
+                                                                $statusText =  __('on time');
                                                                 if( $strTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00' ){
-                                                                    $statusColor = $report->fast() ? 'info':'danger';
+                                                                    $statusColor = $report->fast() ? 'primary':'danger';
+                                                                    $statusText = __($report->status);
                                                                 }
                                                             @endphp
-                                                            <div class="tooltips" data-title="{{ $controlPoint->name }}">
+                                                            <div class="tooltipss" data-title="{{ $controlPoint->name }}">
                                                                 <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
                                                                 <br>
-                                                                <strong class="f-s-12 btn text-{{ $statusColor }} btn-xs tooltips" data-title="@lang('Status')" data-placement="bottom">
-                                                                    {{ $strTime::difference($measuredControlPointTime, $scheduledControlPointTime) }}
-                                                                </strong>
+                                                                <button type="button" class="f-s-12 m-t-5 btn btn-{{ $statusColor }} light btn-xs"
+                                                                        data-placement="bottom"
+                                                                        data-toggle="popover"
+                                                                        data-html="true"
+                                                                        data-trigger="hover"
+                                                                        title="
+                                                                            &nbsp;<i class='fa fa-map-marker text-muted'></i> {{ $controlPoint->name }}<br>
+                                                                            <span class='f-s-12'>
+                                                                                <i class='fa fa-car text-muted'></i>
+                                                                                {{ $vehicle->number }}:
+                                                                            </span>
+                                                                            <b class='f-s-12 text-{{ $statusColor }}'>{{ $statusText }}</b>
+                                                                        "
+                                                                        data-content="
+                                                                            <strong>@lang('Scheduled Time'):</strong> {{ $scheduledControlPointTime }}<br>
+                                                                            <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $measuredControlPointTime }}
+                                                                        "
+                                                                        >
+                                                                    <span>
+                                                                        {{ $strTime::difference($measuredControlPointTime, $scheduledControlPointTime) }}
+                                                                    </span>
+                                                                </button>
                                                                 <br>
-                                                                <span class="f-s-10 tooltips" data-title="@lang('Scheduled Time')" data-placement="bottom">
-                                                                    {{ $scheduledControlPointTime }}
-                                                                </span>
-                                                                <br>
-                                                                <span class="f-s-10 tooltips" data-title="@lang('Reported Time')" data-placement="bottom">
-                                                                    {{ $measuredControlPointTime }}
-                                                                </span>
                                                             </div>
                                                         @else
                                                             @lang('--!--!--')
