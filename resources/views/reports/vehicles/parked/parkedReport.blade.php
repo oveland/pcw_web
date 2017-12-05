@@ -63,6 +63,7 @@
                             @if( $dispatchRegister )
                                 <button class="btn btn-sm btn-primary faa-parent animated-hover tooltips" data-title="@lang('Route')"
                                         data-toggle="collapse" data-target="#collapse-{{ $parkedReportByVehicle->id }}" aria-expanded="false" aria-controls="collapse-{{ $parkedReportByVehicle->id }}">
+                                    <i class="fa fa-flag"></i>
                                     {{ $dispatchRegister->route->name }}
                                 </button>
                             @else
@@ -72,6 +73,7 @@
                     </tr>
 
                     @if($dispatchRegister)
+                        @php( $driver = $dispatchRegister->driver )
                         <tr id="collapse-{{ $parkedReportByVehicle->id }}" class="collapse fade" aria-expanded="true">
                             <td class="bg-inverse text-white text-center">
                                 @lang('Details')
@@ -98,6 +100,11 @@
                                                 <strong>@lang('Turn')</strong> {{ $dispatchRegister->turn }},
                                                 <strong>@lang('Round Trip')</strong> {{ $dispatchRegister->round_trip }},
                                                 <strong class="tooltips" data-title="@lang('Departure time')" data-placement="bottom">{{ $dispatchRegister->departure_time }}</strong>
+                                                <br>
+                                                <span class="f-s-10 text-capitalize tooltips" data-title="@lang('Driver')" data-placement="right">
+                                                    <i class="fa fa-user"></i>
+                                                    {{ $driver?$driver->fullName():__('Not assigned') }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -121,11 +128,11 @@
                                                 <strong>{{ $parkedReportByVehicle->timed }}</strong>
                                             </div>
                                             <div class="widget-stat-text">
-                                                <strong class="tooltips" data-title="@lang('Time scheduled')" data-placement="bottom">
+                                                <strong class="tooltips" data-title="@lang('Time scheduled')" data-placement="right">
                                                     {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parkedReportByVehicle->timep) }}
                                                 </strong>
-                                                ,
-                                                <strong class="tooltips" data-title="@lang('Time reported')" data-placement="bottom">
+                                                <br>
+                                                <strong class="tooltips" data-title="@lang('Time reported')" data-placement="right">
                                                     {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parkedReportByVehicle->timem) }}
                                                 </strong>
                                             </div>

@@ -191,7 +191,10 @@
   "Reported Time":"Hora de reporte",
   "Scheduled Time":"Hora programada",
   "parked":"parqueados",
+  "Parked date":"Fecha parqueado",
+  "Parked time":"Hora parqueado",
   "Parked Report":"Reporte de Parqueados",
+  "Parked report":"Reporte de parqueados",
   "Parked vehicles":"Parqueados",
   "Vehicles Report":"Reporte de Vehículos",
   "Details":"Detalles",
@@ -206,5 +209,7 @@
   "Fringe":"Franja",
   "Time from dispatch":"Tiempo desde despacho",
   "Km from dispatch":"Km desde despacho",
+  "Driver":"Conductor",
+  "Not assigned":"No asignado",
   "":""
 }

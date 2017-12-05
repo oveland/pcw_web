@@ -8,7 +8,7 @@
             </div>
             <div class="row">
                 <div class="col-md-11">
-                    <a href="{{ route('route-search-report') }}?date-report={{ $dateReport }}&route-report={{ $route->id }}&type-report=round_trip&export=true" class="btn btn-lime bg-lime-dark pull-right">
+                    <a href="{{ route('route-search-report') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id }}&type-report=round_trip&export=true" class="btn btn-lime bg-lime-dark pull-right">
                         <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                     </a>
                     <ul class="nav nav-pills nav-pills-success">
@@ -37,6 +37,10 @@
                             <th>
                                 <i class="fa fa-car text-muted"></i><br>
                                 @lang('Vehicle')
+                            </th>
+                            <th>
+                                <i class="fa fa-user text-muted"></i><br>
+                                @lang('Driver')
                             </th>
                             <th class="col-md-2">
                                 <i class="fa fa-clock-o text-muted"></i><br>
@@ -72,9 +76,12 @@
                         </thead>
                         <tbody>
                         @foreach( $dispatchRegisters as $dispatchRegister )
+                            @php( $driver = $dispatchRegister->driver )
+                            @php( $vehicle = $dispatchRegister->vehicle )
                             <tr>
                                 <td class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</td>
-                                <td width="25%" class="text-center">{{ $dispatchRegister->vehicle->number }} | {{ $dispatchRegister->vehicle->plate }}</td>
+                                <td width="10%" class="text-center">{{ $vehicle->number }} <br> {{ $vehicle->plate }}</td>
+                                <td class="text-uppercase">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
                                 <td>{{ $dispatchRegister->departure_time }}</td>
                                 <td>{{ $dispatchRegister->arrival_time_scheduled }}</td>
                                 <td>{{ $dispatchRegister->arrival_time }}</td>

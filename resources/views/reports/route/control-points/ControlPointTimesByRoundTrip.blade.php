@@ -48,6 +48,10 @@
                                         <i class="fa fa-car"></i>
                                         @lang('Vehicle')
                                     </th>
+                                    <th class="text-center bg-inverse-dark text-muted">
+                                        <i class="fa fa-user"></i>
+                                        @lang('Driver')
+                                    </th>
                                     @foreach($reportsByControlPoint->keys() as $controlPointId)
                                         @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
                                         <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}">
@@ -62,16 +66,20 @@
                                         @php
                                             $vehicle = \App\Vehicle::find($vehicleId);
                                             $dispatchRegister = $reportByVehicles->first()->dispatchRegister;
+                                            $driver = $dispatchRegister->driver;
                                             $departureTime = $dispatchRegister->departure_time;
                                             $arrival_time = $dispatchRegister->arrival_time;
                                         @endphp
                                         <tr class="">
-                                            <th class="text-capitalize {{ $dispatchRegister->inProgress() ? 'warning':'' }}">
+                                            <th class="text-capitalize text-muted {{ $dispatchRegister->inProgress() ? 'warning':'bg-inverse' }}">
                                                 {{ $dispatchRegister->turn }}<br>
                                                 {{ $dispatchRegister->status }}
                                             </th>
-                                            <th class="text-uppercase">
-                                                {{ $vehicle->number }} <br> {{ $vehicle->plate }}
+                                            <th class="bg-inverse text-uppercase text-muted">
+                                                {{ $vehicle->number }} <br> {{ $vehicle->plate }} <br>
+                                            </th>
+                                            <th class="bg-inverse text-uppercase text-muted">
+                                                {{ $driver?$driver->fullName():__('Not assigned') }}
                                             </th>
                                             @foreach($reportsByControlPoint->keys() as $controlPointId)
                                                 @php( $controlPoint = \App\ControlPoint::find($controlPointId) )

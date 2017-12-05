@@ -151,13 +151,8 @@ class PCWExporter
             case 'routeReportByVehicle':
                 // Set general formulas
                 for ($i = $starData; $i < $lastRow; $i++) {
-                    // Set formula to calculate recorder from end - start recorders
-                    //$sheet->setCellValue("K$i", "=I$i-H$i");
-                    // Set formula to calculate pass by route
-                    //$sheet->setCellValue("J$i", "=I$i-" . (($i > $starData) ? ("K" . ($i - 1)) : "0"));
-
-                    $sheet->setCellValue("J$i", "=I$i-H$i");
-                    $sheet->setCellValue("K$i", "=J$i+" . (($i > $starData) ? ("K" . ($i - 1)) : "0"));
+                    $sheet->setCellValue("K$i", "=J$i-I$i");
+                    $sheet->setCellValue("L$i", "=K$i+" . (($i > $starData) ? ("L" . ($i - 1)) : "0"));
                 }
                 break;
 

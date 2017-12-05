@@ -22,7 +22,7 @@
                     </ul>
                 </div>
                 <div class="col-md-1">
-                    <a href="{{ route('route-search-report') }}?date-report={{ $dateReport }}&route-report={{ $route->id }}&type-report=vehicle&export=true" class="btn btn-lime bg-lime-dark pull-right" style="position: absolute;left: -20px;">
+                    <a href="{{ route('route-search-report') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id }}&type-report=vehicle&export=true" class="btn btn-lime bg-lime-dark pull-right" style="position: absolute;left: -20px;">
                         <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                     </a>
                 </div>
@@ -44,6 +44,10 @@
                             <th data-sorting="disabled">
                                 <i class="fa fa-retweet text-muted"></i><br>
                                 @lang('Turn')
+                            </th>
+                            <th>
+                                <i class="fa fa-user text-muted"></i><br>
+                                @lang('Driver')
                             </th>
                             <th class="col-md-2">
                                 <i class="fa fa-clock-o text-muted"></i><br>
@@ -86,16 +90,18 @@
                         @php($totalPerRoute = 0)
                         @foreach( $dispatchRegisters as $dispatchRegister )
                             @php
-                                $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
-                                $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
-                                $startRecorderPrev= $recorderCounterPerRoundTrip->end_recorder_prev;
-                                $passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
-                                $totalPerRoute+=$passengersPerRoundTrip;
-                                $invalid = ($totalPerRoute > 1000)?true:false;
+                                    $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
+                                    $driver = $dispatchRegister->driver;
+                                    $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
+                                    $startRecorderPrev= $recorderCounterPerRoundTrip->end_recorder_prev;
+                                    $passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+                                    $totalPerRoute+=$passengersPerRoundTrip;
+                                    $invalid = ($totalPerRoute > 1000)?true:false;
                             @endphp
                             <tr>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td>{{ $dispatchRegister->turn }}</td>
+                                <td class="text-uppercase">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
                                 <td>{{ $dispatchRegister->departure_time }}</td>
                                 <td>{{ $dispatchRegister->arrival_time_scheduled }}</td>
                                 <td>{{ $dispatchRegister->arrival_time }}</td>

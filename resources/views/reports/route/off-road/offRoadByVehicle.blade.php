@@ -88,6 +88,7 @@
                                                         <tr class="inverse">
                                                             <th>@lang('Turn')</th>
                                                             <th>@lang('Round Trip')</th>
+                                                            <th>@lang('Driver')</th>
                                                             <th>@lang('Off road time')</th>
                                                             <th>@lang('Address')</th>
                                                         </tr>
@@ -96,9 +97,11 @@
                                                         @php($dispatchRegister = null)
                                                         @foreach($offRoadReport as $offRoad)
                                                             @php($dispatchRegister = $offRoad->dispatchRegister)
+                                                            @php($driver = $dispatchRegister->driver)
                                                             <tr>
                                                                 <td>{{ $dispatchRegister->turn }}</td>
                                                                 <td>{{ $dispatchRegister->round_trip }}</td>
+                                                                <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
                                                                 <td>{{ $offRoad->date }}</td>
                                                                 <td>
                                                                     <a href="{{ route('route-off-road-report',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-sm">

@@ -59,6 +59,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister active()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDriverCode($value)
  * @property-read mixed $passengers
+ * @property-read \App\Driver|null $driver
  */
 class DispatchRegister extends Model
 {
@@ -132,6 +133,11 @@ class DispatchRegister extends Model
     public function recorderCounterPerRoundTrip()
     {
         return $this->hasOne(RecorderCounterPerRoundTrip::class);
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_code','code');
     }
 
     public function scopeActive($query){

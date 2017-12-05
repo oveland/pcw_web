@@ -52,6 +52,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentParkingReport whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentParkingReport whereVehicleId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentParkingReport findByVehicleId($vehicle_id)
  */
 class CurrentParkingReport extends Model
 {

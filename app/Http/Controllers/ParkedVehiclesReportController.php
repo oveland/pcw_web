@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\ParkingReport;
+use App\Services\PCWExporter;
 use Auth;
 use Illuminate\Http\Request;
 use Route;
@@ -41,7 +42,7 @@ class ParkedVehiclesReportController extends Controller
 
         $parkedReportsByVehicles = $parkedReports->groupBy('vehicle_id');
 
-        return view('reports.vehicles.parked.parkedReport', compact(['parkedReportsByVehicles', 'dateReport', 'stringParams']));
+        return view('reports.vehicles.parked.parkedReport', compact(['parkedReportsByVehicles', 'stringParams']));
     }
 
     /**
@@ -53,17 +54,19 @@ class ParkedVehiclesReportController extends Controller
     public function export($parkedReports, $dateReport)
     {
         $dataExcel = array();
-        foreach ($parkedReports->reports as $parkedReport) {
+        foreach ($parkedReports as $parkedReport) {
             $vehicle = $parkedReport->vehicle;
             $dispatchRegister = $parkedReport->dispatchRegister;
-            $route = $dispatchRegister->route;
+            $route = $dispatchRegister ? $dispatchRegister->route : null;
+            $driver = $dispatchRegister ? $dispatchRegister->driver : null;
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                       # A CELL
-                __('Date') => $parkedReport->date,                               # B CELL
+                __('Parked date') => $parkedReport->date,                                # B CELL
                 __('Vehicle') => intval($vehicle->number),                               # C CELL
-                __('Plate') => $vehicle->plate,                               # C CELL
-                __('Route') => $route->name ?? __('Without assigned route'),        # C CELL
-                __('Status') => $parkedReport->timed,                                    # C CELL
+                __('Plate') => $vehicle->plate,                                          # D CELL
+                __('Route') => $route->name ?? __('Without assigned route'),        # E CELL
+                __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),     # F CELL
+                __('Status') => $parkedReport->timed,                                    # G CELL
             ];
         }
 

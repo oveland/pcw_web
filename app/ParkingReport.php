@@ -52,6 +52,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ParkingReport whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ParkingReport whereVehicleId($value)
  * @mixin \Eloquent
+ * @property-read \App\ControlPoint|null $controlPoint
+ * @property-read \App\DispatchRegister|null $dispatchRegister
+ * @property-read \App\Vehicle $vehicle
  */
 class ParkingReport extends Model
 {
