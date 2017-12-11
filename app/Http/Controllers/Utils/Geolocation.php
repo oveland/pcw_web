@@ -107,6 +107,20 @@ class Geolocation
     }
 
     /**
+     * @param $latitude
+     * @param $longitude
+     * @return mixed
+     */
+    public static function getImageLocationFromCoordinates($latitude, $longitude)
+    {
+        $routePath = "path=color:0x0000ff";
+        $url = "https://maps.googleapis.com/maps/api/staticmap?size=500x200&maptype=roadmap\&center=$latitude,$longitude&zoom=16&$routePath&markers=size:mid%7Ccolor:0xCC2701|$latitude,$longitude&key=" . config('road.google_api_token');
+
+        $image = Image::make($url);
+        return $image->response('jpg');
+    }
+
+    /**
      * @param $location
      * @param $route_coordinates
      * @return array|\Illuminate\Support\Collection

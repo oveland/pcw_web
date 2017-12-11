@@ -211,5 +211,11 @@
   "Km from dispatch":"Km desde despacho",
   "Driver":"Conductor",
   "Not assigned":"No asignado",
+  "Speeding":"Excesos de velocidad",
+  "Speeding Report":"Reporte excesos de velocidad",
+  "Speed":"Velocidad",
+  "speeding-vehicle":"excesos-de-velocidad",
+  "The date haven´t a speeding report":"No existen excesos de velocidad para la fecha seleccionada",
+  "with":"con",
   "":""
 }

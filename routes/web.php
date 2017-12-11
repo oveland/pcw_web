@@ -67,6 +67,15 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/image/{parkingReport}', 'ParkedVehiclesReportController@getImageFromCoordinate')->name('report-vehicle-parked-geolocation-image');
                 Route::any('/ajax', 'ParkedVehiclesReportController@ajax')->name('report-vehicle-parked-ajax-action');
             });
+
+            /* Speeding report */
+            Route::prefix(__('speeding-vehicle'))->group(function () {
+                Route::get('/', 'SpeedingController@index')->name('report-vehicle-speeding');
+                Route::get('/show', 'SpeedingController@searchReport')->name('report-vehicle-speeding-search-report');
+                Route::get('/address/{speeding}', 'SpeedingController@getAddressFromCoordinates')->name('report-vehicle-speeding-geolocation-address');
+                Route::get('/image/{speeding}', 'SpeedingController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
+                Route::any('/ajax', 'SpeedingController@ajax')->name('report-vehicle-speeding-ajax-action');
+            });
         });
 
         /* Routes for passenger report */

@@ -78,9 +78,15 @@
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-report-vehicles-parked">
-                                <a href="{{ route('report-vehicle-parked')  }}">
-                                    <i class="fa fa-product-hunt" aria-hidden="true"></i>
+                                <a href="{{ route('report-vehicle-parked')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-product-hunt faa-pulse" aria-hidden="true"></i>
                                     @lang('Parked vehicles')
+                                </a>
+                            </li>
+                            <li class="has-sub menu-report-vehicles-speeding">
+                                <a href="{{ route('report-vehicle-speeding')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-tachometer text-danger faa-tada" aria-hidden="true"></i>
+                                    @lang('Speeding')
                                 </a>
                             </li>
                         </ul>
