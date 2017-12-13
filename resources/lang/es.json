@@ -101,6 +101,7 @@
   "Off road": "Salidas de ruta",
   "Off road report by Vehicle": "Salidas de ruta por vehículos",
   "Status":"Estado",
+  "status":"estado",
   "See off road report": "Ver reporte de salidas de ruta",
   "Report vehicle off road": "Reporte de salidas de ruta del vehículo",
   "Off_Road_Report_": "Reporte_Salida_Ruta_",
@@ -217,5 +218,9 @@
   "speeding-vehicle":"excesos-de-velocidad",
   "The date haven´t a speeding report":"No existen excesos de velocidad para la fecha seleccionada",
   "with":"con",
+  "Peak and Plate":"Pico y Placa",
+  "peak-and-plate":"pico-y-placa",
+  "Administration":"Administración",
+  "Projects":"Proyectos",
   "":""
 }

@@ -37,6 +37,29 @@
                     <span>@lang('Home')</span>
                 </a>
             </li>
+            <li class="has-sub hide">
+                <a href="javascritp:;" class="faa-parent animated-hover">
+                    <i class="fa fa-cogs faa-pulse"></i>
+                    <span>@lang('Administration')</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="has-sub menu-report-vehicles">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-bus faa-pulse"></i>
+                            @lang('Vehicles')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-report-vehicles-parked">
+                                <a href="{{ route('admin-vehicles-peak-and-plate')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-ban faa-pulse" aria-hidden="true"></i>
+                                    @lang('Peak and Plate')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
             <li class="has-sub active">
                 <a href="javascritp:;" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-pulse"></i>
@@ -89,6 +112,15 @@
                                     @lang('Speeding')
                                 </a>
                             </li>
+
+                            @if( Auth::user()->isAdmin() )
+                            <li class="has-sub menu-report-vehicles-status">
+                                <a href="{{ route('report-vehicle-status')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-podcast blue faa-burst" aria-hidden="true"></i>
+                                    @lang('Status')
+                                </a>
+                            </li>
+                            @endif
                         </ul>
                     </li>
                     <li class="has-sub menu-passengers">
@@ -184,7 +216,6 @@
                     @endif
                 </ul>
             </li>
-
             <br>
             <li class="divider has-minify-btn">
                 <!-- begin sidebar minify button -->

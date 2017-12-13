@@ -22,6 +22,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Speeding whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Speeding whereVehicleId($value)
  * @mixin \Eloquent
+ * @property int|null $speed
+ * @property-read \App\Vehicle|null $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Speeding whereSpeed($value)
  */
 class Speeding extends Model
 {

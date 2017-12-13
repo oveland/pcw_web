@@ -76,6 +76,12 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/image/{speeding}', 'SpeedingController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
                 Route::any('/ajax', 'SpeedingController@ajax')->name('report-vehicle-speeding-ajax-action');
             });
+
+            /* Speeding report */
+            Route::prefix(__('status'))->group(function () {
+                Route::get('/', 'VehicleStatusReportController@index')->name('report-vehicle-status');
+                Route::get('/show', 'VehicleStatusReportController@searchReport')->name('report-vehicle-status-search-report');
+            });
         });
 
         /* Routes for passenger report */
@@ -120,6 +126,15 @@ Route::group(['middleware' => ['auth']], function () {
                 /* Routes for logs */
                 Route::get('/', 'AccessLogController@index')->name('logs-access');
                 Route::get('/{date}', 'AccessLogController@report')->name('logs-access-export');
+            });
+        });
+    });
+
+    /* Routes for admin pages */
+    Route::prefix(__('admin'))->group(function () {
+        Route::prefix(__('vehicles'))->group(function () {
+            Route::prefix(__('peak-and-plate'))->group(function () {
+                Route::get('/', 'PeakAndPlateController@index')->name('admin-vehicles-peak-and-plate');
             });
         });
     });
