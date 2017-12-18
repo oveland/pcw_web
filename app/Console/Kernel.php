@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\LogParkedVehicles::class
+        Commands\LogParkedVehicles::class,
+        Commands\DatabaseSegmentReports::class
     ];
 
     /**
@@ -25,6 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('log:parked')->everyMinute();
+        $schedule->command('db:segment-reports')->dailyAt('01:00');
     }
 
     /**

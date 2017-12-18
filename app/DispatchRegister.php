@@ -84,7 +84,19 @@ class DispatchRegister extends Model
      */
     public function locationReports()
     {
-        return $this->hasMany(LocationReport::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        $numberSegments = config('maintenance.number_segments');
+        $daysPerSegment = config('maintenance.day_per_segment');
+
+        $intervals = collect(range(1, $numberSegments));
+        $diff = Carbon::now()->diff(Carbon::parse($this->date))->days;
+
+        $segmentTarget = $intervals->filter(function ($value, $key) use ($diff,$daysPerSegment) {
+            return $value * $daysPerSegment > $diff;
+        })->first();
+
+        $classLocationReport = __NAMESPACE__."\LocationReport".($segmentTarget?"$segmentTarget":"");
+
+        return $this->hasMany($classLocationReport, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**
