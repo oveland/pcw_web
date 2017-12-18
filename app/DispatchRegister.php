@@ -88,7 +88,7 @@ class DispatchRegister extends Model
         $daysPerSegment = config('maintenance.day_per_segment');
 
         $intervals = collect(range(1, $numberSegments));
-        $diff = Carbon::now()->diff(Carbon::parse($this->date))->days;
+        $diff = Carbon::now()->diff(Carbon::parse($this->getParsedDate()))->days;
 
         $segmentTarget = $intervals->filter(function ($value, $key) use ($diff,$daysPerSegment) {
             return $value * $daysPerSegment > $diff;
