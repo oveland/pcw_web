@@ -14,6 +14,7 @@ class CreateDispatchRegistersView extends Migration
     public function up()
     {
         DB::statement("DROP VIEW IF EXISTS dispatch_registers");
+        DB::statement("DROP VIEW IF EXISTS passengers_dispatch_registers");
         DB::statement("
             CREATE OR REPLACE VIEW dispatch_registers AS
               SELECT
@@ -56,6 +57,33 @@ class CreateDispatchRegistersView extends Migration
                 day_types dt
               WHERE ((cv.placa = (rd.n_placa) :: TEXT) AND ((dt.name) :: TEXT = (rd.tipo_dia) :: TEXT))
         ");
+
+        DB::statement("
+            CREATE OR REPLACE VIEW passengers_dispatch_registers AS
+              SELECT
+                rd.id_registro                 AS id,
+                rd.fecha                       AS \"date\",
+                rd.hora                        AS \"time\",
+                rd.id_ruta                     AS route_id,
+                dt.id                          AS type_of_day,
+                rd.n_turno                     AS turn,
+                rd.n_vuelta                    AS round_trip,
+                cv.id_crear_vehiculo           AS vehicle_id,
+                (rd.id_despacho) :: BIGINT     AS dispatch_id,
+                rd.h_reg_despachado            AS departure_time,
+                rd.h_llegada_prog              AS arrival_time_scheduled,
+                rd.dif_llegada                 AS arrival_time_difference,
+                rd.h_reg_llegada               AS arrival_time,
+                rd.cancelado                   AS canceled,
+                rd.h_reg_cancelado             AS time_canceled,
+                rd.observaciones               AS status,
+                rd.registradora_salida         AS start_recorder,
+                rd.registradora_llegada        AS end_recorder
+              FROM
+                registrodespacho rd
+              JOIN crear_vehiculo cv ON ( cv.placa = (rd.n_placa) :: TEXT)
+              JOIN day_types dt ON ((dt.name) :: TEXT = (rd.tipo_dia) :: TEXT)
+        ");
     }
 
     /**
@@ -66,5 +94,6 @@ class CreateDispatchRegistersView extends Migration
     public function down()
     {
         DB::statement("DROP VIEW IF EXISTS dispatch_registers");
+        DB::statement("DROP VIEW IF EXISTS passengers_dispatch_registers");
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DispatchRegister;
 use App\Models\Passengers\RecorderCounterPerDay;
+use App\PassengersDispatchRegister;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Traits\CounterByRecorder;
@@ -56,7 +57,7 @@ class PassengersReportDateRangeController extends Controller
     public function buildPassengerReport($company, $initialDate, $finalDate)
     {
         $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->whereBetween('date', [$initialDate, $finalDate])->active()->get()
+        $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $routes->pluck('id'))->whereBetween('date', [$initialDate, $finalDate])->active()->get()
             ->sortBy('departure_time');
 
         $reports = self::report($dispatchRegisters);

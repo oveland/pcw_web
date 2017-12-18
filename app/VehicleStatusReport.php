@@ -34,6 +34,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatusReport whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatusReport whereVehicleStatusId($value)
  * @mixin \Eloquent
+ * @property-read \App\VehicleStatus|null $status
+ * @property-read \App\Vehicle|null $vehicle
  */
 class VehicleStatusReport extends Model
 {
