@@ -90,9 +90,13 @@ class DispatchRegister extends Model
         $intervals = collect(range(1, $numberSegments));
         $diff = Carbon::now()->diff(Carbon::parse($this->getParsedDate()))->days;
 
-        $segmentTarget = $intervals->filter(function ($value, $key) use ($diff,$daysPerSegment) {
-            return $value * $daysPerSegment > $diff;
-        })->first();
+        $segmentTarget =
+            ( $diff == 0 )?
+                $diff
+                :
+                $intervals->filter(function ($value, $key) use ($diff,$daysPerSegment) {
+                    return $value * $daysPerSegment > $diff;
+                })->first();
 
         $classLocationReport = __NAMESPACE__."\LocationReport".($segmentTarget?"$segmentTarget":"");
 

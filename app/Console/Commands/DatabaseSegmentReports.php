@@ -59,15 +59,32 @@ class DatabaseSegmentReports extends Command
                   l.latitude,
                   l.longitude,
                   r.date,
-                   l.date AS location_date,
+                  l.date AS location_date,
                   r.timed,
                   r.distancem,
                   r.status_in_minutes
                 FROM locations l
-                  JOIN reports r ON (r.location_id = l.id AND r.date > current_date - $interval AND r.date <= current_date - $lastInterval)
-                WHERE l.date > current_date - $interval AND l.date <= current_date - $lastInterval
+                  JOIN reports r ON (r.location_id = l.id AND r.date > current_date - $interval AND r.date <= ((current_date - $lastInterval)||' 23:59:59')::TIMESTAMP)
+                WHERE l.date > current_date - $interval AND l.date <= ((current_date - $lastInterval)||' 23:59:59')::TIMESTAMP
             ");
         }
+
+        DB::statement("
+            CREATE OR REPLACE VIEW location_reports_0 AS 
+            SELECT l.id AS location_id,
+              l.dispatch_register_id,
+              l.off_road,
+              l.latitude,
+              l.longitude,
+              r.date,
+              l.date AS location_date,
+              r.timed,
+              r.distancem,
+              r.status_in_minutes
+            FROM locations l
+              JOIN reports r ON (r.location_id = l.id AND r.date = current_date)
+            WHERE l.date = current_date
+        ");
 
         $this->info("End segmentation process!");
     }
