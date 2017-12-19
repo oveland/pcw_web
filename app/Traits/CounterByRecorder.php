@@ -10,6 +10,7 @@ namespace App\Traits;
 
 
 use App\DispatchRegister;
+use App\PassengersDispatchRegister;
 use App\Vehicle;
 use Carbon\Carbon;
 
@@ -64,7 +65,7 @@ trait CounterByRecorder
                 }
             } else {
                 if ($start_recorder == 0) {
-                    $start_recorder = DispatchRegister::
+                    $start_recorder = PassengersDispatchRegister::
                     where('vehicle_id', $vehicle_id)
                         ->where('date', '<', $dispatchRegister->date)
                         ->orderByDesc('end_recorder')
