@@ -58,7 +58,7 @@ class PassengersReportDateRangeController extends Controller
     {
         $routes = Route::where('company_id', $company->id)->get();
         $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $routes->pluck('id'))->whereBetween('date', [$initialDate, $finalDate])->active()->get()
-            ->sortBy('turn');
+            ->sortBy('id');
 
         $reports = self::report($dispatchRegisters);
 
@@ -105,10 +105,11 @@ class PassengersReportDateRangeController extends Controller
 
     static function report($dispatchRegisters)
     {
-        $dispatchRegistersByDates = $dispatchRegisters->sortBy('turn')->groupBy('date');
+        $dispatchRegistersByDates = $dispatchRegisters->sortBy('id')->groupBy('date');
 
         $reports = array();
         foreach ($dispatchRegistersByDates as $date => $dispatchRegistersByDate) {
+            $date = Carbon::createFromFormat(config('app.date_format'),$date)->format('Y-m-d');
             $reportByDate = CounterByRecorder::report($dispatchRegistersByDate);
 
             $reports[$date] = (object)[

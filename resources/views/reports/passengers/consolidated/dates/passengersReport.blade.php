@@ -56,7 +56,6 @@
                     @endphp
                     @foreach($reports as $date => $report)
                         @php
-                            $date = Carbon\Carbon::createFromFormat(config('app.date_format'),$date)->format('Y-m-d');
                             $sensor = 0;
                             $recorder = $report->total;
                             $issuesByVehicles = $report->issues;
