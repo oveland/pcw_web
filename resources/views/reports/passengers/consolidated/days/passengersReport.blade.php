@@ -71,6 +71,7 @@
                     @endphp
                     @foreach($reports as $report)
                         @php
+                            $vehicle = \App\Vehicle::find($report->vehicle_id);
                             $sensor = $report->passengers->sensor;
                             $recorder = $report->passengers->recorder;
                             $recorderIssue = $report->passengers->issue;
@@ -78,8 +79,8 @@
                             ($recorder > 0 && !$recorderIssue)? $totalRecorder->push($recorder):null;
                         @endphp
                         <tr class="text-center">
-                            <td >{{ $loop->index + 1 }}</td>
-                            <td>{{ $report->number }} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{  $report->plate }}</td>
+                            <td >{{ $loop->iteration }}</td>
+                            <td>{{ $vehicle->number }} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{  $vehicle->plate }}</td>
                             <td class="sensor">{{ $sensor }}</td>
                             <td class="recorder">
                                 <span class="text-center {{ $recorderIssue ? 'text-danger tooltips click':'' }}" data-title="@lang('Error in') {{ $recorderIssue->field ?? '' }}"

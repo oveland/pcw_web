@@ -16,6 +16,7 @@
                 <ul class="widget-todolist">
                     @foreach($issuesByVehicle as $issue)
                         @php($dispatchRegister = $issue->dispatchRegister)
+                        @php($lastDispatchRegister = $issue->lastDispatchRegister)
                         <li class="">
                             <div class="checkbox">
                                 <label>
@@ -34,12 +35,38 @@
                                 </p>
                                 <p class="tooltips text-{{  $issue->field == __('Start Recorder')?'issue':'' }}" data-title="@lang('Start Recorder')">
                                     <i class="fa fa-arrow-circle-right"></i>
-                                    {{ $issue->start_recorder }}
+                                    <span class="text-{{ $issue->bad_start_recorder ? 'warning':'' }}">
+                                        {{ $issue->start_recorder }}
+                                    </span>
                                 </p>
                                 <p class="tooltips text-{{  $issue->field == __('End Recorder')?'issue':'' }}" data-title="@lang('End Recorder')">
                                     <i class="fa fa-arrow-circle-left"></i>
                                     {{ $dispatchRegister->end_recorder }}
                                 </p>
+                                @if( $issue->bad_start_recorder )
+                                    <hr class="hr">
+                                    <h4>@lang('Last dispatch register'):</h4>
+
+                                    <h4 class="tooltips" data-title="{{ $lastDispatchRegister->status }}">
+                                        {{ $lastDispatchRegister->route->name }},
+                                        @lang('Turn') {{ $lastDispatchRegister->turn }},
+                                        @lang('Round Trip') {{ $lastDispatchRegister->round_trip }}
+                                    </h4>
+                                    <p class="tooltips" data-title="@lang('Departure time')">
+                                        <i class="fa fa-clock-o"></i>
+                                        {{ $lastDispatchRegister->departure_time }}
+                                    </p>
+                                    <p class="tooltips hide text-{{  $issue->field == __('Start Recorder')?'issue':'' }}" data-title="@lang('Start Recorder') @lang('prev')">
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                        {{ $lastDispatchRegister->start_recorder }}
+                                    </p>
+                                    <p class="tooltips" data-title="@lang('End Recorder') @lang('prev')">
+                                        <i class="fa fa-arrow-circle-left"></i>
+                                        <span class="text-warning">
+                                            {{ $lastDispatchRegister->end_recorder }}
+                                        </span>
+                                    </p>
+                                @endif
                             </div>
                             <div class="action">
                                 <a href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>

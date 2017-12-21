@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
+use App\PassengersDispatchRegister;
 use App\Traits\CounterByRecorder;
 use Excel;
 use App\Route;
@@ -59,9 +60,9 @@ class PassengerReportDetailedController extends Controller
                 $report = $passengerReportByRoute->report;
 
                 $dataExcel = array();
-
                 foreach ($report as $vehicleId => $passengerReport) {
                     $vehicle = Vehicle::find($vehicleId);
+                    if( !$vehicle )dd($vehicleId);
                     $dataExcel[] = [
                         __('N°') => count($dataExcel) + 1,                                                                                  # A CELL
                         __('Vehicle') => intval($vehicle->number),                                                                          # C CELL
@@ -97,8 +98,8 @@ class PassengerReportDetailedController extends Controller
     public function buildPassengerReport($company, $dateReport)
     {
         $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
-            ->sortBy('departure_time');
+        $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
+            ->sortBy('id');
 
         $reports = self::report($dispatchRegisters);
 
@@ -113,27 +114,18 @@ class PassengerReportDetailedController extends Controller
 
     static function report($dispatchRegisters)
     {
-        $dispatchRegistersByRoutes = $dispatchRegisters
-            ->sortBy(function ($dispatchRegister, $key) {
+        $dispatchRegistersByRoutes = $dispatchRegisters->sortBy(function ($dispatchRegister, $key) {
                 return $dispatchRegister->route->name;
-            })
-            ->groupBy('route_id');
+            })->groupBy('route_id');
 
         $reports = array();
         foreach ($dispatchRegistersByRoutes as $route_id => $dispatchRegistersByRoute) {
-            $dispatchRegistersByVehicles = $dispatchRegistersByRoute->sortBy('departure_time')->groupBy('vehicle_id');
-
-            $report = array();
-            $issues = array();
-            foreach ($dispatchRegistersByVehicles as $vehicle_id => $dispatchRegistersByVehicle) {
-                $totalByVehicle = self::totalByVehicle($vehicle_id, $dispatchRegisters, $dispatchRegistersByVehicle);
-                $report[$vehicle_id] = $totalByVehicle->report;
-                $totalByVehicle->issues->isNotEmpty() ? $issues[$vehicle_id] = $totalByVehicle->issues : null;
-            }
+            $reportByRoute = CounterByRecorder::report($dispatchRegistersByRoute,true);
 
             $reports[$route_id] = (object)[
-                'report' => $report,
-                'issues' => $issues,
+                'route_id' => $route_id,
+                'report' => $reportByRoute->report,
+                'issues' => $reportByRoute->issues,
             ];
         }
 

@@ -6,9 +6,11 @@ use App\Company;
 use App\DispatchRegister;
 use App\Models\Passengers\PassengerCounterPerDay;
 use App\Models\Passengers\PassengerCounterPerDaySixMonth;
+use App\PassengersDispatchRegister;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Traits\CounterByRecorder;
+use App\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -57,12 +59,13 @@ class PassengerReportController extends Controller
 
         $dataExcel = array();
         foreach ($passengerReports->reports as $report) {
+            $vehicle = Vehicle::find($report->vehicle_id);
             $sensor = $report->passengers->sensor;
             $recorder = $report->passengers->recorder;
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                      # A CELL
-                __('Vehicle') => intval($report->number),                               # B CELL
-                __('Plate') => $report->plate,                                          # C CELL
+                __('Vehicle') => intval($vehicle->number),                              # B CELL
+                __('Plate') => $vehicle->plate,                                         # C CELL
                 __('Recorder') => intval($recorder),                                    # D CELL
                 __('Sensor') => intval($sensor),                                        # E CELL
                 __('Difference') => abs($sensor - $recorder),                   # F CELL
@@ -99,11 +102,11 @@ class PassengerReportController extends Controller
         // Build report data
         $reports = array();
         foreach ($recorderCounterPerDays->report as $recorderCounterPerDay) {
-            $sensor = $passengersCounterPerDay->where('vehicle_id', $recorderCounterPerDay->vehicle->id)->first();
+            $vehicle = $recorderCounterPerDay->vehicle;
+            $sensor = $passengersCounterPerDay->where('vehicle_id', $vehicle->id)->first();
 
             $reports[] = (object)[
-                'plate' => $recorderCounterPerDay->vehicle->plate,
-                'number' => $recorderCounterPerDay->vehicle->number,
+                'vehicle_id' => $vehicle->id,
                 'date' => $dateReport,
                 'passengers' => (object)[
                     'sensor' => $sensor ? $sensor->total : 0,
@@ -130,7 +133,7 @@ class PassengerReportController extends Controller
     public function buildPassengersByRecorder($company, $dateReport)
     {
         $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
+        $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
             ->sortBy('id');
 
         return self::report($dispatchRegisters);

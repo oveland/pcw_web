@@ -222,5 +222,8 @@
   "peak-and-plate":"pico-y-placa",
   "Administration":"Administración",
   "Projects":"Proyectos",
+  "prev":"anterior",
+  "Last dispatch register":"Registro de despacho anterior",
+  "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior",
   "":""
 }

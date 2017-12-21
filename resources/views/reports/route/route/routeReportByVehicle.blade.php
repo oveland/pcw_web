@@ -93,10 +93,12 @@
                                     $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
                                     $driver = $dispatchRegister->driver;
                                     $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
-                                    $startRecorderPrev= $recorderCounterPerRoundTrip->end_recorder_prev;
-                                    $passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+                                    $startRecorderPrev = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $recorderCounterPerRoundTrip->end_recorder_prev;
+
+                                    //$passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+                                    $passengersPerRoundTrip = $currentRecorder - $startRecorderPrev;
                                     $totalPerRoute+=$passengersPerRoundTrip;
-                                    $invalid = ($totalPerRoute > 1000)?true:false;
+                                    $invalid = ($totalPerRoute > 1000 || $totalPerRoute < 0)?true:false;
                             @endphp
                             <tr>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>

@@ -47,7 +47,7 @@ class RouteReportController extends Controller
             })
             ->with('recorderCounterPerRoundTrip')
             ->orderBy('round_trip')
-            ->orderBy('turn')
+            ->orderBy('id')
             ->get();
 
         switch ($typeReport) {
@@ -59,7 +59,12 @@ class RouteReportController extends Controller
                 return view('reports.route.route.routeReportByRoundTrip', compact(['roundTripDispatchRegisters', 'company', 'route', 'dateReport']));
                 break;
             case 'vehicle':
-                $vehiclesDispatchRegisters = $dispatchRegisters->groupBy('vehicle_id');
+
+                $vehiclesDispatchRegisters = $dispatchRegisters
+                    ->groupBy('vehicle_id')
+                    ->sortBy(function ($reports, $vehicleID) {
+                        return $reports->first()->vehicle->number;
+                    });
 
                 if ($request->get('export')) $this->exportByVehicle($vehiclesDispatchRegisters, $route, $dateReport);
 
@@ -129,9 +134,18 @@ class RouteReportController extends Controller
                 $totalDay = 0;
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $driver = $dispatchRegister->driver;
-                    $startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder_prev;
-                    $currentRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder;
-                    $totalRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip->passengers_round_trip;
+                    $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
+                    //$startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder_prev;
+                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $recorderCounterPerRoundTrip->end_recorder_prev;
+                    $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
+
+                    //$passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+                    //$totalRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+
+                    $passengersPerRoundTrip = $currentRecorder - $startRecorder;
+                    $totalRoundTrip = $passengersPerRoundTrip;
+
+
                     $totalDay += $totalRoundTrip;
                     $dataExcel[] = [
                         __('Round Trip') => $dispatchRegister->round_trip,                                  # A CELL
