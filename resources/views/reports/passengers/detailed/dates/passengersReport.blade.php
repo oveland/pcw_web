@@ -45,7 +45,7 @@
                         <thead>
                         <tr class="inverse">
                             <th class="text-center">N°</th>
-                            <th class="text-center"><i class="fa fa-car" aria-hidden="true"></i> @lang('Date')</th>
+                            <th class="text-center"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('Date')</th>
                             <th class="text-center recorder"><i class="fa fa-compass" aria-hidden="true"></i> @lang('Passengers')</th>
                         </tr>
                         </thead>
@@ -64,9 +64,9 @@
                                         <div class="alert alert-warning alert-bordered fade in m-b-0" style="border-radius: 0px">
                                             <i class="fa fa-exclamation-circle"></i>
                                             <strong>@lang('Warning'):</strong>
-                                            @lang('There are issues in data recorder') ({{ $date }}). <a data-toggle="collapse" data-target="#issue-{{ $date }}" class="text-bold text-warning click">@lang('See details')</a>
+                                            @lang('There are issues in data recorder') ({{ $date }}). <a data-toggle="collapse" data-target="#issue-{{ $route_id }}-{{ $date }}" class="text-bold text-warning click">@lang('See details')</a>
                                         </div>
-                                        <div id="issue-{{ $date }}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <div id="issue-{{ $route_id }}-{{ $date }}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                                             <div class="panel-body p-0">
                                                 @include('partials.alerts.reports.passengers.issuesByVehicles',compact('issuesByVehicles'))
                                             </div>
@@ -80,7 +80,7 @@
                                 <td class="text-center">{{ $date }}</td>
                                 <td class="text-center">
                                     <span class="{{ $hasIssues ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
-                                          onclick="{{ $hasIssues ? "$('#issue-$date').collapse('show');":""  }}">
+                                          onclick="{{ $hasIssues ? "$('#issue-$route_id-$date').collapse('show');":""  }}">
                                         {{ $dateReport->total }}
                                     </span>
                                 </td>
