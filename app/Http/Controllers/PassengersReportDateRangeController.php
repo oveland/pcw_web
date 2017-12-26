@@ -96,7 +96,7 @@ class PassengersReportDateRangeController extends Controller
 
         PCWExporter::excel([
             'fileName' => __('Consolidated per date range'),
-            'title' => __('Passengers report' . "\n $initialDate - $finalDate"),
+            'title' => __('Passengers report')."\n $initialDate - $finalDate",
             'subTitle' => __('Consolidated per date range'),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
@@ -110,12 +110,12 @@ class PassengersReportDateRangeController extends Controller
         $reports = array();
         foreach ($dispatchRegistersByDates as $date => $dispatchRegistersByDate) {
             $date = Carbon::createFromFormat(config('app.date_format'),$date)->format('Y-m-d');
-            $reportByDate = CounterByRecorder::report($dispatchRegistersByDate);
+            $report = CounterByRecorder::report($dispatchRegistersByDate);
 
             $reports[$date] = (object)[
                 'date' => $date,
-                'total' => $reportByDate->report->sum('passengers'),
-                'issues' => $reportByDate->issues,
+                'total' => $report->report->sum('passengers'),
+                'issues' => $report->issues,
             ];
         }
 

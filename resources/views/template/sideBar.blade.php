@@ -166,6 +166,12 @@
                                             @lang('Daily')
                                         </a>
                                     </li>
+                                    <li class="has-sub menu-passengers-detailed-range">
+                                        <a href="{{ route('passengers-detailed-report-range')  }}">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            @lang('Date range')
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             @endif
