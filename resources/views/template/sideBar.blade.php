@@ -12,14 +12,9 @@
                     <div class="name dropdown">
                         <a href="javascript:;" data-toggle="dropdown" class="text-capitalize">{{ Auth::user()->name }}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="javascript:;">Editar Perfil</a></li>
-                            <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>
-                            <li><a href="javascript:;">Calendario</a></li>
-                            <li><a href="javascript:;">Configuración</a></li>
-                            <li class="divider"></li>
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    @lang('Logout')
+                                    <i class="fa fa-logout"></i> @lang('Logout')
                                 </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hide">
                                     {{ csrf_field() }}
@@ -30,27 +25,29 @@
                     <div class="position">{!! Auth::user()->company?Auth::user()->company->name:__('Unasigned') !!}</div>
                 </div>
             </li>
-            <li class="nav-header">MENÚ</li>
             <li class="">
                 <a href="http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" target="_blank" class="faa-parent animated-hover">
                     <i class="fa fa-home faa-pulse"></i>
                     <span>@lang('Home')</span>
                 </a>
+
             </li>
-            <li class="has-sub hide">
+
+            @if( Auth::user()->isAdmin())
+            <li class="has-sub {{ $baseMenu == __('url-administration')?'active':'' }}">
                 <a href="javascritp:;" class="faa-parent animated-hover">
                     <i class="fa fa-cogs faa-pulse"></i>
                     <span>@lang('Administration')</span>
                 </a>
                 <ul class="sub-menu">
-                    <li class="has-sub menu-report-vehicles">
+                    <li class="has-sub menu-administration-vehicles">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
                             <i class="fa fa-bus faa-pulse"></i>
                             @lang('Vehicles')
                         </a>
                         <ul class="sub-menu">
-                            <li class="has-sub menu-report-vehicles-parked">
+                            <li class="has-sub menu-administration-vehicles-peak-and-plate">
                                 <a href="{{ route('admin-vehicles-peak-and-plate')  }}" class="faa-parent animated-hover">
                                     <i class="fa fa-ban faa-pulse" aria-hidden="true"></i>
                                     @lang('Peak and Plate')
@@ -60,7 +57,8 @@
                     </li>
                 </ul>
             </li>
-            <li class="has-sub active">
+            @endif
+            <li class="has-sub {{ $baseMenu == __('reports')?'active':'' }}">
                 <a href="javascritp:;" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-pulse"></i>
                     <span>@lang('Reports')</span>
@@ -253,7 +251,7 @@
                                 <a href="javascript:;">Migración a nueva plataforma</a>
                             </div>
                             <div class="progress progress-striped m-b-10 active">
-                                <div class="progress-bar progress-bar-danger" style="width: 50%"></div>
+                                <div class="progress-bar progress-bar-danger" style="width: 80%"></div>
                             </div>
                             <div class="desc">
                                 Mejoras e integración de nuevas funcionalidades

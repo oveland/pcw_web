@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth']], function () {
             });
         });
 
-        Route::prefix(__('vehicles'))->group(function(){
+        Route::prefix(__('url-vehicles'))->group(function(){
             /* Off Road report */
             Route::prefix(__('parked'))->group(function () {
                 Route::get('/', 'ParkedVehiclesReportController@index')->name('report-vehicle-parked');
@@ -137,10 +137,13 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     /* Routes for admin pages */
-    Route::prefix(__('admin'))->group(function () {
-        Route::prefix(__('vehicles'))->group(function () {
+    Route::prefix(__('url-administration'))->group(function () {
+        Route::prefix(__('url-vehicles'))->group(function () {
             Route::prefix(__('peak-and-plate'))->group(function () {
                 Route::get('/', 'PeakAndPlateController@index')->name('admin-vehicles-peak-and-plate');
+                Route::get('/show', 'PeakAndPlateController@show')->name('admin-vehicles-peak-and-plate-show');
+                Route::post('/update', 'PeakAndPlateController@update')->name('admin-vehicles-peak-and-plate-update');
+                Route::post('/reset', 'PeakAndPlateController@reset')->name('admin-vehicles-peak-and-plate-reset');
             });
         });
     });

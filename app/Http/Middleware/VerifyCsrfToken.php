@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Utils\Url;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use View;
 
 class VerifyCsrfToken extends BaseVerifier
 {
@@ -30,6 +32,8 @@ class VerifyCsrfToken extends BaseVerifier
         if($request->ajax() && Auth::guest()) {
             return response('Unauthorized', 401);
         }
+
+        View::share('baseMenu',Url::getBaseMenu($request));
 
         return $next($request);
     }

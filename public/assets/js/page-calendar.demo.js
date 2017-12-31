@@ -24,7 +24,7 @@ var handleCalendar = function() {
     var currentYear = date.getFullYear();
     var currentMonth = date.getMonth() + 1;
         currentMonth = (currentMonth < 10) ? '0' + currentMonth : currentMonth;
-    
+
     $('#calendar').fullCalendar({
         header: {
             left: 'month,agendaWeek,agendaDay',
@@ -99,7 +99,7 @@ var handleCalendar = function() {
     });
 };
 
-    
+
 /* Application Controller
 ------------------------------------------------ */
 var PageDemo = function () {

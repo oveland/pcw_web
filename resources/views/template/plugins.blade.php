@@ -1,4 +1,5 @@
 <!-- ================== BEGIN BASE JS ================== -->
+<script src="{{asset('assets/plugins/fullcalendar/lib/moment.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery/jquery-1.9.1.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery/jquery-migrate-1.1.0.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
