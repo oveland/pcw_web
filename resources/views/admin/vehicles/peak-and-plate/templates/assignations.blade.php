@@ -50,13 +50,13 @@
         for(var index in assignedPeakAndPlates){
             var assignedPeakAndPlate = assignedPeakAndPlates[index];
             var assignedDate = moment(assignedPeakAndPlate.date);
-            assignedDate.subtract({days:7*5});
+            //assignedDate.subtract({days:7*5});
             for (var i = 1; i <= parseInt(200 / 7); i++) {
                 assignments.push(
                     {
                         id: assignedPeakAndPlate.vehicleId,
                         title: assignedPeakAndPlate.vehicleNumber+' '+assignedPeakAndPlate.vehiclePlate,
-                        start: assignedDate.add({days: i == 1 ? 0 : 7}).format('YYYY-MM-DD')
+                        start: assignedDate.add({days: i == 1 ? 0 : 5}).format('YYYY-MM-DD')
                     }
                 );
             }
