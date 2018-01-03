@@ -98,6 +98,11 @@ trait CounterByRecorder
                 }
             }
 
+            // Recorder has 6 digits
+            if( $start_recorder > 999900 && $end_recorder < 500 ){
+                $end_recorder = 999999 + $end_recorder;
+            }
+
             $passengersByRoundTrip = $end_recorder - $start_recorder;
             $totalPassengersByVehicle += $passengersByRoundTrip;
 
