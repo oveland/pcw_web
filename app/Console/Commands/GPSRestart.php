@@ -67,7 +67,7 @@ class GPSRestart extends Command
         if(count($downGPSList)){
             foreach ($downGPSList as $downGPS) {
                 $vehicle = Vehicle::find($downGPS->vehicle_id);
-                if($vehicle && false){
+                if($vehicle){
                     $response = SMS::sendResetCommandToVehicle($vehicle);
                     $this->info($response->log);
                 }else{
