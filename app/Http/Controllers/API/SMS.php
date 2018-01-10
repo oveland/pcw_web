@@ -1,0 +1,85 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Oscar
+ * Date: 9/01/2018
+ * Time: 3:33 PM
+ */
+
+namespace App\Http\Controllers\API;
+
+
+use App\SimGPS;
+use App\Vehicle;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
+class SMS
+{
+    public static function sendCommand($sms, $phone)
+    {
+        $ref = Carbon::now()->format("YmdHis");
+        $url = 'https://api.hablame.co/sms/envio/';
+        $data = array(
+            'cliente' => config('sms.api_id'),
+            'api' => config('sms.api_key'),
+            'numero' => $phone,
+            'sms' => $sms,
+            'fecha' => '',
+            'referencia' => "PCW.$ref." . str_limit(str_replace(" ", "_", $sms), 10),
+        );
+
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            )
+        );
+        $context = stream_context_create($options);
+        $result = json_decode((file_get_contents($url, false, $context)), true);
+
+        return $result;
+    }
+
+    public static function sendResetCommand(SimGPS $simGPS)
+    {
+        $response = [
+            'success' => false,
+            'log' => ''
+        ];
+
+        if ($simGPS) {
+            $vehicle = $simGPS->vehicle;
+            $company = $vehicle->company;
+            $command = $simGPS->gps_type == 'TR' ? "reset123456" : "AT&RESET";
+
+            $responseSMS = self::sendCommand($command, $simGPS->sim);
+            $response['success'] = $responseSMS["resultado"] === 0;
+
+            if ($response['success']) $responseLog = "Send SMS for: $simGPS->sim. $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name => $command";
+            else $responseLog = "Message not tx for: $simGPS->sim. $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
+        } else {
+            $responseLog = "Not found SIM";
+        }
+
+        $response['log'] = $responseLog;
+        Log::info($responseLog);
+
+        return $response;
+    }
+
+    public static function sendResetCommandToVehicle($vehicle)
+    {
+
+        $simGPS = SimGPS::findByVehicleId($vehicle->id);
+        $response = self::sendResetCommand($simGPS);
+
+        if (!$simGPS) {
+            $company = $vehicle->company;
+            $response['log'] = "No found SIM for: $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
+        }
+
+        return (object)$response;
+    }
+}

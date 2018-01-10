@@ -55,6 +55,23 @@
                             </li>
                         </ul>
                     </li>
+                    @if( Auth::user()->isSuperAdmin())
+                    <li class="has-sub menu-administration-gps hide">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-podcast faa-pulse"></i>
+                            @lang('GPS')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-administration-gps-manage">
+                                <a href="{{ route('admin-gps-manage')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-signal faa-pulse" aria-hidden="true"></i>
+                                    @lang('Manage')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
                 </ul>
             </li>
             @endif

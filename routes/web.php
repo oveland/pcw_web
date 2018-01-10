@@ -146,6 +146,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/reset', 'PeakAndPlateController@reset')->name('admin-vehicles-peak-and-plate-reset');
             });
         });
+
+        Route::prefix(__('gps'))->group(function () {
+            Route::prefix(__('url-manage'))->group(function () {
+                Route::get('/', 'ManagerGPSController@index')->name('admin-gps-manage');
+                Route::get('/list', 'ManagerGPSController@list')->name('admin-gps-manage-list');
+            });
+        });
     });
 
     /****************** MIGRATION ROUTES *******************/

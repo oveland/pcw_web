@@ -236,6 +236,10 @@
   "Unassigned":"Sin asignar",
   "Reset":"Reestablecer",
   "Assignations":"Asignaciones",
+  "url-manage":"gestion",
+  "Manage":"Gestión",
+  "Manage GPS":"Gestión de GPS",
+  "manage":"gestión",
   "Last dispatch register":"Registro de despacho anterior",
   "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior"
 }
