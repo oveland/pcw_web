@@ -42,33 +42,6 @@ class SMS
         return $result;
     }
 
-    public static function sendResetCommand($simGPS)
-    {
-        $response = [
-            'success' => false,
-            'log' => ''
-        ];
-
-        if ($simGPS) {
-            $vehicle = $simGPS->vehicle;
-            $company = $vehicle->company;
-            $command = $simGPS->gps_type == 'TR' ? "reset123456" : "AT&RESET";
-
-            $responseSMS = self::sendCommand($command, $simGPS->sim);
-            $response['success'] = $responseSMS["resultado"] === 0;
-
-            if ($response['success']) $responseLog = "Send SMS for: $simGPS->sim. $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name => $command";
-            else $responseLog = "Message not tx for: $simGPS->sim. $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
-        } else {
-            $responseLog = "Not found SIM";
-        }
-
-        $response['log'] = $responseLog;
-        Log::info($responseLog);
-
-        return $response;
-    }
-
     public static function sendResetCommandToVehicle($vehicle)
     {
         $company = $vehicle->company;
