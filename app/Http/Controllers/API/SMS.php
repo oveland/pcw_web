@@ -18,6 +18,8 @@ class SMS
 {
     public static function sendCommand($sms, $phone)
     {
+        return ["resultado"=>1];
+
         $ref = Carbon::now()->format("YmdHis");
         $url = 'https://api.hablame.co/sms/envio/';
         $data = array(
@@ -71,14 +73,29 @@ class SMS
 
     public static function sendResetCommandToVehicle($vehicle)
     {
-
+        $company = $vehicle->company;
         $simGPS = SimGPS::findByVehicleId($vehicle->id);
-        $response = self::sendResetCommand($simGPS);
+        $response = [
+            'success' => false,
+            'log' => ''
+        ];
 
-        if (!$simGPS) {
-            $company = $vehicle->company;
-            $response['log'] = "No found SIM for: $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
+        if ($simGPS) {
+            $command = $simGPS->gps_type == 'TR' ? "reset123456" : "AT&RESET";
+
+            $responseSMS = self::sendCommand($command, $simGPS->sim);
+            $response['success'] = $responseSMS["resultado"] === 0;
+
+            if ($response['success']) $responseLog = "Send SMS for:";
+            else $responseLog = "Message not tx for:";
+
+            $responseLog .= " $simGPS->sim => $command: ";
+        } else {
+            $responseLog = "No found SIM for:";
         }
+
+        $response['log'] = $responseLog . " $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
+        Log::error($responseLog);
 
         return (object)$response;
     }
