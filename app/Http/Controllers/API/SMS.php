@@ -45,7 +45,7 @@ class SMS
     public static function sendResetCommandToVehicle($vehicle)
     {
         $company = $vehicle->company;
-        $simGPS = SimGPS::findByVehicleId($vehicle->id);
+        $simGPS = SimGPS::findByVehicleId($vehicle->id)->get()->first();
         $response = [
             'success' => false,
             'log' => ''
