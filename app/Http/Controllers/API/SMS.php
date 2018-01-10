@@ -42,7 +42,7 @@ class SMS
         return $result;
     }
 
-    public static function sendResetCommand(SimGPS $simGPS)
+    public static function sendResetCommand($simGPS)
     {
         $response = [
             'success' => false,
