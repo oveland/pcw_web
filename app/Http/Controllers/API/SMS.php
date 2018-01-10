@@ -18,8 +18,6 @@ class SMS
 {
     public static function sendCommand($sms, $phone)
     {
-        return ["resultado"=>1];
-
         $ref = Carbon::now()->format("YmdHis");
         $url = 'https://api.hablame.co/sms/envio/';
         $data = array(
