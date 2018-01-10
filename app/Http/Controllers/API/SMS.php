@@ -66,7 +66,7 @@ class SMS
         }
 
         $response['log'] = $responseLog . " $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
-        Log::error($responseLog);
+        Log::error($response['log']);
 
         return (object)$response;
     }
