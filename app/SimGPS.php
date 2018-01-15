@@ -42,4 +42,9 @@ class SimGPS extends Model
     {
         return $this->belongsTo(Vehicle::class);
     }
+
+    public function getGPSType()
+    {
+        return $this->gps_type == 'TR' ? 'TRK':'SKY';
+    }
 }

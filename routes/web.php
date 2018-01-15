@@ -151,6 +151,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('url-manage'))->group(function () {
                 Route::get('/', 'ManagerGPSController@index')->name('admin-gps-manage');
                 Route::get('/list', 'ManagerGPSController@list')->name('admin-gps-manage-list');
+                Route::post('/send-sms', 'ManagerGPSController@sendSMS')->name('admin-gps-manage-send-sms');
             });
         });
     });

@@ -56,7 +56,7 @@
                         </ul>
                     </li>
                     @if( Auth::user()->isSuperAdmin())
-                    <li class="has-sub menu-administration-gps hide">
+                    <li class="has-sub menu-administration-gps">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
                             <i class="fa fa-podcast faa-pulse"></i>

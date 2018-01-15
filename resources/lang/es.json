@@ -168,6 +168,7 @@
   "New feature": "Nueva funcionalidad",
   "Graph report detail": "Ver gráfico de reporte",
   "Verify possible error in register data": "Verificar posible error en los datos de registradora",
+  "An error occurred in the process. Contact your administrator": "Ocurrió un error en el proceso. Contacte con su administrador",
   "Route distance": "Distancia de ruta",
   "Passengers by Km": "Pasajeros por total de km",
   "Consolidated per date range": "Consolidado por rango de fechas",
@@ -240,6 +241,11 @@
   "Manage":"Gestión",
   "Manage GPS":"Gestión de GPS",
   "manage":"gestión",
+  "Options":"Opciones",
+  "Edit":"Modificar",
+  "GPS Command":"Comandos GPS",
+  "Send SMS":"Enviar SMS",
+  "Any GPS":"Cualquier GPS",
   "Last dispatch register":"Registro de despacho anterior",
   "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior"
 }

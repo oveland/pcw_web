@@ -52,7 +52,7 @@ class SMS
         ];
 
         if ($simGPS) {
-            $command = $simGPS->gps_type == 'TR' ? "reset123456" : "AT&RESET";
+            $command = $simGPS->gps_type == 'TR' ? "reset123456" : 'AT$RESET';
 
             $responseSMS = self::sendCommand($command, $simGPS->sim);
             $response['success'] = $responseSMS["resultado"] === 0;
@@ -60,7 +60,7 @@ class SMS
             if ($response['success']) $responseLog = "Send SMS for:";
             else $responseLog = "Message not tx for:";
 
-            $responseLog .= " $simGPS->sim => $command: ";
+            $responseLog .= " $simGPS->sim $simGPS->gps_type => $command: ";
         } else {
             $responseLog = "No found SIM for:";
         }

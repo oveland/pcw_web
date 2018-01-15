@@ -33,16 +33,31 @@
                                     <i class="fa fa-clock-o"></i>
                                     {{ $dispatchRegister->departure_time }}
                                 </p>
-                                <p class="tooltips text-{{  $issue->field == __('Start Recorder')?'issue':'' }}" data-title="@lang('Start Recorder')">
-                                    <i class="fa fa-arrow-circle-right"></i>
-                                    <span class="text-{{ $issue->bad_start_recorder ? 'warning':'' }}">
-                                        {{ $issue->start_recorder }}
+                                <div class="tooltips text-{{  $issue->field == __('Start Recorder')?'issue':'' }} box-edit-recorder" data-title="@lang('Start Recorder')">
+                                    <span class="box-info">
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                        <span class="text-{{ $issue->bad_start_recorder ? 'warning':'' }}">
+                                            {{ $issue->start_recorder }}
+                                        </span>
                                     </span>
-                                </p>
-                                <p class="tooltips text-{{  $issue->field == __('End Recorder')?'issue':'' }}" data-title="@lang('End Recorder')">
-                                    <i class="fa fa-arrow-circle-left"></i>
-                                    {{ $dispatchRegister->end_recorder }}
-                                </p>
+                                    <div class="box-edit" style="display: none">
+                                        <input title="@lang('Start Recorder')" name="" type="number" class="input-sm form-control" value="{{ $issue->start_recorder }}">
+                                    </div>
+                                </div>
+
+
+                                <div class="tooltips text-{{  $issue->field == __('End Recorder')?'issue':'' }} box-edit-recorder" data-title="@lang('End Recorder')">
+                                    <span class="box-info">
+                                        <i class="fa fa-arrow-circle-left"></i>
+                                        <span>
+                                            {{ $dispatchRegister->end_recorder }}
+                                        </span>
+                                    </span>
+                                    <div class="box-edit" style="display: none">
+                                        <input title="@lang('End Recorder')" name="" type="number" class="input-sm form-control" value="{{ $issue->end_recorder }}">
+                                    </div>
+                                </div>
+
                                 @if( $issue->bad_start_recorder )
                                     <hr class="hr">
                                     <h4>@lang('Last dispatch register'):</h4>
@@ -68,8 +83,10 @@
                                     </p>
                                 @endif
                             </div>
-                            <div class="action">
-                                <a href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                            <div class="action hide">
+                                <a href="#" data-toggle="dropdown" aria-expanded="false" class="tooltips" data-title="@lang('Options')">
+                                    <i class="fa fa-ellipsis-v text-danger faa-ring animated"></i>
+                                </a>
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li>
                                         <a href="javascript:alert('@lang('Feature on development')');" class="disabled">
@@ -85,5 +102,18 @@
             </div>
             <!-- end widget -->
         </div>
+         <style>
+             .box-edit-recorder .box-info:hover{
+                 border: 1px solid gray;
+                 border-radius: 2px;
+                 cursor: pointer;
+             }
+         </style>
+        <script>
+            $('.box-edit-recorder').click(function(){
+                $(this).find('.box-info').hide();
+                $(this).find('.box-edit').show();
+            });
+        </script>
     @endif
 @endforeach
