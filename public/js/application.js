@@ -41,13 +41,7 @@ $(document).ready(function () {
 });
 
 function alert(message){
-    $.gritter.add({
-        title: 'Ups!',
-        text: message,
-        sticky: false,
-        time: '6000',
-        class_name: 'gritter-error'
-    });
+    gerror( message );
 }
 
 function alert_type(message,type){

@@ -31,39 +31,25 @@
                 </form>
             </li>
             <li class="dropdown">
+                @if(Auth::user()->isAdmin())
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
-                    <i class="fa fa-bell"></i>
-                    <span class="badge badge-danger pull-right">2</span>
+                    <i class="fa fa-bell faa-ring animated"></i>
+                    <span class="badge badge-danger pull-right faa-float animated">1</span>
                 </a>
                 <ul class="dropdown-menu dropdown-notification pull-right">
-                    <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">2</span></li>
+                    <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">1</span></li>
                     <li class="notification-item">
-                        <a href="{{ route('admin-vehicles-peak-and-plate') }}">
-                            <div class="media"><i class="fa fa-car"></i></div>
-                            <div class="message">
-                                <h6 class="title">Nueva Interfaz de Administración</h6>
-                                <div class="time">
-                                    @lang('Peak and Plate')
-                                </div>
-                            </div>
-                            <div class="option" data-toggle="tooltip" data-title="El 30 de Diciembre"
-                                 data-click="set-message-status" data-status="unread" data-container="body">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="notification-item">
-                        <a href="{{ route('passengers-detailed-report-range') }}">
+                        <a href="javascript:gsuccess('Funcionalidad disponible en las tarjetas de advertencia de inconsistencias y en el reporte de ruta agrupado por vehículo. <hr> Hacer click en el campo o valor de registradora a modificar y posteriormente presionar la tecla Enter para guardar.')">
                             <div class="media"><i class="fa fa-users"></i></div>
                             <div class="message">
-                                <h6 class="title">Nuevo Reporte de Pasajeros</h6>
+                                <h6 class="title">Modificación de registradoras</h6>
                                 <div class="time">
-                                    @lang('Detailed per date range')
+                                    @lang('Solo para administradores')
                                 </div>
                             </div>
-                            <div class="option" data-toggle="tooltip" data-title="El 27 de Diciembre"
+                            <div class="option" data-toggle="tooltip" data-title="El 18 de Enero"
                                  data-click="set-message-status" data-status="unread" data-container="body">
-                                <i class="fa fa-calendar"></i>
+                                <i class="fa fa-users"></i>
                             </div>
                         </a>
                     </li>
@@ -72,6 +58,7 @@
                         <a href="javascript:;">Aquí aparecerán las notificaciones de nuevos reportes</a>
                     </li>
                 </ul>
+                @endif
             </li>
             <li class="dropdown navbar-user">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
