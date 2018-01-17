@@ -3,6 +3,7 @@
 namespace App\Models\Passengers;
 
 use App\Company;
+use App\DispatchRegister;
 use App\Vehicle;
 use Illuminate\Database\Eloquent\Model;
 
@@ -64,5 +65,15 @@ class RecorderCounterPerRoundTrip extends Model
     public function getComputedPassengers()
     {
         return ($this->end_recorder - $this->getStartRecorder());
+    }
+
+    public function dispatchRegister()
+    {
+        return $this->belongsTo(DispatchRegister::class);
+    }
+
+    public function dispatchRegisterPrev()
+    {
+        return $this->belongsTo(DispatchRegister::class);
     }
 }

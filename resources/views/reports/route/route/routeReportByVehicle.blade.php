@@ -1,4 +1,14 @@
 @if(count($vehiclesDispatchRegisters))
+    <div class="col-md-12 alert alert-info p-t-5 container-alert-new-values" style="display: none">
+        <strong>
+            <i class="fa fa-exclamation"></i> @lang('Registers updated')
+        </strong>
+        <button class="btn btn-info btn-xs" onclick="$('.form-search-report').submit()">
+            <i class="fa fa-refresh"></i>
+        </button>
+        <p>@lang('Please refresh the report once you finish the fix bugs')</p>
+    </div>
+
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -92,8 +102,13 @@
                             @php
                                     $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
                                     $driver = $dispatchRegister->driver;
+
                                     $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
-                                    $startRecorderPrev = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $recorderCounterPerRoundTrip->end_recorder_prev;
+
+                                    $startRecorderPrev = $recorderCounterPerRoundTrip->end_recorder_prev;
+                                    if($dispatchRegister->start_recorder > 0){
+                                        $startRecorderPrev = $dispatchRegister->start_recorder;
+                                    }
 
                                     //$passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
                                     $passengersPerRoundTrip = $currentRecorder - $startRecorderPrev;
@@ -109,8 +124,42 @@
                                 <td>{{ $dispatchRegister->arrival_time }}</td>
                                 <td>{{ $dispatchRegister->arrival_time_difference }}</td>
                                 <td>{{ $dispatchRegister->status }}</td>
-                                <td width="15%">{{ $startRecorderPrev }}</td>
-                                <td width="15%">{{ $currentRecorder }}</td>
+                                <td width="20%" class="p-r-0 p-l-0 text-center">
+                                    @if( Auth::user()->isAdmin() )
+                                    <div class="tooltips box-edit-recorder" data-title="@lang('Start Recorder')">
+                                        <span class="box-info">
+                                            <span class="">
+                                                {{ $startRecorderPrev }}
+                                            </span>
+                                        </span>
+                                        <div class="box-edit" style="display: none">
+                                            <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
+                                                   data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('start_recorder')"
+                                                   class="input-sm form-control edit-input-recorder" value="{{ $startRecorderPrev }}">
+                                        </div>
+                                    </div>
+                                    @else
+                                        {{ $startRecorderPrev }}
+                                    @endif
+                                </td>
+                                <td width="20%" class="p-r-0 p-l-0 text-center">
+                                    @if( Auth::user()->isAdmin() )
+                                    <div class="tooltips box-edit-recorder" data-title="@lang('Start Recorder')">
+                                        <span class="box-info">
+                                            <span class="">
+                                                {{ $currentRecorder }}
+                                            </span>
+                                        </span>
+                                        <div class="box-edit" style="display: none">
+                                            <input id="edit-end-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
+                                                   data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('end_recorder')"
+                                                   class="input-sm form-control edit-input-recorder" value="{{ $currentRecorder }}">
+                                        </div>
+                                    </div>
+                                    @else
+                                        {{ $currentRecorder }}
+                                    @endif
+                                </td>
                                 <td width="5%">
                                     <span title="{{ $currentRecorder.'-'.$startRecorderPrev }}" class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
                                         {{ $currentRecorder - $startRecorderPrev }}

@@ -246,6 +246,13 @@
   "GPS Command":"Comandos GPS",
   "Send SMS":"Enviar SMS",
   "Any GPS":"Cualquier GPS",
+  "Data updated successfully":"Dato actualizado correctamente",
+  "Error updating data":"Error actualizando la información",
+  "start_recorder":"registradora_salida",
+  "end_recorder":"registradora_llegada",
+  "Registers updated":"Registros actualizados",
+  "Press enter for edit":"Presione 'Enter' para guardar",
   "Last dispatch register":"Registro de despacho anterior",
-  "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior"
+  "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior",
+  "Please refresh the report once you finish the fix bugs":"Porfavor actualice el reporte una vez termine la corrección de inconsistencias"
 }

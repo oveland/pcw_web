@@ -1,4 +1,13 @@
 @php($index = 0)
+<div class="col-md-12 alert alert-info p-t-5 container-alert-new-values" style="display: none">
+    <strong>
+        <i class="fa fa-exclamation"></i> @lang('Registers updated')
+    </strong>
+    <button class="btn btn-info btn-xs" onclick="$('.form-search-report').submit()">
+        <i class="fa fa-refresh"></i>
+    </button>
+    <p>@lang('Please refresh the report once you finish the fix bugs')</p>
+</div>
 @foreach($issuesByVehicles as $vehicle_id => $issuesByVehicle)
     @if( count($issuesByVehicle) )
          @php($index++)
@@ -41,7 +50,9 @@
                                         </span>
                                     </span>
                                     <div class="box-edit" style="display: none">
-                                        <input title="@lang('Start Recorder')" name="" type="number" class="input-sm form-control" value="{{ $issue->start_recorder }}">
+                                        <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
+                                               data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('start_recorder')"
+                                               class="input-sm form-control edit-input-recorder" value="{{ $issue->start_recorder }}">
                                     </div>
                                 </div>
 
@@ -54,7 +65,9 @@
                                         </span>
                                     </span>
                                     <div class="box-edit" style="display: none">
-                                        <input title="@lang('End Recorder')" name="" type="number" class="input-sm form-control" value="{{ $issue->end_recorder }}">
+                                        <input id="edit-end-recorder-{{ $dispatchRegister->id }}" title="@lang('End Recorder')" name="" type="number"
+                                               data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('end_recorder')"
+                                               class="input-sm form-control edit-input-recorder" value="{{ $issue->end_recorder }}">
                                     </div>
                                 </div>
 
@@ -102,18 +115,5 @@
             </div>
             <!-- end widget -->
         </div>
-         <style>
-             .box-edit-recorder .box-info:hover{
-                 border: 1px solid gray;
-                 border-radius: 2px;
-                 cursor: pointer;
-             }
-         </style>
-        <script>
-            $('.box-edit-recorder').click(function(){
-                $(this).find('.box-info').hide();
-                $(this).find('.box-edit').show();
-            });
-        </script>
     @endif
 @endforeach

@@ -86,6 +86,11 @@ Route::group(['middleware' => ['auth']], function () {
 
         /* Routes for passenger report */
         Route::prefix(__('passengers'))->group(function () {
+            /*Edit reports*/
+            Route::prefix('manage')->group(function () {
+                Route::any('/ajax/{action}', 'ManagePassengersByRecorderController@ajax')->name('report-passengers-manage-update');
+            });
+
             /* Router for Tax Central Reports */
             Route::prefix('taxcentral')->group(function () {
                 Route::get('/', 'TaxCentralPassengerReportController@index')->name('tc-passengers-report');
@@ -94,6 +99,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/seat/show/{historySeat}', 'TaxCentralPassengerReportController@showHistorySeat')->name('tc-passengers-seat-detail');
                 Route::any('/ajax/{action}', 'TaxCentralPassengerReportController@ajax')->name('tc-passengers-ajax');
             });
+
             /* Router for General Reports */
             Route::prefix(__('consolidated'))->group(function () {
                 Route::prefix(__('daily'))->group(function () {

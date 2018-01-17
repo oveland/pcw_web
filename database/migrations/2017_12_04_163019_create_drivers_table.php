@@ -14,17 +14,17 @@ class CreateDriversTable extends Migration
     public function up()
     {
         $this->down();
-
-        DB::statement("CREATE TABLE drivers AS 
-            SELECT
-              id_idconductor::BIGINT          id,
-              codigo_interno                  code,
-              identidad                       \"identity\",
-              apellido1 \"first_name\",
-              apellido2 \"second_name\",
-              nombre1 || ' ' || nombre2     last_name,
-              activo::BOOLEAN                 active
-          FROM conductor;
+        DB::statement("            
+            CREATE OR REPLACE VIEW drivers AS
+              SELECT
+                id_idconductor::BIGINT          id,
+                codigo_interno                  code,
+                identidad                       \"identity\",
+                apellido1 \"first_name\",
+                apellido2 \"second_name\",
+                nombre1 || ' ' || nombre2     last_name,
+                activo::BOOLEAN                 active
+              FROM conductor
         ");
     }
 
@@ -35,6 +35,6 @@ class CreateDriversTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('drivers');
+        DB::statement("DROP VIEW IF EXISTS drivers");
     }
 }

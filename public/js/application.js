@@ -62,33 +62,15 @@ function alert_type(message,type){
 
 /* Alerte gritter */
 function gsuccess( message ){
-    $.gritter.add({
-        title: 'Información',
-        text: message,
-        sticky: false,
-        time: '4000',
-        class_name: 'gritter-success'
-    });
+    toastr.success(message,"Información");
 }
 
 function gwarning( message ){
-    $.gritter.add({
-        title: 'Información',
-        text: message,
-        sticky: false,
-        time: '4000',
-        class_name: 'gritter-warning'
-    });
+    toastr.warning(message);
 }
 
 function gerror( message ){
-    $.gritter.add({
-        title: 'Ups!',
-        text: message,
-        sticky: false,
-        time: '4000',
-        class_name: 'gritter-error gritter-danger danger'
-    });
+    toastr.error(message,"Ups!");
 }
 
 function hideSideBar(){

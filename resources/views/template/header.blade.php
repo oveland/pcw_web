@@ -20,6 +20,7 @@
 
 <!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
 <link href="{{asset('assets/plugins/gritter/css/jquery.gritter.css')}}" rel="stylesheet"/>
+<link href="{{asset('assets/plugins/toastr/toastr.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/bootstrap-select/bootstrap-select.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/select2/dist/css/select2.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css')}}" rel="stylesheet"/>

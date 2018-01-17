@@ -34,7 +34,7 @@
 </template>
 
 @include('template.plugins')
-
+@include('partials.alerts.reports.passengers.issuesByVehiclesScript')
 @yield('scripts')
 
 <script>

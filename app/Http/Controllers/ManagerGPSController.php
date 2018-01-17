@@ -50,7 +50,9 @@ class ManagerGPSController extends Controller
         $responseSMS = SMS::sendCommand($totalCMD, $simGPS);
         dump($responseSMS);
 
-        dump("COMMAND SENT (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . "):");
+        $totalCharacters = strlen($totalCMD);
+
+        dump("COMMAND SENT $totalCharacters Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . "):");
         dd($totalCMD);
     }
 }
