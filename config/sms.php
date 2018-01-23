@@ -39,8 +39,9 @@ return [
     |
     */
 
-    'back_days_for_send_sms' => env('BACK_DAYS_FOR_SEND_SMS',10),/*
+    'back_days_for_send_sms' => env('BACK_DAYS_FOR_SEND_SMS',10),
 
+    /*
     |--------------------------------------------------------------------------
     | Back Time For Send SMS
     |--------------------------------------------------------------------------
@@ -50,4 +51,15 @@ return [
     */
 
     'back_time_for_send_sms' => env('BACK_TIME_FOR_SEND_SMS','00:10:00'),
+
+    /*
+    |--------------------------------------------------------------------------
+    |
+    |--------------------------------------------------------------------------
+    |
+    | Max string length for SMS AT Commands
+    |
+    */
+
+    'sms_max_length_for_gps' => env('SMS_MAX_LENGTH_FOR_GPS',140),
 ];

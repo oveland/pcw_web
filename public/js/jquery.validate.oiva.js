@@ -16,13 +16,7 @@ jQuery.fn.extend({
             }
         });
         if (!isValid && showAlert) {
-            $.gritter.add({
-                title: 'Error!',
-                text: 'Los campos con <b>*</b> son obligatorios',
-                sticky: false,
-                time: '1000',
-                class_name: 'gritter-error success my-sticky-class'
-            });
+            gerror('Los campos con <b>*</b> son obligatorios');
         }
         return isValid;
     }
@@ -36,13 +30,7 @@ jQuery.fn.extend({
             if (is_null($(e).val())) isValid = false;
         });
         if (!isValid) {
-            $.gritter.add({
-                title: 'Error!',
-                text: 'No puede ingresar campos vacíos',
-                sticky: false,
-                time: '4000',
-                class_name: 'gritter-error success my-sticky-class'
-            });
+            gerror('No puede ingresar campos vacíos');
         }
         return isValid;
     }

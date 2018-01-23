@@ -25,34 +25,75 @@ class ManagerGPSController extends Controller
     public function list(Request $request)
     {
         $companyReport = $request->get('company-report');
-        $gpsVehicles = null;
+        $simGPSList = null;
         if ($companyReport != 'any') {
             $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
             $vehiclesCompany = $company->vehicles;
-            $gpsVehicles = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))->orderBy('gps_type')->get();
+            $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))->get();
+
+            $simGPSList = $simGPSList->sortBy(function ($simGPS) {
+                return $simGPS->vehicle->number ?? true;
+            });
         }
-        return view('admin.gps.manage.list', compact('gpsVehicles'));
+        return view('admin.gps.manage.list', compact('simGPSList'));
     }
 
     public function sendSMS(Request $request)
     {
         $simGPS = $request->get('sim-gps');
-        $commandsGPS = explode("\n", $request->get('command-gps'));
+        $gpsCommands = explode("\n", $request->get('command-gps'));
 
         $totalCMD = "";
-        foreach ($commandsGPS as $commandGPS) {
-            $sendCommand = trim(explode("'", $commandGPS)[0]);
-            if ($sendCommand) {
-                $totalCMD .= ($totalCMD == "" ? "" : ";") . str_replace(["AT", "At", "aT", "at"], "", $sendCommand);
+        $smsCommands = [];
+        $flagStartCMD = true;
+        foreach ($gpsCommands as $gpsCommand) {
+            $individualCommand = trim(explode("'", $gpsCommand)[0]);
+            if ($individualCommand) {
+                $individualCommand = str_replace(["AT", "At", "aT", "at"], "", $individualCommand);
+                if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
+                    $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
+                    $flagStartCMD = false;
+                } else {
+                    $smsCommands[] = str_start($totalCMD, "AT");
+                    $totalCMD = $individualCommand . ";";
+                    $flagStartCMD = true;
+                }
             }
         }
-        $totalCMD = str_start($totalCMD, "AT");
-        $responseSMS = SMS::sendCommand($totalCMD, $simGPS);
-        dump($responseSMS);
+        $smsCommands[] = str_start($totalCMD, "AT");
 
-        $totalCharacters = strlen($totalCMD);
+        $totalSent = 0;
+        foreach ($smsCommands as $smsCommand) {
+            $smsCommand .= "&W";
+            echo $smsCommand . "<br>";
+            $responseSMS = SMS::sendCommand($smsCommand, $simGPS);
+            $length = strlen($smsCommand);
+            dump("$totalSent). COMMAND SENT $smsCommand | $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . "):");
+            sleep(1);
+            $totalSent++;
+        }
+        dd("Total Sent: $totalSent");
+    }
 
-        dump("COMMAND SENT $totalCharacters Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . "):");
-        dd($totalCMD);
+    public function updateSIMGPS(SimGPS $simGPS, Request $request)
+    {
+        try {
+            $sim = $request->get('sim');
+            $gpsType = $request->get('gps_type');
+
+            $checkGPS = SimGPS::where('id', '<>', $simGPS->id)->where('sim', $sim)->get()->first();
+            if ($checkGPS) {
+                $error = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']);
+            } else {
+                $simGPS->sim = $sim;
+                $simGPS->gps_type = $gpsType;
+                $simGPS->save();
+                $updated = true;
+            }
+        } catch (Exception $exception) {
+            $error = $exception->getMessage();
+        }
+
+        return view('admin.gps.manage.gpsVehicleDetail', compact(['simGPS', 'updated', 'error']));
     }
 }

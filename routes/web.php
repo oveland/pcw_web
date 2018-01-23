@@ -158,6 +158,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/', 'ManagerGPSController@index')->name('admin-gps-manage');
                 Route::get('/list', 'ManagerGPSController@list')->name('admin-gps-manage-list');
                 Route::post('/send-sms', 'ManagerGPSController@sendSMS')->name('admin-gps-manage-send-sms');
+                Route::post('/update-sim-gps/{simGPS}', 'ManagerGPSController@updateSIMGPS')->name('admin-gps-manage-update-sim-gps');
             });
         });
     });
