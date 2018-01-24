@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\CurrentLocationsGPS;
 use App\GpsVehicle;
 use App\Http\Controllers\API\SMS;
 use App\SimGPS;
@@ -38,39 +39,55 @@ class ManagerGPSController extends Controller
         return view('admin.gps.manage.list', compact('simGPSList'));
     }
 
+    public function getVehicleStatus(Request $request)
+    {
+        $vehicleId = $request->get('vehicleId');
+        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicleId);
+        return $currentLocationGPS->vehicleStatus->des_status ?? 'NONE';
+    }
+
     public function sendSMS(Request $request)
     {
-        $simGPS = $request->get('sim-gps');
-        $gpsCommands = explode("\n", $request->get('command-gps'));
+        $commands = $request->get('command-gps');
+        $gpsCommands = explode("\n", $commands);
 
-        $totalCMD = "";
-        $smsCommands = [];
-        $flagStartCMD = true;
-        foreach ($gpsCommands as $gpsCommand) {
-            $individualCommand = trim(explode("'", $gpsCommand)[0]);
-            if ($individualCommand) {
-                $individualCommand = str_replace(["AT", "At", "aT", "at"], "", $individualCommand);
-                if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
-                    $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
-                    $flagStartCMD = false;
-                } else {
-                    $smsCommands[] = str_start($totalCMD, "AT");
-                    $totalCMD = $individualCommand . ";";
+        switch ( $request->get('gps-type') ){
+            case 'SKYPATROL':
+                $totalCMD = "";
+                $smsCommands = [];
+
+                if( $commands != 'AT$RESET' ){
                     $flagStartCMD = true;
+                    foreach ($gpsCommands as $gpsCommand) {
+                        $individualCommand = trim(explode("'", $gpsCommand)[0]);
+                        if ($individualCommand) {
+                            $individualCommand = str_replace(["AT", "At", "aT", "at"], "", $individualCommand);
+                            if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
+                                $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
+                                $flagStartCMD = false;
+                            } else {
+                                $smsCommands[] = str_start($totalCMD, "AT")."&W";
+                                $totalCMD = $individualCommand . ";";
+                                $flagStartCMD = true;
+                            }
+                        }
+                    }
+                    $smsCommands[] = str_start($totalCMD, "AT")."&W";
+                    $gpsCommands = $smsCommands;
                 }
-            }
+                break;
+            case 'TRACKER':
+                break;
         }
-        $smsCommands[] = str_start($totalCMD, "AT");
 
         $totalSent = 0;
-        foreach ($smsCommands as $smsCommand) {
-            $smsCommand .= "&W";
-            echo $smsCommand . "<br>";
+        foreach ($gpsCommands as $smsCommand) {
+            $smsCommand = trim($smsCommand);
+            $totalSent++;
             $responseSMS = SMS::sendCommand($smsCommand, $simGPS);
             $length = strlen($smsCommand);
-            dump("$totalSent). COMMAND SENT $smsCommand | $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . "):");
+            dump("$totalSent. $smsCommand | $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . "):");
             sleep(1);
-            $totalSent++;
         }
         dd("Total Sent: $totalSent");
     }

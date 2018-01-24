@@ -79,39 +79,65 @@
                 <div class="tab-pane fade {{ $simGPSList?"":"active in" }}" id="tab-2">
                     <form class="form form-send-message" action="{{ route('admin-gps-manage-send-sms') }}">
                         {{ csrf_field() }}
+                        <input type="hidden" id="gps-type" name="gps-type" value="">
                         <div class="row">
                             <div class="form-group col-md-5 has-success has-feedback">
+                                <i class="ion-android-phone-portrait fa-fw text-center f-s-17" aria-hidden="true"></i>
                                 <label for="sim-gps" class="control-label field-required">
                                     @lang('SIM GPS')
                                 </label>
-                                <div class="input-group m-b-15">
-                                    <span class="input-group-addon"><i class="ion-android-phone-portrait fa-fw text-center f-s-17" aria-hidden="true"></i></span>
+                                <div class="row info-gps">
+                                    <div class="col-md-12">
+                                        <div class="input-group m-b-15 col-md-12">
+                                            @if( $simGPSList )
+                                                <select id="sim-gps" name="sim-gps" class="form-control default-select2 col-md-12">
+                                                    <option value="">@lang('Select an option')</option>
+                                                    @foreach($simGPSList as $simGPS)
+                                                        <option value="{{ $simGPS->sim }}"
+                                                                data-reset-command="{{ $simGPS->getResetCommand() }}"
+                                                                data-gps-type="{{ $simGPS->getGPSType() }}"
+                                                                data-vehicle-id="{{ $simGPS->vehicle->id ?? null }}">
+                                                            {{ $simGPS->getGPSType() }}: {{ $simGPS->sim }} | #{{ $simGPS->vehicle->number ?? 'NONE'  }} ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <input id="sim-gps" name="sim-gps" type="number" class="form-control" data-any-gps="true">
+                                            @endif
+                                        </div>
+                                    </div>
                                     @if( $simGPSList )
-                                        <select id="sim-gps" name="sim-gps" class="form-control default-select2">
-                                            @foreach($simGPSList as $simGPS)
-                                                <option value="{{ $simGPS->sim }}">
-                                                    {{ $simGPS->getGPSType() }}: {{ $simGPS->sim }} | #{{ $simGPS->vehicle->number ?? 'NONE'  }} ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    @else
-                                        <input id="sim-gps" name="sim-gps" type="number" class="form-control">
+                                        <div class="col-md-12">
+                                            <label class="control-label">
+                                                <i class="fa fa-podcast faa-burst animated"></i>
+                                                @lang('Status GPS'):
+                                            </label>
+                                            <pre class="pre col-md-12 text-info status-gps-container">@lang('Select a SIM number')</pre>
+                                        </div>
                                     @endif
-                                    <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-info btn-submit m-l-2">
-                                            @lang('Send SMS')
-                                            <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                                        </button>
+                                    <hr class="col-md-12">
+                                    <div class="col-md-12">
+                                        <i class="fa fa-envelope faa-horizontal animated"></i> @lang('SMS Response')
+                                        <pre class="pre col-md-12 sms-response-container hide"></pre>
                                     </div>
                                 </div>
-
-                                <hr class="hr">
-                                <pre class="pre col-md-12 sms-response-container hide"></pre>
                             </div>
                             <div class="form-group col-md-7">
                                 <label for="command-gps" class="control-label col-md-12 field-required">@lang('GPS Command')</label>
                                 <div class="col-md-12">
-                                    <textarea id="command-gps" name="command-gps" class="form-control" rows="40" placeholder="@lang('Type the GPS command')"></textarea>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-danger btn-sm set-reset-command pull-right">
+                                            <i class="fa fa-undo" aria-hidden="true"></i>
+                                            @lang('Reset Command')
+                                        </button>
+
+                                        <button type="submit" class="btn btn-info btn-submit m-l-2 pull-left">
+                                            @lang('Send')
+                                            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <hr class="col-md-12">
+                                    <textarea id="command-gps" name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -135,6 +161,10 @@
         if (formSendSMS.isValid()) {
             formSendSMS.find('.btn-submit').addClass(loadingClass);
             smsResponseContainer.slideUp();
+
+            var simGPS = $('#sim-gps');
+            var gpsType = simGPS.find('option[value="' + simGPS.val() + '"]').data('gps-type');
+            $('#gps-type').val(gpsType);
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -174,6 +204,46 @@
                     $('#edit-' + simGPSId).addClass('hide');
                 }
             });
+        }
+    });
+
+    $('#sim-gps').change(function(){
+        var simGPS = $(this);
+        var simNumber = simGPS.val();
+        var statusGPSContainer = $('.status-gps-container');
+        if( !simGPS.data('any-gps') ){
+            statusGPSContainer.parent().slideDown();
+            statusGPSContainer.html('@lang('Searching')...');
+            if( is_not_null(simNumber) ){
+                var vehicleId = simGPS.find('option[value="'+simGPS.val()+'"]').data('vehicle-id');
+                $.ajax({
+                    url: '{{ route('admin-gps-get-vehicle-status') }}',
+                    data:{
+                        vehicleId: vehicleId
+                    },
+                    success:function(data){
+                        statusGPSContainer.html(data);
+                    },error:function(){
+                        statusGPSContainer.empty();
+                        gerror('@lang('An error occurred in the process. Contact your administrator')');
+                    }
+                });
+
+            }else{
+                statusGPSContainer.html('@lang('Select a SIM number')');
+            }
+        }else{
+            statusGPSContainer.parent().slideUp();
+        }
+    });
+
+    $('.set-reset-command').click(function(){
+        var simGPS = $('#sim-gps');
+        if( is_not_null(simGPS.val()) ){
+            var resetCommand = simGPS.find('option[value="'+simGPS.val()+'"]').data('reset-command');
+            $('#command-gps').val(resetCommand);
+        }else{
+            gwarning('@lang('Select a SIM number')');
         }
     });
 </script>

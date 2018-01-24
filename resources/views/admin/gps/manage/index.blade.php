@@ -101,5 +101,11 @@
 
             form.submit();
         });
+
+        setTimeout(function(){
+            setInterval(function () {
+                $('#sim-gps').change();
+            },10000);
+        },1000);
     </script>
 @endsection

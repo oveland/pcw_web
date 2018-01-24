@@ -157,6 +157,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('url-manage'))->group(function () {
                 Route::get('/', 'ManagerGPSController@index')->name('admin-gps-manage');
                 Route::get('/list', 'ManagerGPSController@list')->name('admin-gps-manage-list');
+                Route::get('/get-vehicle-status', 'ManagerGPSController@getVehicleStatus')->name('admin-gps-get-vehicle-status');
                 Route::post('/send-sms', 'ManagerGPSController@sendSMS')->name('admin-gps-manage-send-sms');
                 Route::post('/update-sim-gps/{simGPS}', 'ManagerGPSController@updateSIMGPS')->name('admin-gps-manage-update-sim-gps');
             });

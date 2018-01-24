@@ -45,6 +45,11 @@ class SimGPS extends Model
 
     public function getGPSType()
     {
-        return $this->gps_type == 'TR' ? 'TRACKER':'SKYPTROL';
+        return $this->gps_type == 'TR' ? 'TRACKER':'SKYPATROL';
+    }
+
+    public function getResetCommand()
+    {
+        return $this->gps_type == 'TR' ? "reset123456" : 'AT$RESET';
     }
 }

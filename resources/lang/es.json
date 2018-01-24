@@ -256,6 +256,12 @@
   "List GPS SIM":"Listado de SIM asociados a GPS",
   "GPS SIM":"Número de SIM",
   "GPS Type":"Tipo de GPS",
+  "Searching":"Consultando",
+  "Status GPS":"Estado del GPS",
+  "Select a SIM number":"Seleccione un número de SIM",
+  "Type here the commands": "Ingrese aquí los comandos",
+  "Send": "Enviar",
+  "Reset Command":"Comando de reinicio",
   "The SIM number :sim is already associated with another GPS (Vehicle :vehicle)":"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)",
   "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior",
   "Please refresh the report once you finish the fix bugs":"Porfavor actualice el reporte una vez termine la corrección de inconsistencias"
