@@ -43,11 +43,13 @@ class ManagerGPSController extends Controller
     {
         $vehicleId = $request->get('vehicleId');
         $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicleId);
-        return $currentLocationGPS->vehicleStatus->des_status ?? 'NONE';
+        $vehicleStatus = $currentLocationGPS->vehicleStatus;
+        return $vehicleStatus ? "$vehicleStatus->des_status | $currentLocationGPS->date_vehicle_status" : 'NONE';
     }
 
     public function sendSMS(Request $request)
     {
+        $simGPS = $request->get('sim-gps');
         $commands = $request->get('command-gps');
         $gpsCommands = explode("\n", $commands);
 

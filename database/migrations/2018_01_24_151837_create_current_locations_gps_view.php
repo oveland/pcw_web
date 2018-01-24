@@ -22,6 +22,7 @@ class CreateCurrentLocationsGpsView extends Migration
               m.orientacion AS orientation,
               m.velocidad AS speed,
               m.status vehicle_status_id,
+              (((m.fecha || ' '::text) || m.hora_status))::timestamp without time zone AS date_vehicle_status,
               v.id AS vehicle_id,
               m.name AS vehicle_plate
             FROM (markers m
