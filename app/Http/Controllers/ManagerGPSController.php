@@ -86,6 +86,7 @@ class ManagerGPSController extends Controller
         foreach ($gpsCommands as $smsCommand) {
             $smsCommand = trim($smsCommand);
             $totalSent++;
+            //dump($smsCommand);
             $responseSMS = SMS::sendCommand($smsCommand, $simGPS);
             $length = strlen($smsCommand);
             dump("$totalSent. $smsCommand | $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . "):");

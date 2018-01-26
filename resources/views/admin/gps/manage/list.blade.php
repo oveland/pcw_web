@@ -164,6 +164,7 @@
 
             var simGPS = $('#sim-gps');
             var gpsType = simGPS.find('option[value="' + simGPS.val() + '"]').data('gps-type');
+            if( simGPS.data('any-gps') )gpsType = 'SKYPATROL';
             $('#gps-type').val(gpsType);
 
             $.ajax({
