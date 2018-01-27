@@ -32,17 +32,18 @@ class RouteReportController extends Controller
      */
     public function show(Request $request)
     {
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $route = Route::find($request->get('route-report'));
-
-        if (!$route->belongsToCompany($company)) abort(404);
-
+        $companyReport = $request->get('company-report');
+        $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
 
-        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
-            ->where('route_id', '=', $route->id)
-            ->where(function ($query) {
+        $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
+        $route = $routeReport == "all" ? $routeReport : Route::find($routeReport);
+        if ($route != "all" && !$route->belongsToCompany($company)) abort(404);
+
+        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
+        if( $route != "all" )$dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
+        $dispatchRegisters = $dispatchRegisters->where(function ($query) {
                 $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
             })
             ->with('recorderCounterPerRoundTrip')
@@ -66,7 +67,7 @@ class RouteReportController extends Controller
                         return $reports->first()->vehicle->number;
                     });
 
-                if ($request->get('export')) $this->exportByVehicle($vehiclesDispatchRegisters, $route, $dateReport);
+                if ($request->get('export')) $this->exportByVehicle($vehiclesDispatchRegisters, $dateReport);
 
                 return view('reports.route.route.routeReportByVehicle', compact(['vehiclesDispatchRegisters', 'company', 'route', 'dateReport']));
                 break;
@@ -121,18 +122,19 @@ class RouteReportController extends Controller
     /**
      * Export excel by Vehicle option
      *
-     * @param $roundTripDispatchRegisters
-     * @param $route
+     * @param $vehiclesDispatchRegisters
      * @param $dateReport
+     * @internal param $roundTripDispatchRegisters
      */
-    public function exportByVehicle($vehiclesDispatchRegisters, $route, $dateReport)
+    public function exportByVehicle($vehiclesDispatchRegisters, $dateReport)
     {
-        Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport, $route) {
+        Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
                 $dataExcel = array();
                 $totalDay = 0;
                 foreach ($dispatchRegisters as $dispatchRegister) {
+                    $route = $dispatchRegister->route;
                     $driver = $dispatchRegister->driver;
                     $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
                     //$startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder_prev;
@@ -148,24 +150,25 @@ class RouteReportController extends Controller
 
                     $totalDay += $totalRoundTrip;
                     $dataExcel[] = [
-                        __('Round Trip') => $dispatchRegister->round_trip,                                  # A CELL
-                        __('Turn') => $dispatchRegister->turn,                                              # B CELL
-                        __('Driver') => $driver?$driver->fullName():__('Not assigned'),                # C CELL
-                        __('Departure time') => $dispatchRegister->departure_time,                          # D CELL
-                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,          # E CELL
-                        __('Arrival Time') => $dispatchRegister->arrival_time,                              # F CELL
-                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,        # G CELL
-                        __('Status') => $dispatchRegister->status,                                          # H CELL
-                        __('Start Rec.') => intval($startRecorder),                                         # I CELL
-                        __('End Rec.') => intval($currentRecorder),                                         # J CELL
-                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),               # K CELL
-                        __('Pass.') . " " . __('Day') => intval($totalDay),                            # L CELL
+                        __('Route') => $route->name,                                       # A CELL
+                        __('Round Trip') => $dispatchRegister->round_trip,                                  # B CELL
+                        __('Turn') => $dispatchRegister->turn,                                              # C CELL
+                        __('Driver') => $driver?$driver->fullName():__('Not assigned'),                # D CELL
+                        __('Departure time') => $dispatchRegister->departure_time,                          # E CELL
+                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,          # F CELL
+                        __('Arrival Time') => $dispatchRegister->arrival_time,                              # G CELL
+                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,        # H CELL
+                        __('Status') => $dispatchRegister->status,                                          # I CELL
+                        __('Start Rec.') => intval($startRecorder),                                         # J CELL
+                        __('End Rec.') => intval($currentRecorder),                                         # K CELL
+                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),               # L CELL
+                        __('Pass.') . " " . __('Day') => intval($totalDay),                            # M CELL
                     ];
                 }
 
                 $dataExport = (object)[
                     'fileName' => __('Dispatch report') . " V $dateReport",
-                    'title' => __('Dispatch report') . " | $route->name: $dateReport",
+                    'title' => __('Dispatch report') . " | $dateReport",
                     'subTitle' => "$vehicle->number | $vehicle->plate",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,

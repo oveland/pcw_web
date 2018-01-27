@@ -261,6 +261,7 @@
   "Select a SIM number":"Seleccione un número de SIM",
   "Type here the commands": "Ingrese aquí los comandos",
   "Send": "Enviar",
+  "All Routes": "Todas las rutas",
   "Reset Command":"Comando de reinicio",
   "The SIM number :sim is already associated with another GPS (Vehicle :vehicle)":"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)",
   "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior",

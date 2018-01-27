@@ -276,12 +276,26 @@
 
             $('#company-report').change();
 
-            $('#date-report, #route-report, #type-report').change(function () {
+            $('#date-report, #type-report').change(function () {
                 var form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
+            });
+
+            $('#route-report').change(function(){
+                var typeReportSelect = $('#type-report');
+                var typeReportByRoundTrip = typeReportSelect.find('option[value="round_trip"]');
+                var allRoutes = $(this).val() == "all";
+
+                if( allRoutes ){
+                    typeReportSelect.val('vehicle');
+                    typeReportByRoundTrip.prop('disabled', allRoutes);
+                }else{
+                    typeReportByRoundTrip.removeProp('disabled');
+                }
+                typeReportSelect.select2();
             });
 
             $('#modal-route-report').on('shown.bs.modal', function () {
@@ -446,7 +460,9 @@
                 option: 'loadRoutes',
                 company: company
             }, function () {
-                routeSelect.trigger('change.select2');
+                routeSelect.find('option[value=""]').remove();
+                routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
+                routeSelect.val('all').change();
             });
         }
     </script>

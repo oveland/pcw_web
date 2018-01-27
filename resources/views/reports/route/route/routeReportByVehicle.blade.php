@@ -32,7 +32,7 @@
                     </ul>
                 </div>
                 <div class="col-md-1">
-                    <a href="{{ route('route-search-report') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id }}&type-report=vehicle&export=true" class="btn btn-lime bg-lime-dark pull-right" style="position: absolute;left: -20px;">
+                    <a href="{{ route('route-search-report') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id ?? $route }}&type-report=vehicle&export=true" class="btn btn-lime bg-lime-dark pull-right" style="position: absolute;left: -20px;">
                         <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                     </a>
                 </div>
@@ -47,6 +47,10 @@
                     <table id="table-report" class="table table-bordered table-striped table-hover table-valign-middle table-report">
                         <thead>
                         <tr class="inverse">
+                            <th data-sorting="disabled">
+                                <i class="fa fa-flag text-muted"></i><br>
+                                @lang('Route')
+                            </th>
                             <th data-sorting="disabled">
                                 <i class="fa fa-list-ol text-muted"></i><br>
                                 @lang('Round Trip')
@@ -100,22 +104,24 @@
                         @php($totalPerRoute = 0)
                         @foreach( $dispatchRegisters as $dispatchRegister )
                             @php
-                                    $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
-                                    $driver = $dispatchRegister->driver;
+                                $route = $dispatchRegister->route;
+                                $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
+                                $driver = $dispatchRegister->driver;
 
-                                    $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
+                                $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
 
-                                    $startRecorderPrev = $recorderCounterPerRoundTrip->end_recorder_prev;
-                                    if($dispatchRegister->start_recorder > 0){
-                                        $startRecorderPrev = $dispatchRegister->start_recorder;
-                                    }
+                                $startRecorderPrev = $recorderCounterPerRoundTrip->end_recorder_prev;
+                                if($dispatchRegister->start_recorder > 0){
+                                    $startRecorderPrev = $dispatchRegister->start_recorder;
+                                }
 
-                                    //$passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
-                                    $passengersPerRoundTrip = $currentRecorder - $startRecorderPrev;
-                                    $totalPerRoute+=$passengersPerRoundTrip;
-                                    $invalid = ($totalPerRoute > 1000 || $totalPerRoute < 0)?true:false;
+                                //$passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+                                $passengersPerRoundTrip = $currentRecorder - $startRecorderPrev;
+                                $totalPerRoute+=$passengersPerRoundTrip;
+                                $invalid = ($totalPerRoute > 1000 || $totalPerRoute < 0)?true:false;
                             @endphp
                             <tr>
+                                <th class="bg-inverse text-white text-center">{{ $route->name }}</th>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td>{{ $dispatchRegister->turn }}</td>
                                 <td class="text-uppercase">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
