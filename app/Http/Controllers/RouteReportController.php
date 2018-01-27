@@ -39,10 +39,10 @@ class RouteReportController extends Controller
 
         $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
         $route = $routeReport == "all" ? $routeReport : Route::find($routeReport);
-        if ($route != "all" && !$route->belongsToCompany($company)) abort(404);
+        if ($routeReport != "all" && !$route->belongsToCompany($company)) abort(404);
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
-        if ($route != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
+        if ($routeReport != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
         else $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
         $dispatchRegisters = $dispatchRegisters->where(function ($query) {
             $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');

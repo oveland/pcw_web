@@ -296,6 +296,8 @@
                     typeReportByRoundTrip.removeProp('disabled');
                 }
                 typeReportSelect.select2();
+
+                $('.report-container').empty().slideUp();
             });
 
             $('#modal-route-report').on('shown.bs.modal', function () {
