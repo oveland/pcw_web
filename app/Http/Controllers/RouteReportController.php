@@ -42,10 +42,11 @@ class RouteReportController extends Controller
         if ($route != "all" && !$route->belongsToCompany($company)) abort(404);
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
-        if( $route != "all" )$dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
+        if ($route != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
+        else $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
         $dispatchRegisters = $dispatchRegisters->where(function ($query) {
-                $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
-            })
+            $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
+        })
             ->with('recorderCounterPerRoundTrip')
             ->orderBy('round_trip')
             ->orderBy('id')
@@ -94,7 +95,7 @@ class RouteReportController extends Controller
                         __('Turn') => $dispatchRegister->turn,                                                                              # B CELL
                         __('Vehicle') => intval($vehicle->number),                                                                          # C CELL
                         __('Plate') => $vehicle->plate,                                                                                     # D CELL
-                        __('Driver') => $driver?$driver->fullName():__('Not assigned'),                                                # E CELL
+                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                                                # E CELL
                         __('Departure time') => $dispatchRegister->departure_time,                                                          # F CELL
                         __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,                                          # G CELL
                         __('Arrival Time') => $dispatchRegister->arrival_time,                                                              # H CELL
@@ -153,7 +154,7 @@ class RouteReportController extends Controller
                         __('Route') => $route->name,                                       # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                  # B CELL
                         __('Turn') => $dispatchRegister->turn,                                              # C CELL
-                        __('Driver') => $driver?$driver->fullName():__('Not assigned'),                # D CELL
+                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                # D CELL
                         __('Departure time') => $dispatchRegister->departure_time,                          # E CELL
                         __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,          # F CELL
                         __('Arrival Time') => $dispatchRegister->arrival_time,                              # G CELL
@@ -338,7 +339,7 @@ class RouteReportController extends Controller
             'fileName' => __('Off_Road_Report_') . str_replace(' ', '_', $company->name) . '.' . str_replace('-', '', $dateReport),
             'header' => [strtoupper(__('Off road report')) . ' ' . $company->name . '. ' . __('Vehicle') . ' ' . $dispatchRegister->vehicle->number . ' ➜ ' . $dispatchRegister->vehicle->plate],
             'infoRoute' => [
-                $route->name . ': ' . __('Round Trip') . ' ' . ($dispatchRegister->round_trip == 0 ? '0' : $dispatchRegister->round_trip) . ', ' . __('Turn') . ' ' . $dispatchRegister->turn.'. '.__('Driver').': '.($driver?$driver->fullName():__('Not assigned')),
+                $route->name . ': ' . __('Round Trip') . ' ' . ($dispatchRegister->round_trip == 0 ? '0' : $dispatchRegister->round_trip) . ', ' . __('Turn') . ' ' . $dispatchRegister->turn . '. ' . __('Driver') . ': ' . ($driver ? $driver->fullName() : __('Not assigned')),
             ],
             'data' => $data,
         ];
