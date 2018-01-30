@@ -40,7 +40,7 @@ trait CounterByRecorder
     {
         $vehicle = Vehicle::find($vehicle_id);
 
-        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy('id');
+        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy('departure_time');
         $totalPassengersByVehicle = 0;
         $issues = collect([]);
 

@@ -48,8 +48,7 @@ class RouteReportController extends Controller
             $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
         })
             ->with('recorderCounterPerRoundTrip')
-            ->orderBy('round_trip')
-            ->orderBy('id')
+            ->orderBy('departure_time')
             ->get();
 
         switch ($typeReport) {
