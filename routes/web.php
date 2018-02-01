@@ -187,3 +187,9 @@ Route::group(['middleware' => ['auth']], function () {
     /* Routes for tools */
     Route::get('/tools/map', 'ToolsController@map')->name('map-tool');
 });
+
+Route::prefix('api')->group(function () {
+    Route::prefix('peak-and-plate')->group(function () {
+        Route::get('/{company}', 'Api\PeakAndPlateController@getVehiclesCurrentPeakAndPlate')->name('api-peak-and-plate-get-vehicles-current-peak-and-plate');
+    });
+});

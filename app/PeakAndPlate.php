@@ -31,4 +31,9 @@ class PeakAndPlate extends Model
     protected $fillable = ['date','week_day','vehicle_id'];
 
     protected $dates = ['date'];
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
 }
