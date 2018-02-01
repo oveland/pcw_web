@@ -190,6 +190,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::prefix('api')->group(function () {
     Route::prefix('peak-and-plate')->group(function () {
-        Route::get('/{company}', 'Api\PeakAndPlateController@getVehiclesCurrentPeakAndPlate')->name('api-peak-and-plate-get-vehicles-current-peak-and-plate');
+        Route::get('/{company}', 'ApiPeakAndPlateController@getVehiclesCurrentPeakAndPlate')->name('api-peak-and-plate-get-vehicles-current-peak-and-plate');
     });
 });

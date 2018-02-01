@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Company;
 use App\PeakAndPlate;
@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PeakAndPlateController extends Controller
+class ApiPeakAndPlateController extends Controller
 {
     public function getVehiclesCurrentPeakAndPlate(Company $company)
     {
