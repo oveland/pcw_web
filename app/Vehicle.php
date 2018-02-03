@@ -38,4 +38,9 @@ class Vehicle extends Model
     public function scopeActive($query){
         return $query->where('active','=',true);
     }
+
+    public function simGPS()
+    {
+        return $this->hasOne(SimGPS::class);
+    }
 }

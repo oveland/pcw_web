@@ -281,7 +281,7 @@ class MigrationController extends Controller
                     $gpsVehicle = new GpsVehicle();
                     $gpsVehicleNew = true;
                 }
-                $gpsVehicle->imei = $vehicleOLD->imei_gps ?? $vehicleOLD->placa;
+                $gpsVehicle->imei = ($vehicleOLD->imei_gps && $vehicleOLD->imei_gps != 0) ? $vehicleOLD->imei_gps : $vehicleOLD->placa;
                 $gpsVehicle->vehicle_id = $vehicleOLD->id_crear_vehiculo;
 
                 try {

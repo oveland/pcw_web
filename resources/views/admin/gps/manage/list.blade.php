@@ -82,7 +82,7 @@
                         <input type="hidden" id="gps-type" name="gps-type" value="">
                         <div class="row">
                             <div class="form-group col-md-5 has-success has-feedback">
-                                <i class="ion-android-phone-portrait fa-fw text-center f-s-17" aria-hidden="true"></i>
+                                <i class="fa fa-signal f-s-17" aria-hidden="true"></i>
                                 <label for="sim-gps" class="control-label field-required">
                                     @lang('SIM GPS')
                                 </label>
@@ -102,7 +102,19 @@
                                                     @endforeach
                                                 </select>
                                             @else
-                                                <input id="sim-gps" name="sim-gps" type="number" class="form-control" data-any-gps="true">
+                                                <div class="m-b-10">
+                                                    <button type="button" class="btn btn-success btn-xs gps-skypatrol m-r-5"
+                                                            onclick="$(this).removeClass('disabled');$('.gps-tracker').addClass('disabled');$('#sim-gps').data('gps-type','SKYPATROL')">
+                                                        <i class="fa fa-podcast"></i>
+                                                        @lang('SKYPATROL')
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary btn-xs gps-tracker disabled"
+                                                            onclick="$(this).removeClass('disabled');$('.gps-skypatrol').addClass('disabled');$('#sim-gps').data('gps-type','TRACKER')">
+                                                        <i class="fa fa-podcast"></i>
+                                                        @lang('TRACKER')
+                                                    </button>
+                                                </div>
+                                                <input id="sim-gps" name="sim-gps" type="text" class="form-control" data-any-gps="true" data-gps-type="SKYPATROL">
                                             @endif
                                         </div>
                                     </div>
@@ -164,7 +176,10 @@
 
             var simGPS = $('#sim-gps');
             var gpsType = simGPS.find('option[value="' + simGPS.val() + '"]').data('gps-type');
-            if( simGPS.data('any-gps') )gpsType = 'SKYPATROL';
+            if( simGPS.data('any-gps') ){
+                gpsType = simGPS.data('gps-type');
+                console.log(gpsType);
+            }
             $('#gps-type').val(gpsType);
 
             $.ajax({
