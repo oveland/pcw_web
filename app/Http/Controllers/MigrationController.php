@@ -362,7 +362,10 @@ class MigrationController extends Controller
     public function migrateFringes(Request $request)
     {
         $new = true;
+        DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
         DB::statement("TRUNCATE control_point_times");
+
+        DB::statement("ALTER TABLE fringes DISABLE TRIGGER ALL");
         DB::statement("DELETE FROM fringes");
         DB::statement("SELECT pg_catalog.setval('fringes_id_seq', 1, false)");
 
@@ -402,6 +405,9 @@ class MigrationController extends Controller
             }
         }
 
+        DB::statement("ALTER TABLE control_point_times ENABLE TRIGGER ALL");
+        DB::statement("ALTER TABLE fringes ENABLE TRIGGER ALL");
+
         dd([
             'Total Created' => $totalCreated,
             'Total Updated' => $totalUpdated,
@@ -412,6 +418,7 @@ class MigrationController extends Controller
     public function migrateControlPointTimes(Request $request)
     {
         $new = true;
+        DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
         DB::statement("TRUNCATE control_point_times");
         DB::statement("SELECT pg_catalog.setval('control_point_times_id_seq', 1, false)");
         DB::statement("UPDATE tiempos_punto_control SET tiempo1 = '00:00' WHERE tiempo1 = ''");
@@ -498,6 +505,8 @@ class MigrationController extends Controller
                 }
             }
         }
+
+        DB::statement("ALTER TABLE control_point_times ENABLE TRIGGER ALL");
 
         dd([
             'Total Created' => $totalCreated,

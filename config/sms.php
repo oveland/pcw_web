@@ -62,4 +62,26 @@ return [
     */
 
     'sms_max_length_for_gps' => env('SMS_MAX_LENGTH_FOR_GPS',140),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Start time for send RESET command
+    |--------------------------------------------------------------------------
+    |
+    | Start time for send RESET command via SMS for down GPS
+    |
+    */
+
+    'sms_reset_start_at' => env('SMS_RESET_START_AT','05:00'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | End time for send RESET command
+    |--------------------------------------------------------------------------
+    |
+    | End time for send RESET command via SMS for down GPS
+    |
+    */
+
+    'sms_reset_end_at' => env('SMS_RESET_END_AT','19:00'),
 ];

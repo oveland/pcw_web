@@ -94,7 +94,7 @@ trait CounterByRecorder
                         ->where('date', '<', $dispatchRegister->date)
                         ->orderByDesc('id')
                         ->limit(1)->get()->first()
-                        ->end_recorder;
+                        ->end_recorder ?? 0;
                 }
             }
 

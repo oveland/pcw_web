@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('log:parked')->everyMinute();
         $schedule->command('db:segment-reports')->dailyAt('01:00');
-        $schedule->command('gps:restart')->everyThirtyMinutes()->between('05:00','20:00');
+        $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
     }
 
     /**
