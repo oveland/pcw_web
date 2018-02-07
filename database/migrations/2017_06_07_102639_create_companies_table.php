@@ -20,6 +20,7 @@ class CreateCompaniesTable extends Migration
             $table->string('nit')->unique();
             $table->string('address')->nullable();
             $table->string('link')->default('http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php');
+            $table->string('timezone',100)->default('America/Bogota');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

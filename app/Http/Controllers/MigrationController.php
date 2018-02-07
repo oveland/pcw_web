@@ -121,6 +121,7 @@ class MigrationController extends Controller
             $company->nit = $companyOLD->nit;
             $company->address = $companyOLD->direccion;
             $company->link = $companyOLD->url;
+            $company->timezone = $companyOLD->timezone;
             $company->active = $companyOLD->estado;
 
             try {
