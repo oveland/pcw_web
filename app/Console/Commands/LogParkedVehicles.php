@@ -14,7 +14,7 @@ class LogParkedVehicles extends Command
      *
      * @var string
      */
-    protected $signature = 'log:parked';
+    protected $signature = 'log:parked-vehicles';
 
     /**
      * The console command description.
