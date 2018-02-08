@@ -122,9 +122,9 @@
     <!-- end row -->
 
     <div class="modal modal-message fade" id="modal-route-report">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="height: 1000px !important;">
             <div class="modal-content">
-                <div class="modal-header" style="width: 90%">
+                <div class="modal-header" style="width: 100%">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         <i class="fa fa-times"></i>
                     </button>
@@ -141,7 +141,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-body" style="width:90%;">
+                <div class="modal-body" style="width:100%;">
                     <h4>
                         <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
                         <span class="pull-right"><img src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>                        &nbsp;&nbsp;
@@ -201,7 +201,7 @@
                         </div>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <div class="col-md-12 p-5">
-                                <div id="google-map-light-dream" class="height-sm"></div>
+                                <div id="google-map-light-dream" class="height-lg"></div>
                             </div>
                         </div>
                     </div>

@@ -186,6 +186,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Routes for tools */
     Route::get('/tools/map', 'ToolsController@map')->name('map-tool');
+    Route::get('/tools/get-route-distance/{route}', 'ToolsController@getRouteDistance')->name('tools-map-get-route-distance');
+    Route::get('/tools/get-route-distance', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-url');
 });
 
 Route::prefix('api')->group(function () {

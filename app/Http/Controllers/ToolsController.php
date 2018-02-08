@@ -57,4 +57,26 @@ class ToolsController extends Controller
         }
         return $coordinates;
     }
+
+    public function getRouteDistance(Route $route)
+    {
+        $coordinates = RouteReportController::getRouteCoordinates($route->url);
+        $content = "";
+        foreach ($coordinates as $coordinate) {
+            $coordinate = (object)$coordinate;
+            $content .= "$coordinate->latitude, $coordinate->longitude\n";
+        }
+
+        return $content;
+    }
+    public function getRouteDistanceFromUrl($url)
+    {
+        $coordinates = RouteReportController::getRouteCoordinates($url);
+        $content = "";
+        foreach ($coordinates as $coordinate) {
+            $coordinate = (object)$coordinate;
+            $content .= "$coordinate->latitude, $coordinate->longitude\n";
+        }
+        return $content;
+    }
 }
