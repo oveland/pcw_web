@@ -50,8 +50,7 @@ class GPSCheckStatusCommand extends Command
           UPDATE markers
           SET status = 1, period = 0 
           WHERE ( fecha < current_date OR (fecha = current_date AND hora < (current_time - '$gpsTimeForNOReportPowerOn'::TIME) ) ) 
-          AND status <> 6 
-          AND name NOT IN (SELECT v.placa FROM crear_vehiculo as v WHERE v.empresa = 27)
+          AND status <> 6
         ";
         $queryForColombianGPSPowerON = DB::update($queryForColombianGPSPowerON);
         Log::info("TOTAL NO REPORT WITH POWER ON (COL) $queryForColombianGPSPowerON");
@@ -60,14 +59,13 @@ class GPSCheckStatusCommand extends Command
           UPDATE markers 
           SET status = 1, period = 0 
           WHERE ( fecha < current_date OR (fecha = current_date AND hora < (current_time - '$gpsTimeForNOReportPowerOff'::TIME) ) ) 
-          AND status = 6 
-          AND name NOT IN (SELECT v.placa FROM crear_vehiculo as v WHERE v.empresa = 27)
+          AND status = 6
         ";
         $queryForColombianGPSPowerOFF = DB::update($queryForColombianGPSPowerOFF);
         Log::info("TOTAL NO REPORT WITH POWER OFF (COL) $queryForColombianGPSPowerOFF");
 
         /* CHECK STATUS GPS FOR NICARAGUA */
-        DB::update("SET TIMEZONE = 'America/Managua'");
+        /*DB::update("SET TIMEZONE = 'America/Managua'");
         $queryForNicaraguaGPSPowerON = "
           UPDATE markers 
           SET status = 1, period = 0 
@@ -86,7 +84,7 @@ class GPSCheckStatusCommand extends Command
           AND name IN (SELECT v.placa FROM crear_vehiculo as v WHERE v.empresa = 27)
         ";
         $queryForNicaraguaGPSPowerOFF = DB::update($queryForNicaraguaGPSPowerOFF);
-        Log::info("TOTAL NO REPORT WITH POWER OFF (NIC) $queryForNicaraguaGPSPowerOFF");
+        Log::info("TOTAL NO REPORT WITH POWER OFF (NIC) $queryForNicaraguaGPSPowerOFF");*/
 
         /* Set default timezone for current session */
         DB::update("SET TIMEZONE = 'America/Bogota'");
