@@ -48,4 +48,8 @@ class Route extends Model
     public function belongsToCompany($company){
         return $this->company->id == $company->id;
     }
+
+    public function scopeActive($query){
+        return $query->where('active',true);
+    }
 }

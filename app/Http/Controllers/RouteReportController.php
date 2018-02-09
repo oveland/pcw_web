@@ -425,7 +425,7 @@ class RouteReportController extends Controller
         switch ($request->get('option')) {
             case 'loadRoutes':
                 $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
-                $routes = $company != 'null' ? Route::where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
+                $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
                 return view('partials.selects.routes', compact('routes'));
                 break;
             default:

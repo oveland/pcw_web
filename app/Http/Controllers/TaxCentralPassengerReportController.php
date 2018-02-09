@@ -293,7 +293,7 @@ class TaxCentralPassengerReportController extends Controller
                 } else {
                     $company = Auth::user()->company->id;
                 }
-                $routes = $company != 'null' ? Route::whereCompanyId($company)->orderBy('name', 'asc')->get() : [];
+                $routes = $company != 'null' ? Route::active()->whereCompanyId($company)->orderBy('name', 'asc')->get() : [];
                 return view('partials.selects.routes', compact('routes'));
                 break;
             default:
