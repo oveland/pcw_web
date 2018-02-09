@@ -41,6 +41,7 @@ class ControlPointsReportController extends Controller
             ->get();
 
         $controlPointTimeReports = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
+            ->orderBy('date_created')
             ->get();
 
         $controlPointTimeReportsByRoundTrip = $controlPointTimeReports->groupBy(function ($controlPointTimeReport) {
