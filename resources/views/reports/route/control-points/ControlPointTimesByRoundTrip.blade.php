@@ -68,7 +68,8 @@
                                             $dispatchRegister = $reportByVehicles->first()->dispatchRegister;
                                             $driver = $dispatchRegister->driver;
                                             $departureTime = $dispatchRegister->departure_time;
-                                            $arrival_time = $dispatchRegister->arrival_time;
+                                            $arrivalTime = $dispatchRegister->arrival_time;
+                                            $arrivalTimeScheduled = $dispatchRegister->arrival_time_scheduled;
                                         @endphp
                                         <tr class="">
                                             <th class="text-capitalize text-muted {{ $dispatchRegister->inProgress() ? 'warning':'bg-inverse' }}">
@@ -85,29 +86,33 @@
                                                 @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
                                                 @php( $report = $reportByVehicles->where('control_point_id',$controlPointId)->first() ?? null )
                                                 <td class="text-center">
-                                                    @if( $report )
+                                                    @if( $report || ($loop->last && $dispatchRegister->complete() ) )
                                                         @php
-                                                            $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPointId)
+                                                            $strTime = new \App\Http\Controllers\Utils\StrTime();
+
+                                                            if( $loop->last && $dispatchRegister->complete() ){ // For last control point
+                                                                $measuredControlPointTime = $arrivalTime;
+                                                                $scheduledControlPointTime = $arrivalTimeScheduled;
+                                                            }else{
+                                                                $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPointId)
                                                                 ->where('fringe_id',$report->fringe_id)
                                                                 ->get()->first();
 
-                                                            $strTime = new \App\Http\Controllers\Utils\StrTime();
-                                                            $measuredTime = $strTime::addStrTime($departureTime,$report->timem);
-                                                            $scheduledTime = $strTime::addStrTime($departureTime,$report->timep);
+                                                                $measuredTime = $strTime::addStrTime($departureTime,$report->timem);
+                                                                $scheduledTime = $strTime::addStrTime($departureTime,$report->timep);
 
-                                                            $scheduledControlPointTime = $strTime::addStrTime($departureTime,$controlPointTime->time_from_dispatch);
+                                                                $scheduledControlPointTime = $strTime::addStrTime($departureTime,$controlPointTime->time_from_dispatch);
 
-                                                            $measuredControlPointTime = "";
-                                                            if( $loop->first ){
-                                                                $measuredControlPointTime = $departureTime;
-                                                            }else if( $loop->last && $dispatchRegister->complete() ){
-                                                                $measuredControlPointTime = $arrival_time;
-                                                            }
-                                                            else{
-                                                                $measuredControlPointTime = $strTime::segToStrTime(
-                                                                    $strTime::toSeg($scheduledControlPointTime)*$strTime::toSeg($measuredTime)/
-                                                                    $strTime::toSeg($scheduledTime)
-                                                                );
+                                                                $measuredControlPointTime = "";
+                                                                if( $loop->first ){
+                                                                    $measuredControlPointTime = $departureTime;
+                                                                }
+                                                                else{
+                                                                    $measuredControlPointTime = $strTime::segToStrTime(
+                                                                        $strTime::toSeg($scheduledControlPointTime)*$strTime::toSeg($measuredTime)/
+                                                                        $strTime::toSeg($scheduledTime)
+                                                                    );
+                                                                }
                                                             }
                                                         @endphp
 
@@ -116,8 +121,14 @@
                                                                 $statusColor =  'lime';
                                                                 $statusText =  __('on time');
                                                                 if( $strTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00' ){
-                                                                    $statusColor = $report->fast() ? 'primary':'danger';
-                                                                    $statusText = __($report->status);
+                                                                    if( $report ){
+                                                                        $statusColor = $report->fast() ? 'primary':'danger';
+                                                                        $statusText = __($report->status);
+                                                                    }else{
+                                                                        $isFast = $strTime::timeAGreaterThanTimeB($scheduledControlPointTime,$measuredControlPointTime);
+                                                                        $statusColor =  $isFast ? 'primary':'danger';
+                                                                        $statusText =  __($isFast ? 'fast':'slow');
+                                                                    }
                                                                 }
                                                             @endphp
                                                             <div class="tooltipss" data-title="{{ $controlPoint->name }}">
