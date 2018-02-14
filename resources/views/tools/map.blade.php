@@ -76,7 +76,7 @@
         });
         setTimeout(function(){
             map.addListener('click', function(event) {
-                addMarker(event.latLng);
+                addMarker(event.latLng,true);
             });
         },1500);
 
@@ -90,11 +90,13 @@
         }
 
         // Adds a marker to the map and push to the array.
-        function addMarker(location) {
+        function addMarker(location,clicked) {
             var marker = new google.maps.Marker({
                 position: location,
                 map: map
             });
+
+            if(clicked)marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
 
             var infowindow = new google.maps.InfoWindow({
                 content: location.lat()+', '+location.lng()

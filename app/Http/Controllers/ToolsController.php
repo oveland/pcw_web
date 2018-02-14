@@ -23,7 +23,59 @@ class ToolsController extends Controller
         $coordinates = $this->googleSnapToRoad($path);
         dd($coordinates);*/
 
+
+        // FOR CALCULATE COUNTER BY SENSOR FROM FRAME COUNTER
+        /*
+        $counts = \DB::select("
+            SELECT *
+            FROM contador_eventos
+            WHERE fecha = '2018-02-09' AND id_gps = 'M-1614'
+            ORDER BY hora ASC
+        ");
+
+        $updated = 0;
+        $lastTotal = 0;
+        foreach ($counts as $count){
+            try{
+                $totalFromTorres = self::getAverageFromTORRESCriterion($count->frame);
+                $totalFromTorres = ($totalFromTorres>$lastTotal)?$totalFromTorres:$lastTotal;
+                $lastTotal = $totalFromTorres;
+                $new = \DB::update("UPDATE contador_eventos SET total=$totalFromTorres WHERE id_cont_eventos=$count->id_cont_eventos");
+                if($new){
+                    $updated++;
+                }else{
+                    dump("NO SE ACTUALIZÓ, $new");
+                }
+            }catch (\Exception $e){
+                dump($e->getMessage());
+            }
+        }
+
+        dump("**********************************************************************");
+        
+        dump("** TOTAL ROWS: ".count($counts));
+        dd("** TOTAL UPDATED: $updated");*/
+        
         return view('tools.map');
+    }
+
+    public static function getAverageFromTORRESCriterion($frame)
+    {
+        $f = explode(" ","0 $frame");
+
+        $i = collect([]);
+        $i->push(0);
+        $i->push(($f[2] + $f[3]) / 2);                  // 1°
+        $i->push($f[4] + $f[5] - $f[6] - $f[7]);        // 2°
+        $i->push($f[6] + $f[7] + $f[8]);                // 3°
+        $i->push($f[9] + $f[10] - $f[11] - $f[12]);     // 4°
+        $i->push($f[11] + $f[12] + $f[13]);             // 5°
+        $i->push($f[14] + $f[15] + $f[16]);             // 6°
+        $i->push($f[17] + $f[18] + $f[19]);             // 7°
+        $i->push(($f[20] + $f[21]) / 2);                // 8°
+        $i->push(($f[22] + $f[23]) / 2);                // 9°
+
+        return intval(($i->get(2) + $i->get(3) + $i->get(4) + $i->get(5) + 2 * ($i->get(6) + $i->get(7) + $i->get(8) + $i->get(9)) )/12);
     }
 
     /**
@@ -69,6 +121,7 @@ class ToolsController extends Controller
 
         return $content;
     }
+
     public function getRouteDistanceFromUrl($url)
     {
         $coordinates = RouteReportController::getRouteCoordinates($url);
