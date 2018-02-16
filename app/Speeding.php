@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +30,16 @@ use Illuminate\Database\Eloquent\Model;
 class Speeding extends Model
 {
     protected $table = 'speeding';
+
+    protected function getDateFormat()
+    {
+        return config('app.date_time_format');
+    }
+
+    public function getTimeAttribute($time)
+    {
+        return Carbon::createFromFormat(config('app.simple_time_format'),explode('.',$time)[0]);
+    }
 
     public function vehicle()
     {

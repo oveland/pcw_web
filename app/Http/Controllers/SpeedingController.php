@@ -37,14 +37,42 @@ class SpeedingController extends Controller
         $vehicles = $company->vehicles;
         $dateReport = $request->get('date-report');
 
-        $speedingReportByVehicle = Speeding::where('date',$dateReport)
+        $allSpeedingReportByVehicle = Speeding::where('date',$dateReport)
             ->whereIn('vehicle_id',$vehicles->pluck('id'))
             ->get()
             ->groupBy('vehicle_id');
 
+        $speedingReportByVehicle = array();
+        foreach ($allSpeedingReportByVehicle as $vehicleId => $allSpeedingByVehicle) {
+            $speedingReportByVehicle[$vehicleId] = self::groupByFirstSpeeding($allSpeedingByVehicle);
+        }
+
         if( $request->get('export') )$this->export($speedingReportByVehicle,$dateReport);
 
         return view('reports.vehicles.speeding.speedingReport', compact(['speedingReportByVehicle', 'stringParams']));
+    }
+
+    /**
+     * @param $allSpeedingByVehicle
+     * @return array
+     */
+    public static function groupByFirstSpeeding($allSpeedingByVehicle)
+    {
+        $speedingReport = array();
+        $prevOffRoad = null;
+
+        foreach ($allSpeedingByVehicle as $speeding) {
+            if ($prevOffRoad) {
+                if ($speeding->time->diff($prevOffRoad->time)->format('%H:%I:%S') > '00:05:00') {
+                    $speedingReport[] = $speeding;
+                }
+            } else {
+                //$speedingReport[] = $speeding;
+            }
+            $prevOffRoad = $speeding;
+        }
+
+        return $speedingReport;
     }
 
     /**

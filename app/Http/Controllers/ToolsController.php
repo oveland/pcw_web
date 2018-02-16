@@ -25,16 +25,17 @@ class ToolsController extends Controller
 
 
         // FOR CALCULATE COUNTER BY SENSOR FROM FRAME COUNTER
-        /*
+        /*$date = '2018-02-09';
         $counts = \DB::select("
             SELECT *
             FROM contador_eventos
-            WHERE fecha = '2018-02-09' AND id_gps = 'M-1614'
+            WHERE fecha = '$date' AND id_gps = 'M-1614'
             ORDER BY hora ASC
         ");
 
         $updated = 0;
         $lastTotal = 0;
+        $totalFromTorres = 0;
         foreach ($counts as $count){
             try{
                 $totalFromTorres = self::getAverageFromTORRESCriterion($count->frame);
@@ -53,29 +54,51 @@ class ToolsController extends Controller
 
         dump("**********************************************************************");
         
+        dump("** DATE: ".$date);
         dump("** TOTAL ROWS: ".count($counts));
-        dd("** TOTAL UPDATED: $updated");*/
-        
+        dump("** TOTAL UPDATED: $updated");
+        dd("****** TOTAL PASS FINAL: $totalFromTorres");
+        */
         return view('tools.map');
     }
 
     public static function getAverageFromTORRESCriterion($frame)
     {
-        $f = explode(" ","0 $frame");
+        $f = collect(explode(" ","0 $frame"))->map(function($item,$key){
+            return abs(intval($item));
+        });
 
         $i = collect([]);
         $i->push(0);
-        $i->push(($f[2] + $f[3]) / 2);                  // 1°
-        $i->push($f[4] + $f[5] - $f[6] - $f[7]);        // 2°
-        $i->push($f[6] + $f[7] + $f[8]);                // 3°
-        $i->push($f[9] + $f[10] - $f[11] - $f[12]);     // 4°
-        $i->push($f[11] + $f[12] + $f[13]);             // 5°
-        $i->push($f[14] + $f[15] + $f[16]);             // 6°
-        $i->push($f[17] + $f[18] + $f[19]);             // 7°
-        $i->push(($f[20] + $f[21]) / 2);                // 8°
-        $i->push(($f[22] + $f[23]) / 2);                // 9°
+        $i->push(($f[2] + $f[3]) / 2);                          // 1°
+        $i->push($f[4] + $f[5] - $f[6] - $f[7] - $f[8]);        // 2°
+        $i->push($f[7] + $f[8] + $f[9]);                        // 3°
+        $i->push($f[10] + $f[11] - $f[12] - $f[13] - $f[14]);   // 4°
+        $i->push($f[13] + $f[14] + $f[15]);                     // 5°
+        $i->push($f[16] + $f[17] + $f[18]);                     // 6°
+        $i->push($f[19] + $f[20] + $f[21]);                     // 7°
+        $i->push(($f[22] + $f[23]) / 2);                        // 8°
+        $i->push(($f[24] + $f[25]) / 2);                        // 9°
 
-        return intval(($i->get(2) + $i->get(3) + $i->get(4) + $i->get(5) + 2 * ($i->get(6) + $i->get(7) + $i->get(8) + $i->get(9)) )/12);
+        $greater1 = collect([$f[2], $i->get(2), $i->get(3), $i->get(6), $i->get(8)])->max();
+        $greater2 = collect([$f[3], $i->get(4), $i->get(5), $i->get(7), $i->get(9)])->max();
+        $averageGreater = ($greater1 + $greater2) / 2;
+
+        $Base1 = $f[2];
+        $Base2 = $f[3];
+        $NSIT1 = $i->get(3);
+        $NSIT2 = $i->get(5);
+        $TS1 = $i->get(2);
+        $TS2 = $i->get(4);
+        $TI1 = $i->get(6);
+        $TI2 = $i->get(7);
+
+        $Error1 = ($Base1 - $NSIT1) + ($Base2 - $NSIT2);
+        $Error2 = ($NSIT1 - $TS1) + ($NSIT2 - $TS2);
+        $Error3 = ($Base1 - $TS1) + ($Base2 - $TS2);
+        $Error4 = ($Base1 - $TI1) + ($Base2 - $TI2);
+
+        return intval($averageGreater + $Error1 + $Error2 - $Error3 - $Error4);
     }
 
     /**

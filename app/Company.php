@@ -51,4 +51,9 @@ class Company extends Model
     public function scopeActive($query){
         return $query->where('active','=',true);
     }
+
+    public function hasRecorderCounter()
+    {
+        return $this->id == 14;
+    }
 }

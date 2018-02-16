@@ -151,7 +151,7 @@
                         </a>
                     </h4>
                     <div class="row">
-                        <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="col-md-3 col-sm-4 col-xs-12">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <!-- begin widget -->
                                 <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
@@ -199,7 +199,7 @@
                                 <!-- end widget -->
                             </div>
                         </div>
-                        <div class="col-md-8 col-sm-6 col-xs-12">
+                        <div class="col-md-9 col-sm-8 col-xs-12">
                             <div class="col-md-12 p-5">
                                 <div id="google-map-light-dream" class="height-lg"></div>
                             </div>
@@ -247,6 +247,11 @@
         var controlPointIcon = [
             '{{ asset('img/control-point-0.png') }}',
             '{{ asset('img/control-point-1.png') }}'
+        ];
+
+        var pointMap = [
+            '{{ asset('img/point-map-on-road.png') }}',
+            '{{ asset('img/point-map-off-road.png') }}'
         ];
 
         $(document).ready(function () {
@@ -367,14 +372,23 @@
                             var offRoads = [];
 
                             data.reports.forEach(function (report, i) {
+                                var percent = ((report.distance / data.routeDistance) * 100).toFixed(1);
+                                var routeDistance = report.distance / 1000;
                                 dataDates[i] = report.date;
                                 dataTimes[i] = report.time;
                                 dataValues[i] = report.value * 60;
-                                dataDistances[i] = report.distance / 1000;
-                                dataPercentDistances[i] = ((report.distance / data.routeDistance) * 100).toFixed(1);
+                                dataDistances[i] = routeDistance;
+                                dataPercentDistances[i] = percent;
                                 latitudes[i] = report.latitude;
                                 longitudes[i] = report.longitude;
                                 offRoads[i] = report.offRoad ? '' : 'hide';
+
+                                new google.maps.Marker({
+                                    title: report.date+" | "+report.time+" | "+routeDistance+" Km | "+"  "+percent+"%",
+                                    map: map,
+                                    icon: pointMap[report.offRoad ? 1 : 0],
+                                    position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}
+                                });
                             });
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {

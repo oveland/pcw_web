@@ -52,6 +52,10 @@
                                         <i class="fa fa-user"></i>
                                         @lang('Driver')
                                     </th>
+                                    <th class="text-center bg-inverse-dark text-muted">
+                                        <i class="fa fa-clock-o"></i><br>
+                                        @lang('Route Time')
+                                    </th>
                                     @foreach($reportsByControlPoint->keys() as $controlPointId)
                                         @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
                                         <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}">
@@ -65,6 +69,7 @@
                                     @foreach( $reportsByVehicles as $vehicleId => $reportByVehicles )
                                         @php
                                             $vehicle = \App\Vehicle::find($vehicleId);
+                                            $strTime = new \App\Http\Controllers\Utils\StrTime();
                                             $dispatchRegister = $reportByVehicles->first()->dispatchRegister;
                                             $driver = $dispatchRegister->driver;
                                             $departureTime = $dispatchRegister->departure_time;
@@ -82,14 +87,15 @@
                                             <th class="bg-inverse text-uppercase text-muted">
                                                 {{ $driver?$driver->fullName():__('Not assigned') }}
                                             </th>
+                                            <th class="bg-inverse text-uppercase text-muted">
+                                                {{ $strTime::toString($departureTime) }}<br>{{ $strTime::toString($arrivalTime) }}
+                                            </th>
                                             @foreach($reportsByControlPoint->keys() as $controlPointId)
                                                 @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
                                                 @php( $report = $reportByVehicles->where('control_point_id',$controlPointId)->first() ?? null )
                                                 <td class="text-center">
                                                     @if( $report || ($loop->last && $dispatchRegister->complete() ) )
                                                         @php
-                                                            $strTime = new \App\Http\Controllers\Utils\StrTime();
-
                                                             if( $loop->last && $dispatchRegister->complete() ){ // For last control point
                                                                 $measuredControlPointTime = $arrivalTime;
                                                                 $scheduledControlPointTime = $arrivalTimeScheduled;
@@ -149,8 +155,8 @@
                                                                         "
                                                                         data-content="
                                                                             <div style='width:200px'>
-                                                                                <strong>@lang('Scheduled Time'):</strong> {{ $scheduledControlPointTime }}<br>
-                                                                                <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $measuredControlPointTime }}
+                                                                                <strong>@lang('Scheduled Time'):</strong> {{ $strTime::toString($scheduledControlPointTime) }}<br>
+                                                                                <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $strTime::toString($measuredControlPointTime) }}
                                                                             </div>
                                                                         "
                                                                         >

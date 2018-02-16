@@ -73,4 +73,8 @@ class StrTime
     {
         return self::segToStrTime(self::toSeg($strTimeA) - self::toSeg($strTimeB));
     }
+
+    static function toString($time){
+        return explode('.',$time)[0];
+    }
 }

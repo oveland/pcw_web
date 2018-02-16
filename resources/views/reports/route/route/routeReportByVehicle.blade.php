@@ -31,7 +31,7 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 hide">
                     <a href="{{ route('route-search-report') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id ?? $route }}&type-report=vehicle&export=true" class="btn btn-lime bg-lime-dark pull-right" style="position: absolute;left: -20px;">
                         <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                     </a>
@@ -42,6 +42,7 @@
         <div class="tab-content panel p-0">
             @foreach($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters)
                 @php( $vehicle = \App\Vehicle::find($vehicleId) )
+                @php( $company = $vehicle->company )
                 <div id="report-tab-{{ $vehicle->plate }}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}}">
                     <!-- begin table -->
                     <table id="table-report" class="table table-bordered table-striped table-hover table-valign-middle table-report">
@@ -83,6 +84,7 @@
                                 <i class="fa fa-tachometer text-muted"></i><br>
                                 @lang('Status')
                             </th>
+                            @if( $company->hasRecorderCounter() )
                             <th colspan="2" data-sorting="disabled" class="text-center">
                                 @lang('Registradora')
                                 <hr class="hr">
@@ -94,6 +96,7 @@
                                 <hr class="hr">
                                 @lang('Round Trip') | @lang('Route')
                             </th>
+                            @endif
                             <th data-sorting="disabled">
                                 <i class="fa fa-rocket text-muted"></i><br>
                                 @lang('Actions')
@@ -104,6 +107,7 @@
                         @php($totalPerRoute = 0)
                         @foreach( $dispatchRegisters as $dispatchRegister )
                             @php
+                                $strTime = new \App\Http\Controllers\Utils\StrTime();
                                 $route = $dispatchRegister->route;
                                 $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
                                 $driver = $dispatchRegister->driver;
@@ -125,11 +129,12 @@
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td>{{ $dispatchRegister->turn }}</td>
                                 <td class="text-uppercase">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
-                                <td>{{ $dispatchRegister->departure_time }}</td>
-                                <td>{{ $dispatchRegister->arrival_time_scheduled }}</td>
-                                <td>{{ $dispatchRegister->arrival_time }}</td>
-                                <td>{{ $dispatchRegister->arrival_time_difference }}</td>
+                                <td>{{ $strTime->toString($dispatchRegister->departure_time) }}</td>
+                                <td>{{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}</td>
+                                <td>{{ $strTime->toString($dispatchRegister->arrival_time) }}</td>
+                                <td>{{ $strTime->toString($dispatchRegister->arrival_time_difference) }}</td>
                                 <td>{{ $dispatchRegister->status }}</td>
+                                @if( $company->hasRecorderCounter() )
                                 <td width="20%" class="p-r-0 p-l-0 text-center">
                                     @if( Auth::user()->isAdmin() )
                                     <div class="tooltips box-edit-recorder" data-title="@lang('Start Recorder')">
@@ -176,6 +181,7 @@
                                         {{ $totalPerRoute }}
                                     </span>
                                 </td>
+                                @endif
                                 <td width="10%" class="text-center">
                                     <a href="#modal-route-report"
                                        class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
