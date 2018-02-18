@@ -71,6 +71,21 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="has-sub menu-administration-counter">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="ion-android-contacts faa-pulse"></i>
+                            @lang('Counter')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-administration-counter-status">
+                                <a href="{{ route('admin-counter-status')  }}" class="faa-parent animated-hover">
+                                    <i class="ion-checkmark-circled faa-pulse" aria-hidden="true"></i>
+                                    @lang('Status')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     @endif
                 </ul>
             </li>

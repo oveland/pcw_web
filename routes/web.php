@@ -162,6 +162,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/update-sim-gps/{simGPS}', 'ManagerGPSController@updateSIMGPS')->name('admin-gps-manage-update-sim-gps');
             });
         });
+
+        Route::prefix(__('counter'))->group(function () {
+            Route::prefix(__('status'))->group(function () {
+                Route::get('/', 'StatusCounterController@index')->name('admin-counter-status');
+                Route::get('/list', 'StatusCounterController@list')->name('admin-counter-status-list');
+            });
+        });
     });
 
     /****************** MIGRATION ROUTES *******************/
