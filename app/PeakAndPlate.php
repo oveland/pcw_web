@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PeakAndPlate whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PeakAndPlate whereWeekDay($value)
  * @mixin \Eloquent
+ * @property-read \App\Vehicle $vehicle
  */
 class PeakAndPlate extends Model
 {

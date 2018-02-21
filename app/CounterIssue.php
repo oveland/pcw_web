@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CounterIssue whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CounterIssue whereVehicleId($value)
  * @mixin \Eloquent
+ * @property-read \App\DispatchRegister|null $dispatchRegister
  */
 class CounterIssue extends Model
 {
