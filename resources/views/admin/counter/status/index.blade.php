@@ -68,8 +68,8 @@
                                 <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
                                 <div class="input-group date date-time-picker-report">
                                     <input name="initial-date" id="initial-date" type="text" class="form-control" placeholder="@lang('Initial date')"
-                                           {{--value="{{ date('Y-m-d H:i:s') }}"/>--}}
-                                           value="2018-02-18 00:30:00"/>
+                                           value="{{ date('Y-m-d H:i:s') }}"/>
+                                           {{--value="2018-02-18 00:30:00"/>--}}
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -81,8 +81,8 @@
                                 <label for="final-date" class="control-label field-required">@lang('Final date')</label>
                                 <div class="input-group date date-time-picker-report">
                                     <input name="final-date" id="final-date" type="text" class="form-control" placeholder="@lang('Final date')"
-                                           {{--value="{{ date('Y-m-d') }} 20:00:00"/>--}}
-                                           value="2018-02-18 00:50:00"/>
+                                           value="{{ date('Y-m-d') }} 20:00:00"/>
+                                            {{--value="2018-02-18 00:50:00"/>--}}
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
