@@ -35,6 +35,7 @@ class StatusCounterController extends Controller
                 $counterIssues = CounterIssue::whereIn('vehicle_id', $vehicles->pluck('id'))
                     ->whereBetween('date', [$initialDate, $finalDate])
                     ->orderBy('id')
+                    ->limit(500)
                     ->get();
 
                 return view('admin.counter.status.listIssues', compact('counterIssues'));
@@ -43,6 +44,7 @@ class StatusCounterController extends Controller
                 $passengers = Passenger::whereIn('vehicle_id', $vehicles->pluck('id'))
                     ->whereBetween('date', [$initialDate, $finalDate])
                     ->orderBy('date')
+                    ->limit(500)
                     ->get();
 
                 return view('admin.counter.status.listHistory', compact('passengers'));
