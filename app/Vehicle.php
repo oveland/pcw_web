@@ -28,6 +28,7 @@ use Sofa\Eloquence\Mappable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle wherePlate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Vehicle whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\SimGPS $simGPS
  */
 class Vehicle extends Model
 {

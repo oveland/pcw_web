@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerRoundTrip whereEndRecorderPrev($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerRoundTrip wherePassengersRoundTrip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\RecorderCounterPerRoundTrip whereRouteId($value)
+ * @property-read \App\DispatchRegister|null $dispatchRegister
+ * @property-read \App\DispatchRegister $dispatchRegisterPrev
  */
 class RecorderCounterPerRoundTrip extends Model
 {

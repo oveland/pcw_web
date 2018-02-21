@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereUrl($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route active()
  */
 class Route extends Model
 {
