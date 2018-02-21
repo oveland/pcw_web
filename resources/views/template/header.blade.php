@@ -25,6 +25,9 @@
 <link href="{{asset('assets/plugins/select2/dist/css/select2.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css')}}" rel="stylesheet"/>
+
+<link href="{{asset('assets/plugins/bootstrap-eonasdan-datetimepicker/build/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet"/>
+
 <link href="{{asset('css/application.css')}}" rel="stylesheet"/>
 <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
 
@@ -34,7 +37,7 @@
 
 <!-- Scripts -->
 <script>
-    window.Laravel = {!! json_encode([
+    window.Laravel = '{!! json_encode([
             'csrfToken' => csrf_token(),
-        ]) !!};
+        ]) !!}';
 </script>

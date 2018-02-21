@@ -35,6 +35,10 @@ $(document).ready(function () {
         todayHighlight: true
     });
 
+    $('.date-time-picker-report').datetimepicker({
+        format: "YYYY-MM-DD HH:mm:ss",
+    });
+
     $('.default-select2').select2();
     $('[data-toggle="tooltip"]').tooltip();
     $('.tooltips').tooltip();

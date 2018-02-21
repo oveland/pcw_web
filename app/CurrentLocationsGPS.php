@@ -4,6 +4,33 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\CurrentLocationsGPS
+ *
+ * @property int $id
+ * @property string|null $date
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property float|null $orientation
+ * @property float|null $speed
+ * @property int|null $vehicle_status_id
+ * @property string|null $date_vehicle_status
+ * @property int|null $vehicle_id
+ * @property string|null $vehicle_plate
+ * @property-read \App\VehicleStatus|null $vehicleStatus
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS findByVehicleId($vehicleId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereDateVehicleStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereOrientation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereSpeed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereVehicleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereVehiclePlate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereVehicleStatusId($value)
+ * @mixin \Eloquent
+ */
 class CurrentLocationsGPS extends Model
 {
     protected $table = 'current_locations_gps';

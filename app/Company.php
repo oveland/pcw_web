@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereShortName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company active()
+ * @property string|null $timezone
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereTimezone($value)
  */
 class Company extends Model
 {

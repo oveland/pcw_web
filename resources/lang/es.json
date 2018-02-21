@@ -12,6 +12,7 @@
   "Routes": "Rutas",
   "Route Time": "Tiempo de ruta",
   "Reports": "Reportes",
+  "Report": "Reporte",
   "Route times": "Tiempos de ruta",
   "Search report": "Consultar reporte",
   "Date report": "Fecha de Reporte",
@@ -102,6 +103,8 @@
   "Off road": "Salidas de ruta",
   "Off road report by Vehicle": "Salidas de ruta por vehículos",
   "Status":"Estado",
+  "Status Counter": "Estado de Contador",
+  "Report Counter": "Reporte de Contador",
   "status":"estado",
   "See off road report": "Ver reporte de salidas de ruta",
   "Report vehicle off road": "Reporte de salidas de ruta del vehículo",
@@ -267,5 +270,15 @@
   "Reset Command":"Comando de reinicio",
   "The SIM number :sim is already associated with another GPS (Vehicle :vehicle)":"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)",
   "A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior",
-  "Please refresh the report once you finish the fix bugs":"Porfavor actualice el reporte una vez termine la corrección de inconsistencias"
+  "Please refresh the report once you finish the fix bugs":"Porfavor actualice el reporte una vez termine la corrección de inconsistencias",
+  "The company haven´t issues in your counters at the selected date":"La empresa no tiene incidencias en sus contadores en la fecha seleccionada",
+  "List of counter issues":"Listado de incidencias en contador",
+  "alarms":"Alarmas",
+  "lowerCount":"Bajo conteo",
+  "Inactive cameras":"Cámara Inactiva",
+  "Check counter":"Contador de chequeo",
+  "Items issues": "Anomalías en los items",
+  "Type of report": "Tipo de reporte",
+  "Issues": "Incidencias",
+  "History": "Historial"
 }

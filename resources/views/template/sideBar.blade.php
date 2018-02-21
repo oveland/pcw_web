@@ -80,8 +80,8 @@
                         <ul class="sub-menu">
                             <li class="has-sub menu-administration-counter-status">
                                 <a href="{{ route('admin-counter-status')  }}" class="faa-parent animated-hover">
-                                    <i class="ion-checkmark-circled faa-pulse" aria-hidden="true"></i>
-                                    @lang('Status')
+                                    <i class="fa fa-table faa-pulse" aria-hidden="true"></i>
+                                    @lang('Report')
                                 </a>
                             </li>
                         </ul>
