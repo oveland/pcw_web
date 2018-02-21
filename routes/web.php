@@ -164,7 +164,7 @@ Route::group(['middleware' => ['auth']], function () {
         });
 
         Route::prefix(__('counter'))->group(function () {
-            Route::prefix(__('status'))->group(function () {
+            Route::prefix(__('report'))->group(function () {
                 Route::get('/', 'StatusCounterController@index')->name('admin-counter-status');
                 Route::get('/list', 'StatusCounterController@list')->name('admin-counter-status-list');
             });
