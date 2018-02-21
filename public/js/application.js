@@ -63,6 +63,10 @@ function gsuccess( message ){
     toastr.success(message,"Información");
 }
 
+function ginfo( message ){
+    toastr.info(message,"Información");
+}
+
 function gwarning( message ){
     toastr.warning(message);
 }

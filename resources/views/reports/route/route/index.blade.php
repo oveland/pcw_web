@@ -2,30 +2,7 @@
 
 @section('stylesheets')
     <style>
-        .icon-report{
-            position: absolute !important;
-            left: 40%;
-            bottom: 10%;
-        }
-        span.icon-report{
-            color: #ddddd5 !important;
-            font-weight: bold;
-            left: 7%;
-            top: 2%;
-        }
-        .nav-vehicles li{
-            margin:0 5px 5px 0  !important;
-        }
-        .table-report th{
-            text-align: center !important;
-        }
-        .table-report th i{
-            font-size: 200%;
-            color: rgba(211, 211, 211, 0.16);
-            position: relative;
-            top: -5px;
-            float: unset;
-        }
+
     </style>
 @endsection
 
