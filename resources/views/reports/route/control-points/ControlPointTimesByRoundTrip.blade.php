@@ -79,7 +79,7 @@
                                         <tr class="">
                                             <th class="text-capitalize text-muted {{ $dispatchRegister->inProgress() ? 'warning':'bg-inverse' }}">
                                                 {{ $dispatchRegister->turn }}<br>
-                                                {{ $dispatchRegister->status }}
+                                                <span class="status-html">{!! $dispatchRegister->status !!}</span>
                                             </th>
                                             <th class="bg-inverse text-uppercase text-muted">
                                                 {{ $vehicle->number }} <br> {{ $vehicle->plate }} <br>
@@ -185,7 +185,6 @@
         </div>
     </div>
     <script type="application/javascript">
-
     </script>
 @else
     <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
