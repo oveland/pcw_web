@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-download-report" action="{{ route('logs-access-export',['date'=>'']) }}">
+        <form class="col-md-12 form-download-report" action="{{ route('report-user-access-log-export',['date'=>'']) }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">

@@ -31,7 +31,7 @@ class ControlPointsReportController extends Controller
     {
         $dateReport = $request->get('date-report');
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $route = Route::find($request->get('route-report'));
+        $route = Route::find($request->get('report-route'));
 
         if (!$route->belongsToCompany($company)) abort(404);
 

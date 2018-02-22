@@ -26,3 +26,5 @@
 <script src="{{asset('js/application.js')}}"></script>
 <script src="{{asset('js/jquery.validate.oiva.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->
+
+@include('partials.scripts.general')

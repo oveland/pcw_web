@@ -1,4 +1,4 @@
-@if(count($counterIssuesByVehicles))
+@if(count($counterIssues))
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -11,26 +11,13 @@
                     @lang('See all frames')
                 </a>
             </div>
-            <h5 class="text-white label-vehicles">
-                <i class="fa fa-exclamation-triangle"></i>
-                @lang('List of counter issues')
+            <h5 class="text-white label-vehicles m-b-0">
+                <i class="fa fa-exclamation-triangle"></i> @lang('List of counter issues')
+                @include('partials.pagination.totalInfo',['paginator' => $counterIssues ])
             </h5>
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="nav nav-pills nav-pills-success">
-                        @foreach($counterIssuesByVehicles as $vehicleId => $counterIssue )
-                            @php($vehicle = \App\Vehicle::find($vehicleId))
-                            <li class="{{ $loop->first?'active':'' }} tooltips" data-title="{{ $vehicle->plate }}">
-                                <a href="#tab-issue-{{ $vehicleId }}" data-toggle="tab">{{ $vehicle->number }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
         </div>
         <div class="tab-content panel p-0">
-            @foreach($counterIssuesByVehicles as $vehicleId => $counterIssues )
-                <div id="tab-issue-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first?'active in':'' }}">
+            <div class="">
                     <div class="table-responsive">
                         <!-- begin table -->
                         <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle table-report">
@@ -68,14 +55,14 @@
                             </thead>
                             <tbody>
                             @foreach($counterIssues as $counterIssue)
-                                @include('admin.counter.status._issue')
+                                @include('admin.counter.report._issue')
                             @endforeach
                             </tbody>
                         </table>
                         <!-- end table -->
+                        <div class="col-md-12">{{ $counterIssues->links() }}</div>
                     </div>
                 </div>
-            @endforeach
         </div>
     </div>
     <script>hideSideBar()</script>

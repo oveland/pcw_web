@@ -44,4 +44,12 @@ class Vehicle extends Model
     {
         return $this->hasOne(SimGPS::class);
     }
+
+    /**
+     * @param Company $company
+     * @return bool
+     */
+    public function belongsToCompany($company){
+        return $this->company->id == $company->id;
+    }
 }

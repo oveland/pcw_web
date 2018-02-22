@@ -132,4 +132,5 @@ return [
 
     ],
 
+    'total_pagination' => env('DB_TOTAL_PAGINATE',15),
 ];

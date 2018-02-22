@@ -8,7 +8,7 @@
             </div>
             <div class="row">
                 <div class="col-md-11">
-                    <a href="{{ route('route-search-report') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id }}&type-report=round_trip&export=true" class="btn btn-lime bg-lime-dark pull-right">
+                    <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id }}&type-report=round_trip&export=true" class="btn btn-lime bg-lime-dark pull-right">
                         <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                     </a>
                     <ul class="nav nav-pills nav-pills-success">
@@ -98,8 +98,8 @@
                                     <a href="#modal-route-report"
                                        class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
                                        data-toggle="modal"
-                                       data-url="{{ route('route-chart-report',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                                       data-url-off-road-report="{{ route('route-off-road-report',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                       data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                       data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
                                        data-original-title="@lang('Graph report detail')">
                                         <i class="fa fa-area-chart faa-pulse"></i>
                                     </a>

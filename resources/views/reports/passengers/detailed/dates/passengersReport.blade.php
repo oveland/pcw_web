@@ -4,7 +4,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('passengers-detailed-export-report-range') }}?initial-date={{ $passengerReport->initialDate }}&final-date={{ $passengerReport->finalDate }}&company-report={{ $passengerReport->companyId }}" class="btn btn-lime bg-lime-dark btn-sm">
+                <a href="{{ route('report-passengers-detailed-date-range-export') }}?initial-date={{ $passengerReport->initialDate }}&final-date={{ $passengerReport->finalDate }}&company-report={{ $passengerReport->companyId }}" class="btn btn-lime bg-lime-dark btn-sm">
                     <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                 </a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-info " data-click="panel-expand" title="@lang('Expand / Compress')">

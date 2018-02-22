@@ -33,7 +33,7 @@ class RouteReportController extends Controller
     public function show(Request $request)
     {
         $companyReport = $request->get('company-report');
-        $routeReport = $request->get('route-report');
+        $routeReport = $request->get('report-route');
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
 

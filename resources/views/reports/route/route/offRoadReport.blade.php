@@ -2,7 +2,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('route-off-road-report',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true"
+                <a href="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true"
                    class="btn btn-lime bg-lime-dark btn-sm" style="color: white !important;">
                     <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                 </a>

@@ -24,7 +24,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('route-search-report') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-route-search') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">

@@ -79,7 +79,7 @@
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-administration-counter-status">
-                                <a href="{{ route('admin-counter-status')  }}" class="faa-parent animated-hover">
+                                <a href="{{ route('admin-counter-report')  }}" class="faa-parent animated-hover">
                                     <i class="fa fa-table faa-pulse" aria-hidden="true"></i>
                                     @lang('Report')
                                 </a>
@@ -104,13 +104,13 @@
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-route-report">
-                                <a href="{{ route('route-report')  }}">
+                                <a href="{{ route('report-route')  }}">
                                     <i class="fa fa-line-chart" aria-hidden="true"></i>
                                     @lang('Route report')
                                 </a>
                             </li>
                             <li class="has-sub menu-off-road-report">
-                                <a href="{{ route('off-road-report')  }}">
+                                <a href="{{ route('report-route-off-road')  }}">
                                     <i class="fa fa-road" aria-hidden="true"></i>
                                     @lang('Off road')
                                 </a>
@@ -169,13 +169,13 @@
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-consolidated-days">
-                                        <a href="{{ route('passengers-consolidated-report-days')  }}">
+                                        <a href="{{ route('report-passengers-consolidated-daily')  }}">
                                             <i class="fa fa-file-archive-o" aria-hidden="true"></i>
                                             @lang('Daily')
                                         </a>
                                     </li>
                                     <li class="has-sub menu-passengers-consolidated-range">
-                                        <a href="{{ route('passengers-consolidated-report-range')  }}">
+                                        <a href="{{ route('report-passengers-consolidated-date-range')  }}">
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                             @lang('Date range')
                                         </a>
@@ -191,13 +191,13 @@
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-detailed-days">
-                                        <a href="{{ route('passengers-detailed-report-days')  }}">
+                                        <a href="{{ route('report-passengers-detailed-daily')  }}">
                                             <i class="fa fa-file-text-o" aria-hidden="true"></i>
                                             @lang('Daily')
                                         </a>
                                     </li>
                                     <li class="has-sub menu-passengers-detailed-range">
-                                        <a href="{{ route('passengers-detailed-report-range')  }}">
+                                        <a href="{{ route('report-passengers-detailed-date-range')  }}">
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                             @lang('Date range')
                                         </a>
@@ -215,7 +215,7 @@
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-taxcentral">
-                                        <a href="{{ route('tc-passengers-report')  }}">
+                                        <a href="{{ route('report-passengers-taxcentral-report')  }}">
                                             <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                                             @lang('Passengers report')
                                         </a>
@@ -242,7 +242,7 @@
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-logs">
-                                <a href="{{ route('logs-access')  }}">
+                                <a href="{{ route('report-user-access-log')  }}">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i>
                                     @lang('Access log')
                                 </a>

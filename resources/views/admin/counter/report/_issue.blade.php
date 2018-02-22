@@ -62,7 +62,7 @@
     <td colspan="6" style="font-family: monospace">
         @php
             $currentFrame = $counterIssue->frame;
-            $comparedFrame = \App\Http\Controllers\StatusCounterController::compareChangeFrames($currentFrame,$currentFrame);
+            $comparedFrame = \App\Http\Controllers\PassengerReportCounterController::compareChangeFrames($currentFrame,$currentFrame);
         @endphp
         <span>
         @foreach($comparedFrame as $frame)

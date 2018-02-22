@@ -33,7 +33,7 @@ class TaxCentralPassengerReportController extends Controller
     public function show(Request $request)
     {
         $dateReport = $request->get('date-report');
-        $routeId = $request->get('route-report');
+        $routeId = $request->get('report-route');
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $vehiclesForCompany = $company->activeVehicles->pluck('plate');
 

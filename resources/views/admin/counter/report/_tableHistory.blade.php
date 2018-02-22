@@ -36,7 +36,7 @@
             @php($counterIssue = $passenger->counterIssue )
             @php($dispatchRegister = $passenger->dispatchRegister )
             <tr>
-                <td class="text-center" width="5%">{{ $loop->iteration }}</td>
+                <td class="text-center" width="5%">{{ $loop->index + $passengers->firstItem() }}</td>
                 <td class="text-center">{{ $passenger->date }}</td>
                 <td class="text-center">{{ $vehicle->number }}</td>
                 <td class="text-center">{{ $passenger->total }}</td>
@@ -71,7 +71,7 @@
                 </td>
                 <td>
                     @if($counterIssue)
-                        <button class="btn btn-sm btn-danger btn-show-counter-issue" data-action="{{ route('admin-counter-status-show-counter-issue',['counterIssue' => $counterIssue->id]) }}">
+                        <button class="btn btn-sm btn-danger btn-show-counter-issue" data-action="{{ route('admin-counter-report-show-counter-issue',['counterIssue' => $counterIssue->id]) }}">
                             <i class="fa fa-exclamation-triangle"></i>
                             @lang('Issues')
                         </button>
@@ -86,7 +86,7 @@
                 <td colspan="6" class="p-l-4 p-r-4" style="font-family: monospace">
                     @php
                         $currentFrame = $passenger->frame;
-                        $comparedFrame = \App\Http\Controllers\StatusCounterController::compareChangeFrames($currentFrame,$prevFrame);
+                        $comparedFrame = \App\Http\Controllers\PassengerReportCounterController::compareChangeFrames($currentFrame,$prevFrame);
                         $prevFrame = $currentFrame;
                     @endphp
                     @foreach($comparedFrame as $frame)

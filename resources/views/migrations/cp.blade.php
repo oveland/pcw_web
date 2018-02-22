@@ -75,7 +75,7 @@
                                                     <button class="btn btn-success" onclick="alert('Migrating...')" data-toggle="modal" data-target="#modal-migration">
                                                         <i class="fa fa-database"></i> @lang('Process migration')
                                                     </button>
-                                                    <button class="btn btn-default" onclick="$('.compare-{{$route->id}}').load('{{ route('compare-control-point',['route'=>$route->id]) }}')">
+                                                    <button class="btn btn-default" onclick="$('.compare-{{$route->id}}').load('{{ route('migrate-cp-compare',['route'=>$route->id]) }}')">
                                                         <i class="fa fa-angle-double-left"></i> <i class="fa fa-angle-double-right"></i> @lang('Compare')
                                                     </button>
                                                     <div class="widget-stat-number">

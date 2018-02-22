@@ -43,7 +43,7 @@
                                 <td>{{$dispatchRegister->turn}}</td>
                                 <td>
                                     <a href="#modal-passengers-route-report" data-toggle="modal"
-                                       data-url="{{ route('tc-passengers-by-dispatch',['id'=>$dispatchRegister->id]) }}"
+                                       data-url="{{ route('report-passengers-taxcentral-by-dispatch',['id'=>$dispatchRegister->id]) }}"
                                        class="btn btn-sm btn-primary faa-parent animated-hover btn-show-passengers-route-report">
                                         <i class="fa fa-users faa-pulse"></i> @lang('Passenger report detail')
                                     </a>

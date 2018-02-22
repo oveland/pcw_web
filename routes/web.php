@@ -15,131 +15,17 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function(){
-        return redirect(route('route-report'));
+        return redirect(route('report-route'));
     })->name('home');
 
     Route::get('/home', function(){
-        return redirect(route('route-report'));
+        return redirect(route('report-route'));
     })->name('index');
 
-    /* Routes for route report */
-    Route::prefix(__('reports'))->group(function () {
-        Route::prefix(__('geolocation'))->group(function () {
-            Route::get('/address/{offRoad}', 'GeolocationController@getAddressFromCoordinates')->name('geolocation-address');
-            Route::get('/image/{offRoad}', 'GeolocationController@getImageFromCoordinate')->name('geolocation-image');
-        });
-
-        /* General reports */
-        Route::prefix(__('routes'))->group(function () {
-            /* Route report */
-            Route::prefix(__('route-report'))->group(function () {
-                Route::get('/', 'RouteReportController@index')->name('route-report');
-                Route::get('/show', 'RouteReportController@show')->name('route-search-report');
-                Route::any('/chart/{dispatchRegister}', 'RouteReportController@chart')->name('route-chart-report');
-                Route::any('/off_road/{dispatchRegister}', 'RouteReportController@offRoadReport')->name('route-off-road-report');
-                Route::any('/ajax', 'RouteReportController@ajax')->name('route-ajax-action');
-            });
-
-            /* Off Road report */
-            Route::prefix(__('off-road'))->group(function () {
-                Route::get('/', 'OffRoadController@index')->name('off-road-report');
-                Route::get('/show', 'OffRoadController@searchReport')->name('off-road-search-report');
-                Route::get('/address/{offRoad}', 'OffRoadController@getAddressFromCoordinates')->name('off-road-geolocation-address');
-                Route::get('/image/{offRoad}', 'OffRoadController@getImageFromCoordinate')->name('off-road-geolocation-image');
-                Route::any('/ajax', 'OffRoadController@ajax')->name('off-road-ajax-action');
-            });
-
-            /* Control Points report */
-            Route::prefix(__('control-points'))->group(function () {
-                Route::get('/', 'ControlPointsReportController@index')->name('report-route-control-points');
-                Route::get('/show', 'ControlPointsReportController@searchReport')->name('report-route-control-points-search-report');
-                Route::get('/export', 'ControlPointsReportController@export')->name('report-route-control-points-export-report');
-                Route::any('/ajax', 'ControlPointsReportController@ajax')->name('report-route-control-points-ajax-action');
-            });
-        });
-
-        Route::prefix(__('url-vehicles'))->group(function(){
-            /* Off Road report */
-            Route::prefix(__('parked'))->group(function () {
-                Route::get('/', 'ParkedVehiclesReportController@index')->name('report-vehicle-parked');
-                Route::get('/show', 'ParkedVehiclesReportController@searchReport')->name('report-vehicle-parked-search-report');
-                Route::get('/address/{parkingReport}', 'ParkedVehiclesReportController@getAddressFromCoordinates')->name('report-vehicle-parked-geolocation-address');
-                Route::get('/image/{parkingReport}', 'ParkedVehiclesReportController@getImageFromCoordinate')->name('report-vehicle-parked-geolocation-image');
-                Route::any('/ajax', 'ParkedVehiclesReportController@ajax')->name('report-vehicle-parked-ajax-action');
-            });
-
-            /* Speeding report */
-            Route::prefix(__('speeding-vehicle'))->group(function () {
-                Route::get('/', 'SpeedingController@index')->name('report-vehicle-speeding');
-                Route::get('/show', 'SpeedingController@searchReport')->name('report-vehicle-speeding-search-report');
-                Route::get('/address/{speeding}', 'SpeedingController@getAddressFromCoordinates')->name('report-vehicle-speeding-geolocation-address');
-                Route::get('/image/{speeding}', 'SpeedingController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
-                Route::any('/ajax', 'SpeedingController@ajax')->name('report-vehicle-speeding-ajax-action');
-            });
-
-            /* Speeding report */
-            Route::prefix(__('status'))->group(function () {
-                Route::get('/', 'VehicleStatusReportController@index')->name('report-vehicle-status');
-                Route::get('/show', 'VehicleStatusReportController@searchReport')->name('report-vehicle-status-search-report');
-            });
-        });
-
-        /* Routes for passenger report */
-        Route::prefix(__('passengers'))->group(function () {
-            /*Edit reports*/
-            Route::prefix('manage')->group(function () {
-                Route::any('/ajax/{action}', 'ManagePassengersByRecorderController@ajax')->name('report-passengers-manage-update');
-            });
-
-            /* Router for Tax Central Reports */
-            Route::prefix('taxcentral')->group(function () {
-                Route::get('/', 'TaxCentralPassengerReportController@index')->name('tc-passengers-report');
-                Route::get('/show', 'TaxCentralPassengerReportController@show')->name('tc-passengers-search-report');
-                Route::any('/dispatch/show/{dispatchRegister}', 'TaxCentralPassengerReportController@showByDispatch')->name('tc-passengers-by-dispatch');
-                Route::any('/seat/show/{historySeat}', 'TaxCentralPassengerReportController@showHistorySeat')->name('tc-passengers-seat-detail');
-                Route::any('/ajax/{action}', 'TaxCentralPassengerReportController@ajax')->name('tc-passengers-ajax');
-            });
-
-            /* Router for General Reports */
-            Route::prefix(__('consolidated'))->group(function () {
-                Route::prefix(__('daily'))->group(function () {
-                    Route::get('/','PassengerReportController@index')->name('passengers-consolidated-report-days');
-                    Route::get('/show', 'PassengerReportController@show')->name('passengers-consolidated-search-report-days');
-                    Route::get('/export', 'PassengerReportController@export')->name('passengers-consolidated-export-report-days');
-                    Route::any('/ajax/{action}', 'PassengerReportController@ajax')->name('passengers-ajax');
-                });
-
-                Route::prefix(__('date-range'))->group(function () {
-                    Route::get('/','PassengersReportDateRangeController@index')->name('passengers-consolidated-report-range');
-                    Route::get('/show', 'PassengersReportDateRangeController@show')->name('passengers-consolidated-search-report-range');
-                    Route::get('/export', 'PassengersReportDateRangeController@export')->name('passengers-consolidated-export-report-range');
-                });
-            });
-
-            /* Router for General Reports */
-            Route::prefix(__('detailed'))->group(function () {
-                Route::prefix(__('daily'))->group(function () {
-                    Route::get('/','PassengerReportDetailedController@index')->name('passengers-detailed-report-days');
-                    Route::get('/show', 'PassengerReportDetailedController@show')->name('passengers-detailed-search-days');
-                    Route::get('/export', 'PassengerReportDetailedController@export')->name('passengers-detailed-export-days');
-                });
-
-                Route::prefix(__('date-range'))->group(function () {
-                    Route::get('/','PassengerReportDetailedDateRangeController@index')->name('passengers-detailed-report-range');
-                    Route::get('/show', 'PassengerReportDetailedDateRangeController@show')->name('passengers-detailed-search-report-range');
-                    Route::get('/export', 'PassengerReportDetailedDateRangeController@export')->name('passengers-detailed-export-report-range');
-                });
-            });
-        });
-
-        /* Access log report */
-        Route::prefix(__('users'))->group(function () {
-            Route::prefix(__('access-log'))->group(function () {
-                /* Routes for logs */
-                Route::get('/', 'AccessLogController@index')->name('logs-access');
-                Route::get('/{date}', 'AccessLogController@report')->name('logs-access-export');
-            });
-        });
+    /* Routes for general actions */
+    Route::prefix(__('general'))->group(function () {
+        Route::any('/load-select-routes', 'GeneralController@loadSelectRoutes')->name('general-load-select-routes');
+        Route::any('/load-select-vehicles', 'GeneralController@loadSelectVehicles')->name('general-load-select-vehicles');
     });
 
     /* Routes for admin pages */
@@ -165,9 +51,124 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::prefix(__('counter'))->group(function () {
             Route::prefix(__('report'))->group(function () {
-                Route::get('/', 'StatusCounterController@index')->name('admin-counter-status');
-                Route::get('/list', 'StatusCounterController@list')->name('admin-counter-status-list');
-                Route::get('/show-counter-issue/{counterIssue}', 'StatusCounterController@showCounterIssue')->name('admin-counter-status-show-counter-issue');
+                Route::get('/', 'PassengerReportCounterController@index')->name('admin-counter-report');
+                Route::get('/list', 'PassengerReportCounterController@list')->name('admin-counter-report-list');
+                Route::get('/show-counter-issue/{counterIssue}', 'PassengerReportCounterController@showCounterIssue')->name('admin-counter-report-show-counter-issue');
+            });
+        });
+    });
+
+    /* Routes for route report */
+    Route::prefix(__('reports'))->group(function () {
+        /* General reports */
+        Route::prefix(__('routes'))->group(function () {
+            /* Route report */
+            Route::prefix(__('report-route'))->group(function () {
+                Route::get('/', 'RouteReportController@index')->name('report-route');
+                Route::get('/show', 'RouteReportController@show')->name('report-route-search');
+                Route::any('/chart/{dispatchRegister}', 'RouteReportController@chart')->name('report-route-chart');
+                Route::any('/off_road/{dispatchRegister}', 'RouteReportController@offRoadReport')->name('report-route-off-road');
+                Route::any('/ajax', 'RouteReportController@ajax')->name('route-ajax-action');
+            });
+
+            /* Off Road report */
+            Route::prefix(__('off-road'))->group(function () {
+                Route::get('/', 'OffRoadController@index')->name('report-route-off-road');
+                Route::get('/show', 'OffRoadController@searchReport')->name('report-route-off-road-search');
+                Route::get('/address/{offRoad}', 'OffRoadController@getAddressFromCoordinates')->name('report-route-off-road-geolocation-address');
+                Route::get('/image/{offRoad}', 'OffRoadController@getImageFromCoordinate')->name('report-route-off-road-geolocation-image');
+                Route::any('/ajax', 'OffRoadController@ajax')->name('report-route-off-road-ajax-action');
+            });
+
+            /* Control Points report */
+            Route::prefix(__('control-points'))->group(function () {
+                Route::get('/', 'ControlPointsReportController@index')->name('report-route-control-points');
+                Route::get('/show', 'ControlPointsReportController@searchReport')->name('report-route-control-points-search-report');
+                Route::get('/export', 'ControlPointsReportController@export')->name('report-route-control-points-export-report');
+                Route::any('/ajax', 'ControlPointsReportController@ajax')->name('report-route-control-points-ajax-action');
+            });
+        });
+
+        Route::prefix(__('url-vehicles'))->group(function(){
+            /* Off Road report */
+            Route::prefix(__('parked'))->group(function () {
+                Route::get('/', 'ParkedVehiclesReportController@index')->name('report-vehicle-parked');
+                Route::get('/show', 'ParkedVehiclesReportController@searchReport')->name('report-vehicle-parked-search-report');
+                Route::get('/address/{parkingReport}', 'ParkedVehiclesReportController@getAddressFromCoordinates')->name('report-vehicle-parked-geolocation-address');
+                Route::get('/image/{parkingReport}', 'ParkedVehiclesReportController@getImageFromCoordinate')->name('report-vehicle-parked-geolocation-image');
+                Route::any('/ajax', 'ParkedVehiclesReportController@ajax')->name('report-vehicle-parked-ajax-action');
+            });
+
+            /* Speeding report */
+            Route::prefix(__('speeding'))->group(function () {
+                Route::get('/', 'SpeedingController@index')->name('report-vehicle-speeding');
+                Route::get('/show', 'SpeedingController@searchReport')->name('report-vehicle-speeding-search-report');
+                Route::get('/address/{speeding}', 'SpeedingController@getAddressFromCoordinates')->name('report-vehicle-speeding-geolocation-address');
+                Route::get('/image/{speeding}', 'SpeedingController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
+                Route::any('/ajax', 'SpeedingController@ajax')->name('report-vehicle-speeding-ajax-action');
+            });
+
+            /* Speeding report */
+            Route::prefix(__('status'))->group(function () {
+                Route::get('/', 'VehicleStatusReportController@index')->name('report-vehicle-status');
+                Route::get('/show', 'VehicleStatusReportController@searchReport')->name('report-vehicle-status-search-report');
+            });
+        });
+
+        /* Routes for passenger report */
+        Route::prefix(__('passengers'))->group(function () {
+            /*Edit reports*/
+            Route::prefix('manage')->group(function () {
+                Route::any('/ajax/{action}', 'ManagePassengersByRecorderController@ajax')->name('report-passengers-manage-update');
+            });
+
+            /* Router for Tax Central Reports */
+            Route::prefix('taxcentral')->group(function () {
+                Route::get('/', 'TaxCentralPassengerReportController@index')->name('report-passengers-taxcentral-report');
+                Route::get('/show', 'TaxCentralPassengerReportController@show')->name('report-passengers-taxcentral-search-report');
+                Route::any('/dispatch/show/{dispatchRegister}', 'TaxCentralPassengerReportController@showByDispatch')->name('report-passengers-taxcentral-by-dispatch');
+                Route::any('/seat/show/{historySeat}', 'TaxCentralPassengerReportController@showHistorySeat')->name('report-passengers-taxcentral-seat-detail');
+                Route::any('/ajax/{action}', 'TaxCentralPassengerReportController@ajax')->name('report-passengers-taxcentral-ajax');
+            });
+
+            /* Router for General Reports */
+            Route::prefix(__('consolidated'))->group(function () {
+                Route::prefix(__('daily'))->group(function () {
+                    Route::get('/','PassengerReportController@index')->name('report-passengers-consolidated-daily');
+                    Route::get('/show', 'PassengerReportController@show')->name('report-passengers-consolidated-daily-search');
+                    Route::get('/export', 'PassengerReportController@export')->name('report-passengers-consolidated-daily-export');
+                    Route::any('/ajax/{action}', 'PassengerReportController@ajax')->name('report-passengers-consolidated-daily-ajax-action');
+                });
+
+                Route::prefix(__('date-range'))->group(function () {
+                    Route::get('/','PassengersReportDateRangeController@index')->name('report-passengers-consolidated-date-range');
+                    Route::get('/show', 'PassengersReportDateRangeController@show')->name('report-passengers-consolidated-date-range-search');
+                    Route::get('/export', 'PassengersReportDateRangeController@export')->name('report-passengers-consolidated-date-range-export');
+                });
+            });
+
+            /* Router for General Reports */
+            Route::prefix(__('detailed'))->group(function () {
+                Route::prefix(__('daily'))->group(function () {
+                    Route::get('/','PassengerReportDetailedController@index')->name('report-passengers-detailed-daily');
+                    Route::get('/show', 'PassengerReportDetailedController@show')->name('report-passengers-detailed-daily-search');
+                    Route::get('/export', 'PassengerReportDetailedController@export')->name('report-passengers-detailed-daily-export');
+                });
+
+                Route::prefix(__('date-range'))->group(function () {
+                    Route::get('/','PassengerReportDetailedDateRangeController@index')->name('report-passengers-detailed-date-range');
+                    Route::get('/show', 'PassengerReportDetailedDateRangeController@show')->name('report-passengers-detailed-date-range-search');
+                    Route::get('/export', 'PassengerReportDetailedDateRangeController@export')->name('report-passengers-detailed-date-range-export');
+                });
+            });
+        });
+
+        /* Access log report */
+        Route::prefix(__('users'))->group(function () {
+            Route::prefix(__('access-log'))->group(function () {
+                /* Routes for logs */
+                Route::get('/', 'AccessLogController@index')->name('report-user-access-log');
+                Route::get('/{date}', 'AccessLogController@report')->name('report-user-access-log-export');
             });
         });
     });
@@ -188,14 +189,18 @@ Route::group(['middleware' => ['auth']], function () {
         /* Routes for migrate Control Points (CP) */
         Route::prefix(__('cp'))->group(function () {
             Route::get('/', 'MigrationControlPointController@getControlPoints')->name('migrate-cp');
-            Route::get('/compare/{route}', 'MigrationControlPointController@compare')->name('compare-control-point');
+            Route::get('/compare/{route}', 'MigrationControlPointController@compare')->name('migrate-cp-compare');
         });
     });
 
     /* Routes for tools */
-    Route::get('/tools/map', 'ToolsController@map')->name('map-tool');
-    Route::get('/tools/get-route-distance/{route}', 'ToolsController@getRouteDistance')->name('tools-map-get-route-distance');
-    Route::get('/tools/get-route-distance', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-url');
+    Route::prefix(__('tools'))->group(function () {
+        Route::prefix(__('map'))->group(function () {
+            Route::get('/', 'ToolsController@map')->name('tools-map');
+            Route::get('/get-route-distance/{route}', 'ToolsController@getRouteDistance')->name('tools-map-get-route-distance');
+            Route::get('/get-route-distance', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-url');
+        });
+    });
 });
 
 Route::prefix('api')->group(function () {

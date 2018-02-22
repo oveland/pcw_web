@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('passengers-detailed-search-report-range') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-detailed-date-range-search') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -164,7 +164,7 @@
         function loadRouteReport(company) {
             var roouteSelect = $('#route-report');
             roouteSelect.html($('#select-loading').html()).trigger('change.select2');
-            roouteSelect.load('{{ route('passengers-ajax',['action'=>'loadRoutes']) }}', {
+            roouteSelect.load('{{ route('report-passengers-consolidated-daily-ajax-action',['action'=>'loadRoutes']) }}', {
                 company: company
             }, function () {
                 roouteSelect.trigger('change.select2');

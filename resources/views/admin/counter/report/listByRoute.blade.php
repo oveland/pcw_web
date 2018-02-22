@@ -1,4 +1,4 @@
-@if(count($passengersByVehicles))
+@if(count($passengersByRoundTrip))
     @php($strTime = new \App\Http\Controllers\Utils\StrTime())
     <div class="panel panel-inverse">
         <div class="panel-heading">
@@ -12,17 +12,19 @@
                     @lang('See all frames')
                 </a>
             </div>
-            <h5 class="text-white label-vehicles">
-                <i class="ion-clipboard"></i>
-                @lang('List counter passengers')
+            <h5 class="text-white label-vehicles m-b-0">
+                <i class="ion-flag"></i> @lang('List counter passengers by route')
+                @include('partials.pagination.totalInfo',['paginator' => $passengersByRoundTrip ])
             </h5>
+
             <div class="row">
                 <div class="col-md-12">
                     <ul class="nav nav-pills nav-pills-success">
-                        @foreach($passengersByVehicles as $vehicleId => $passengers )
-                            @php($vehicle = \App\Vehicle::find($vehicleId))
-                            <li class="{{ $loop->first?'active':'' }} tooltips" data-title="{{ $vehicle->plate }}. @lang('Total'): {{ $passengers->last()->total -  $passengers->first()->total }}">
-                                <a href="#tab-issue-{{ $vehicleId }}" data-toggle="tab">{{ $vehicle->number }}</a>
+                        @foreach($passengersByRoundTrip as $roundTrip => $passengers )
+                            <li class="{{ $loop->first?'active':'' }} tooltips" data-title="@lang('Round Trip') {{ $roundTrip }}. @lang('Total'): {{ $passengers->last()->total -  $passengers->first()->total }}">
+                                <a href="#tab-round-trip-{{ $roundTrip }}" data-toggle="tab">
+                                    <i class="fa fa-retweet"></i> {{ $roundTrip }}
+                                </a>
                             </li>
                         @endforeach
                     </ul>
@@ -30,11 +32,10 @@
             </div>
         </div>
         <div class="tab-content panel p-0">
-            @foreach($passengersByVehicles as $vehicleId => $passengers )
-                <div id="tab-issue-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first?'active in':'' }}">
-                    @include('admin.counter.status._tableHistory')
-                </div>
+            @foreach($passengersByRoundTrip as $roundTrip => $passengers )
+                @include('admin.counter.report._tableHistory')
             @endforeach
+            <div class="col-md-12 p-0">{{ $passengersPerRoundTrip->links() }}</div>
         </div>
     </div>
     <script>hideSideBar()</script>

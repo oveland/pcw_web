@@ -37,17 +37,22 @@ class Company extends Model
 {
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class,'company_id','id');
+        return $this->hasMany(Vehicle::class);
     }
 
     public function routes()
     {
-        return $this->hasMany(Route::class,'company_id','id');
+        return $this->hasMany(Route::class);
     }
 
     public function activeVehicles()
     {
-        return $this->hasMany(Vehicle::class,'company_id','id')->where('active',true);
+        return $this->hasMany(Vehicle::class)->where('active',true);
+    }
+
+    public function activeRoutes()
+    {
+        return $this->hasMany(Route::class)->where('active',true);
     }
 
     public function scopeActive($query){

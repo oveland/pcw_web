@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('admin-counter-status-list') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('admin-counter-report-list') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -43,7 +43,7 @@
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
                                         <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
-                                            <option value="null">@lang('Select an option')</option>
+                                            <option value="null">@lang('Select a company')</option>
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                             @endforeach
@@ -52,7 +52,19 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-3">
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
+                                <div class="form-group">
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company first')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="type-report" class="control-label field-required">@lang('Type of report')</label>
                                 <div class="input-group btn-block">
@@ -64,12 +76,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 form-by-route" style="display: none">
+                        <div class="col-md-2 form-by-route" style="display: none">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="input-group btn-block">
                                     <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company')</option>
+                                        <option value="null">@lang('Select a company first')</option>
                                     </select>
                                 </div>
                             </div>
@@ -85,29 +97,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 form-date-range">
+                        <div class="col-md-5 form-date-range">
                             <div class="form-group">
-                                <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
-                                <div class="input-group date date-time-picker-report">
-                                    <input name="initial-date" id="initial-date" type="text" class="form-control" placeholder="@lang('Initial date')"
-                                           value="{{ date('Y-m-d H:i:s') }}"/>
-                                           {{--value="2018-02-18 00:30:00"/>--}}
+                                <label for="initial-date" class="control-label field-required">@lang('Date range')</label>
+
+                                <div class="row row-space-10">
+                                    <div class="col-xs-6 date">
+                                        <input name="initial-date" id="initial-date" type="text" class="form-control date-time-picker-report" placeholder="@lang('Initial date')" value="{{ date('Y-m-d H:i:s') }}"/>
+                                    </div>
+                                    <div class="col-xs-6 date">
+                                        <input name="final-date" id="final-date" type="text" class="form-control date-time-picker-report" placeholder="@lang('Final date')" value="{{ date('Y-m-d') }} 20:00:00"/>
+                                    </div>
+                                </div>
+
+                                <div class="input-group hide">
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 form-date-range">
-                            <div class="form-group">
-                                <label for="final-date" class="control-label field-required">@lang('Final date')</label>
-                                <div class="input-group date date-time-picker-report">
-                                    <input name="final-date" id="final-date" type="text" class="form-control" placeholder="@lang('Final date')"
-                                           value="{{ date('Y-m-d') }} 20:00:00"/>
-                                            {{--value="2018-02-18 00:50:00"/>--}}
-                                    <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +141,7 @@
         $('.menu-administration-counter, .menu-administration-counter-status').addClass('active');
 
         $(document).ready(function () {
-            $('.form-search-report').submit(function (e) {
+            form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
@@ -153,7 +159,7 @@
                 }
             });
 
-            $('#company-report,#route-report,#route-report-date').change(function () {
+            $('#company-report,#vehicle-report,#route-report,#route-report-date').change(function () {
                 mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
@@ -161,7 +167,8 @@
             });
 
             $('#company-report').change(function () {
-                loadRouteReport($(this).val());
+                loadSelectRouteReport($(this).val());
+                loadSelectVehicleReport($(this).val());
             });
 
             $('#type-report').change(function () {
@@ -186,19 +193,11 @@
             });
 
             @if(!Auth::user()->isAdmin())
-            loadRouteReport(null);
+                loadSelectRouteReport(null);
+                loadSelectVehicleReport(null);
+            @else
+                $('#company-report').change();
             @endif
         });
-
-        function loadRouteReport(company) {
-            var routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('route-ajax-action') }}', {
-                option: 'loadRoutes',
-                company: company
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        }
     </script>
 @endsection
