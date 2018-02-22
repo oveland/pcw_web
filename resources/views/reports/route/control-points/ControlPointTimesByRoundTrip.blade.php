@@ -20,7 +20,7 @@
 
             <ul class="nav nav-pills nav-pills-success">
                 @foreach($controlPointTimeReportsByRoundTrip->keys() as $roundTrip)
-                    <li class="{{ $loop->first ? 'active':'' }}">
+                    <li class="{{ $loop->first ? 'active':'' }} tooltips" data-title="@lang('Round Trip') {{ $roundTrip }}">
                         <a href="#report-tab-{{ $roundTrip }}" data-toggle="tab" aria-expanded="true">
                             <i class="fa fa-retweet" aria-hidden="true"></i> {{ $roundTrip }}
                         </a>

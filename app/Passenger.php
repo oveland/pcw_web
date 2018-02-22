@@ -9,7 +9,7 @@ class Passenger extends Model
 {
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
+        return Carbon::createFromFormat(config(str_contains($date,":")?'app.simple_date_time_format':'app.date_format'),explode('.',$date)[0]);
     }
 
     public function vehicle()

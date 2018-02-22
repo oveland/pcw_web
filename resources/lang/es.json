@@ -279,9 +279,19 @@
   "Inactive cameras":"Cámara Inactiva",
   "Check counter":"Contador de chequeo",
   "Items issues": "Anomalías en los items",
+  "Counter issue":"Incidencia de contador",
   "Type of report": "Tipo de reporte",
   "Issues": "Incidencias",
+  "Of issues": "De incidencias",
   "History": "Historial",
+  "Historic": "Histórico",
   "See frame": "Ver trama",
-  "List counter passengers": "Listado de counteo de pasajeros"
+  "By routes": "Por rutas",
+  "Text copied": "Texto copiado",
+  "Copy frame": "Copiar trama",
+  "Prev value": "Valor anterior",
+  "See all frames": "Ver todas las tramas",
+  "List counter passengers by route": "Listado de conteo de pasajeros por ruta",
+  "List counter passengers": "Listado de conteo de pasajeros",
+  "The are not list of passengers and counter on this date range": "No existe conteo de pasajeros en la fecha seleccionada"
 }

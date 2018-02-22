@@ -1,4 +1,4 @@
-@if(count($counterIssues))
+@if(count($counterIssuesByVehicles))
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -6,90 +6,76 @@
                    title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
+                <a href="javascript:;" class="btn btn-sm btn-rounded btn-info" data-toggle="collapse" data-target=".collapse-frame">
+                    <i class="ion-ios-search"></i>
+                    @lang('See all frames')
+                </a>
             </div>
             <h5 class="text-white label-vehicles">
                 <i class="fa fa-exclamation-triangle"></i>
                 @lang('List of counter issues')
             </h5>
-        </div>
-        <div class="tab-content panel">
             <div class="row">
-                <div class="table-responsive">
-                    <!-- begin table -->
-                    <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle">
-                        <thead>
-                        <tr class="inverse">
-                            <th>@lang('Passengers')</th>
-                            <th>@lang('Vehicle')</th>
-                            <th>@lang('Items issues')</th>
-                            <th>@lang('Inactive cameras')</th>
-                            <th>@lang('Check counter')</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($counterIssues as $counterIssue)
-                            @php($vehicle = $counterIssue->vehicle)
-                            @php($itemsIssues = collect(json_decode($counterIssue->items_issues,true)))
-                            <tr class="bg-inverse text-white text-bold">
-                                <td>{{ $counterIssue->date }}</td>
-                                <td colspan="4">{{ $counterIssue->frame }}</td>
-                            </tr>
-                            <tr>
-                                <td>{{ $counterIssue->total }}</td>
-                                <td>{{ $vehicle->number }}</td>
-                                <td width="30%">
-                                    @foreach($itemsIssues as $item => $issues)
-                                        <div class="widget widget-stat bg-warning text-white p-5 m-b-5">
-                                            <div class="row">
-                                                <div class="col-md-3 text-right p-0 m-t-5 p-r-5" style="border-right: 1px dotted white">
-                                                    <p class="text-uppercase text-bold m-0">@lang('Item') {{ $item }}</p>
-                                                </div>
-                                                <div class="col-md-9 p-0 m-0">
-                                                    <ul>
-                                                        @foreach($issues as $name => $issue)
-                                                            <li style="text-align: left">
-                                                                <small class="text-white text-bold" style="float: left">@lang($name):
-                                                                    @if(is_array($issue))
-                                                                        <ul>
-                                                                            @foreach($issue as $field => $value)
-                                                                                <li>
-                                                                                    F[{{ $field }}] = {{ $value }}
-                                                                                </li>
-                                                                            @endforeach
-                                                                        </ul>
-                                                                    @else
-                                                                        <cite title="">{{ $issue }}</cite>
-                                                                    @endif
-                                                                </small>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </td>
-                                <td>
-                                    @if($counterIssue->raspberry_cameras_issues)
-                                        <div class="btn btn-danger btn-sm">
-                                            {{ $counterIssue->raspberry_cameras_issues }}
-                                        </div>
-                                    @endif
-                                </td>
-                                <td width="30%">
-                                    @if($counterIssue->raspberry_check_counter_issue)
-                                        <div class="btn btn-primary btn-sm">
-                                            {{ $counterIssue->raspberry_check_counter_issue }}
-                                        </div>
-                                    @endif
-                                </td>
-                            </tr>
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-pills-success">
+                        @foreach($counterIssuesByVehicles as $vehicleId => $counterIssue )
+                            @php($vehicle = \App\Vehicle::find($vehicleId))
+                            <li class="{{ $loop->first?'active':'' }} tooltips" data-title="{{ $vehicle->plate }}">
+                                <a href="#tab-issue-{{ $vehicleId }}" data-toggle="tab">{{ $vehicle->number }}</a>
+                            </li>
                         @endforeach
-                        </tbody>
-                    </table>
-                    <!-- end table -->
+                    </ul>
                 </div>
             </div>
+        </div>
+        <div class="tab-content panel p-0">
+            @foreach($counterIssuesByVehicles as $vehicleId => $counterIssues )
+                <div id="tab-issue-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first?'active in':'' }}">
+                    <div class="table-responsive">
+                        <!-- begin table -->
+                        <table id="data-table" class="table table-bordered table-striped table-hover table-valign-middle table-report">
+                            <thead>
+                            <tr class="inverse">
+                                <th>
+                                    <i class="fa fa-list text-muted"></i><br>
+                                    @lang('N°')
+                                </th>
+                                <th>
+                                    <i class="fa fa-car text-muted"></i><br>
+                                    @lang('Vehicle')
+                                </th>
+                                <th>
+                                    <i class="fa fa-users text-muted"></i><br>
+                                    @lang('Passengers')
+                                </th>
+                                <th>
+                                    <i class="fa fa-exclamation-triangle text-muted"></i><br>
+                                    @lang('Items issues')
+                                </th>
+                                <th>
+                                    <i class="fa fa-camera text-muted"></i><br>
+                                    @lang('Inactive cameras')
+                                </th>
+                                <th>
+                                    <i class="ion-radio-waves"></i><br>
+                                    @lang('Check counter')
+                                </th>
+                                <th>
+                                    <i class="fa fa-rocket text-muted"></i><br>
+                                    @lang('Actions')
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($counterIssues as $counterIssue)
+                                @include('admin.counter.status._issue')
+                            @endforeach
+                            </tbody>
+                        </table>
+                        <!-- end table -->
+                    </div>
+                </div>
+            @endforeach
         </div>
     </div>
     <script>hideSideBar()</script>

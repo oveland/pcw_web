@@ -56,14 +56,36 @@
                             <div class="form-group">
                                 <label for="type-report" class="control-label field-required">@lang('Type of report')</label>
                                 <div class="input-group btn-block">
-                                    <select name="type-report" id="type-report" type="text" class="default-select2 form-control col-md-12" placeholder="@lang('Type of report')">
-                                        <option value="issues">@lang('Issues')</option>
-                                        <option value="history">@lang('History')</option>
+                                    <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
+                                        <option value="history">@lang('Historic')</option>
+                                        <option value="issues">@lang('Of issues')</option>
+                                        <option value="route">@lang('By route')</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 form-by-route" style="display: none">
+                            <div class="form-group">
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <div class="input-group btn-block">
+                                    <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-by-route" style="display: none">
+                            <div class="form-group">
+                                <label for="route-report-date" class="control-label field-required">@lang('Date')</label>
+                                <div class="input-group date datepicker">
+                                    <input name="route-report-date" id="route-report-date" type="text" class="form-control" placeholder="@lang('Date')" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-date-range">
                             <div class="form-group">
                                 <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
                                 <div class="input-group date date-time-picker-report">
@@ -76,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 form-date-range">
                             <div class="form-group">
                                 <label for="final-date" class="control-label field-required">@lang('Final date')</label>
                                 <div class="input-group date date-time-picker-report">
@@ -104,6 +126,8 @@
 
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+
     <script type="application/javascript">
         var mainContainer = $('.main-container');
         var form = $('.form-search-report');
@@ -129,12 +153,52 @@
                 }
             });
 
-            $('#company-report').change(function () {
+            $('#company-report,#route-report,#route-report-date').change(function () {
                 mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
             });
+
+            $('#company-report').change(function () {
+                loadRouteReport($(this).val());
+            });
+
+            $('#type-report').change(function () {
+                var typeReport = $(this).val();
+                var formByRoute = $('.form-by-route');
+                var formDateRange = $('.form-date-range');
+
+                if( typeReport === 'route' ){
+                    formDateRange.hide();
+                    formByRoute.fadeIn();
+                }else{
+                    formByRoute.hide();
+                    formDateRange.fadeIn();
+                }
+            });
+
+            var clipboard = new Clipboard('.btn-copy');
+
+            clipboard.on('success', function (e) {
+                gsuccess("@lang('Text copied'):" + e.text);
+                e.clearSelection();
+            });
+
+            @if(!Auth::user()->isAdmin())
+            loadRouteReport(null);
+            @endif
         });
+
+        function loadRouteReport(company) {
+            var routeSelect = $('#route-report');
+            routeSelect.html($('#select-loading').html()).trigger('change.select2');
+            routeSelect.load('{{ route('route-ajax-action') }}', {
+                option: 'loadRoutes',
+                company: company
+            }, function () {
+                routeSelect.trigger('change.select2');
+            });
+        }
     </script>
 @endsection

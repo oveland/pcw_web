@@ -81,3 +81,6 @@ span.icon-report{
     top: -5px;
     float: unset;
 }
+.select2-container{
+    width:100% !important;
+}
