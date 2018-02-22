@@ -33,13 +33,13 @@ class RouteReportController extends Controller
     public function show(Request $request)
     {
         $companyReport = $request->get('company-report');
-        $routeReport = $request->get('report-route');
+        $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
 
         $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
         $route = $routeReport == "all" ? $routeReport : Route::find($routeReport);
-        if ($routeReport != "all" && !$route->belongsToCompany($company)) abort(404);
+        if ($routeReport != "all" && (!$route || !$route->belongsToCompany($company) )) abort(404);
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
         if ($routeReport != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);

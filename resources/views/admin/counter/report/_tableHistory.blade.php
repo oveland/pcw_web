@@ -36,7 +36,7 @@
             @php($counterIssue = $passenger->counterIssue )
             @php($dispatchRegister = $passenger->dispatchRegister )
             <tr>
-                <td class="text-center" width="5%">{{ $loop->index + $passengers->firstItem() }}</td>
+                <td class="text-center" width="5%">{{ $loop->index  }}</td>
                 <td class="text-center">{{ $passenger->date }}</td>
                 <td class="text-center">{{ $vehicle->number }}</td>
                 <td class="text-center">{{ $passenger->total }}</td>

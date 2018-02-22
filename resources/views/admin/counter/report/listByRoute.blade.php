@@ -14,7 +14,6 @@
             </div>
             <h5 class="text-white label-vehicles m-b-0">
                 <i class="ion-flag"></i> @lang('List counter passengers by route')
-                @include('partials.pagination.totalInfo',['paginator' => $passengersByRoundTrip ])
             </h5>
 
             <div class="row">
@@ -35,7 +34,7 @@
             @foreach($passengersByRoundTrip as $roundTrip => $passengers )
                 @include('admin.counter.report._tableHistory')
             @endforeach
-            <div class="col-md-12 p-0">{{ $passengersPerRoundTrip->links() }}</div>
+            
         </div>
     </div>
     <script>hideSideBar()</script>

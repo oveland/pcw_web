@@ -31,9 +31,9 @@ class ControlPointsReportController extends Controller
     {
         $dateReport = $request->get('date-report');
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $route = Route::find($request->get('report-route'));
+        $route = Route::find($request->get('route-report'));
 
-        if (!$route->belongsToCompany($company)) abort(404);
+        if (!$route || !$route->belongsToCompany($company)) abort(404);
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
             ->where('route_id', '=', $route->id)
