@@ -97,7 +97,7 @@ class StatusCounterController extends Controller
             $comparedFrame[] = (object)[
                 'class' => (isset($prevFrameFields[$index]) && $field != $prevFrameFields[$index] && ($index < count($currentFrameFields) - 1)) ? 'btn btn-xs btn-success p-2 tooltips' : '',
                 'field' => $field,
-                'prevField' => $prevFrameFields[$index]
+                'prevField' => $prevFrameFields[$index] ?? ''
             ];
         }
         return $comparedFrame;
