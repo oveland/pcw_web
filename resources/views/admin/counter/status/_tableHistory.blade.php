@@ -49,6 +49,9 @@
                             data-trigger="hover"
                             title="
                                 <i class='fa fa-flag text-primary'></i> {{ $dispatchRegister->route->name }}<br>
+                                <span class='f-s-12'><br>
+                                    <i class='fa fa-retweet text-success'></i> <b>@lang('Round Trip') {{ $dispatchRegister->round_trip }}</b><br>
+                                </span>
                                 <span class='f-s-12'>
                                     <i class='fa fa-industry text-warning'></i> <b>{{ $dispatchRegister->status }}</b>
                                 </span>
