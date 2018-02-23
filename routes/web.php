@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth']], function () {
     /* Routes for general actions */
     Route::prefix(__('general'))->group(function () {
         Route::any('/load-select-routes', 'GeneralController@loadSelectRoutes')->name('general-load-select-routes');
+        Route::any('/load-select-route-round-trips', 'GeneralController@loadSelectRouteRoundTrips')->name('general-load-select-route-round-trips');
         Route::any('/load-select-vehicles', 'GeneralController@loadSelectVehicles')->name('general-load-select-vehicles');
     });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\CounterIssue;
+use App\DispatchRegister;
 use App\Passenger;
 use App\Route;
 use App\Vehicle;
@@ -28,7 +29,7 @@ class PassengerReportCounterController extends Controller
         $typeReport = $request->get('type-report');
         $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
         $vehicle = Vehicle::find($vehicleReport);
-        if(!$vehicle || !$vehicle->belongsToCompany($company))return view('errors._403');
+        if (!$vehicle || !$vehicle->belongsToCompany($company)) return view('errors._403');
 
         switch ($typeReport) {
             case 'issues':
@@ -50,38 +51,38 @@ class PassengerReportCounterController extends Controller
                 $finalDate = $request->get('final-date');
                 if ($initialDate > $finalDate) return view('partials.dates.invalidRange');
 
-                $passengers = Passenger::where('vehicle_id', $vehicle->id)
-                    ->whereBetween('date', [$initialDate, $finalDate])
-                    ->orderBy('id')
+                $passengers = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')
                     ->paginate(config('database.total_pagination'));
 
                 $passengers->appends($request->all());
 
-                return view('admin.counter.report.listHistory', compact('passengers'));
+                $initialPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')->limit(1)->get()->first();
+                $lastPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderByDesc('id')->limit(1)->get()->first();
+
+                return view('admin.counter.report.listHistory', compact('passengers'))->with([
+                    'initialPassengerCount' => $initialPassengerCount,
+                    'lastPassengerCount' => $lastPassengerCount,
+                ]);
                 break;
             case 'route':
                 $routeReportDate = $request->get('route-report-date');
+                $routeRoundTrip = $request->get('route-round-trip-report');
                 $routeReport = $request->get('route-report');
                 $route = Route::find($routeReport);
-                if(!$route || !$route->belongsToCompany($company))return view('errors._403');
+                if (!$route || !$route->belongsToCompany($company)) return view('errors._403');
 
-                $passengers = Passenger::where('vehicle_id', $vehicle->id)
-                    ->whereBetween('date', ["$routeReportDate 00:00:00", "$routeReportDate 23:59:59"])
-                    ->where('dispatch_register_id', '<>', null)
-                    ->orderBy('id')
+                $passengers = Passenger::findAllByRoundTrip($vehicle->id, $route->id, $routeRoundTrip, $routeReportDate)->orderBy('passengers.id')
                     ->paginate(config('database.total_pagination'));
 
                 $passengers->appends($request->all());
 
-                $passengersByRoute = $passengers->filter(function ($passenger, $key) use ($route) {
-                    return $passenger->dispatchRegister->route->id == $route->id;
-                });
+                $initialPassengerCount = Passenger::findAllByRoundTrip($vehicle->id, $route->id, $routeRoundTrip, $routeReportDate)->orderBy('passengers.id')->limit(1)->get()->first();
+                $lastPassengerCount = Passenger::findAllByRoundTrip($vehicle->id, $route->id, $routeRoundTrip, $routeReportDate)->orderByDesc('passengers.id')->limit(1)->get()->first();
 
-                $passengersByRoundTrip = $passengersByRoute->groupBy(function ($passenger, $key) {
-                    return $passenger->dispatchRegister->round_trip;
-                });
-
-                return view('admin.counter.report.listByRoute', compact('passengersByRoundTrip'));
+                return view('admin.counter.report.listByRoute', compact('passengers'))->with([
+                    'initialPassengerCount' => $initialPassengerCount,
+                    'lastPassengerCount' => $lastPassengerCount,
+                ]);
                 break;
         }
     }

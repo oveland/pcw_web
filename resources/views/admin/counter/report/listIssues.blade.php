@@ -28,8 +28,8 @@
                                     @lang('N°')
                                 </th>
                                 <th>
-                                    <i class="fa fa-car text-muted"></i><br>
-                                    @lang('Vehicle')
+                                    <i class="fa fa-calendar text-muted"></i><br>
+                                    @lang('Date')
                                 </th>
                                 <th>
                                     <i class="fa fa-users text-muted"></i><br>

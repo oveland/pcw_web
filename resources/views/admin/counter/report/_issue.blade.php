@@ -2,7 +2,7 @@
 @php($itemsIssues = collect(json_decode($counterIssue->items_issues,true)))
 <tr>
     <td class="text-center" width="5%">{!! $loop->iteration  or 1 !!} </td>
-    <td>{{ $vehicle->number }}</td>
+    <td width="30%">{{ $counterIssue->date }}</td>
     <td>{{ $counterIssue->total }}</td>
     <td width="30%">
         @foreach($itemsIssues as $item => $issues)
@@ -58,8 +58,7 @@
     </td>
 </tr>
 <tr id="frame-issue-{{ $counterIssue->id }}" class="bg-inverse text-white text-bold collapse collapse-frame fade">
-    <td width="10%">{{ $counterIssue->date }}</td>
-    <td colspan="6" style="font-family: monospace">
+    <td colspan="7" style="font-family: monospace">
         @php
             $currentFrame = $counterIssue->frame;
             $comparedFrame = \App\Http\Controllers\PassengerReportCounterController::compareChangeFrames($currentFrame,$currentFrame);

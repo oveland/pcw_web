@@ -12,12 +12,12 @@
                     @lang('Date')
                 </th>
                 <th>
-                    <i class="fa fa-car text-muted"></i><br>
-                    @lang('Vehicle')
+                    <i class="fa fa-users text-muted"></i><br>
+                    @lang('Passengers')
                 </th>
                 <th>
                     <i class="fa fa-users text-muted"></i><br>
-                    @lang('Passengers')
+                    @lang('Total passengers')
                 </th>
                 <th>
                     <i class="fa fa-flag text-muted"></i><br>
@@ -36,9 +36,9 @@
             @php($counterIssue = $passenger->counterIssue )
             @php($dispatchRegister = $passenger->dispatchRegister )
             <tr>
-                <td class="text-center" width="5%">{{ $loop->index + $passengers->firstItem() }}</td>
+                <td class="text-center" width="5%">{{ $loop->iteration }}</td>
                 <td class="text-center">{{ $passenger->date }}</td>
-                <td class="text-center">{{ $vehicle->number }}</td>
+                <td class="text-center">{{ ($passenger->total - $initialPassengerCount->total ) }}</td>
                 <td class="text-center">{{ $passenger->total }}</td>
                 <td class="text-center">
                     @if($dispatchRegister)

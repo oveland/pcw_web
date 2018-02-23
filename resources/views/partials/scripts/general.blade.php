@@ -9,7 +9,7 @@
                 routeSelect.trigger('change.select2');
             });
         }else{
-            routeSelect.html('<option value="null">@lang('Select a company')</option>').trigger('change.select2');
+            routeSelect.html('<option value="null">@lang('Select an option')</option>').trigger('change.select2');
         }
     }
 
@@ -23,7 +23,7 @@
                 vehicleSelect.trigger('change.select2');
             });
         }else{
-            vehicleSelect.html('<option value="null">@lang('Select a company')</option>').trigger('change.select2');
+            vehicleSelect.html('<option value="null">@lang('Select an option')</option>').trigger('change.select2');
         }
     }
 </script>

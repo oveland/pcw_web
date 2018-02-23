@@ -1,4 +1,4 @@
-@if(count($passengersByRoundTrip))
+@if(count($passengers))
     @php($strTime = new \App\Http\Controllers\Utils\StrTime())
     <div class="panel panel-inverse">
         <div class="panel-heading">
@@ -14,28 +14,13 @@
             </div>
             <h5 class="text-white label-vehicles m-b-0">
                 <i class="ion-flag"></i> @lang('List counter passengers by route')
-                @include('partials.pagination.totalInfo',['paginator' => $passengersByRoundTrip ])
+                @include('admin.counter.report.totalInfo')
+                @include('partials.pagination.totalInfo',['paginator' => $passengers ])
             </h5>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="nav nav-pills nav-pills-success">
-                        @foreach($passengersByRoundTrip as $roundTrip => $passengers )
-                            <li class="{{ $loop->first?'active':'' }} tooltips" data-title="@lang('Round Trip') {{ $roundTrip }}. @lang('Total'): {{ $passengers->last()->total -  $passengers->first()->total }}">
-                                <a href="#tab-round-trip-{{ $roundTrip }}" data-toggle="tab">
-                                    <i class="fa fa-retweet"></i> {{ $roundTrip }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
         </div>
         <div class="tab-content panel p-0">
-            @foreach($passengersByRoundTrip as $roundTrip => $passengers )
-                @include('admin.counter.report._tableHistory')
-            @endforeach
-            <div class="col-md-12 p-0">{{ $passengersPerRoundTrip->links() }}</div>
+            @include('admin.counter.report._tableHistory')
+            <div class="col-md-12 p-0">{{ $passengers->links() }}</div>
         </div>
     </div>
     <script>hideSideBar()</script>

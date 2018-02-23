@@ -279,6 +279,7 @@
   "List of counter issues":"Listado de incidencias en contador",
   "alarms":"Alarmas",
   "lowerCount":"Bajo conteo",
+  "higherCount":"Alto conteo",
   "Inactive cameras":"Cámara Inactiva",
   "Check counter":"Contador de chequeo",
   "Items issues": "Anomalías en los items",
@@ -298,6 +299,7 @@
   "registers in total": "registros en total",
   "Select a company first": "Primero seleccione una empresa",
   "See all frames": "Ver todas las tramas",
+  "No round trips found":"Sin vueltas",
   "List counter passengers by route": "Listado de conteo de pasajeros por ruta",
   "List counter passengers": "Listado de conteo de pasajeros",
   "The are not list of passengers and counter on this date range": "No existe conteo de pasajeros en la fecha seleccionada"

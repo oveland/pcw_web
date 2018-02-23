@@ -84,6 +84,12 @@
                                         <option value="null">@lang('Select a company first')</option>
                                     </select>
                                 </div>
+                                <label for="route-round-trip-report" class="control-label field-required">@lang('Round Trip')</label>
+                                <div class="input-group btn-block">
+                                    <select title="@lang('Round trip')" name="route-round-trip-report" id="route-round-trip-report" class="default-select2 form-control col-md-12">
+                                        <option value="history">@lang('Round trip')</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3 form-by-route" style="display: none">
@@ -159,19 +165,8 @@
                 }
             });
 
-            $('#company-report,#vehicle-report,#route-report,#route-report-date').change(function () {
-                mainContainer.slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
-            });
-
-            $('#company-report').change(function () {
-                loadSelectRouteReport($(this).val());
-                loadSelectVehicleReport($(this).val());
-            });
-
             $('#type-report').change(function () {
+                mainContainer.slideUp();
                 var typeReport = $(this).val();
                 var formByRoute = $('.form-by-route');
                 var formDateRange = $('.form-date-range');
@@ -183,6 +178,26 @@
                     formByRoute.hide();
                     formDateRange.fadeIn();
                 }
+            });
+
+            $('#company-report, #route-round-trip-report, #route-report-date, #type-report, #initial-date, #final-date').change(function () {
+                setTimeout(function(){
+                    mainContainer.slideUp();
+                    if (form.isValid(false)) {
+                        form.submit();
+                    }
+                },500);
+            });
+
+            $('#company-report').change(function () {
+                mainContainer.slideUp();
+                loadSelectRouteReport($(this).val());
+                loadSelectVehicleReport($(this).val());
+            });
+
+            $('#route-report,#vehicle-report').change(function () {
+                mainContainer.slideUp();
+                loadSelectRouteRoundTripsReport();
             });
 
             var clipboard = new Clipboard('.btn-copy');
@@ -199,5 +214,23 @@
                 $('#company-report').change();
             @endif
         });
+
+        function loadSelectRouteRoundTripsReport() {
+            var route = $('#route-report').val();
+            var vehicle = $('#vehicle-report').val();
+
+            var routeRoundTripReport = $('#route-round-trip-report');
+            if( is_not_null(route) && is_not_null(vehicle) ) {
+                routeRoundTripReport.html($('#select-loading').html()).trigger('change.select2');
+                routeRoundTripReport.load('{{ route('general-load-select-route-round-trips') }}', {
+                    route: route,
+                    vehicle: vehicle
+                }, function () {
+                    routeRoundTripReport.trigger('change.select2');
+                });
+            }else{
+                routeRoundTripReport.html('<option value="null">@lang('Round trip')</option>').trigger('change.select2');
+            }
+        }
     </script>
 @endsection
