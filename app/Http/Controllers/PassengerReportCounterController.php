@@ -35,10 +35,30 @@ class PassengerReportCounterController extends Controller
             case 'issues':
                 $initialDate = $request->get('initial-date');
                 $finalDate = $request->get('final-date');
+                $typeIssue = $request->get('type-issue');
+
                 if ($initialDate > $finalDate) return view('partials.dates.invalidRange');
 
-                $counterIssues = CounterIssue::where('vehicle_id', $vehicle->id)
-                    ->whereBetween('date', [$initialDate, $finalDate])
+                $whereClause[] = ['vehicle_id','=', $vehicle->id];
+                switch ($typeIssue){
+                    case 'lower-count':
+                        $whereClause[] = ['items_issues','like','%lowerCount%'];
+                        break;
+                    case 'higher-count':
+                        $whereClause[] = ['items_issues','like','%higherCount%'];
+                        break;
+                    case 'alarms':
+                        $whereClause[] = ['items_issues','like','%alarms%'];
+                        break;
+                    case 'cameras':
+                        $whereClause[] = ['raspberry_cameras_issues','<>',''];
+                        break;
+                    case 'signal-check':
+                        $whereClause[] = ['raspberry_check_counter_issue','<>',''];
+                        break;
+                }
+
+                $counterIssues = CounterIssue::where($whereClause)->whereBetween('date', [$initialDate, $finalDate])
                     ->orderBy('id')
                     ->paginate(config('database.total_pagination'));
 
@@ -99,7 +119,7 @@ class PassengerReportCounterController extends Controller
         $prevFrameFields = explode(' ', $prevFrame ?? $currentFrame);
         foreach ($currentFrameFields as $index => $field) {
             $comparedFrame[] = (object)[
-                'class' => (isset($prevFrameFields[$index]) && $field != $prevFrameFields[$index] && ($index < count($currentFrameFields) - 1)) ? 'btn btn-xs btn-success p-2 tooltips' : '',
+                'class' => (isset($prevFrameFields[$index]) && $field != $prevFrameFields[$index]) ? 'btn btn-xs btn-success p-2 tooltips' : '',
                 'field' => $field,
                 'prevField' => $prevFrameFields[$index] ?? ''
             ];

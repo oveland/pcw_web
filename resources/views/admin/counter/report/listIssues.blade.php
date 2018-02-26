@@ -45,7 +45,7 @@
                                 </th>
                                 <th>
                                     <i class="ion-radio-waves"></i><br>
-                                    @lang('Check counter')
+                                    @lang('Signal check')
                                 </th>
                                 <th>
                                     <i class="fa fa-rocket text-muted"></i><br>

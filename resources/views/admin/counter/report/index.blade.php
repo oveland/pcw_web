@@ -74,6 +74,19 @@
                                         <option value="route">@lang('By route')</option>
                                     </select>
                                 </div>
+                                <div class="type-issue" style="display: none;">
+                                    <label for="type-issue" class="control-label field-required">@lang('Type')</label>
+                                    <div class="input-group btn-block type-issue">
+                                        <select name="type-issue" id="type-issue" class="default-select2 form-control col-md-12">
+                                            <option value="all">@lang('All')</option>
+                                            <option value="lower-count">@lang('Lower count')</option>
+                                            <option value="higher-count">@lang('Higher count')</option>
+                                            <option value="alarms">@lang('Alarms')</option>
+                                            <option value="cameras">@lang('Cameras')</option>
+                                            <option value="signal-check">@lang('Signal check')</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-2 form-by-route" style="display: none">
@@ -178,9 +191,16 @@
                     formByRoute.hide();
                     formDateRange.fadeIn();
                 }
+
+                var typeIssueSelection = $('.type-issue');
+                if( typeReport === 'issues'){
+                    typeIssueSelection.fadeIn();
+                }else{
+                    typeIssueSelection.slideUp();
+                }
             });
 
-            $('#company-report, #route-round-trip-report, #route-report-date, #type-report, #initial-date, #final-date').change(function () {
+            $('#company-report, #route-round-trip-report, #route-report-date, #type-report, #initial-date, #final-date, #type-issue').change(function () {
                 setTimeout(function(){
                     mainContainer.slideUp();
                     if (form.isValid(false)) {
