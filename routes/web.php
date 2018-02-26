@@ -64,12 +64,15 @@ Route::group(['middleware' => ['auth']], function () {
         /* General reports */
         Route::prefix(__('routes'))->group(function () {
             /* Route report */
-            Route::prefix(__('report-route'))->group(function () {
+            Route::prefix(__('route-report'))->group(function () {
                 Route::get('/', 'RouteReportController@index')->name('report-route');
                 Route::get('/show', 'RouteReportController@show')->name('report-route-search');
                 Route::any('/chart/{dispatchRegister}', 'RouteReportController@chart')->name('report-route-chart');
                 Route::any('/off_road/{dispatchRegister}', 'RouteReportController@offRoadReport')->name('report-route-off-road');
                 Route::any('/ajax', 'RouteReportController@ajax')->name('route-ajax-action');
+            });
+            Route::prefix(__('report-route'))->group(function () {
+                Route::get('/', 'RouteReportController@index')->name('report-route');
             });
 
             /* Off Road report */

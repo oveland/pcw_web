@@ -58,6 +58,11 @@
                                 <i class="fa fa-clock-o text-muted"></i><br>
                                 @lang('Arrival Time Difference')
                             </th>
+                            <th class="col-md-2">
+                                <i class="fa fa-clock-o text-muted"></i>
+                                <i class="fa fa-flag text-muted m-r-5"></i><br>
+                                <span class="text-warning">@lang('Route Time')</span>
+                            </th>
                             <th data-sorting="disabled">
                                 <i class="fa fa-tachometer text-muted"></i><br>
                                 @lang('Status')
@@ -76,16 +81,22 @@
                         </thead>
                         <tbody>
                         @foreach( $dispatchRegisters as $dispatchRegister )
+                            @php($strTime = new \App\Http\Controllers\Utils\StrTime())
                             @php( $driver = $dispatchRegister->driver )
                             @php( $vehicle = $dispatchRegister->vehicle )
                             <tr>
                                 <td class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</td>
                                 <td width="10%" class="text-center">{{ $vehicle->number }} <br> {{ $vehicle->plate }}</td>
                                 <td class="text-uppercase">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
-                                <td>{{ $dispatchRegister->departure_time }}</td>
-                                <td>{{ $dispatchRegister->arrival_time_scheduled }}</td>
-                                <td>{{ $dispatchRegister->arrival_time }}</td>
-                                <td>{{ $dispatchRegister->arrival_time_difference }}</td>
+                                <td>{{ $strTime::toString($dispatchRegister->departure_time) }}</td>
+                                <td>{{ $strTime::toString($dispatchRegister->arrival_time_scheduled) }}</td>
+                                <td>{{ $strTime::toString($dispatchRegister->arrival_time) }}</td>
+                                <td>{{ $strTime::toString($dispatchRegister->arrival_time_difference) }}</td>
+                                <td>
+                                    @if($dispatchRegister->complete())
+                                        {{ $strTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) }}
+                                    @endif
+                                </td>
                                 <td>{{ $dispatchRegister->status }}</td>
                                 @php($total = $dispatchRegister->recorderCounterPerRoundTrip->passengers)
                                 @php($invalid = ($total<0 || $total > 1000)?true:false )

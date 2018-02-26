@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
+use App\Http\Controllers\Utils\StrTime;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Vehicle;
@@ -94,13 +95,17 @@ class RouteReportController extends Controller
                         __('Turn') => $dispatchRegister->turn,                                                                              # B CELL
                         __('Vehicle') => intval($vehicle->number),                                                                          # C CELL
                         __('Plate') => $vehicle->plate,                                                                                     # D CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                                                # E CELL
-                        __('Departure time') => $dispatchRegister->departure_time,                                                          # F CELL
-                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,                                          # G CELL
-                        __('Arrival Time') => $dispatchRegister->arrival_time,                                                              # H CELL
-                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,                                        # I CELL
-                        __('Status') => $dispatchRegister->status,                                                                          # J CELL
-                        __('Passengers') . ' | ' . __('Day') => intval($dispatchRegister->recorderCounterPerRoundTrip->passengers),    # K CELL
+                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                                            # E CELL
+                        __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                                       # F CELL
+                        __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),                       # G CELL
+                        __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                                           # H CELL
+                        __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference),                     # I CELL
+                        __('Route Time') =>
+                            $dispatchRegister->complete()?
+                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time):
+                                '',                                                                                                              # J CELL
+                        __('Status') => $dispatchRegister->status,                                                                          # K CELL
+                        __('Passengers') . ' | ' . __('Day') => intval($dispatchRegister->recorderCounterPerRoundTrip->passengers),    # L CELL
                     ];
                 }
 
@@ -150,19 +155,23 @@ class RouteReportController extends Controller
 
                     $totalDay += $totalRoundTrip;
                     $dataExcel[] = [
-                        __('Route') => $route->name,                                       # A CELL
-                        __('Round Trip') => $dispatchRegister->round_trip,                                  # B CELL
-                        __('Turn') => $dispatchRegister->turn,                                              # C CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                # D CELL
-                        __('Departure time') => $dispatchRegister->departure_time,                          # E CELL
-                        __('Arrival Time Scheduled') => $dispatchRegister->arrival_time_scheduled,          # F CELL
-                        __('Arrival Time') => $dispatchRegister->arrival_time,                              # G CELL
-                        __('Arrival Time Difference') => $dispatchRegister->arrival_time_difference,        # H CELL
-                        __('Status') => $dispatchRegister->status,                                          # I CELL
-                        __('Start Rec.') => intval($startRecorder),                                         # J CELL
-                        __('End Rec.') => intval($currentRecorder),                                         # K CELL
-                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),               # L CELL
-                        __('Pass.') . " " . __('Day') => intval($totalDay),                            # M CELL
+                        __('Route') => $route->name,                                                                    # A CELL
+                        __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
+                        __('Turn') => $dispatchRegister->turn,                                                          # C CELL
+                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # D CELL
+                        __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # E CELL
+                        __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # F CELL
+                        __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # G CELL
+                        __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # H CELL
+                        __('Route Time') =>
+                            $dispatchRegister->complete()?
+                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time):
+                                '',                                                                                          # I CELL
+                        __('Status') => $dispatchRegister->status,                                                      # J CELL
+                        __('Start Rec.') => intval($startRecorder),                                                     # K CELL
+                        __('End Rec.') => intval($currentRecorder),                                                     # L CELL
+                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # M CELL
+                        __('Pass.') . " " . __('Day') => intval($totalDay),                                        # N CELL
                     ];
                 }
 

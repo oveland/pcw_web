@@ -31,7 +31,7 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="col-md-1 hide">
+                <div class="col-md-1">
                     <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id ?? $route }}&type-report=vehicle&export=true" class="btn btn-lime bg-lime-dark pull-right" style="position: absolute;left: -20px;">
                         <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                     </a>
@@ -79,6 +79,11 @@
                             <th class="col-md-2">
                                 <i class="fa fa-clock-o text-muted"></i><br>
                                 @lang('Arrival Time Difference')
+                            </th>
+                            <th class="col-md-2">
+                                <i class="fa fa-clock-o text-muted"></i>
+                                <i class="fa fa-flag text-muted m-r-5"></i><br>
+                                <span class="text-warning">@lang('Route Time')</span>
                             </th>
                             <th data-sorting="disabled">
                                 <i class="fa fa-tachometer text-muted"></i><br>
@@ -133,6 +138,11 @@
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}</td>
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time) }}</td>
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time_difference) }}</td>
+                                <td>
+                                    @if($dispatchRegister->complete())
+                                        {{ $strTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) }}
+                                    @endif
+                                </td>
                                 <td>{{ $dispatchRegister->status }}</td>
                                 @if( $company->hasRecorderCounter() )
                                 <td width="20%" class="p-r-0 p-l-0 text-center">

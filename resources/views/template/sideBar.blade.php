@@ -71,21 +71,6 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="has-sub menu-administration-counter">
-                        <a href="javascript:;" class="faa-parent animated-hover">
-                            <b class="caret pull-right"></b>
-                            <i class="ion-android-contacts faa-pulse"></i>
-                            @lang('Counter')
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="has-sub menu-administration-counter-status">
-                                <a href="{{ route('admin-counter-report')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-table faa-pulse" aria-hidden="true"></i>
-                                    @lang('Report')
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                     @endif
                 </ul>
             </li>
@@ -151,6 +136,21 @@
                                 </a>
                             </li>
                             @endif
+                        </ul>
+                    </li>
+                    <li class="has-sub menu-administration-counter">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="ion-android-contacts faa-pulse"></i>
+                            @lang('Counter')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-administration-counter-status">
+                                <a href="{{ route('admin-counter-report')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-table faa-pulse" aria-hidden="true"></i>
+                                    @lang('Report')
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="has-sub menu-passengers">
