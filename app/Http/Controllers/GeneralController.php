@@ -20,7 +20,7 @@ class GeneralController extends Controller
         $routeId = $request->get('route');
         $vehicleId = $request->get('vehicle');
 
-        $currentDispatchRegister = \DB::select("SELECT round_trip::INTEGER last_round_trip FROM current_dispatch_registers WHERE route_id = $routeId AND vehicle_id = $vehicleId");
+        $currentDispatchRegister = \DB::select("SELECT round_trip::INTEGER last_round_trip FROM last_dispatch_registers WHERE route_id = $routeId AND vehicle_id = $vehicleId");
         if ($currentDispatchRegister) {
             $lastRoundTrip = $currentDispatchRegister[0]->last_round_trip;
             $roundTrips = range(1, $lastRoundTrip);

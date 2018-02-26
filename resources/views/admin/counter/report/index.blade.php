@@ -228,8 +228,8 @@
             });
 
             @if(!Auth::user()->isAdmin())
-                loadSelectRouteReport(null);
-                loadSelectVehicleReport(null);
+                loadSelectRouteReport(1);
+                loadSelectVehicleReport(1);
             @else
                 $('#company-report').change();
             @endif

@@ -66,19 +66,6 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="date-report"
-                                       class="control-label field-required">@lang('Date report')</label>
-                                <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control"
-                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
                         @if(Auth::user()->isAdmin())
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -96,6 +83,19 @@
                                 </div>
                             </div>
                         @endif
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="date-report"
+                                       class="control-label field-required">@lang('Date report')</label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-report" id="date-report" type="text" class="form-control"
+                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="type-report" class="control-label field-required">@lang('Type report')</label>

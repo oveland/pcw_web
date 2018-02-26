@@ -151,8 +151,8 @@ class PCWExporter
             case 'routeReportByVehicle':
                 // Set general formulas
                 for ($i = $starData; $i < $lastRow; $i++) {
-                    $sheet->setCellValue("K$i", "=J$i-I$i");
-                    $sheet->setCellValue("L$i", "=K$i+" . (($i > $starData) ? ("L" . ($i - 1)) : "0"));
+                    $sheet->setCellValue("L$i", "=K$i-J$i");
+                    $sheet->setCellValue("M$i", "=L$i+" . (($i > $starData) ? ("M" . ($i - 1)) : "0"));
                 }
                 break;
 
