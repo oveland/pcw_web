@@ -37,9 +37,9 @@ class CreateOffRoadsTable extends Migration
 
         /* Create trigger on locations table to execute locations_function on INSERT */
         DB::statement("
-            CREATE TRIGGER locations_trigger AFTER INSERT
-              ON locations FOR EACH ROW
-            EXECUTE PROCEDURE locations_function();
+            CREATE TRIGGER off_roads_trigger BEFORE INSERT
+              ON off_roads FOR EACH ROW
+            EXECUTE PROCEDURE off_roads_function();
         ");
     }
 

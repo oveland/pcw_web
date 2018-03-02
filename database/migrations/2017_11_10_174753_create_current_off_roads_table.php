@@ -38,25 +38,23 @@ class CreateCurrentOffRoadsTable extends Migration
         /* Create function that save current_off_roads alerts from INSERT off_roads_table */
         DB::statement("
             CREATE OR REPLACE FUNCTION off_roads_function() RETURNS TRIGGER
-            LANGUAGE plpgsql
-            AS $$
+            language plpgsql
+            as $$
             DECLARE
-              off_road_vehicle CURSOR FOR SELECT date FROM current_off_roads WHERE vehicle_id = NEW.vehicle_id LIMIT 1;
+              off_road_vehicle RECORD;
               alert_off_road_vehicle BOOLEAN;
-              off_road_exists BOOLEAN;
             BEGIN
               IF (TG_OP = 'INSERT' ) THEN
                 IF (NEW.latitude = 0 OR NEW.longitude = 0) THEN
                   RETURN OLD;
                 END IF;
             
-                off_road_exists := FALSE;
+                SELECT * FROM current_off_roads WHERE vehicle_id = NEW.vehicle_id LIMIT 1 INTO off_road_vehicle;
             
-                FOR ov IN off_road_vehicle LOOP
-                    off_road_exists := TRUE;
-            
+                IF off_road_vehicle.id IS NOT NULL THEN
                     alert_off_road_vehicle := FALSE;
-                    IF (NEW.date - ov.date)::TIME > '00:03:00'::TIME THEN
+            
+                    IF (NEW.date - off_road_vehicle.date)::TIME > '00:03:00'::TIME THEN
                       alert_off_road_vehicle := TRUE;
                     END IF;
             
@@ -70,11 +68,10 @@ class CreateCurrentOffRoadsTable extends Migration
                       odometer = NEW.odometer,
                       speed = NEW.speed,
                       off_road = NEW.off_road,
-                      alert_off_road = alert_off_road_vehicle
+                      alert_off_road = alert_off_road_vehicle,
+                      updated_at = current_timestamp
                      WHERE vehicle_id = NEW.vehicle_id;
-                END LOOP;
-            
-                IF off_road_exists IS FALSE THEN
+                ELSE
                   INSERT INTO current_off_roads
                   (
                     vehicle_id,
@@ -87,7 +84,9 @@ class CreateCurrentOffRoadsTable extends Migration
                     odometer,
                     speed,
                     off_road,
-                    alert_off_road
+                    alert_off_road,
+                    created_at,
+                    updated_at
                   )
                   VALUES (
                     NEW.vehicle_id,
@@ -100,15 +99,17 @@ class CreateCurrentOffRoadsTable extends Migration
                     NEW.odometer,
                     NEW.speed,
                     NEW.off_road,
-                    TRUE
+                    TRUE,
+                    current_timestamp,
+                    current_timestamp
                   );
-            
                 END IF;
             
               END IF;
               RETURN NEW;
             END;
-            $$;
+            $$
+            ;
         ");
 
         /* Create trigger on off_roads table to execute current_off_roads_function on INSERT */
