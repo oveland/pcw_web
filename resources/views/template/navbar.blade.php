@@ -31,7 +31,7 @@
                 </form>
             </li>
             <li class="dropdown">
-                @if(Auth::user()->isAdmin())
+                @if(false)
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
                     <i class="fa fa-bell faa-ring animated"></i>
                     <span class="badge badge-danger pull-right faa-float animated">1</span>
