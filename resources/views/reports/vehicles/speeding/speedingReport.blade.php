@@ -87,7 +87,7 @@
                                             @endphp
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{!! $speeding->time->toTimeString ?? '' !!}</td>
+                                                <td>{!! $speeding->time->toTimeString() ?? '' !!}</td>
                                                 <td class="text-{{ $truncated? 'muted':'' }}">
                                                     {{ $speed }}
                                                 </td>
