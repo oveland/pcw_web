@@ -107,7 +107,7 @@
                                                                 $measuredTime = $strTime::addStrTime($departureTime,$report->timem);
                                                                 $scheduledTime = $strTime::addStrTime($departureTime,$report->timep);
 
-                                                                $scheduledControlPointTime = $strTime::addStrTime($departureTime,$controlPointTime->time_from_dispatch);
+                                                                $scheduledControlPointTime = $controlPointTime?$strTime::addStrTime($departureTime,$controlPointTime->time_from_dispatch):$scheduledTime;
 
                                                                 $measuredControlPointTime = "";
                                                                 if( $loop->first ){
