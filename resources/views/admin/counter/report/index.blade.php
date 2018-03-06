@@ -107,9 +107,9 @@
                         </div>
                         <div class="col-md-3 form-by-route" style="display: none">
                             <div class="form-group">
-                                <label for="route-report-date" class="control-label field-required">@lang('Date')</label>
+                                <label for="route-date-report" class="control-label field-required">@lang('Date')</label>
                                 <div class="input-group date datepicker">
-                                    <input name="route-report-date" id="route-report-date" type="text" class="form-control" placeholder="@lang('Date')" value="{{ date('Y-m-d') }}"/>
+                                    <input name="route-date-report" id="route-date-report" type="text" class="form-control" placeholder="@lang('Date')" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -200,7 +200,7 @@
                 }
             });
 
-            $('#company-report, #route-round-trip-report, #route-report-date, #type-report, #initial-date, #final-date, #type-issue').change(function () {
+            $('#company-report, #route-round-trip-report, #type-report, #initial-date, #final-date, #type-issue').change(function () {
                 setTimeout(function(){
                     mainContainer.slideUp();
                     if (form.isValid(false)) {
@@ -215,7 +215,7 @@
                 loadSelectVehicleReport($(this).val());
             });
 
-            $('#route-report,#vehicle-report').change(function () {
+            $('#route-report,#vehicle-report,#route-date-report').change(function () {
                 mainContainer.slideUp();
                 loadSelectRouteRoundTripsReport();
             });
@@ -238,13 +238,15 @@
         function loadSelectRouteRoundTripsReport() {
             var route = $('#route-report').val();
             var vehicle = $('#vehicle-report').val();
+            var date = $('#route-date-report').val();
 
             var routeRoundTripReport = $('#route-round-trip-report');
             if( is_not_null(route) && is_not_null(vehicle) ) {
                 routeRoundTripReport.html($('#select-loading').html()).trigger('change.select2');
                 routeRoundTripReport.load('{{ route('general-load-select-route-round-trips') }}', {
                     route: route,
-                    vehicle: vehicle
+                    vehicle: vehicle,
+                    date: date
                 }, function () {
                     routeRoundTripReport.trigger('change.select2');
                 });

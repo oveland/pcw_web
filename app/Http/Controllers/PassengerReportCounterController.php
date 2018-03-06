@@ -85,7 +85,7 @@ class PassengerReportCounterController extends Controller
                 ]);
                 break;
             case 'route':
-                $routeReportDate = $request->get('route-report-date');
+                $routeReportDate = $request->get('route-date-report');
                 $routeRoundTrip = $request->get('route-round-trip-report');
                 $routeReport = $request->get('route-report');
                 $route = Route::find($routeReport);

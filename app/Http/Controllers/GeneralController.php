@@ -19,8 +19,21 @@ class GeneralController extends Controller
     {
         $routeId = $request->get('route');
         $vehicleId = $request->get('vehicle');
+        $date = $request->get('date');
 
-        $currentDispatchRegister = \DB::select("SELECT round_trip::INTEGER last_round_trip FROM last_dispatch_registers WHERE route_id = $routeId AND vehicle_id = $vehicleId");
+        $query = "
+            SELECT max(rd.id_registro) AS dispatch_register_id, rd.n_vuelta last_round_trip
+            FROM registrodespacho rd
+              JOIN crear_vehiculo cv ON (cv.placa = (rd.n_placa)::text)
+            WHERE rd.fecha = ('$date')::DATE AND (rd.observaciones = 'En camino' OR rd.observaciones = 'Terminó')
+              AND cv.id_crear_vehiculo = $vehicleId
+              AND rd.id_ruta = $routeId
+              GROUP BY rd.n_vuelta
+            ORDER BY rd.n_vuelta DESC LIMIT 1
+        ";
+
+        $currentDispatchRegister = \DB::select($query);
+
         if ($currentDispatchRegister) {
             $lastRoundTrip = $currentDispatchRegister[0]->last_round_trip;
             $roundTrips = range(1, $lastRoundTrip);
