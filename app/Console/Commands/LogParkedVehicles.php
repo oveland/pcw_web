@@ -53,7 +53,7 @@ class LogParkedVehicles extends Command
             FROM markers as m
               JOIN vehicles as v ON (v.plate = m.name)
               LEFT JOIN current_locations as cl ON (cl.vehicle_id = v.id)
-              LEFT JOIN current_reports as cr ON (cr.vehicle_id = v.id)
+              LEFT JOIN current_reports as cr ON (cr.vehicle_id = v.id AND cr.date >= (current_date)::TIMESTAMP)
             WHERE m.status = 3 AND m.hora_status < (current_time - '$timeParkedVehicleThreshold'::TIME) AND m.parked_reported IS FALSE
         ";
         $parkedVehicles = DB::select($query);
