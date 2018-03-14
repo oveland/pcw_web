@@ -71,13 +71,10 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/off_road/{dispatchRegister}', 'RouteReportController@offRoadReport')->name('report-route-off-road');
                 Route::any('/ajax', 'RouteReportController@ajax')->name('route-ajax-action');
             });
-            Route::prefix(__('report-route'))->group(function () {
-                Route::get('/', 'RouteReportController@index')->name('report-route');
-            });
 
             /* Off Road report */
             Route::prefix(__('off-road'))->group(function () {
-                Route::get('/', 'OffRoadController@index')->name('report-route-off-road');
+                Route::get('/', 'OffRoadController@index')->name('report-route-off-road-index');
                 Route::get('/show', 'OffRoadController@searchReport')->name('report-route-off-road-search');
                 Route::get('/address/{offRoad}', 'OffRoadController@getAddressFromCoordinates')->name('report-route-off-road-geolocation-address');
                 Route::get('/image/{offRoad}', 'OffRoadController@getImageFromCoordinate')->name('report-route-off-road-geolocation-image');
@@ -164,6 +161,22 @@ Route::group(['middleware' => ['auth']], function () {
                     Route::get('/show', 'PassengerReportDetailedDateRangeController@show')->name('report-passengers-detailed-date-range-search');
                     Route::get('/export', 'PassengerReportDetailedDateRangeController@export')->name('report-passengers-detailed-date-range-export');
                 });
+            });
+        });
+
+        /* Routes for drivers report */
+        Route::prefix(__('drivers'))->group(function () {
+            Route::prefix(__('consolidated'))->group(function () {
+                Route::get('/','DriverConsolidatedController@index')->name('report-drivers-consolidated');
+                Route::get('/show', 'DriverConsolidatedController@show')->name('report-drivers-consolidated-search');
+                Route::get('/export', 'DriverConsolidatedController@export')->name('report-drivers-consolidated-export');
+            });
+
+            /* Router for General Reports */
+            Route::prefix(__('detailed'))->group(function () {
+                Route::get('/','DriverDetailedController@index')->name('report-drivers-detailed');
+                Route::get('/show', 'DriverDetailedController@show')->name('report-drivers-detailed-search');
+                Route::get('/export', 'DriverDetailedController@export')->name('report-drivers-detailed-export');
             });
         });
 

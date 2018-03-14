@@ -95,7 +95,7 @@
                                 </a>
                             </li>
                             <li class="has-sub menu-off-road-report">
-                                <a href="{{ route('report-route-off-road')  }}">
+                                <a href="{{ route('report-route-off-road-index')  }}">
                                     <i class="fa fa-road" aria-hidden="true"></i>
                                     @lang('Off road')
                                 </a>
@@ -230,6 +230,28 @@
                                     </a>
                                 </li>
                             @endif
+                        </ul>
+                    </li>
+                    <li class="has-sub menu-drivers">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="ion-ios-people faa-pulse"></i>
+                            @lang('Drivers')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-drivers-consolidated">
+                                <a href="{{ route('report-drivers-consolidated')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-archive faa-pulse" aria-hidden="true"></i>
+                                    @lang('Consolidated')
+                                </a>
+                            </li>
+
+                            <li class="has-sub menu-drivers-detailed">
+                                <a href="{{ route('report-drivers-detailed')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-list-alt faa-pulse" aria-hidden="true"></i>
+                                    @lang('Detailed')
+                                </a>
+                            </li>
                         </ul>
                     </li>
 

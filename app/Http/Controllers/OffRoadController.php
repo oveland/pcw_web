@@ -60,7 +60,7 @@ class OffRoadController extends Controller
                 break;
         }
 
-        return redirect(route('report-route-off-road'));
+        return redirect(route('report-route-off-road-index'));
     }
 
     /**
