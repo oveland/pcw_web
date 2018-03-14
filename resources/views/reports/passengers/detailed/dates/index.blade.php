@@ -162,12 +162,12 @@
         });
 
         function loadRouteReport(company) {
-            var roouteSelect = $('#route-report');
-            roouteSelect.html($('#select-loading').html()).trigger('change.select2');
-            roouteSelect.load('{{ route('report-passengers-consolidated-daily-ajax-action',['action'=>'loadRoutes']) }}', {
+            var routeSelect = $('#route-report');
+            routeSelect.html($('#select-loading').html()).trigger('change.select2');
+            routeSelect.load('{{ route('report-passengers-consolidated-daily-ajax-action',['action'=>'loadRoutes']) }}', {
                 company: company
             }, function () {
-                roouteSelect.trigger('change.select2');
+                routeSelect.trigger('change.select2');
             });
         }
     </script>

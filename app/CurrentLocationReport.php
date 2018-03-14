@@ -30,9 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport0 whereTimed($value)
  * @mixin \Eloquent
  */
-class LocationReport0 extends Model
+class CurrentLocationReport extends Model
 {
     use LocationReportTrait;
-
-    protected $table = 'location_reports_0';
 }
