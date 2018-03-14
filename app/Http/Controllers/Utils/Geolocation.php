@@ -49,7 +49,7 @@ class Geolocation
         $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=" . config('road.google_api_token');
         $response = file_get_contents($url);
 
-        sleep(1);
+        sleep(0.2);
 
         $json = collect(json_decode($response, true));
         $address = (object)collect($json->first())->first();
