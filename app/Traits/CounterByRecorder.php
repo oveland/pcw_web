@@ -118,9 +118,9 @@ trait CounterByRecorder
             } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $start_recorder < $lastDispatchRegister->end_recorder) {
                 $issueField = __('A Start Recorder less than the last End Recorder') . ' ' . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
                 $badStartRecorder = true;
-            } else if ($passengersByTurn < config('counter.recorder.threshold_low_count')) {
+            } /*(else if ($passengersByTurn < config('counter.recorder.threshold_low_count')) {
                 $issueField = __('Low count') . ' < ' . config('counter.recorder.threshold_low_count');
-            }
+            }*/
 
             if ($issueField) {
                 $issues->push((object)[
