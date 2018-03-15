@@ -44,7 +44,8 @@ class SpeedingController extends Controller
 
         $speedingReportByVehicle = array();
         foreach ($allSpeedingReportByVehicle as $vehicleId => $allSpeedingByVehicle) {
-            $speedingReportByVehicle[$vehicleId] = self::groupByFirstSpeeding($allSpeedingByVehicle);
+            $speedings = self::groupByFirstSpeeding($allSpeedingByVehicle);
+            if(count($speedings))$speedingReportByVehicle[$vehicleId] = $speedings;
         }
 
         if( $request->get('export') )$this->export($speedingReportByVehicle,$dateReport);
@@ -94,7 +95,7 @@ class SpeedingController extends Controller
 
                     $dataExcel[] = [
                         __('N°') => count($dataExcel) + 1,                             # A CELL
-                        __('Time') => $speeding->time,                                 # B CELL
+                        __('Time') => $speeding->time->toTimeString(),                                 # B CELL
                         __('Vehicle') => intval($vehicle->number),                     # C CELL
                         __('Plate') => $vehicle->plate,                                # D CELL
                         __('Speed') => $speed                                          # E CELL
