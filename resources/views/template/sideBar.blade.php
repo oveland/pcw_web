@@ -239,13 +239,12 @@
                             @lang('Drivers')
                         </a>
                         <ul class="sub-menu">
-                            <li class="has-sub menu-drivers-consolidated">
+                            <li class="has-sub menu-drivers-consolidated hide">
                                 <a href="{{ route('report-drivers-consolidated')  }}" class="faa-parent animated-hover">
                                     <i class="fa fa-archive faa-vertical" aria-hidden="true"></i>
                                     @lang('Consolidated')
                                 </a>
                             </li>
-
                             <li class="has-sub menu-drivers-detailed">
                                 <a href="{{ route('report-drivers-detailed')  }}" class="faa-parent animated-hover">
                                     <i class="fa fa-list-alt faa-vertical" aria-hidden="true"></i>
