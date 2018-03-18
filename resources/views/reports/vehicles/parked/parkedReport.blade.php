@@ -49,20 +49,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach( $parkedReportsByVehicle as $parkedReportByVehicle )
-                    @php( $dispatchRegister = $parkedReportByVehicle->dispatchRegister )
+                @foreach( $parkedReportsByVehicle as $parking )
+                    @php( $dispatchRegister = $parking->dispatchRegister )
                     <tr>
                         <td class="bg-inverse text-white text-center">{{ $loop->iteration }}</td>
                         <td class="text-center">
-                            {{ $parkedReportByVehicle->date->toTimeString() ?? '' }}
+                            {{ $parking->date->toTimeString() ?? '' }}
                         </td>
                         <td class="text-center">
-                            {{ $parkedReportByVehicle->vehicle->number }} | {{ $parkedReportByVehicle->vehicle->plate }}
+                            {{ $parking->vehicle->number }} | {{ $parking->vehicle->plate }}
                         </td>
                         <td class="text-center">
                             @if( $dispatchRegister )
                                 <button class="btn btn-sm btn-primary faa-parent animated-hover tooltips" data-title="@lang('Route')"
-                                        data-toggle="collapse" data-target="#collapse-{{ $parkedReportByVehicle->id }}" aria-expanded="false" aria-controls="collapse-{{ $parkedReportByVehicle->id }}">
+                                        data-toggle="collapse" data-target="#collapse-{{ $parking->id }}" aria-expanded="false" aria-controls="collapse-{{ $parking->id }}">
                                     <i class="fa fa-flag"></i>
                                     {{ $dispatchRegister->route->name }}
                                 </button>
@@ -74,7 +74,7 @@
 
                     @if($dispatchRegister)
                         @php( $driver = $dispatchRegister->driver )
-                        <tr id="collapse-{{ $parkedReportByVehicle->id }}" class="collapse fade" aria-expanded="true">
+                        <tr id="collapse-{{ $parking->id }}" class="collapse fade" aria-expanded="true">
                             <td class="bg-inverse text-white text-center">
                                 @lang('Details')
                             </td>
@@ -109,11 +109,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if($parkedReportByVehicle->report_id)
+                                @if($parking->report_id)
                                     <div class="col-md-4">
                                         <div class="widget widget-stat bg-success text-white">
                                         <div class="widget-stat-btn">
-                                            <a href="javascript:void(0)" class="tooltips" data-title="@lang('Near of') {{ $parkedReportByVehicle->controlPoint->name }}">
+                                            <a href="javascript:void(0)" class="tooltips" data-title="@lang('Near of') {{ $parking->controlPoint->name }}">
                                                 <i class="fa fa-map-marker"></i>
                                             </a>
                                         </div>
@@ -125,15 +125,15 @@
                                                 @lang('Route report')
                                             </div>
                                             <div class="widget-stat-number">
-                                                <strong>{{ $parkedReportByVehicle->timed }}</strong>
+                                                <strong>{{ $parking->timed }}</strong>
                                             </div>
                                             <div class="widget-stat-text">
                                                 <strong class="tooltips" data-title="@lang('Time scheduled')" data-placement="right">
-                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parkedReportByVehicle->timep) }}
+                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parking->timep) }}
                                                 </strong>
                                                 <br>
                                                 <strong class="tooltips" data-title="@lang('Time reported')" data-placement="right">
-                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parkedReportByVehicle->timem) }}
+                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parking->timem) }}
                                                 </strong>
                                             </div>
                                         </div>
@@ -141,20 +141,20 @@
                                     </div>
                                 @endif
                                 <div class="col-md-4">
-                                    <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $parkedReportByVehicle->id }}" title="@lang('Location')">
+                                    <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $parking->id }}" title="@lang('Location')">
                                         <i class="fa fa-map-marker"></i>
                                         <span>@lang('Location')</span>
                                     </button>
                                     <hr>
-                                    <span id="address-{{ $parkedReportByVehicle->id }}" class="tooltips" data-title="@lang('Address')"></span>
+                                    <span id="address-{{ $parking->id }}" class="tooltips" data-title="@lang('Address')"></span>
                                     <button class="btn btn-sm btn-info btn-show-address"
-                                            data-url="{{ route('report-vehicle-parked-geolocation-address',['parkingReport'=>$parkedReportByVehicle->id]) }}"
-                                            data-target="#address-{{ $parkedReportByVehicle->id }}">
+                                            data-url="{{ route('report-vehicle-parked-geolocation-address',['parkingReport'=>$parking->id]) }}"
+                                            data-target="#address-{{ $parking->id }}">
                                         <i class="fa fa-refresh faa-spin animated-hover hide"></i>
                                         <span>@lang('Address')</span>
                                     </button>
                                 </div>
-                                <div id="image-{{ $parkedReportByVehicle->id }}" class="collapse fade collapse-parked-location-image" data-url="{{ route('report-vehicle-parked-geolocation-image',['parkingReport'=>$parkedReportByVehicle->id]) }}">
+                                <div id="image-{{ $parking->id }}" class="collapse fade collapse-parked-location-image" data-url="{{ route('report-vehicle-parked-geolocation-image',['parkingReport'=>$parking->id]) }}">
                                     <div class="text-center">
                                         <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
                                     </div>

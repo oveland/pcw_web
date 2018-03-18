@@ -16,15 +16,15 @@ class CreateDriversTable extends Migration
         $this->down();
         DB::statement("            
             CREATE OR REPLACE VIEW drivers AS
-              SELECT
-                id_idconductor::BIGINT          id,
-                codigo_interno                  code,
-                identidad                       \"identity\",
-                apellido1 \"first_name\",
-                apellido2 \"second_name\",
-                nombre1 || ' ' || nombre2     last_name,
-                activo::BOOLEAN                 active
-              FROM conductor
+              SELECT (conductor.id_idconductor)::BIGINT AS id,
+                conductor.codigo_interno AS code,
+                conductor.identidad AS identity,
+                conductor.apellido1 AS first_name,
+                conductor.apellido2 AS second_name,
+                ((conductor.nombre1 || ' '::text) || conductor.nombre2) AS last_name,
+                conductor.activo AS active,
+                conductor.empresa AS company_id
+               FROM conductor;
         ");
     }
 

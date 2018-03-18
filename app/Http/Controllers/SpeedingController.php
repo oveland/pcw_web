@@ -59,6 +59,9 @@ class SpeedingController extends Controller
      */
     public static function groupByFirstSpeeding($allSpeedingByVehicle)
     {
+
+        if(!count($allSpeedingByVehicle))return collect([]);
+
         $speedingReport = array();
         $prevOffRoad = null;
 
@@ -73,7 +76,7 @@ class SpeedingController extends Controller
             $prevOffRoad = $speeding;
         }
 
-        return $speedingReport;
+        return collect($speedingReport)->sortBy('date');
     }
 
     /**

@@ -22,7 +22,8 @@ class CreateSpeedingView extends Migration
                 v.id        vehicle_id,
                 e.velocidad speed,
                 e.latitud   latitude,
-                e.longitud  longitude
+                e.longitud  longitude,
+                e.dispatch_register_id
               FROM excepciones AS e
                 JOIN vehicles AS v ON (v.plate = e.usuario)
         ");

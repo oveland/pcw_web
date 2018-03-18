@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Vehicle[] $activeVehicles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Vehicle[] $vehicles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Drivers[] $drivers
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Drivers[] $activeDrivers
  * @mixin \Eloquent
  * @property int $id
  * @property string $name
@@ -32,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company active()
  * @property string|null $timezone
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereTimezone($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Route[] $activeRoutes
  */
 class Company extends Model
 {
@@ -62,5 +65,15 @@ class Company extends Model
     public function hasRecorderCounter()
     {
         return $this->id == 14;
+    }
+
+    public function drivers()
+    {
+        return $this->hasMany(Driver::class);
+    }
+
+    public function activeDrivers()
+    {
+        return $this->hasMany(Driver::class)->where('active',true);
     }
 }

@@ -103,8 +103,10 @@ class OffRoadController extends Controller
      * @return array
      */
     public
-    static function groupByFirstOffRoad($offRoads, $recCheckOffRoad)
+    static function groupByFirstOffRoad($offRoads, $recCheckOffRoad = false)
     {
+        if (!count($offRoads)) return collect([]);
+
         $offRoadsReport = array();
         $prevOffRoad = null;
 

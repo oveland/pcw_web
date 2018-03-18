@@ -88,7 +88,14 @@
                                                 {{ $driver?$driver->fullName():__('Not assigned') }}
                                             </th>
                                             <th class="bg-inverse text-uppercase text-muted">
-                                                {{ $strTime::toString($departureTime) }}<br>{{ $strTime::toString($arrivalTime) }}
+                                                {{ $strTime::toString($departureTime) }}
+                                                @if( $dispatchRegister->complete() )
+                                                <br>{{ $strTime::toString($arrivalTime) }}
+                                                <hr class="m-5">
+                                                {{ $strTime::subStrTime($arrivalTime,$departureTime) }}
+                                                @else
+                                                    {{ '--:--:--' }}
+                                                @endif
                                             </th>
                                             @foreach($reportsByControlPoint->keys() as $controlPointId)
                                                 @php( $controlPoint = \App\ControlPoint::find($controlPointId) )

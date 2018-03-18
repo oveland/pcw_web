@@ -90,16 +90,16 @@ class DispatchRegister extends Model
         $intervals = collect(range(1, $numberSegments));
         $diff = Carbon::now()->diff(Carbon::parse($this->getParsedDate()))->days;
 
-        if( $diff == 0 ){
+        if ($diff == 0) {
             $classLocationReport = "\CurrentLocationReport";
-        }else{
-            $segmentTarget = $intervals->filter(function ($value, $key) use ($diff,$daysPerSegment) {
+        } else {
+            $segmentTarget = $intervals->filter(function ($value, $key) use ($diff, $daysPerSegment) {
                 return $value * $daysPerSegment > $diff;
             })->first();
-            $classLocationReport = "\LocationReport".($segmentTarget?"$segmentTarget":"");
+            $classLocationReport = "\LocationReport" . ($segmentTarget ? "$segmentTarget" : "");
         }
 
-        return $this->hasMany(__NAMESPACE__."$classLocationReport", 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        return $this->hasMany(__NAMESPACE__ . "$classLocationReport", 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**
@@ -152,11 +152,12 @@ class DispatchRegister extends Model
 
     public function driver()
     {
-        return $this->belongsTo(Driver::class, 'driver_code','code');
+        return $this->belongsTo(Driver::class, 'driver_code', 'code');
     }
 
-    public function scopeActive($query){
-        return $query->where('status',$this::COMPLETE)->orWhere('status',$this::IN_PROGRESS);
+    public function scopeActive($query)
+    {
+        return $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
     }
 
     public function complete()
@@ -167,6 +168,21 @@ class DispatchRegister extends Model
     public function inProgress()
     {
         return $this->status == $this::IN_PROGRESS;
+    }
+
+    public function speedingReport()
+    {
+        return $this->hasMany(Speeding::class)->orderBy('date', 'asc');
+    }
+
+    public function parkingReport()
+    {
+        return $this->hasMany(ParkingReport::class)->orderBy('date', 'asc');
+    }
+
+    public function controlPointTimeReports()
+    {
+        return $this->hasMany(ControlPointTimeReport::class)->orderBy('date', 'asc');
     }
 
     const CREATED_AT = 'date_created';

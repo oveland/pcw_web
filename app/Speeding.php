@@ -45,4 +45,17 @@ class Speeding extends Model
     {
         return $this->belongsTo(Vehicle::class);
     }
+
+    public function getSpeedAttribute($speed)
+    {
+        $thresholdTruncateSpeeding = config('vehicle.threshold_truncate_speeding');
+        return ($speed > $thresholdTruncateSpeeding) ? $thresholdTruncateSpeeding : $speed;
+    }
+
+    public function isTruncated()
+    {
+        $speed = $this->speed;
+        $thresholdTruncateSpeeding = config('vehicle.threshold_truncate_speeding');
+        return ($speed > $thresholdTruncateSpeeding);
+    }
 }

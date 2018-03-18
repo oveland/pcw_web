@@ -27,7 +27,7 @@
             </li>
             <li class="">
                 <a href="http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" target="_blank" class="faa-parent animated-hover">
-                    <i class="fa fa-home faa-pulse"></i>
+                    <i class="fa fa-home faa-vertical"></i>
                     <span>@lang('Home')</span>
                 </a>
 
@@ -36,20 +36,20 @@
             @if( Auth::user()->isAdmin())
             <li class="has-sub {{ $baseMenu == __('url-administration')?'active':'' }}">
                 <a href="javascritp:;" class="faa-parent animated-hover">
-                    <i class="fa fa-cogs faa-pulse"></i>
+                    <i class="fa fa-cogs faa-horizontal"></i>
                     <span>@lang('Administration')</span>
                 </a>
                 <ul class="sub-menu">
                     <li class="has-sub menu-administration-vehicles">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="fa fa-bus faa-pulse"></i>
+                            <i class="fa fa-bus faa-vertical"></i>
                             @lang('Vehicles')
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-administration-vehicles-peak-and-plate">
                                 <a href="{{ route('admin-vehicles-peak-and-plate')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-ban faa-pulse" aria-hidden="true"></i>
+                                    <i class="fa fa-ban faa-vertical" aria-hidden="true"></i>
                                     @lang('Peak and Plate')
                                 </a>
                             </li>
@@ -59,13 +59,13 @@
                     <li class="has-sub menu-administration-gps">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="fa fa-podcast faa-pulse"></i>
+                            <i class="fa fa-podcast faa-vertical"></i>
                             @lang('GPS')
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-administration-gps-manage">
                                 <a href="{{ route('admin-gps-manage')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-signal faa-pulse" aria-hidden="true"></i>
+                                    <i class="fa fa-signal faa-vertical" aria-hidden="true"></i>
                                     @lang('Manage')
                                 </a>
                             </li>
@@ -77,32 +77,32 @@
             @endif
             <li class="has-sub {{ $baseMenu == __('reports')?'active':'' }}">
                 <a href="javascritp:;" class="faa-parent animated-hover">
-                    <i class="fa fa-area-chart faa-pulse"></i>
+                    <i class="fa fa-area-chart faa-horizontal"></i>
                     <span>@lang('Reports')</span>
                 </a>
                 <ul class="sub-menu">
                     <li class="has-sub menu-routes">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="fa fa-flag faa-pulse"></i>
+                            <i class="fa fa-flag faa-vertical"></i>
                             @lang('Route')
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-route-report">
-                                <a href="{{ route('report-route')  }}">
-                                    <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                <a href="{{ route('report-route')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-line-chart faa-vertical" aria-hidden="true"></i>
                                     @lang('Route report')
                                 </a>
                             </li>
                             <li class="has-sub menu-off-road-report">
-                                <a href="{{ route('report-route-off-road-index')  }}">
-                                    <i class="fa fa-road" aria-hidden="true"></i>
+                                <a href="{{ route('report-route-off-road-index')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-road faa-vertical" aria-hidden="true"></i>
                                     @lang('Off road')
                                 </a>
                             </li>
                             <li class="has-sub menu-report-control-points">
-                                <a href="{{ route('report-route-control-points')  }}">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <a href="{{ route('report-route-control-points')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-map-marker faa-vertical" aria-hidden="true"></i>
                                     @lang('Control Points')
                                 </a>
                             </li>
@@ -111,13 +111,13 @@
                     <li class="has-sub menu-report-vehicles">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="fa fa-bus faa-pulse"></i>
+                            <i class="fa fa-bus faa-vertical"></i>
                             @lang('Vehicles')
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-report-vehicles-parked">
                                 <a href="{{ route('report-vehicle-parked')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-product-hunt faa-pulse" aria-hidden="true"></i>
+                                    <i class="fa fa-product-hunt faa-vertical" aria-hidden="true"></i>
                                     @lang('Parked vehicles')
                                 </a>
                             </li>
@@ -141,13 +141,13 @@
                     <li class="has-sub menu-administration-counter">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="ion-android-contacts faa-pulse"></i>
+                            <i class="fa fa-user-circle-o faa-burst"></i>
                             @lang('Counter')
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-administration-counter-status">
                                 <a href="{{ route('admin-counter-report')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-table faa-pulse" aria-hidden="true"></i>
+                                    <i class="fa fa-table faa-vertical" aria-hidden="true"></i>
                                     @lang('Report')
                                 </a>
                             </li>
@@ -156,7 +156,7 @@
                     <li class="has-sub menu-passengers">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="fa fa-users faa-pulse"></i>
+                            <i class="fa fa-users faa-vertical"></i>
                             @lang('Passengers')
                         </a>
                         <ul class="sub-menu">
@@ -164,19 +164,19 @@
                             <li class="has-sub menu-passengers-consolidated">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
-                                    <i class="fa fa-archive faa-pulse"></i>
+                                    <i class="fa fa-archive faa-vertical"></i>
                                     @lang('Consolidated')
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-consolidated-days">
-                                        <a href="{{ route('report-passengers-consolidated-daily')  }}">
-                                            <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+                                        <a href="{{ route('report-passengers-consolidated-daily')  }}" class="faa-parent animated-hover">
+                                            <i class="fa fa-file-archive-o faa-vertical" aria-hidden="true"></i>
                                             @lang('Daily')
                                         </a>
                                     </li>
                                     <li class="has-sub menu-passengers-consolidated-range">
-                                        <a href="{{ route('report-passengers-consolidated-date-range')  }}">
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        <a href="{{ route('report-passengers-consolidated-date-range')  }}" class="faa-parent animated-hover">
+                                            <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
                                             @lang('Date range')
                                         </a>
                                     </li>
@@ -186,19 +186,19 @@
                             <li class="has-sub menu-passengers-detailed">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
-                                    <i class="fa fa-list-alt faa-pulse"></i>
+                                    <i class="fa fa-list-alt faa-vertical"></i>
                                     @lang('Detailed')
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-detailed-days">
-                                        <a href="{{ route('report-passengers-detailed-daily')  }}">
-                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                        <a href="{{ route('report-passengers-detailed-daily')  }}" class="faa-parent animated-hover">
+                                            <i class="fa fa-file-text-o faa-vertical" aria-hidden="true"></i>
                                             @lang('Daily')
                                         </a>
                                     </li>
                                     <li class="has-sub menu-passengers-detailed-range">
-                                        <a href="{{ route('report-passengers-detailed-date-range')  }}">
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        <a href="{{ route('report-passengers-detailed-date-range')  }}" class="faa-parent animated-hover">
+                                            <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
                                             @lang('Date range')
                                         </a>
                                     </li>
@@ -210,13 +210,13 @@
                             <li class="has-sub menu-passengers-taxcentral">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
-                                    <i class="fa fa-building faa-pulse"></i>
+                                    <i class="fa fa-building faa-vertical"></i>
                                     @lang('Taxcentral')
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="has-sub menu-passengers-taxcentral">
-                                        <a href="{{ route('report-passengers-taxcentral-report')  }}">
-                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                        <a href="{{ route('report-passengers-taxcentral-report')  }}" class="faa-parent animated-hover">
+                                            <i class="fa fa-user-circle-o faa-vertical" aria-hidden="true"></i>
                                             @lang('Passengers report')
                                         </a>
                                     </li>
@@ -235,20 +235,20 @@
                     <li class="has-sub menu-drivers">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="ion-ios-people faa-pulse"></i>
+                            <i class="icon-user fa faa-vertical"></i>
                             @lang('Drivers')
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-drivers-consolidated">
                                 <a href="{{ route('report-drivers-consolidated')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-archive faa-pulse" aria-hidden="true"></i>
+                                    <i class="fa fa-archive faa-vertical" aria-hidden="true"></i>
                                     @lang('Consolidated')
                                 </a>
                             </li>
 
                             <li class="has-sub menu-drivers-detailed">
                                 <a href="{{ route('report-drivers-detailed')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-list-alt faa-pulse" aria-hidden="true"></i>
+                                    <i class="fa fa-list-alt faa-vertical" aria-hidden="true"></i>
                                     @lang('Detailed')
                                 </a>
                             </li>
@@ -259,7 +259,7 @@
                     <li class="has-sub menu-logs">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
-                            <i class="fa fa-user faa-pulse"></i>
+                            <i class="fa fa-user faa-vertical"></i>
                             @lang('Users')
                         </a>
                         <ul class="sub-menu">

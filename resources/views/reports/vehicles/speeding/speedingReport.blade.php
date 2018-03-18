@@ -58,38 +58,33 @@
                                     </p>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover table-valign-middle">
+                                    <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
                                         <thead>
                                         <tr class="inverse">
                                             <th>
                                                 <i class="fa fa-list"></i>
                                             </th>
                                             <th>
-                                                <i class="fa fa-clock-o"></i> @lang('Time')
+                                                <i class="fa fa-clock-o"></i><br>
+                                                @lang('Time')
                                             </th>
                                             <th>
-                                                <i class="fa fa-tachometer"></i> @lang('Speed')
+                                                <i class="fa fa-tachometer"></i><br>
+                                                @lang('Speed')
                                             </th>
                                             <th>
-                                                <i class="fa fa-rocket"></i> @lang('Actions')
+                                                <i class="fa fa-rocket"></i><br>
+                                                @lang('Actions')
                                             </th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         @foreach($speedingReport as $speeding)
-                                            @php
-                                                $speed = $speeding->speed;
-                                                $truncated = false;
-                                                if( $speed > 100 ){
-                                                    $speed = 70 + (random_int(-10,10));
-                                                    $truncated = true;
-                                                }
-                                            @endphp
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{!! $speeding->time->toTimeString() ?? '' !!}</td>
-                                                <td class="text-{{ $truncated? 'muted':'' }}">
-                                                    {{ $speed }}
+                                                <td class="text-{{ $speeding->isTruncated()? 'muted':'' }}">
+                                                    {{ $speeding->speed }}
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $speeding->id }}" data-title="@lang('Location')">

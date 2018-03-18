@@ -83,14 +83,29 @@
                                         @php($route = \App\Route::find($routeId))
                                         <div id="panel-tab-{{ $vehicleId }}-{{ $routeId }}" class="tab-pane fade in {{ $loop->first ? 'active':'' }}">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered table-striped table-hover table-valign-middle">
+                                                <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
                                                     <thead>
                                                         <tr class="inverse">
-                                                            <th>@lang('Turn')</th>
-                                                            <th>@lang('Round Trip')</th>
-                                                            <th>@lang('Driver')</th>
-                                                            <th>@lang('Off road time')</th>
-                                                            <th>@lang('Address')</th>
+                                                            <th>
+                                                                <i class="fa fa-list-ol"></i><br>
+                                                                @lang('Turn')
+                                                            </th>
+                                                            <th>
+                                                                <i class="fa fa-retweet text-muted"></i><br>
+                                                                @lang('Round Trip')
+                                                            </th>
+                                                            <th>
+                                                                <i class="icon-user text-muted"></i><br>
+                                                                @lang('Driver')
+                                                            </th>
+                                                            <th>
+                                                                <i class="fa fa-clock-o text-muted"></i><br>
+                                                                @lang('Time')
+                                                            </th>
+                                                            <th>
+                                                                <i class="fa fa-map text-muted"></i><br>
+                                                                @lang('Address')
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -102,7 +117,7 @@
                                                                 <td>{{ $dispatchRegister->turn }}</td>
                                                                 <td>{{ $dispatchRegister->round_trip }}</td>
                                                                 <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
-                                                                <td>{{ $offRoad->date }}</td>
+                                                                <td>{{ $offRoad->date->toTimeString() }}</td>
                                                                 <td>
                                                                     <a href="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-sm">
                                                                         <i class="fa fa-file-excel-o"></i>
