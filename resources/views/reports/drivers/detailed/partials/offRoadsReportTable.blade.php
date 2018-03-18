@@ -53,26 +53,6 @@
                 var img = $('<img>').attr('src',$(this).data('url'));
                 $(this).find('td').empty().append( img );
             });
-
-            $('.btn-show-address').click(function () {
-                var el = $(this);
-                el.attr('disabled', true);
-                el.find('span').hide();
-                el.find('i').removeClass('hide');
-                $($(this).data('target')).load($(this).data('url'), function (response, status, xhr) {
-                    console.log(status);
-                    el.attr('disabled', false);
-                    if (status == "error") {
-                        if (el.hasClass('second-time')) {
-                            el.removeClass('second-time');
-                        } else {
-                            el.addClass('second-time', true).click();
-                        }
-                    } else {
-                        el.fadeOut(1000);
-                    }
-                });
-            });
         </script>
     @else
         <div class="alert alert-success alert-bordered fade in m-b-10 col-md-8 col-md-offset-2">
