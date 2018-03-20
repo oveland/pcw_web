@@ -1,5 +1,6 @@
 <meta charset="utf-8"/>
 <title>@yield('title','PCW | Servicios GPS')</title>
+<link rel="icon" type="image/png" href="{{ asset('pcw.png') }}">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="PCW | Servicios GPS" name="description"/>
