@@ -162,6 +162,14 @@ Route::group(['middleware' => ['auth']], function () {
                     Route::get('/export', 'PassengerReportDetailedDateRangeController@export')->name('report-passengers-detailed-date-range-export');
                 });
             });
+
+            /*Edit reports*/
+            Route::prefix(__('recorders'))->group(function () {
+                Route::prefix(__('fringes'))->group(function () {
+                    Route::get('/', 'RecorderPassengerReportByFringesController@index')->name('report-passengers-recorders-fringes');
+                    Route::get('/search', 'RecorderPassengerReportByFringesController@search')->name('report-passengers-recorders-fringes-search');
+                });
+            });
         });
 
         /* Routes for drivers report */

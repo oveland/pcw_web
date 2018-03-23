@@ -22,10 +22,10 @@ trait CounterByRecorder
 
         $report = array();
         $issues = array();
-        foreach ($dispatchRegistersByVehicles as $vehicle_id => $dispatchRegistersByVehicle) {
-            $totalByVehicle = self::totalByVehicle($vehicle_id, $dispatchRegisters, $dispatchRegistersByVehicle, $classifyByRoute);
-            $report[$vehicle_id] = $totalByVehicle->report;
-            $totalByVehicle->issues->isNotEmpty() ? $issues[$vehicle_id] = $totalByVehicle->issues : null;
+        foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
+            $totalByVehicle = self::totalByVehicle($vehicleId, $dispatchRegisters, $dispatchRegistersByVehicle, $classifyByRoute);
+            $report[$vehicleId] = $totalByVehicle->report;
+            $totalByVehicle->issues->isNotEmpty() ? $issues[$vehicleId] = $totalByVehicle->issues : null;
         }
 
         return (object)[
@@ -36,28 +36,28 @@ trait CounterByRecorder
         ];
     }
 
-    static function totalByVehicle($vehicle_id, $dispatchRegisters, $dispatchRegistersByVehicle, $classifyByRoute = null)
+    static function totalByVehicle($vehicleId, $dispatchRegisters, $dispatchRegistersByVehicle, $classifyByRoute = null)
     {
-        $vehicle = Vehicle::find($vehicle_id);
+        $vehicle = Vehicle::find($vehicleId);
 
         $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy('departure_time');
         $totalPassengersByVehicle = 0;
+        $history = collect([]);
         $issues = collect([]);
 
         $firstDispatchRegisterByVehicle = $dispatchRegistersByVehicle->first();
-        $start_recorder = $firstDispatchRegisterByVehicle->start_recorder;
-        $first_start_recorder = $start_recorder;
+        $startRecorder = $firstDispatchRegisterByVehicle->start_recorder;
+        $firstStartRecorder = $startRecorder;
 
         $lastDispatchRegister = null;
-        $last_route_id = null;
         $index = 0;
         foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
-            $end_recorder = $dispatchRegister->end_recorder;
-            $start_recorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $start_recorder;
+            $endRecorder = $dispatchRegister->end_recorder;
+            $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
 
 
             if ($classifyByRoute) {
-                $lastDispatchRegister = PassengersDispatchRegister::where('vehicle_id', $vehicle_id)
+                $lastDispatchRegister = PassengersDispatchRegister::where('vehicle_id', $vehicleId)
                     ->where('date', '=', $dispatchRegister->date)
                     ->where('id', '<', $dispatchRegister->id)
                     ->orderByDesc('id')
@@ -69,27 +69,27 @@ trait CounterByRecorder
                 if ($classifyByRoute) {
                     $endRecorderByOtherRoutes = $lastDispatchRegister->end_recorder;
                 } else {
-                    $endRecorderByOtherRoutes = $dispatchRegisters->where('vehicle_id', $vehicle_id)
+                    $endRecorderByOtherRoutes = $dispatchRegisters->where('vehicle_id', $vehicleId)
                             ->where('id', '<', $dispatchRegister->id)
                             ->where('id', '>=', $lastDispatchRegister->id ?? 0)
                             ->last()->end_recorder ?? null;
                 }
 
-                $start_recorder = (($endRecorderByOtherRoutes > 0 && abs($start_recorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $start_recorder;
-            } else if (abs($end_recorder - $start_recorder) > 1000) {
-                $start_recorder = 0; // For search a properly value in the next logic
+                $startRecorder = (($endRecorderByOtherRoutes > 0 && abs($startRecorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $startRecorder;
+            } else if (abs($endRecorder - $startRecorder) > 1000) {
+                $startRecorder = 0; // For search a properly value in the next logic
             }
 
-            if ($start_recorder == 0) {
-                $start_recorder = PassengersDispatchRegister::where('vehicle_id', $vehicle_id)
+            if ($startRecorder == 0) {
+                $startRecorder = PassengersDispatchRegister::where('vehicle_id', $vehicleId)
                         ->where('date', '=', $dispatchRegister->date)
                         ->where('id', '<', $dispatchRegister->id)
                         ->orderByDesc('id')
                         ->limit(1)->get()->first()
                         ->end_recorder ?? 0;
 
-                if ($start_recorder == 0) {
-                    $start_recorder = PassengersDispatchRegister::where('vehicle_id', $vehicle_id)
+                if ($startRecorder == 0) {
+                    $startRecorder = PassengersDispatchRegister::where('vehicle_id', $vehicleId)
                             ->where('date', '<', $dispatchRegister->date)
                             ->orderByDesc('id')
                             ->limit(1)->get()->first()
@@ -98,27 +98,35 @@ trait CounterByRecorder
             }
 
             // Recorder has 6 digits
-            if ($start_recorder > 999900 && $end_recorder < 500) {
-                $end_recorder = 999999 + $end_recorder;
+            if ($startRecorder > 999900 && $endRecorder < 500) {
+                $endRecorder = 999999 + $endRecorder;
             }
 
-            $passengersByTurn = $end_recorder - $start_recorder;
-            $totalPassengersByVehicle += $passengersByTurn;
+            $passengersByRoundTrip = $endRecorder - $startRecorder;
+            $totalPassengersByVehicle += $passengersByRoundTrip;
+
+            $history->put($dispatchRegister->id, (object)[
+                'passengersByRoundTrip' => $passengersByRoundTrip,
+                'totalPassengersByRoute' => $totalPassengersByVehicle,
+                'startRecorder' => $startRecorder,
+                'endRecorder' => $endRecorder,
+                'dispatchRegister' => $dispatchRegister
+            ]);
 
             $issueField = null;
             $badStartRecorder = false;
-            if ($start_recorder <= 0) {
+            if ($startRecorder <= 0) {
                 $issueField = __('Start Recorder');
-            } else if ($end_recorder <= 0) {
+            } else if ($endRecorder <= 0) {
                 $issueField = __('End Recorder');
-            } else if ($passengersByTurn > 1000) {
+            } else if ($passengersByRoundTrip > 1000) {
                 $issueField = __('A high count');
-            } else if ($passengersByTurn < 0) {
+            } else if ($passengersByRoundTrip < 0) {
                 $issueField = __('A negative count');
-            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $start_recorder < $lastDispatchRegister->end_recorder) {
+            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder) {
                 $issueField = __('A Start Recorder less than the last End Recorder') . ' ' . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
                 $badStartRecorder = true;
-            } /*(else if ($passengersByTurn < config('counter.recorder.threshold_low_count')) {
+            } /*(else if ($passengersByRoundTrip < config('counter.recorder.threshold_low_count')) {
                 $issueField = __('Low count') . ' < ' . config('counter.recorder.threshold_low_count');
             }*/
 
@@ -126,18 +134,18 @@ trait CounterByRecorder
                 $issues->push((object)[
                     'field' => $issueField,
                     'route_id' => $dispatchRegister->route_id,
-                    'vehicle_id' => $vehicle_id,
-                    'start_recorder' => $start_recorder,
-                    'end_recorder' => $end_recorder,
+                    'vehicle_id' => $vehicleId,
+                    'start_recorder' => $startRecorder,
+                    'end_recorder' => $endRecorder,
                     'lastDispatchRegister' => $lastDispatchRegister,
                     'bad_start_recorder' => $badStartRecorder,
-                    'passengers' => $passengersByTurn,
+                    'passengers' => $passengersByRoundTrip,
                     'dispatchRegister' => $dispatchRegister
                 ]);
             }
 
             // The next Start recorder is the last end recorder
-            $start_recorder = $end_recorder > 0 ? $end_recorder : $start_recorder;
+            $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
 
             // Save the last dispatch register
             $lastDispatchRegister = $dispatchRegister;
@@ -147,13 +155,19 @@ trait CounterByRecorder
         $totalByVehicle = (object)[
             'report' => (object)[
                 'vehicle' => $vehicle,
-                'start_recorder' => $first_start_recorder,
+                'start_recorder' => $firstStartRecorder,
                 'passengers' => $totalPassengersByVehicle,
+                'history' => $history,
                 'issue' => $issues->first()
             ],
             'issues' => $issues
         ];
 
         return $totalByVehicle;
+    }
+
+    public static function reportByVehicle($vehicleId,$dispatchRegistersByVehicle)
+    {
+        return self::totalByVehicle($vehicleId,$dispatchRegistersByVehicle,$dispatchRegistersByVehicle);
     }
 }

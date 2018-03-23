@@ -8,6 +8,7 @@ use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
 use App\Route;
 use App\Services\PCWExporter;
+use App\Traits\CounterByRecorder;
 use App\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,10 +46,10 @@ class RouteReportController extends Controller
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
         if ($routeReport != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
         else $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
-        $dispatchRegisters = $dispatchRegisters->where(function ($query) {
-            $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
-        })
-            ->with('recorderCounterPerRoundTrip')
+        $dispatchRegisters = $dispatchRegisters
+            ->where(function ($query) {
+                $query->where('status', '=', 'En camino')->orWhere('status', '=', 'Terminó');
+            })
             ->orderBy('departure_time')
             ->get();
 
@@ -136,24 +137,19 @@ class RouteReportController extends Controller
         Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
+                $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId,$dispatchRegisters);
                 $dataExcel = array();
-                $totalDay = 0;
+
                 foreach ($dispatchRegisters as $dispatchRegister) {
+                    $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
                     $driver = $dispatchRegister->driver;
-                    $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
-                    //$startRecorder = $dispatchRegister->recorderCounterPerRoundTrip->end_recorder_prev;
-                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $recorderCounterPerRoundTrip->end_recorder_prev;
-                    $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
 
-                    //$passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
-                    //$totalRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
+                    $endRecorder = $historyCounter->endRecorder;
+                    $startRecorder = $historyCounter->startRecorder;
+                    $totalRoundTrip = $historyCounter->passengersByRoundTrip;
+                    $totalPassengersByRoute = $historyCounter->totalPassengersByRoute;
 
-                    $passengersPerRoundTrip = $currentRecorder - $startRecorder;
-                    $totalRoundTrip = $passengersPerRoundTrip;
-
-
-                    $totalDay += $totalRoundTrip;
                     $dataExcel[] = [
                         __('Route') => $route->name,                                                                    # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
@@ -166,12 +162,12 @@ class RouteReportController extends Controller
                         __('Route Time') =>
                             $dispatchRegister->complete()?
                                 StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time):
-                                '',                                                                                          # I CELL
-                        __('Status') => $dispatchRegister->status,                                                      # J CELL
-                        __('Start Rec.') => intval($startRecorder),                                                     # K CELL
-                        __('End Rec.') => intval($currentRecorder),                                                     # L CELL
-                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # M CELL
-                        __('Pass.') . " " . __('Day') => intval($totalDay),                                        # N CELL
+                                '',                                                                                         # I CELL
+                        __('Status') => $dispatchRegister->status,                                                     # J CELL
+                        __('Start Rec.') => intval($startRecorder),                                                    # K CELL
+                        __('End Rec.') => intval($endRecorder),                                                        # L CELL
+                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # M CELL
+                        __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # N CELL
                     ];
                 }
 

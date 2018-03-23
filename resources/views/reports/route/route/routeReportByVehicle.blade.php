@@ -42,6 +42,7 @@
         <div class="tab-content panel p-0">
             @foreach($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters)
                 @php( $vehicle = \App\Vehicle::find($vehicleId) )
+                @php( $vehicleCounter = \App\Traits\CounterByRecorder::reportByVehicle($vehicleId,$dispatchRegisters) )
                 @php( $company = $vehicle->company )
                 <div id="report-tab-{{ $vehicle->plate }}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}}">
                     <!-- begin table -->
@@ -113,20 +114,16 @@
                         @foreach( $dispatchRegisters as $dispatchRegister )
                             @php
                                 $strTime = new \App\Http\Controllers\Utils\StrTime();
+                                $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
+
                                 $route = $dispatchRegister->route;
-                                $recorderCounterPerRoundTrip = $dispatchRegister->recorderCounterPerRoundTrip;
                                 $driver = $dispatchRegister->driver;
 
-                                $currentRecorder = $recorderCounterPerRoundTrip->end_recorder;
+                                $endRecorder = $historyCounter->endRecorder;
+                                $startRecorder = $historyCounter->startRecorder;
+                                $passengersPerRoundTrip = $historyCounter->passengersByRoundTrip;
+                                $totalPerRoute = $historyCounter->totalPassengersByRoute;
 
-                                $startRecorderPrev = $recorderCounterPerRoundTrip->end_recorder_prev;
-                                if($dispatchRegister->start_recorder > 0){
-                                    $startRecorderPrev = $dispatchRegister->start_recorder;
-                                }
-
-                                //$passengersPerRoundTrip = $recorderCounterPerRoundTrip->passengers_round_trip;
-                                $passengersPerRoundTrip = $currentRecorder - $startRecorderPrev;
-                                $totalPerRoute+=$passengersPerRoundTrip;
                                 $invalid = ($totalPerRoute > 1000 || $totalPerRoute < 0)?true:false;
                             @endphp
                             <tr>
@@ -144,23 +141,24 @@
                                     @endif
                                 </td>
                                 <td>{{ $dispatchRegister->status }}</td>
+
                                 @if( $company->hasRecorderCounter() )
                                 <td width="20%" class="p-r-0 p-l-0 text-center">
                                     @if( Auth::user()->isAdmin() )
                                     <div class="tooltips box-edit-recorder" data-title="@lang('Start Recorder')">
                                         <span class="box-info">
                                             <span class="">
-                                                {{ $startRecorderPrev }}
+                                                {{ $startRecorder }}
                                             </span>
                                         </span>
                                         <div class="box-edit" style="display: none">
                                             <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
                                                    data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('start_recorder')"
-                                                   class="input-sm form-control edit-input-recorder" value="{{ $startRecorderPrev }}">
+                                                   class="input-sm form-control edit-input-recorder" value="{{ $startRecorder }}">
                                         </div>
                                     </div>
                                     @else
-                                        {{ $startRecorderPrev }}
+                                        {{ $startRecorder }}
                                     @endif
                                 </td>
                                 <td width="20%" class="p-r-0 p-l-0 text-center">
@@ -168,22 +166,22 @@
                                     <div class="tooltips box-edit-recorder" data-title="@lang('Start Recorder')">
                                         <span class="box-info">
                                             <span class="">
-                                                {{ $currentRecorder }}
+                                                {{ $endRecorder }}
                                             </span>
                                         </span>
                                         <div class="box-edit" style="display: none">
                                             <input id="edit-end-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
                                                    data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('end_recorder')"
-                                                   class="input-sm form-control edit-input-recorder" value="{{ $currentRecorder }}">
+                                                   class="input-sm form-control edit-input-recorder" value="{{ $endRecorder }}">
                                         </div>
                                     </div>
                                     @else
-                                        {{ $currentRecorder }}
+                                        {{ $endRecorder }}
                                     @endif
                                 </td>
                                 <td width="5%">
-                                    <span title="{{ $currentRecorder.'-'.$startRecorderPrev }}" class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
-                                        {{ $currentRecorder - $startRecorderPrev }}
+                                    <span title="{{ $endRecorder.'-'.$startRecorder }}" class="{{ $invalid?'tooltips text-danger':'' }}" data-original-title="{{ $invalid?__('Verify possible error in register data'):'' }}">
+                                        {{ $endRecorder - $startRecorder }}
                                     </span>
                                 </td>
                                 <td width="5%">
