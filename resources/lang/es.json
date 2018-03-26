@@ -131,6 +131,12 @@
   "Access Logs": "Logs de acceso",
   "Consolidated per day":"Consolidado por día",
   "Recorder":"Registradora",
+  "recorder":"registradora",
+  "Recorders":"Registradoras",
+  "recorders":"registradoras",
+  "fringes":"franjas",
+  "Fringes":"Franjas",
+  "By Fringes":"Por franjas",
   "Start Recorder":"Registradora inicial",
   "Start Rec.":"Reg. inicial",
   "End Recorder":"Registradora final",
@@ -322,5 +328,9 @@
   "Off road counts":"Salidas de ruta",
   "List counter passengers by route": "Listado de conteo de pasajeros por ruta",
   "List counter passengers": "Listado de conteo de pasajeros",
+  "Manage drivers":"Gestión de conductores",
+  "File":"Archivo",
+  "Import":"Importar",
+  "CSV File":"Archivo CSV",
   "The are not list of passengers and counter on this date range": "No existe conteo de pasajeros en la fecha seleccionada"
 }

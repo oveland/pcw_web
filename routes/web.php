@@ -57,6 +57,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/show-counter-issue/{counterIssue}', 'PassengerReportCounterController@showCounterIssue')->name('admin-counter-report-show-counter-issue');
             });
         });
+
+        Route::prefix(__('drivers'))->group(function () {
+            Route::prefix(__('excel'))->group(function () {
+                Route::get('/', 'DriverController@index')->name('admin-drivers');
+                Route::post('/csv', 'DriverController@csv')->name('admin-drivers-csv');
+            });
+        });
     });
 
     /* Routes for route report */
