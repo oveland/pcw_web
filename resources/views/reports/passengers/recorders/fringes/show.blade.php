@@ -3,7 +3,7 @@
         var footerInfo = {};
         var roundTrips = {};
     </script>
-    <div id="canvas-holder" class="col-md-8 col-md-offset-2 bg-white">
+    <div id="canvas-holder" class="col-md-8 col-md-offset-2 bg-white p-b-10">
         <h4 class="text-center"><i class="fa fa-archive"></i> @lang('Consolidated daily')</h4>
         <hr class="hr">
         <canvas id="chart-area-total-passengers"></canvas>
