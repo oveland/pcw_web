@@ -77,4 +77,9 @@ class StrTime
     static function toString($time){
         return explode('.',$time)[0];
     }
+
+    static function toShortString($time){
+        $fields = explode(':',self::toString($time));
+        return "$fields[0]:$fields[1]";
+    }
 }

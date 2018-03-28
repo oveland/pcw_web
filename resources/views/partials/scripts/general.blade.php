@@ -4,7 +4,8 @@
         if( is_not_null(company) ){
             routeSelect.html($('#select-loading').html()).trigger('change.select2');
             routeSelect.load('{{ route('general-load-select-routes') }}', {
-                company: company
+                company: company,
+                withAll: routeSelect.data('with-all')
             }, function () {
                 routeSelect.trigger('change.select2');
             });

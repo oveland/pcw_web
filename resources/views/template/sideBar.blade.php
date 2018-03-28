@@ -160,7 +160,7 @@
                             @lang('Passengers')
                         </a>
                         <ul class="sub-menu">
-                            @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToAlameda() )
+                            @if( Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter() )
                             <li class="has-sub menu-passengers-consolidated">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
@@ -203,6 +203,13 @@
                                         </a>
                                     </li>
                                 </ul>
+                            </li>
+
+                            <li class="has-sub menu-passengers-fringes">
+                                <a href="{{ route('report-passengers-recorders-fringes') }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-industry faa-vertical"></i>
+                                    @lang('Fringes')
+                                </a>
                             </li>
                             @endif
 

@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateGetFringeFromDispatchTimeFunction extends Migration
@@ -51,6 +49,38 @@ class CreateGetFringeFromDispatchTimeFunction extends Migration
             END;
             $$
         ");
+
+        DB::statement("
+            CREATE OR REPLACE FUNCTION get_fringe_from_dispatch_time(dispatch_register_id BIGINT, from_time VARCHAR(50))
+              RETURNS BIGINT
+            LANGUAGE plpgsql
+            AS $$
+            DECLARE
+              fringe_id BIGINT;
+              dispatch_register RECORD;
+              search_time TIME WITHOUT TIME ZONE;
+            BEGIN            
+              SELECT * FROM dispatch_registers WHERE id = dispatch_register_id LIMIT 1 INTO dispatch_register;            
+              search_time = CASE WHEN (from_time = 'arrival' AND dispatch_register.status = 'Terminó' ) THEN dispatch_register.arrival_time ELSE dispatch_register.departure_time END;            
+              SELECT get_fringe_from_dispatch_time(search_time,dispatch_register.route_id,dispatch_register.type_of_day) INTO fringe_id;            
+              RETURN fringe_id;
+            END;
+            $$
+        ");
+
+        DB::statement("
+            CREATE OR REPLACE FUNCTION get_fringe_from_dispatch_time(dispatch_register_id BIGINT)
+              RETURNS BIGINT
+            LANGUAGE plpgsql
+            AS $$
+            DECLARE
+              fringe_id BIGINT;
+            BEGIN
+              SELECT get_fringe_from_dispatch_time(dispatch_register_id,'departure') INTO fringe_id;
+              RETURN fringe_id;
+            END;
+            $$
+        ");
     }
 
     /**
@@ -60,6 +90,8 @@ class CreateGetFringeFromDispatchTimeFunction extends Migration
      */
     public function down()
     {
+        DB::statement("DROP FUNCTION IF EXISTS get_fringe_from_dispatch_time(BIGINT)");
+        DB::statement("DROP FUNCTION IF EXISTS get_fringe_from_dispatch_time(BIGINT,VARCHAR(50))");
         DB::statement("DROP FUNCTION IF EXISTS get_fringe_from_dispatch_time(TIME WITHOUT TIME ZONE,BIGINT,INTEGER)");
     }
 }

@@ -12,7 +12,8 @@ class GeneralController extends Controller
     public function loadSelectRoutes(Request $request)
     {
         $routes = self::getRoutesFromCompany($this->getCompany($request));
-        return view('partials.selects.routes', compact('routes'));
+        $withAll = $request->get('with-all');
+        return view('partials.selects.routes', compact(['routes','withAll']));
     }
 
     public function loadSelectRouteRoundTrips(Request $request)

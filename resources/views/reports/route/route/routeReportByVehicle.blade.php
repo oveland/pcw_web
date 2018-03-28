@@ -135,12 +135,8 @@
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}</td>
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time) }}</td>
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time_difference) }}</td>
-                                <td>
-                                    @if($dispatchRegister->complete())
-                                        {{ $strTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) }}
-                                    @endif
-                                </td>
-                                <td>{{ $dispatchRegister->status }}</td>
+                                <td>{{ $dispatchRegister->getRouteTime() }}</td>
+                                <td>{!! $dispatchRegister->status !!}</td>
 
                                 @if( $company->hasRecorderCounter() )
                                 <td width="20%" class="p-r-0 p-l-0 text-center">

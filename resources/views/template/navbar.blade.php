@@ -8,9 +8,9 @@
     <!-- begin container-fluid -->
     <div class="container-fluid transparent">
         <!-- begin mobile sidebar expand / collapse button -->
-        <div class="navbar-header" style="width: 50%">
+        <div class="navbar-header">
             <a href="{{ url('/') }}" class="navbar-brand" style="text-transform: uppercase; font-weight: normal">
-                PCW <i class="ion-ios-pulse" style="font-size: 150%"></i> <span class="hidden-sm hidden-xs">Sistema de monitoreo satelital</span><span class="hidden-md hidden-lg">SMS</span>
+                PCW <i class="ion-ios-pulse" style="font-size: 150%"></i> <span class="hidden-sm hidden-xs" style="position: absolute;left: 100px;top: 20px;">Sistema de monitoreo satelital</span><span class="hidden-md hidden-lg">SMS</span>
             </a>
             <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
                 <span class="icon-bar"></span>

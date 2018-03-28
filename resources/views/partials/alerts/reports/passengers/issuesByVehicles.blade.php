@@ -36,7 +36,8 @@
                                 <h4 class="tooltips" data-title="{{ $dispatchRegister->status }}">
                                     {{ $dispatchRegister->route->name }},
                                     @lang('Turn') {{ $dispatchRegister->turn }},
-                                    @lang('Round Trip') {{ $dispatchRegister->round_trip }}
+                                    @lang('Round Trip') {{ $dispatchRegister->round_trip }},
+                                    <small>{{ $dispatchRegister->status }}</small>
                                 </h4>
                                 <p class="tooltips" data-title="@lang('Departure time')">
                                     <i class="fa fa-clock-o"></i>

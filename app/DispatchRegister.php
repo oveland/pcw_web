@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\Utils\StrTime;
 use App\Models\Passengers\RecorderCounterPerDay;
 use App\Models\Passengers\RecorderCounterPerRoundTrip;
 use Illuminate\Database\Eloquent\Model;
@@ -186,6 +187,11 @@ class DispatchRegister extends Model
     public function controlPointTimeReports()
     {
         return $this->hasMany(ControlPointTimeReport::class)->orderBy('date', 'asc');
+    }
+
+    public function getRouteTime()
+    {
+        return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : '';
     }
 
     const CREATED_AT = 'date_created';

@@ -105,12 +105,22 @@ trait CounterByRecorder
             $passengersByRoundTrip = $endRecorder - $startRecorder;
             $totalPassengersByVehicle += $passengersByRoundTrip;
 
+            $driver = $dispatchRegister->driver;
+
             $history->put($dispatchRegister->id, (object)[
                 'passengersByRoundTrip' => $passengersByRoundTrip,
                 'totalPassengersByRoute' => $totalPassengersByVehicle,
                 'startRecorder' => $startRecorder,
                 'endRecorder' => $endRecorder,
-                'dispatchRegister' => $dispatchRegister
+                'route' => $dispatchRegister->route->name,
+                'roundTrip' => $dispatchRegister->round_trip,
+                'turn' => $dispatchRegister->turn,
+                'departureTime' => $dispatchRegister->departure_time,
+                'arrivalTime' => $dispatchRegister->arrival_time,
+                'statusDispatchRegister' => $dispatchRegister->status,
+                'dispatchRegisterIsComplete' => $dispatchRegister->complete(),
+                'driver' => $driver ? $driver->fullName() : __('Not assigned'),
+                //'dispatchRegister' => $dispatchRegister
             ]);
 
             $issueField = null;
@@ -166,8 +176,14 @@ trait CounterByRecorder
         return $totalByVehicle;
     }
 
-    public static function reportByVehicle($vehicleId,$dispatchRegistersByVehicle)
+    /**
+     * @param $vehicleId
+     * @param $dispatchRegistersByVehicle
+     * @param null $classifyByRoute
+     * @return object
+     */
+    public static function reportByVehicle($vehicleId, $dispatchRegistersByVehicle, $classifyByRoute = null)
     {
-        return self::totalByVehicle($vehicleId,$dispatchRegistersByVehicle,$dispatchRegistersByVehicle);
+        return self::totalByVehicle($vehicleId, $dispatchRegistersByVehicle, $dispatchRegistersByVehicle, $classifyByRoute);
     }
 }

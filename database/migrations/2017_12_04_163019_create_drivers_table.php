@@ -19,9 +19,9 @@ class CreateDriversTable extends Migration
               SELECT (conductor.id_idconductor)::BIGINT AS id,
                 conductor.codigo_interno AS code,
                 conductor.identidad AS identity,
-                conductor.apellido1 AS first_name,
-                conductor.apellido2 AS second_name,
-                ((conductor.nombre1 || ' '::text) || conductor.nombre2) AS last_name,
+                conductor.nombre1 AS first_name,
+                conductor.nombre2 AS second_name,
+                ((conductor.apellido1 || ' '::text) || conductor.apellido2) AS last_name,
                 conductor.activo AS active,
                 conductor.empresa AS company_id
                FROM conductor;
