@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\LogParkedVehicles::class,
         Commands\DatabaseManageLocationReports::class,
+        Commands\DatabaseManageMarkersReports::class,
         Commands\GPSRestart::class,
         Commands\GPSCheckStatusCommand::class
     ];
@@ -30,6 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('log:parked-vehicles')->everyMinute();
 
         $schedule->command('db:manage-location-reports')->dailyAt('01:00');
+        $schedule->command('db:manage-markers-reports')->dailyAt('02:00');
 
         $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
 
