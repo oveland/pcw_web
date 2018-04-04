@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
+use App\Http\Controllers\Utils\StrTime;
 use App\Route;
 use App\Traits\CounterByRecorder;
 use App\Vehicle;
@@ -41,7 +42,6 @@ class RecorderPassengerReportByFringesController extends Controller
         else $dispatchRegisters = $dispatchRegisters->where('route_id', $routeReport);
         $dispatchRegisters = $dispatchRegisters->orderBy('departure_time')->get();
 
-
         $dispatchRegistersByVehicles = $dispatchRegisters->sortBy(function($dispatchRegister,$routeId){
             return $dispatchRegister->vehicle->number;
         })->groupBy('vehicle_id');
@@ -50,8 +50,10 @@ class RecorderPassengerReportByFringesController extends Controller
             case 'round_trips':
                 return view('reports.passengers.recorders.fringes.show',compact('dispatchRegistersByVehicles'));
                 break;
-            case 'times':
-                return view('reports.passengers.recorders.fringes.times',compact('dispatchRegistersByVehicles'));
+            case 'fringes':
+                $route = Route::find($routeReport);
+                $fringes = $route->fringes($dispatchRegisters->first()->type_of_day);
+                return view('reports.passengers.recorders.fringes.times',compact(['dispatchRegistersByVehicles', 'fringes']));
                 break;
             default:
                 return null;

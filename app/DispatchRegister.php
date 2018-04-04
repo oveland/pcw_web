@@ -57,6 +57,8 @@ use Carbon\Carbon;
  * @mixin \Eloquent
  * @property-read \App\Models\Passengers\RecorderCounterPerRoundTrip $recorderCounterPerRoundTrip
  * @property string|null $driver_code
+ * @property mixed $departure_fringe
+ * @property mixed $arrival_fringe
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister active()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDriverCode($value)
  * @property-read mixed $passengers
@@ -72,9 +74,16 @@ class DispatchRegister extends Model
         return config('app.simple_date_time_format');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    public function getDepartureTimeAttribute($departureTime)
+    {
+        return StrTime::toString($departureTime);
+    }
+
+    public function getArrivalTimeAttribute($arrivalTime)
+    {
+        return StrTime::toString($arrivalTime);
+    }
+
     public function reports()
     {
         return $this->hasMany(Report::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
@@ -192,6 +201,16 @@ class DispatchRegister extends Model
     public function getRouteTime()
     {
         return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : '';
+    }
+
+    public function departureFringe()
+    {
+        return $this->belongsTo(Fringe::class, 'departure_fringe_id', 'id');
+    }
+
+    public function arrivalFringe()
+    {
+        return $this->belongsTo(Fringe::class, 'arrival_fringe_id', 'id');
     }
 
     const CREATED_AT = 'date_created';

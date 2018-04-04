@@ -77,8 +77,8 @@
                                 <label for="group-by" class="control-label">@lang('Group By')</label>
                                 <div class="form-group">
                                     <select name="group-by" id="group-by" class="default-select2 form-control col-md-12">
+                                        <option value="fringes">@lang('Fringes')</option>
                                         <option value="round_trips">@lang('Round trips')</option>
-                                        <option value="times">@lang('Times')</option>
                                     </select>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                 }
             });
 
-            $('#company-report, #group-by, #date-report, #route-report').change(function () {
+            $('#company-report, #date-report, #route-report').change(function () {
                 setTimeout(function(){
                     mainContainer.slideUp();
                     if (form.isValid(false)) {
@@ -136,6 +136,9 @@
                 },500);
             });
 
+            $('#group-by').change(function () {
+                $('#company-report').change();
+            });
             $('#company-report').change(function () {
                 loadRouteReport($(this).val());
             });
@@ -149,13 +152,16 @@
 
         function loadRouteReport(company) {
             var routeSelect = $('#route-report');
+            var groupBy = $('#group-by').val();
             routeSelect.html($('#select-loading').html()).trigger('change.select2');
             routeSelect.load('{{ route('route-ajax-action') }}', {
                 option: 'loadRoutes',
                 company: company
             }, function () {
-                routeSelect.find('option[value=""]').remove();
-                routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
+                if( groupBy !== 'fringes' ){
+                    routeSelect.find('option[value=""]').remove();
+                    routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
+                }
                 routeSelect.val('all').change();
             });
         }

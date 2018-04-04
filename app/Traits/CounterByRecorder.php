@@ -120,6 +120,8 @@ trait CounterByRecorder
                 'statusDispatchRegister' => $dispatchRegister->status,
                 'dispatchRegisterIsComplete' => $dispatchRegister->complete(),
                 'driver' => $driver ? $driver->fullName() : __('Not assigned'),
+                'departureFringe' => $dispatchRegister->departureFringe,
+                'arrivalFringe' => $dispatchRegister->arrivalFringe,
                 //'dispatchRegister' => $dispatchRegister
             ]);
 

@@ -42,15 +42,16 @@ class Route extends Model
         return $this->hasMany(ControlPoint::class)->orderBy('order','asc');
     }
 
-    /**
-     * @param Company $company
-     * @return bool
-     */
     public function belongsToCompany($company){
         return $this->company->id == $company->id;
     }
 
     public function scopeActive($query){
         return $query->where('active',true);
+    }
+
+    public function fringes($dayType)
+    {
+        return $this->hasMany(Fringe::class)->where('day_type_id',$dayType)->get();
     }
 }

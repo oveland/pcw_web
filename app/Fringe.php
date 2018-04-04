@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $active
  * @property int $route_id
  * @property int $day_type_id
+ * @property string $style_color
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\DayType $dayType

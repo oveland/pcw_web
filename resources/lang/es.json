@@ -169,9 +169,11 @@
   "Location":"Ubicación",
   "outs":"salidas",
   "Plate":"Placa",
-
+  "Between":"Entre",
   "Dispatch report":"Reporte de despacho",
   "Departure time":"Hora despachado",
+  "Departure":"Salida",
+  "Arrived":"Llegada",
   "Departure Time":"Hora despachado",
   "Arrival Time Scheduled":"Llegada programada",
   "Arrival Time":"Hora de llegada",

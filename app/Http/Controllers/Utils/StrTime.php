@@ -24,6 +24,10 @@ class StrTime
     }
     */
 
+    function hola(){
+
+    }
+
     static function toSeg($strTime)
     {
         $strTimeArray = explode(":", $strTime);

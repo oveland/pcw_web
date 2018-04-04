@@ -392,6 +392,7 @@ class MigrationController extends Controller
                 $fringe->sequence = $i;
                 $fringe->route_id = $fringeOLD->id_ruta;
                 $fringe->day_type_id = $fringeOLD->tipo_de_dia;
+                $fringe->style_color = "#".substr(md5(rand()), 0, 6);
 
                 try {
                     $fringe->save();

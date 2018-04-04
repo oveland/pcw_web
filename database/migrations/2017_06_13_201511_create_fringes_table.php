@@ -23,6 +23,7 @@ class CreateFringesTable extends Migration
             $table->boolean('active')->default(true);
             $table->bigInteger('route_id')->unsigned();
             $table->integer('day_type_id')->unsigned();
+            $table->string('style_color')->nullable();
             $table->timestamps();
 
             /* table relations */

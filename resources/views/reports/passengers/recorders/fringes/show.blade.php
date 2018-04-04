@@ -43,7 +43,7 @@
                         if( $history->dispatchRegisterIsComplete ){
                             $roundTrips->push( "⇄ $history->roundTrip ($history->route)" );
                             $passengersByRoundTrips->push( $history->passengersByRoundTrip );
-                            $routeTimes->push( $strTime::toShortString($history->departureTime)." - ".$strTime::toShortString($history->arrivalTime) );
+                            $routeTimes->push( __('Between')." ".$strTime::toShortString($history->departureTime)." ".__('and')." ".$strTime::toShortString($history->arrivalTime) );
 
                             $departureTimes->push( $strTime::toShortString($history->departureTime) );
                             $arrivalTimes->push( $strTime::toShortString($history->arrivalTime) );
