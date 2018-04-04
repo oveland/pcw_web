@@ -75,6 +75,9 @@
                             <div class="form-group">
                                 <span class="badge badge-danger pull-right tooltips hide" data-original-title="@lang('New feature')">@lang('New') <i class="fa fa-bell faa-ring animated"></i></span>
                                 <label for="group-by" class="control-label">@lang('Group By')</label>
+                                @if( \Carbon\Carbon::now()->toDateString() <= '2018-04-07' )
+                                <span class="badge badge-danger pull-right tooltips" data-original-title="Nueva funcionalidad">Nuevo <i class="fa fa-bell faa-ring animated"></i></span>
+                                @endif
                                 <div class="form-group">
                                     <select name="group-by" id="group-by" class="default-select2 form-control col-md-12">
                                         <option value="fringes">@lang('Fringes')</option>
