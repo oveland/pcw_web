@@ -31,16 +31,16 @@
                 </form>
             </li>
             <li class="dropdown">
-                @if(\Carbon\Carbon::now()->toDateString() <= '2018-03-28')
+                @if(\Carbon\Carbon::now()->toDateString() <= '2018-04-07')
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
                     <i class="fa fa-bell faa-ring animated"></i>
-                    <span class="badge badge-danger pull-right faa-float animated">2</span>
+                    <span class="badge badge-danger pull-right faa-float animated">1</span>
                 </a>
                 <ul class="dropdown-menu dropdown-notification pull-right">
                     <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">2</span></li>
                     <li class="notification-item">
-                        <a href="{{ route('report-passengers-recorders-fringes') }}">
-                            <div class="media faa-parent animated-hover" data-toggle="tooltip" data-title="El 29 de Marzo" data-placement="rigth">
+                        <a href="{{ route('report-passengers-recorders-fringes') }}" onclick="event.preventDefault();gsuccess('Nueva agrupación de reporte por Franjas. <hr> <a href=\'{{ route('report-passengers-recorders-fringes') }}\'><i class=\'fa fa-hand-pointer-o\'></i>  Abrir</a>')">
+                            <div class="media faa-parent animated-hover" data-toggle="tooltip" data-title="El 04 de Abril" data-placement="rigth">
                                 <i class="fa fa-users faa-vertical"></i>
                             </div>
                             <div class="message">
@@ -55,7 +55,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="notification-item">
+                    <li class="notification-item hide">
                         <a href="{{ route('report-drivers-detailed') }}">
                             <div class="media faa-parent animated-hover" data-toggle="tooltip" data-title="El 18 de Marzo" data-placement="rigth">
                                 <i class="icon-user fa faa-vertical"></i>
