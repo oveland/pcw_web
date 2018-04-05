@@ -22,6 +22,7 @@
   "Search": "Consultar",
   "Chart report": "Gráfica de repote",
   "Vehicle": "Vehículo",
+  "vehicle": "vehículo",
   "Vehicles": "Vehículos",
   "vehicles": "vehículos",
   "Hour dispatch": "Hora despachado",
@@ -139,6 +140,7 @@
   "Recorders":"Registradoras",
   "recorders":"registradoras",
   "fringes":"franjas",
+  "Fringes merged":"Franjas | Traslape",
   "Fringes":"Franjas",
   "By Fringes":"Por franjas",
   "Start Recorder":"Registradora inicial",
@@ -338,5 +340,7 @@
   "File":"Archivo",
   "Import":"Importar",
   "CSV File":"Archivo CSV",
+  "In dispatch":"En despacho",
+  "Passengers by fringes":"Pasajeros por franjas",
   "The are not list of passengers and counter on this date range": "No existe conteo de pasajeros en la fecha seleccionada"
 }

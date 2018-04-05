@@ -47,13 +47,18 @@ class RecorderPassengerReportByFringesController extends Controller
         })->groupBy('vehicle_id');
 
         switch ($request->get('group-by')){
-            case 'round_trips':
-                return view('reports.passengers.recorders.fringes.show',compact('dispatchRegistersByVehicles'));
-                break;
             case 'fringes':
                 $route = Route::find($routeReport);
-                $fringes = $route->fringes($dispatchRegisters->first()->type_of_day);
-                return view('reports.passengers.recorders.fringes.times',compact(['dispatchRegistersByVehicles', 'fringes']));
+                $fringes = $route->fringes($dispatchRegisters->first()->type_of_day ?? 0);
+                return view('reports.passengers.recorders.fringes.fringes',compact(['dispatchRegistersByVehicles', 'fringes']));
+                break;
+            case 'fringes-merged':
+                $route = Route::find($routeReport);
+                $fringes = $route->fringes($dispatchRegisters->first()->type_of_day ?? 0);
+                return view('reports.passengers.recorders.fringes.fringesMerged',compact(['dispatchRegistersByVehicles', 'fringes']));
+                break;
+            case 'round_trips':
+                return view('reports.passengers.recorders.fringes.roundTrips',compact('dispatchRegistersByVehicles'));
                 break;
             default:
                 return null;

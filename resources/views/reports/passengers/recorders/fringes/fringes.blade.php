@@ -44,6 +44,7 @@
                 $recorderCounterHistoriesDataValues = collect([]); // Y Axis - Dataset 0
                 $fringesDataValues = collect([]);                  // Y Axis - Dataset 1
                 $timeChart = '04:00:00';
+                $holdCount = false;
                 foreach (range(1,(18*30)) as $minute){
                     $timesLabels->push( $strTime::toShortString($timeChart) );
 

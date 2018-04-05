@@ -81,6 +81,7 @@
                                 <div class="form-group">
                                     <select name="group-by" id="group-by" class="default-select2 form-control col-md-12">
                                         <option value="fringes">@lang('Fringes')</option>
+                                        <option value="fringes-merged">@lang('Fringes merged')</option>
                                         <option value="round_trips">@lang('Round trips')</option>
                                     </select>
                                 </div>
