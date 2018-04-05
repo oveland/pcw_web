@@ -17,7 +17,7 @@ class ManagerGPSController extends Controller
 {
     public function index(Request $request)
     {
-        if (Auth::user()->isAdmin()) {
+        if (Auth::user()->isAdmin() || Auth::user()->id == 999459 || Auth::user()->id == 841403) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
         return view('admin.gps.manage.index', compact('companies'));
