@@ -33,7 +33,7 @@
 
             </li>
 
-            @if( Auth::user()->isAdmin())
+            @if( Auth::user()->isAdmin() || Auth::user()->id == 999459|| Auth::user()->id == 841403)
             <li class="has-sub {{ $baseMenu == __('url-administration')?'active':'' }}">
                 <a href="javascritp:;" class="faa-parent animated-hover">
                     <i class="fa fa-cogs faa-horizontal"></i>
@@ -55,7 +55,7 @@
                             </li>
                         </ul>
                     </li>
-                    @if( Auth::user()->isSuperAdmin())
+                    @if( Auth::user()->isSuperAdmin() || Auth::user()->id == 999459|| Auth::user()->id == 841403 )
                     <li class="has-sub menu-administration-gps">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
