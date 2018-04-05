@@ -35,7 +35,7 @@
 
             @if( Auth::user()->isAdmin() || Auth::user()->id == 999459|| Auth::user()->id == 841403)
             <li class="has-sub {{ $baseMenu == __('url-administration')?'active':'' }}">
-                <a href="javascritp:;" class="faa-parent animated-hover">
+                <a href="#" class="faa-parent animated-hover">
                     <i class="fa fa-cogs faa-horizontal"></i>
                     <span>@lang('Administration')</span>
                 </a>
@@ -76,7 +76,7 @@
             </li>
             @endif
             <li class="has-sub {{ $baseMenu == __('reports')?'active':'' }}">
-                <a href="javascritp:;" class="faa-parent animated-hover">
+                <a href="#" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-horizontal"></i>
                     <span>@lang('Reports')</span>
                 </a>
