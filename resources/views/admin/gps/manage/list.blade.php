@@ -111,7 +111,7 @@
                                                     <button type="button" class="btn btn-primary btn-xs gps-tracker disabled"
                                                             onclick="$(this).removeClass('disabled');$('.gps-skypatrol').addClass('disabled');$('#sim-gps').data('gps-type','TRACKER')">
                                                         <i class="fa fa-podcast"></i>
-                                                        @lang('TRACKER')
+                                                        @lang('COBAN')
                                                     </button>
                                                 </div>
                                                 <input id="sim-gps" name="sim-gps" type="text" class="form-control" data-any-gps="true" data-gps-type="SKYPATROL">
