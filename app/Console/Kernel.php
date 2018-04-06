@@ -17,7 +17,9 @@ class Kernel extends ConsoleKernel
         Commands\DatabaseManageLocationReports::class,
         Commands\DatabaseManageMarkersReports::class,
         Commands\GPSRestart::class,
-        Commands\GPSCheckStatusCommand::class
+        Commands\GPSCheckStatusCommand::class,
+
+        Commands\SMSSendReport::class,
     ];
 
     /**
@@ -36,6 +38,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
 
         $schedule->command('gps:check-status')->everyMinute();
+
+        $schedule->command('sms:send-report')->everyMinute();
     }
 
     /**
