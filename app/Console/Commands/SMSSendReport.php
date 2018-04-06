@@ -40,9 +40,11 @@ class SMSSendReport extends Command
      */
     public function handle()
     {
-        $vehicleToReport = env('SMS_VEHICLE_REPORT','VCH-351');
-        $simToReport = env('SMS_VEHICLE_SIM','3145224312');
-        $report = DB::select("
+        $vehicleToReport = env('SMS_VEHICLE_REPORT');
+        $simToReport = env('SMS_VEHICLE_SIM');
+
+        if( $simToReport && $simToReport ){
+            $report = DB::select("
             SELECT v.plate vehicle_plate, v.number vehicle_number, r.name route_name, dr.round_trip round_trip, dr.turn, cr.date, cr.timed, cr.timep, cr.timem, dr.departure_time, (cr.timem::INTERVAL +dr.departure_time)::TIME time_m, (cr.timep::INTERVAL+dr.departure_time)::TIME time_p
             FROM current_reports cr
               JOIN dispatch_registers dr ON (cr.dispatch_register_id = dr.id)
@@ -51,14 +53,17 @@ class SMSSendReport extends Command
             WHERE v.plate = '$vehicleToReport'
         ");
 
-        if( count($report) && $report = $report[0] ){
-            dump("Send report for $vehicleToReport to $simToReport");
-            $date = explode('.',$report->date)[0];
-            $message = "$report->vehicle_plate ($report->vehicle_number):\nFecha: $date\n$report->route_name\nVuelta: $report->round_trip\nTurno: $report->turn\nDespachado: $report->departure_time\n\nProg.: $report->time_p\nMedido: $report->time_m\nEstado: $report->timed\n
+            if( count($report) && $report = $report[0] ){
+                dump("Send report for $vehicleToReport to $simToReport");
+                $date = explode('.',$report->date)[0];
+                $message = "$report->vehicle_plate ($report->vehicle_number):\nFecha: $date\n$report->route_name\nVuelta: $report->round_trip\nTurno: $report->turn\nDespachado: $report->departure_time\n\nProg.: $report->time_p\nMedido: $report->time_m\nEstado: $report->timed\n
             ";
 
-            $sms = SMS::sendCommand($message, $simToReport);
-            dump("Send: ".($sms["resultado"] === 0)?'Success':'Unsuccessfully');
+                $sms = SMS::sendCommand($message, $simToReport);
+                dump("Send: ".($sms["resultado"] === 0)?'Success':'Unsuccessfully');
+            }
+        }else{
+            dump("Bad parametes configured :( -> simToReport $simToReport, simToReport: $simToReport");
         }
     }
 }
