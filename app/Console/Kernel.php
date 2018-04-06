@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('gps:check-status')->everyMinute();
 
-        $schedule->command('sms:send-report')->everyMinute();
+        $schedule->command('sms:send-report')->cron(config('sms.sms_cron_report'));
     }
 
     /**

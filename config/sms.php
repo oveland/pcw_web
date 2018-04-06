@@ -94,4 +94,9 @@ return [
      *
     */
     'sms_vehicle_sim' => env('SMS_VEHICLE_SIM'),
+
+    /*
+     *
+    */
+    'sms_cron_report' => env('SMS_CRON_REPORT'),
 ];

@@ -50,20 +50,26 @@ class SMSSendReport extends Command
                   JOIN dispatch_registers dr ON (cr.dispatch_register_id = dr.id)
                   JOIN vehicles v ON (cr.vehicle_id = v.id)
                   JOIN routes r ON (dr.route_id = r.id)
-                WHERE v.plate = '$vehicleToReport'
+                WHERE v.plate = '$vehicleToReport' AND (current_timestamp - cr.date)::INTERVAL < '00:00:40'::INTERVAL
             ");
 
             if( count($report) && $report = $report[0] ){
-                dump("Send report for $vehicleToReport to $simToReport");
+                Log::useDailyFiles(storage_path().'/logs/sms-report.log',10);
                 $date = explode('.',$report->date)[0];
-                $message = "$report->vehicle_plate ($report->vehicle_number):\nFecha: $date\n$report->route_name\nVuelta: $report->round_trip\nTurno: $report->turn\nDespachado: $report->departure_time\n\nProg.: $report->time_p\nMedido: $report->time_m\nEstado: $report->timed\n
-            ";
+                $message = "$report->vehicle_plate ($report->vehicle_number):\nFecha: $date\n$report->route_name\nVuelta: $report->round_trip\nTurno: $report->turn\nDespachado: $report->departure_time\n\nProg.: $report->time_p\nMedido: $report->time_m\nEstado: $report->timed\n";
 
                 $sms = SMS::sendCommand($message, $simToReport);
-                dump("Send: ".($sms["resultado"] === 0)?'Success':'Unsuccessfully');
+
+                $log = date('Y-m-d h:i:s').": Send report for $vehicleToReport to $simToReport";
+                Log::info($log);
+                $this->info($log);
+
+                $log = "Send: ".($sms["resultado"] === 0)?'Success':'Unsuccessfully';
+                Log::info($log);
+                $this->info($log);
             }
         }else{
-            dump("Bad parametes configured :( -> simToReport $simToReport, simToReport: $simToReport");
+            $this->info("Bad parametes configured :( -> simToReport $simToReport, simToReport: $simToReport");
         }
     }
 }
