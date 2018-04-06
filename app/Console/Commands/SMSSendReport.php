@@ -6,6 +6,7 @@ use App\CurrentLocationReport;
 use App\Http\Controllers\API\SMS;
 use DB;
 use Illuminate\Console\Command;
+use Log;
 
 class SMSSendReport extends Command
 {
