@@ -61,7 +61,7 @@ class SMSSendReport extends Command
 
                 $sms = SMS::sendCommand($message, $simToReport);
 
-                $log = date('Y-m-d h:i:s').": Send report for $vehicleToReport to $simToReport";
+                $log = "Send report for $vehicleToReport to $simToReport";
                 Log::info($log);
                 $this->info($log);
 
