@@ -40,18 +40,18 @@ class SMSSendReport extends Command
      */
     public function handle()
     {
-        $vehicleToReport = env('SMS_VEHICLE_REPORT');
-        $simToReport = env('SMS_VEHICLE_SIM');
+        $vehicleToReport = config('sms.sms_vehicle_report');
+        $simToReport = config('sms.sms_vehicle_sim');
 
         if( $simToReport && $simToReport ){
             $report = DB::select("
-            SELECT v.plate vehicle_plate, v.number vehicle_number, r.name route_name, dr.round_trip round_trip, dr.turn, cr.date, cr.timed, cr.timep, cr.timem, dr.departure_time, (cr.timem::INTERVAL +dr.departure_time)::TIME time_m, (cr.timep::INTERVAL+dr.departure_time)::TIME time_p
-            FROM current_reports cr
-              JOIN dispatch_registers dr ON (cr.dispatch_register_id = dr.id)
-              JOIN vehicles v ON (cr.vehicle_id = v.id)
-              JOIN routes r ON (dr.route_id = r.id)
-            WHERE v.plate = '$vehicleToReport'
-        ");
+                SELECT v.plate vehicle_plate, v.number vehicle_number, r.name route_name, dr.round_trip round_trip, dr.turn, cr.date, cr.timed, cr.timep, cr.timem, dr.departure_time, (cr.timem::INTERVAL +dr.departure_time)::TIME time_m, (cr.timep::INTERVAL+dr.departure_time)::TIME time_p
+                FROM current_reports cr
+                  JOIN dispatch_registers dr ON (cr.dispatch_register_id = dr.id)
+                  JOIN vehicles v ON (cr.vehicle_id = v.id)
+                  JOIN routes r ON (dr.route_id = r.id)
+                WHERE v.plate = '$vehicleToReport'
+            ");
 
             if( count($report) && $report = $report[0] ){
                 dump("Send report for $vehicleToReport to $simToReport");

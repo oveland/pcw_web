@@ -84,4 +84,14 @@ return [
     */
 
     'sms_reset_end_at' => env('SMS_RESET_END_AT','19:00'),
+
+    /*
+     *
+    */
+    'sms_vehicle_report' => env('SMS_VEHICLE_REPORT'),
+
+    /*
+     *
+    */
+    'sms_vehicle_sim' => env('SMS_VEHICLE_SIM'),
 ];
