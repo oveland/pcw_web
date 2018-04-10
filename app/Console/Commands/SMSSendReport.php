@@ -52,7 +52,7 @@ class SMSSendReport extends Command
                   JOIN dispatch_registers dr ON (cr.dispatch_register_id = dr.id)
                   JOIN vehicles v ON (cr.vehicle_id = v.id)
                   JOIN routes r ON (dr.route_id = r.id)
-                WHERE v.plate = '$vehicleToReport' --AND (current_timestamp - cr.date)::INTERVAL < '00:00:40'::INTERVAL
+                WHERE v.plate = '$vehicleToReport' AND (current_timestamp - cr.date)::INTERVAL < '00:00:40'::INTERVAL
             ");
 
             if( count($report) && $report = $report[0] ){
@@ -72,6 +72,9 @@ class SMSSendReport extends Command
                     'dif' => $report->timed,
                     'st' => $report->status
                 ])->toJson();
+
+                $dataMessage = str_replace('{','(',$dataMessage);
+                $dataMessage = str_replace('}',')',$dataMessage);
 
                 $sms = SMS::sendCommand($dataMessage, $simToReport);
 
