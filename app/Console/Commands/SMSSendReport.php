@@ -48,7 +48,7 @@ class SMSSendReport extends Command
         if( $simToReport && $simToReport ){
             $report = DB::select("
                 SELECT v.plate vehicle_plate, v.number vehicle_number, r.name route_name, dr.round_trip round_trip, dr.turn, cr.date, cr.timed, cr.timep, cr.timem, dr.departure_time, (cr.timem::INTERVAL +dr.departure_time)::TIME time_m, (cr.timep::INTERVAL+dr.departure_time)::TIME time_p, 
-                CASE WHEN ( abs(cr.status_in_minutes) <= 1 ) THEN 'secondary' ELSE (CASE WHEN cr.status = 'slow' THEN 'danger' ELSE 'primary' END) END status
+                CASE WHEN ( abs(cr.status_in_minutes) <= 1 ) THEN 'ok' ELSE cr.status END status
                 FROM current_reports cr
                   JOIN dispatch_registers dr ON (cr.dispatch_register_id = dr.id)
                   JOIN vehicles v ON (cr.vehicle_id = v.id)
