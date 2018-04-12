@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -32,7 +33,10 @@ class MaintenanceVehicle extends Model
 
     protected $fillable = ['date','week_day','vehicle_id'];
 
-    protected $dates = ['date'];
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.date_format'), explode('.', $date)[0])->toDateString();
+    }
 
     public function vehicle()
     {
