@@ -38,6 +38,14 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/update', 'PeakAndPlateController@update')->name('admin-vehicles-peak-and-plate-update');
                 Route::post('/reset', 'PeakAndPlateController@reset')->name('admin-vehicles-peak-and-plate-reset');
             });
+
+            Route::prefix(__('maintenance'))->group(function () {
+                Route::get('/', 'MaintenanceVehicleController@index')->name('admin-vehicles-maintenance');
+                Route::get('/show', 'MaintenanceVehicleController@show')->name('admin-vehicles-maintenance-show');
+                Route::post('/create/{vehicle}', 'MaintenanceVehicleController@create')->name('admin-vehicles-maintenance-create');
+                Route::put('/update/{maintenanceVehicle}', 'MaintenanceVehicleController@update')->name('admin-vehicles-maintenance-update');
+                Route::delete('/delete/{company}', 'MaintenanceVehicleController@delete')->name('admin-vehicles-maintenance-delete');
+            });
         });
 
         Route::prefix(__('gps'))->group(function () {

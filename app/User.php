@@ -79,4 +79,9 @@ class User extends Authenticatable
     {
         return $this->company?$this->company->id === 14:false;
     }
+
+    public function belongsToCompany($company)
+    {
+        return $this->company->id == $company->id;
+    }
 }

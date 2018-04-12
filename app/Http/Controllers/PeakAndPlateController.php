@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\Http\Controllers\Utils\Url;
 use App\PeakAndPlate;
 use App\Vehicle;
 use Auth;

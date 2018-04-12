@@ -53,6 +53,12 @@
                                     @lang('Peak and Plate')
                                 </a>
                             </li>
+                            <li class="has-sub menu-administration-vehicles-maintenance">
+                                <a href="{{ route('admin-vehicles-maintenance')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-wrench faa-wrench" aria-hidden="true"></i>
+                                    @lang('Maintenance')
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     @if( Auth::user()->isSuperAdmin() || Auth::user()->id == 999459|| Auth::user()->id == 841403 )

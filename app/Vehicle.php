@@ -32,12 +32,14 @@ use Sofa\Eloquence\Mappable;
  */
 class Vehicle extends Model
 {
-    public function company(){
+    public function company()
+    {
         return $this->belongsTo(Company::class);
     }
 
-    public function scopeActive($query){
-        return $query->where('active','=',true);
+    public function scopeActive($query)
+    {
+        return $query->where('active', '=', true);
     }
 
     public function simGPS()
@@ -49,7 +51,18 @@ class Vehicle extends Model
      * @param Company $company
      * @return bool
      */
-    public function belongsToCompany($company){
+    public function belongsToCompany($company)
+    {
         return $this->company->id == $company->id;
+    }
+
+    public function maintenance()
+    {
+        return $this->hasMany(MaintenanceVehicle::class);
+    }
+
+    public function peakAndPlate()
+    {
+        return $this->hasMany(PeakAndPlate::class);
     }
 }
