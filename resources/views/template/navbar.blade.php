@@ -31,42 +31,26 @@
                 </form>
             </li>
             <li class="dropdown">
-                @if(\Carbon\Carbon::now()->toDateString() <= '2018-04-07')
+                @if(\Carbon\Carbon::now()->toDateString() <= '2018-04-16')
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
                     <i class="fa fa-bell faa-ring animated"></i>
                     <span class="badge badge-danger pull-right faa-float animated">1</span>
                 </a>
                 <ul class="dropdown-menu dropdown-notification pull-right">
-                    <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">2</span></li>
-                    <li class="notification-item">
-                        <a href="{{ route('report-passengers-recorders-fringes') }}" onclick="event.preventDefault();gsuccess('Nueva agrupación de reporte por Franjas. <hr> <a href=\'{{ route('report-passengers-recorders-fringes') }}\'><i class=\'fa fa-hand-pointer-o\'></i>  Abrir</a>')">
-                            <div class="media faa-parent animated-hover" data-toggle="tooltip" data-title="El 04 de Abril" data-placement="rigth">
-                                <i class="fa fa-users faa-vertical"></i>
+                    <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">1</span></li>
+                    <li class="notification-item" data-toggle="tooltip" data-title="El 12 de Abril" data-placement="top">
+                        <a href="{{ route('admin-vehicles-maintenance') }}">
+                            <div class="media">
+                                <i class="fa fa-wrench faa-wrench animated"></i>
                             </div>
                             <div class="message">
-                                <h6 class="title">@lang('Passengers report')</h6>
+                                <h6 class="title">@lang('Maintenance') de @lang('vehicles')</h6>
                                 <div class="time">
-                                    @lang('By Fringes')
+                                    @lang('Calendario de mantenimiento')
                                 </div>
                             </div>
                             <div class="option faa-parent animated-hover"
                                  data-click="set-message-status" data-status="unread" data-container="body">
-                                <i class="fa fa-dot-circle-o faa-vertical"></i>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="notification-item hide">
-                        <a href="{{ route('report-drivers-detailed') }}">
-                            <div class="media faa-parent animated-hover" data-toggle="tooltip" data-title="El 18 de Marzo" data-placement="rigth">
-                                <i class="icon-user fa faa-vertical"></i>
-                            </div>
-                            <div class="message">
-                                <h6 class="title">@lang('Drivers report')</h6>
-                                <div class="time">
-                                    @lang('Detailed per day')
-                                </div>
-                            </div>
-                            <div class="option faa-parent animated-hover" data-click="set-message-status" data-status="unread" data-container="body">
                                 <i class="fa fa-dot-circle-o faa-vertical"></i>
                             </div>
                         </a>
