@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('stylesheets')
-
+    <link href="{{ asset('assets/plugins/bootstrap-slider/bootstrap-slider.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -139,7 +139,7 @@
     @include('template.google.maps')
 
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
+    <script src="{{ asset('assets/plugins/bootstrap-slider/bootstrap-slider.min.js') }}"></script>
 
     <script type="application/javascript">
         var mainContainer = $('.main-container');
