@@ -144,21 +144,6 @@
                             @endif
                         </ul>
                     </li>
-                    <li class="has-sub menu-administration-counter">
-                        <a href="javascript:;" class="faa-parent animated-hover">
-                            <b class="caret pull-right"></b>
-                            <i class="fa fa-user-circle-o faa-burst"></i>
-                            @lang('Counter')
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="has-sub menu-administration-counter-status">
-                                <a href="{{ route('admin-counter-report')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-table faa-vertical" aria-hidden="true"></i>
-                                    @lang('Report')
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                     <li class="has-sub menu-passengers">
                         <a href="javascript:;" class="faa-parent animated-hover">
                             <b class="caret pull-right"></b>
@@ -167,60 +152,91 @@
                         </a>
                         <ul class="sub-menu">
                             @if( Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter() )
-                            <li class="has-sub menu-passengers-consolidated">
-                                <a href="javascript:;" class="faa-parent animated-hover">
-                                    <b class="caret pull-right"></b>
-                                    <i class="fa fa-archive faa-vertical"></i>
-                                    @lang('Consolidated')
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="has-sub menu-passengers-consolidated-days">
-                                        <a href="{{ route('report-passengers-consolidated-daily')  }}" class="faa-parent animated-hover">
-                                            <i class="fa fa-file-archive-o faa-vertical" aria-hidden="true"></i>
-                                            @lang('Daily')
-                                        </a>
-                                    </li>
-                                    <li class="has-sub menu-passengers-consolidated-range">
-                                        <a href="{{ route('report-passengers-consolidated-date-range')  }}" class="faa-parent animated-hover">
-                                            <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
-                                            @lang('Date range')
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="has-sub menu-passengers-recorders">
+                                    <a href="javascript:;" class="faa-parent animated-hover">
+                                        <b class="caret pull-right"></b>
+                                        <i class="fa fa-asterisk faa-vertical"></i>
+                                        @lang('Recorders')
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="has-sub menu-passengers-recorders-consolidated">
+                                            <a href="javascript:;" class="faa-parent animated-hover">
+                                                <b class="caret pull-right"></b>
+                                                <i class="fa fa-archive faa-vertical"></i>
+                                                @lang('Consolidated')
+                                            </a>
+                                            <ul class="sub-menu">
+                                                <li class="has-sub menu-passengers-recorders-consolidated-days">
+                                                    <a href="{{ route('report-passengers-recorders-consolidated-daily')  }}" class="faa-parent animated-hover">
+                                                        <i class="fa fa-file-archive-o faa-vertical" aria-hidden="true"></i>
+                                                        @lang('Daily')
+                                                    </a>
+                                                </li>
+                                                <li class="has-sub menu-passengers-recorders-consolidated-range">
+                                                    <a href="{{ route('report-passengers-recorders-consolidated-date-range')  }}" class="faa-parent animated-hover">
+                                                        <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
+                                                        @lang('Date range')
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-sub menu-passengers-recorders-detailed">
+                                            <a href="javascript:;" class="faa-parent animated-hover">
+                                                <b class="caret pull-right"></b>
+                                                <i class="fa fa-list-alt faa-vertical"></i>
+                                                @lang('Detailed')
+                                            </a>
+                                            <ul class="sub-menu">
+                                                <li class="has-sub menu-passengers-recorders-detailed-days">
+                                                    <a href="{{ route('report-passengers-recorders-detailed-daily')  }}" class="faa-parent animated-hover">
+                                                        <i class="fa fa-file-text-o faa-vertical" aria-hidden="true"></i>
+                                                        @lang('Daily')
+                                                    </a>
+                                                </li>
+                                                <li class="has-sub menu-passengers-recorders-detailed-range">
+                                                    <a href="{{ route('report-passengers-recorders-detailed-date-range')  }}" class="faa-parent animated-hover">
+                                                        <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
+                                                        @lang('Date range')
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-sub menu-passengers-recorders-fringes">
+                                            <a href="{{ route('report-passengers-recorders-fringes') }}" class="faa-parent animated-hover">
+                                                <i class="fa fa-industry faa-vertical"></i>
+                                                @lang('Fringes')
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
 
-                            <li class="has-sub menu-passengers-detailed">
-                                <a href="javascript:;" class="faa-parent animated-hover">
-                                    <b class="caret pull-right"></b>
-                                    <i class="fa fa-list-alt faa-vertical"></i>
-                                    @lang('Detailed')
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="has-sub menu-passengers-detailed-days">
-                                        <a href="{{ route('report-passengers-detailed-daily')  }}" class="faa-parent animated-hover">
-                                            <i class="fa fa-file-text-o faa-vertical" aria-hidden="true"></i>
-                                            @lang('Daily')
-                                        </a>
-                                    </li>
-                                    <li class="has-sub menu-passengers-detailed-range">
-                                        <a href="{{ route('report-passengers-detailed-date-range')  }}" class="faa-parent animated-hover">
-                                            <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
-                                            @lang('Date range')
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="has-sub menu-passengers-fringes">
-                                <a href="{{ route('report-passengers-recorders-fringes') }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-industry faa-vertical"></i>
-                                    @lang('Fringes')
-                                </a>
-                            </li>
+                            @if( Auth::user()->isAdmin() ||  Auth::user()->company->hasSeatSensorCounter() )
+                                <li class="has-sub menu-passengers-sensors">
+                                    <a href="javascript:;" class="faa-parent animated-hover">
+                                        <b class="caret pull-right"></b>
+                                        <i class="fa fa-crosshairs faa-vertical"></i>
+                                        @lang('Sensors')
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="has-sub menu-passengers-sensors-counter">
+                                            <a href="{{ route('report-passengers-sensors-counter')  }}" class="faa-parent animated-hover">
+                                                <i class="fa fa-user-circle-o faa-vertical" aria-hidden="true"></i>
+                                                @lang('Counter')
+                                            </a>
+                                        </li>
+                                        <li class="has-sub menu-passengers-sensors-seats">
+                                            <a href="{{ route('report-passengers-sensors-seats') }}" class="faa-parent animated-hover">
+                                                <i class="fa fa-table faa-vertical"></i>
+                                                @lang('Seats')
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             @endif
 
                             @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
-                            <li class="has-sub menu-passengers-taxcentral">
+                                <li class="has-sub menu-passengers-taxcentral">
                                 <a href="javascript:;" class="faa-parent animated-hover">
                                     <b class="caret pull-right"></b>
                                     <i class="fa fa-building faa-vertical"></i>
@@ -235,13 +251,6 @@
                                     </li>
                                 </ul>
                             </li>
-                            @else
-                                <li class="has-sub menu-passengers-consolidated-days">
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
-                                        @lang('Coming soon')
-                                    </a>
-                                </li>
                             @endif
                         </ul>
                     </li>

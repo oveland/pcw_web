@@ -84,3 +84,6 @@ span.icon-report{
 .select2-container{
     width:100% !important;
 }
+.no-padding{
+    padding: 0 !important;
+}

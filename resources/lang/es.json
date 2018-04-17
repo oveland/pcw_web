@@ -59,6 +59,10 @@
   "Register historic": "Histórico de registro",
   "Passengers": "Pasajeros",
   "Seat": "Asiento",
+  "Seats": "Asientos",
+  "seat": "asiento",
+  "seats": "asientos",
+  "Seats report": "Reporte de asientos",
   "Event active time": "Ocupado a las",
   "Event inactive time": "Libre a las",
   "Active time": "Activo durante",
@@ -72,7 +76,7 @@
   "Log In": "Inicia sesión",
   "Type your credentials": "Ingresa tus credenciales",
   "Confirm Password": "Confirma Contraseña",
-  "Register": "Regístrate",
+  "Register": "Registro",
   "Name": "Nombre",
   "Logout": "Cerrar Sesión",
   "Passengers_Report_": "Reporte_Pasajeros_",
@@ -351,5 +355,11 @@
   "Maintenance date updated successfully":"Fecha de mantenimiento actualizada correctamente",
   "Maintenance date is not updated":"La fecha de mantenimiento no fue actualizada",
   "Maintenance dates deleted successfully":"Fechas de mantenimiento eliminadas correctamente",
-  "Maintenance dates not deleted":"Las fechas de mantenimiento no fueron eliminadas"
+  "Maintenance dates not deleted":"Las fechas de mantenimiento no fueron eliminadas",
+  "Play":"Reproducir",
+  "Pause":"Pausar",
+  "Stop":"Parar",
+  "Sensors":"Sensores",
+  "sensors":"sensores",
+  "Driver's seat":"Asiento del conductor"
 }

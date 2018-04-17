@@ -44,4 +44,9 @@ class Passenger extends Model
             ->where('vehicle_id', $vehicleId)
             ->whereBetween('date', [$initialDate, $finalDate]);
     }
+
+    public function getHexSeatsAttribute()
+    {
+        return explode(' ',$this->frame)[3];
+    }
 }
