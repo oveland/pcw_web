@@ -20,9 +20,24 @@
                         {!! \App\Services\PCWSeatSensorGualas::makeHtmlTemplate($passengers->first()) !!}
                     </div>
 
-                    <hr class="m-0 m-t-20">
+                    <hr class="m-0 m-t-10 m-b-10">
+
+                    <div class="row">
+                        <small class="col-md-4 text-left p-l-20">
+                            <i class="fa fa-clock-o"></i>
+                            <span class="play-time"></span>
+                        </small>
+                        <small class="col-md-4 text-center">
+                            <i class="fa fa-flag"></i>
+                            <span class="play-route">@lang('No Route')</span>
+                        </small>
+                        <small class="col-md-4 text-right p-r-25"><i class="fa fa-users"></i>
+                            <span class="play-passengers"></span>
+                        </small>
+                    </div>
+
                     <!-- begin progress-bar -->
-                    <div class="col-md-12 m-t-10 m-b-5">
+                    <div class="col-md-12 m-t-10 m-b-10">
                         <div class="progress progress-sm progress-striped active m-0">
                             <div class="progress-bar progress-bar-info play-progress" style="width: 0%">0</div>
                         </div>
@@ -53,9 +68,6 @@
         </div>
     </div>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.css" rel="stylesheet"></link>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
-
     <script type="application/javascript">
         @php( $seatingStatusReport = collect([]) )
         @foreach($passengers as $passenger)
@@ -83,15 +95,20 @@
             var location = report.location;
             var time = report.time;
             var passengers = report.passengers;
+            var route = report.route;
 
             if (trackingPoint) {
                 trackingPoint.marker.setPosition(new google.maps.LatLng({
                     lat: parseFloat(location.latitude),
                     lng: parseFloat(location.longitude)
                 }));
-                trackingPoint.infowindow.setContent(makeContentMarkerMain(time,passengers));
+                trackingPoint.infowindow.setContent(makeContentMarkerMain(time,route,passengers));
                 trackingPoint.infowindow.open(map,trackingPoint.marker);
             }
+
+            $('.play-time').html(time);
+            $('.play-route').html(route);
+            $('.play-passengers').html(passengers);
 
             $('.play-progress').css('width',((currentIndex+1)*100/indexes)+'%').html(parseInt((currentIndex+1)*100/indexes)+'%');
             $('#ex1').bootstrapSlider('setValue',currentIndex+1);
@@ -105,10 +122,6 @@
                     currentIndex++;
                     play();
                 },200);
-            }else{
-                setTimeout(function () {
-                    stop();
-                }, 5000);
             }
         }
 
@@ -164,6 +177,7 @@
             seatingStatusReport.forEach(function(report,i){
                 var location = report.location;
                 var time = report.time;
+                var route = report.route;
                 var passengers = report.passengers;
                 var contentMarker = "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> "+time+"<br><strong><i class='fa fa-users'></i> @lang('Passengers'):</strong> "+passengers+"<br>";
 
@@ -178,7 +192,7 @@
 
                 /* Set marker main as first location report */
                 if( i === 0 ){
-                    var contentMarkerMain = makeContentMarkerMain(time, passengers);
+                    var contentMarkerMain = makeContentMarkerMain(time, route, passengers);
                     trackingPoint = addMarker(
                         new google.maps.LatLng({
                             lat: parseFloat(location.latitude),
@@ -190,6 +204,8 @@
             });
             //now fit the map to the newly inclusive bounds
             map.fitBounds(bounds);
+
+            render();
         },500);
 
         // Adds a marker to the map and push to the array.
@@ -221,8 +237,10 @@
             };
         }
 
-        function makeContentMarkerMain(time,passengers){
-            return "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> " + time + "<br><strong><i class='fa fa-users'></i> @lang('Passengers'):</strong> " + passengers + "<br>";
+        function makeContentMarkerMain(time,route,passengers){
+            return "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> " + time + "<br>" +
+                "<strong><i class='fa fa-flag'></i> @lang('Route'):</strong> " + route + "<br>"+
+                "<strong><i class='fa fa-users'></i> @lang('Passengers'):</strong> " + passengers + "<br>";
         }
 
         hideSideBar();

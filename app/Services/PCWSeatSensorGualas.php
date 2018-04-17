@@ -47,8 +47,9 @@ class PCWSeatSensorGualas
                 'latitude' => $passenger->latitude,
                 'longitude' => $passenger->longitude
             ],
-            'passengers' => $passenger->total,
             'time' => $passenger->date->toTimeString(),
+            'route' => $passenger->dispatchRegister->route ?? __('No Route'),
+            'passengers' => $passenger->total,
         ];
     }
 
