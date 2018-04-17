@@ -35,7 +35,7 @@ class SimGPS extends Model
 
     public function scopeFindByVehicleId($query, $vehicle_id)
     {
-        return $query->where('vehicle_id', $vehicle_id);
+        return $query->where('vehicle_id', $vehicle_id)->where('active',true);
     }
 
     public function vehicle()

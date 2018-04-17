@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group has-success has-feedback m-b-0">
-                    <input name="sim" type="number" class="form-control input-sm" value="{{ $simGPS->sim }}" placeholder="SIM">
+                    <input name="sim" type="number" class="form-control input-sm" value="{{ $simGPS->sim }}" placeholder="SIM" style="border-radius: 50px">
                     <span class="fa fa-phone form-control-feedback"></span>
                 </div>
             </div>
@@ -26,10 +26,10 @@
     </form>
 </td>
 <td class="text-center">
-    <button type="button" class="btn btn-sm btn-default tooltips" onclick="$('#detail-{{ $id }}').removeClass('hide');$('#edit-{{ $id }}').addClass('hide');" data-title="@lang('Cancel')">
+    <button type="button" class="btn btn-sm btn-default tooltips btn-rounded" onclick="$('#detail-{{ $id }}').removeClass('hide');$('#edit-{{ $id }}').addClass('hide');" data-title="@lang('Cancel')">
         <i class="fa fa-undo"></i>
     </button>
-    <button type="submit" class="btn btn-sm btn-success tooltips" onclick="$('#form-edit-sim-gps-{{ $id }}').submit()" data-title="@lang('Update')">
+    <button type="submit" class="btn btn-sm btn-success tooltips btn-rounded" onclick="$('#form-edit-sim-gps-{{ $id }}').submit()" data-title="@lang('Update')">
         <i class="fa fa-floppy-o"></i>
     </button>
 </td>
