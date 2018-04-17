@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-detailed-daily-search') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-recorders-detailed-daily-search') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -107,7 +107,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-passengers, .menu-passengers-detailed, .menu-passengers-detailed-days').addClass('active');
+        $('.menu-passengers, .menu-passengers-recorders, .menu-passengers-recorders-detailed, .menu-passengers-recorders-detailed-days').addClass('active');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
@@ -152,7 +152,7 @@
         function loadRouteReport(company) {
             var routeSelect = $('#route-report');
             routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('report-passengers-consolidated-daily-ajax-action',['action'=>'loadRoutes']) }}', {
+            routeSelect.load('{{ route('report-passengers-recorders-consolidated-daily-ajax-action',['action'=>'loadRoutes']) }}', {
                 company: company
             }, function () {
                 routeSelect.trigger('change.select2');

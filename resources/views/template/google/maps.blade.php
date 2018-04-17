@@ -43,7 +43,9 @@
         setTimeout(function(){
             var mapOptions = {
                 zoom: 14,
-                center: new google.maps.LatLng(3.455608, -76.58943),
+                center: new google.maps.LatLng(
+                    3.445951192812193, -76.52618682268542
+                ),
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
 

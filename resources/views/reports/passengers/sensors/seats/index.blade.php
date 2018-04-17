@@ -9,12 +9,12 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Administration')</a></li>
         <li><a href="javascript:;">@lang('Counter')</a></li>
-        <li class="active">@lang('Report')</li>
+        <li class="active">@lang('Seats')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-cogs" aria-hidden="true"></i> @lang('Administration')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Report Counter')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Seats report')</small>
     </h1>
     <hr class="col-md-12 hr">
     <!-- end page-header -->
@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-sensors-counter-list') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-sensors-seats-play') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -70,22 +70,8 @@
                                 <div class="input-group btn-block">
                                     <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
                                         <option value="history">@lang('Historic')</option>
-                                        <option value="issues">@lang('Of issues')</option>
                                         <option value="route">@lang('By route')</option>
                                     </select>
-                                </div>
-                                <div class="type-issue" style="display: none;">
-                                    <label for="type-issue" class="control-label field-required">@lang('Type')</label>
-                                    <div class="input-group btn-block type-issue">
-                                        <select name="type-issue" id="type-issue" class="default-select2 form-control col-md-12">
-                                            <option value="all">@lang('All')</option>
-                                            <option value="lower-count">@lang('Lower count')</option>
-                                            <option value="higher-count">@lang('Higher count')</option>
-                                            <option value="alarms">@lang('Alarms')</option>
-                                            <option value="cameras">@lang('Cameras')</option>
-                                            <option value="signal-check">@lang('Signal check')</option>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -149,15 +135,18 @@
     <!-- end row -->
 @endsection
 
-
 @section('scripts')
+    @include('template.google.maps')
+
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
 
     <script type="application/javascript">
         var mainContainer = $('.main-container');
         var form = $('.form-search-report');
+        var tout = null;
 
-        $('.menu-passengers, .menu-passengers-sensors, .menu-passengers-sensors-counter').addClass('active');
+        $('.menu-passengers, .menu-passengers-sensors, .menu-passengers-sensors-seats').addClass('active');
 
         $(document).ready(function () {
             form.submit(function (e) {
@@ -191,16 +180,9 @@
                     formByRoute.hide();
                     formDateRange.fadeIn();
                 }
-
-                var typeIssueSelection = $('.type-issue');
-                if( typeReport === 'issues'){
-                    typeIssueSelection.fadeIn();
-                }else{
-                    typeIssueSelection.slideUp();
-                }
             });
 
-            $('#company-report, #route-round-trip-report, #type-report, #initial-date, #final-date, #type-issue').change(function () {
+            $('#company-report, #route-round-trip-report, #type-report, #initial-date, #final-date').change(function () {
                 setTimeout(function(){
                     mainContainer.slideUp();
                     if (form.isValid(false)) {

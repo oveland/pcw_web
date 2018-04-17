@@ -82,7 +82,7 @@
         var mainContainer = $('.main-container');
         var form = $('.form-search-report');
 
-        $('.menu-passengers, .menu-passengers-fringes').addClass('active');
+        $('.menu-passengers, .menu-passengers-recorders-fringes').addClass('active');
 
         $(document).ready(function () {
             form.submit(function (e) {

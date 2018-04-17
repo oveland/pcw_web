@@ -62,9 +62,26 @@ class Company extends Model
         return $query->where('active','=',true);
     }
 
+    /*
+     * What companies that have seat sensor counter
+     *
+     * Alameda
+     *
+    */
     public function hasRecorderCounter()
     {
         return $this->id == 14;
+    }
+
+    /*
+     * What companies that have seat sensor counter
+     *
+     * Cootransol
+     *
+    */
+    public function hasSeatSensorCounter()
+    {
+        return $this->id == 12;
     }
 
     public function drivers()

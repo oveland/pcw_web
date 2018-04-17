@@ -7,7 +7,7 @@
                         <i class="fa fa-arrow-up"></i> <span class="hidden-xs">Llévame arriba</span>
                     </a>
                 </span>
-        © 2017 <b>PCW Ditech Integradores Tecnológicos</b> @lang('All Right Reserved')
+        © 2018 <b>PCW Ditech Integradores Tecnológicos</b> @lang('All Right Reserved')
     </div>
     <!-- end #footer -->
 </div>
