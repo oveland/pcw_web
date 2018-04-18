@@ -99,7 +99,7 @@
                     titleFormat: 'MMMM'
                 }
             },
-            defaultView: 'month',
+            defaultView: 'basicWeek',
             droppable: true, // this allows things to be dropped onto the calendar
             drop: function(date, jsEvent, ui, resourceId) {
                 var event = $(this).data('event');
