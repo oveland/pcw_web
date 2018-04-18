@@ -64,13 +64,13 @@ class MaintenanceVehicleController extends Controller
         $periodDays = config('vehicle.maintenance_period_days');
         $totalRegisters = 0;
         foreach ($dateRange as $nextDate) {
-            if ($nextDate->dayOfWeek == Carbon::SUNDAY){
+            if ($nextDate->dayOfWeek == Carbon::SUNDAY || $nextDate->dayOfWeek == Carbon::MONDAY){
                 $assignable = false;
             }
             else{
-                $periodDays++;
                 $assignable = true;
             }
+            $periodDays++;
 
             if ($periodDays > config('vehicle.maintenance_period_days') && $assignable) {
                 $maintenanceVehicle = new MaintenanceVehicle();
