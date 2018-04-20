@@ -18,7 +18,9 @@ class CreatePassengersTable extends Migration
             $table->dateTime('date');
             $table->integer('total');
             $table->integer('total_prev');
+            $table->integer('total_platform');
             $table->bigInteger('vehicle_id')->unsigned();
+            $table->integer('vehicle_status_id')->nullable();
             $table->bigInteger('dispatch_register_id')->unsigned()->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('counter_issue_id')->unsigned()->nullable();

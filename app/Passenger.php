@@ -49,4 +49,9 @@ class Passenger extends Model
     {
         return explode(' ',$this->frame)[3];
     }
+
+    public function vehicleStatus()
+    {
+        return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id', 'id_status');
+    }
 }

@@ -50,6 +50,10 @@ class PCWSeatSensorGualas
             'time' => $passenger->date->toTimeString(),
             'route' => $passenger->dispatchRegister->route ?? __('No Route'),
             'passengers' => $passenger->total,
+            'passengersPlatform' => $passenger->total_platform,
+            'vehicleStatus' => $passenger->vehicleStatus->des_status,
+            'vehicleStatusIconClass' => $passenger->vehicleStatus->icon_class,
+            'vehicleStatusMainClass' => $passenger->vehicleStatus->main_class,
         ];
     }
 

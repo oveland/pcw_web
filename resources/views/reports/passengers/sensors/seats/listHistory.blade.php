@@ -102,7 +102,7 @@
                     lat: parseFloat(location.latitude),
                     lng: parseFloat(location.longitude)
                 }));
-                trackingPoint.infowindow.setContent(makeContentMarkerMain(time,route,passengers));
+                trackingPoint.infowindow.setContent(makeContentMarkerMain(report));
                 trackingPoint.infowindow.open(map,trackingPoint.marker);
             }
 
@@ -176,10 +176,7 @@
         setTimeout(function(){
             seatingStatusReport.forEach(function(report,i){
                 var location = report.location;
-                var time = report.time;
-                var route = report.route;
-                var passengers = report.passengers;
-                var contentMarker = "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> "+time+"<br><strong><i class='fa fa-users'></i> @lang('Passengers'):</strong> "+passengers+"<br>";
+                var contentMarker = makeContentMarkerMain(report);
 
                 addMarker(
                     new google.maps.LatLng({
@@ -192,13 +189,12 @@
 
                 /* Set marker main as first location report */
                 if( i === 0 ){
-                    var contentMarkerMain = makeContentMarkerMain(time, route, passengers);
                     trackingPoint = addMarker(
                         new google.maps.LatLng({
                             lat: parseFloat(location.latitude),
                             lng: parseFloat(location.longitude)
                         }),
-                        contentMarkerMain, null
+                        contentMarker, null
                     );
                 }
             });
@@ -237,10 +233,22 @@
             };
         }
 
-        function makeContentMarkerMain(time,route,passengers){
-            return "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> " + time + "<br>" +
-                "<strong><i class='fa fa-flag'></i> @lang('Route'):</strong> " + route + "<br>"+
-                "<strong><i class='fa fa-users'></i> @lang('Passengers'):</strong> " + passengers + "<br>";
+        function makeContentMarkerMain(report){
+            var time = report.time;
+            var route = report.route;
+            var passengers = report.passengers;
+            var passengersPlatform = report.passengersPlatform;
+            var vehicleStatus = report.vehicleStatus;
+            var vehicleStatusIconClass = report.vehicleStatusIconClass;
+            var vehicleStatusMainClass = report.vehicleStatusMainClass;
+
+            return "<div class='p-5'>"+
+                    "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> " + time + "<br>" +
+                    "<strong><i class='fa fa-flag'></i> @lang('Route'):</strong> " + route + "<br>"+
+                    "<strong><i class='fa fa-users'></i> @lang('Passengers'):</strong> " + passengers + "<br>"+
+                    "<strong><i class='fa fa-users'></i> @lang('Platform'):</strong> " + passengersPlatform + "<hr class='hr'>"+
+                    "@lang('GPS'): <strong><i class='text-" + vehicleStatusMainClass + " " + vehicleStatusIconClass + "'></i> </strong> " + vehicleStatus + "<br>" +
+            "</div>";
         }
 
         hideSideBar();
