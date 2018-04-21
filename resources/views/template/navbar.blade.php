@@ -31,22 +31,22 @@
                 </form>
             </li>
             <li class="dropdown">
-                @if(\Carbon\Carbon::now()->toDateString() <= '2018-04-16')
+                @if(\Carbon\Carbon::now()->toDateString() <= '2018-04-24')
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
                     <i class="fa fa-bell faa-ring animated"></i>
                     <span class="badge badge-danger pull-right faa-float animated">1</span>
                 </a>
                 <ul class="dropdown-menu dropdown-notification pull-right">
                     <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">1</span></li>
-                    <li class="notification-item" data-toggle="tooltip" data-title="El 12 de Abril" data-placement="top">
-                        <a href="{{ route('admin-vehicles-maintenance') }}">
+                    <li class="notification-item" data-toggle="tooltip" data-title="El 21 de Abril" data-placement="top">
+                        <a href="{{ route('report-route-control-points') }}">
                             <div class="media">
-                                <i class="fa fa-wrench faa-wrench animated"></i>
+                                <i class="fa fa-map-marker faa-pulse animated"></i>
                             </div>
                             <div class="message">
-                                <h6 class="title">@lang('Maintenance') de @lang('vehicles')</h6>
+                                <h6 class="title">@lang('Reporte de puntos de control')</h6>
                                 <div class="time">
-                                    @lang('Calendario de mantenimiento')
+                                    Nueva <strong>agrupación por vehículo</strong>
                                 </div>
                             </div>
                             <div class="option faa-parent animated-hover"

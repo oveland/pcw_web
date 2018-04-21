@@ -92,11 +92,16 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="type-report" class="control-label field-required">@lang('Group By')</label>
+                                <label for="type-report" class="control-label field-required">
+                                    @lang('Group By')
+                                </label>
+                                @if(\Carbon\Carbon::now()->toDateString() <= '2018-04-24')
+                                    <small class="badge badge-danger pull-right faa-float animated">@lang('New')</small>
+                                @endif
                                 <div class="form-group">
                                     <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
-                                        <option value="route">@lang('Round Trip')</option>
-                                        <option value="vehicle" disabled="disabled">@lang('Vehicle')</option>
+                                        <option value="vehicle">@lang('Vehicle')</option>
+                                        <option value="round-trip">@lang('Round Trip')</option>
                                     </select>
                                 </div>
                             </div>

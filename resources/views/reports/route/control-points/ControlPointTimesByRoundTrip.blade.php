@@ -34,8 +34,11 @@
                 <div id="report-tab-{{ $roundTrip }}" class="tab-pane fade {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
                         <div class="table-responsive col-md-12" style="padding-bottom: 90px">
-                            @php( $reportsByControlPoint =  $controlPointTimeReportByRoundTrip->groupBy('control_point_id') )
-                            @php( $reportsByVehicles = $controlPointTimeReportByRoundTrip->groupBy('vehicle_id') )
+                            @php
+                                $controlPoints =  $route->controlPoints;
+                                $reportsByVehicles = $controlPointTimeReportByRoundTrip->groupBy('vehicle_id')
+                            @endphp
+
 
                             <table class="table table-bordered table-striped table-hover table-valign-middle table-report-control-point data-table-report">
                                 <thead>
@@ -56,8 +59,7 @@
                                         <i class="fa fa-clock-o"></i><br>
                                         @lang('Route Time')
                                     </th>
-                                    @foreach($reportsByControlPoint->keys() as $controlPointId)
-                                        @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
+                                    @foreach($controlPoints as $controlPoint)
                                         <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}">
                                             <i class="fa fa-map-marker"></i><br>
                                             {{ $controlPoint->name }}
@@ -97,9 +99,8 @@
                                                     {{ '--:--:--' }}
                                                 @endif
                                             </th>
-                                            @foreach($reportsByControlPoint->keys() as $controlPointId)
-                                                @php( $controlPoint = \App\ControlPoint::find($controlPointId) )
-                                                @php( $report = $reportByVehicles->where('control_point_id',$controlPointId)->first() ?? null )
+                                            @foreach($controlPoints as $controlPoint)
+                                                @php( $report = $reportByVehicles->where('control_point_id',$controlPoint->id)->first() ?? null )
                                                 <td class="text-center">
                                                     @if( $report || ($loop->last && $dispatchRegister->complete() ) )
                                                         @php
@@ -107,7 +108,7 @@
                                                                 $measuredControlPointTime = $arrivalTime;
                                                                 $scheduledControlPointTime = $arrivalTimeScheduled;
                                                             }else{
-                                                                $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPointId)
+                                                                $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPoint->id)
                                                                 ->where('fringe_id',$report->fringe_id)
                                                                 ->get()->first();
 
@@ -191,8 +192,7 @@
             @endforeach
         </div>
     </div>
-    <script type="application/javascript">
-    </script>
+    <script type="application/javascript">hideSideBar();</script>
 @else
     <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
         <div class="col-md-2" style="padding-top: 10px">

@@ -44,11 +44,21 @@ class ControlPointsReportController extends Controller
             ->orderBy('date_created')
             ->get();
 
-        $controlPointTimeReportsByRoundTrip = $controlPointTimeReports->groupBy(function ($controlPointTimeReport) {
-            return $controlPointTimeReport->dispatchRegister->round_trip;
-        });
+        switch ($request->get('type-report')){
+            case 'round-trip':
+                $controlPointTimeReportsByRoundTrip = $controlPointTimeReports->groupBy(function ($controlPointTimeReport) {
+                    return $controlPointTimeReport->dispatchRegister->round_trip;
+                });
 
-        return view('reports.route.control-points.ControlPointTimesByRoundTrip', compact('controlPointTimeReportsByRoundTrip'));
+                return view('reports.route.control-points.ControlPointTimesByRoundTrip', compact(['controlPointTimeReportsByRoundTrip','route']));
+                break;
+            case 'vehicle':
+                $controlPointTimeReportsByVehicles = $controlPointTimeReports->groupBy('vehicle_id');
+
+                return view('reports.route.control-points.ControlPointTimesByVehicle', compact(['controlPointTimeReportsByVehicles','route']));
+                break;
+
+        }
     }
 
     function export()
