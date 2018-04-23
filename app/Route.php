@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereUrl($value)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route active()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Fringe[] $fringes
  */
 class Route extends Model
 {

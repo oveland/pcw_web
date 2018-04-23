@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\MaintenanceVehicle whereWeekDay($value)
  * @mixin \Eloquent
  * @property-read \App\Vehicle $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\MaintenanceVehicle whereObservations($value)
  */
 class MaintenanceVehicle extends Model
 {

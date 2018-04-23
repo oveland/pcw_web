@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $sequence
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Fringe whereSequence($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\ControlPointTime[] $controlPointTimes
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Fringe whereStyleColor($value)
  */
 class Fringe extends Model
 {

@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Http\Controllers\Utils\StrTime;
-use App\Models\Passengers\RecorderCounterPerDay;
 use App\Models\Passengers\RecorderCounterPerRoundTrip;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -63,6 +62,15 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDriverCode($value)
  * @property-read mixed $passengers
  * @property-read \App\Driver|null $driver
+ * @property int|null $departure_fringe_id
+ * @property int|null $arrival_fringe_id
+ * @property-read \App\Fringe|null $arrivalFringe
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ControlPointTimeReport[] $controlPointTimeReports
+ * @property-read \App\Fringe|null $departureFringe
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ParkingReport[] $parkingReport
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Speeding[] $speedingReport
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalFringeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDepartureFringeId($value)
  */
 class DispatchRegister extends Model
 {

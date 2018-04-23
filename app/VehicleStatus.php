@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatus whereDesStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatus whereIdStatus($value)
  * @mixin \Eloquent
+ * @property string|null $main_class
+ * @property string|null $icon_class
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatus whereIconClass($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatus whereMainClass($value)
  */
 class VehicleStatus extends Model
 {
