@@ -13,36 +13,21 @@ use App\Passenger;
 
 class PCWSeatSensorGualas
 {
-    static function getDistribution()
+    static function getDistribution($plate)
     {
-        return (object)[
-            'row1' => [
-                5 => [10, 9],
-                4 => [8, 7],
-                3 => [6, 5],
-                2 => [4, 3],
-                1 => [2]
-            ],
-            'row2' => [
-                10 => [21, 20],
-                9 => [19, 18],
-                8 => [17, 16],
-                7 => [15, 14],
-                6 => [13],
-            ]
-        ];
+        return config("counter.sensor.seating.distribution.$plate");
     }
 
     static function makeHtmlTemplate(Passenger $passenger)
     {
-        $seatingStatus = self::getSeatingStatusFromHex($passenger->hexSeats);
+        $seatingStatus = self::getSeatingStatusFromHex($passenger->hexSeats, $passenger->vehicle->plate);
         return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus'));
     }
 
     static function getSeatingStatus(Passenger $passenger)
     {
         return [
-            'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats),
+            'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats, $passenger->vehicle->plate),
             'location' => [
                 'latitude' => $passenger->latitude,
                 'longitude' => $passenger->longitude
@@ -59,12 +44,13 @@ class PCWSeatSensorGualas
 
     /**
      * @param $seatingStatusHexadecimal
+     * @param $plate
      * @return object
      */
-    static function getSeatingStatusFromHex($seatingStatusHexadecimal)
+    static function getSeatingStatusFromHex($seatingStatusHexadecimal,$plate)
     {
         $seatingStatusFromHex = collect([]);
-        $distribution = self::getDistribution();
+        $distribution = self::getDistribution($plate);
         $seatingStatusBinary = self::decodeSeatingStatusFromHex($seatingStatusHexadecimal);
 
         foreach ($distribution as $row => $distributionSeating) {
