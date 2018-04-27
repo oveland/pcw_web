@@ -44,7 +44,7 @@ class ManagerGPSController extends Controller
         $vehicleId = $request->get('vehicleId');
         $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicleId);
         $vehicleStatus = $currentLocationGPS->vehicleStatus;
-        return $vehicleStatus ? "$vehicleStatus->des_status | $currentLocationGPS->date_vehicle_status" : 'NONE';
+        return $vehicleStatus ? "$vehicleStatus->des_status | $currentLocationGPS->date | T = $currentLocationGPS->time_period" : 'NONE';
     }
 
     public function sendSMS(Request $request)
