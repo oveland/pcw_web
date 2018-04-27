@@ -36,32 +36,42 @@ class ManagerGPSController extends Controller
                 return $simGPS->vehicle->number ?? true;
             });
         }
-        return view('admin.gps.manage.list', compact('simGPSList','vehiclesCompany'));
+        return view('admin.gps.manage.list', compact('simGPSList', 'vehiclesCompany'));
     }
 
     public function getVehicleStatus(Request $request)
     {
-        $vehicleId = $request->get('vehicleId');
-        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicleId);
-        $vehicleStatus = $currentLocationGPS->vehicleStatus;
-        return $vehicleStatus ? "$vehicleStatus->des_status | $currentLocationGPS->date | T = $currentLocationGPS->time_period" : 'NONE';
+        $simGPSList = $request->get('simGPSList');
+
+        $statusList = "";
+        foreach ($simGPSList as $sim){
+            $simGPS = SimGPS::where('sim',$sim)->get()->first();
+            $vehicle = $simGPS->vehicle;
+            $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
+            $vehicleStatus = $currentLocationGPS->vehicleStatus;
+            $statusList.= $vehicleStatus ? "<i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> $currentLocationGPS->date (T = $currentLocationGPS->time_period)<br>" : '********';
+        }
+
+        return $statusList;
     }
 
     public function sendSMS(Request $request)
     {
-        $simGPSNumbers = explode(";", $request->get('sim-gps'));
+        $simGPSList = $request->get('sim-gps');
 
-        foreach ($simGPSNumbers as $simGPS){
+        $simGPSNumbers = is_array($simGPSList) ? $simGPSList : explode(";", $simGPSList);
+
+        foreach ($simGPSNumbers as $simGPS) {
             dump("**************  $simGPS **************");
             $commands = $request->get('command-gps');
             $gpsCommands = explode("\n", $commands);
 
-            switch ( $request->get('gps-type') ){
+            switch ($request->get('gps-type')) {
                 case 'SKYPATROL':
                     $totalCMD = "";
                     $smsCommands = [];
 
-                    if( $commands != 'AT$RESET' ){
+                    if ($commands != 'AT$RESET') {
                         $flagStartCMD = true;
                         foreach ($gpsCommands as $gpsCommand) {
                             $individualCommand = trim(explode("'", $gpsCommand)[0]);
@@ -71,13 +81,13 @@ class ManagerGPSController extends Controller
                                     $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
                                     $flagStartCMD = false;
                                 } else {
-                                    $smsCommands[] = str_start($totalCMD, "AT")."&W";
+                                    $smsCommands[] = str_start($totalCMD, "AT") . "&W";
                                     $totalCMD = $individualCommand . ";";
                                     $flagStartCMD = true;
                                 }
                             }
                         }
-                        $smsCommands[] = str_start($totalCMD, "AT")."&W";
+                        $smsCommands[] = str_start($totalCMD, "AT") . "&W";
                         $gpsCommands = $smsCommands;
                     }
                     break;
@@ -91,10 +101,10 @@ class ManagerGPSController extends Controller
                 $totalSent++;
                 $responseSMS = SMS::sendCommand($smsCommand, $simGPS);
                 $length = strlen($smsCommand);
-                dump("$totalSent. $smsCommand | $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")");
+                dump("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")");
                 sleep(0.5);
             }
-            dump("-------------- Total Sent: $totalSent --------------");
+            dump("-------------- TOTAL SMS SENT: $totalSent --------------");
         }
     }
 
@@ -110,6 +120,7 @@ class ManagerGPSController extends Controller
             } else {
                 $simGPS->sim = $sim;
                 $simGPS->gps_type = $gpsType;
+                $simGPS->operator = starts_with($sim,'350')?'avantel':'movistar';
                 $simGPS->save();
                 $updated = true;
             }

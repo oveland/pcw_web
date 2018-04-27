@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -34,6 +35,11 @@ use Illuminate\Database\Eloquent\Model;
 class CurrentLocationsGPS extends Model
 {
     protected $table = 'current_locations_gps';
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+    }
 
     public function scopeFindByVehicleId($query, $vehicleId)
     {

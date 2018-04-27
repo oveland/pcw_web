@@ -79,7 +79,7 @@
                 <div class="tab-pane fade {{ $simGPSList?"":"active in" }}" id="tab-2">
                     <form class="form form-send-message" action="{{ route('admin-gps-manage-send-sms') }}">
                         {{ csrf_field() }}
-                        <input type="hidden" id="gps-type" name="gps-type" value="">
+                        <input type="hidden" id="gps-type" name="gps-type" value="" data-reset-command="">
                         <div class="row">
                             <div class="form-group col-md-5 has-success has-feedback">
                                 <i class="fa fa-signal f-s-17" aria-hidden="true"></i>
@@ -89,9 +89,20 @@
                                 <div class="row info-gps">
                                     <div class="col-md-12">
                                         <div class="input-group m-b-15 col-md-12">
+                                            <div class="m-b-10">
+                                                <button type="button" class="btn btn-success btn-xs gps-skypatrol m-r-5" style="cursor: pointer"
+                                                        onclick="$(this).removeClass('disabled');$('.gps-tracker').addClass('disabled');selectGPSType('SKYPATROL')">
+                                                    <i class="fa fa-podcast"></i>
+                                                    @lang('SKYPATROL')
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-xs gps-tracker disabled" style="cursor: pointer"
+                                                        onclick="$(this).removeClass('disabled');$('.gps-skypatrol').addClass('disabled');selectGPSType('TRACKER')">
+                                                    <i class="fa fa-podcast"></i>
+                                                    @lang('COBAN')
+                                                </button>
+                                            </div>
                                             @if( $simGPSList )
-                                                <select id="sim-gps" name="sim-gps" class="form-control default-select2 col-md-12">
-                                                    <option value="">@lang('Select an option')</option>
+                                                <select id="sim-gps" name="sim-gps[]" class="form-control select default-select2 col-md-12" multiple>
                                                     @foreach($simGPSList as $simGPS)
                                                         <option value="{{ $simGPS->sim }}"
                                                                 data-reset-command="{{ $simGPS->getResetCommand() }}"
@@ -102,18 +113,6 @@
                                                     @endforeach
                                                 </select>
                                             @else
-                                                <div class="m-b-10">
-                                                    <button type="button" class="btn btn-success btn-xs gps-skypatrol m-r-5"
-                                                            onclick="$(this).removeClass('disabled');$('.gps-tracker').addClass('disabled');$('#sim-gps').data('gps-type','SKYPATROL')">
-                                                        <i class="fa fa-podcast"></i>
-                                                        @lang('SKYPATROL')
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary btn-xs gps-tracker disabled"
-                                                            onclick="$(this).removeClass('disabled');$('.gps-skypatrol').addClass('disabled');$('#sim-gps').data('gps-type','TRACKER')">
-                                                        <i class="fa fa-podcast"></i>
-                                                        @lang('COBAN')
-                                                    </button>
-                                                </div>
                                                 <input id="sim-gps" name="sim-gps" type="text" class="form-control" data-any-gps="true" data-gps-type="SKYPATROL">
                                             @endif
                                         </div>
@@ -166,6 +165,29 @@
         $('.form-send-message .select2-container').css('width','100%');
     },100);
 
+    function selectGPSType(gpsTypeString) {
+        var simGPS = $('#sim-gps');
+        var gpsType = $('#gps-type').val(gpsTypeString);
+        gpsType.val(gpsTypeString);
+
+        if (simGPS.hasClass('select')) {
+            simGPS.find('option').each(function(i,e){
+                var el = $(e);
+                var disabled = $(e).data('gps-type') !== gpsTypeString;
+                if( disabled ){
+                    $(e).prop('disabled',disabled);
+                    el.remove();
+                    el.appendTo('#sim-gps');
+                }
+                else {
+                    $(e).removeAttr('disabled');
+                    gpsType.data('reset-command', $(e).data('reset-command'));
+                }
+            });
+            simGPS.select2();
+        }
+    }
+
     $('.form-send-message').submit(function(e){
         e.preventDefault();
         var smsResponseContainer = $('.sms-response-container');
@@ -173,14 +195,6 @@
         if (formSendSMS.isValid()) {
             formSendSMS.find('.btn-submit').addClass(loadingClass);
             smsResponseContainer.slideUp();
-
-            var simGPS = $('#sim-gps');
-            var gpsType = simGPS.find('option[value="' + simGPS.val() + '"]').data('gps-type');
-            if( simGPS.data('any-gps') ){
-                gpsType = simGPS.data('gps-type');
-                console.log(gpsType);
-            }
-            $('#gps-type').val(gpsType);
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -229,13 +243,12 @@
         var statusGPSContainer = $('.status-gps-container');
         if( !simGPS.data('any-gps') ){
             statusGPSContainer.parent().slideDown();
-            statusGPSContainer.html('@lang('Searching')...');
             if( is_not_null(simNumber) ){
-                var vehicleId = simGPS.find('option[value="'+simGPS.val()+'"]').data('vehicle-id');
+
                 $.ajax({
                     url: '{{ route('admin-gps-get-vehicle-status') }}',
                     data:{
-                        vehicleId: vehicleId
+                        simGPSList: simGPS.val()
                     },
                     success:function(data){
                         statusGPSContainer.html(data);
@@ -262,4 +275,6 @@
             gwarning('@lang('Select a SIM number')');
         }
     });
+
+    $('.gps-skypatrol').click();
 </script>
