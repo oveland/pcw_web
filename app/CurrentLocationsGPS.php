@@ -41,6 +41,11 @@ class CurrentLocationsGPS extends Model
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
+    public function getTimePeriod()
+    {
+        return explode('.',$this->time_period)[0];
+    }
+
     public function scopeFindByVehicleId($query, $vehicleId)
     {
         return $query->where('vehicle_id', $vehicleId)->get()->first() ?? null;

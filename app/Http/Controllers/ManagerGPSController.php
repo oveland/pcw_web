@@ -49,7 +49,8 @@ class ManagerGPSController extends Controller
             $vehicle = $simGPS->vehicle;
             $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
             $vehicleStatus = $currentLocationGPS->vehicleStatus;
-            $statusList.= $vehicleStatus ? "<i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> $currentLocationGPS->date (T = $currentLocationGPS->time_period)<br>" : '********';
+            $timePeriod = $currentLocationGPS->getTimePeriod();
+            $statusList.= $vehicleStatus ? "<i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span style='width: 20px'>$vehicle->number</span> $currentLocationGPS->date (T = $timePeriod)<br>" : '********';
         }
 
         return $statusList;
