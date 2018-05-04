@@ -38,6 +38,7 @@ class DatabaseManageLocationReports extends Command
      */
     public function handle()
     {
+        /* Update segmented tables */
         $numberSegments = config('maintenance.number_segments');
         $daysPerSegment = config('maintenance.day_per_segment');
 
@@ -69,6 +70,10 @@ class DatabaseManageLocationReports extends Command
                 WHERE l.date > current_date - $interval AND l.date <= ((current_date - $lastInterval)||' 23:59:59')::TIMESTAMP                
             ");
         }
+
+        /* Delete current locations reports data */
+        DB::statement("TRUNCATE TABLE current_location_reports");
+
 
         $this->info("End segmentation process!");
     }
