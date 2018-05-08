@@ -308,7 +308,7 @@ class ManagerGPSController extends Controller
                 $fileScript = 'ScriptSkypatrol.txt';
                 break;
             case 'coban':
-                $fileScript = 'CobanSkypatrol.txt';
+                $fileScript = 'ScriptCoban.txt';
                 break;
             default:
                 $fileScript = '';
