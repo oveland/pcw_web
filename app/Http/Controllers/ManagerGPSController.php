@@ -11,7 +11,9 @@ use App\Vehicle;
 use Auth;
 use Carbon\Carbon;
 use Dompdf\Exception;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
+use Storage;
 
 class ManagerGPSController extends Controller
 {
@@ -38,7 +40,7 @@ class ManagerGPSController extends Controller
                 return $simGPS->vehicle->number ?? true;
             });
 
-            $unAssignedVehicles = $vehiclesCompany->where('active',true)->whereNotIn('id', $simGPSList->pluck('vehicle_id'))->sortBy(function($vehicle){
+            $unAssignedVehicles = $vehiclesCompany->where('active', true)->whereNotIn('id', $simGPSList->pluck('vehicle_id'))->sortBy(function ($vehicle) {
                 return $vehicle->number;
             });
 
@@ -104,9 +106,9 @@ class ManagerGPSController extends Controller
                 // On May 8th
                 71
             ];
-            switch ($defaultSelection){
+            switch ($defaultSelection) {
                 case 'all':
-                    foreach ($simGPSList as $simGPS){
+                    foreach ($simGPSList as $simGPS) {
                         $selection[] = $simGPS->vehicle->number;
                     }
                     break;
@@ -114,8 +116,8 @@ class ManagerGPSController extends Controller
                     $selection = $readyVehicles;
                     break;
                 case 'unready':
-                    foreach ($simGPSList as $simGPS){
-                        if( !in_array($simGPS->vehicle->number, $readyVehicles) )$selection[] = $simGPS->vehicle->number;
+                    foreach ($simGPSList as $simGPS) {
+                        if (!in_array($simGPS->vehicle->number, $readyVehicles)) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 default:
@@ -135,40 +137,40 @@ class ManagerGPSController extends Controller
         $reportsStatus = collect([]);
         $totalOKPeriod = 0;
         $index = 1;
-        foreach ($simGPSList as $sim){
-            $simGPS = SimGPS::where('sim',$sim)->get()->first();
+        foreach ($simGPSList as $sim) {
+            $simGPS = SimGPS::where('sim', $sim)->get()->first();
             $vehicle = $simGPS->vehicle;
             $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
             $vehicleStatus = $currentLocationGPS->vehicleStatus;
             $timePeriod = $currentLocationGPS->getTimePeriod();
 
             $classStatus = null;
-            if( $vehicleStatus->id == 6 && ( $timePeriod >= "00:04:00" && $timePeriod <= "00:06:00" ) )$classStatus = "btn btn-lime btn-xs";
-            elseif( ( $timePeriod >= "00:00:13" && $timePeriod <= "00:00:17" ) )$classStatus = "btn btn-lime btn-xs";
+            if ($vehicleStatus->id == 6 && ($timePeriod >= "00:04:00" && $timePeriod <= "00:06:00")) $classStatus = "btn btn-lime btn-xs";
+            elseif (($timePeriod >= "00:00:13" && $timePeriod <= "00:00:17")) $classStatus = "btn btn-lime btn-xs";
 
-            $statusList.= $vehicleStatus ?"<div class='row' style='height: 20px'><div class='col-md-1 col-sm-1 col-xs-1 text-right'><small class='$classStatus hide'>$index</small></div><div class='col-md-10 col-sm-10 col-xs-10'><span class='tooltips click' title='$vehicleStatus->des_status' data-placement='right'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i><span style='width: 20px'>$vehicle->number</span> $currentLocationGPS->date (<span class='$classStatus'>$timePeriod</span>)<br></span></div></div>": "********";
+            $statusList .= $vehicleStatus ? "<div class='row' style='height: 20px'><div class='col-md-1 col-sm-1 col-xs-1 text-right'><small class='$classStatus hide'>$index</small></div><div class='col-md-10 col-sm-10 col-xs-10'><span class='tooltips click' title='$vehicleStatus->des_status' data-placement='right'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i><span style='width: 20px'>$vehicle->number</span> $currentLocationGPS->date (<span class='$classStatus'>$timePeriod</span>)<br></span></div></div>" : "********";
 
             $reportsStatus->push((object)[
                 'statusId' => $vehicleStatus->id,
                 'status' => $vehicleStatus
             ]);
 
-            if($classStatus)$totalOKPeriod++;
+            if ($classStatus) $totalOKPeriod++;
             $index++;
         }
 
-        $statusList="<div class='text-center'><span class='btn btn-lime'>Total OK $totalOKPeriod</span></div>$statusList";
+        $statusList = "<div class='text-center'><span class='btn btn-lime'>Total OK $totalOKPeriod</span></div>$statusList";
 
         $headerReport = "";
         $reportsByStatus = $reportsStatus->sortBy('statusId')->groupBy('statusId');
-        foreach ($reportsByStatus as $statusId => $reportStatus){
-            if( $reportStatus->first() ){
+        foreach ($reportsByStatus as $statusId => $reportStatus) {
+            if ($reportStatus->first()) {
                 $status = $reportStatus->first()->status;
-                $headerReport.="<span class='tooltips click btn btn-$status->main_class btn-sm' style='border-radius: 0' title='$status->des_status' data-placement='bottom'><i class='text-white $status->icon_class' style='width: 15px'></i> <strong>".count($reportStatus)."</strong></span>";
+                $headerReport .= "<span class='tooltips click btn btn-$status->main_class btn-sm' style='border-radius: 0' title='$status->des_status' data-placement='bottom'><i class='text-white $status->icon_class' style='width: 15px'></i> <strong>" . count($reportStatus) . "</strong></span>";
             }
         }
 
-        return "<div class='text-center'>Total: ".count($simGPSList)."<br>$headerReport</div> <hr class='m-t-5 m-b-5'>$statusList";
+        return "<div class='text-center'>Total: " . count($simGPSList) . "<br>$headerReport</div> <hr class='m-t-5 m-b-5'>$statusList";
     }
 
     public function sendSMS(Request $request)
@@ -218,10 +220,10 @@ class ManagerGPSController extends Controller
                 $responseSMS = SMS::sendCommand($smsCommand, $simGPS);
                 $length = strlen($smsCommand);
 
-                $dump.=("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")")."\n\n";
+                $dump .= ("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")") . "\n\n";
                 sleep(0.5);
             }
-            $dump.="-------------- TOTAL SMS SENT: $totalSent --------------\n";
+            $dump .= "-------------- TOTAL SMS SENT: $totalSent --------------\n";
             dump($dump);
         }
 
@@ -240,18 +242,18 @@ class ManagerGPSController extends Controller
             $checkVehicle = SimGPS::where('vehicle_id', $vehicleId)->get()->first();
             if ($checkGPS) {
                 $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']);
-            } elseif( $checkVehicle ){
+            } elseif ($checkVehicle) {
                 $message = __('A record for this vehicle already exists');
             } else {
                 $simGPS = new SimGPS();
                 $simGPS->sim = $sim;
                 $simGPS->vehicle_id = $vehicleId;
                 $simGPS->gps_type = $gpsType;
-                $simGPS->operator = starts_with($sim,'350')?'avantel':'movistar';
-                if($simGPS->save()){
+                $simGPS->operator = starts_with($sim, '350') ? 'avantel' : 'movistar';
+                if ($simGPS->save()) {
                     $created = true;
                     $message = __('Register created successfully');
-                }else{
+                } else {
                     $message = __('Error');
                 }
             }
@@ -275,7 +277,7 @@ class ManagerGPSController extends Controller
             } else {
                 $simGPS->sim = $sim;
                 $simGPS->gps_type = $gpsType;
-                $simGPS->operator = starts_with($sim,'350')?'avantel':'movistar';
+                $simGPS->operator = starts_with($sim, '350') ? 'avantel' : 'movistar';
                 $simGPS->save();
                 $updated = true;
             }
@@ -291,7 +293,7 @@ class ManagerGPSController extends Controller
         $deleted = false;
         try {
             $deleted = ($simGPS->delete() > 0);
-            if( $deleted )$message = __('Register deleted successfully');
+            if ($deleted) $message = __('Register deleted successfully');
             else $message = __('Error');
         } catch (Exception $exception) {
             $message = $exception->getMessage();
@@ -299,12 +301,25 @@ class ManagerGPSController extends Controller
         return response()->json(['success' => $deleted, 'message' => $message]);
     }
 
-    public static function getGeneralScript($gpsType){
-        $script = "";
-        switch ($gpsType){
-            case 'SKYPATROL':
-
+    public function getScript($device)
+    {
+        switch ($device) {
+            case 'skypatrol':
+                $fileScript = 'ScriptSkypatrol.txt';
+                break;
+            case 'coban':
+                $fileScript = 'CobanSkypatrol.txt';
+                break;
+            default:
+                $fileScript = '';
                 break;
         }
+        if (!Storage::exists($fileScript)) Storage::put($fileScript, '');
+        try {
+            $script = Storage::get($fileScript);
+        } catch (FileNotFoundException $e) {
+            $script = null;
+        }
+        return $script;
     }
 }

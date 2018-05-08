@@ -57,6 +57,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/update-sim-gps/{simGPS}', 'ManagerGPSController@updateSIMGPS')->name('admin-gps-manage-update-sim-gps');
                 Route::post('/create-sim-gps', 'ManagerGPSController@createSIMGPS')->name('admin-gps-manage-create-sim-gps');
                 Route::delete('/delete-sim-gps/{simGPS}', 'ManagerGPSController@deleteSIMGPS')->name('admin-gps-manage-delete-sim-gps');
+                Route::get('/get-script/{device}', 'ManagerGPSController@getScript')->name('admin-gps-manage-get-script');
             });
         });
 

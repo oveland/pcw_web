@@ -114,6 +114,14 @@
                                                                     @lang('Send')
                                                                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
                                                                 </button>
+                                                                <button type="button" class="btn btn-primary btn-sm" onclick="getScript('skypatrol')">
+                                                                    <i class="fa fa-podcast" aria-hidden="true"></i>
+                                                                    @lang('Script Skypatrol')
+                                                                </button>
+                                                                <button type="button" class="btn btn-warning btn-sm" onclick="getScript('coban')">
+                                                                    <i class="fa fa-podcast" aria-hidden="true"></i>
+                                                                    @lang('Script Coban')
+                                                                </button>
                                                                 <button type="button" class="btn btn-danger btn-sm set-reset-command">
                                                                     <i class="fa fa-undo" aria-hidden="true"></i>
                                                                     @lang('Reset Command')
@@ -309,6 +317,19 @@
             }
         });
     });
+
+    function getScript(device) {
+        var url = {
+            'skypatrol': '{{ route('admin-gps-manage-get-script','skypatrol') }}',
+            'coban': '{{ route('admin-gps-manage-get-script','coban') }}'
+        };
+        $.ajax({
+            url: url[device],
+            success: function (data) {
+                $('#command-gps').val(data);
+            }
+        });
+    }
 
     function selectGPSType(gpsTypeString) {
         var simGPS = $('#sim-gps');

@@ -5,60 +5,13 @@ namespace App\Http\Controllers;
 use App\HistoryMarker;
 use App\Http\Controllers\Utils\Geolocation;
 use Carbon\Carbon;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Storage;
 
 class ToolsController extends Controller
 {
     public function map()
     {
-        /*$url = "https://roads.googleapis.com/v1/snapToRoads?path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836&interpolate=true&key=AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA";
-
-        $markers = HistoryMarker::limit(10)->get();
-        $coordinatesGPS = array();
-        $path = "";
-        foreach ($markers as $marker) {
-            $coordinatesGPS[] = collect($marker)->only(['lat', 'lng'])->toArray();
-            $path .= $marker->lat . ',' . $marker->lng . '|';
-        }
-        $path = rtrim($path, '|');
-        $coordinates = $this->googleSnapToRoad($path);
-        dd($coordinates);*/
-
-
-        // FOR CALCULATE COUNTER BY SENSOR FROM FRAME COUNTER
-        /*$date = '2018-02-09';
-        $counts = \DB::select("
-            SELECT *
-            FROM contador_eventos
-            WHERE fecha = '$date' AND id_gps = 'M-1614'
-            ORDER BY hora ASC
-        ");
-
-        $updated = 0;
-        $lastTotal = 0;
-        $totalFromTorres = 0;
-        foreach ($counts as $count){
-            try{
-                $totalFromTorres = self::getAverageFromTORRESCriterion($count->frame);
-                $totalFromTorres = ($totalFromTorres>$lastTotal)?$totalFromTorres:$lastTotal;
-                $lastTotal = $totalFromTorres;
-                $new = \DB::update("UPDATE contador_eventos SET total=$totalFromTorres WHERE id_cont_eventos=$count->id_cont_eventos");
-                if($new){
-                    $updated++;
-                }else{
-                    dump("NO SE ACTUALIZÓ, $new");
-                }
-            }catch (\Exception $e){
-                dump($e->getMessage());
-            }
-        }
-
-        dump("**********************************************************************");
-        
-        dump("** DATE: ".$date);
-        dump("** TOTAL ROWS: ".count($counts));
-        dump("** TOTAL UPDATED: $updated");
-        dd("****** TOTAL PASS FINAL: $totalFromTorres");
-        */
         return view('tools.map');
     }
 
