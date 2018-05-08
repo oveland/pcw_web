@@ -30,7 +30,7 @@ class ManagerGPSController extends Controller
 
         $simGPSList = null;
         if ($companyReport != 'any') {
-            $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
+            $company = (Auth::user()->isAdmin() || Auth::user()->id == 999459 || Auth::user()->id == 841403) ? Company::find($companyReport) : Auth::user()->company;
             $vehiclesCompany = $company->vehicles;
             $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))->get();
 
