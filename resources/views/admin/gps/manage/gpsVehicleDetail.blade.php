@@ -4,10 +4,10 @@
     $error = $error ?? false;
     $updated = $updated ?? false;
 @endphp
-
+<td class="text-center bg-info text-white">{!! $loop->iteration ?? '*' !!}</td>
 <td>{{ $vehicle->plate ?? 'NONE'  }}</td>
 <td>{{ $vehicle->number ?? 'NONE'  }}</td>
-<td width="20%">{{ $simGPS->getGPSType() }}</td>
+<td width="20%"><span class="btn btn-sm btn-rounded btn-{{ $simGPS->getGPSTypeCssColor() }}">{{ $simGPS->getGPSType() }}</span></td>
 <td width="20%">
     <button class="btn btn-{{ $simGPS->operator == 'movistar'?'info':($simGPS->operator == 'avantel'?'purple':'white') }} btn-rounded active">
         @if( $simGPS->operator == 'movistar' )

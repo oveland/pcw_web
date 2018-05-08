@@ -285,6 +285,8 @@
   "start_recorder":"registradora_salida",
   "end_recorder":"registradora_llegada",
   "Registers updated":"Registros actualizados",
+  "Register created successfully":"Registro creado correctamente",
+  "Register deleted successfully":"Registro eliminado correctamente",
   "Press enter for edit":"Presione 'Enter' para guardar",
   "Last dispatch register":"Registro de despacho anterior",
   "List GPS SIM":"Listado de SIM asociados a GPS",
@@ -293,6 +295,7 @@
   "Searching":"Consultando",
   "Status GPS":"Estado del GPS",
   "Select a SIM number":"Seleccione un número de SIM",
+  "Number": "Número",
   "Type here the commands": "Ingrese aquí los comandos",
   "Send": "Enviar",
   "Counter": "Contador",
@@ -363,5 +366,15 @@
   "sensors":"sensores",
   "Driver's seat":"Asiento del conductor",
   "No Route":"Sin Ruta",
-  "Platform":"Plataforma"
+  "Platform":"Plataforma",
+  "A record for this vehicle already exists":"Ya existe un registro para este vehículo",
+  "unassigned vehicles": "vehículos sin asignar",
+  "assigned vehicles": "vehículos asignados",
+  "Selection": "Selección",
+  "Ready": "Con Script*",
+  "Unready": "Sin script*",
+  "None": "Ninguno",
+  "Commands": "Comandos",
+  "Search vehicle":"Buscar vehículo",
+  "Manage SIM GPS": "Administrar SIM GPS"
 }

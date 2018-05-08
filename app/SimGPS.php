@@ -45,7 +45,12 @@ class SimGPS extends Model
 
     public function getGPSType()
     {
-        return $this->gps_type == 'TR' ? 'TRACKER':'SKYPATROL';
+        return $this->gps_type == 'TR' ? 'COBAN':'SKYPATROL';
+    }
+
+    public function getGPSTypeCssColor()
+    {
+        return $this->gps_type == 'TR' ? 'warning':'primary';
     }
 
     public function getResetCommand()

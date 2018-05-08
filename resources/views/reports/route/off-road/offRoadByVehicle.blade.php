@@ -116,7 +116,7 @@
                                                             <tr>
                                                                 <td>{{ $dispatchRegister->turn }}</td>
                                                                 <td>{{ $dispatchRegister->round_trip }}</td>
-                                                                <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
+                                                                <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
                                                                 <td>{{ $offRoad->date->toTimeString() }}</td>
                                                                 <td>
                                                                     <a href="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-sm">

@@ -20,4 +20,9 @@ use Illuminate\Database\Eloquent\Model;
 class VehicleStatus extends Model
 {
     protected $table = 'status_vehi';
+
+    public function getIdAttribute()
+    {
+        return $this->id_status;
+    }
 }

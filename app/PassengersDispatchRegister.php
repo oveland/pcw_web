@@ -88,7 +88,9 @@ class PassengersDispatchRegister extends Model
     }
 
     public function scopeActive($query){
-        return $query->where('status',$this::COMPLETE)->orWhere('status',$this::IN_PROGRESS);
+        return $query->where(function ($query) {
+            $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
+        });
     }
 
     public function complete()

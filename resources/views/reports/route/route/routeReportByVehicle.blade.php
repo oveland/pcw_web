@@ -130,7 +130,7 @@
                                 <th class="bg-inverse text-white text-center">{{ $route->name }}</th>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td>{{ $dispatchRegister->turn }}</td>
-                                <td class="text-uppercase">{{ $driver?$driver->fullName():__('Not assigned') }}</td>
+                                <td class="text-uppercase">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
                                 <td>{{ $strTime->toString($dispatchRegister->departure_time) }}</td>
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}</td>
                                 <td>{{ $strTime->toString($dispatchRegister->arrival_time) }}</td>

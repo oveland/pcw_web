@@ -57,7 +57,7 @@ trait CounterByRecorder
 
 
             if ($classifyByRoute) {
-                $lastDispatchRegister = PassengersDispatchRegister::where('vehicle_id', $vehicleId)
+                $lastDispatchRegister = PassengersDispatchRegister::active()->where('vehicle_id', $vehicleId)
                     ->where('date', '=', $dispatchRegister->date)
                     ->where('id', '<', $dispatchRegister->id)
                     ->orderByDesc('id')

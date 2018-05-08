@@ -53,6 +53,45 @@
                             </div>
                         @endif
                     </div>
+
+                    <div class="form-input-flat">
+                        @if(Auth::user()->isAdmin())
+                            <div class="col-md-4">
+                                <div class="col-md-12">
+                                    <div class="col-md-12">
+                                        <label for="show-vehicle-ready">
+                                            @lang('Selection')
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="radio m-0 m-b-5">
+                                            <label>
+                                                <input type="radio" name="default-selection" value="all"> @lang('All')
+                                            </label>
+                                        </div>
+                                        <div class="radio m-0 m-b-5">
+                                            <label>
+                                                <input type="radio" name="default-selection" value="none" checked> @lang('None')
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="radio m-0 m-b-5">
+                                            <label>
+                                                <input type="radio" name="default-selection" value="ready"> @lang('Ready')
+                                            </label>
+                                        </div>
+                                        <div class="radio m-0 m-b-5">
+                                            <label>
+                                                <input type="radio" name="default-selection" value="unready"> @lang('Unready')
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
                 </div>
             </div>
         </form>
@@ -92,7 +131,7 @@
                 }
             });
 
-            $('#company-report').change(function () {
+            $('#company-report,input[name="default-selection"]').change(function () {
                 mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();

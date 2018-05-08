@@ -2,7 +2,7 @@
     $id = $simGPS->id;
     $vehicle = $simGPS->vehicle;
 @endphp
-
+<td class="text-center bg-info text-white">{!! $loop->iteration !!}</td>
 <td>{{ $vehicle->plate ?? 'NONE'  }}</td>
 <td>{{ $vehicle->number ?? 'NONE'  }}</td>
 <td width="40%" colspan="2">
@@ -12,7 +12,7 @@
             <div class="col-md-6">
                 <select id="gps-type-{{ $id }}" name="gps_type" class="form-control input-sm" title="@lang('GPS type')">
                     <option value="SKY">SKYPATROL</option>
-                    <option value="TR">TRACKER</option>
+                    <option value="TR">COBAN</option>
                 </select>
                 <script>$('#gps-type-{{ $id }}').val('{{ $simGPS->gps_type }}')</script>
             </div>
@@ -29,8 +29,14 @@
     <button type="button" class="btn btn-sm btn-default tooltips btn-rounded" onclick="$('#detail-{{ $id }}').removeClass('hide');$('#edit-{{ $id }}').addClass('hide');" data-title="@lang('Cancel')">
         <i class="fa fa-undo"></i>
     </button>
-    <button type="submit" class="btn btn-sm btn-success tooltips btn-rounded" onclick="$('#form-edit-sim-gps-{{ $id }}').submit()" data-title="@lang('Update')">
+    <button type="button" class="btn btn-sm btn-success tooltips btn-rounded" onclick="$('#form-edit-sim-gps-{{ $id }}').submit()" data-title="@lang('Update')">
         <i class="fa fa-floppy-o"></i>
     </button>
+    <button type="button" class="btn btn-sm btn-danger tooltips btn-rounded m-l-20" onclick="$('#form-delete-sim-gps-{{ $id }}').submit()" data-title="@lang('Delete')">
+        <i class="fa fa-times"></i>
+    </button>
+    <form id="form-delete-sim-gps-{{ $id }}" class="form-delete-sim-gps" action="{{ route('admin-gps-manage-delete-sim-gps',['simGPS' => $id]) }}">
+        {{ csrf_field() }}
+    </form>
 </td>
 
