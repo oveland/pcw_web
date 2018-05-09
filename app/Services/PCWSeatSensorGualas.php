@@ -72,7 +72,7 @@ class PCWSeatSensorGualas
         foreach ($distribution as $seat => $sensors) {
             $seatingStatus[$seat] = 0;
             foreach ($sensors as $sensor) {
-                if ($seatingStatusBinary[$sensor] == 1) {
+                if ($seatingStatusBinary[$sensor - 1] == 1) {
                     $seatingStatus[$seat] = 1;
                 }
             }
