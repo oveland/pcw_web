@@ -125,8 +125,11 @@ class Geolocation
      * @param $route_coordinates
      * @return array|\Illuminate\Support\Collection
      */
-    private static function filterNearestRouteCoordinates($location, $route_coordinates)
+    public static function filterNearestRouteCoordinates($location, $route_coordinates)
     {
+        $location = (object) $location;
+        $route_coordinates = (object) $route_coordinates;
+
         $location_latitude = $location->latitude;
         $location_longitude = $location->longitude;
         $threshold = config('road.route_sampling_area');
@@ -146,5 +149,24 @@ class Geolocation
         })->values();
 
         return $route_coordinates;
+    }
+
+    public static function findNearestCoordinateFromLocation($location, $routeCoordinates)
+    {
+        $nearestRouteCoordinate = [];
+        $location = (object) $location;
+        $routeCoordinates = (object) $routeCoordinates;
+        $minRadius = 10000;
+        foreach ($routeCoordinates as $routeCoordinate){
+            $radius = self::getDistance(
+                $routeCoordinate->latitude, $routeCoordinate->longitude,
+                $location->latitude, $location->longitude
+            );
+            if($radius < $minRadius){
+                $nearestRouteCoordinate = $routeCoordinate;
+                $minRadius = $radius;
+            }
+        }
+        return $nearestRouteCoordinate;
     }
 }

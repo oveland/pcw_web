@@ -248,6 +248,10 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/get-route-distance/{route}', 'ToolsController@getRouteDistance')->name('tools-map-get-route-distance');
             Route::get('/get-route-distance', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-url');
         });
+
+        Route::prefix(__('calibration-control-points'))->group(function () {
+            Route::get('/', 'CalibrationControlPointsController@calibrate')->name('tools-calibration-control-points');
+        });
     });
 });
 

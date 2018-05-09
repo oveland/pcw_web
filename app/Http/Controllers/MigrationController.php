@@ -312,9 +312,9 @@ class MigrationController extends Controller
         ]);
     }
 
-    public function migrateControlPoints(Request $request)
+    public function migrateControlPoints(Request $request = null)
     {
-        if ($request->get('delete')) {
+        if ($request && $request->get('delete')) {
             $deleted = DB::delete('DELETE FROM control_points');
             dd($deleted . ' registers has ben deleted!');
         }

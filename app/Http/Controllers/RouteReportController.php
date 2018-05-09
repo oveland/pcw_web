@@ -204,9 +204,9 @@ class RouteReportController extends Controller
             $routeDistance = $route->distance * 1000;
             $controlPoints = $route->controlPoints;
 
-            $route_coordinates = false;
+            $routeCoordinates = false;
             if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
-                $route_coordinates = self::getRouteCoordinates($route->url);
+                $routeCoordinates = self::getRouteCoordinates($route->url);
                 $offRoadLocation = false;
             }
 
@@ -219,8 +219,8 @@ class RouteReportController extends Controller
                 $report = $location;
                 if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
                     $offRoad = $location->off_road == 't' ? true : false;
-                    if ($route_coordinates != false) {
-                        $offRoad = self::checkOffRoad($location, $route_coordinates);
+                    if ($routeCoordinates != false) {
+                        $offRoad = self::checkOffRoad($location, $routeCoordinates);
                     }
 
                     $reports[] = (object)[
@@ -271,9 +271,9 @@ class RouteReportController extends Controller
         if ($locations->isNotEmpty()) {
             $route = $dispatchRegister->route;
 
-            $route_coordinates = false;
+            $routeCoordinates = false;
             if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
-                $route_coordinates = self::getRouteCoordinates($route->url);
+                $routeCoordinates = self::getRouteCoordinates($route->url);
             }
 
             $reports = array();
@@ -282,8 +282,8 @@ class RouteReportController extends Controller
                 $report = $location;
                 if ($report && $location->isValid()) {
                     $offRoad = $location->off_road == 't' ? true : false;
-                    if ($route_coordinates != false) {
-                        $offRoad = self::checkOffRoad($location, $route_coordinates);
+                    if ($routeCoordinates != false) {
+                        $offRoad = self::checkOffRoad($location, $routeCoordinates);
                     }
                     $reports[] = (object)[
                         'date' => $report->date,
@@ -292,7 +292,7 @@ class RouteReportController extends Controller
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
-                        'offRoad' => $offRoad//$this->checkOffRoad($location, $route_coordinates)
+                        'offRoad' => $offRoad//$this->checkOffRoad($location, $routeCoordinates)
                     ];
                 }
             }
@@ -472,49 +472,57 @@ class RouteReportController extends Controller
         $documents = $documents->Placemark ? $documents : $dataXML->Document;
 
         /* Extract coordinates for xml file */
-        $route_coordinates = array();
+        $routeCoordinates = array();
+        $prevLatitude = null;
+        $prevLongitude = null;
+        $distance = 0;
         foreach ($documents as $document) {
             foreach ($document->Placemark as $placemark) {
-                $route_coordinates_xml = explode(' ', trim($placemark->LineString->coordinates));
-                foreach ($route_coordinates_xml as $index => $route_coordinate) {
-                    $array_coordinates = collect(explode(',', trim($route_coordinate)));
+                $routeCoordinatesXML = explode(' ', trim($placemark->LineString->coordinates));
+                foreach ($routeCoordinatesXML as $index => $routeCoordinate) {
+                    $array_coordinates = collect(explode(',', trim($routeCoordinate)));
 
                     if ($array_coordinates->count() > 2) {
-                        list($longitude, $latitude, $angle) = explode(',', trim($route_coordinate));
-                        $latitude_route = doubleval($latitude);
-                        $longitude_route = doubleval($longitude);
-                        $route_coordinates[] = [
-                            'latitude' => $latitude_route,
-                            'longitude' => $longitude_route
+                        list($longitude, $latitude, $angle) = explode(',', trim($routeCoordinate));
+                        $latitudeRoute = doubleval($latitude);
+                        $longitudeRoute = doubleval($longitude);
+
+                        $distance += ($prevLatitude && $prevLongitude) ? Geolocation::getDistance($prevLatitude, $prevLongitude, $latitudeRoute, $longitudeRoute) : 0;
+                        $routeCoordinates[] = (object)[
+                            'latitude' => $latitudeRoute,
+                            'longitude' => $longitudeRoute,
+                            'distance' => $distance
                         ];
+                        $prevLatitude = $latitudeRoute;
+                        $prevLongitude = $longitudeRoute;
                     }
                 }
             }
         }
 
-        return $route_coordinates;
+        return $routeCoordinates;
     }
 
     /**
      * Check if location is off road from kml route coordinates
      *
      * @param $location
-     * @param $route_coordinates
+     * @param $routeCoordinates
      * @return bool
      */
     public
-    static function checkOffRoad($location, $route_coordinates)
+    static function checkOffRoad($location, $routeCoordinates)
     {
         $offRoad = true;
-        $location_latitude = $location->latitude;
-        $location_longitude = $location->longitude;
-        //dump($location_latitude.', '.$location_longitude);
+        $locationLatitude = $location->latitude;
+        $locationLongitude = $location->longitude;
+        //dump($locationLatitude.', '.$locationLongitude);
         $threshold = config('road.route_sampling_area');
         $threshold_location = [
-            'la_up' => $location_latitude + $threshold,
-            'la_down' => $location_latitude - $threshold,
-            'lo_up' => $location_longitude + $threshold,
-            'lo_down' => $location_longitude - $threshold
+            'la_up' => $locationLatitude + $threshold,
+            'la_down' => $locationLatitude - $threshold,
+            'lo_up' => $locationLongitude + $threshold,
+            'lo_down' => $locationLongitude - $threshold
         ];
         /*dump($threshold_location['la_up'].', '.$threshold_location['lo_up']);
         dump($threshold_location['la_up'].', '.$threshold_location['lo_down']);
@@ -522,28 +530,28 @@ class RouteReportController extends Controller
         dd($threshold_location['la_down'].', '.$threshold_location['lo_down']);*/
 
 
-        $route_coordinates = collect($route_coordinates);
-        $route_coordinates = $route_coordinates->filter(function ($value, $key) use ($threshold_location) {
+        $routeCoordinates = collect($routeCoordinates);
+        $routeCoordinates = $routeCoordinates->filter(function ($value, $key) use ($threshold_location) {
             return
                 $value['latitude'] > $threshold_location['la_down'] && $value['latitude'] < $threshold_location['la_up'] &&
                 $value['longitude'] > $threshold_location['lo_down'] && $value['longitude'] < $threshold_location['lo_up'];
         })->values()->toArray();
 
-        foreach ($route_coordinates as $index => $route_coordinate) {
-            $route_latitude = $route_coordinate['latitude'];
-            $route_longitude = $route_coordinate['longitude'];
+        foreach ($routeCoordinates as $index => $routeCoordinate) {
+            $routeLatitude = $routeCoordinate['latitude'];
+            $routeLongitude = $routeCoordinate['longitude'];
 
-            $radius_distance = Geolocation::getDistance($location_latitude, $location_longitude, $route_latitude, $route_longitude);
+            $radiusDistance = Geolocation::getDistance($locationLatitude, $locationLongitude, $routeLatitude, $routeLongitude);
 
-            if ($radius_distance <= config('road.route_distance_threshold')) {
+            if ($radiusDistance <= config('road.route_distance_threshold')) {
                 $offRoad = false;
                 break;
-            } else if ($radius_distance < config('road.route_sampling_radius') && $index > 0) {
-                $prev_route_latitude = $route_coordinates[$index - 1]['latitude'];
-                $prev_route_longitude = $route_coordinates[$index - 1]['longitude'];
-                $a = (double)$radius_distance;
-                $b = (double)Geolocation::getDistance($location_latitude, $location_longitude, $prev_route_latitude, $prev_route_longitude);
-                $c = (double)Geolocation::getDistance($route_latitude, $route_longitude, $prev_route_latitude, $prev_route_longitude);
+            } else if ($radiusDistance < config('road.route_sampling_radius') && $index > 0) {
+                $prevRouteLatitude = $routeCoordinates[$index - 1]['latitude'];
+                $prevRouteLongitude = $routeCoordinates[$index - 1]['longitude'];
+                $a = (double)$radiusDistance;
+                $b = (double)Geolocation::getDistance($locationLatitude, $locationLongitude, $prevRouteLatitude, $prevRouteLongitude);
+                $c = (double)Geolocation::getDistance($routeLatitude, $routeLongitude, $prevRouteLatitude, $prevRouteLongitude);
                 $angle = Geolocation::getAngleC($a, $b, $c);
                 $thresholdAngle = Geolocation::getThresholdAngleC(config('road.route_distance_threshold'), $a, $b);
 
