@@ -1,5 +1,5 @@
 <div class="col-md-8 col-md-offset-2 col-sm-12 col-xs-12 m-t-10">
-    @php( $speedingReport = \App\Http\Controllers\SpeedingController::groupByFirstSpeeding($dispatchRegister->speedingReport) )
+    @php( $speedingReport = \App\Http\Controllers\SpeedingReportController::groupByFirstSpeeding($dispatchRegister->speedingReport) )
 
     @if( $speedingReport->isNotEmpty() )
         <script>$('.badge-speeding-{{ $dispatchRegister->id }}').html('{{ count($speedingReport) }}').removeClass('hide')</script>

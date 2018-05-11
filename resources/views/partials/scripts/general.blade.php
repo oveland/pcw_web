@@ -14,13 +14,18 @@
         }
     }
 
-    function loadSelectVehicleReport(company) {
+    function loadSelectVehicleReport(company,all) {
         var vehicleSelect = $('#vehicle-report');
         if( is_not_null(company) ) {
             vehicleSelect.html($('#select-loading').html()).trigger('change.select2');
             vehicleSelect.load('{{ route('general-load-select-vehicles') }}', {
                 company: company
             }, function () {
+                if(all){
+                    vehicleSelect.prepend('<option value="all" selected>@lang('All')</option>');
+                }else{
+                    vehicleSelect.prepend('<option value="" selected>@lang('Select an option')</option>');
+                }
                 vehicleSelect.trigger('change.select2');
             });
         }else{

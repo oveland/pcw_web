@@ -49,12 +49,12 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Vehicles')</a></li>
-        <li class="active">@lang('Speeding')</li>
+        <li class="active">@lang('Mileage')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-bus animated" aria-hidden="true"></i> @lang('Vehicles Report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Speeding')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage')</small>
     </h1>
     <hr class="col-md-12 hr">
     <!-- end page-header -->
@@ -62,7 +62,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('report-vehicle-speeding-search-report') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-vehicle-mileage-show') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -123,7 +123,7 @@
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-speeding').addClass('active');
+        $('.menu-report-vehicles, .menu-report-vehicles-mileage').addClass('active');
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 var form = $(this);

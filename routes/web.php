@@ -112,11 +112,18 @@ Route::group(['middleware' => ['auth']], function () {
 
             /* Speeding report */
             Route::prefix(__('speeding'))->group(function () {
-                Route::get('/', 'SpeedingController@index')->name('report-vehicle-speeding');
-                Route::get('/show', 'SpeedingController@searchReport')->name('report-vehicle-speeding-search-report');
-                Route::get('/address/{speeding}', 'SpeedingController@getAddressFromCoordinates')->name('report-vehicle-speeding-geolocation-address');
-                Route::get('/image/{speeding}', 'SpeedingController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
-                Route::any('/ajax', 'SpeedingController@ajax')->name('report-vehicle-speeding-ajax-action');
+                Route::get('/', 'SpeedingReportController@index')->name('report-vehicle-speeding');
+                Route::get('/show', 'SpeedingReportController@show')->name('report-vehicle-speeding-search-report');
+                Route::get('/address/{speeding}', 'SpeedingReportController@getAddressFromCoordinates')->name('report-vehicle-speeding-geolocation-address');
+                Route::get('/image/{speeding}', 'SpeedingReportController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
+                Route::any('/ajax', 'SpeedingReportController@ajax')->name('report-vehicle-speeding-ajax-action');
+            });
+
+            /* Mileage report */
+            Route::prefix(__('mileage'))->group(function () {
+                Route::get('/', 'ReportMileageController@index')->name('report-vehicle-mileage');
+                Route::get('/show', 'ReportMileageController@show')->name('report-vehicle-mileage-show');
+                Route::any('/ajax', 'ReportMileageController@ajax')->name('report-vehicle-mileage-ajax-action');
             });
 
             /* Speeding report */

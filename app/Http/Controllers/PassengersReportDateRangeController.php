@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\DispatchRegister;
+use App\Models\Passengers\PassengerCounterPerDay;
+use App\Models\Passengers\PassengerCounterPerDaySixMonth;
 use App\Models\Passengers\RecorderCounterPerDay;
 use App\PassengersDispatchRegister;
 use App\Route;
 use App\Services\PCWExporter;
+use App\Services\PCWTime;
 use App\Traits\CounterByRecorder;
 use App\Vehicle;
 use Carbon\Carbon;
@@ -36,12 +39,13 @@ class PassengersReportDateRangeController extends Controller
     public function show(Request $request)
     {
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
+        $vehicle = Vehicle::find(intval($request->get('vehicle-report')));
         $initialDate = $request->get('initial-date');
         $finalDate = $request->get('final-date');
 
         if ($finalDate < $initialDate) return view('partials.dates.invalidRange');
 
-        $passengerReport = $this->buildPassengerReport($company, $initialDate, $finalDate);
+        $passengerReport = $this->buildPassengerReport($company, $vehicle, $initialDate, $finalDate);
 
         return view('reports.passengers.consolidated.dates.passengersReport', compact('passengerReport'));
     }
@@ -50,26 +54,82 @@ class PassengersReportDateRangeController extends Controller
      * Build passenger report from company and date
      *
      * @param $company
+     * @param $vehicle
      * @param $initialDate
      * @param $finalDate
      * @return object
      */
-    public function buildPassengerReport($company, $initialDate, $finalDate)
+    public function buildPassengerReport(Company $company, Vehicle $vehicle = null, $initialDate, $finalDate)
     {
-        $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $routes->pluck('id'))->whereBetween('date', [$initialDate, $finalDate])->active()->get()
-            ->sortBy('id');
+        $dateRange = PCWTime::dateRange(Carbon::parse($initialDate), Carbon::parse($finalDate));
+        $recorderReports = $this->buildPassengersReportByRecorder($company, $vehicle, $initialDate, $finalDate);
+        $sensorReports = $this->buildPassengersReportBySensor($company, $vehicle, $initialDate, $finalDate);
 
-        $reports = self::report($dispatchRegisters);
+        $reports = collect([]);
+        foreach ($dateRange as $date) {
+            $date = $date->toDateString();
+            $recorderReport = $recorderReports->where('date', $date)->first();
+            $totalByRecorder = $recorderReport ? $recorderReport->total : 0;
+
+            $sensorReport = $sensorReports->where('date', $date);
+            $totalBySensor = $sensorReport ? $sensorReport->sum('total') : 0;
+
+            $reports->put($date, (object)[
+                'date' => $date,
+                'totalByRecorder' => $totalByRecorder,
+                'totalBySensor' => $totalBySensor,
+                'issues' => collect($recorderReport ? $recorderReport->issues : []),
+                'frame' => $sensorReport->first() ? $sensorReport->last()->frame : ''
+            ]);
+        }
 
         $passengerReport = (object)[
+            'vehicleReport' => $vehicle ? $vehicle->id : 'all',
             'initialDate' => $initialDate,
             'finalDate' => $finalDate,
             'companyId' => $company->id,
             'reports' => $reports,
+            'totalSensor' => $reports->sum('totalBySensor'),
+            'totalRecorder' => $reports->sum('totalByRecorder'),
         ];
 
         return $passengerReport;
+    }
+
+    /**
+     * @param Company $company
+     * @param Vehicle|null $vehicle
+     * @param $initialDate
+     * @param $finalDate
+     * @return \Illuminate\Support\Collection
+     */
+    public function buildPassengersReportByRecorder(Company $company, Vehicle $vehicle = null, $initialDate, $finalDate)
+    {
+        $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $company->routes->pluck('id'));
+        if ($vehicle) $dispatchRegisters = $dispatchRegisters->where('vehicle_id', $vehicle->id);
+        $dispatchRegisters = $dispatchRegisters->whereBetween('date', [$initialDate, $finalDate])
+            ->active()
+            ->get()
+            ->sortBy('id');
+
+        return self::report($dispatchRegisters);
+    }
+
+    /**
+     * @param Company $company
+     * @param Vehicle|null $vehicle
+     * @param $initialDate
+     * @param $finalDate
+     * @return \Illuminate\Support\Collection
+     */
+    public function buildPassengersReportBySensor(Company $company, Vehicle $vehicle = null, $initialDate, $finalDate)
+    {
+        $sensorReports = PassengerCounterPerDaySixMonth::where('company_id', $company->id);
+        if ($vehicle) $sensorReports = $sensorReports->where('vehicle_id', $vehicle->id);
+        $sensorReports = $sensorReports->whereBetween('date', [$initialDate, $finalDate])
+            ->orderBy('date')
+            ->get();
+        return $sensorReports;
     }
 
     /**
@@ -80,24 +140,31 @@ class PassengersReportDateRangeController extends Controller
     public function export(Request $request)
     {
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
+        $vehicle = Vehicle::find(intval($request->get('vehicle-report')));
         $initialDate = $request->get('initial-date');
         $finalDate = $request->get('final-date');
 
-        $passengerReports = $this->buildPassengerReport($company, $initialDate, $finalDate);
+        $passengerReports = $this->buildPassengerReport($company, $vehicle, $initialDate, $finalDate);
 
         $dataExcel = array();
         foreach ($passengerReports->reports as $date => $report) {
-            $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                      # A CELL
-                __('Date') => $date,                               # B CELL
-                __('Recorder') => $report->total,                                    # F CELL
-            ];
+            $data = collect([
+                __('N°') => count($dataExcel) + 1,                  # A CELL
+                __('Date') => $date,                                # B CELL
+                __('Sensor') => $report->totalBySensor,             # C CELL
+                __('Recorder') => $report->totalByRecorder,         # D CELL
+                __('Difference') => ''                              # E CELL
+            ]);
+            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
+
+            $dataExcel[] = $data->toArray();
         }
 
+        $infoVehicle = ($vehicle ? __("#") . $vehicle->number . " " : "");
         PCWExporter::excel([
-            'fileName' => __('Consolidated per date range'),
-            'title' => __('Passengers report')."\n $initialDate - $finalDate",
-            'subTitle' => __('Consolidated per date range'),
+            'fileName' => $infoVehicle . __('Consolidated per dates'),
+            'title' => __('Passengers report') . "\n $initialDate - $finalDate",
+            'subTitle' => str_limit($infoVehicle . __('Consolidated per dates'), 28),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
         ]);
@@ -109,7 +176,7 @@ class PassengersReportDateRangeController extends Controller
 
         $reports = array();
         foreach ($dispatchRegistersByDates as $date => $dispatchRegistersByDate) {
-            $date = Carbon::createFromFormat(config('app.date_format'),$date)->format('Y-m-d');
+            $date = Carbon::createFromFormat(config('app.date_format'), $date)->format('Y-m-d');
             $report = CounterByRecorder::report($dispatchRegistersByDate);
 
             $reports[$date] = (object)[

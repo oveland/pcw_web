@@ -91,9 +91,7 @@ class PassengerReportController extends Controller
     public function buildPassengerReport($company, $dateReport)
     {
         // Query passenger by sensor counter
-        $ageReport = Carbon::parse($dateReport)->diffInDays(Carbon::now());
-        $model = $ageReport <= 5 ? PassengerCounterPerDay::class : PassengerCounterPerDaySixMonth::class;
-        $passengersCounterPerDay = $model::where('date', $dateReport)
+        $passengersCounterPerDay = PassengerCounterPerDaySixMonth::where('date', $dateReport)
             ->where('company_id', $company->id)
             ->get();
 

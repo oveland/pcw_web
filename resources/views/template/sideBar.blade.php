@@ -102,7 +102,7 @@
                             </li>
                             <li class="has-sub menu-off-road-report">
                                 <a href="{{ route('report-route-off-road-index')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-road faa-vertical" aria-hidden="true"></i>
+                                    <i class="fa fa-random faa-vertical" aria-hidden="true"></i>
                                     @lang('Off road')
                                 </a>
                             </li>
@@ -133,7 +133,12 @@
                                     @lang('Speeding')
                                 </a>
                             </li>
-
+                            <li class="has-sub menu-report-vehicles-mileage hide">
+                                <a href="{{ route('report-vehicle-mileage')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-road faa-tada" aria-hidden="true"></i>
+                                    @lang('Mileage')
+                                </a>
+                            </li>
                             @if( Auth::user()->isAdmin() )
                             <li class="has-sub menu-report-vehicles-status">
                                 <a href="{{ route('report-vehicle-status')  }}" class="faa-parent animated-hover">
@@ -155,7 +160,7 @@
                                 <li class="has-sub menu-passengers-recorders">
                                     <a href="javascript:;" class="faa-parent animated-hover">
                                         <b class="caret pull-right"></b>
-                                        <i class="fa fa-asterisk faa-vertical"></i>
+                                        <i class="fa fa-compass faa-vertical"></i>
                                         @lang('Recorders')
                                     </a>
                                     <ul class="sub-menu">

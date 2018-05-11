@@ -31,22 +31,22 @@
                 </form>
             </li>
             <li class="dropdown">
-                @if(\Carbon\Carbon::now()->toDateString() <= '2018-04-24')
+                @if(\Carbon\Carbon::now()->toDateString() <= '2018-05-16')
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
                     <i class="fa fa-bell faa-ring animated"></i>
                     <span class="badge badge-danger pull-right faa-float animated">1</span>
                 </a>
                 <ul class="dropdown-menu dropdown-notification pull-right">
                     <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">1</span></li>
-                    <li class="notification-item" data-toggle="tooltip" data-title="El 21 de Abril" data-placement="top">
-                        <a href="{{ route('report-route-control-points') }}">
+                    <li class="notification-item" data-toggle="tooltip" data-title="El 11 de Mayo" data-placement="top">
+                        <a href="{{ route('report-passengers-recorders-consolidated-date-range') }}">
                             <div class="media">
                                 <i class="fa fa-map-marker faa-pulse animated"></i>
                             </div>
                             <div class="message">
-                                <h6 class="title">@lang('Reporte de puntos de control')</h6>
+                                <h6 class="title">@lang('Reporte de pasajeros')</h6>
                                 <div class="time">
-                                    Nueva <strong>agrupación por vehículo</strong>
+                                    <strong>Consolidado por rango de fechas</strong>
                                 </div>
                             </div>
                             <div class="option faa-parent animated-hover"

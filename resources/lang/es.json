@@ -376,5 +376,8 @@
   "None": "Ninguno",
   "Commands": "Comandos",
   "Search vehicle":"Buscar vehículo",
-  "Manage SIM GPS": "Administrar SIM GPS"
+  "Manage SIM GPS": "Administrar SIM GPS",
+  "Mileage": "Kilometraje",
+  "mileage": "kilometraje",
+  "Consolidated per dates": "Consolidado por fechas"
 }

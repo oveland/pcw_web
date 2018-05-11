@@ -71,7 +71,7 @@
                 </td>
                 <td>
                     @if($counterIssue)
-                        <button class="btn btn-sm btn-danger btn-show-counter-issue" data-action="{{ route('admin-counter-report-show-counter-issue',['counterIssue' => $counterIssue->id]) }}">
+                        <button class="btn btn-sm btn-danger btn-show-counter-issue" data-action="{{ route('report-passengers-sensors-counter-issue',['counterIssue' => $counterIssue->id]) }}">
                             <i class="fa fa-exclamation-triangle"></i>
                             @lang('Issues')
                         </button>

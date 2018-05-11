@@ -140,7 +140,11 @@ class PCWExporter
 
             case 'passengerReportByRangeTotalFooter':
                 // Set general formulas
-                foreach (['C'] as $totalLetterPosition) {
+                for ($i = $starData; $i < $lastRow; $i++) {
+                    $sheet->setCellValue("E$i", "=ABS(C$i-D$i)");
+                }
+
+                foreach (['C','D','E'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 

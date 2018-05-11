@@ -25,6 +25,7 @@ class PCWTime
             $dates[] = $start->copy();
             $start->addDay();
         }
+        $dates[] = $start->copy();
         return $dates;
     }
 }

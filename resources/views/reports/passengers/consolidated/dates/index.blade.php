@@ -38,7 +38,7 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
@@ -52,7 +52,23 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-4">
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                @if(\Carbon\Carbon::now()->toDateString() <= '2018-05-16')
+                                    <script>setTimeout(function(){ginfo("Nueva opción de consulta por vehículo")},3000)</script>
+                                    <small class="badge badge-danger pull-right faa-float animated">@lang('New')</small>
+                                @endif
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
+                                <div class="form-group">
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company first')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
                                 <div class="input-group date datepicker" data-less="true" data-than="#final-date">
@@ -63,7 +79,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="final-date" class="control-label field-required">@lang('Final date')</label>
                                 <div class="input-group date datepicker" data-greater="true" data-than="#initial-date">
@@ -81,44 +97,17 @@
         <!-- end search form -->
         <hr class="hr">
         <!-- begin content report -->
-        <div class="report-container col-md-12"></div>
+        <div class="main-container col-md-12"></div>
         <!-- end content report -->
     </div>
     <!-- end row -->
-
-    <div class="modal modal-message fade" id="modal-passengers-route-report">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="width: 90%">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        <i class="fa fa-times"></i>
-                    </button>
-                    <div class="row">
-                        <blockquote class="m-0">
-                            <h3 class="m-3">@lang('Passengers report')</h3>
-                        </blockquote>
-                        <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
-                    </div>
-                </div>
-                <div class="modal-body" style="width:90%;">
-                    <div class="row">
-                        <div class="col-md-12 p-5">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer hide" style="width:90%;">
-                    <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 
 @section('scripts')
     <script type="application/javascript">
         $('.menu-passengers, .menu-passengers-recorders, .menu-passengers-recorders-consolidated, .menu-passengers-recorders-consolidated-range').addClass('active');
+        var mainContainer = $('.main-container');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
@@ -126,12 +115,12 @@
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    $('.report-container').slideUp(100);
+                    mainContainer.slideUp(100);
                     $.ajax({
                         url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            $('.report-container').empty().hide().html(data).fadeIn();
+                            mainContainer.empty().hide().html(data).fadeIn();
                         },
                         complete:function(){
                             form.find('.btn-search-report').removeClass(loadingClass);
@@ -141,23 +130,24 @@
             });
 
             $('#company-report').change(function () {
-                var form = $('.form-search-report');
-                $('.report-container').slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
+                mainContainer.slideUp();
+                loadSelectRouteReport($(this).val());
+                loadSelectVehicleReport($(this).val(), true);
             });
 
-            $('#date-report, #route-report').change(function () {
+            $('#date-report, #vehicle-report').change(function () {
                 var form = $('.form-search-report');
-                $('.report-container').slideUp();
+                mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
             });
 
             @if(!Auth::user()->isAdmin())
-            loadRouteReport(null);
+                loadRouteReport(null);
+                loadSelectVehicleReport(1, true);
+            @else
+                $('#company-report').change();
             @endif
         });
 

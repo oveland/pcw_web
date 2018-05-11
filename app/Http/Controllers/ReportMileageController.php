@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Speeding;
-use App\Vehicle;
-use Excel;
-use Illuminate\Http\Request;
 use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
-use App\ParkingReport;
-use App\Services\PCWExporter;
+use App\Route;
 use Auth;
-use Route;
+use Excel;
+use Illuminate\Http\Request;
 
-class SpeedingController extends Controller
+class ReportMileageController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -23,60 +19,24 @@ class SpeedingController extends Controller
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name', 'asc')->get();
         }
-        return view('reports.vehicles.speeding.index', compact('companies'));
+        return view('reports.vehicles.mileage.index', compact('companies'));
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function searchReport(Request $request)
+    public function show(Request $request)
     {
-        $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $vehicles = $company->vehicles;
         $dateReport = $request->get('date-report');
 
-        $allSpeedingReportByVehicle = Speeding::where('date',$dateReport)
-            ->whereIn('vehicle_id',$vehicles->pluck('id'))
-            ->get()
-            ->groupBy('vehicle_id');
+        dd($request->all());
 
-        $speedingReportByVehicle = array();
-        foreach ($allSpeedingReportByVehicle as $vehicleId => $allSpeedingByVehicle) {
-            $speedings = self::groupByFirstSpeeding($allSpeedingByVehicle);
-            if(count($speedings))$speedingReportByVehicle[$vehicleId] = $speedings;
-        }
+        //if( $request->get('export') )$this->export($speedingReportByVehicle,$dateReport);
 
-        if( $request->get('export') )$this->export($speedingReportByVehicle,$dateReport);
-
-        return view('reports.vehicles.speeding.speedingReport', compact(['speedingReportByVehicle', 'stringParams']));
-    }
-
-    /**
-     * @param $allSpeedingByVehicle
-     * @return array
-     */
-    public static function groupByFirstSpeeding($allSpeedingByVehicle)
-    {
-
-        if(!count($allSpeedingByVehicle))return collect([]);
-
-        $speedingReport = array();
-        $prevOffRoad = null;
-
-        foreach ($allSpeedingByVehicle as $speeding) {
-            if ($prevOffRoad) {
-                if ($speeding->time->diff($prevOffRoad->time)->format('%H:%I:%S') > '00:05:00') {
-                    $speedingReport[] = $speeding;
-                }
-            } else {
-                //$speedingReport[] = $speeding;
-            }
-            $prevOffRoad = $speeding;
-        }
-
-        return collect($speedingReport)->sortBy('date');
+        return view('reports.vehicles.mileage.show', compact(['speedingReportByVehicle', 'stringParams']));
     }
 
     /**
@@ -119,26 +79,6 @@ class SpeedingController extends Controller
             }
         })->
         export('xlsx');
-    }
-
-    /**
-     * @param Speeding $speeding
-     * @return mixed
-     */
-    public function getAddressFromCoordinates(Speeding $speeding)
-    {
-        sleep(1); // Because google (Free layer) only lets 50 request/second
-        return Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude);
-    }
-
-    /**
-     * @param Speeding $speeding
-     * @return mixed
-     */
-    public function getImageLocationFromCoordinates(Speeding $speeding)
-    {
-        sleep(1); // Because google (Free layer) only lets 50 request/second
-        return Geolocation::getImageLocationFromCoordinates($speeding->latitude, $speeding->longitude);
     }
 
     /**
