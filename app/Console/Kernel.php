@@ -13,13 +13,14 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\LogParkedVehicles::class,
-        Commands\DatabaseManageLocationReports::class,
-        Commands\DatabaseManageMarkersReports::class,
-        Commands\GPSRestart::class,
+        Commands\LogParkedVehiclesCommand::class,
+        Commands\DatabaseManageLocationReportsCommand::class,
+        Commands\DatabaseManageMarkersReportsCommand::class,
+        Commands\GPSRestartCommand::class,
         Commands\GPSCheckStatusCommand::class,
 
-        Commands\SMSSendReport::class,
+        Commands\SMSSendReportCommand::class,
+        Commands\SMSSendProprietaryReportCommand::class,
     ];
 
     /**

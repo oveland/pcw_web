@@ -9,7 +9,7 @@ use DB;
 use Illuminate\Console\Command;
 use Log;
 
-class SMSSendReport extends Command
+class SMSSendReportCommand extends Command
 {
     /**
      * The name and signature of the console command.

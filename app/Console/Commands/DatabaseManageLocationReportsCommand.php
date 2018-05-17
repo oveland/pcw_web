@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use DB;
 use Illuminate\Console\Command;
 
-class DatabaseManageLocationReports extends Command
+class DatabaseManageLocationReportsCommand extends Command
 {
     /**
      * The name and signature of the console command.

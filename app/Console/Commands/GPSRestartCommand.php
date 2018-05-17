@@ -7,7 +7,7 @@ use App\Vehicle;
 use DB;
 use Illuminate\Console\Command;
 
-class GPSRestart extends Command
+class GPSRestartCommand extends Command
 {
     /**
      * The name and signature of the console command.

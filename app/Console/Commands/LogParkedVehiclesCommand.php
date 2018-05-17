@@ -7,7 +7,7 @@ use App\ParkingReport;
 use DB;
 use Illuminate\Console\Command;
 
-class LogParkedVehicles extends Command
+class LogParkedVehiclesCommand extends Command
 {
     /**
      * The name and signature of the console command.
