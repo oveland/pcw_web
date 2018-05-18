@@ -78,6 +78,21 @@
                         </ul>
                     </li>
                     @endif
+                    <li class="has-sub menu-administration-proprietaries">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-user faa-vertical"></i>
+                            @lang('Proprietaries')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-administration-proprietaries-manage">
+                                <a href="{{ route('admin-proprietaries-manage')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-user-plus faa-vertical" aria-hidden="true"></i>
+                                    @lang('Manage')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
             @endif

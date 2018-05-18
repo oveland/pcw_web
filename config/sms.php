@@ -99,4 +99,9 @@ return [
      *
     */
     'sms_cron_report' => env('SMS_CRON_REPORT'),
+
+    /*
+     *
+    */
+    'sms_cron_proprietary_report' => env('SMS_CRON_PROPRIETARY_REPORT'),
 ];

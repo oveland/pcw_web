@@ -173,6 +173,11 @@ class DispatchRegister extends Model
         return $this->belongsTo(Driver::class, 'driver_code', 'code');
     }
 
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', $this::COMPLETE);
+    }
+
     public function scopeActive($query)
     {
         return $query->where(function ($query) {

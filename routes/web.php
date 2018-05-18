@@ -67,6 +67,11 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/csv', 'DriverController@csv')->name('admin-drivers-csv');
             });
         });
+
+        Route::prefix(__('proprietaries'))->group(function () {
+            Route::get('/', 'ProprietaryController@index')->name('admin-proprietaries-manage');
+            Route::get('/show', 'ProprietaryController@show')->name('admin-proprietaries-show');
+        });
     });
 
     /* Routes for route report */

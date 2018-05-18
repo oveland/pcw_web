@@ -93,4 +93,9 @@ class Company extends Model
     {
         return $this->hasMany(Driver::class)->where('active',true);
     }
+
+    public function proprietaries()
+    {
+        return $this->hasMany(Proprietary::class);
+    }
 }

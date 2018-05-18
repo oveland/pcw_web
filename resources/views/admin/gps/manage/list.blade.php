@@ -45,9 +45,6 @@
                                                 <i class="fa fa-podcast"></i>
                                                 @lang('COBAN')
                                             </button>
-                                            <button type="button" class="btn btn-inverse btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
-                                                <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
-                                            </button>
                                         </div>
                                         @if( $simGPSList )
                                             <select id="sim-gps" name="sim-gps[]" class="form-control select default-select2 col-md-12" multiple>
@@ -70,6 +67,9 @@
                                 <div class="row info-gps">
                                     @if( $simGPSList )
                                         <div class="col-md-12">
+                                            <button type="button" class="btn btn-inverse m-b-5 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
+                                                <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
+                                            </button>
                                             <label class="control-label">
                                                 <i class="fa fa-podcast faa-burst animated"></i>
                                                 @lang('Status GPS'):
@@ -109,26 +109,56 @@
                                                 <div class="tab-content panel row m-0 p-t-5">
                                                     <div class="tab-pane fade active in" id="nav-pills-justified-1">
                                                         <div class="col-md-12">
-                                                            <div class="input-group-btn text-center">
-                                                                <button type="submit" class="btn btn-lime btn-sm btn-submit">
-                                                                    @lang('Send')
-                                                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                                            <div class="btn-group">
+                                                                <button type="submit" class="btn btn-success btn-sm btn-submit">
+                                                                    @lang('Send') <i class="fa fa-paper-plane" aria-hidden="true"></i>
                                                                 </button>
-                                                                <button type="button" class="btn btn-primary btn-sm" onclick="getScript('skypatrol')">
-                                                                    <i class="fa fa-podcast" aria-hidden="true"></i>
-                                                                    @lang('Script Skypatrol')
+                                                                <button data-toggle="dropdown" class="btn btn-success btn-sm dropdown-toggle" aria-expanded="false">
+                                                                    <span class="caret"></span>
                                                                 </button>
-                                                                <button type="button" class="btn btn-warning btn-sm" onclick="getScript('coban')">
-                                                                    <i class="fa fa-podcast" aria-hidden="true"></i>
-                                                                    @lang('Script Coban')
-                                                                </button>
-                                                                <button type="button" class="btn btn-danger btn-sm set-reset-command">
-                                                                    <i class="fa fa-undo" aria-hidden="true"></i>
-                                                                    @lang('Reset Command')
-                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <a href="javascript:getScript('general-skypatrol')">
+                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script General Skypatrol')
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:getScript('apn-skypatrol')">
+                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script APN Skypatrol')
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:getScript('ip-skypatrol')">
+                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script IP Skypatrol')
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:getScript('plate-skypatrol')">
+                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script plate Skypatrol')
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="divider"></li>
+                                                                    <li>
+                                                                        <a href="javascript:getScript('coban')">
+                                                                            <i class="fa fa-podcast text-warning" aria-hidden="true"></i> @lang('Script Coban')
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="divider"></li>
+                                                                    <li>
+                                                                        <a href="javascript:;" class="set-reset-command">
+                                                                            <i class="fa fa-undo text-primary" aria-hidden="true"></i>
+                                                                            @lang('Reset Command')
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="divider"></li>
+                                                                    <li>
+                                                                        <a href="javascript:$('#command-gps').val('');">
+                                                                            <i class="fa fa-trash text-danger" aria-hidden="true"></i> @lang('Clear')
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
                                                             </div>
-                                                            <hr class="hr col-md-12">
-                                                            <label for="command-gps" class="control-label col-md-12 field-required">@lang('Commands')</label>
+                                                            <label for="command-gps" class="control-label col-md-12 field-required text-right">@lang('Commands')</label>
                                                             <textarea id="command-gps" name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
                                                         </div>
                                                     </div>
@@ -319,12 +349,9 @@
     });
 
     function getScript(device) {
-        var url = {
-            'skypatrol': '{{ route('admin-gps-manage-get-script','skypatrol') }}',
-            'coban': '{{ route('admin-gps-manage-get-script','coban') }}'
-        };
+        var url = '{{ route('admin-gps-manage-get-script','_DEVICE') }}';
         $.ajax({
-            url: url[device],
+            url: url.replace('_DEVICE',device),
             success: function (data) {
                 $('#command-gps').val(data);
             }

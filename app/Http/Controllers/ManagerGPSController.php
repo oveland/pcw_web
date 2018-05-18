@@ -304,8 +304,17 @@ class ManagerGPSController extends Controller
     public function getScript($device)
     {
         switch ($device) {
-            case 'skypatrol':
+            case 'general-skypatrol':
                 $fileScript = 'ScriptSkypatrol.txt';
+                break;
+            case 'apn-skypatrol':
+                $fileScript = 'ScriptAPNSkypatrol.txt';
+                break;
+            case 'plate-skypatrol':
+                $fileScript = 'ScriptPlateSkypatrol.txt';
+                break;
+            case 'ip-skypatrol':
+                $fileScript = 'ScriptIPSkypatrol.txt';
                 break;
             case 'coban':
                 $fileScript = 'ScriptCoban.txt';

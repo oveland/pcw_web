@@ -67,4 +67,9 @@ class Vehicle extends Model
     {
         return $this->hasMany(PeakAndPlate::class);
     }
+
+    public function numberAndPlate()
+    {
+        return "$this->number | $this->plate";
+    }
 }
