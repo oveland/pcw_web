@@ -67,19 +67,19 @@ class PassengersReportDateRangeController extends Controller
 
         $reports = collect([]);
         foreach ($dateRange as $date) {
-            $date = $date->toDateString();
-            $recorderReport = $recorderReports->where('date', $date)->first();
+            $recorderReport = $recorderReports->where('date', $date->toDateString())->first();
             $totalByRecorder = $recorderReport ? $recorderReport->total : 0;
 
-            $sensorReport = $sensorReports->where('date', $date);
+            $sensorReport = $sensorReports->where('date', $date->format(config('app.date_format')));
+
             $totalBySensor = $sensorReport ? $sensorReport->sum('total') : 0;
 
-            $reports->put($date, (object)[
+            $reports->put($date->toDateString(), (object)[
                 'date' => $date,
                 'totalByRecorder' => $totalByRecorder,
                 'totalBySensor' => $totalBySensor,
                 'issues' => collect($recorderReport ? $recorderReport->issues : []),
-                'frame' => $sensorReport->first() ? $sensorReport->last()->frame : ''
+                'frame' => $sensorReport->first() ? $sensorReport->first()->frame : ''
             ]);
         }
 

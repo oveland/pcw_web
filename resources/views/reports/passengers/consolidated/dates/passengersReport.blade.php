@@ -8,7 +8,7 @@
                     <i class="fa fa-file-excel-o"></i>
                 </a>
                 @if( $passengerReport->vehicleReport != 'all' )
-                <a href="javascript:;" class="btn btn-sm btn-rounded btn-success tooltips" data-toggle="collapse" data-target=".collapse-frame" data-title="@lang('See all frames')">
+                <a href="javascript:;" class="btn btn-sm btn-rounded btn-success tooltips" onclick="$('.collapse-frame').collapse('show')" data-title="@lang('See all frames')">
                     <i class="fa fa-podcast faa-pulse animated"></i>
                 </a>
                 @endif
@@ -86,7 +86,7 @@
                             </tr>
                         @endif
 
-                        <tr class="text-center">
+                        <tr class="text-center click" data-toggle="collapse" data-target="#collapse-{{ $date }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $date }} </td>
                             <td class="sensor">{{ $sensor }}</td>
@@ -100,7 +100,26 @@
                         </tr>
                         <tr id="collapse-{{ $date }}" class="bg-inverse text-white text-bold collapse-frame fade collapse">
                             <td colspan="5" style="font-family: monospace">
-                                <span>{{ $report->frame }}</span>
+                                @php
+                                    $currentFrame = $report->frame;
+                                    $comparedFrame = \App\Http\Controllers\PassengerReportCounterController::compareChangeFrames($currentFrame,$currentFrame);
+                                @endphp
+                                <span>
+                                    @foreach($comparedFrame as $frame)
+                                        <label class="p-0 text-center">
+                                            <span class="text-center p-0 {{ $frame->class }}" data-title="@lang('Prev value'): <b>{{ $frame->prevField }}</b>" data-html="true" style="border-bottom: 1px dotted gray">
+                                                {{ $frame->field }}
+                                            </span>
+                                            <br>
+                                            <small class="text-muted p-t-3 btn-block" style="border: 1px dotted gray">
+                                                {{ $loop->iteration }}
+                                            </small>
+                                        </label>
+                                    @endforeach
+                                </span>
+                                <button class="btn btn-copy btn-sm btn-default pull-right tooltips" data-title="@lang('Copy frame')" data-clipboard-text="{{ $report->frame }}">
+                                    <i class="fa fa-copy"></i>
+                                </button>
                             </td>
                         </tr>
                     @endforeach

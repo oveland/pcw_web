@@ -105,6 +105,7 @@
 
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
     <script type="application/javascript">
         $('.menu-passengers, .menu-passengers-recorders, .menu-passengers-recorders-consolidated, .menu-passengers-recorders-consolidated-range').addClass('active');
         var mainContainer = $('.main-container');
@@ -141,6 +142,13 @@
                 if (form.isValid(false)) {
                     form.submit();
                 }
+            });
+
+            var clipboard = new Clipboard('.btn-copy');
+
+            clipboard.on('success', function (e) {
+                gsuccess("@lang('Text copied'):" + e.text);
+                e.clearSelection();
             });
 
             @if(!Auth::user()->isAdmin())
