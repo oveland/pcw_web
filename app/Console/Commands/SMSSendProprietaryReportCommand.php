@@ -66,16 +66,18 @@ class SMSSendProprietaryReportCommand extends Command
                 if( count($dispatchRegisters) ){
                     $currentDispatchRegister = $dispatchRegisters->last();
                     $route = $currentDispatchRegister->route;
-                    $time = $now->toTimeString();
+                    $arrivalTime = explode('.', $currentDispatchRegister->arrival_time)[0];
 
                     $recorder = CounterByRecorder::reportByVehicle($vehicle->id,$dispatchRegisters,true);
                     $sensor = CurrentSensorPassengers::where('placa',$vehicle->plate)->get()->first();
+                    $timeSensor = explode('.', $sensor->hora_status)[0]; // TODO Change column when table contador is migrated
 
                     $passengersByRecorder = $recorder->report->passengers;
                     $passengersBySensor = $sensor->passengers;
 
-                    $message = "Pasajeros:\nHora: $time\nRegistradora: $passengersByRecorder\nSensor: $passengersBySensor\nRuta: $route->name\nVuelta: $currentDispatchRegister->round_trip";
+                    $message = "Pasajeros $vehicle->number:\nRegistradora ($arrivalTime): $passengersByRecorder\nSensor ($timeSensor): $passengersBySensor\nRuta: $route->name\nVuelta: $currentDispatchRegister->round_trip";
                     SMS::sendCommand($message, $cellPhone);
+                    $this->info("Message ($cellPhone):\n$message");
                 }
             }
         }
