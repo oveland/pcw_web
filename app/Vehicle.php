@@ -72,4 +72,9 @@ class Vehicle extends Model
     {
         return "$this->number | $this->plate";
     }
+
+    public function getNumberAndPlateAttribute()
+    {
+        return "$this->number <i class='fa fa-hand-o-right'></i> $this->plate";
+    }
 }

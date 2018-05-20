@@ -9,6 +9,8 @@
 namespace App\Traits;
 
 
+use App\LocationReport;
+
 trait LocationReportTrait
 {
     protected function getDateFormat()
@@ -29,5 +31,14 @@ trait LocationReportTrait
     public function getTableName()
     {
         return $this->table;
+    }
+
+    public static function calculateMileageFromGroup($locationReport)
+    {
+        $firstLocationReport =  $locationReport->first();
+        $lastLocationReport =  $locationReport->last();
+        $totalKm = ($lastLocationReport->odometer - $firstLocationReport->odometer)/1000;
+
+        return $totalKm;
     }
 }

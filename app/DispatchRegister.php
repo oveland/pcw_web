@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\Utils\Database;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Passengers\RecorderCounterPerRoundTrip;
 use Illuminate\Database\Eloquent\Model;
@@ -102,22 +103,8 @@ class DispatchRegister extends Model
      */
     public function locationReports()
     {
-        $numberSegments = config('maintenance.number_segments');
-        $daysPerSegment = config('maintenance.day_per_segment');
-
-        $intervals = collect(range(1, $numberSegments));
-        $diff = Carbon::now()->diff(Carbon::parse($this->getParsedDate()))->days;
-
-        if ($diff == 0) {
-            $classLocationReport = "\CurrentLocationReport";
-        } else {
-            $segmentTarget = $intervals->filter(function ($value, $key) use ($diff, $daysPerSegment) {
-                return $value * $daysPerSegment > $diff;
-            })->first();
-            $classLocationReport = "\LocationReport" . ($segmentTarget ? "$segmentTarget" : "");
-        }
-
-        return $this->hasMany(__NAMESPACE__ . "$classLocationReport", 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        $stringClassLocationReport = Database::findLocationReportModelStringByDate($this->getParsedDate());
+        return $this->hasMany($stringClassLocationReport, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**

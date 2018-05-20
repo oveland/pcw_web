@@ -169,6 +169,15 @@ class PCWExporter
                 $sheet->setCellValue("C$lastRow", "TOTAL");
                 $sheet = self::styleFooter($sheet, $config);
                 break;
+            case 'mileageReport':
+                // Set general formulas
+                foreach (['E'] as $totalLetterPosition) {
+                    $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
+                }
+
+                $sheet->setCellValue("D$lastRow", "TOTAL");
+                $sheet = self::styleFooter($sheet, $config);
+                break;
         }
         return $sheet;
     }

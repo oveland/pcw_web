@@ -381,6 +381,7 @@
   "Manage SIM GPS": "Administrar SIM GPS",
   "Mileage": "Kilometraje",
   "mileage": "kilometraje",
+  "Mileage Report": "Reporte kilometraje",
   "Consolidated per dates": "Consolidado por fechas",
   "Manage proprietaries": "Administrar propietarios",
   "proprietary": "propietario",
@@ -395,5 +396,7 @@
   "Last Name": "Apellido",
   "Cellphone": "Celular",
   "Assigned vehicles": "Vehículos asignados",
-  "Search proprietary": "Buscar propietario"
+  "Search proprietary": "Buscar propietario",
+  "in the fleet": "en la flota",
+  "in the day": "en el día"
 }

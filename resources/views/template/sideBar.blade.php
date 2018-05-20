@@ -148,7 +148,7 @@
                                     @lang('Speeding')
                                 </a>
                             </li>
-                            <li class="has-sub menu-report-vehicles-mileage hide">
+                            <li class="has-sub menu-report-vehicles-mileage">
                                 <a href="{{ route('report-vehicle-mileage')  }}" class="faa-parent animated-hover">
                                     <i class="fa fa-road faa-tada" aria-hidden="true"></i>
                                     @lang('Mileage')
