@@ -3,8 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\DispatchRegister;
+use App\Http\Controllers\Utils\Database;
 use App\Http\Controllers\Utils\Geolocation;
+use App\Location;
+use App\LocationReport;
 use App\Route;
+use App\Services\PCWExporter;
+use App\Vehicle;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
@@ -28,51 +34,102 @@ class ReportMileageController extends Controller
      */
     public function show(Request $request)
     {
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $vehicles = $company->vehicles;
+        $company = GeneralController::getCompany($request);
         $dateReport = $request->get('date-report');
 
-        dd($request->all());
+        $mileageReport = $this->buildMileageReport($company, $dateReport);
 
-        //if( $request->get('export') )$this->export($speedingReportByVehicle,$dateReport);
+        if ($request->get('export')) $this->export($mileageReport);
 
-        return view('reports.vehicles.mileage.show', compact(['speedingReportByVehicle', 'stringParams']));
+        return view('reports.vehicles.mileage.show', compact(['mileageReport', 'stringParams']));
+    }
+
+    public function buildMileageReport(Company $company = null, $dateReport)
+    {
+        $vehicles = $company->vehicles;
+        $locationReportModel = Database::findLocationReportModelInstanceByDate($dateReport);
+
+        $locationReports = $locationReportModel::whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+            ->orderBy('location_id')
+            ->get();
+
+        $locationReportsByVehicle = $locationReports->groupBy('vehicle_id');
+        $reports = collect([]);
+        foreach ($locationReportsByVehicle as $vehicleId => $locationReport) {
+            $vehicle = Vehicle::find($vehicleId);
+
+            $mileageByRoutes = collect([]);
+            $locationReportByDispatchRegisters = $locationReport->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id');
+            foreach ($locationReportByDispatchRegisters as $dispatchRegisterId => $locationReportByDispatchRegister) {
+                $dispatchRegister = DispatchRegister::find($dispatchRegisterId);
+                $route = $dispatchRegister->route;
+                $mileageByRoutes->put(
+                    $dispatchRegisterId,
+                    (object)[
+                        'route' => $route,
+                        'dispatchRegister' => $dispatchRegister,
+                        'mileage' => LocationReport::calculateMileageFromGroup($locationReportByDispatchRegister),
+                    ]
+                );
+            }
+
+            $reports->put(
+                $vehicleId,
+                (object)[
+                    'vehicle' => $vehicle,
+                    'mileage' => LocationReport::calculateMileageFromGroup($locationReport),
+                    'byRoutes' => $mileageByRoutes,
+                    'mileageByAllRoutes' => $mileageByRoutes->sum('mileage'),
+                ]
+            );
+        }
+
+        $mileageReport = (object)[
+            'company' => $company,
+            'dateReport' => $dateReport,
+            'reports' => $reports,
+            'mileageByFleet' => $reports->sum('mileage')
+        ];
+
+        return $mileageReport;
     }
 
     /**
-     * @param $speedingReportByVehicle
-     * @param $dateReport
+     * @param $mileageReport
      */
-    public function export($speedingReportByVehicle, $dateReport)
+    public function export($mileageReport)
     {
-        Excel::create(__('Speeding Report') . " $dateReport", function ($excel) use ($speedingReportByVehicle, $dateReport) {
-            foreach ($speedingReportByVehicle as $vehicleId => $speedingReport) {
-                $vehicle = Vehicle::find($vehicleId);
-                $dataExcel = array();
+        $dateReport = $mileageReport->dateReport;
+        $reports = $mileageReport->reports;
+        Excel::create(__('Mileage Report') . " $dateReport", function ($excel) use ($reports, $dateReport) {
+            foreach ($reports as $vehicleId => $report) {
+                $vehicle = $report->vehicle;
+                $reportByRoutes = $report->byRoutes;
 
-                foreach ($speedingReport as $speeding) {
-                    $speed = $speeding->speed;
-                    if( $speed > 100 ){
-                        $speed = 70 + (random_int(-10,10));
-                    }
+                $dataExcel = array();
+                foreach($reportByRoutes as $dispatchRegisterId => $reportByRoute){
+                    $route = $reportByRoute->route;
+                    $dispatchRegister = $reportByRoute->dispatchRegister;
 
                     $dataExcel[] = [
-                        __('N°') => count($dataExcel) + 1,                             # A CELL
-                        __('Time') => $speeding->time->toTimeString(),                                 # B CELL
-                        __('Vehicle') => intval($vehicle->number),                     # C CELL
-                        __('Plate') => $vehicle->plate,                                # D CELL
-                        __('Speed') => $speed                                          # E CELL
+                        __('Route') => $route->name,                        # A CELL
+                        __('Turn') => $dispatchRegister->turn,              # B CELL
+                        __('Round trip') => $dispatchRegister->round_trip,  # C CELL
+                        __('Status') => $dispatchRegister->status,          # D CELL
+                        __('Mileage') => number_format($reportByRoute->mileage,2, ',', '')   # E CELL
                     ];
                 }
 
                 $dataExport = (object)[
-                    'fileName' => __('Speeding Report') . " $dateReport",
-                    'title' => __('Speeding Report') . " $dateReport",
-                    'subTitle' => count($speedingReport)." ".__('Speeding'),
+                    'fileName' => __('Mileage Report') . " $dateReport",
+                    'title' => __('Mileage Report') . " $dateReport",
+                    'subTitle' => __('Vehicle')." $vehicle->number:  ".number_format($report->mileage,2, ',', '')."Km ".__('in the day'),
                     'sheetTitle' => "$vehicle->number",
-                    'data' => $dataExcel
+                    'data' => $dataExcel,
+                    'type' => 'mileageReport'
                 ];
-                //foreach ()
+
                 /* SHEETS */
                 $excel = PCWExporter::createHeaders($excel, $dataExport);
                 $excel = PCWExporter::createSheet($excel, $dataExport);

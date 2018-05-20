@@ -46,32 +46,11 @@ class DatabaseManageLocationReportsCommand extends Command
         $this->info("Number Segments: $numberSegments, Days Per Segment: $daysPerSegment");
 
         foreach (range(1, $numberSegments) as $segment) {
-            $this->info("Segmenting number: $segment...");
-
-            $interval = $segment * $daysPerSegment;
-            $lastInterval = ($segment - 1) * $daysPerSegment;
-
-            DB::statement("TRUNCATE TABLE location_reports_$segment");
-
-            DB::statement("
-                INSERT INTO location_reports_$segment
-                SELECT l.id AS location_id,
-                  l.dispatch_register_id,
-                  l.off_road,
-                  l.latitude,
-                  l.longitude,
-                  r.date,
-                  l.date AS location_date,
-                  r.timed,
-                  r.distancem,
-                  r.status_in_minutes                
-                FROM locations l
-                  JOIN reports r ON (r.location_id = l.id AND r.date > current_date - $interval AND r.date <= ((current_date - $lastInterval)||' 23:59:59')::TIMESTAMP)
-                WHERE l.date > current_date - $interval AND l.date <= ((current_date - $lastInterval)||' 23:59:59')::TIMESTAMP                
-            ");
+            $this->info("Refreshing materialized view location_reports_$segment...");
+            DB::statement("REFRESH MATERIALIZED VIEW location_reports_$segment");
         }
 
-        /* Delete current locations reports data */
+        /* Clear current locations reports data */
         DB::statement("TRUNCATE TABLE current_location_reports");
 
 
