@@ -213,6 +213,11 @@ class DispatchRegister extends Model
         return $this->belongsTo(Fringe::class, 'arrival_fringe_id', 'id');
     }
 
+    public function getStatusString()
+    {
+        return explode('.',$this->status)[0];
+    }
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }

@@ -113,10 +113,10 @@ class ReportMileageController extends Controller
                     $dispatchRegister = $reportByRoute->dispatchRegister;
 
                     $dataExcel[] = [
-                        __('Route') => $route->name,                        # A CELL
-                        __('Turn') => $dispatchRegister->turn,              # B CELL
-                        __('Round trip') => $dispatchRegister->round_trip,  # C CELL
-                        __('Status') => $dispatchRegister->status,          # D CELL
+                        __('Route') => $route->name,                            # A CELL
+                        __('Turn') => $dispatchRegister->turn,                  # B CELL
+                        __('Round trip') => $dispatchRegister->round_trip,      # C CELL
+                        __('Status') => $dispatchRegister->getStatusString(),   # D CELL
                         __('Mileage') => number_format($reportByRoute->mileage,2, ',', '')   # E CELL
                     ];
                 }

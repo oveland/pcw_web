@@ -42,7 +42,7 @@ class UpdateLocationReportsTable extends Migration
                 r.status_in_minutes,
                 r.control_point_id,
                 r.fringe_id
-               FROM (locations l JOIN reports r ON ((r.location_id = l.id)))
+               FROM (locations l LEFT JOIN reports r ON ((r.location_id = l.id)))
         ");
 
         /*
@@ -137,21 +137,11 @@ class UpdateLocationReportsTable extends Migration
     {
         $numberSegments = config('maintenance.number_segments');
         /* Drop current location_reports tables because this will be overwrite with materialized views */
-        DB::statement("
-            DO
-            $$
-            DECLARE
-              target_table VARCHAR(50);
-            BEGIN
-              FOR i IN 1..$numberSegments LOOP
-                target_table := 'location_reports_' || i;
-                IF ( SELECT 1 FROM pg_tables where tablename = target_table  ) THEN
-                  DROP TABLE IF EXISTS target_table;    
-                END IF;
-              END LOOP ;
-            END;
-            $$;
-        ");
+        foreach (range(1, $numberSegments) as $segment) {
+            $targetTable = "location_reports_$segment";
+            $table = DB::select("SELECT 1 FROM pg_tables where tablename = '$targetTable'");
+            if ($table) DB::statement("DROP TABLE IF EXISTS $targetTable");
+        }
 
         /* Drop last triggers */
         DB::statement("DROP TRIGGER IF EXISTS current_reports_trigger ON current_reports");

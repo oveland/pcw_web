@@ -75,7 +75,7 @@
                                     <td class="text-center">{{ $route->name }} </td>
                                     <td class="text-center">{{ $dispatchRegister->turn }} </td>
                                     <td class="text-center">{{ $dispatchRegister->round_trip }} </td>
-                                    <td class="text-center">{{ $dispatchRegister->status }} </td>
+                                    <td class="text-center">{!! $dispatchRegister->status !!} </td>
                                     <td class="text-center">{{ number_format($reportByRoute->mileage,2) }}</td>
                                 </tr>
                             @endforeach
