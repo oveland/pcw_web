@@ -75,7 +75,22 @@ class SMSSendProprietaryReportCommand extends Command
                     $passengersByRecorder = $recorder->report->passengers;
                     $passengersBySensor = $sensor->passengers;
 
-                    $message = "Pasajeros $vehicle->number:\nRegistradora ($arrivalTime): $passengersByRecorder\nSensor ($timeSensor): $passengersBySensor\nRuta: $route->name\nVuelta: $currentDispatchRegister->round_trip";
+                    $message = $reportSMS = collect([
+                        'prop' => true,                                 // Indicates that data SMS belongs to a proprietary
+                        'vn' => $vehicle->number,
+                        'pr' => $passengersByRecorder,                  // Passengers by Recorder
+                        'ps' => $passengersBySensor,                    // Passengers by Sensor
+                        'tr' => $arrivalTime,                           // Time by Recorder
+                        'ts' => $timeSensor,                            // Time by Sensor,
+                        'rn' => $route->name,                           // Route name,
+                        'rr' => $currentDispatchRegister->round_trip,   // Route round trip,
+                        'rt' => $currentDispatchRegister->turn,         // Route turn,
+                    ])->toJson();
+
+                    $message = str_replace('{','(',$message);
+                    $message = str_replace('}',')',$message);
+
+                    //$message = "Pasajeros $vehicle->number:\nRegistradora ($arrivalTime): $passengersByRecorder\nSensor ($timeSensor): $passengersBySensor\nRuta: $route->name\nVuelta: $currentDispatchRegister->round_trip";
                     SMS::sendCommand($message, $cellPhone);
                     $this->info("Message ($cellPhone):\n$message");
                 }
