@@ -45,7 +45,7 @@ class ManagerGPSController extends Controller
             });
 
             $readyVehicles = [
-                6,
+                //6,
                 17,
                 21,
                 22,
@@ -63,8 +63,8 @@ class ManagerGPSController extends Controller
                 61,
                 66,
                 67,
-                70,
-                77,
+                //70,
+                //77,
                 83,
                 84,
                 93,
@@ -73,7 +73,7 @@ class ManagerGPSController extends Controller
                 110,
                 111,
                 113,
-                114,
+                //114,
                 125,
                 132,
                 // On May 3rd
@@ -96,7 +96,7 @@ class ManagerGPSController extends Controller
                 54,
                 56,
                 59,
-                62,
+                //62,
                 64,
                 87,
                 90,
@@ -104,7 +104,16 @@ class ManagerGPSController extends Controller
                 122,
                 135,
                 // On May 8th
-                71
+                71,
+                // On may 21th
+                4,
+                6,
+                62,
+                70,
+                77,
+                85,
+                114,
+                33,
             ];
             switch ($optionSelection) {
                 case 'all-skypatrol':
