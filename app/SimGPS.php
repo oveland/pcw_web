@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\Vehicle $vehicle
  * @method static \Illuminate\Database\Eloquent\Builder|\App\SimGPS findByVehicleId($vehicle_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SimGPS findBySim($sim)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\SimGPS whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\SimGPS whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\SimGPS whereGpsType($value)
@@ -38,6 +39,11 @@ class SimGPS extends Model
         return $query->where('vehicle_id', $vehicle_id)->where('active',true);
     }
 
+    public function scopeFindBySim($query, $sim)
+    {
+        return $query->where('sim', $sim)->where('active',true)->get()->first();
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
@@ -46,6 +52,16 @@ class SimGPS extends Model
     public function getGPSType()
     {
         return $this->gps_type == 'TR' ? 'COBAN':'SKYPATROL';
+    }
+
+    public function isSkypatrol()
+    {
+        return $this->gps_type != 'TR';
+    }
+
+    public function isCoban()
+    {
+        return $this->gps_type == 'TR';
     }
 
     public function getGPSTypeCssColor()

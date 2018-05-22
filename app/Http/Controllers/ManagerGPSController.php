@@ -28,7 +28,7 @@ class ManagerGPSController extends Controller
     public function list(Request $request)
     {
         $companyReport = $request->get('company-report');
-        $defaultSelection = $request->get('default-selection');
+        $optionSelection = $request->get('option-selection');
 
         $simGPSList = null;
         if ($companyReport != 'any') {
@@ -106,10 +106,15 @@ class ManagerGPSController extends Controller
                 // On May 8th
                 71
             ];
-            switch ($defaultSelection) {
-                case 'all':
+            switch ($optionSelection) {
+                case 'all-skypatrol':
                     foreach ($simGPSList as $simGPS) {
-                        $selection[] = $simGPS->vehicle->number;
+                        if( $simGPS->isSkypatrol() )$selection[] = $simGPS->vehicle->number;
+                    }
+                    break;
+                case 'all-coban':
+                    foreach ($simGPSList as $simGPS) {
+                        if( $simGPS->isCoban() )$selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 case 'ready':
@@ -126,7 +131,7 @@ class ManagerGPSController extends Controller
             }
         }
 
-        return view('admin.gps.manage.list', compact(['simGPSList', 'vehiclesCompany', 'selection', 'unAssignedVehicles']));
+        return view('admin.gps.manage.list', compact(['simGPSList', 'vehiclesCompany', 'selection', 'optionSelection', 'unAssignedVehicles']));
     }
 
     public function getVehicleStatus(Request $request)
@@ -179,8 +184,8 @@ class ManagerGPSController extends Controller
 
         $simGPSNumbers = is_array($simGPSList) ? $simGPSList : explode(";", $simGPSList);
         $now = Carbon::now();
-        foreach ($simGPSNumbers as $simGPS) {
-            $dump = "************** $now >> $simGPS **************\n";
+        foreach ($simGPSNumbers as $sim) {
+            $dump = "************** $now >> $sim **************\n";
             $commands = $request->get('command-gps');
             $gpsCommands = explode("\n", $commands);
 
@@ -195,17 +200,38 @@ class ManagerGPSController extends Controller
                             $individualCommand = trim(explode("'", $gpsCommand)[0]);
                             if ($individualCommand) {
                                 $individualCommand = str_replace(["AT", "At", "aT", "at"], "", $individualCommand);
-                                if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
-                                    $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
-                                    $flagStartCMD = false;
-                                } else {
-                                    $smsCommands[] = str_start($totalCMD, "AT") . "&W";
-                                    $totalCMD = $individualCommand . ";";
-                                    $flagStartCMD = true;
+
+                                // Checks for auto set plate
+                                if (str_contains($individualCommand, "TTDEVID")) {
+                                    $simGPS = SimGPS::findBySim($sim);
+                                    if( $simGPS ){
+                                        if( $request->get('auto-set-plate') ){
+                                            $vehicle = $simGPS->vehicle;
+                                            $individualCommand = '$TTDEVID="' . $vehicle->plate . '"';
+                                            dump(" - Auto set plate for: $vehicle->plate");
+                                        }
+                                    }else{
+                                        dd("Error: Está intentando establecer una placa que no existe en la configuración de SIM-GPS: $individualCommand");
+                                    }
+
+                                    if( !$request->get('auto-set-plate') && count($simGPSNumbers) > 1){
+                                        dd("Error: No es posible establecer la misma placa para varios vehículos. Seleccione la opción 'Auto setear placa'");
+                                    }
+                                }
+                                if( $individualCommand ){
+                                    if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
+                                        $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
+                                        $flagStartCMD = false;
+                                    } else {
+                                        $smsCommands[] = str_start($totalCMD, "AT") . "&W";
+                                        $totalCMD = $individualCommand . ";";
+                                        $flagStartCMD = true;
+                                    }
                                 }
                             }
                         }
                         $smsCommands[] = str_start($totalCMD, "AT") . "&W";
+
                         $gpsCommands = $smsCommands;
                     }
                     break;
@@ -217,7 +243,8 @@ class ManagerGPSController extends Controller
             foreach ($gpsCommands as $smsCommand) {
                 $smsCommand = trim($smsCommand);
                 $totalSent++;
-                $responseSMS = SMS::sendCommand($smsCommand, $simGPS);
+                $responseSMS = SMS::sendCommand($smsCommand, $sim);
+                //$responseSMS = ['resultado' => 1];
                 $length = strlen($smsCommand);
 
                 $dump .= ("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")") . "\n\n";
@@ -312,6 +339,9 @@ class ManagerGPSController extends Controller
                 break;
             case 'plate-skypatrol':
                 $fileScript = 'ScriptPlateSkypatrol.txt';
+                break;
+            case 'new-skypatrol':
+                $fileScript = 'NewScriptSkypatrol.txt';
                 break;
             case 'ip-skypatrol':
                 $fileScript = 'ScriptIPSkypatrol.txt';

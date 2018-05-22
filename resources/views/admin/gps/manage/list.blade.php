@@ -35,12 +35,12 @@
                                 <div class="col-md-12">
                                     <div class="input-group m-b-15 col-md-12">
                                         <div class="m-b-10">
-                                            <button type="button" class="btn btn-success btn-xs gps-skypatrol m-r-5" style="cursor: pointer"
+                                            <button type="button" class="btn btn-success btn-xs gps-skypatrol all-skypatrol none ready unready m-r-5" style="cursor: pointer"
                                                     onclick="$(this).removeClass('disabled');$('.gps-coban').addClass('disabled');selectGPSType('SKYPATROL')">
                                                 <i class="fa fa-podcast"></i>
                                                 @lang('SKYPATROL')
                                             </button>
-                                            <button type="button" class="btn btn-primary btn-xs gps-coban disabled" style="cursor: pointer"
+                                            <button type="button" class="btn btn-primary btn-xs gps-coban all-coban" style="cursor: pointer"
                                                     onclick="$(this).removeClass('disabled');$('.gps-skypatrol').addClass('disabled');selectGPSType('COBAN')">
                                                 <i class="fa fa-podcast"></i>
                                                 @lang('COBAN')
@@ -49,7 +49,7 @@
                                         @if( $simGPSList )
                                             <select id="sim-gps" name="sim-gps[]" class="form-control select default-select2 col-md-12" multiple>
                                                 @foreach($simGPSList as $simGPS)
-                                                    <option value="{{ $simGPS->sim }}" {{ in_array($simGPS->vehicle->number,$selection) && $simGPS->getGPSType() == 'SKYPATROL' ?'selected':'' }}
+                                                    <option value="{{ $simGPS->sim }}" {{ in_array($simGPS->vehicle->number,$selection) ?'selected':'' }}
                                                     data-reset-command="{{ $simGPS->getResetCommand() }}"
                                                             data-gps-type="{{ $simGPS->getGPSType() }}"
                                                             data-vehicle-id="{{ $simGPS->vehicle->id ?? null }}">
@@ -99,7 +99,7 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="#nav-pills-justified-2" data-toggle="tab">
+                                                        <a href="#nav-pills-justified-2" data-toggle="tab" class="tab-console-log">
                                                             <i class="fa fa-code"></i> @lang('Console log')
                                                         </a>
                                                     </li>
@@ -137,6 +137,11 @@
                                                                             <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script plate Skypatrol')
                                                                         </a>
                                                                     </li>
+                                                                    <li>
+                                                                        <a href="javascript:getScript('new-skypatrol')">
+                                                                            <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('NEW Script Skypatrol')
+                                                                        </a>
+                                                                    </li>
                                                                     <li class="divider"></li>
                                                                     <li>
                                                                         <a href="javascript:getScript('coban')">
@@ -157,6 +162,14 @@
                                                                         </a>
                                                                     </li>
                                                                 </ul>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input name="auto-set-plate" type="checkbox" value="true">
+                                                                        @lang('Auto set plate')
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                             <label for="command-gps" class="control-label col-md-12 field-required text-right">@lang('Commands')</label>
                                                             <textarea id="command-gps" name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
@@ -402,6 +415,7 @@
                 complete:function(){
                     smsResponseContainer.removeClass('hide').hide().fadeIn();
                     formSendSMS.find('.btn-submit').removeClass(loadingClass);
+                    $('.tab-console-log').tab('show');
                 }
             });
         }
@@ -521,5 +535,5 @@
         }
     });
 
-    $('.gps-skypatrol').click();
+    $('.{{ $optionSelection }}').click();
 </script>
