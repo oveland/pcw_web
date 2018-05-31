@@ -127,6 +127,12 @@
                                     @lang('Control Points')
                                 </a>
                             </li>
+                            <li class="has-sub menu-report-control-points">
+                                <a href="{{ route('report-route-consolidated-month')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-archive faa-vertical" aria-hidden="true"></i>
+                                    @lang('Consolidate month')
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="has-sub menu-report-vehicles">

@@ -103,6 +103,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/export', 'ControlPointsReportController@export')->name('report-route-control-points-export-report');
                 Route::any('/ajax', 'ControlPointsReportController@ajax')->name('report-route-control-points-ajax-action');
             });
+
+            /* Control Points report */
+            Route::prefix(__('consolidated'))->group(function () {
+                Route::prefix(__('month'))->group(function () {
+                    Route::get('/', 'RouteReportController@index')->name('report-route-consolidated-month');
+                });
+            });
         });
 
         Route::prefix(__('url-vehicles'))->group(function(){

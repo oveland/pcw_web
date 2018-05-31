@@ -74,9 +74,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 hide">
                             <div class="form-group">
-                                <span class="badge badge-danger pull-right tooltips" data-original-title="@lang('New feature')">@lang('New') <i class="fa fa-bell faa-ring animated"></i></span>
                                 <label for="type-report" class="control-label">@lang('Group By')</label>
                                 <div class="form-group">
                                     <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
