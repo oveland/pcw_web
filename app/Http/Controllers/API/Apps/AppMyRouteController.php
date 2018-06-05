@@ -53,7 +53,6 @@ class AppMyRouteController extends Controller implements APIInterface
             foreach ($route->currentLocations() as $currentLocation) {
                 $dispatchRegister = $currentLocation->dispatchRegister;
                 $vehicle = $dispatchRegister->vehicle;
-
                 $trackLocations[] = [
                     'vehicle' => [
                         'id' => $vehicle->id,
@@ -62,7 +61,8 @@ class AppMyRouteController extends Controller implements APIInterface
                     ],
                     'location' => [
                         'lat' => $currentLocation->latitude,
-                        'lng' => $currentLocation->longitude
+                        'lng' => $currentLocation->longitude,
+                        'orientation' => $currentLocation->orientation
                     ]
                 ];
             }
