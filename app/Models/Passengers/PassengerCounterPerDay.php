@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereVehicleId($value)
  * @mixin \Eloquent
+ * @property string|null $frame
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\PassengerCounterPerDay whereFrame($value)
  */
 class PassengerCounterPerDay extends Model
 {

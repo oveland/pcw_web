@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereVersion($value)
  * @mixin \Eloquent
+ * @property int|null $vehicle_status_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereVehicleStatusId($value)
  */
 class Location extends Model
 {

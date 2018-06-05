@@ -35,24 +35,39 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Route extends Model
 {
-    public function company(){
+    public function company()
+    {
         return $this->belongsTo(Company::class);
     }
 
-    public function controlPoints(){
-        return $this->hasMany(ControlPoint::class)->orderBy('order','asc');
+    public function controlPoints()
+    {
+        return $this->hasMany(ControlPoint::class)->orderBy('order', 'asc');
     }
 
-    public function belongsToCompany($company){
+    public function belongsToCompany($company)
+    {
         return $this->company->id == $company->id;
     }
 
-    public function scopeActive($query){
-        return $query->where('active',true);
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
     }
 
     public function fringes($dayType)
     {
-        return $this->hasMany(Fringe::class)->where('day_type_id',$dayType)->get();
+        return $this->hasMany(Fringe::class)->where('day_type_id', $dayType)->get();
+    }
+
+    public function currentLocations()
+    {
+        $currentRouteDispatchRegisters = $this->currentDispatchRegisters;
+        return CurrentLocation::whereIn('dispatch_register_id', $currentRouteDispatchRegisters->pluck('dispatch_register_id'))->get();
+    }
+
+    public function currentDispatchRegisters()
+    {
+        return $this->hasMany(CurrentDispatchRegister::class);
     }
 }

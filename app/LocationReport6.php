@@ -29,6 +29,26 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereStatusInMinutes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereTimed($value)
  * @mixin \Eloquent
+ * @property int|null $vehicle_id
+ * @property float|null $orientation
+ * @property int|null $vehicle_status_id
+ * @property int|null $speed
+ * @property float|null $distance
+ * @property float|null $odometer
+ * @property int|null $report_id
+ * @property string|null $status
+ * @property int|null $control_point_id
+ * @property int|null $fringe_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereControlPointId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereDistance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereFringeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereOdometer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereOrientation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereReportId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereSpeed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereVehicleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereVehicleStatusId($value)
  */
 class LocationReport6 extends Model
 {

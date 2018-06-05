@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $timezone
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereTimezone($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Route[] $activeRoutes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Proprietary[] $proprietaries
  */
 class Company extends Model
 {

@@ -31,6 +31,7 @@ use Sofa\Eloquence\Mappable;
  * @property-read \App\SimGPS $simGPS
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\MaintenanceVehicle[] $maintenance
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\PeakAndPlate[] $peakAndPlate
+ * @property-read mixed $number_and_plate
  */
 class Vehicle extends Model
 {

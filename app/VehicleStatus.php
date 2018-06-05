@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $icon_class
  * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatus whereIconClass($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\VehicleStatus whereMainClass($value)
+ * @property-read mixed $id
  */
 class VehicleStatus extends Model
 {

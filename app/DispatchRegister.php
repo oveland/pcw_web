@@ -72,6 +72,7 @@ use Carbon\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Speeding[] $speedingReport
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDepartureFringeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister completed()
  */
 class DispatchRegister extends Model
 {
@@ -215,7 +216,7 @@ class DispatchRegister extends Model
 
     public function getStatusString()
     {
-        return explode('.',$this->status)[0];
+        return explode('.', $this->status)[0];
     }
 
     const CREATED_AT = 'date_created';
