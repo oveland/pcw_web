@@ -114,6 +114,7 @@ class ManagerGPSController extends Controller
                 85,
                 114,
                 33,
+                39
             ];
             switch ($optionSelection) {
                 case 'all-skypatrol':
