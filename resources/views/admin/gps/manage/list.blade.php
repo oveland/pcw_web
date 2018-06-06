@@ -34,26 +34,14 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="input-group m-b-15 col-md-12">
-                                        <div class="m-b-10">
-                                            <button type="button" class="btn btn-success btn-xs gps-skypatrol all-skypatrol none ready unready m-r-5" style="cursor: pointer"
-                                                    onclick="$(this).removeClass('disabled');$('.gps-coban').addClass('disabled');selectGPSType('SKYPATROL')">
-                                                <i class="fa fa-podcast"></i>
-                                                @lang('SKYPATROL')
-                                            </button>
-                                            <button type="button" class="btn btn-primary btn-xs gps-coban all-coban" style="cursor: pointer"
-                                                    onclick="$(this).removeClass('disabled');$('.gps-skypatrol').addClass('disabled');selectGPSType('COBAN')">
-                                                <i class="fa fa-podcast"></i>
-                                                @lang('COBAN')
-                                            </button>
-                                        </div>
                                         @if( $simGPSList )
                                             <select id="sim-gps" name="sim-gps[]" class="form-control select default-select2 col-md-12" multiple>
                                                 @foreach($simGPSList as $simGPS)
                                                     <option value="{{ $simGPS->sim }}" {{ in_array($simGPS->vehicle->number,$selection) ?'selected':'' }}
                                                     data-reset-command="{{ $simGPS->getResetCommand() }}"
-                                                            data-gps-type="{{ $simGPS->getGPSType() }}"
+                                                            data-gps-type="{{ $simGPS->gps_type }}"
                                                             data-vehicle-id="{{ $simGPS->vehicle->id ?? null }}">
-                                                        {{ $simGPS->getGPSType() }}: {{ $simGPS->sim }} | #{{ $simGPS->vehicle->number ?? 'NONE'  }} ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
+                                                        {{ $simGPS->gps_type }}: {{ $simGPS->sim }} | #{{ $simGPS->vehicle->number ?? 'NONE'  }} ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -219,7 +207,7 @@
                                         $totalSkypatrol = $simGPSList->filter(function ($simGPS, $key){ return $simGPS->isSkypatrol(); })->count();
                                         $totalCoban = $simGPSList->filter(function ($simGPS, $key){ return $simGPS->isCoban(); })->count();
                                     @endphp
-                                    <small class="text-bold">{{ count($simGPSList) }} @lang('assigned vehicles') | ({{ $totalSkypatrol }} SKYPATROL) ({{ $totalCoban }} COBAN)</small><br>
+                                    <small class="text-bold">{{ count($simGPSList) }} @lang('assigned vehicles')</small><br>
                                     <small class="text-bold">{{ count($unAssignedVehicles) }} @lang('unassigned vehicles')</small>
                                 </h4>
                             </div>
@@ -306,8 +294,9 @@
                                                         </div>
                                                         <div class="input-group col-md-7">
                                                             <select id="gps_type" name="gps_type" class="default-select2 form-control input-sm" title="@lang('GPS type')">
-                                                                <option value="SKY">SKYPATROL</option>
-                                                                <option value="TR">COBAN</option>
+                                                                @foreach( \App\SimGPS::DEVICES as $device )
+                                                                    <option value="{{ $device }}" data-reset-command="{{ \App\SimGPS::RESET_COMMAND[ $device ] }}">{{ $device }}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -374,29 +363,6 @@
                 $('#command-gps').val(data);
             }
         });
-    }
-
-    function selectGPSType(gpsTypeString) {
-        var simGPS = $('#sim-gps');
-        var gpsType = $('#gps-type').val(gpsTypeString);
-        gpsType.val(gpsTypeString);
-
-        if (simGPS.hasClass('select')) {
-            simGPS.find('option').each(function(i,e){
-                var el = $(e);
-                var disabled = $(e).data('gps-type') !== gpsTypeString;
-                if( disabled ){
-                    $(e).prop('disabled',disabled);
-                    el.remove();
-                    el.appendTo('#sim-gps');
-                }
-                else {
-                    $(e).removeAttr('disabled');
-                    gpsType.data('reset-command', $(e).data('reset-command'));
-                }
-            });
-            simGPS.select2();
-        }
     }
 
     $('.form-send-message').submit(function(e){
@@ -542,5 +508,7 @@
         }
     });
 
-    $('.{{ $optionSelection }}').click();
+    var gpsType = $('#gps-type');
+    gpsType.val( $("#gps-report").val() );
+    gpsType.data('reset-command', $('#gps-report option:selected').data('reset-command'));
 </script>

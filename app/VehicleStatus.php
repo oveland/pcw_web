@@ -2,6 +2,7 @@
 
 namespace App;
 
+use const Grpc\CALL_OK;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,10 +21,49 @@ use Illuminate\Database\Eloquent\Model;
  */
 class VehicleStatus extends Model
 {
+    const OK = 0;
+    const NO_REPORT = 1;
+    const WITHOUT_GPS_SIGNAL = 5;
+    const POWER_OFF = 6;
+    const PARKED = 3;
+    const IN_REPAIR = 31;
+
     protected $table = 'status_vehi';
 
     public function getIdAttribute()
     {
         return $this->id_status;
+    }
+
+    /*
+     * Checks if Status vehicle is OK
+     */
+    public function isOK()
+    {
+        return $this->id == self::OK;
+    }
+
+    /*
+     * Checks if Status vehicle is Power Off
+     */
+    public function isPowerOff()
+    {
+        return $this->id == self::POWER_OFF;
+    }
+
+    /*
+     * Checks if Status vehicle is No Report
+     */
+    public function isNoReport()
+    {
+        return $this->id == self::NO_REPORT;
+    }
+
+    /*
+     * Checks if Status vehicle is Without GPS Signal
+     */
+    public function isWithoutGPSSignal()
+    {
+        return $this->id == self::WITHOUT_GPS_SIGNAL;
     }
 }

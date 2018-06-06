@@ -52,7 +52,7 @@ class SMS
         ];
 
         if ($simGPS) {
-            //$command = $simGPS->gps_type == 'TR' ? "reset123456" : 'AT$RESET';
+            //$command = $simGPS->gps_type == 'COBAN' ? "reset123456" : 'AT$RESET';
             $command = $simGPS->getResetCommand();
 
             $responseSMS = self::sendCommand($command, $simGPS->sim);

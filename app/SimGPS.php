@@ -30,18 +30,28 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SimGPS extends Model
 {
+    const SKYPATROL = 'SKYPATROL';
+    const COBAN = 'COBAN';
+
+    const RESET_COMMAND = [
+        self::SKYPATROL => 'AT$RESET',
+        self::COBAN => 'reset123456',
+    ];
+
+    const DEVICES = [self::SKYPATROL,self::COBAN];
+
     protected $table = 'sim_gps';
 
-    protected $fillable = ['sim','operator','gps_type','vehicle_id','active'];
+    protected $fillable = ['sim', 'operator', 'gps_type', 'vehicle_id', 'active'];
 
     public function scopeFindByVehicleId($query, $vehicle_id)
     {
-        return $query->where('vehicle_id', $vehicle_id)->where('active',true);
+        return $query->where('vehicle_id', $vehicle_id)->where('active', true);
     }
 
     public function scopeFindBySim($query, $sim)
     {
-        return $query->where('sim', $sim)->where('active',true)->get()->first();
+        return $query->where('sim', $sim)->where('active', true)->get()->first();
     }
 
     public function vehicle()
@@ -49,28 +59,23 @@ class SimGPS extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function getGPSType()
-    {
-        return $this->gps_type == 'TR' ? 'COBAN':'SKYPATROL';
-    }
-
     public function isSkypatrol()
     {
-        return $this->gps_type != 'TR';
+        return $this->gps_type == self::SKYPATROL;
     }
 
     public function isCoban()
     {
-        return $this->gps_type == 'TR';
+        return $this->gps_type == self::COBAN;
     }
 
     public function getGPSTypeCssColor()
     {
-        return $this->gps_type == 'TR' ? 'warning':'primary';
+        return $this->gps_type == self::COBAN ? 'warning' : 'primary';
     }
 
     public function getResetCommand()
     {
-        return $this->gps_type == 'TR' ? "reset123456" : 'AT$RESET';
+        return $this->gps_type == self::COBAN ? "reset123456" : 'AT$RESET';
     }
 }

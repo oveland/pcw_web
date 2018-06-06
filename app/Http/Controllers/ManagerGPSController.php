@@ -8,6 +8,7 @@ use App\GpsVehicle;
 use App\Http\Controllers\API\SMS;
 use App\SimGPS;
 use App\Vehicle;
+use App\VehicleStatus;
 use Auth;
 use Carbon\Carbon;
 use Dompdf\Exception;
@@ -28,21 +29,28 @@ class ManagerGPSController extends Controller
     public function list(Request $request)
     {
         $companyReport = $request->get('company-report');
+        $gpsReport = $request->get('gps-report');
         $optionSelection = $request->get('option-selection');
 
         $simGPSList = null;
         if ($companyReport != 'any') {
             $company = (Auth::user()->isAdmin()) ? Company::find($companyReport) : Auth::user()->company;
             $vehiclesCompany = $company->vehicles;
-            $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))->get();
+            $simGPSList = SimGPS::
+            whereIn('vehicle_id', $vehiclesCompany->pluck('id'))
+                ->where('gps_type', $gpsReport)
+                ->get();
 
             $simGPSList = $simGPSList->sortBy(function ($simGPS) {
                 return $simGPS->vehicle->number ?? true;
             });
 
-            $unAssignedVehicles = $vehiclesCompany->where('active', true)->whereNotIn('id', $simGPSList->pluck('vehicle_id'))->sortBy(function ($vehicle) {
-                return $vehicle->number;
-            });
+            $unAssignedVehicles = $vehiclesCompany
+                ->where('active', true)
+                ->whereNotIn('id', SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))->get()->pluck('vehicle_id'))
+                ->sortBy(function ($vehicle) {
+                    return $vehicle->number;
+                });
 
             $readyVehicles = [
                 //6,
@@ -114,17 +122,14 @@ class ManagerGPSController extends Controller
                 85,
                 114,
                 33,
-                39
+                39,
+                53,
+                92
             ];
             switch ($optionSelection) {
-                case 'all-skypatrol':
+                case 'all':
                     foreach ($simGPSList as $simGPS) {
-                        if( $simGPS->isSkypatrol() )$selection[] = $simGPS->vehicle->number;
-                    }
-                    break;
-                case 'all-coban':
-                    foreach ($simGPSList as $simGPS) {
-                        if( $simGPS->isCoban() )$selection[] = $simGPS->vehicle->number;
+                        $selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 case 'ready':
@@ -133,6 +138,22 @@ class ManagerGPSController extends Controller
                 case 'unready':
                     foreach ($simGPSList as $simGPS) {
                         if (!in_array($simGPS->vehicle->number, $readyVehicles)) $selection[] = $simGPS->vehicle->number;
+                    }
+                    break;
+                case 'no-report':
+                    foreach ($simGPSList as $simGPS) {
+                        $vehicle = $simGPS->vehicle;
+                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
+                        $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                        if ($vehicleStatus->id == VehicleStatus::NO_REPORT) $selection[] = $simGPS->vehicle->number;
+                    }
+                    break;
+                case 'without-gps-signal':
+                    foreach ($simGPSList as $simGPS) {
+                        $vehicle = $simGPS->vehicle;
+                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
+                        $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                        if ($vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 default:
@@ -174,8 +195,7 @@ class ManagerGPSController extends Controller
             $index++;
         }
 
-        $statusList = "<div class='text-center'><span class='btn btn-lime'>Total OK $totalOKPeriod</span></div>$statusList";
-
+        $statusList = "<div class='text-center'><span class='btn btn-xs btn-lime'>Período OK » $totalOKPeriod</span></div>$statusList";
         $headerReport = "";
         $reportsByStatus = $reportsStatus->sortBy('statusId')->groupBy('statusId');
         foreach ($reportsByStatus as $statusId => $reportStatus) {
@@ -214,21 +234,21 @@ class ManagerGPSController extends Controller
                                 // Checks for auto set plate
                                 if (str_contains($individualCommand, "TTDEVID")) {
                                     $simGPS = SimGPS::findBySim($sim);
-                                    if( $simGPS ){
-                                        if( $request->get('auto-set-plate') ){
+                                    if ($simGPS) {
+                                        if ($request->get('auto-set-plate')) {
                                             $vehicle = $simGPS->vehicle;
                                             $individualCommand = '$TTDEVID="' . $vehicle->plate . '"';
                                             dump(" - Auto set plate for: $vehicle->plate");
                                         }
-                                    }else{
+                                    } else {
                                         dd("Error: Está intentando establecer una placa que no existe en la configuración de SIM-GPS: $individualCommand");
                                     }
 
-                                    if( !$request->get('auto-set-plate') && count($simGPSNumbers) > 1){
+                                    if (!$request->get('auto-set-plate') && count($simGPSNumbers) > 1) {
                                         dd("Error: No es posible establecer la misma placa para varios vehículos. Seleccione la opción 'Auto setear placa'");
                                     }
                                 }
-                                if( $individualCommand ){
+                                if ($individualCommand) {
                                     if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
                                         $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
                                         $flagStartCMD = false;

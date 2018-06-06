@@ -11,8 +11,9 @@
         <div class="row">
             <div class="col-md-6">
                 <select id="gps-type-{{ $id }}" name="gps_type" class="form-control input-sm" title="@lang('GPS type')">
-                    <option value="SKY">SKYPATROL</option>
-                    <option value="TR">COBAN</option>
+                    @foreach( \App\SimGPS::DEVICES as $device )
+                        <option value="{{ $device }}">{{ $device }}</option>
+                    @endforeach
                 </select>
                 <script>$('#gps-type-{{ $id }}').val('{{ $simGPS->gps_type }}')</script>
             </div>
