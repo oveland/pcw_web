@@ -105,6 +105,7 @@
                                                                     <span class="caret"></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu">
+                                                                    @if( $gpsReport === \App\SimGPS::SKYPATROL )
                                                                     <li>
                                                                         <a href="javascript:getScript('general-skypatrol')">
                                                                             <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script General Skypatrol')
@@ -131,12 +132,15 @@
                                                                         </a>
                                                                     </li>
                                                                     <li class="divider"></li>
+                                                                    @endif
+                                                                    @if( $gpsReport === \App\SimGPS::COBAN )
                                                                     <li>
                                                                         <a href="javascript:getScript('coban')">
                                                                             <i class="fa fa-podcast text-warning" aria-hidden="true"></i> @lang('Script Coban')
                                                                         </a>
                                                                     </li>
                                                                     <li class="divider"></li>
+                                                                    @endif
                                                                     <li>
                                                                         <a href="javascript:;" class="set-reset-command">
                                                                             <i class="fa fa-undo text-primary" aria-hidden="true"></i>
@@ -151,7 +155,7 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                            <div class="btn-group">
+                                                            <div class="btn-group" style="border-left: 1px solid gray">
                                                                 <div class="checkbox">
                                                                     <label>
                                                                         <input name="auto-set-plate" type="checkbox" value="true">
@@ -202,7 +206,7 @@
                                 </div>
                                 <h4 class="panel-title">
                                     <i class="fa fa-table" aria-hidden="true"></i>
-                                    @lang('List GPS SIM')<br>
+                                    <strong>@lang('List GPS SIM') {{ $gpsReport }}</strong><br>
                                     @php
                                         $totalSkypatrol = $simGPSList->filter(function ($simGPS, $key){ return $simGPS->isSkypatrol(); })->count();
                                         $totalCoban = $simGPSList->filter(function ($simGPS, $key){ return $simGPS->isCoban(); })->count();

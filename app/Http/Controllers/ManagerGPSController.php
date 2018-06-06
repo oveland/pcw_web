@@ -162,7 +162,7 @@ class ManagerGPSController extends Controller
             }
         }
 
-        return view('admin.gps.manage.list', compact(['simGPSList', 'vehiclesCompany', 'selection', 'optionSelection', 'unAssignedVehicles']));
+        return view('admin.gps.manage.list', compact(['simGPSList', 'vehiclesCompany', 'selection', 'optionSelection', 'unAssignedVehicles', 'gpsReport']));
     }
 
     public function getVehicleStatus(Request $request)
