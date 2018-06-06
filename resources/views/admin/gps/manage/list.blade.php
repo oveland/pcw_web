@@ -155,7 +155,11 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                            <div class="btn-group" style="border-left: 1px solid gray">
+                                                            <div class="btn-group" style="
+                                                                border-left: 1px solid lightgray;
+                                                                margin-left: 20px;
+                                                                padding-left: 20px;
+                                                            ">
                                                                 <div class="checkbox">
                                                                     <label>
                                                                         <input name="auto-set-plate" type="checkbox" value="true">
