@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-md-12">
         <div class="panel">
-            <ul class="nav nav-tabs nav-tabs-primary nav-justified">
-                <li class="active">
+            <ul class="nav nav-tabs nav-tabs-primary nav-justified tab-report">
+                <li class="active" onclick="if(editedSIM)$('.form-search-report').submit()">
                     <a href="#tab-1" data-toggle="tab">
                         <i class="fa fa-paper-plane"></i>
                         @lang('Send Commands')
@@ -215,7 +215,11 @@
                                 <h4 class="panel-title">
                                     <i class="fa fa-table" aria-hidden="true"></i>
                                     @lang('List GPS SIM')<br>
-                                    <small class="text-bold">{{ count($simGPSList) }} @lang('assigned vehicles') | (66 SKYPATROL) (15 COBAN)</small><br>
+                                    @php
+                                        $totalSkypatrol = $simGPSList->filter(function ($simGPS, $key){ return $simGPS->isSkypatrol(); })->count();
+                                        $totalCoban = $simGPSList->filter(function ($simGPS, $key){ return $simGPS->isCoban(); })->count();
+                                    @endphp
+                                    <small class="text-bold">{{ count($simGPSList) }} @lang('assigned vehicles') | ({{ $totalSkypatrol }} SKYPATROL) ({{ $totalCoban }} COBAN)</small><br>
                                     <small class="text-bold">{{ count($unAssignedVehicles) }} @lang('unassigned vehicles')</small>
                                 </h4>
                             </div>
@@ -344,6 +348,7 @@
 </div>
 
 <script type="application/javascript">
+    var editedSIM = false;
     $('.default-select2').select2();
     setTimeout(function () {
         $('.form-send-message .select2-container').css('width','100%');
@@ -439,6 +444,7 @@
                 complete:function () {
                     $('#detail-' + simGPSId).removeClass('hide');
                     $('#edit-' + simGPSId).addClass('hide');
+                    editedSIM = true;
                 }
             });
         }
@@ -467,6 +473,7 @@
                     setTimeout(function(){
                         $('.form-search-report').submit();
                     },500);
+                    editedSIM = true;
                 }
             });
         }

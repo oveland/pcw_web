@@ -37,7 +37,7 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
-                        @if(Auth::user()->isAdmin() || Auth::user()->id == 999459 || Auth::user()->id == 841403)
+                        @if(Auth::user()->isAdmin())
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="form-input-flat">
-                        @if(Auth::user()->isAdmin())
+                        @if(Auth::user()->isAdmin() || true)
                             <div class="col-md-8">
                                 <div class="col-md-12">
                                     <div class="col-md-12">
