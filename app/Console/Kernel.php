@@ -21,6 +21,8 @@ class Kernel extends ConsoleKernel
 
         Commands\SMSSendReportCommand::class,
         Commands\SMSSendProprietaryReportCommand::class,
+
+        Commands\DatabaseManageOLDRoutinesCommand::class,
     ];
 
     /**
@@ -36,12 +38,15 @@ class Kernel extends ConsoleKernel
         $schedule->command('db:manage-location-reports')->dailyAt('01:00');
         $schedule->command('db:manage-markers-reports')->dailyAt('02:00');
 
-        $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
+        $schedule->command('db:manage-old-routines')->dailyAt('03:00');
 
+
+        $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
         $schedule->command('gps:check-status')->everyMinute();
 
         $schedule->command('sms:send-report')->cron(config('sms.sms_cron_report'));
         $schedule->command('sms:send-proprietary-report')->cron(config('sms.sms_cron_proprietary_report'));
+
     }
 
     /**
