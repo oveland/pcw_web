@@ -69,7 +69,7 @@
                                 <i class="fa fa-clock-o text-muted"></i><br>
                                 @lang('Departure time')
                             </th>
-                            <th class="col-md-2">
+                            <th class="col-md-2 hide">
                                 <i class="fa fa-clock-o text-muted"></i><br>
                                 @lang('Arrival Time Scheduled')
                             </th>
@@ -82,11 +82,10 @@
                                 @lang('Arrival Time Difference')
                             </th>
                             <th class="col-md-2">
-                                <i class="fa fa-clock-o text-muted"></i>
-                                <i class="fa fa-flag text-muted m-r-5"></i><br>
+                                <i class="ion-android-stopwatch text-muted"></i><br>
                                 <span class="text-warning">@lang('Route Time')</span>
                             </th>
-                            <th data-sorting="disabled">
+                            <th class="hide" data-sorting="disabled">
                                 <i class="fa fa-tachometer text-muted"></i><br>
                                 @lang('Status')
                             </th>
@@ -127,16 +126,24 @@
                                 $invalid = ($totalPerRoute > 1000 || $totalPerRoute < 0)?true:false;
                             @endphp
                             <tr>
-                                <th class="bg-inverse text-white text-center">{{ $route->name }}</th>
+                                <th class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+                                    {{ $route->name }}<br>
+                                    <small>{{ $dispatchRegister->status }}</small>
+                                </th>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td>{{ $dispatchRegister->turn }}</td>
                                 <td class="text-uppercase">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
-                                <td>{{ $strTime->toString($dispatchRegister->departure_time) }}</td>
-                                <td>{{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}</td>
-                                <td>{{ $strTime->toString($dispatchRegister->arrival_time) }}</td>
-                                <td>{{ $strTime->toString($dispatchRegister->arrival_time_difference) }}</td>
-                                <td>{{ $dispatchRegister->getRouteTime() }}</td>
-                                <td>{!! $dispatchRegister->status !!}</td>
+                                <td class="text-center">
+                                    {{ $strTime->toString($dispatchRegister->departure_time) }}<br>
+                                    <small class="tooltips" data-title="@lang('Vehicles without route')" data-placement="bottom">
+                                        {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
+                                    </small>
+                                </td>
+                                <td class="hide text-center">{{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}</td>
+                                <td class="text-center">{{ $strTime->toString($dispatchRegister->arrival_time) }}</td>
+                                <td class="text-center">{{ $strTime->toString($dispatchRegister->arrival_time_difference) }}</td>
+                                <td class="text-center">{{ $dispatchRegister->getRouteTime() }}</td>
+                                <td class="hide">{!! $dispatchRegister->status !!}</td>
 
                                 @if( $company->hasRecorderCounter() )
                                 <td width="20%" class="p-r-0 p-l-0 text-center">

@@ -166,6 +166,7 @@ class RouteReportController extends Controller
                         __('End Rec.') => intval($endRecorder),                                                        # L CELL
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # M CELL
                         __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # N CELL
+                        __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # O CELL
                     ];
                 }
 

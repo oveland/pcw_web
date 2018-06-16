@@ -404,5 +404,6 @@
   "month": "mes",
   "Consolidate month": "Consolidado mes",
   "Without GPS signal": "Sin señal GPS",
-  "No report": "No reporta"
+  "No report": "No reporta",
+  "Vehicles without route": "Vehículos sin ruta"
 }
