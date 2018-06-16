@@ -47,6 +47,8 @@ class SMSSendReportCommand extends Command
         //$simToReport = config('sms.sms_vehicle_sim');
         $simToReport = DB::select("SELECT val FROM params WHERE name='sms_vehicle_sim' LIMIT 1")[0]->val ?? null;
 
+        //dd($vehicleToReport,$simToReport);
+
 
         if( $simToReport && $simToReport ){
             $report = DB::select("
