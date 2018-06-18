@@ -405,5 +405,6 @@
   "Consolidate month": "Consolidado mes",
   "Without GPS signal": "Sin señal GPS",
   "No report": "No reporta",
-  "Vehicles without route": "Vehículos sin ruta"
+  "Vehicles without route": "Vehículos sin ruta",
+  "Vehicle not found in platform": "Vehículo no registrado en plataforma"
 }

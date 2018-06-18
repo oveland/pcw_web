@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\Apps\AppMyRouteController;
+use App\Services\API\Apps\MyRouteService;
+use App\Services\API\Apps\PCWTrackService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -12,7 +13,10 @@ class APIController extends Controller
     {
         switch ($api) {
             case 'app-my-route':
-                return AppMyRouteController::serve($request);
+                return MyRouteService::serve($request);
+                break;
+            case 'app-pcw-track':
+                return PCWTrackService::serve($request);
                 break;
             default:
                 abort(403);

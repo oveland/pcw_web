@@ -6,7 +6,7 @@
  * Time: 11:05 PM
  */
 
-namespace App\Http\Controllers\API\interfaces;
+namespace App\Services\API\Apps\Contracts;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;

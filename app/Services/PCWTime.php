@@ -10,6 +10,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Excel;
+use PhpParser\Node\Scalar\String_;
 
 class PCWTime
 {
@@ -27,5 +28,10 @@ class PCWTime
         }
         $dates[] = $start->copy();
         return $dates;
+    }
+
+    public static function toDateTimeString($dateString)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.',$dateString)[0])->toDateTimeString();
     }
 }

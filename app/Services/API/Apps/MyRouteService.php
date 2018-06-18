@@ -1,19 +1,20 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Oscar
+ * Date: 17/06/2018
+ * Time: 11:08 PM
+ */
 
-namespace App\Http\Controllers\API\Apps;
+namespace App\Services\API\Apps;
 
-use App\Company;
-use App\CurrentLocation;
-use App\CurrentLocationReport;
-use App\Http\Controllers\API\interfaces\APIInterface;
 use App\Route;
+use App\Services\API\Apps\Contracts\APIInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class AppMyRouteController extends Controller implements APIInterface
+class MyRouteService implements APIInterface
 {
-    //
     public static function serve(Request $request): JsonResponse
     {
         $action = $request->get('action');
