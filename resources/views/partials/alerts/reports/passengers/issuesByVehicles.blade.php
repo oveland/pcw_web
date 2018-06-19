@@ -43,7 +43,7 @@
                                     <i class="fa fa-clock-o"></i>
                                     {{ $dispatchRegister->departure_time }}
                                 </p>
-                                <div class="tooltips text-{{  $issue->field == __('Start Recorder')?'issue':'' }} box-edit-recorder" data-title="@lang('Start Recorder')">
+                                <div class="tooltips text-{{  $issue->field == __('Start Recorder')?'issue':'' }} box-edit" data-title="@lang('Start Recorder')">
                                     <span class="box-info">
                                         <i class="fa fa-arrow-circle-right"></i>
                                         <span class="text-{{ $issue->bad_start_recorder ? 'warning':'' }}">
@@ -58,7 +58,7 @@
                                 </div>
 
 
-                                <div class="tooltips text-{{  $issue->field == __('End Recorder')?'issue':'' }} box-edit-recorder" data-title="@lang('End Recorder')">
+                                <div class="tooltips text-{{  $issue->field == __('End Recorder')?'issue':'' }} box-edit" data-title="@lang('End Recorder')">
                                     <span class="box-info">
                                         <i class="fa fa-arrow-circle-left"></i>
                                         <span>

@@ -1,6 +1,6 @@
 @if( Auth::user()->isAdmin() )
 <style>
-    .box-edit-recorder .box-info:hover{
+    .box-edit .box-info:hover{
         border: 1px solid gray;
         border-radius: 6px;
         cursor: pointer;
@@ -11,7 +11,7 @@
 
 <script type="application/javascript">
     $(document).ready(function () {
-        $('body').on('click', '.box-edit-recorder', function () {
+        $('body').on('click', '.box-edit', function () {
             $(this).find('.box-info').hide();
             $(this).find('.box-edit').show();
         });
@@ -36,8 +36,8 @@
                     success: function (data) {
                         if(data.success){
                             gsuccess('@lang('Data updated successfully')');
-                            input.parents('.box-edit-recorder').find('.box-info').show().find('span').text(data.value);
-                            input.parents('.box-edit-recorder').find('.box-edit').hide();
+                            input.parents('.box-edit').find('.box-info').show().find('span').text(data.value);
+                            input.parents('.box-edit').find('.box-edit').hide();
                             $('.container-alert-new-values').slideDown(1500);
                         }else{
                             gerror('@lang('Error updating data')');

@@ -285,6 +285,7 @@
   "Data updated successfully": "Dato actualizado correctamente",
   "Error updating data": "Error actualizando la información",
   "start_recorder": "registradora_salida",
+  "driver_code": "codigo_interno_conductor",
   "end_recorder": "registradora_llegada",
   "Registers updated": "Registros actualizados",
   "Register created successfully": "Registro creado correctamente",

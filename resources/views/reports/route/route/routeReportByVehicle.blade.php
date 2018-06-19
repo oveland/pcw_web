@@ -132,7 +132,24 @@
                                 </th>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td>{{ $dispatchRegister->turn }}</td>
-                                <td class="text-uppercase">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
+                                <td class="text-uppercase">
+                                    @if( Auth::user()->isAdmin() )
+                                        <div class="tooltips box-edit" data-title="@lang('Driver')">
+                                        <span class="box-info">
+                                            <span class="">
+                                                {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
+                                            </span>
+                                        </span>
+                                            <div class="box-edit" style="display: none">
+                                                <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
+                                                       data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('driver_code')"
+                                                       class="input-sm form-control edit-input-recorder" value="{{ $dispatchRegister->driver_code }}">
+                                            </div>
+                                        </div>
+                                    @else
+                                        {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     {{ $strTime->toString($dispatchRegister->departure_time) }}<br>
                                     <small class="tooltips" data-title="@lang('Vehicles without route')" data-placement="bottom">
@@ -148,7 +165,7 @@
                                 @if( $company->hasRecorderCounter() )
                                 <td width="20%" class="p-r-0 p-l-0 text-center">
                                     @if( Auth::user()->isAdmin() )
-                                    <div class="tooltips box-edit-recorder" data-title="@lang('Start Recorder')">
+                                    <div class="tooltips box-edit" data-title="@lang('Start Recorder')">
                                         <span class="box-info">
                                             <span class="">
                                                 {{ $startRecorder }}
@@ -166,7 +183,7 @@
                                 </td>
                                 <td width="20%" class="p-r-0 p-l-0 text-center">
                                     @if( Auth::user()->isAdmin() )
-                                    <div class="tooltips box-edit-recorder" data-title="@lang('Start Recorder')">
+                                    <div class="tooltips box-edit" data-title="@lang('Start Recorder')">
                                         <span class="box-info">
                                             <span class="">
                                                 {{ $endRecorder }}
