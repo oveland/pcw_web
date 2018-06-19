@@ -11,6 +11,7 @@ namespace App\Services\API\Apps;
 use App\Services\API\Apps\Contracts\APIInterface;
 use App\Services\PCWTime;
 use App\Vehicle;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,6 +26,12 @@ class PCWTrackService implements APIInterface
         if ($action) {
             switch ($action) {
                 case 'track-route-times':
+                    /*return response()->json([
+                        'error' => true,
+                        'message' => 'Temporal unavailable'
+                    ]);*/
+                    //$date = Carbon::now()->toDateTimeString();
+                    //return response()->json(json_decode("{\"success\":true,\"message\":\"\",\"data\":{\"vp\":\"VBZ-040\",\"vn\":\"364\",\"rd\":\"$date\",\"rn\":\"RUTA 1\",\"rr\":2,\"rt\":27,\"dpt\":\"15:25:00\",\"sch\":\"21:06:38\",\"dif\":\"-02:43:49\",\"st\":\"slow\"}}",true));
                     return self::trackRouteTime($request);
                     break;
                 default:
@@ -59,6 +66,7 @@ class PCWTrackService implements APIInterface
                 WHERE v.plate = '$vehicle->plate' AND (current_timestamp - cr.date)::INTERVAL < '00:00:40'::INTERVAL
             ");
 
+
             if( count($report) && $report = $report[0] ){
                 Log::useDailyFiles(storage_path().'/logs/gprs-report.log',2);
 
@@ -79,12 +87,12 @@ class PCWTrackService implements APIInterface
                 Log::info( $dataMessage->toJson() );
             }else{
                 $data->put('success', false);
-                $data->put('message', __('Report not found'));
+                $data->put('message', __('No registers found'));
             }
         }
         else{
             $data->put('success', false);
-            $data->put('message', __('Vehicle not found'));
+            $data->put('message', __('Vehicle not found in platform'));
         }
 
         return response()->json($data);
