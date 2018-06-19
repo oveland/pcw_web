@@ -66,9 +66,8 @@ class PCWTrackService implements APIInterface
                 WHERE v.plate = '$vehicle->plate' AND (current_timestamp - cr.date)::INTERVAL < '00:00:40'::INTERVAL
             ");
 
-
             if( count($report) && $report = $report[0] ){
-                Log::useDailyFiles(storage_path().'/logs/gprs-report.log',2);
+                Log::useDailyFiles(storage_path().'/logs/api/pcw-track-report.log',2);
 
                 $dataMessage = collect([
                     'vp' => $report->vehicle_plate,

@@ -407,5 +407,6 @@
   "Without GPS signal": "Sin señal GPS",
   "No report": "No reporta",
   "Vehicles without route": "Vehículos sin ruta",
-  "Vehicle not found in platform": "Vehículo no registrado en plataforma"
+  "Vehicle not found in platform": "Vehículo no registrado en plataforma",
+  "Proprietary not found in platform": "Propietario no registrado en plataforma"
 }
