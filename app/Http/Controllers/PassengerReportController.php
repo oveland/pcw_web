@@ -131,7 +131,7 @@ class PassengerReportController extends Controller
     public function buildPassengersByRecorder($company, $dateReport)
     {
         $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
+        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
             ->sortBy('id');
 
         return self::report($dispatchRegisters);

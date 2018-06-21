@@ -57,7 +57,7 @@ trait CounterByRecorder
 
 
             if ($classifyByRoute) {
-                $lastDispatchRegister = PassengersDispatchRegister::active()->where('vehicle_id', $vehicleId)
+                $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
                     ->where('date', '=', $dispatchRegister->date)
                     ->where('id', '<', $dispatchRegister->id)
                     ->orderByDesc('id')
@@ -81,7 +81,7 @@ trait CounterByRecorder
             }
 
             if ($startRecorder == 0) {
-                $startRecorder = PassengersDispatchRegister::where('vehicle_id', $vehicleId)
+                $startRecorder = DispatchRegister::where('vehicle_id', $vehicleId)
                         ->where('date', '=', $dispatchRegister->date)
                         ->where('id', '<', $dispatchRegister->id)
                         ->orderByDesc('id')
@@ -89,7 +89,7 @@ trait CounterByRecorder
                         ->end_recorder ?? 0;
 
                 if ($startRecorder == 0) {
-                    $startRecorder = PassengersDispatchRegister::where('vehicle_id', $vehicleId)
+                    $startRecorder = DispatchRegister::where('vehicle_id', $vehicleId)
                             ->where('date', '<', $dispatchRegister->date)
                             ->orderByDesc('id')
                             ->limit(1)->get()->first()
@@ -152,7 +152,7 @@ trait CounterByRecorder
                     'lastDispatchRegister' => $lastDispatchRegister,
                     'bad_start_recorder' => $badStartRecorder,
                     'passengers' => $passengersByRoundTrip,
-                    'dispatchRegister' => $dispatchRegister
+                    'dispatchRegister' => $dispatchRegister,
                 ]);
             }
 

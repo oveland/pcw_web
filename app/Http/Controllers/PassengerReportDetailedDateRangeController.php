@@ -55,7 +55,7 @@ class PassengerReportDetailedDateRangeController extends Controller
     public function buildPassengerReport($company, $initialDate, $finalDate)
     {
         $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = PassengersDispatchRegister::whereIn('route_id', $routes->pluck('id'))->whereBetween('date', [$initialDate, $finalDate])->active()->get()
+        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->whereBetween('date', [$initialDate, $finalDate])->active()->get()
             ->sortBy('id');
 
         $reports = self::report($dispatchRegisters);

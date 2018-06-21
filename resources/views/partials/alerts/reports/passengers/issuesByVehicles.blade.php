@@ -29,7 +29,7 @@
                         <li class="">
                             <div class="checkbox">
                                 <label>
-                                    <i class="fa fa-exclamation-triangle text-warning tooltips" data-title="@lang('Error in') <b>{{ $issue->field }}</b>" data-html="true"></i>
+                                    <i class="fa fa-exclamation-triangle faa faa-tada animated text-warning tooltips" data-title="@lang('Error in') <b>{{ $issue->field }}</b>" data-html="true"></i>
                                 </label>
                             </div>
                             <div class="info">
@@ -39,6 +39,12 @@
                                     @lang('Round Trip') {{ $dispatchRegister->round_trip }},
                                     <small>{{ $dispatchRegister->status }}</small>
                                 </h4>
+                                @if( $dispatchRegister->user )
+                                    <p class="tooltips" data-title="@lang('User') / @lang('Dispatcher')">
+                                        <i class="fa fa-user"></i>
+                                        {{ $dispatchRegister->user->name }}
+                                    </p>
+                                @endif
                                 <p class="tooltips" data-title="@lang('Departure time')">
                                     <i class="fa fa-clock-o"></i>
                                     {{ $dispatchRegister->departure_time }}
@@ -81,6 +87,12 @@
                                         @lang('Turn') {{ $lastDispatchRegister->turn }},
                                         @lang('Round Trip') {{ $lastDispatchRegister->round_trip }}
                                     </h4>
+                                    @if( $lastDispatchRegister->user )
+                                    <p class="tooltips" data-title="@lang('User') / @lang('Dispatcher')">
+                                        <i class="fa fa-user"></i>
+                                        {{ $lastDispatchRegister->user->name }}
+                                    </p>
+                                    @endif
                                     <p class="tooltips" data-title="@lang('Departure time')">
                                         <i class="fa fa-clock-o"></i>
                                         {{ $lastDispatchRegister->departure_time }}
