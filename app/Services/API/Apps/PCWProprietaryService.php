@@ -49,12 +49,11 @@ class PCWProprietaryService implements APIInterface
 
     public static function trackPassengers(Request $request): JsonResponse
     {
+        Log::useDailyFiles(storage_path() . '/logs/api/pcw-proprietary-report.log', 1);
         $data = collect(['success' => true, 'message' => '']);
 
         $now = Carbon::now();
-        $proprietary = Proprietary::where('id', $request->get('id'))
-            ->where('passenger_report_via_sms', true)
-            ->get()->first();
+        $proprietary = Proprietary::where('id', $request->get('id'))->get()->first();
 
         if ($proprietary) {
             $assignedVehicles = $proprietary->assignedVehicles;
@@ -69,7 +68,6 @@ class PCWProprietaryService implements APIInterface
                     ->get();
 
                 if (count($dispatchRegisters)) {
-                    Log::useDailyFiles(storage_path() . '/logs/api/pcw-proprietary-report.log', 2);
                     $currentDispatchRegister = $dispatchRegisters->last();
                     $route = $currentDispatchRegister->route;
                     $arrivalTime = explode('.', $currentDispatchRegister->arrival_time)[0];
@@ -93,10 +91,10 @@ class PCWProprietaryService implements APIInterface
                         'rt' => $currentDispatchRegister->turn,         // Route turn,
                     ]);
 
-                    Log::info("Send passenger report to proprietary: $proprietary->id: " . $proprietary->fullName());
+                    Log::info("Send passenger report (passengersBySensor: $passengersBySensor, passengersByRecorder: $passengersByRecorder) to proprietary: $proprietary->id: " . $proprietary->fullName());
                 }
             }
-            $data->put('reports', $reports);
+            $data->put('data', $reports);
         } else {
             $data->put('success', false);
             $data->put('message', __('Proprietary not found in platform'));
