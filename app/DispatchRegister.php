@@ -29,6 +29,7 @@ use Carbon\Carbon;
  * @property string|null $status
  * @property int|null $start_recorder
  * @property int|null $end_recorder
+ * @property int|null $user_id
  * @property-read \App\Models\Passengers\RecorderCounterPerDay|null $recorderCounter
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\LocationReport[] $locationReports
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
@@ -36,6 +37,7 @@ use Carbon\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Report[] $reports
  * @property-read \App\Route|null $route
  * @property-read \App\Vehicle|null $vehicle
+ * @property-read \App\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTimeDifference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTimeScheduled($value)
@@ -217,6 +219,11 @@ class DispatchRegister extends Model
     public function getStatusString()
     {
         return explode('.', $this->status)[0];
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     const CREATED_AT = 'date_created';

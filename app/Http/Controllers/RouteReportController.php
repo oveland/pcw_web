@@ -137,7 +137,7 @@ class RouteReportController extends Controller
                 $vehicle = Vehicle::find($vehicleId);
                 $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId,$dispatchRegisters);
                 $dataExcel = array();
-
+                $lastArrivalTime = null;
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
@@ -167,7 +167,10 @@ class RouteReportController extends Controller
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # M CELL
                         __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # N CELL
                         __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # O CELL
+                        __('Dead time') => $lastArrivalTime?StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime):'',                 # P CELL
                     ];
+
+                    $lastArrivalTime = $dispatchRegister->arrival_time;
                 }
 
                 $dataExport = (object)[
