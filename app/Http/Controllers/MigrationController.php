@@ -337,8 +337,8 @@ class MigrationController extends Controller
             $controlPoint->trajectory = $controlPointOLD->trayecto;
             $controlPoint->order = $controlPointOLD->orden;
             $controlPoint->type = $controlPointOLD->tipo;
-            $controlPoint->distance_from_dispatch = $controlPointOLD->distancia_desde_despacho;
-            $controlPoint->distance_next_point = intval($controlPointOLD->distancia_punto_siguiente);
+            //$controlPoint->distance_from_dispatch = $controlPointOLD->distancia_desde_despacho;
+            //$controlPoint->distance_next_point = intval($controlPointOLD->distancia_punto_siguiente);
             $controlPoint->route_id = $controlPointOLD->id_ruta;
 
             try {

@@ -15,8 +15,8 @@ class CreateControlPointsTable extends Migration
     {
         Schema::create('control_points', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->double('latitude');
+            $table->double('longitude');
             $table->string('name');
             $table->integer('order');
             $table->integer('trajectory');
