@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DispatchRegister;
 use App\Models\Passengers\PassengerCounterPerDaySixMonth;
 use App\PassengersDispatchRegister;
 use App\Services\PCWExporter;

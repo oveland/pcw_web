@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DispatchRegister;
 use Excel;
 use Illuminate\Http\Request;
 use App\PassengersDispatchRegister;
