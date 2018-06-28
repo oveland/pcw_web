@@ -225,6 +225,8 @@
             '{{ asset('img/control-point-1.png') }}'
         ];
 
+        var routeCoordinateIcon = '{{ asset('img/point-map-blue.png') }}';
+
         var pointMap = [
             '{{ asset('img/point-map-on-road.png') }}',
             '{{ asset('img/point-map-off-road.png') }}'
@@ -331,6 +333,16 @@
                                     icon: controlPointIcon[cp.trajectory],
                                     animation: google.maps.Animation.DROP,
                                     position: {lat: parseFloat(cp.latitude), lng: parseFloat(cp.longitude)}
+                                });
+                            });
+
+                            data.routeCoordinates.forEach(function (rc, i) {
+                                new google.maps.Marker({
+                                    title: rc.index + ": distance "+rc.distance+" m.",
+                                    map: map,
+                                    icon: routeCoordinateIcon,
+                                    //animation: google.maps.Animation.DROP,
+                                    position: {lat: parseFloat(rc.latitude), lng: parseFloat(rc.longitude)}
                                 });
                             });
 

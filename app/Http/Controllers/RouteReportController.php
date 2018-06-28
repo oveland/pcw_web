@@ -41,7 +41,7 @@ class RouteReportController extends Controller
 
         $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
         $route = $routeReport == "all" ? $routeReport : Route::find($routeReport);
-        if ($routeReport != "all" && (!$route || !$route->belongsToCompany($company) )) abort(404);
+        if ($routeReport != "all" && (!$route || !$route->belongsToCompany($company))) abort(404);
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
         if ($routeReport != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
@@ -100,8 +100,8 @@ class RouteReportController extends Controller
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                                           # H CELL
                         __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference),                     # I CELL
                         __('Route Time') =>
-                            $dispatchRegister->complete()?
-                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time):
+                            $dispatchRegister->complete() ?
+                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) :
                                 '',                                                                                                              # J CELL
                         __('Status') => $dispatchRegister->status,                                                                          # K CELL
                         __('Passengers') . ' | ' . __('Day') => intval($dispatchRegister->recorderCounterPerRoundTrip->passengers),    # L CELL
@@ -135,7 +135,7 @@ class RouteReportController extends Controller
         Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
-                $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId,$dispatchRegisters);
+                $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegisters);
                 $dataExcel = array();
                 $lastArrivalTime = null;
                 foreach ($dispatchRegisters as $dispatchRegister) {
@@ -158,8 +158,8 @@ class RouteReportController extends Controller
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # G CELL
                         __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # H CELL
                         __('Route Time') =>
-                            $dispatchRegister->complete()?
-                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time):
+                            $dispatchRegister->complete() ?
+                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) :
                                 '',                                                                                         # I CELL
                         __('Status') => $dispatchRegister->status,                                                     # J CELL
                         __('Start Rec.') => intval($startRecorder),                                                    # K CELL
@@ -167,7 +167,7 @@ class RouteReportController extends Controller
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # M CELL
                         __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # N CELL
                         __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # O CELL
-                        __('Dead time') => $lastArrivalTime?StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime):'',                 # P CELL
+                        __('Dead time') => $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '',                 # P CELL
                     ];
 
                     $lastArrivalTime = $dispatchRegister->arrival_time;
@@ -206,14 +206,9 @@ class RouteReportController extends Controller
             $vehicle = $dispatchRegister->vehicle;
 
             $route = $dispatchRegister->route;
-            $routeDistance = $route->distance * 1000;
+            $routeCoordinates = self::getRouteCoordinates($route->url);
+            $routeDistance = $routeCoordinates->last()->distance;
             $controlPoints = $route->controlPoints;
-
-            $routeCoordinates = false;
-            if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
-                $routeCoordinates = self::getRouteCoordinates($route->url);
-                $offRoadLocation = false;
-            }
 
             $reports = array();
             $lastReport = $locations->first();
@@ -224,7 +219,7 @@ class RouteReportController extends Controller
                 $report = $location;
                 if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
                     $offRoad = $location->off_road == 't' ? true : false;
-                    if ($routeCoordinates != false) {
+                    if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
                         $offRoad = self::checkOffRoad($location, $routeCoordinates);
                     }
 
@@ -252,8 +247,9 @@ class RouteReportController extends Controller
                 'routePercent' => round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1),
                 'controlPoints' => $controlPoints,
                 'urlLayerMap' => $route->url,
+                'routeCoordinates' => $routeCoordinates->toArray(),
                 'reports' => $reports,
-                'offRoadFromLocation' => $offRoadLocation
+                'offRoadFromLocation' => !$dispatchRegister->dateLessThanDateNewOffRoadReport()
             ];
         }
 
@@ -477,10 +473,11 @@ class RouteReportController extends Controller
         $documents = $documents->Placemark ? $documents : $dataXML->Document;
 
         /* Extract coordinates for xml file */
-        $routeCoordinates = array();
+        $routeCoordinates = collect();
         $prevLatitude = null;
         $prevLongitude = null;
         $distance = 0;
+        $indexCoordinate = 0;
         foreach ($documents as $document) {
             foreach ($document->Placemark as $placemark) {
                 $routeCoordinatesXML = explode(' ', trim($placemark->LineString->coordinates));
@@ -493,11 +490,13 @@ class RouteReportController extends Controller
                         $longitudeRoute = doubleval($longitude);
 
                         $distance += ($prevLatitude && $prevLongitude) ? Geolocation::getDistance($prevLatitude, $prevLongitude, $latitudeRoute, $longitudeRoute) : 0;
-                        $routeCoordinates[] = (object)[
+                        $routeCoordinates->push((object)[
+                            'index' => $indexCoordinate,
                             'latitude' => $latitudeRoute,
                             'longitude' => $longitudeRoute,
-                            'distance' => $distance
-                        ];
+                            'distance' => intval($distance)
+                        ]);
+                        $indexCoordinate++;
                         $prevLatitude = $latitudeRoute;
                         $prevLongitude = $longitudeRoute;
                     }
