@@ -97,7 +97,7 @@ class Geolocation
 
         $routePath = "path=color:0x0000ff";
         foreach ($nearestRouteCoordinates as $nearestRouteCoordinate) {
-            $routePath .= '|' . $nearestRouteCoordinate['latitude'] . ',' . $nearestRouteCoordinate['longitude'];
+            $routePath .= '|' . $nearestRouteCoordinate->latitude . ',' . $nearestRouteCoordinate->longitude;
         }
 
         $url = "https://maps.googleapis.com/maps/api/staticmap?size=500x200&maptype=roadmap\&center=$location->latitude,$location->longitude&zoom=16&$routePath&markers=size:mid%7Ccolor:0xCC2701|$location->latitude,$location->longitude&key=" . config('road.google_api_token');
@@ -134,7 +134,7 @@ class Geolocation
         $location_longitude = $location->longitude;
         $threshold = config('road.route_sampling_area');
 
-        $threshold_location = [
+        $threshold_location = (object)[
             'la_up' => $location_latitude + $threshold,
             'la_down' => $location_latitude - $threshold,
             'lo_up' => $location_longitude + $threshold,
@@ -144,8 +144,8 @@ class Geolocation
         $route_coordinates = collect($route_coordinates);
         $route_coordinates = $route_coordinates->filter(function ($value, $key) use ($threshold_location) {
             return
-                $value['latitude'] > $threshold_location['la_down'] && $value['latitude'] < $threshold_location['la_up'] &&
-                $value['longitude'] > $threshold_location['lo_down'] && $value['longitude'] < $threshold_location['lo_up'];
+                $value->latitude > $threshold_location->la_down && $value->latitude < $threshold_location->la_up &&
+                $value->longitude > $threshold_location->lo_down && $value->longitude < $threshold_location->lo_up;
         })->values();
 
         return $route_coordinates;

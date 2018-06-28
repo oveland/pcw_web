@@ -53,6 +53,6 @@
             map.setOptions({styles: mapLightDreamStyles});
             routeLayerKML = new google.maps.KmlLayer();
             trafficLayer = new google.maps.TrafficLayer();
-        },500);
+        },300);
     }
 </script>

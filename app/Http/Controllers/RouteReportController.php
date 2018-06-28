@@ -197,6 +197,7 @@ class RouteReportController extends Controller
     public
     function chart(DispatchRegister $dispatchRegister)
     {
+        sleep(0.5); // For wait init map on view
         $dataReport = ['empty' => true];
         //$locations = $dispatchRegister->locations()->with('report')->get();
         $locations = $dispatchRegister->locationReports()->get();

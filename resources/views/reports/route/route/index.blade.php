@@ -279,6 +279,7 @@
                 typeReportSelect.select2();
 
                 $('.report-container').empty().slideUp();
+                $('#date-report').change();
             });
 
             $('#modal-route-report').on('shown.bs.modal', function () {
