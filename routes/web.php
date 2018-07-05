@@ -265,7 +265,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('map'))->group(function () {
             Route::get('/', 'ToolsController@map')->name('tools-map');
             Route::get('/get-route-distance/{route}', 'ToolsController@getRouteDistance')->name('tools-map-get-route-distance');
-            Route::get('/get-route-distance', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-url');
+            Route::get('/get-route-distance', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-urlwwwwwwwwwwww');
+            Route::get('/get-route-coordinates', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-url');
         });
 
         Route::prefix(__('calibration-control-points'))->group(function () {

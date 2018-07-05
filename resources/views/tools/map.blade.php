@@ -73,6 +73,24 @@
                     });
                 }
             });
+
+            $('.btn-draw-route-kmz').on('click',function () {
+                var routeKmz = $('#route-kmz').val();
+                if( is_null(routeKmz) ){
+                    alert_type('@lang('Select a route')')
+                }else{
+                    $.ajax({
+                        url:''
+                    });
+
+                    (coordinates.split("\n")).forEach(function (c,i) {
+                        c = c.split(", ");
+                        var latitude = c[0];
+                        var longitude = c[1];
+                        addMarker(new google.maps.LatLng({lat: parseFloat(latitude), lng: parseFloat(longitude)}));
+                    });
+                }
+            });
         });
         setTimeout(function(){
             map.addListener('click', function(event) {
