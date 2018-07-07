@@ -12,7 +12,7 @@
                         @foreach($driverReport as $driverCode => $report)
                             @php( $driver = \App\Driver::withCode($driverCode) )
                             <li class="{{$loop->first?'active':''}}" onclick="$('.driver-name').hide().text('{{ $driver->fullName() }}').slideDown()">
-                                <a  href="#report-tab-{{ $driverCode }}" data-toggle="tab" aria-expanded="true" class="text-center tooltips"
+                                <a  href="#report-tab-{{ $driverCode }}" data-toggle="tab" aria-expanded="true" class="text-center"
                                    data-original-title="{{ $driver->fullName() }}">
                                     <span class="icon-report f-s-8">{{ $loop->iteration }}</span>
                                     <strong><i class="icon-user f-s-9"></i> {{ $driver->code }}</strong>
