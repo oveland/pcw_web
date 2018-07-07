@@ -410,6 +410,7 @@
   "Vehicle not found in platform": "Vehículo no registrado en plataforma",
   "Proprietary not found in platform": "Propietario no registrado en plataforma",
   "Dead time": "Tiempo muerto",
+  "Total dead time": "Tiempo muerto total",
   "Dispatcher": "Despachador",
   "User": "Usuario"
 }

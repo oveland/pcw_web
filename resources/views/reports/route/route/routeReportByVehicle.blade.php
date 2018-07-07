@@ -108,6 +108,7 @@
                         </thead>
                         <tbody>
                         @php($totalPerRoute = 0)
+                        @php($totalDeadTime = '00:00:00')
                         @foreach( $dispatchRegisters as $dispatchRegister )
                             @php
                                 $strTime = new \App\Http\Controllers\Utils\StrTime();
@@ -155,9 +156,11 @@
                                         {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
                                     </small>
                                     @if( $loop->iteration > 1 )
+                                        @php($deadTime=$strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime))
+                                        @php($totalDeadTime=$strTime->addStrTime($totalDeadTime, $deadTime))
                                     <br>
                                     <small class="tooltips text-primary" data-title="@lang('Dead time')" data-placement="bottom">
-                                        <i class="ion-android-stopwatch text-muted"></i> {{ $strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime) }}
+                                        <i class="ion-android-stopwatch text-muted"></i> {{ $deadTime }}
                                     </small>
                                     @endif
                                 </td>
@@ -228,6 +231,11 @@
                             </tr>
                             @php( $lastArrivalTime = $dispatchRegister->arrival_time )
                         @endforeach
+                        <tr>
+                            <td colspan="4" class="text-right"><i class="ion-android-stopwatch"></i> @lang('Total dead time')</td>
+                            <td class="text-center">{{ $totalDeadTime }}</td>
+                            <td colspan="8"></td>
+                        </tr>
                         </tbody>
                     </table>
                     <!-- end table -->

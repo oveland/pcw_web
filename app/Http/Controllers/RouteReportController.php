@@ -138,6 +138,9 @@ class RouteReportController extends Controller
                 $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegisters);
                 $dataExcel = array();
                 $lastArrivalTime = null;
+
+                $totalDeadTime = '00:00:00';
+
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
@@ -147,6 +150,8 @@ class RouteReportController extends Controller
                     $startRecorder = $historyCounter->startRecorder;
                     $totalRoundTrip = $historyCounter->passengersByRoundTrip;
                     $totalPassengersByRoute = $historyCounter->totalPassengersByRoute;
+
+                    $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
 
                     $dataExcel[] = [
                         __('Route') => $route->name,                                                                    # A CELL
@@ -167,8 +172,10 @@ class RouteReportController extends Controller
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # M CELL
                         __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # N CELL
                         __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # O CELL
-                        __('Dead time') => $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '',                 # P CELL
+                        __('Dead time') => $deadTime,                 # P CELL
                     ];
+
+                    $totalDeadTime = $deadTime ? StrTime::addStrTime($totalDeadTime, $deadTime) : $totalDeadTime;
 
                     $lastArrivalTime = $dispatchRegister->arrival_time;
                 }
@@ -176,12 +183,11 @@ class RouteReportController extends Controller
                 $dataExport = (object)[
                     'fileName' => __('Dispatch report') . " V $dateReport",
                     'title' => __('Dispatch report') . " | $dateReport",
-                    'subTitle' => "$vehicle->number | $vehicle->plate",
+                    'subTitle' => "$vehicle->number | $vehicle->plate" . ". " . __('Total dead time') . ": $totalDeadTime",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
                     'type' => 'routeReportByVehicle'
                 ];
-                //foreach ()
                 /* SHEETS */
                 $excel = PCWExporter::createHeaders($excel, $dataExport);
                 $excel = PCWExporter::createSheet($excel, $dataExport);

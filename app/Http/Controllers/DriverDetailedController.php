@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
+use App\Http\Controllers\Utils\StrTime;
 use App\Services\PCWExporter;
 use Auth;
 use Illuminate\Http\Request;
@@ -31,21 +32,56 @@ class DriverDetailedController extends Controller
         $dateReport = $request->get('date-report');
         $driverReport = $request->get('driver-report');
 
-        $driverReport = 'all';
+        $driverReport = $this->buildDriverReport($company, $dateReport, $driverReport);
+
+        return view('reports.drivers.detailed.show', compact('driverReport'));
+    }
+
+    function buildDriverReport($company, $dateReport, $driverReport)
+    {
+        $driverReport = 'all'; // TODO: Set report for a specific driver
+
+        $report = collect([]);
 
         $drivers = $company->activeDrivers();
-        if( $driverReport != 'all' )$drivers->where('code',$driverReport);
+        if ($driverReport != 'all') $drivers->where('code', $driverReport);
         $drivers = $drivers->get();
 
-        $dispatchRegistersByDrivers = DispatchRegister::where('date',$dateReport)
+        $dispatchRegistersByDrivers = DispatchRegister::where('date', $dateReport)
             ->whereIn('driver_code', $drivers->pluck('code'))
+            ->orderBy('departure_time')
             ->get()
             ->groupBy('driver_code');
 
-        return view('reports.drivers.detailed.show',compact('dispatchRegistersByDrivers'));
+        foreach ($dispatchRegistersByDrivers as $driverCode => $dispatchRegistersByDriver) {
+            $deadTimeReport = collect([]);
+            $deadTime = '00:00:00';
+            $totalDeadTime = '00:00:00';
+            $lastArrivalTime = null;
+            foreach ($dispatchRegistersByDriver as $dispatchRegister) {
+                if ($lastArrivalTime) {
+                    $deadTime = StrTime::subStrTime($dispatchRegister['departure_time'], $lastArrivalTime);
+                    $totalDeadTime = StrTime::addStrTime($totalDeadTime, $deadTime);
+                }
+                $deadTimeReport->put($dispatchRegister->id,$deadTime);
+                $lastArrivalTime = $dispatchRegister['arrival_time'];
+            }
+
+            $report->put($driverCode, (object)[
+                'company' => $company->id,
+                'dateReport' => $dateReport,
+                'driverReport' => $driverReport,
+                'dispatchRegisters' => $dispatchRegistersByDriver,
+                'totalDeadTime' => $totalDeadTime,
+                'deadTimeReport' => $deadTimeReport
+            ]);
+        }
+
+        return $report->sortBy('totalDeadTime');
     }
 
     /**
+     * TODO make export feature
      * Export report to excel format
      *
      * @param Request $request
