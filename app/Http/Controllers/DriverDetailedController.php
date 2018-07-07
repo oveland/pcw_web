@@ -42,7 +42,7 @@ class DriverDetailedController extends Controller
         $report = collect([]);
 
         $drivers = $company->activeDrivers();
-        if ($driverReport != 'all') $drivers->where('code', $driverReport);
+        if ($driverReport) $drivers->whereIn('code', $driverReport);
         $drivers = $drivers->get();
 
         $dispatchRegistersByDrivers = DispatchRegister::where('date', $dateReport)
