@@ -39,8 +39,6 @@ class DriverDetailedController extends Controller
 
     function buildDriverReport($company, $dateReport, $driverReport)
     {
-        $driverReport = 'all'; // TODO: Set report for a specific driver
-
         $report = collect([]);
 
         $drivers = $company->activeDrivers();
