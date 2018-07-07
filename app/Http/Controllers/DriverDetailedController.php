@@ -48,6 +48,7 @@ class DriverDetailedController extends Controller
         $drivers = $drivers->get();
 
         $dispatchRegistersByDrivers = DispatchRegister::where('date', $dateReport)
+            ->completed()
             ->whereIn('driver_code', $drivers->pluck('code'))
             ->orderBy('departure_time')
             ->get()
