@@ -52,15 +52,7 @@ class RouteReportController extends Controller
             ->get();
 
         switch ($typeReport) {
-            case 'round_trip':
-                $roundTripDispatchRegisters = $dispatchRegisters->groupBy('round_trip');
-
-                if ($request->get('export')) $this->exportByRoundTrip($roundTripDispatchRegisters, $route, $dateReport);
-
-                return view('reports.route.route.routeReportByRoundTrip', compact(['roundTripDispatchRegisters', 'company', 'route', 'dateReport']));
-                break;
-            case 'vehicle':
-
+            case 'group-vehicles':
                 $vehiclesDispatchRegisters = $dispatchRegisters
                     ->groupBy('vehicle_id')
                     ->sortBy(function ($reports, $vehicleID) {
@@ -71,6 +63,16 @@ class RouteReportController extends Controller
 
                 return view('reports.route.route.routeReportByVehicle', compact(['vehiclesDispatchRegisters', 'company', 'route', 'dateReport']));
                 break;
+            default:
+                $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
+                $reportsByVehicle = collect([]);
+                foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
+                    $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
+                }
+
+                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport']));
+                break;
+
         }
     }
 

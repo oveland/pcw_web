@@ -74,14 +74,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 hide">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="type-report" class="control-label">@lang('Group By')</label>
+                                <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
-                                    <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
-                                        <option value="round_trip">@lang('Round Trip')</option>
-                                        <option value="vehicle">@lang('Vehicle')</option>
-                                    </select>
+                                    <div class="has-warning">
+                                        <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
+                                            <label class="text-bold">
+                                                <input name="type-report" type="checkbox" value="group-vehicles" checked> @lang('Group')
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
