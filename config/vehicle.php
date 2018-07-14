@@ -20,7 +20,7 @@ return [
     | Maintenance period days
     |--------------------------------------------------------------------------
     */
-    'maintenance_period_days' => 14,
+    'maintenance_period_days' => 11,
 
     /*
     |--------------------------------------------------------------------------
@@ -28,4 +28,12 @@ return [
     |--------------------------------------------------------------------------
     */
     'maintenance_default_observations' => "En mantenimiento programado",
+
+    /*
+    |--------------------------------------------------------------------------
+    | Check if should check assignable days.
+    |   When is false all days are assignable
+    |--------------------------------------------------------------------------
+    */
+    'maintenance_check_assignable_days' => false,
 ];

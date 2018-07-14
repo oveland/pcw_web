@@ -62,9 +62,10 @@ class MaintenanceVehicleController extends Controller
         $dateRange = PCWTime::dateRange($date, $date->copy()->addMonth(6));
 
         $periodDays = config('vehicle.maintenance_period_days');
+        $checkAssignable = config('vehicle.maintenance_check_assignable_days');
         $totalRegisters = 0;
         foreach ($dateRange as $nextDate) {
-            if ($nextDate->dayOfWeek == Carbon::SUNDAY || $nextDate->dayOfWeek == Carbon::MONDAY){
+            if ($checkAssignable && ($nextDate->dayOfWeek == Carbon::SUNDAY || $nextDate->dayOfWeek == Carbon::MONDAY)){
                 $assignable = false;
             }
             else{
