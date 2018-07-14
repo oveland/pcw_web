@@ -2,7 +2,6 @@
 
 @section('stylesheets')
     <style>
-
     </style>
 @endsection
 
@@ -81,7 +80,7 @@
                                     <div class="has-warning">
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
-                                                <input name="type-report" type="checkbox" value="group-vehicles" checked> @lang('Group')
+                                                <input id="type-report" name="type-report" type="checkbox" value="group-vehicles" checked> @lang('Group')
                                             </label>
                                         </div>
                                     </div>
@@ -262,29 +261,12 @@
 
             $('#company-report').change();
 
-            $('#date-report, #type-report').change(function () {
+            $('#route-report, #date-report, #type-report').change(function () {
                 var form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
-            });
-
-            $('#route-report').change(function(){
-                var typeReportSelect = $('#type-report');
-                var typeReportByRoundTrip = typeReportSelect.find('option[value="round_trip"]');
-                var allRoutes = $(this).val() == "all";
-
-                if( allRoutes ){
-                    typeReportSelect.val('vehicle');
-                    typeReportByRoundTrip.prop('disabled', allRoutes);
-                }else{
-                    typeReportByRoundTrip.removeProp('disabled');
-                }
-                typeReportSelect.select2();
-
-                $('.report-container').empty().slideUp();
-                $('#date-report').change();
             });
 
             $('#modal-route-report').on('shown.bs.modal', function () {

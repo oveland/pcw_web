@@ -32,16 +32,16 @@
                             @lang('Route')
                         </th>
                         <th data-sorting="disabled">
+                            <i class="fa fa-list-ol text-muted"></i><br>
+                            @lang('Round Trip')
+                        </th>
+                        <th data-sorting="disabled">
                             <i class="fa fa-retweet text-muted"></i><br>
                             @lang('Turn')
                         </th>
                         <th data-sorting="disabled">
                             <i class="fa fa-car text-muted"></i><br>
                             @lang('Vehicle')
-                        </th>
-                        <th data-sorting="disabled">
-                            <i class="fa fa-list-ol text-muted"></i><br>
-                            @lang('Round Trip')
                         </th>
                         <th>
                             <i class="fa fa-user text-muted"></i><br>
@@ -113,12 +113,15 @@
                             <th class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                                 {{ $route->name }}<br>
                                 <small>{{ $dispatchRegister->status }}</small>
+                                <h6 class="col-md-12 p-0 m-0 text-center text-{{ $dispatchRegister->complete() ?'muted':'white' }} tooltips" data-placement="bottom" data-title="@lang('N°')">
+                                    {{ $loop->iteration }}
+                                </h6>
                             </th>
+                            <td class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</td>
                             <th class="bg-inverse text-white text-center">
                                 {{ $dispatchRegister->turn }}
                             </th>
                             <th class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
-                            <td class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</td>
                             <td class="text-uppercase">
                                 @if( Auth::user()->isAdmin() )
                                     <div class="tooltips box-edit" data-title="@lang('Driver')">
@@ -224,11 +227,6 @@
                         </tr>
                         @php( $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time )
                     @endforeach
-                    <tr class="hide">
-                        <td colspan="4" class="text-right"><i class="ion-android-stopwatch"></i> @lang('Total dead time')</td>
-                        <td class="text-center">{{ dump($totalDeadTime) }}</td>
-                        <td colspan="8"></td>
-                    </tr>
                     </tbody>
                 </table>
                 <!-- end table -->
@@ -238,4 +236,3 @@
 @else
     @include('partials.alerts.noRegistersFound')
 @endif
-{{ dd('') }}
