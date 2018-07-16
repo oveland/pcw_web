@@ -37,6 +37,7 @@ class ControlPointsReportController extends Controller
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
             ->where('route_id', '=', $route->id)
+            ->active()
             ->orderBy('departure_time')
             ->get();
 
@@ -54,10 +55,11 @@ class ControlPointsReportController extends Controller
                 break;
             case 'vehicle':
                 $controlPointTimeReportsByVehicles = $controlPointTimeReports->groupBy('vehicle_id');
-
                 return view('reports.route.control-points.ControlPointTimesByVehicle', compact(['controlPointTimeReportsByVehicles','route']));
                 break;
-
+            default:
+                return view('reports.route.control-points.ControlPointTimesByAll', compact(['controlPointTimeReports','route']));
+                break;
         }
     }
 

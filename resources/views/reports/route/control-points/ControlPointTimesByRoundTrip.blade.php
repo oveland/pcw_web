@@ -29,7 +29,7 @@
             </ul>
         </div>
 
-        <div class="tab-content panel">
+        <div class="tab-content panel p-0">
             @foreach($controlPointTimeReportsByRoundTrip as $roundTrip => $controlPointTimeReportByRoundTrip)
                 <div id="report-tab-{{ $roundTrip }}" class="tab-pane fade {{ $loop->first ? 'active in':'' }}">
                     <div class="row">

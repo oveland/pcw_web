@@ -30,7 +30,7 @@
             </ul>
         </div>
 
-        <div class="tab-content panel">
+        <div class="tab-content panel p-0">
             @foreach($controlPointTimeReportsByVehicles as $vehicleId => $controlPointTimeReportByVehicle)
                 @php($vehicle = \App\Vehicle::find( $vehicleId ))
                 <div id="report-tab-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first ? 'active in':'' }}">
@@ -81,7 +81,7 @@
                                         $arrivalTimeScheduled = $dispatchRegister->arrival_time_scheduled;
                                     @endphp
                                     <tr class="">
-                                        <th class="text-capitalize text-muted {{ $dispatchRegister->inProgress() ? 'warning':'bg-inverse' }}">
+                                        <th class="text-capitalize text-muted bg-{{ $dispatchRegister->inProgress() ? 'warning':'inverse' }}">
                                             {{ $dispatchRegister->round_trip }}<br>
                                             <span class="status-html">{!! $dispatchRegister->status !!}</span>
                                         </th>
