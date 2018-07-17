@@ -75,6 +75,21 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDepartureFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister completed()
+ * @property int|null $available_vehicles
+ * @property int|null $initial_sensor_counter
+ * @property string|null $initial_frame_sensor_counter
+ * @property int|null $initial_sensor_recorder
+ * @property int|null $final_sensor_counter
+ * @property string|null $final_frame_sensor_counter
+ * @property int|null $final_sensor_recorder
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereAvailableVehicles($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalFrameSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalSensorRecorder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialFrameSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialSensorRecorder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereUserId($value)
  */
 class DispatchRegister extends Model
 {

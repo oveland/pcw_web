@@ -24,6 +24,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentDispatchRegister whereRouteName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentDispatchRegister whereVehicleId($value)
  * @mixin \Eloquent
+ * @property string|null $date
+ * @property string|null $driver_code
+ * @property-read \App\Vehicle|null $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentDispatchRegister whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentDispatchRegister whereDriverCode($value)
  */
 class CurrentDispatchRegister extends Model
 {

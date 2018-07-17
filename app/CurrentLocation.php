@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereVehicleStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereVersion($value)
  * @mixin \Eloquent
+ * @property-read \App\CurrentDispatchRegister|null $dispatchRegister
  */
 class CurrentLocation extends Model
 {

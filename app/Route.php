@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route active()
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Fringe[] $fringes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\CurrentDispatchRegister[] $currentDispatchRegisters
  */
 class Route extends Model
 {
@@ -55,7 +56,7 @@ class Route extends Model
         return $query->where('active', true);
     }
 
-    public function fringes($dayType)
+    public function fringes($dayType = 1)
     {
         return $this->hasMany(Fringe::class)->where('day_type_id', $dayType)->get();
     }
