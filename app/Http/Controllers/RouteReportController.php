@@ -53,15 +53,19 @@ class RouteReportController extends Controller
 
         switch ($typeReport) {
             case 'group-vehicles':
-                $vehiclesDispatchRegisters = $dispatchRegisters
-                    ->groupBy('vehicle_id')
+                $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id')
                     ->sortBy(function ($reports, $vehicleID) {
                         return $reports->first()->vehicle->number;
                     });
 
-                if ($request->get('export')) $this->exportByVehicle($vehiclesDispatchRegisters, $dateReport);
+                $reportsByVehicle = collect([]);
+                foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
+                    $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
+                }
 
-                return view('reports.route.route.routeReportByVehicle', compact(['vehiclesDispatchRegisters', 'company', 'route', 'dateReport']));
+                if ($request->get('export')) $this->exportByVehicle($dispatchRegistersByVehicles, $dateReport);
+
+                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles','reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
                 break;
             default:
                 $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
@@ -70,7 +74,7 @@ class RouteReportController extends Controller
                     $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
                 }
 
-                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport']));
+                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
                 break;
 
         }

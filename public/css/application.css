@@ -74,7 +74,7 @@ span.icon-report{
 .table-report th{
     text-align: center !important;
 }
-.table-report th i{
+.table-report th > i{
     font-size: 200%;
     color: rgba(211, 211, 211, 0.16);
     position: relative;

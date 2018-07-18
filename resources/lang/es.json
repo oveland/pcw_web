@@ -207,6 +207,7 @@
   "Detailed per date range": "Detallado por rango de fechas",
   "Consolidated": "Consolidado",
   "Final date": "Fecha final",
+  "Initial": "Inicial",
   "Initial date": "Fecha inicial",
   "The date range is not valid": "El rango de fechas no es válido",
   "Detailed": "Detallado",
@@ -415,6 +416,8 @@
   "Proprietary not found in platform": "Propietario no registrado en plataforma",
   "Dead time": "Tiempo muerto",
   "Total dead time": "Tiempo muerto total",
+  "Accumulated dead time": "Tiempo muerto acumulado",
+  "Accumulated day": "Acumulado día",
   "Dispatcher": "Despachador",
   "User": "Usuario",
   "All drivers": "Todos"

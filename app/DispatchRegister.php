@@ -241,6 +241,16 @@ class DispatchRegister extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function getPassengersBySensorAttribute()
+    {
+        return ($this->final_sensor_counter - $this->initial_sensor_counter);
+    }
+
+    public function getPassengersBySensorRecorderAttribute()
+    {
+        return ($this->final_sensor_recorder - $this->initial_sensor_recorder);
+    }
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }
