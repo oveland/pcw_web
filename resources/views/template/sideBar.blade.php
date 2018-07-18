@@ -261,6 +261,25 @@
                                 </li>
                             @endif
 
+                            @if( Auth::user()->isAdmin() )
+                                <li class="has-sub menu-passengers-mixed">
+                                    <a href="javascript:;" class="faa-parent animated-hover">
+                                        <b class="caret pull-right"></b>
+                                        <i class="fa fa-compass faa-vertical"></i> <i class="fa fa-crosshairs faa-vertical"></i>
+                                        @lang('Mixed')
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="has-sub menu-passengers-mixed-recorder-vs-sensor">
+                                            <a href="{{ route('report-passengers-mixed')  }}" class="faa-parent animated-hover text-center">
+                                                <i class="fa fa-compass faa-vertical"></i> @lang('Recorder')
+                                                <br>vs<br>
+                                                <i class="fa fa-crosshairs faa-vertical"></i> @lang('Sensor')
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+
                             @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
                                 <li class="has-sub menu-passengers-taxcentral">
                                 <a href="javascript:;" class="faa-parent animated-hover">

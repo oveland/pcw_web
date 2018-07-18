@@ -212,8 +212,10 @@ Route::group(['middleware' => ['auth']], function () {
                     Route::get('/play', 'SeatReportController@play')->name('report-passengers-sensors-seats-play');
                 });
             });
-            Route::prefix(__('sensors').'-vs-'.__('recorders'))->group(function () {
-                Route::get('/', 'SeatReportController@index')->name('report-passengers-sensors-seats');
+
+            Route::prefix(__('mixed'))->group(function () {
+                Route::get('/', 'PassengersBySensorVSRecorderReportController@index')->name('report-passengers-mixed');
+                Route::get('/search', 'PassengersBySensorVSRecorderReportController@show')->name('report-passengers-mixed-search');
             });
         });
 

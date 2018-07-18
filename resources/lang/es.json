@@ -11,6 +11,7 @@
   "Company": "Empresa",
   "Routes": "Rutas",
   "Route Time": "Tiempo de ruta",
+  "Route time": "Tiempo de ruta",
   "Reports": "Reportes",
   "Report": "Reporte",
   "report": "reporte",
@@ -183,6 +184,7 @@
   "Departure Time": "Hora despachado",
   "Arrival Time Scheduled": "Llegada programada",
   "Arrival Time": "Hora de llegada",
+  "Arrival time": "Hora de llegada",
   "Arrival Time Difference": "Diferencia llegada",
   "Group": "Agrupar",
   "No group": "Sin agrupar",
@@ -420,5 +422,11 @@
   "Accumulated day": "Acumulado día",
   "Dispatcher": "Despachador",
   "User": "Usuario",
-  "All drivers": "Todos"
+  "All drivers": "Todos",
+  "Mixed report": "Reporte mixto",
+  "Mixed": "Mixto",
+  "mixed": "mixto",
+  "Initial frame counter": "Trama de conteo inicial",
+  "Final frame counter": "Trama de conteo final",
+  "Show frames": "Ver tramas de conteo"
 }

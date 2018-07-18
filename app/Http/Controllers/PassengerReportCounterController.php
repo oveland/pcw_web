@@ -115,14 +115,16 @@ class PassengerReportCounterController extends Controller
     public static function compareChangeFrames($currentFrame, $prevFrame)
     {
         $comparedFrame = array();
-        $currentFrameFields = explode(' ', $currentFrame);
-        $prevFrameFields = explode(' ', $prevFrame ?? $currentFrame);
-        foreach ($currentFrameFields as $index => $field) {
-            $comparedFrame[] = (object)[
-                'class' => (isset($prevFrameFields[$index]) && $field != $prevFrameFields[$index]) ? 'btn btn-xs btn-success p-2 tooltips' : '',
-                'field' => $field,
-                'prevField' => $prevFrameFields[$index] ?? ''
-            ];
+        if( $currentFrame && $prevFrame){
+            $currentFrameFields = explode(' ', $currentFrame);
+            $prevFrameFields = explode(' ', $prevFrame ?? $currentFrame);
+            foreach ($currentFrameFields as $index => $field) {
+                $comparedFrame[] = (object)[
+                    'class' => (isset($prevFrameFields[$index]) && $field != $prevFrameFields[$index]) ? 'btn btn-xs btn-success p-2 tooltips' : '',
+                    'field' => $field,
+                    'prevField' => $prevFrameFields[$index] ?? ''
+                ];
+            }
         }
         return $comparedFrame;
     }

@@ -19,18 +19,6 @@
             @lang('Vehicle')
         </th>
         <th>
-            <i class="fa fa-user text-muted"></i><br>
-            @lang('Driver')
-        </th>
-        <th>
-            <i class="fa fa-clock-o text-muted"></i><br>
-            @lang('Departure time')
-        </th>
-        <th>
-            <i class="fa fa-clock-o text-muted"></i><br>
-            @lang('Arrival Time')
-        </th>
-        <th>
             <i class="ion-android-stopwatch text-muted"></i><br>
             @lang('Route Time')
         </th>
@@ -52,23 +40,21 @@
                 </small>
             </th>
         @endif
-        @if( false )
-            <th>
-                <i class="fa fa-users text-muted"></i><br>
-                <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
-                <small class="text-muted">
-                    @lang('Sensor')
-                </small>
-            </th>
-            <th>
-                <i class="fa fa-users text-muted"></i><br>
-                <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
-                <small class="text-muted">
-                    @lang('Sensor') @lang('Recorder')
-                </small>
-            </th>
-        @endif
         <th>
+            <i class="fa fa-users text-muted"></i><br>
+            <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
+            <small class="text-muted">
+                @lang('Sensor')
+            </small>
+        </th>
+        <th>
+            <i class="fa fa-users text-muted"></i><br>
+            <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
+            <small class="text-muted">
+                @lang('Sensor') @lang('Recorder')
+            </small>
+        </th>
+        <th data-sorting="disabled">
             <i class="fa fa-rocket text-muted"></i><br>
             @lang('Actions')
         </th>
@@ -111,57 +97,20 @@
             </th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
             <th width="5%" class="bg-inverse text-white text-center {{ $typeReport == 'group-vehicles'?'hide':'' }}">{{ $vehicle->number }}</th>
-            <td width="30%" class="text-uppercase">
-                @if( Auth::user()->isAdmin() )
-                    <div class="tooltips box-edit" data-title="@lang('Driver')">
-                        <span class="box-info">
-                            <span class="">
-                                {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
-                            </span>
-                        </span>
-                        <div class="box-edit" style="display: none">
-                            <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                   data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('driver_code')"
-                                   class="input-sm form-control edit-input-recorder" value="{{ $dispatchRegister->driver_code }}">
-                        </div>
-                    </div>
-                @else
-                    {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
-                @endif
-            </td>
-            <td class="text-center">
-                {{ $strTime->toString($dispatchRegister->departure_time) }}<br>
-                <small class="tooltips text-info" data-title="@lang('Vehicles without route')" data-placement="bottom">
-                    {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
-                </small>
-                @if( isset($lastArrivalTime[$vehicle->id]) )
-                    @php($deadTime = $strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime[$vehicle->id]))
-                    @php($totalDeadTime[$vehicle->id] = $strTime->addStrTime($totalDeadTime[$vehicle->id], $deadTime))
-                    <br>
-                    <small class="tooltips text-primary" data-title="@lang('Dead time')" data-placement="bottom">
-                        <i class="ion-android-stopwatch text-muted"></i> {{ $deadTime }}
-                    </small>
-                    <br>
-                    <small class="tooltips text-warning" data-title="@lang('Accumulated dead time')" data-placement="bottom">
-                        <i class="ion-android-stopwatch text-muted"></i> {{ $totalDeadTime[$vehicle->id] }}
-                    </small>
-                @else
-                    @php($totalDeadTime[$vehicle->id] = '00:00:00')
-                @endif
-            </td>
+
             <td width="10%" class="text-center">
-                <small class="tooltips text-bold" data-title="@lang('Arrival Time')">
+                <small class="tooltips" data-title="@lang('Departure time')">
+                    {{ $strTime->toString($dispatchRegister->departure_time) }}
+                </small>
+                <br>
+                <small class="tooltips" data-title="@lang('Arrival time')">
                     {{ $strTime->toString($dispatchRegister->arrival_time) }}
                 </small>
-                <small class="tooltips text-muted" data-title="@lang('Arrival Time Scheduled')">
-                    {{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}
-                </small>
                 <hr class="m-0">
-                <small class="tooltips text" data-title="@lang('Arrival Time Difference')">
-                    {{ $strTime->toString($dispatchRegister->arrival_time_difference) }} <i class="ion-android-stopwatch text-muted"></i>
+                <small class="tooltips text-bold" data-title="@lang('Route time')">
+                    {{ $dispatchRegister->getRouteTime() }}
                 </small>
             </td>
-            <td width="8%" class="text-center">{{ $dispatchRegister->getRouteTime() }}</td>
 
             @if( $company->hasRecorderCounter() )
                 <td width="10%" class="p-r-0 p-l-0 text-center">
@@ -216,38 +165,42 @@
                 </td>
             @endif
 
-            @if( false )
-                <td width="10%" class="text-center">
-                    <span class="tooltips" data-title="@lang('Round trip')">
-                        {{ $dispatchRegister->passengersBySensor }}
-                    </span>
-                    <hr class="m-0">
-                    <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
-                        {{ $totalPassengersBySensor }}
-                    </small>
-                </td>
-                <td width="10%" class="text-center">
-                    <span class="tooltips" data-title="@lang('Round trip')">
-                        {{ $dispatchRegister->passengersBySensorRecorder }}
-                    </span>
-                    <hr class="m-0">
-                    <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
-                        {{ $totalPassengersBySensorRecorder }}
-                    </small>
-                </td>
-            @endif
+            <td width="10%" class="text-center">
+                <span class="tooltips" data-title="@lang('Round trip')">
+                    {{ $dispatchRegister->passengersBySensor }}
+                </span>
+                <hr class="m-0">
+                <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
+                    {{ $totalPassengersBySensor }}
+                </small>
+            </td>
+            <td width="10%" class="text-center">
+                <span class="tooltips" data-title="@lang('Round trip')">
+                    {{ $dispatchRegister->passengersBySensorRecorder }}
+                </span>
+                <hr class="m-0">
+                <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
+                    {{ $totalPassengersBySensorRecorder }}
+                </small>
+            </td>
 
             <td width="5%" class="text-center">
-                <a href="#modal-route-report"
-                   class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
-                   data-toggle="modal"
-                   data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                   data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                   data-original-title="@lang('Graph report detail')">
-                    <i class="fa fa-area-chart faa-pulse"></i>
-                </a>
+                <button data-target="#collapse-{{ $dispatchRegister->id }}" class="btn btn-sm btn-rounded btn-info tooltips" data-title="@lang('Show frames')" data-toggle="collapse">
+                    <i class="ion-ios-search"></i>
+                </button>
             </td>
         </tr>
+
+        <tr id="collapse-{{ $dispatchRegister->id }}" class="bg-inverse text-white text-bold collapse fade">
+            <td colspan="8" class="p-l-4 p-r-4" style="font-family: monospace">
+                @lang('Initial frame counter') ({{ $dispatchRegister->initial_time_sensor_counter }}):
+                @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->initial_frame_sensor_counter])
+                <hr class="hr">
+                @lang('Final frame counter') ({{ $dispatchRegister->final_time_sensor_counter }}):
+                @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->final_frame_sensor_counter])
+            </td>
+        </tr>
+
         @php( $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time )
     @endforeach
     </tbody>
