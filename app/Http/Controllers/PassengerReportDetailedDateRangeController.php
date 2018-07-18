@@ -25,7 +25,7 @@ class PassengerReportDetailedDateRangeController extends Controller
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
-        return view('reports.passengers.detailed.dates.index', compact('companies'));
+        return view('reports.passengers.recorders.detailed.dates.index', compact('companies'));
     }
 
     /**
@@ -42,7 +42,7 @@ class PassengerReportDetailedDateRangeController extends Controller
 
         $passengerReport = $this->buildPassengerReport($company, $initialDate, $finalDate);
 
-        return view('reports.passengers.detailed.dates.passengersReport', compact('passengerReport'));
+        return view('reports.passengers.recorders.detailed.dates.passengersReport', compact('passengerReport'));
     }
 
     /**
