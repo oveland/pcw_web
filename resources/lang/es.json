@@ -428,5 +428,6 @@
   "mixed": "mixto",
   "Initial frame counter": "Trama de conteo inicial",
   "Final frame counter": "Trama de conteo final",
-  "Show frames": "Ver tramas de conteo"
+  "Show frames": "Ver tramas de conteo",
+  "Empty": "Vacío"
 }

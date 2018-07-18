@@ -22,7 +22,7 @@ class ManagePassengersByRecorderController extends Controller
                     $field = $request->get('field');
                     $value = $request->get('value');
 
-                    $success = DB::update("UPDATE registrodespacho SET $field = $value WHERE id_registro = $id");
+                    $success = DB::update("UPDATE registrodespacho SET $field = $value, ignore_trigger = TRUE WHERE id_registro = $id");
 
                     return Response::json([
                         'success' => $success,

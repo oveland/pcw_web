@@ -10,7 +10,7 @@
                 </span>
                 <br>
                 <small class="text-muted p-t-3 btn-block" style="border: 1px dotted gray">
-                    {{ $loop->iteration }}
+                    {{ $loop->index }}°
                 </small>
             </label>
         @endforeach

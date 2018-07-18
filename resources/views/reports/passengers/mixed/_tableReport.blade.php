@@ -193,10 +193,10 @@
 
         <tr id="collapse-{{ $dispatchRegister->id }}" class="bg-inverse text-white text-bold collapse fade">
             <td colspan="8" class="p-l-4 p-r-4" style="font-family: monospace">
-                @lang('Initial frame counter') ({{ $dispatchRegister->initial_time_sensor_counter }}):
+                @lang('Initial frame counter') ({{ $strTime->toString($dispatchRegister->initial_time_sensor_counter) }}): <strong>{{ $dispatchRegister->initial_sensor_counter }}</strong>
                 @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->initial_frame_sensor_counter])
                 <hr class="hr">
-                @lang('Final frame counter') ({{ $dispatchRegister->final_time_sensor_counter }}):
+                @lang('Final frame counter') ({{ $strTime->toString($dispatchRegister->final_time_sensor_counter) }}): <strong>{{ $dispatchRegister->final_sensor_counter }}</strong>
                 @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->final_frame_sensor_counter])
             </td>
         </tr>

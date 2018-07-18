@@ -113,10 +113,11 @@
             <th width="5%" class="bg-inverse text-white text-center {{ $typeReport == 'group-vehicles'?'hide':'' }}">{{ $vehicle->number }}</th>
             <td width="30%" class="text-uppercase">
                 @if( Auth::user()->isAdmin() )
+                    @php( $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code )
                     <div class="tooltips box-edit" data-title="@lang('Driver')">
                         <span class="box-info">
-                            <span class="">
-                                {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
+                            <span class="{{ !$driverInfo?'text-danger text-bold':'' }} text-capitalize">
+                                {{ $driverInfo?$driverInfo:__('Empty') }}
                             </span>
                         </span>
                         <div class="box-edit" style="display: none">
