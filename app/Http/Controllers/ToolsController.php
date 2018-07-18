@@ -12,6 +12,31 @@ class ToolsController extends Controller
 {
     public function map()
     {
+        /*$lastKms = \DB::connection('GPS_MONTH')->select("
+            SELECT id_gps, max(km) last_km FROM markers_historial_mes_1
+            WHERE fecha = '2018-07-14'
+            GROUP BY id_gps
+        ");
+
+        \DB::statement("DELETE FROM reporte_km_historial where fecha = '2018-07-14'");
+        \DB::connection('GPS_MONTH')->statement("DELETE FROM reporte_km_historial_mes where fecha = '2018-07-14'");
+        \DB::connection('GPS_SIX_MONTH')->statement("DELETE FROM reporte_km_historial_seis_meses where fecha = '2018-07-14'");
+        foreach ($lastKms as $lastKm){
+            $query = "INSERT INTO reporte_km_historial (usuario, fecha, hora, kilometraje) VALUES ('$lastKm->id_gps', '2018-07-14', '23:59:59', $lastKm->last_km)";
+            $res = \DB::insert($query);
+            if( !$res )dd('Error query '.$query);
+
+            $query = "INSERT INTO reporte_km_historial_mes (usuario, fecha, hora, kilometraje) VALUES ('$lastKm->id_gps', '2018-07-14', '23:59:59', $lastKm->last_km)";
+            $res = \DB::connection('GPS_MONTH')->insert($query);
+            if( !$res )dd('Error query '.$query);
+
+            $query = "INSERT INTO reporte_km_historial_seis_meses (usuario, fecha, hora, kilometraje) VALUES ('$lastKm->id_gps', '2018-07-14', '23:59:59', $lastKm->last_km)";
+            $res = \DB::connection('GPS_SIX_MONTH')->insert($query);
+            if( !$res )dd('Error query '.$query);
+        }
+
+        dd("Updated");
+        dd('Edn');*/
         return view('tools.map');
     }
 
