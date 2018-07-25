@@ -243,12 +243,19 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensorAttribute()
     {
-        return ($this->final_sensor_counter - $this->initial_sensor_counter);
+        $hasReset = ($this->final_sensor_counter < $this->initial_sensor_counter);
+        return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
     }
 
     public function getPassengersBySensorRecorderAttribute()
     {
-        return ($this->final_sensor_recorder - $this->initial_sensor_recorder);
+        $hasReset = ($this->final_sensor_recorder < $this->initial_sensor_recorder);
+        return ($this->final_sensor_recorder - ($hasReset ? 0 : $this->initial_sensor_recorder));
+    }
+
+    public function calculateErrorPercent($reference, $value)
+    {
+        return number_format((100 - $value * 100 / $reference), 1, '.', '');
     }
 
     const CREATED_AT = 'date_created';

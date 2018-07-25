@@ -63,7 +63,7 @@ class PCWTrackService implements APIInterface
                   JOIN dispatch_registers dr ON (cr.dispatch_register_id = dr.id)
                   JOIN vehicles v ON (cr.vehicle_id = v.id)
                   JOIN routes r ON (dr.route_id = r.id)
-                WHERE v.plate = '$vehicle->plate' AND (current_timestamp - cr.date)::INTERVAL < '00:00:40'::INTERVAL
+                WHERE v.plate = '$vehicle->plate' AND (current_timestamp - cr.date)::INTERVAL < '00:01:00'::INTERVAL
             ");
 
             if( count($report) && $report = $report[0] ){

@@ -74,6 +74,11 @@ class Company extends Model
         return $this->id == 14;
     }
 
+    public function hasDriverRegisters()
+    {
+        return $this->id == 14;
+    }
+
     /*
      * What companies that have seat sensor counter
      *

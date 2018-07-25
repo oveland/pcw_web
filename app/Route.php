@@ -36,6 +36,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Route extends Model
 {
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);

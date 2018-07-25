@@ -2,18 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Company;
-use App\ControlPoint;
 use App\Route;
-use App\User;
-use App\Vehicle;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Mockery\Exception;
-use PhpParser\Node\Stmt\DeclareDeclare;
-use Response;
 
 class MigrationControlPointController extends Controller
 {
@@ -27,7 +19,8 @@ class MigrationControlPointController extends Controller
 
     public function getControlPoints()
     {
-        $companies = Company::whereActive(true)->orderBy('short_name')->get();
+        if( Auth::user()->isAdmin() )$companies = Company::whereActive(true)->orderBy('short_name')->get();
+        else $companies = [Auth::user()->company];
         return view('migrations.cp',compact('companies'));
     }
 

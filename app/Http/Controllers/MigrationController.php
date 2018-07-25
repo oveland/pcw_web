@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\CobanVehicle;
 use App\Company;
 use App\ControlPoint;
@@ -47,6 +48,7 @@ class MigrationController extends Controller
      */
     public function index()
     {
+        if( !Auth::user()->isAdmin() )abort(403);
         $tables = collect([
             (object)[
                 'name' => self::OLD_TABLES['companies'],

@@ -12,4 +12,9 @@ class CurrentSensorPassengers extends Model
     {
         return $this->pas_tot;
     }
+
+    public function getTimeStatusAttribute()
+    {
+        return $this->hora_status;
+    }
 }

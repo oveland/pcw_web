@@ -18,10 +18,12 @@
             <i class="fa fa-car text-muted"></i><br>
             @lang('Vehicle')
         </th>
+        @if( $company->hasDriverRegisters() )
         <th>
             <i class="fa fa-user text-muted"></i><br>
             @lang('Driver')
         </th>
+        @endif
         <th>
             <i class="fa fa-clock-o text-muted"></i><br>
             @lang('Departure time')
@@ -111,6 +113,7 @@
             </th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
             <th width="5%" class="bg-inverse text-white text-center {{ $typeReport == 'group-vehicles'?'hide':'' }}">{{ $vehicle->number }}</th>
+            @if( $company->hasDriverRegisters() )
             <td width="30%" class="text-uppercase">
                 @if( Auth::user()->isAdmin() )
                     @php( $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code )
@@ -130,6 +133,7 @@
                     {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
                 @endif
             </td>
+            @endif
             <td class="text-center">
                 {{ $strTime->toString($dispatchRegister->departure_time) }}<br>
                 <small class="tooltips text-info" data-title="@lang('Vehicles without route')" data-placement="bottom">

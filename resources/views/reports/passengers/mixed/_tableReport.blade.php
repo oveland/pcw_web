@@ -1,5 +1,5 @@
 <!-- begin table -->
-<table id="table-report" class="table table-bordered table-striped table-hover table-valign-middle table-report">
+<table class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
     <tr class="inverse">
         <th class="{{ $routeReport != 'all'?'hide':'' }}">
@@ -24,6 +24,13 @@
         </th>
         @if( $company->hasRecorderCounter() )
             <th class="text-center">
+                <i class="fa fa-users text-muted"></i><br>
+                @lang('Passengers')<br>
+                <small class="text-muted">
+                    <i class="fa fa-crosshairs text-muted"></i> <i class="fa fa-compass text-muted"></i> @lang('Sensor') @lang('Recorder')
+                </small>
+            </th>
+            <th class="text-center hide">
                 <i class="fa fa-compass text-muted"></i><br>
                 {{ str_limit(__('Recorder'),5) }}<br>
                 <small class="text-muted">
@@ -34,24 +41,17 @@
             </th>
             <th class="text-center">
                 <i class="fa fa-users text-muted"></i><br>
-                <small><i class="fa fa-compass text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
+                @lang('Passengers')<br>
                 <small class="text-muted">
-                    @lang('Recorder')
+                    <i class="fa fa-compass text-muted"></i> @lang('Recorder')
                 </small>
             </th>
         @endif
         <th>
             <i class="fa fa-users text-muted"></i><br>
-            <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
+            @lang('Passengers')<br>
             <small class="text-muted">
-                @lang('Sensor')
-            </small>
-        </th>
-        <th>
-            <i class="fa fa-users text-muted"></i><br>
-            <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
-            <small class="text-muted">
-                @lang('Sensor') @lang('Recorder')
+                <i class="fa fa-crosshairs text-muted"></i> @lang('Sensor')
             </small>
         </th>
         <th data-sorting="disabled">
@@ -113,7 +113,30 @@
             </td>
 
             @if( $company->hasRecorderCounter() )
-                <td width="10%" class="p-r-0 p-l-0 text-center">
+                <td width="10%" class="text-center">
+                    @if( $dispatchRegister->complete() )
+                        <span class="tooltips" data-title="@lang('Round trip')">
+                            {{ $dispatchRegister->passengersBySensorRecorder }}
+                            @php( $error = $dispatchRegister->calculateErrorPercent(($endRecorder - $startRecorder), $dispatchRegister->passengersBySensorRecorder) )
+                            <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-right f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="right">
+                                {{  $error }}%
+                            </span>
+                        </span>
+                        <hr class="m-0">
+                        <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
+                            {{ $totalPassengersBySensorRecorder }}
+                            @php( $error = $dispatchRegister->calculateErrorPercent($totalPassengersByRecorder, $totalPassengersBySensorRecorder) )
+                            <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-right f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="right">
+                                {{  $error }}%
+                            </span>
+                        </small>
+                    @else
+                        ...
+                        <hr class="hr">
+                        ...
+                    @endif
+                </td>
+                <td width="10%" class="p-r-0 p-l-0 text-center hide">
                     @if( Auth::user()->isAdmin() )
                         <div class="tooltips box-edit" data-title="@lang('Start Recorder')">
                             <span class="box-info">
@@ -150,11 +173,11 @@
                 </td>
                 <td width="10%" class="text-center">
                     @if( $dispatchRegister->complete() )
-                        <span title="" class="{{ $invalid?'text-danger':'' }} tooltips" data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Round trip').' '.($endRecorder.' - '.$startRecorder) }}">
+                        <span title="" class="{{ $invalid?'text-muted':'' }} tooltips" data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Round trip').' '.($endRecorder.' - '.$startRecorder) }}">
                             {{ $endRecorder - $startRecorder }}
                         </span>
                         <hr class="m-0">
-                        <small class="{{ $invalid?'text-danger':'' }} text-bold tooltips" data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
+                        <small class="{{ $invalid?'text-muted':'' }} text-bold tooltips" data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
                             {{ $totalPassengersByRecorder }}
                         </small>
                     @else
@@ -166,22 +189,27 @@
             @endif
 
             <td width="10%" class="text-center">
-                <span class="tooltips" data-title="@lang('Round trip')">
-                    {{ $dispatchRegister->passengersBySensor }}
-                </span>
-                <hr class="m-0">
-                <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
-                    {{ $totalPassengersBySensor }}
-                </small>
-            </td>
-            <td width="10%" class="text-center">
-                <span class="tooltips" data-title="@lang('Round trip')">
-                    {{ $dispatchRegister->passengersBySensorRecorder }}
-                </span>
-                <hr class="m-0">
-                <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
-                    {{ $totalPassengersBySensorRecorder }}
-                </small>
+                @if( $dispatchRegister->complete() )
+                    <span class="tooltips" data-title="@lang('Round trip')">
+                        {{ $dispatchRegister->passengersBySensor }}
+                        @php( $error = $dispatchRegister->calculateErrorPercent(($endRecorder - $startRecorder), $dispatchRegister->passengersBySensor) )
+                        <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-left f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="left">
+                            {{  $error }}%
+                        </span>
+                    </span>
+                    <hr class="m-0">
+                    <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
+                        {{ $totalPassengersBySensor }}
+                        @php( $error = $dispatchRegister->calculateErrorPercent($totalPassengersByRecorder, $totalPassengersBySensor) )
+                        <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-left f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="left">
+                            {{  $error }}%
+                        </span>
+                    </small>
+                @else
+                    ...
+                    <hr class="hr">
+                    ...
+                @endif
             </td>
 
             <td width="5%" class="text-center">
@@ -192,12 +220,30 @@
         </tr>
 
         <tr id="collapse-{{ $dispatchRegister->id }}" class="bg-inverse text-white text-bold collapse fade">
-            <td colspan="8" class="p-l-4 p-r-4" style="font-family: monospace">
-                @lang('Initial frame counter') ({{ $strTime->toString($dispatchRegister->initial_time_sensor_counter) }}): <strong>{{ $dispatchRegister->initial_sensor_counter }}</strong>
-                @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->initial_frame_sensor_counter])
-                <hr class="hr">
-                @lang('Final frame counter') ({{ $strTime->toString($dispatchRegister->final_time_sensor_counter) }}): <strong>{{ $dispatchRegister->final_sensor_counter }}</strong>
-                @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->final_frame_sensor_counter])
+            <td colspan="9" class="p-l-4 p-r-4" style="font-family: monospace">
+                <div class="col-md-12">
+                    @lang('Initial frame counter') ({{ $strTime->toString($dispatchRegister->initial_time_sensor_counter) }}):<br>
+                    <hr class="col-md-3 m-t-3 m-b-4"><br>
+                    <ul class="col-md-3 m-l-20">
+                        <li>@lang('Front door'): {{ $dispatchRegister->initial_front_sensor_counter }}</li>
+                        <li>@lang('Back door'): {{ $dispatchRegister->initial_back_sensor_counter }}</li>
+                        <li>@lang('Average'): {{ $dispatchRegister->initial_sensor_counter }}</li>
+                    </ul>
+                    @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->initial_frame_sensor_counter])
+                </div>
+
+                <hr class="col-md-12 no-padding">
+
+                <div class="col-md-12">
+                    @lang('Final frame counter') ({{ $strTime->toString($dispatchRegister->final_time_sensor_counter) }}):<br>
+                    <hr class="col-md-3 m-t-3 m-b-4"><br>
+                    <ul class="col-md-3 m-l-20">
+                        <li>@lang('Front door'): {{ $dispatchRegister->final_front_sensor_counter }}</li>
+                        <li>@lang('Back door'): {{ $dispatchRegister->final_back_sensor_counter }}</li>
+                        <li>@lang('Average'): {{ $dispatchRegister->final_sensor_counter }}</li>
+                    </ul>
+                    @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->final_frame_sensor_counter])
+                </div>
             </td>
         </tr>
 

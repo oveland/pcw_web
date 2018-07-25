@@ -20,9 +20,11 @@ class CalibrationControlPointsController extends Controller
                 $this->printCalibration($route, $controlPointsCalibrated);
                 $updated = $this->saveCalibratedControlPoints($controlPointsCalibrated);
                 dump("Registers updated: $updated of ".count($controlPointsCalibrated));
-                dump("**** Auto migrating control points...");
-                $migrationController = new MigrationController();
-                $migrationController->migrateControlPoints();
+                if ($request->get('migrate')){
+                    dump("**** Auto migrating control points...");
+                    $migrationController = new MigrationController();
+                    $migrationController->migrateControlPoints();
+                }
             }
         } else {
             dd('No route found');

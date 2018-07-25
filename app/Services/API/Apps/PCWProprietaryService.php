@@ -74,10 +74,12 @@ class PCWProprietaryService implements APIInterface
 
                     $recorder = CounterByRecorder::reportByVehicle($vehicle->id, $dispatchRegisters, true);
                     $sensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
-                    $timeSensor = explode('.', $sensor->hora_status)[0]; // TODO Change column when table contador is migrated
+                    $timeSensor = explode('.', $sensor->timeStatus)[0]; // TODO Change column when table contador is migrated
 
                     $passengersByRecorder = $recorder->report->passengers;
                     $passengersBySensor = $sensor->passengers;
+
+                    //dd($dispatchRegisters->toArray());
 
                     $reports->push([
                         'prop' => true,                                 // Indicates that data SMS belongs to a proprietary
@@ -89,6 +91,7 @@ class PCWProprietaryService implements APIInterface
                         'rn' => $route->name,                           // Route name,
                         'rr' => $currentDispatchRegister->round_trip,   // Route round trip,
                         'rt' => $currentDispatchRegister->turn,         // Route turn,
+                        'dispatchRegisters' => $dispatchRegisters
                     ]);
 
                     Log::info("Send passenger report (passengersBySensor: $passengersBySensor, passengersByRecorder: $passengersByRecorder) to proprietary: $proprietary->id: " . $proprietary->fullName());
@@ -99,6 +102,8 @@ class PCWProprietaryService implements APIInterface
             $data->put('success', false);
             $data->put('message', __('Proprietary not found in platform'));
         }
+
+        //$data = json_decode('{"success":true,"message":"","data":[{"prop":true,"vn":"338","pr":294,"ps":27,"tr":"16:22:45","ts":"18:07:21","rn":"RUTA 6","rr":4,"rt":53},{"prop":true,"vn":"356","pr":306,"ps":98,"tr":"17:05:32","ts":"18:07:22","rn":"RUTA 3","rr":4,"rt":33},{"prop":true,"vn":"361","pr":361,"ps":0,"tr":"16:44:23","ts":"00:05:06","rn":"RUTA 6","rr":4,"rt":55}]}',true);
 
         return response()->json($data);
     }
