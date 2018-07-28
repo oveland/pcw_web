@@ -18,6 +18,9 @@ class CreatePassengersTable extends Migration
             $table->dateTime('date');
             $table->integer('total');
             $table->integer('total_prev');
+            $table->integer('total_front_sensor')->default(0);
+            $table->integer('total_back_sensor')->default(0);
+            $table->integer('total_sensor_recorder')->default(0);
             $table->integer('total_platform');
             $table->bigInteger('vehicle_id')->unsigned();
             $table->integer('vehicle_status_id')->nullable();

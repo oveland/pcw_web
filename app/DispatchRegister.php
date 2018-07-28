@@ -75,6 +75,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDepartureFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister completed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister[] findAllByDateAndVehicleAndRoute()
  * @property int|null $available_vehicles
  * @property int|null $initial_sensor_counter
  * @property string|null $initial_frame_sensor_counter
@@ -90,6 +91,20 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialSensorCounter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialSensorRecorder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereUserId($value)
+ * @property string|null $initial_time_sensor_counter
+ * @property string|null $final_time_sensor_counter
+ * @property int|null $initial_front_sensor_counter
+ * @property int|null $initial_back_sensor_counter
+ * @property int|null $final_front_sensor_counter
+ * @property int|null $final_back_sensor_counter
+ * @property-read mixed $passengers_by_sensor
+ * @property-read mixed $passengers_by_sensor_recorder
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalBackSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalFrontSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalTimeSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialBackSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialFrontSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialTimeSensorCounter($value)
  */
 class DispatchRegister extends Model
 {
@@ -121,7 +136,11 @@ class DispatchRegister extends Model
      */
     public function locationReports()
     {
-        $stringClassLocationReport = Database::findLocationReportModelStringByDate($this->getParsedDate());
+        if ($this->date) {
+            $stringClassLocationReport = Database::findLocationReportModelStringByDate($this->getParsedDate());
+        } else {
+            $stringClassLocationReport = LocationReport::class;
+        }
         return $this->hasMany($stringClassLocationReport, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
@@ -256,6 +275,16 @@ class DispatchRegister extends Model
     public function calculateErrorPercent($reference, $value)
     {
         return number_format((100 - $value * 100 / $reference), 1, '.', '');
+    }
+
+    public function scopeFindAllByDateAndVehicleAndRoute($query, $date, $vehicleId, $routeId)
+    {
+        return $query->completed()
+            ->where('date', $date)
+            ->where('vehicle_id', $vehicleId)
+            ->where('route_id', $routeId)
+            ->orderBy('round_trip')
+            ->get();
     }
 
     const CREATED_AT = 'date_created';

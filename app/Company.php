@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereShortName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company active()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Company findAllActive()
  * @property string|null $timezone
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereTimezone($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Route[] $activeRoutes
@@ -61,6 +62,10 @@ class Company extends Model
 
     public function scopeActive($query){
         return $query->where('active','=',true);
+    }
+
+    public function scopeFindAllActive($query){
+        return $query->where('active','=',true)->orderBy('short_name', 'asc')->get();
     }
 
     /*

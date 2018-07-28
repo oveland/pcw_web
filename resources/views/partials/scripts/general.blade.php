@@ -14,6 +14,27 @@
         }
     }
 
+    function loadSelectRouteRoundTrips() {
+        var dateReport = $('#date-report');
+        var routeReport = $('#route-report');
+        var vehicleReport = $('#vehicle-report');
+        var routeRoundTripReport = $('#route-round-trip-report');
+
+        routeRoundTripReport.html($('#select-loading').html()).trigger('change.select2');
+        if( is_not_null(vehicleReport.val()) && is_not_null(dateReport.val()) && is_not_null(routeReport.val()) ){
+            $('.form-container-route').slideDown();
+            routeRoundTripReport.load('{{ route('general-load-select-route-round-trips') }}',{
+                vehicle: vehicleReport.val(),
+                route: routeReport.val(),
+                date: dateReport.val()
+            },function () {
+                routeRoundTripReport.trigger('change.select2');
+            });
+        }else{
+            $('.form-container-route').slideUp();
+        }
+    }
+
     function loadSelectVehicleReport(company,all) {
         var vehicleSelect = $('#vehicle-report');
         if( is_not_null(company) ) {

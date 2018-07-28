@@ -344,6 +344,8 @@
   "Registers": "Registros",
   "registers in total": "registros en total",
   "Select a company first": "Primero seleccione una empresa",
+  "Select a vehicle first": "Primero seleccione un vehículo",
+  "Select a route first": "Primero seleccione una ruta",
   "See all frames": "Ver todas las tramas",
   "Type": "Tipo",
   "Item count": "Conteo Items",
@@ -431,5 +433,11 @@
   "Initial frame counter": "Trama de conteo inicial",
   "Final frame counter": "Trama de conteo final",
   "Show frames": "Ver tramas de conteo",
-  "Empty": "Vacío"
+  "Empty": "Vacío",
+  "Geolocation": "Geolocalización",
+  "Geolocation report": "Reporte de Geolocalización",
+  "geolocation": "geolocalización",
+  "url-geolocation": "geolocalizacion",
+  "Count by round trip": "Conteo por vuelta",
+  "Sensor recorder": "Sensor registradora"
 }

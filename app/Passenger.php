@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * App\Passenger
  *
  * @property int $id
- * @property string $date
+ * @property \Carbon\Carbon $date
  * @property int $total
  * @property int $total_prev
  * @property int $vehicle_id
@@ -46,6 +46,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereVehicleStatusId($value)
  * @mixin \Eloquent
+ * @property int|null $total_sensor_recorder
+ * @property int|null $total_front_sensor
+ * @property int|null $total_back_sensor
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereTotalBackSensor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereTotalFrontSensor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereTotalSensorRecorder($value)
  */
 class Passenger extends Model
 {
@@ -80,6 +86,11 @@ class Passenger extends Model
             ->whereBetween('passengers.date', ["$date 00:00:00", "$date 23:59:59"]);
     }
 
+    public function scopeWhereDate($query, $date)
+    {
+        return $query->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"]);
+    }
+
     public function scopeFindAllByDateRange($query, $vehicleId, $initialDate, $finalDate)
     {
         return $query
@@ -95,5 +106,10 @@ class Passenger extends Model
     public function vehicleStatus()
     {
         return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id', 'id_status');
+    }
+
+    public function totalCount()
+    {
+        return ($this->total - $this->total_prev);
     }
 }

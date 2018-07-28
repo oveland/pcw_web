@@ -217,6 +217,11 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/', 'PassengersBySensorVSRecorderReportController@index')->name('report-passengers-mixed');
                 Route::get('/search', 'PassengersBySensorVSRecorderReportController@show')->name('report-passengers-mixed-search');
             });
+
+            Route::prefix(__('url-geolocation'))->group(function () {
+                Route::get('/', 'GeolocationPassengersController@index')->name('report-passengers-geolocation');
+                Route::get('/search', 'GeolocationPassengersController@search')->name('report-passengers-geolocation-search');
+            });
         });
 
         /* Routes for drivers report */
