@@ -160,7 +160,8 @@
                                 var lastCount = 0;
                                 var totalMarkers = 0;
                                 $.each(report.data,function(i,r){
-                                    if( r.totalSensorRecorder > 0 && r.totalSensorRecorder > lastCount){
+                                    if (r.totalSensorRecorder - lastCount > 0) {
+                                        console.log('Show',r);
                                         var passengerInfoWindow = createPassengerInfoWindow(r);
                                         var marker = addPassengerMaker(r);
                                         marker.addListener('click', function() {

@@ -32,17 +32,17 @@ class GeolocationPassengersController extends Controller
         $dispatchRegistersByVehicle = DispatchRegister::findAllByDateAndVehicleAndRoute($date, $vehicle->id, $route->id);
         $counterByRecorder = CounterByRecorder::totalByVehicle($vehicle->id, $dispatchRegistersByVehicle, $dispatchRegistersByVehicle);
 
-        $passengers = Passenger::where('dispatch_register_id', $dispatchRegister->id)->get();
+        $passengers = Passenger::where('dispatch_register_id', $dispatchRegister->id)->orderBy('date')->get();
 
         $data = collect([]);
         foreach ($passengers as $passenger) {
             $data->push((object)[
                 'time' => $passenger->date->toTimeString(),
+                'totalSensorRecorder' => $passenger->total_sensor_recorder,
                 'total' => $passenger->total,
                 'totalFrontSensor' => $passenger->total_front_sensor,
                 'totalBackSensor' => $passenger->total_back_sensor,
                 'totalCount' => $passenger->totalCount(),
-                'totalSensorRecorder' => $passenger->total_sensor_recorder,
                 'latitude' => $passenger->latitude,
                 'longitude' => $passenger->longitude,
                 'frame' => $passenger->frame,
