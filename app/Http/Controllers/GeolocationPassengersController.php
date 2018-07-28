@@ -35,7 +35,7 @@ class GeolocationPassengersController extends Controller
         $passengers = Passenger::where('dispatch_register_id', $dispatchRegister->id)->get();
 
         $data = collect([]);
-        foreach ($passengers->take(100) as $passenger) {
+        foreach ($passengers as $passenger) {
             $data->push((object)[
                 'time' => $passenger->date->toTimeString(),
                 'total' => $passenger->total,

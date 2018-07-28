@@ -168,7 +168,7 @@
                                             $('.passenger-info-map').parent().css('overflow','hidden');
                                         });
                                         lastMarker = marker;
-                                        lastCount = r.total;
+                                        lastCount = r.totalSensorRecorder;
                                         totalMarkers++;
                                     }
                                 });
