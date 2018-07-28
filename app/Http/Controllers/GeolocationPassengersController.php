@@ -24,10 +24,10 @@ class GeolocationPassengersController extends Controller
 
     public function search(Request $request)
     {
-        $date = $request->get('date-report');
-        $route = Route::find($request->get('route-report'));
-        $vehicle = Vehicle::find($request->get('vehicle-report'));
         $dispatchRegister = DispatchRegister::find($request->get('dispatch-register-id'));
+        $vehicle = $dispatchRegister->vehicle;
+        $route = $dispatchRegister->route;
+        $date = $dispatchRegister->date;
 
         $dispatchRegistersByVehicle = DispatchRegister::findAllByDateAndVehicleAndRoute($date, $vehicle->id, $route->id);
         $counterByRecorder = CounterByRecorder::totalByVehicle($vehicle->id, $dispatchRegistersByVehicle, $dispatchRegistersByVehicle);
@@ -52,7 +52,7 @@ class GeolocationPassengersController extends Controller
 
         $report = collect([
             'route' => $dispatchRegister->route,
-            'totalBySensorRecorder' => ($data->last()->totalSensorRecorder - $data->first()->totalSensorRecorder),
+            'totalBySensorRecorder' => $data->isNotEmpty() ? ($data->last()->totalSensorRecorder - $data->first()->totalSensorRecorder) : 0,
             'counterByRecorder' => $counterByRecorder->report->history[$dispatchRegister->id],
             'data' => $data
         ]);
