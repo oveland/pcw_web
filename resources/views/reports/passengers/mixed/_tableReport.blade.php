@@ -214,7 +214,15 @@
 
             <td width="5%" class="text-center">
                 <button data-target="#collapse-{{ $dispatchRegister->id }}" class="btn btn-sm btn-rounded btn-info tooltips" data-title="@lang('Show frames')" data-toggle="collapse">
-                    <i class="ion-ios-search"></i>
+                    <i class="fa fa-code"></i>
+                </button>
+                <button class="btn btn-sm btn-rounded btn-success tooltips btn-geolocation-report"
+                        data-toggle="modal"
+                        data-target="#modal-geolocation-report"
+                        data-title="@lang('Show geolocation report')"
+                        data-url="{{ route('report-passengers-geolocation-search') }}"
+                        data-id="{{ $dispatchRegister->id }}">
+                    <i class="fa fa-map"></i>
                 </button>
             </td>
         </tr>

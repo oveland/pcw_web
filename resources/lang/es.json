@@ -439,5 +439,6 @@
   "geolocation": "geolocalización",
   "url-geolocation": "geolocalizacion",
   "Count by round trip": "Conteo por vuelta",
-  "Sensor recorder": "Sensor registradora"
+  "Sensor recorder": "Sensor registradora",
+  "Show geolocation report": "Mostrar reporte de Geolocalización"
 }

@@ -12,7 +12,7 @@ use App\Company;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class GeolocationPassengersController extends Controller
+class GeolocationPassengersReportController extends Controller
 {
     public function index(Request $request)
     {

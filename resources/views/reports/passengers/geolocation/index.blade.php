@@ -101,29 +101,7 @@
         <hr class="hr">
         <!-- begin content report -->
         <div class="report-container col-md-12 p-5">
-            <div class='col-md-3 pull-right recorder-passenger-info-map' style="position: relative;z-index: 2;background: white">
-                <div class='col-md-12'>
-                    <div class=''>
-                        <h5 class='text-info'><i class='fa fa-users'></i> <b>@lang('Count by round trip')</b></h5>
-                        <hr class='hr'>
-                    </div>
-                    <div class=''>
-                        <i class='fa fa-compass text-muted'></i> <b>@lang('Total') @lang('Recorder'): </b><span class="total-recorder"></span><br>
-                        <i class='fa fa-crosshairs text-muted'></i> <b>@lang('Total') @lang('Sensor recorder'): </b><span class="total-sensor-recorder"></span><br>
-                        <hr class='hr'>
-                    </div>
-                    <div class='text-bold'>
-                        <i class='fa fa-clock-o text-muted'></i>
-                        <small class='tooltips departure-time' data-title="@lang('Departure time')" data-placement="bottom">00:00:00</small>
-                        -
-                        <small class='tooltips arrival-time' data-title="@lang('Arrival time')" data-placement="bottom"></small>
-                        <hr class='hr'>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 p-0" style="position: relative; top: -128px;z-index: 1">
-                <div id="google-map-light-dream" class="height-lg"></div>
-            </div>
+            @include('reports.passengers.geolocation.templates.geolocationPassengerMap')
         </div>
         <!-- end content report -->
     </div>
@@ -134,6 +112,7 @@
 
 @section('scripts')
     @include('template.google.maps')
+    @include('reports.passengers.geolocation.templates.geolocationScript')
 
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
     <script type="application/javascript">
@@ -154,41 +133,7 @@
                         dataType:'json',
                         success: function (report) {
                             mainContainer.fadeIn();
-                            initializeMap();
-                            setTimeout(function(){
-                                var lastMarker = null;
-                                var lastCount = 0;
-                                var totalMarkers = 0;
-                                $.each(report.data,function(i,r){
-                                    if (r.totalSensorRecorder - lastCount > 0) {
-                                        console.log('Show',r);
-                                        var passengerInfoWindow = createPassengerInfoWindow(r);
-                                        var marker = addPassengerMaker(r);
-                                        marker.addListener('click', function() {
-                                            passengerInfoWindow.open(map, marker);
-                                            $('.passenger-info-map').parent().css('overflow','hidden');
-                                        });
-                                        lastMarker = marker;
-                                        lastCount = r.totalSensorRecorder;
-                                        totalMarkers++;
-                                    }
-                                });
-
-                                console.log(totalMarkers);
-
-                                new google.maps.KmlLayer({
-                                    url: report.route.url,
-                                    map: map
-                                });
-
-                                $('.total-recorder').text(report.counterByRecorder.passengersByRoundTrip);
-                                $('.total-sensor-recorder').text(report.totalBySensorRecorder);
-                                $('.departure-time').text(report.counterByRecorder.departureTime);
-                                $('.arrival-time').text(report.counterByRecorder.arrivalTime);
-
-                                // Center map over last marker
-                                if (lastMarker) map.setCenter(lastMarker.getPosition());
-                            },500);
+                            GeolocationPassengerReport.processPassengerReportData(report);
                         },
                         complete:function(){
                             form.find('.btn-search-report').removeClass(loadingClass);
@@ -255,51 +200,5 @@
                 mainContainer.slideUp();
             },500);
         });
-
-
-        function addPassengerMaker(r){
-            return new google.maps.Marker({
-                title: "Total: "+r.total+" ("+r.time+")",
-                map: map,
-                icon: passengerMapIcon,
-                animation: google.maps.Animation.DROP,
-                position: {lat: parseFloat(r.latitude), lng: parseFloat(r.longitude)}
-            });
-        }
-
-        function createPassengerInfoWindow(r){
-            var contentString =
-                "<div class='row passenger-info-map' style='width: 200px'>" +
-                "<div class='col-md-12'>"+
-                "<div class=''>"+
-                "<h5 class='text-info'><i class='fa fa-users'></i> <b>Información de conteo</b></h5>"+
-                "<hr class='hr'>"+
-                "</div>"+
-                "<div class='hide'>"+
-                "<i class='fa fa-crosshairs text-muted'></i> <b>Sensor: </b>"+r.total+"<br>"+
-                "<i class='fa fa-arrow-circle-o-right text-muted'></i> <b>Front door: </b>"+r.totalFrontSensor+"<br>"+
-                "<i class='fa fa-arrow-circle-o-left text-muted'></i> <b>Back door: </b>"+r.totalBackSensor+"<br>"+
-                "<i class='fa fa-clock-o text-muted'></i> <small class='text-bold'>"+r.time+"</small><br>"+
-                "<hr class='hr'>"+
-                "</div>"+
-                "<div class=''>"+
-                "<i class='fa fa-compass text-muted'></i> <b>Sensor Recorder: </b>"+r.totalSensorRecorder+"<br>"+
-                "<i class='fa fa-clock-o text-muted'></i> <small class='text-bold'>"+r.time+"</small><br>"+
-                "<hr class='hr'>"+
-                "</div>"+
-                "<div class='hide'>"+
-                "<i class='fa fa-compass text-muted'></i> <b> Recorder: </b>"+r.total+"<br>"+
-                "<i class='fa fa-clock-o text-muted'></i> <small class='text-bold'>"+r.time+"</small><br>"+
-                "<hr class='hr'>"+
-                "</div>"+
-                "<div class=''>"+
-                "<i class='fa fa-bus text-muted'></i> <b>Estado: </b><span class='text-"+r.vehicleStatus.main_class+"'><i class='"+r.vehicleStatus.icon_class+"'></i> "+r.vehicleStatus.des_status+"</span><br>"+
-                "</div>"+
-                "</div>"+
-                "</div>";
-            return new google.maps.InfoWindow({
-                content: contentString
-            });
-        }
     </script>
 @endsection

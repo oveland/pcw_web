@@ -214,13 +214,13 @@ Route::group(['middleware' => ['auth']], function () {
             });
 
             Route::prefix(__('mixed'))->group(function () {
-                Route::get('/', 'PassengersBySensorVSRecorderReportController@index')->name('report-passengers-mixed');
-                Route::get('/search', 'PassengersBySensorVSRecorderReportController@show')->name('report-passengers-mixed-search');
+                Route::get('/', 'PassengersMixedReportController@index')->name('report-passengers-mixed');
+                Route::get('/search', 'PassengersMixedReportController@show')->name('report-passengers-mixed-search');
             });
 
             Route::prefix(__('url-geolocation'))->group(function () {
-                Route::get('/', 'GeolocationPassengersController@index')->name('report-passengers-geolocation');
-                Route::get('/search', 'GeolocationPassengersController@search')->name('report-passengers-geolocation-search');
+                Route::get('/', 'GeolocationPassengersReportController@index')->name('report-passengers-geolocation');
+                Route::any('/search', 'GeolocationPassengersReportController@search')->name('report-passengers-geolocation-search');
             });
         });
 

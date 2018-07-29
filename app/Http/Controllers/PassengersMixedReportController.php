@@ -13,7 +13,7 @@ use Auth;
 use Excel;
 use Illuminate\Http\Request;
 
-class PassengersBySensorVSRecorderReportController extends Controller
+class PassengersMixedReportController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
