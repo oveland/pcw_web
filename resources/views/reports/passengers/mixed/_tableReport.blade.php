@@ -216,6 +216,7 @@
                 <button data-target="#collapse-{{ $dispatchRegister->id }}" class="btn btn-sm btn-rounded btn-info tooltips" data-title="@lang('Show frames')" data-toggle="collapse">
                     <i class="fa fa-code"></i>
                 </button>
+                @if( $dispatchRegister->complete() )
                 <button class="btn btn-sm btn-rounded btn-success tooltips btn-geolocation-report"
                         data-toggle="modal"
                         data-target="#modal-geolocation-report"
@@ -224,6 +225,7 @@
                         data-id="{{ $dispatchRegister->id }}">
                     <i class="fa fa-map"></i>
                 </button>
+                @endif
             </td>
         </tr>
 

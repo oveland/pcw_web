@@ -100,7 +100,7 @@
     <!-- end row -->
 
     <div class="modal fade" id="modal-geolocation-report" style="background: #535353;opacity: 0.96;">
-        <div class="modal-dialog modal-lg" style="width: 80%;">
+        <div class="modal-dialog modal-lg" style="width: 90%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

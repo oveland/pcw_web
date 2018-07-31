@@ -118,7 +118,6 @@
     <script type="application/javascript">
         $('.menu-passengers, .menu-passengers-geolocation').addClass('active');
         var mainContainer = $('.report-container');
-        var passengerMapIcon = '{{ asset('img/passenger-map.png') }}';
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
