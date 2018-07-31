@@ -83,6 +83,9 @@ use Carbon\Carbon;
  * @property int|null $final_sensor_counter
  * @property string|null $final_frame_sensor_counter
  * @property int|null $final_sensor_recorder
+ * @property int|null passengersBySensor
+ * @property int|null passengersBySensorRecorder
+ * @property int|null calculateErrorPercent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereAvailableVehicles($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalFrameSensorCounter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalSensorCounter($value)
