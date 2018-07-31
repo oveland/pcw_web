@@ -1,6 +1,6 @@
 <div class="loading-geolocation-map" style="display: none"></div>
 <div class="geolocation-map-container">
-    <div class='col-md-3 pull-right recorder-passenger-info-map' style="position: relative;z-index: 2;background: white">
+    <div class='col-md-3 pull-right recorder-passenger-info-map' style="position: relative;z-index: 2;background: rgba(255,255,255,0.8)">
         <div class='col-md-12'>
             <div class=''>
                 <h5 class='text-info'><i class='fa fa-users'></i> <b>@lang('Count by round trip')</b></h5>
@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12 p-0" style="position: relative; top: -128px;z-index: 1">
-        <div id="google-map-light-dream" class="height-lg"></div>
+    <div class="col-md-12 p-0" style="position: relative; top: -128px;z-index: 1;">
+        <div id="google-map-light-dream" class="height-lg" style="width: 100%"></div>
     </div>
 </div>

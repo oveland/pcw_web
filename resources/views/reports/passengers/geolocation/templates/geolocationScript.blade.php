@@ -57,7 +57,7 @@
             return new google.maps.Marker({
                 title: "Total: "+r.total+" ("+r.time+")",
                 map: map,
-                icon: passengerMapIcon,
+                icon: '{{ asset('img/passenger-map.png') }}',
                 animation: google.maps.Animation.DROP,
                 position: {lat: parseFloat(r.latitude), lng: parseFloat(r.longitude)}
             });
