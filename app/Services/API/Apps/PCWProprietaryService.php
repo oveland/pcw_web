@@ -12,14 +12,12 @@ use App\CurrentSensorPassengers;
 use App\DispatchRegister;
 use App\Proprietary;
 use App\Services\API\Apps\Contracts\APIInterface;
-use App\Services\PCWTime;
 use App\Traits\CounterByRecorder;
+use App\Traits\CounterBySensor;
 use App\Vehicle;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Log;
 
 class PCWProprietaryService implements APIInterface
 {
@@ -49,10 +47,8 @@ class PCWProprietaryService implements APIInterface
 
     public static function trackPassengers(Request $request): JsonResponse
     {
-        Log::useDailyFiles(storage_path() . '/logs/api/pcw-proprietary-report.log', 1);
         $data = collect(['success' => true, 'message' => '']);
 
-        $now = Carbon::now();
         $proprietary = Proprietary::where('id', $request->get('id'))->get()->first();
 
         if ($proprietary) {
@@ -60,51 +56,105 @@ class PCWProprietaryService implements APIInterface
             $reports = collect([]);
             foreach ($assignedVehicles as $assignation) {
                 $vehicle = $assignation->vehicle;
-
-                $dispatchRegisters = DispatchRegister::where('date', $now->toDateString())
-                    ->where('vehicle_id', $vehicle->id)
-                    ->completed()
-                    ->orderBy('departure_time')
-                    ->get();
-
-                if (count($dispatchRegisters)) {
-                    $currentDispatchRegister = $dispatchRegisters->last();
-                    $route = $currentDispatchRegister->route;
-                    $arrivalTime = explode('.', $currentDispatchRegister->arrival_time)[0];
-
-                    $recorder = CounterByRecorder::reportByVehicle($vehicle->id, $dispatchRegisters, true);
-                    $sensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
-                    $timeSensor = explode('.', $sensor->timeStatus)[0]; // TODO Change column when table contador is migrated
-
-                    $passengersByRecorder = $recorder->report->passengers;
-                    $passengersBySensor = $sensor->passengers;
-
-                    //dd($dispatchRegisters->toArray());
-
-                    $reports->push([
-                        'prop' => true,                                 // Indicates that data SMS belongs to a proprietary
-                        'vn' => $vehicle->number,
-                        'pr' => $passengersByRecorder,                  // Passengers by Recorder
-                        'ps' => $passengersBySensor,                    // Passengers by Sensor
-                        'tr' => $arrivalTime,                           // Time by Recorder
-                        'ts' => $timeSensor,                            // Time by Sensor,
-                        'rn' => $route->name,                           // Route name,
-                        'rr' => $currentDispatchRegister->round_trip,   // Route round trip,
-                        'rt' => $currentDispatchRegister->turn,         // Route turn,
-                        'dispatchRegisters' => $dispatchRegisters
-                    ]);
-
-                    Log::info("Send passenger report (passengersBySensor: $passengersBySensor, passengersByRecorder: $passengersByRecorder) to proprietary: $proprietary->id: " . $proprietary->fullName());
+                $passengersReportByVehicle = self::makeVehicleReport($vehicle);
+                if ($passengersReportByVehicle->isNotEmpty()) {
+                    $reports->push($passengersReportByVehicle);
                 }
             }
-            $data->put('data', $reports);
+            $data->put('currentPassengersReports', $reports);
         } else {
             $data->put('success', false);
             $data->put('message', __('Proprietary not found in platform'));
         }
 
-        //$data = json_decode('{"success":true,"message":"","data":[{"prop":true,"vn":"338","pr":294,"ps":27,"tr":"16:22:45","ts":"18:07:21","rn":"RUTA 6","rr":4,"rt":53},{"prop":true,"vn":"356","pr":306,"ps":98,"tr":"17:05:32","ts":"18:07:22","rn":"RUTA 3","rr":4,"rt":33},{"prop":true,"vn":"361","pr":361,"ps":0,"tr":"16:44:23","ts":"00:05:06","rn":"RUTA 6","rr":4,"rt":55}]}',true);
 
+        //dd($data);
         return response()->json($data);
+    }
+
+    /**
+     * @param Vehicle $vehicle
+     * @return \Illuminate\Support\Collection|object $passengersReportByVehicle
+     */
+    public static function makeVehicleReport(Vehicle $vehicle)
+    {
+        $now = Carbon::now();
+        $passengersReportByVehicle = collect([]);
+        $allDispatchRegisters = DispatchRegister::where('date', $now->toDateString())
+            ->with('vehicle')
+            ->with('route')
+            ->where('vehicle_id', $vehicle->id)
+            ->where(function($query){
+                return $query->where('status',DispatchRegister::COMPLETE)->orWhere('status',DispatchRegister::IN_PROGRESS);
+            })
+            ->orderBy('departure_time')
+            ->get();
+
+        $completedDispatchRegisters = $allDispatchRegisters->filter(function ($dispatchRegister, $key) {
+            return $dispatchRegister->complete();
+        });
+
+        $lastDispatchRegister = $allDispatchRegisters->last();
+
+        if ($completedDispatchRegisters->isNotEmpty()) {
+            $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);
+            $timeRecorder = $counterByRecorder->report->timeRecorder;
+
+            $counterBySensor = CounterBySensor::reportByVehicle($vehicle->id, $completedDispatchRegisters);
+
+            $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
+            $timeSensor = explode('.', $currentSensor->timeStatus)[0]; // TODO Change column when table contador is migrated
+
+            $totalByRecorder = $counterByRecorder->report->passengers;
+
+	        $totalSensorRealTime = $lastDispatchRegister->complete() ? 0 : ( $currentSensor->pas_tot - $lastDispatchRegister->initial_sensor_counter);
+            $passengersBySensor = $counterBySensor->report->passengersBySensor + $totalSensorRealTime;
+
+            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() ? 0 : ( $currentSensor->des_p1 - $lastDispatchRegister->initial_sensor_recorder);
+            $totalBySensorRecorder = $counterBySensor->report->passengersBySensorRecorder + $totalSensorRecorderRealTime; // TODO add the real time count
+
+            $passengersReportByVehicle = collect((object)[
+                'totalByRecorder' => $totalByRecorder,
+                'totalBySensorRecorder' => $totalBySensorRecorder,
+                'totalBySensor' => $passengersBySensor,
+                'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->toArray() : null,
+                'vehicle' => $vehicle,
+                'timeSensor' => $timeSensor,
+                'timeRecorder' => $timeRecorder,
+                'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor)
+            ]);
+        }
+
+        return $passengersReportByVehicle;
+    }
+
+    /**
+     * @param Vehicle $vehicle
+     * @param $counterByRecorder
+     * @param $counterBySensor
+     * @return \Illuminate\Support\Collection
+     */
+    public static function makeHistoryReport(Vehicle $vehicle, $counterByRecorder, $counterBySensor)
+    {
+        $historyReport = collect([]);
+        $historyReportByRecorder = $counterByRecorder->report->history;
+        $historyReportBySensor = $counterBySensor->report->history;
+
+        foreach ($historyReportByRecorder as $historyRecorder) {
+            $dispatchRegister = $historyRecorder->dispatchRegister;
+            $historySensor = $historyReportBySensor[$dispatchRegister->id];
+
+            $historyReport->push((object)[
+                'totalByRecorder' => $historyRecorder->passengersByRoundTrip,
+                'totalBySensorRecorder' => $historySensor->totalBySensorRecorderByRoundTrip,
+                'totalBySensor' => $historySensor->totalBySensorByRoundTrip,
+                'dispatchRegister' => $dispatchRegister,
+                'vehicle' => $vehicle,
+                'timeSensor' => $dispatchRegister->arrivalTime,
+                'timeRecorder' => $dispatchRegister->arrivalTime,
+            ]);
+        }
+
+        return $historyReport;
     }
 }

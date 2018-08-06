@@ -100,7 +100,17 @@ class Passenger extends Model
 
     public function getHexSeatsAttribute()
     {
-        return explode(' ',$this->frame)[3] ?? '000000';
+        $arrayFrame = explode(' ',$this->frame);
+
+        $hexFromFrame = '000000';
+        foreach ($arrayFrame as $a){
+            if( strlen($a) == 6 ){
+                $hexFromFrame = $a;
+                break;
+            }
+        }
+
+        return $hexFromFrame;
     }
 
     public function vehicleStatus()

@@ -11,7 +11,7 @@ namespace App\Traits;
 
 use App\Vehicle;
 
-trait CounterByRecorder
+trait CounterBySensor
 {
     static function report($dispatchRegisters)
     {

@@ -122,7 +122,7 @@ trait CounterByRecorder
                 'driver' => $driver ? $driver->fullName() : __('Not assigned'),
                 'departureFringe' => $dispatchRegister->departureFringe,
                 'arrivalFringe' => $dispatchRegister->arrivalFringe,
-                //'dispatchRegister' => $dispatchRegister
+                'dispatchRegister' => $dispatchRegister
             ]);
 
             $issueField = null;
@@ -169,6 +169,7 @@ trait CounterByRecorder
                 'vehicle' => $vehicle,
                 'start_recorder' => $firstStartRecorder,
                 'passengers' => $totalPassengersByVehicle,
+                'timeRecorder' => $lastDispatchRegister->arrival_time,
                 'history' => $history,
                 'issue' => $issues->first()
             ],

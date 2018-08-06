@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Route extends Model
 {
+    protected $hidden = ['created_at', 'updated_at'];
+    
     protected function getDateFormat()
     {
         return config('app.simple_date_time_format');
