@@ -72,7 +72,11 @@
             <span class='btn btn-xs btn-default col-md-12'><i class='fa fa-ellipsis-h'></i></span>
         </div>
         <div class='col-md-1 col-sm-1 col-xs-1 no-padding'>
-            <span id="seat-13" class='btn btn-xs seat-inactive seat-top-guala seat-driver tooltips' data-title='13'>&nbsp;</span>
+            <span id="seat-13" class='hide btn btn-xs seat-inactive seat-top-guala seat-driver tooltips' data-title='13'>&nbsp;</span>
+            @foreach ($seatingStatus['center'] as $seat => $status)
+                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
+                </span>
+            @endforeach
         </div>
     </div>
     {{-- END ROW CENTER --}}
@@ -88,7 +92,11 @@
         </div>
 
         <div class='col-md-1 col-sm-1 col-xs-1 no-padding'>
-            <span id="seat-14" class='btn btn-xs seat-inactive seat-top-guala seat-driver tooltips' data-title='14'>&nbsp;</span>
+            <span id="seat-14" class='btn hide btn-xs seat-inactive seat-top-guala seat-driver tooltips' data-title='14'>&nbsp;</span>
+            @foreach ($seatingStatus['window'] as $seat => $status)
+                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
+                </span>
+            @endforeach
         </div>
     </div>
     {{-- END ROW 3 --}}
