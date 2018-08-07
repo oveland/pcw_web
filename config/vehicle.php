@@ -20,7 +20,7 @@ return [
     | Maintenance period days
     |--------------------------------------------------------------------------
     */
-    'maintenance_period_days' => 11,
+    'maintenance_period_days' => 15,
 
     /*
     |--------------------------------------------------------------------------
@@ -35,5 +35,5 @@ return [
     |   When is false all days are assignable
     |--------------------------------------------------------------------------
     */
-    'maintenance_check_assignable_days' => false,
+    'maintenance_check_assignable_days' => true,
 ];

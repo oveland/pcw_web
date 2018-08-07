@@ -23,9 +23,7 @@ class MaintenanceVehicleController extends Controller
     public function show(Request $request)
     {
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $vehicles = $company->vehicles->where('active', true)->sortBy(function ($vehicle, $key) {
-            return substr($vehicle->plate, -1); // Sort vehicle by last number asc
-        });
+        $vehicles = $company->vehicles->where('active', true)->sortBy('number');
 
         $maintenanceVehiclesReports = collect([]);
         foreach ($vehicles as $vehicle) {
