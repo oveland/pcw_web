@@ -96,14 +96,15 @@ class PCWProprietaryService implements APIInterface
 
         $lastDispatchRegister = $allDispatchRegisters->last();
 
+        $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
+        $timeSensor = explode('.', $currentSensor->timeStatus)[0]; // TODO Change column when table contador is migrated
+
         if ($completedDispatchRegisters->isNotEmpty()) {
             $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);
             $timeRecorder = $counterByRecorder->report->timeRecorder;
 
             $counterBySensor = CounterBySensor::reportByVehicle($vehicle->id, $completedDispatchRegisters);
 
-            $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
-            $timeSensor = explode('.', $currentSensor->timeStatus)[0]; // TODO Change column when table contador is migrated
 
             $totalByRecorder = $counterByRecorder->report->passengers;
 
@@ -122,6 +123,17 @@ class PCWProprietaryService implements APIInterface
                 'timeSensor' => $timeSensor,
                 'timeRecorder' => $timeRecorder,
                 'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor)
+            ]);
+        }else{
+            $passengersReportByVehicle = collect((object)[
+                'totalByRecorder' => 0,
+                'totalBySensorRecorder' => 0,
+                'totalBySensor' => $currentSensor->pas_tot,
+                'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->toArray() : null,
+                 'vehicle' => $vehicle,
+                'timeSensor' => $timeSensor,
+                'timeRecorder' => '00:00:00',
+                'historyReport' => []
             ]);
         }
 

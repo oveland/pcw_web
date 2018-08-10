@@ -5,7 +5,11 @@
     $totalAssignedVehicles = count($assignedVehicles);
     $assignedIdVehicles = $totalAssignedVehicles?$assignedVehicles->pluck('vehicle_id')->toArray():[];
 @endphp
-<td class="text-center bg-inverse text-white">{!! $loop->iteration ?? '*' !!}</td>
+<td class="text-center bg-inverse text-white">
+    {!! $loop->iteration ?? '*' !!}
+    <br>
+    <strong>ID {{ $proprietary->id }}</strong>
+</td>
 <td>{{ $proprietary->first_name }}</td>
 <td>{{ $proprietary->surname }}</td>
 <td>

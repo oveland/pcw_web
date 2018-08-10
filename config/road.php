@@ -61,7 +61,8 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'google_api_token' => 'AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA',
+    //'google_api_token' => 'AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA',
+    'google_api_token' => 'AIzaSyC_BkN0qt9j8gUEe7GdW2Bxu3vgQPTrSP8',
 
     /*
     |--------------------------------------------------------------------------
