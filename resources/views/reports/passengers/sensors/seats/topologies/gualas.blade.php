@@ -50,10 +50,10 @@
 <div class='row btn btn-default car-top-guala'>
     {{--START ROW 1--}}
     <div class='col-md-12 no-padding'>
-        <div class='col-md-11 col-sm-11 col-xs-11 no-padding' style='border-right: 1px solid grey;'>
+        <div class='col-md-11 col-sm-11 col-xs-11 data-row1 no-padding' style='border-right: 1px solid grey;'>
             @foreach ($seatingStatus['row1'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala tooltips' data-title='{{ $seat }}'>
-                    &nbsp;
+                    &nbsp;&nbsp;
                 </span>
             @endforeach
         </div>
@@ -69,12 +69,14 @@
     {{-- START ROW CENTER --}}
     <div class='col-md-12 no-padding'>
         <div class='col-md-11 col-sm-11 col-xs-11' style='padding: 2px 8px 0 2px;border-right: 1px solid grey'>
-            <span class='btn btn-xs btn-default col-md-12'><i class='fa fa-ellipsis-h'></i></span>
+            <span class='btn btn-xs btn-default col-md-12 hex-seating'>
+                {{ $hexSeating }}
+            </span>
         </div>
-        <div class='col-md-1 col-sm-1 col-xs-1 no-padding'>
-            <span id="seat-13" class='hide btn btn-xs seat-inactive seat-top-guala seat-driver tooltips' data-title='13'>&nbsp;</span>
+        <div class='col-md-1 col-sm-1 col-xs-1 no-padding data-center'>
             @foreach ($seatingStatus['center'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
+                    &nbsp;
                 </span>
             @endforeach
         </div>
@@ -83,7 +85,7 @@
 
     {{-- START ROW 3 --}}
     <div class='col-md-12 no-padding'>
-        <div class='col-md-11 col-sm-11 col-xs-11 no-padding' style='border-right: 1px solid grey'>
+        <div class='col-md-11 col-sm-11 col-xs-11 data-row2 no-padding' style='border-right: 1px solid grey'>
             @foreach ($seatingStatus['row2'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala tooltips' data-title='{{ $seat }}'>
                     &nbsp;
@@ -91,10 +93,10 @@
             @endforeach
         </div>
 
-        <div class='col-md-1 col-sm-1 col-xs-1 no-padding'>
-            <span id="seat-14" class='btn hide btn-xs seat-inactive seat-top-guala seat-driver tooltips' data-title='14'>&nbsp;</span>
+        <div class='col-md-1 col-sm-1 col-xs-1 no-padding data-window'>
             @foreach ($seatingStatus['window'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
+                    &nbsp;
                 </span>
             @endforeach
         </div>

@@ -20,14 +20,16 @@ class PCWSeatSensorGualas
 
     static function makeHtmlTemplate(Passenger $passenger)
     {
-        $seatingStatus = self::getSeatingStatusFromHex($passenger->hexSeats, $passenger->vehicle->plate);
-        return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus'));
+        $hexSeating = $passenger->hexSeats;
+        $seatingStatus = self::getSeatingStatusFromHex($hexSeating, $passenger->vehicle->plate);
+        return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus','hexSeating'));
     }
 
     static function getSeatingStatus(Passenger $passenger)
     {
         return [
             'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats, $passenger->vehicle->plate),
+            'hexSeating' => $passenger->hexSeats,
             'location' => [
                 'latitude' => $passenger->latitude,
                 'longitude' => $passenger->longitude
@@ -51,11 +53,13 @@ class PCWSeatSensorGualas
     {
         $seatingStatusFromHex = collect([]);
         $distribution = self::getDistribution($plate);
+
         $seatingStatusBinary = self::decodeSeatingStatusFromHex($seatingStatusHexadecimal);
 
         foreach ($distribution as $row => $distributionSeating) {
             $seatingStatusFromHex->put($row, self::makeDistribution($distributionSeating, $seatingStatusBinary));
         }
+
         return $seatingStatusFromHex;
     }
 

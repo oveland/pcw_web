@@ -81,14 +81,18 @@
 
         function render(){
             var report = seatingStatusReport[currentIndex];
-            var seatingStatus = report.seatingStatus;
-            var seating = seatingStatus.row1;
-            jQuery.extend(seating, seatingStatus.row2);// Combine objects (row1 + row2)
 
-            $.each(seating, function (seat, status) {
-                var seatView = $('#seat-'+seat);
-                seatView.removeClass('seat-active').removeClass('seat-inactive');
-                seatView.addClass( status === 1 ? 'seat-active':'seat-inactive' );
+            console.log(report.hexSeating);
+            $('.hex-seating').html(report.hexSeating);
+            $.each(report.seatingStatus, function (container, seating) {
+                console.log(container,seating);
+
+                $.each(seating, function (seat, status) {
+                    var seatView = $('.data-'+container).find('#seat-'+seat);
+                    seatView.removeClass('seat-active').removeClass('seat-inactive');
+                    seatView.addClass( status === 1 ? 'seat-active':'seat-inactive' );
+                });
+
             });
 
             /* Track events on google maps */
