@@ -277,6 +277,7 @@ class DispatchRegister extends Model
 
     public function calculateErrorPercent($reference, $value)
     {
+        if (!$reference || $reference == 0) $reference = 1;
         return number_format((100 - $value * 100 / $reference), 1, '.', '');
     }
 

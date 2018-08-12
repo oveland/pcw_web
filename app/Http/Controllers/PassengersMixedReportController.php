@@ -35,7 +35,10 @@ class PassengersMixedReportController extends Controller
         $companyReport = $request->get('company-report');
         $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
-        $vehiclesReport = Vehicle::where('plate','VCH-351')->orWhere('plate','VCK-542')->get(); // TODO: Only these vehicles has Counter Sensors
+        $vehiclesReport = Vehicle::where('plate','VCH-351')
+            ->orWhere('plate','VCK-542')
+            ->orWhere('plate','VCD-672')
+            ->get(); // TODO: Only these vehicles has Counter Sensors
         $typeReport = 'group-vehicles';
 
         $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
