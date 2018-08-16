@@ -13,6 +13,7 @@ use App\CurrentSensorPassengers;
 use App\DispatchRegister;
 use App\Proprietary;
 use App\Services\API\Apps\Contracts\APIInterface;
+use App\Services\PCWSeatSensorGualas;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Vehicle;
@@ -98,18 +99,20 @@ class PCWProprietaryService implements APIInterface
 
         $lastDispatchRegister = $allDispatchRegisters->last();
 
-        $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
-        $timeSensor = explode('.', $currentSensor->timeStatus)[0]; // TODO Change column when table contador is migrated
+        $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first(); // TODO Change column  placa when table contador is migrated
+        $timeSensor = explode('.', $currentSensor->timeStatus)[0];
         $timeSensorRecorder = explode('.', $currentSensor->timeSensorRecorder)[0];
 
         $currentLocation = CurrentLocation::where('vehicle_id', $vehicle->id)->get()->first();
+
+        /* ONLY FOR VEHICLES WITH SEATING SENSOR COUNTER */
+        $seatingStatus = PCWSeatSensorGualas::getSeatingStatusFromHex($currentSensor->seating, $vehicle->plate);
 
         if ($completedDispatchRegisters->isNotEmpty()) {
             $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);
             $timeRecorder = $counterByRecorder->report->timeRecorder;
 
             $counterBySensor = CounterBySensor::reportByVehicle($vehicle->id, $completedDispatchRegisters);
-
 
             $totalByRecorder = $counterByRecorder->report->passengers;
 
@@ -129,7 +132,8 @@ class PCWProprietaryService implements APIInterface
                 'timeSensor' => $timeSensor,
                 'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => $timeRecorder,
-                'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor)
+                'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor),
+                'seatingStatus' => $seatingStatus
             ]);
         } else {
             $passengersReportByVehicle = collect((object)[
@@ -142,7 +146,8 @@ class PCWProprietaryService implements APIInterface
                 'timeSensor' => $timeSensor,
                 'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => '00:00:00',
-                'historyReport' => []
+                'historyReport' => [],
+                'seatingStatus' => $seatingStatus
             ]);
         }
 

@@ -22,7 +22,7 @@ class PCWSeatSensorGualas
     {
         $hexSeating = $passenger->hexSeats;
         $seatingStatus = self::getSeatingStatusFromHex($hexSeating, $passenger->vehicle->plate);
-        return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus','hexSeating'));
+        return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus', 'hexSeating'));
     }
 
     static function getSeatingStatus(Passenger $passenger)
@@ -49,10 +49,12 @@ class PCWSeatSensorGualas
      * @param $plate
      * @return object
      */
-    static function getSeatingStatusFromHex($seatingStatusHexadecimal,$plate)
+    static function getSeatingStatusFromHex($seatingStatusHexadecimal, $plate)
     {
         $seatingStatusFromHex = collect([]);
         $distribution = self::getDistribution($plate);
+
+        if (!$distribution || strlen($seatingStatusHexadecimal) < 6) return null;
 
         $seatingStatusBinary = self::decodeSeatingStatusFromHex($seatingStatusHexadecimal);
 

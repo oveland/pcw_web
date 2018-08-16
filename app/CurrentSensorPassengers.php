@@ -22,4 +22,9 @@ class CurrentSensorPassengers extends Model
     {
         return $this->time_change_sensor_recorder;
     }
+
+    public function getSeatingAttribute()
+    {
+        return $this->asientos;
+    }
 }
