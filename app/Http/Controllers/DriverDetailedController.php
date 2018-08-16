@@ -79,40 +79,4 @@ class DriverDetailedController extends Controller
         return $report->sortBy('totalDeadTime');
     }
 
-    /**
-     * TODO make export feature
-     * Export report to excel format
-     *
-     * @param Request $request
-     */
-    public function export(Request $request)
-    {
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $dateReport = $request->get('date-report');
-
-        $passengerReports = $this->buildPassengerReport($company, $dateReport);
-
-        $dataExcel = array();
-        foreach ($passengerReports->reports as $report) {
-            $vehicle = Vehicle::find($report->vehicle_id);
-            $sensor = $report->passengers->sensor;
-            $recorder = $report->passengers->recorder;
-            $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                      # A CELL
-                __('Vehicle') => intval($vehicle->number),                              # B CELL
-                __('Plate') => $vehicle->plate,                                         # C CELL
-                __('Recorder') => intval($recorder),                                    # D CELL
-                __('Sensor') => intval($sensor),                                        # E CELL
-                __('Difference') => abs($sensor - $recorder),                   # F CELL
-            ];
-        }
-
-        PCWExporter::excel([
-            'fileName' => __('Passengers report') . " $dateReport",
-            'title' => __('Passengers report') . " $dateReport",
-            'subTitle' => __('Consolidated per day'),
-            'data' => $dataExcel,
-            'type' => 'passengerReportTotalFooter'
-        ]);
-    }
 }

@@ -229,23 +229,6 @@
             </div>
         </div>
     </div>
-
-    <template id="warning-template-old-dates">
-        <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
-            <div class="col-md-2 p-0 text-center" style="padding-top: 10px">
-                <i class="fa fa-3x fa-exclamation-circle"></i>
-                <div class="col-md- p-0 text-center">
-                    <i class="fa fa-cog fa-spin p-20"></i>
-                </div>
-            </div>
-            <div class="col-md-10">
-                <span class="close pull-right" data-dismiss="alert">×</span>
-                <h4><strong>@lang('Warning')</strong></h4>
-                <hr class="hr">
-                For dates less than to 2017-09-17 this process may take around <strong>15 seconds</strong>
-            </div>
-        </div>
-    </template>
 @endsection
 
 
@@ -270,11 +253,6 @@
                 var form = $(this);
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    $('.report-container').slideUp(100, function () {
-                        if ($('#date-report').val() <= '2017-09-16') {// TODO: Tempora until 2018-03-16
-                            $('.report-container').html($('#warning-template-old-dates').html()).slideDown();
-                        }
-                    });
 
                     $.ajax({
                         url: form.attr('action'),

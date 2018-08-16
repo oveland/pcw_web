@@ -43,11 +43,28 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereVersion($value)
  * @mixin \Eloquent
  * @property-read \App\CurrentDispatchRegister|null $dispatchRegister
+ * @property-read \App\Vehicle|null $vehicle
  */
 class CurrentLocation extends Model
 {
     public function dispatchRegister()
     {
         return $this->belongsTo(CurrentDispatchRegister::class, 'dispatch_register_id', 'dispatch_register_id');
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function getGeolocationAttribute()
+    {
+        return (object)[
+            'id' => $this->id,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'orientation' => $this->orientation,
+            'speed' => $this->speed,
+        ];
     }
 }

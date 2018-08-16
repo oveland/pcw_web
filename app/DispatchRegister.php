@@ -75,7 +75,6 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereDepartureFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister completed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister[] findAllByDateAndVehicleAndRoute()
  * @property int|null $available_vehicles
  * @property int|null $initial_sensor_counter
  * @property string|null $initial_frame_sensor_counter
@@ -108,6 +107,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialBackSensorCounter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialFrontSensorCounter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialTimeSensorCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId)
  */
 class DispatchRegister extends Model
 {

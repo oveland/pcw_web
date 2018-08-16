@@ -8,6 +8,7 @@
 
 namespace App\Services\API\Apps;
 
+use App\CurrentLocation;
 use App\CurrentSensorPassengers;
 use App\DispatchRegister;
 use App\Proprietary;
@@ -53,6 +54,7 @@ class PCWProprietaryService implements APIInterface
 
         if ($proprietary) {
             $assignedVehicles = $proprietary->assignedVehicles;
+
             $reports = collect([]);
             foreach ($assignedVehicles as $assignation) {
                 $vehicle = $assignation->vehicle;
@@ -84,8 +86,8 @@ class PCWProprietaryService implements APIInterface
             ->with('vehicle')
             ->with('route')
             ->where('vehicle_id', $vehicle->id)
-            ->where(function($query){
-                return $query->where('status',DispatchRegister::COMPLETE)->orWhere('status',DispatchRegister::IN_PROGRESS);
+            ->where(function ($query) {
+                return $query->where('status', DispatchRegister::COMPLETE)->orWhere('status', DispatchRegister::IN_PROGRESS);
             })
             ->orderBy('departure_time')
             ->get();
@@ -99,6 +101,8 @@ class PCWProprietaryService implements APIInterface
         $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
         $timeSensor = explode('.', $currentSensor->timeStatus)[0]; // TODO Change column when table contador is migrated
 
+        $currentLocation = CurrentLocation::where('vehicle_id', $vehicle->id)->get()->first();
+
         if ($completedDispatchRegisters->isNotEmpty()) {
             $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);
             $timeRecorder = $counterByRecorder->report->timeRecorder;
@@ -108,11 +112,11 @@ class PCWProprietaryService implements APIInterface
 
             $totalByRecorder = $counterByRecorder->report->passengers;
 
-	        $totalSensorRealTime = $lastDispatchRegister->complete() ? 0 : ( $currentSensor->pas_tot - $lastDispatchRegister->initial_sensor_counter);
+            $totalSensorRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->pas_tot - $lastDispatchRegister->initial_sensor_counter);
             $passengersBySensor = $counterBySensor->report->passengersBySensor + $totalSensorRealTime;
 
-            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() ? 0 : ( $currentSensor->des_p1 - $lastDispatchRegister->initial_sensor_recorder);
-            $totalBySensorRecorder = $counterBySensor->report->passengersBySensorRecorder + $totalSensorRecorderRealTime; // TODO add the real time count
+            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->des_p1 - $lastDispatchRegister->initial_sensor_recorder);
+            $totalBySensorRecorder = $counterBySensor->report->passengersBySensorRecorder + $totalSensorRecorderRealTime;
 
             $passengersReportByVehicle = collect((object)[
                 'totalByRecorder' => $totalByRecorder,
@@ -120,17 +124,19 @@ class PCWProprietaryService implements APIInterface
                 'totalBySensor' => $passengersBySensor,
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->toArray() : null,
                 'vehicle' => $vehicle,
+                'currentLocation' => $currentLocation->geolocation,
                 'timeSensor' => $timeSensor,
                 'timeRecorder' => $timeRecorder,
                 'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor)
             ]);
-        }else{
+        } else {
             $passengersReportByVehicle = collect((object)[
                 'totalByRecorder' => 0,
                 'totalBySensorRecorder' => 0,
                 'totalBySensor' => $currentSensor->pas_tot,
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->toArray() : null,
-                 'vehicle' => $vehicle,
+                'vehicle' => $vehicle,
+                'currentLocation' => $currentLocation->geolocation,
                 'timeSensor' => $timeSensor,
                 'timeRecorder' => '00:00:00',
                 'historyReport' => []

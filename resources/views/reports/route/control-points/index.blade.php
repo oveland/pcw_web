@@ -129,11 +129,6 @@
                 var form = $(this);
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    $('.report-container').slideUp(100, function () {
-                        if ($('#date-report').val() <= '2017-09-16') {// TODO: Tempora until 2018-03-16
-                            $('.report-container').html($('#warning-template-old-dates').html()).slideDown();
-                        }
-                    });
 
                     $.ajax({
                         url: form.attr('action'),

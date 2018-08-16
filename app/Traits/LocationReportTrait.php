@@ -8,8 +8,7 @@
 
 namespace App\Traits;
 
-
-use App\LocationReport;
+use App\Vehicle;
 
 trait LocationReportTrait
 {
@@ -40,5 +39,10 @@ trait LocationReportTrait
         $totalKm = ($lastLocationReport->odometer - $firstLocationReport->odometer)/1000;
 
         return $totalKm;
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 }

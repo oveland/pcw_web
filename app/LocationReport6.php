@@ -49,6 +49,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LocationReport6 whereVehicleStatusId($value)
+ * @property-read \App\Vehicle|null $vehicle
  */
 class LocationReport6 extends Model
 {
