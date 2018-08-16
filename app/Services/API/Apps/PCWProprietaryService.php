@@ -100,6 +100,7 @@ class PCWProprietaryService implements APIInterface
 
         $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first();
         $timeSensor = explode('.', $currentSensor->timeStatus)[0]; // TODO Change column when table contador is migrated
+        $timeSensorRecorder = explode('.', $currentSensor->timeSensorRecorder)[0];
 
         $currentLocation = CurrentLocation::where('vehicle_id', $vehicle->id)->get()->first();
 
@@ -126,6 +127,7 @@ class PCWProprietaryService implements APIInterface
                 'vehicle' => $vehicle,
                 'currentLocation' => $currentLocation->geolocation,
                 'timeSensor' => $timeSensor,
+                'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => $timeRecorder,
                 'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor)
             ]);
@@ -138,6 +140,7 @@ class PCWProprietaryService implements APIInterface
                 'vehicle' => $vehicle,
                 'currentLocation' => $currentLocation->geolocation,
                 'timeSensor' => $timeSensor,
+                'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => '00:00:00',
                 'historyReport' => []
             ]);

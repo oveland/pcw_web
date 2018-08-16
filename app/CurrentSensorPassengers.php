@@ -17,4 +17,9 @@ class CurrentSensorPassengers extends Model
     {
         return $this->hora_status;
     }
+
+    public function getTimeSensorRecorderAttribute()
+    {
+        return $this->time_change_sensor_recorder;
+    }
 }
