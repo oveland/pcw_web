@@ -65,6 +65,7 @@ class PCWProprietaryService implements APIInterface
                 }
             }
             $data->put('currentPassengersReports', $reports);
+            $data->put('proprietaryName', $proprietary->simpleName);
         } else {
             $data->put('success', false);
             $data->put('message', __('Proprietary not found in platform'));
@@ -133,7 +134,9 @@ class PCWProprietaryService implements APIInterface
                 'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => $timeRecorder,
                 'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor),
-                'seatingStatus' => $seatingStatus
+                'seatingStatus' => $seatingStatus,
+                'vehicleStatus' => $currentLocation->vehicleStatus->des_status,
+                'distance' => $currentLocation->distance
             ]);
         } else {
             $passengersReportByVehicle = collect((object)[
@@ -147,7 +150,9 @@ class PCWProprietaryService implements APIInterface
                 'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => '00:00:00',
                 'historyReport' => [],
-                'seatingStatus' => $seatingStatus
+                'seatingStatus' => $seatingStatus,
+                'vehicleStatus' => $currentLocation->vehicleStatus->des_status,
+                'distance' => $currentLocation->distance
             ]);
         }
 

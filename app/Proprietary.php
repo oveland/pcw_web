@@ -42,6 +42,11 @@ class Proprietary extends Model
         return "$this->first_name $this->second_name $this->surname $this->second_surname";
     }
 
+    public function getSimpleNameAttribute()
+    {
+        return "$this->first_name $this->surname";
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);

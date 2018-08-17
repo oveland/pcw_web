@@ -67,4 +67,9 @@ class CurrentLocation extends Model
             'speed' => $this->speed,
         ];
     }
+
+    public function vehicleStatus()
+    {
+        return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id', 'id_status');
+    }
 }
