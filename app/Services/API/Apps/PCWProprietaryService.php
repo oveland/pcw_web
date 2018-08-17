@@ -128,15 +128,13 @@ class PCWProprietaryService implements APIInterface
                 'totalBySensorRecorder' => $totalBySensorRecorder,
                 'totalBySensor' => $passengersBySensor,
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->toArray() : null,
-                'vehicle' => $vehicle,
-                'currentLocation' => $currentLocation->geolocation,
+                'vehicle' => $vehicle->getAPIFields($currentLocation),
+                'currentLocation' => $currentLocation->getAPIFields(),
                 'timeSensor' => $timeSensor,
                 'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => $timeRecorder,
                 'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor),
-                'seatingStatus' => $seatingStatus,
-                'vehicleStatus' => $currentLocation->vehicleStatus->des_status,
-                'distance' => $currentLocation->distance
+                'seatingStatus' => $seatingStatus
             ]);
         } else {
             $passengersReportByVehicle = collect((object)[
@@ -144,15 +142,13 @@ class PCWProprietaryService implements APIInterface
                 'totalBySensorRecorder' => 0,
                 'totalBySensor' => $currentSensor->pas_tot,
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->toArray() : null,
-                'vehicle' => $vehicle,
-                'currentLocation' => $currentLocation->geolocation,
+                'vehicle' => $vehicle->getAPIFields($currentLocation),
+                'currentLocation' => $currentLocation->getAPIFields(),
                 'timeSensor' => $timeSensor,
                 'timeSensorRecorder' => $timeSensorRecorder,
                 'timeRecorder' => '00:00:00',
                 'historyReport' => [],
-                'seatingStatus' => $seatingStatus,
-                'vehicleStatus' => $currentLocation->vehicleStatus->des_status,
-                'distance' => $currentLocation->distance
+                'seatingStatus' => $seatingStatus
             ]);
         }
 

@@ -80,4 +80,14 @@ class Vehicle extends Model
     {
         return "$this->number <i class='fa fa-hand-o-right'></i> $this->plate";
     }
+
+    public function getAPIFields(CurrentLocation $currentLocation = null)
+    {
+        return (object)[
+            'id' => $this->id,
+            'number' => $this->number,
+            'plate' => $this->plate,
+            'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ''
+        ];
+    }
 }

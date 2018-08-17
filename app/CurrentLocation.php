@@ -57,13 +57,14 @@ class CurrentLocation extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function getGeolocationAttribute()
+    public function getAPIFields()
     {
         return (object)[
             'id' => $this->id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'orientation' => $this->orientation,
+            'distance' => $this->distance,
             'speed' => $this->speed,
         ];
     }
