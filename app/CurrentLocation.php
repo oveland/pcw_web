@@ -44,6 +44,11 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \App\CurrentDispatchRegister|null $dispatchRegister
  * @property-read \App\Vehicle|null $vehicle
+ * @property float|null $yesterday_odometer
+ * @property float|null $current_mileage
+ * @property-read \App\VehicleStatus|null $vehicleStatus
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereCurrentMileage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereYesterdayOdometer($value)
  */
 class CurrentLocation extends Model
 {
@@ -64,7 +69,7 @@ class CurrentLocation extends Model
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'orientation' => $this->orientation,
-            'distance' => $this->distance,
+            'current_mileage' => $this->current_mileage,
             'speed' => $this->speed,
         ];
     }

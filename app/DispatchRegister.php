@@ -291,6 +291,22 @@ class DispatchRegister extends Model
             ->get();
     }
 
+    public function getAPIFields()
+    {
+        return (object)[
+            'id' => $this->id,
+            'turn' => $this->turn,
+            'round_trip' => $this->round_trip,
+            'departure_time' => $this->departure_time,
+            'arrival_time_scheduled' => $this->arrival_time_scheduled,
+            'arrival_time' => $this->arrival_time,
+            'difference_time' => $this->difference_time,
+            'route' => $this->route->toArray(),
+            'status' => $this->status,
+            'driver_name' => $this->driver->fullName(),
+        ];
+    }
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }
