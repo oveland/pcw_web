@@ -69,7 +69,7 @@ class CurrentLocation extends Model
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'orientation' => $this->orientation,
-            'current_mileage' => $this->current_mileage,
+            'current_mileage' => number_format($this->current_mileage, 2, ',', '.'),
             'speed' => $this->speed,
         ];
     }
