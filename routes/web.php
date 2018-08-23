@@ -257,6 +257,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/', 'MigrationController@index')->name('migrate');
         Route::get('/companies', 'MigrationController@migrateCompanies')->name('migrate-companies');
         Route::get('/routes', 'MigrationController@migrateRoutes')->name('migrate-routes');
+        Route::get('/dispatches', 'MigrationController@migrateDispatches')->name('migrate-dispatches');
         Route::get('/users', 'MigrationController@migrateUsers')->name('migrate-users');
         Route::get('/vehicles', 'MigrationController@migrateVehicles')->name('migrate-vehicles');
         Route::get('/control-points', 'MigrationController@migrateControlPoints')->name('migrate-control-points');
