@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dispatch;
 use Auth;
 use App\CobanVehicle;
 use App\Company;
@@ -23,6 +24,7 @@ class MigrationController extends Controller
     const OLD_TABLES = [
         'companies' => 'empresa',
         'routes' => 'ruta',
+        'dispatches' => 'despachos',
         'users' => 'acceso',
         'vehicles' => 'crear_vehiculo',
         'control_points' => 'puntos_control_ruta',
@@ -61,6 +63,12 @@ class MigrationController extends Controller
                 'route' => route('migrate-routes'),
                 'total' => DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', self::ROUTES_FOR_MIGRATE_CP)->count(),
                 'total_migrated' => Route::count()
+            ],
+            (object)[
+                'name' => self::OLD_TABLES['dispatches'],
+                'route' => route('migrate-dispatches'),
+                'total' => DB::table(self::OLD_TABLES['dispatches'])->count(),
+                'total_migrated' => Dispatch::count()
             ],
             (object)[
                 'name' => self::OLD_TABLES['users'],
@@ -176,6 +184,50 @@ class MigrationController extends Controller
 
             try {
                 $route->save();
+                $new ? $totalCreated++ : $totalUpdated++;
+            } catch (QueryException $e) {
+                $totalErrors++;
+                dump($e->getMessage());
+            } catch (\PDOException $e) {
+                $totalErrors++;
+                dump($e->getMessage());
+            }
+        }
+
+        dd([
+            'Total Created' => $totalCreated,
+            'Total Updated' => $totalUpdated,
+            'Total Errors' => $totalErrors
+        ]);
+    }
+
+    public function migrateDispatches(Request $request)
+    {
+        if ($request->get('delete')) {
+            $deleted = DB::delete('DELETE FROM dispatches');
+            dd($deleted . ' registers has ben deleted!');;
+        }
+
+        $totalCreated = 0;
+        $totalUpdated = 0;
+        $totalErrors = 0;
+        $dispatches = DB::table(self::OLD_TABLES['dispatches'])->get();
+        foreach ($dispatches as $dispatchOLD) {
+            $new = false;
+            $dispatch = Dispatch::find($dispatchOLD->id_despachos);
+            if (!$dispatch) {
+                $dispatch = new Dispatch();
+                $new = true;
+            }
+            $dispatch->id = $dispatchOLD->id_despachos;
+            $dispatch->name = $dispatchOLD->nombre;
+            $dispatch->latitude = $dispatchOLD->latitude;
+            $dispatch->longitude = $dispatchOLD->longitude;
+            $dispatch->company_id = $dispatchOLD->id_empresa;
+            $dispatch->active = $dispatchOLD->estado == 0 ? true : false;
+
+            try {
+                $dispatch->save();
                 $new ? $totalCreated++ : $totalUpdated++;
             } catch (QueryException $e) {
                 $totalErrors++;
