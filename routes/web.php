@@ -29,6 +29,40 @@ Route::group(['middleware' => ['auth']], function () {
         Route::any('/load-select-vehicles', 'GeneralController@loadSelectVehicles')->name('general-load-select-vehicles');
     });
 
+    /* Routes for operation pages */
+    Route::prefix(__('url-operation'))->group(function () {
+        Route::prefix(__('dispatches'))->group(function () {
+            Route::get('/', 'DispatchesController@index')->name('operation-dispatches');
+            Route::get('/show', 'PeakAndPlateController@show')->name('operation-dispatches-show');
+            Route::post('/update', 'PeakAndPlateController@update')->name('operation-dispatches-update');
+        });
+
+        Route::prefix(__('gps'))->group(function () {
+            Route::prefix(__('url-manage'))->group(function () {
+                Route::get('/', 'ManagerGPSController@index')->name('admin-gps-manage');
+                Route::get('/list', 'ManagerGPSController@list')->name('admin-gps-manage-list');
+                Route::get('/get-vehicle-status', 'ManagerGPSController@getVehicleStatus')->name('admin-gps-get-vehicle-status');
+                Route::post('/send-sms', 'ManagerGPSController@sendSMS')->name('admin-gps-manage-send-sms');
+                Route::post('/update-sim-gps/{simGPS}', 'ManagerGPSController@updateSIMGPS')->name('admin-gps-manage-update-sim-gps');
+                Route::post('/create-sim-gps', 'ManagerGPSController@createSIMGPS')->name('admin-gps-manage-create-sim-gps');
+                Route::delete('/delete-sim-gps/{simGPS}', 'ManagerGPSController@deleteSIMGPS')->name('admin-gps-manage-delete-sim-gps');
+                Route::get('/get-script/{device}', 'ManagerGPSController@getScript')->name('admin-gps-manage-get-script');
+            });
+        });
+
+        Route::prefix(__('drivers'))->group(function () {
+            Route::prefix(__('excel'))->group(function () {
+                Route::get('/', 'DriverController@index')->name('admin-drivers');
+                Route::post('/csv', 'DriverController@csv')->name('admin-drivers-csv');
+            });
+        });
+
+        Route::prefix(__('proprietaries'))->group(function () {
+            Route::get('/', 'ProprietaryController@index')->name('admin-proprietaries-manage');
+            Route::get('/show', 'ProprietaryController@show')->name('admin-proprietaries-show');
+        });
+    });
+
     /* Routes for admin pages */
     Route::prefix(__('url-administration'))->group(function () {
         Route::prefix(__('url-vehicles'))->group(function () {
@@ -292,4 +326,8 @@ Route::prefix('api')->group(function () {
     /*Route::prefix('peak-and-plate')->group(function () {
         Route::get('/{company}', 'ApiPeakAndPlateController@getVehiclesCurrentPeakAndPlate')->name('api-peak-and-plate-get-vehicles-current-peak-and-plate');
     });*/
+});
+
+Route::prefix('logs')->group(function () {
+    Route::get('/register-gps', 'LogController@registerGPS')->name('logs-register-gps');
 });
