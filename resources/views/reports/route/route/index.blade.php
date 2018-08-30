@@ -43,6 +43,7 @@
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
                                         <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                            <option value="">@lang('Select an option')</option>
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                             @endforeach

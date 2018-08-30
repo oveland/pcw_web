@@ -303,7 +303,7 @@ class DispatchRegister extends Model
             'difference_time' => $this->difference_time,
             'route' => $this->route->toArray(),
             'status' => $this->status,
-            'driver_name' => $this->driver->fullName(),
+            'driver_name' => $this->driver ? $this->driver->fullName() : '',
         ];
     }
 

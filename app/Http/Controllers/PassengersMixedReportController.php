@@ -38,6 +38,7 @@ class PassengersMixedReportController extends Controller
         $vehiclesReport = Vehicle::where('plate','VCH-351')
             ->orWhere('plate','VCK-542')
             ->orWhere('plate','VCD-672')
+            ->orWhere('plate','VCK-531')
             ->get();
         $typeReport = 'group-vehicles';
 

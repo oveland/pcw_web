@@ -32,8 +32,8 @@ class MigrationController extends Controller
         'control_point_times' => 'tiempos_punto_control',
     ];
 
-    const ROUTES_FOR_MIGRATE = [124,126,128,129, 135, 136, 137,155,156,170,171,172];
-    const ROUTES_FOR_MIGRATE_CP = [124,125,126,127,128,129,155,156, 135, 136, 137,171,172];
+    const ROUTES_FOR_MIGRATE = [124,125,126,127,128,129,135,136,137,155,156,170,171,172,173,174];
+    const ROUTES_FOR_MIGRATE_CP = [124,125,126,127,128,129,155,156, 135, 136, 137,171,172,173,174];
 
     /**
      * Create a new controller instance.

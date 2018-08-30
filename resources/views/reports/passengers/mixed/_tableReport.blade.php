@@ -237,7 +237,7 @@
                     <ul class="col-md-3 m-l-20">
                         <li>@lang('Front door'): {{ $dispatchRegister->initial_front_sensor_counter }}</li>
                         <li>@lang('Back door'): {{ $dispatchRegister->initial_back_sensor_counter }}</li>
-                        <li>@lang('Average'): {{ $dispatchRegister->initial_sensor_counter }}</li>
+                        <li>@lang('Passengers') @lang('sensor'): {{ $dispatchRegister->initial_sensor_counter }}</li>
                     </ul>
                     @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->initial_frame_sensor_counter])
                 </div>
@@ -250,7 +250,7 @@
                     <ul class="col-md-3 m-l-20">
                         <li>@lang('Front door'): {{ $dispatchRegister->final_front_sensor_counter }}</li>
                         <li>@lang('Back door'): {{ $dispatchRegister->final_back_sensor_counter }}</li>
-                        <li>@lang('Average'): {{ $dispatchRegister->final_sensor_counter }}</li>
+                        <li>@lang('Passengers') @lang('sensor'): {{ $dispatchRegister->final_sensor_counter }}</li>
                     </ul>
                     @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->final_frame_sensor_counter])
                 </div>
