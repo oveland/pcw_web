@@ -440,5 +440,18 @@
   "url-geolocation": "geolocalizacion",
   "Count by round trip": "Conteo por vuelta",
   "Sensor recorder": "Sensor registradora",
-  "Show geolocation report": "Mostrar reporte de Geolocalización"
+  "Show geolocation report": "Mostrar reporte de Geolocalización",
+  "Operation": "Operación",
+  "operation": "operación",
+  "url-operation": "operacion",
+  "Dispatches": "Despachos",
+  "dispatches": "despachos",
+  "Dispatch": "Despacho",
+  "dispatch": "despacho",
+  "Auto Dispatcher": "Despachador Automático",
+  "Automatic": "Automático",
+  "url-auto-dispatcher": "despachador-automatico",
+  "Reassign route": "Reasignar ruta",
+  "The Route has ben reassigned successfully": "La ruta ha sido reasignada correctamente",
+  "Add vehicles": "Agregar vehículos"
 }

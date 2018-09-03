@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Vehicle[] $vehicles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Drivers[] $drivers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Drivers[] $activeDrivers
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Dispatch[] $dispatches
  * @mixin \Eloquent
  * @property int $id
  * @property string $name
@@ -47,7 +48,7 @@ class Company extends Model
 
     public function routes()
     {
-        return $this->hasMany(Route::class);
+        return $this->hasMany(Route::class)->orderBy('name');
     }
 
     public function activeVehicles()
@@ -61,7 +62,7 @@ class Company extends Model
     }
 
     public function scopeActive($query){
-        return $query->where('active','=',true);
+        return $query->where('active','=',true)->orderBy('short_name');
     }
 
     public function scopeFindAllActive($query){
@@ -98,6 +99,11 @@ class Company extends Model
     public function drivers()
     {
         return $this->hasMany(Driver::class);
+    }
+
+    public function dispatches()
+    {
+        return $this->hasMany(Dispatch::class)->orderBy('name');
     }
 
     public function activeDrivers()

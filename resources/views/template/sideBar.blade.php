@@ -96,6 +96,31 @@
                 </ul>
             </li>
             @endif
+
+            <li class="has-sub {{ $baseMenu == __('url-operation')?'active':'' }}">
+                <a href="#" class="faa-parent animated-hover">
+                    <i class="fa fa-life-ring faa-spin"></i>
+                    <span>@lang('Operation')</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="has-sub menu-operation-dispatch">
+                        <a href="javascript:;" class="faa-parent animated-hover">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-automobile faa-passing"></i>
+                            @lang('Dispatch')
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub menu-operation-dispatch-automatic">
+                                <a href="{{ route('operation-dispatch-auto-dispatcher') }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-play faa-burst" aria-hidden="true"></i>
+                                    @lang('Automatic')
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
             <li class="has-sub {{ $baseMenu == __('reports')?'active':'' }}">
                 <a href="#" class="faa-parent animated-hover">
                     <i class="fa fa-area-chart faa-horizontal"></i>

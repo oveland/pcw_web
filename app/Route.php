@@ -78,4 +78,9 @@ class Route extends Model
     {
         return $this->hasMany(CurrentDispatchRegister::class);
     }
+
+    public function dispatch()
+    {
+        return $this->belongsTo(Dispatch::class);
+    }
 }

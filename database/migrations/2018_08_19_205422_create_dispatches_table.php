@@ -13,7 +13,7 @@ class CreateDispatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('dispatches', function (Blueprint $table) {
+        Schema::create('auto-dispatcher', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->double('latitude')->defult(0);
@@ -37,6 +37,6 @@ class CreateDispatchesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dispatches');
+        Schema::dropIfExists('auto-dispatcher');
     }
 }

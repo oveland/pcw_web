@@ -24,8 +24,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $longitude
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Dispatch whereLatitude($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Dispatch whereLongitude($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\DispatcherVehicle[] $dispatcherVehicles
  */
 class Dispatch extends Model
 {
-    //
+    public function dispatcherVehicles()
+    {
+        return $this->hasMany(DispatcherVehicle::class);
+    }
 }

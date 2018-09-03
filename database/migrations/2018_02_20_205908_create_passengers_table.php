@@ -29,7 +29,7 @@ class CreatePassengersTable extends Migration
             $table->bigInteger('counter_issue_id')->unsigned()->nullable();
             $table->double('latitude');
             $table->double('longitude');
-            $table->string('frame',255);
+            $table->string('frame',512);
             $table->timestamps();
 
             /* table relations */
