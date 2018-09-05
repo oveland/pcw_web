@@ -6,6 +6,7 @@ use App\DispatchRegister;
 use App\Passenger;
 use App\Route;
 use App\Traits\CounterByRecorder;
+use App\Traits\CounterBySensor;
 use App\Vehicle;
 use Auth;
 use App\Company;
@@ -32,6 +33,8 @@ class GeolocationPassengersReportController extends Controller
         $dispatchRegistersByVehicle = DispatchRegister::findAllByDateAndVehicleAndRoute($date, $vehicle->id, $route->id);
         $counterByRecorder = CounterByRecorder::totalByVehicle($vehicle->id, $dispatchRegistersByVehicle, $dispatchRegistersByVehicle);
 
+        $counterBySensor = CounterBySensor::totalByVehicle($vehicle->id, $dispatchRegistersByVehicle);
+
         $passengers = Passenger::where('dispatch_register_id', $dispatchRegister->id)->orderBy('date')->get();
 
         $data = collect([]);
@@ -52,7 +55,7 @@ class GeolocationPassengersReportController extends Controller
 
         $report = collect([
             'route' => $dispatchRegister->route,
-            'totalBySensorRecorder' => $data->isNotEmpty() ? ($data->last()->totalSensorRecorder - $data->first()->totalSensorRecorder) : 0,
+            'counterBySensor' => $counterBySensor->report->history[$dispatchRegister->id],
             'counterByRecorder' => $counterByRecorder->report->history[$dispatchRegister->id],
             'data' => $data
         ]);
