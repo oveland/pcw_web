@@ -16,27 +16,39 @@ class CreateAutoDispatchRegistersTrigger extends Migration
         $this->down();
 
         DB::statement("
-            CREATE OR REPLACE FUNCTION auto_dispatch_registers_function() RETURNS TRIGGER
-            LANGUAGE plpgsql
-            AS $$
+            create or replace function auto_dispatch_registers_function() returns trigger
+            language plpgsql
+            as $$
             DECLARE
               new_dispatch_register_id BIGINT;
-              vehicle RECORD;
+              vehicle                  RECORD;
+              dispatcher_vehicle       RECORD;
+              route                    RECORD;
+              company                  RECORD;
             BEGIN
-              IF (TG_OP = 'UPDATE') THEN
-                SELECT * FROM vehicles WHERE id = NEW.vehicle_id LIMIT 1 INTO vehicle;
+              IF (TG_OP = 'UPDATE')
+              THEN
+                SELECT *
+                FROM vehicles
+                WHERE id = NEW.vehicle_id
+                LIMIT 1
+                INTO vehicle;
+                SELECT *
+                FROM dispatcher_vehicles
+                WHERE id = NEW.dispatcher_vehicle_id
+                LIMIT 1
+                INTO dispatcher_vehicle;
             
-                IF (NEW.in_dispatch IS TRUE AND OLD.in_dispatch IS FALSE) THEN   -- ARRIVED TO DISPATCH
-                  NEW.date = current_timestamp;
-                  NEW.hour = current_time;
-            
-                  UPDATE registrodespacho SET h_reg_llegada = NEW.hour, observaciones = 'Terminó' WHERE id_registro = OLD.dispatch_register_id AND observaciones = 'En camino';
+                IF (NEW.in_dispatch IS TRUE AND OLD.in_dispatch IS FALSE AND OLD.dispatch_register_id IS NOT NULL)
+                THEN -- ARRIVED TO DISPATCH
+                  UPDATE registrodespacho SET h_reg_llegada = NEW.date :: TIME, observaciones = 'Terminó' WHERE id_registro = OLD.dispatch_register_id;
                   NEW.dispatch_register_id = NULL;
                 END IF;
             
-                IF (NEW.in_dispatch IS FALSE AND OLD.in_dispatch IS TRUE) THEN -- DISPATCH VEHICLE
-                  NEW.date = current_timestamp;
-                  NEW.hour = current_time;
+                IF (NEW.in_dispatch IS FALSE AND OLD.in_dispatch IS TRUE AND dispatcher_vehicle IS NOT NULL)
+                THEN -- DISPATCH VEHICLE
+                  SELECT * FROM routes WHERE id = dispatcher_vehicle.route_id LIMIT 1 INTO route;
+                  SELECT * FROM companies WHERE id = route.company_id LIMIT 1 INTO company;
             
                   new_dispatch_register_id = 0;
             
@@ -66,40 +78,50 @@ class CreateAutoDispatchRegistersTrigger extends Migration
                     registradora_salida,
                     registradora_llegada,
                     codigo_interno_conductor,
-                    fringe_id
+                    arrival_fringe_id
                   )
                   VALUES (
-                    NEW.date,
-                    NEW.hour,
-                    27,
-                    44,
-                    172,
-                    (SELECT dt.name FROM day_types as dt WHERE dt.id = (SELECT get_day_type_id(NEW.date::DATE))),
+                    NEW.date :: DATE,
+                    NEW.date :: TIME,
+                    company.id,
+                    dispatcher_vehicle.dispatch_id,
+                    dispatcher_vehicle.route_id,
+                    (SELECT dt.name
+                     FROM day_types AS dt
+                     WHERE dt.id = dispatcher_vehicle.day_type_id),
                     0,
                     vehicle.number,
                     vehicle.plate,
                     '0',
-                    NEW.hour::TEXT::TIME,
-                    NEW.hour::TEXT::TIME,
+                    NEW.date :: TIME,
+                    NEW.date :: TIME,
                     '- 00:00:00',
-                    (current_time + (SELECT get_route_total_time_from_dispatch_time((NEW.date||' '||NEW.hour)::TIMESTAMP,172)))::TIME,
+                    (NEW.date :: TEXT :: TIME :: INTERVAL +
+                     (SELECT get_route_total_time_from_dispatch_time(NEW.date, dispatcher_vehicle.route_id))) :: INTERVAL,
                     '00:00:00',
                     '+ 00:00:00',
                     FALSE,
                     NULL,
                     'En camino',
-                    '','','',0,0,'', (SELECT get_fringe_from_dispatch_time(NEW.hour, 172::BIGINT,(SELECT get_day_type_id(NEW.date::DATE))))
-                  ) RETURNING id_registro INTO new_dispatch_register_id;
+                    '', '', '', 0, 0, '',
+                    (SELECT get_fringe_from_dispatch_time(NEW.date :: TEXT :: TIME, dispatcher_vehicle.route_id :: BIGINT,
+                                                          dispatcher_vehicle.day_type_id))
+                  )
+                  RETURNING id_registro
+                    INTO new_dispatch_register_id;
             
                   NEW.dispatch_register_id = new_dispatch_register_id;
             
-                  UPDATE registrodespacho SET id_view = ('despacho-'||new_dispatch_register_id) WHERE id_registro = new_dispatch_register_id;
+                  UPDATE registrodespacho
+                  SET id_view = ('despacho-' || new_dispatch_register_id), ignore_trigger = TRUE
+                  WHERE id_registro = new_dispatch_register_id;
             
                 END IF;
               END IF;
               RETURN NEW;
             END;
             $$
+            ;
         ");
 
         DB::statement("

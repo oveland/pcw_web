@@ -452,6 +452,10 @@
   "Automatic": "Automático",
   "url-auto-dispatcher": "despachador-automatico",
   "Reassign route": "Reasignar ruta",
+  "Unassign": "Desasignar",
   "The Route has ben reassigned successfully": "La ruta ha sido reasignada correctamente",
-  "Add vehicles": "Agregar vehículos"
+  "The Route has ben unassigned successfully": "La ruta ha sido desasignada correctamente",
+  "Add vehicles": "Agregar vehículos",
+  "All vehicles are assigned": "Todos los vehículos están asignados",
+  "Not found": "No encontrado"
 }

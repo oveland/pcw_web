@@ -30,6 +30,6 @@ class Dispatch extends Model
 {
     public function dispatcherVehicles()
     {
-        return $this->hasMany(DispatcherVehicle::class);
+        return $this->hasMany(DispatcherVehicle::class)->active();
     }
 }
