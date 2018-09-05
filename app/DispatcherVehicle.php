@@ -41,4 +41,9 @@ class DispatcherVehicle extends Model
     {
         return $this->belongsTo(Dispatch::class);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('route_id', '<>', null);
+    }
 }

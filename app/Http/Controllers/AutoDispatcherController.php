@@ -27,7 +27,7 @@ class AutoDispatcherController extends Controller
 
         $unassignedVehicles = $company->vehicles()
             ->active()
-            ->whereNotIn('id',DispatcherVehicle::all()->pluck('vehicle_id'))
+            ->whereNotIn('id', DispatcherVehicle::active()->pluck('vehicle_id'))
             ->orderBy('number')
             ->get();
 
@@ -39,22 +39,36 @@ class AutoDispatcherController extends Controller
         $response = (object)['success' => true, 'message' => __('The Route has ben reassigned successfully')];
         $vehicle = Vehicle::find($request->get('vehicle_id'));
         $route = Route::find($request->get('route_id'));
+
         $dispatch = $route->dispatch;
 
         $dispatcherVehicle = DispatcherVehicle::find($request->get('dispatcher_vehicle_id'));
-        if (!$dispatcherVehicle){
-            $dispatcherVehicle = new DispatcherVehicle();
-            $dispatcherVehicle->vehicle_id = $vehicle->id;
-            $dispatcherVehicle->day_type_id = 1;
-        }
 
-        $dispatcherVehicle->date = Carbon::now();
-        $dispatcherVehicle->route_id = $route->id;
-        $dispatcherVehicle->dispatch_id = $dispatch->id;
+        if ($request->get('delete') === 'true') {
+            $response->message = __('The Route has ben unassigned successfully');
 
-        if( !$dispatcherVehicle->save() ){
-            $response->success = false;
-            $response->message = __('An error occurred in the process. Contact your administrator');
+            if ($dispatcherVehicle) {
+                $dispatcherVehicle->route_id = null;
+                if (!$dispatcherVehicle->save()) {
+                    $response->success = false;
+                    $response->message = __('An error occurred in the process. Contact your administrator');
+                }
+            }
+        } else {
+            if (!$dispatcherVehicle) {
+                $dispatcherVehicle = new DispatcherVehicle();
+                $dispatcherVehicle->vehicle_id = $vehicle->id;
+                $dispatcherVehicle->day_type_id = 1;
+            }
+
+            $dispatcherVehicle->date = Carbon::now();
+            $dispatcherVehicle->route_id = $route->id;
+            $dispatcherVehicle->dispatch_id = $dispatch->id;
+
+            if (!$dispatcherVehicle->save()) {
+                $response->success = false;
+                $response->message = __('An error occurred in the process. Contact your administrator');
+            }
         }
 
         return response()->json($response);

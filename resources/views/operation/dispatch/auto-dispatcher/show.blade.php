@@ -1,7 +1,7 @@
 @if( $dispatches->isNotEmpty() )
 
 <div class="modal fade" id="modal-reassign-route">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-md">
         <form id="form-reassign-route" class="col-md-12" action="{{ route('operation-dispatch-auto-dispatcher-reassign-route') }}">
             <div class="modal-content">
                 <div class="modal-header">
@@ -15,6 +15,7 @@
                     <div class="row">
                             <input type="hidden" id="form-reassign-route-dispatcher-vehicle" name="dispatcher_vehicle_id">
                             <input type="hidden" id="form-reassign-route-vehicle" name="vehicle_id">
+                            <input type="hidden" id="form-delete-auto-dispatcher" name="delete" value="false">
                             <div class="form-input-flat">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -33,43 +34,67 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn width-100 btn-default" data-dismiss="modal">@lang('Cancel')</button>
-                    <button type="submit" class="btn width-100 btn-info">@lang('Update')</button>
+                    <button id="btn-form-delete" type="submit" class="btn btn-sm width-100 btn-danger pull-left" onclick="$('#form-delete-auto-dispatcher').val(true)">
+                        <i class="fa fa-ban"></i>
+                        @lang('Unassign')
+                    </button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <button type="submit" class="btn btn-sm width-100 btn-info" onclick="$('#form-delete-auto-dispatcher').val(false)">
+                        <i class="fa fa-save"></i>
+                        @lang('Update')
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-@if( $unassignedVehicles->isNotEmpty() )
+
 <div class="panel panel-inverse">
-    <div class="panel-heading click" data-toggle="collapse" data-target="#unassigned-vehicles">
-        <h4 class="panel-title text-bold">
-            <span class="fa-stack" style="top:-3px">
-                <i class="fa fa-ban fa-stack-2x text-muted" style="font-size: 220%"></i>
-                <i class="fa fa-bus fa-stack-1x"></i>
-            </span>
-            {{ $unassignedVehicles->count() }} @lang('unassigned vehicles')
-        </h4>
-    </div>
-    <div id="unassigned-vehicles" class="panel-body collapse">
-        <div class="row">
-            @foreach($unassignedVehicles as $vehicle)
-                <div class="col-md-1 p-5">
-                    <button class="btn btn-sm btn-default col-md-12 btn-reassign-route"
-                            data-toggle="modal" data-target="#modal-reassign-route"
-                            onclick="
-                                    $('#form-reassign-route-dispatcher-vehicle').val(0);
-                                    $('#form-reassign-route-vehicle').val({{ $vehicle->id }});
-                                    $('#new-route').val('').change();
-                                    $('#vehicle-to-reassign').text('{{ $vehicle->number }}')">
-                        <i class="fa fa-car text-muted"></i> {!! $vehicle->number !!}
-                    </button>
+    <div class="panel-heading">
+        <div class="panel-title text-bold row">
+            <div class="pull-left col-md-6 col-sm-12 col-xs-12 m-t-5">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <input id="search-vehicle" min="1" max="9999" type="number" title="@lang('Search')" placeholder="@lang('Search')" class="form-control col-md-12 col-sm-12 col-xs-12">
                 </div>
-            @endforeach
+                <div class="col-md-9 col-sm-6 col-xs-12 text-muted legend-search"></div>
+            </div>
+            <div class="pull-right col-md-6 col-sm-12 col-xs-12 text-right p-t-5 click" data-toggle="collapse" data-target="#unassigned-vehicles">
+                @if( $unassignedVehicles->isNotEmpty() )
+                    <span class="fa-stack" style="top:-3px">
+                        <i class="fa fa-ban fa-stack-2x text-muted" style="font-size: 220%"></i>
+                        <i class="fa fa-bus fa-stack-1x"></i>
+                    </span>
+                    {{ $unassignedVehicles->count() }} @lang('unassigned vehicles')
+                @else
+                    <i class="fa fa-check"></i>
+                    @lang('All vehicles are assigned')
+                @endif
+            </div>
         </div>
     </div>
+    @if( $unassignedVehicles->isNotEmpty() )
+        <div id="unassigned-vehicles" class="panel-body collapse">
+            <div class="row">
+                @foreach ($unassignedVehicles as $vehicle)
+                    <div class="col-md-3 col-sm-4 col-xs-6 p-5">
+                        <button class="btn btn-sm btn-default col-md-12 col-sm-12 col-xs-12 btn-reassign-route unassigned-vehicle"
+                                data-toggle="modal" data-target="#modal-reassign-route"
+                                onclick="
+                                        $('#btn-form-delete').hide();
+                                        $('#form-reassign-route-dispatcher-vehicle').val({{ $vehicle->dispatcherVehicle ? $vehicle->dispatcherVehicle->id : 0 }});
+                                        $('#form-reassign-route-vehicle').val({{ $vehicle->id }});
+                                        $('#new-route').val('').change();
+                                        $('#vehicle-to-reassign').text('{{ $vehicle->number }}')">
+                            <i class="fa fa-car text-muted"></i> {!! $vehicle->number !!}
+                        </button>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>
-@endif
 
 <div class="row p-10">
     <div class="col-md-12">
@@ -82,7 +107,7 @@
                 </li>
             @endforeach
         </ul>
-        <div class="tab-content panel row" style="background: rgba(0,34,47,0.09)">
+        <div class="dispatches tab-content panel row" style="background: rgba(0,34,47,0.09)">
             @foreach($dispatches as $dispatch)
                 <div id="dispatch-{{ $dispatch->id }}" class="tab-pane fade {{ $loop->first ? 'active in' : '' }}">
                     @php( $dispatcherVehicles = $dispatch->dispatcherVehicles)
@@ -95,7 +120,7 @@
                                 return $dispatcherVehicle->vehicle->number;
                             }) )
                             @php($route = $dispatcherVehicles->first()->route)
-                            <div class="col-md-4">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="widget">
                                     <div class="widget-header bg-inverse">
                                         <h4 class="text-white">
@@ -105,10 +130,12 @@
                                     <div class="row">
                                         @foreach($dispatcherVehicles as $dispatcherVehicle)
                                             @php($vehicle = $dispatcherVehicle->vehicle)
-                                            <div class="col-md-3 p-5">
-                                                <button class="btn btn-sm btn-default col-md-12 btn-reassign-route"
+                                            <div class="col-md-3 col-sm-4 col-xs-6 p-5">
+                                                <button class="btn btn-sm btn-default col-md-12 col-sm-12 col-xs-12 btn-reassign-route vehicle-{{ $vehicle->number }}"
                                                         data-toggle="modal" data-target="#modal-reassign-route"
+                                                        data-route-name="{{ $route->name }}" data-dispatch-name="{{ $dispatch->name }}"
                                                         onclick="
+                                                                $('#btn-form-delete').hide().fadeIn(2000);
                                                                 $('#form-reassign-route-dispatcher-vehicle').val({{ $dispatcherVehicle->id }});
                                                                 $('#form-reassign-route-vehicle').val({{ $vehicle->id }});
                                                                 $('#new-route').val({{ $route->id }}).change();
@@ -158,6 +185,27 @@
             });
         }
     });
+
+    $('#search-vehicle').keyup(searchVehicle).change(searchVehicle);
+
+    function searchVehicle() {
+        let search = $('#search-vehicle').val();
+        let legendSearch = $('.legend-search').hide();
+        if (search) {
+            let vehicle = $('.vehicle-' + search);
+            let unassignedVehicle = $('.unassigned-vehicle-' + search);
+            if (vehicle.length > 0) {
+                legendSearch.html("<strong>@lang('Dispatch'):</strong> " + vehicle.data('dispatch-name') + "<br> <strong>@lang('Route'):</strong> " + vehicle.data('route-name'));
+            } else if (unassignedVehicle.length > 0) {
+                legendSearch.html('@lang('Unassigned')');
+            } else{
+                legendSearch.html('@lang('Not found')');
+            }
+        } else {
+            legendSearch.empty();
+        }
+        legendSearch.fadeIn();
+    }
 </script>
 @else
     @include('partials.alerts.noRegistersFound')

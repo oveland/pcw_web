@@ -52,6 +52,11 @@ class Vehicle extends Model
         return $this->hasOne(SimGPS::class);
     }
 
+    public function dispatcherVehicle()
+    {
+        return $this->hasOne(DispatcherVehicle::class);
+    }
+
     /**
      * @param Company $company
      * @return bool
