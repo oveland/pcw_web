@@ -44,7 +44,7 @@
                     });
 
                     $('.total-recorder').text(report.counterByRecorder.passengersByRoundTrip);
-                    $('.total-sensor-recorder').text(report.totalBySensorRecorder);
+                    $('.total-sensor-recorder').text(report.counterBySensor.totalBySensorRecorderByRoundTrip);
                     $('.departure-time').text(report.counterByRecorder.departureTime);
                     $('.arrival-time').text(report.counterByRecorder.arrivalTime);
 
