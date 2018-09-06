@@ -234,11 +234,15 @@
                 <div class="col-md-12">
                     @lang('Initial frame counter') ({{ $strTime->toString($dispatchRegister->initial_time_sensor_counter) }}):<br>
                     <hr class="col-md-3 m-t-3 m-b-4"><br>
-                    <ul class="col-md-3 m-l-20">
-                        <li>@lang('Front door'): {{ $dispatchRegister->initial_front_sensor_counter }}</li>
-                        <li>@lang('Back door'): {{ $dispatchRegister->initial_back_sensor_counter }}</li>
-                        <li>@lang('Passengers') @lang('sensor'): {{ $dispatchRegister->initial_sensor_counter }}</li>
-                    </ul>
+                    @if($dispatchRegister->hasObservationCounter())
+                        {{ $dispatchRegister->displayInitialObservationsCounter() }}
+                    @else
+                        <ul class="col-md-3 m-l-20">
+                            <li>@lang('Front door'): {{ $dispatchRegister->initial_front_sensor_counter }}</li>
+                            <li>@lang('Back door'): {{ $dispatchRegister->initial_back_sensor_counter }}</li>
+                            <li>@lang('Passengers') @lang('sensor'): {{ $dispatchRegister->initial_sensor_counter }}</li>
+                        </ul>
+                    @endif
                     @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->initial_frame_sensor_counter])
                 </div>
 
@@ -247,11 +251,15 @@
                 <div class="col-md-12">
                     @lang('Final frame counter') ({{ $strTime->toString($dispatchRegister->final_time_sensor_counter) }}):<br>
                     <hr class="col-md-3 m-t-3 m-b-4"><br>
-                    <ul class="col-md-3 m-l-20">
-                        <li>@lang('Front door'): {{ $dispatchRegister->final_front_sensor_counter }}</li>
-                        <li>@lang('Back door'): {{ $dispatchRegister->final_back_sensor_counter }}</li>
-                        <li>@lang('Passengers') @lang('sensor'): {{ $dispatchRegister->final_sensor_counter }}</li>
-                    </ul>
+                    @if($dispatchRegister->hasObservationCounter())
+                        {{ $dispatchRegister->displayFinalObservationsCounter() }}
+                    @else
+                        <ul class="col-md-3 m-l-20">
+                            <li>@lang('Front door'): {{ $dispatchRegister->final_front_sensor_counter }}</li>
+                            <li>@lang('Back door'): {{ $dispatchRegister->final_back_sensor_counter }}</li>
+                            <li>@lang('Passengers') @lang('sensor'): {{ $dispatchRegister->final_sensor_counter }}</li>
+                        </ul>
+                    @endif
                     @include('.partials.reports.frame', ['currentFrame' => $dispatchRegister->final_frame_sensor_counter])
                 </div>
             </td>

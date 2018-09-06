@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
-use App\Models\Passengers\PassengerCounterPerDay;
 use App\Models\Passengers\PassengerCounterPerDaySixMonth;
-use App\PassengersDispatchRegister;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Traits\CounterByRecorder;
 use App\Vehicle;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 

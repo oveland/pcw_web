@@ -10,9 +10,7 @@ namespace App\Traits;
 
 
 use App\DispatchRegister;
-use App\PassengersDispatchRegister;
 use App\Vehicle;
-use Carbon\Carbon;
 
 trait CounterByRecorder
 {

@@ -457,5 +457,11 @@
   "The Route has ben unassigned successfully": "La ruta ha sido desasignada correctamente",
   "Add vehicles": "Agregar vehículos",
   "All vehicles are assigned": "Todos los vehículos están asignados",
-  "Not found": "No encontrado"
+  "Not found": "No encontrado",
+  "Calculated": "Calculado",
+  "Current passengers on board": "Pasajeros actuales en bus",
+  "Descents": "Descensos",
+  "Ascents": "Ascensos",
+  "Total descents": "Total descensos",
+  "Total ascents": "Total ascensos"
 }

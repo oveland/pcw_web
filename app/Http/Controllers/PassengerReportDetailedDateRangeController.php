@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\DispatchRegister;
 use Excel;
 use Illuminate\Http\Request;
-use App\PassengersDispatchRegister;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Traits\CounterByRecorder;

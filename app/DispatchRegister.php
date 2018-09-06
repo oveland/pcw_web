@@ -81,10 +81,14 @@ use Carbon\Carbon;
  * @property int|null $initial_sensor_recorder
  * @property int|null $final_sensor_counter
  * @property string|null $final_frame_sensor_counter
+ * @property string|null $initial_counter_obs
+ * @property string|null $final_counter_obs
  * @property int|null $final_sensor_recorder
  * @property int|null passengersBySensor
  * @property int|null passengersBySensorRecorder
  * @property int|null calculateErrorPercent
+ * @property string|null displayInitialObservationsCounter
+ * @property string|null displayFinalObservationsCounter
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereAvailableVehicles($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalFrameSensorCounter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalSensorCounter($value)
@@ -305,6 +309,33 @@ class DispatchRegister extends Model
             'status' => $this->status,
             'driver_name' => $this->driver ? $this->driver->fullName() : '',
         ];
+    }
+
+    public function displayObservationsCounter($observationsCounter)
+    {
+        if ($observationsCounter) {
+            $observationsCounter = json_decode($observationsCounter, false);
+
+            $observationsCounterDisplay = __('Ascents') . ": $observationsCounter->passengersOnBoard<br>";
+            $observationsCounterDisplay .= __('Descents') . ": $observationsCounter->passengersGettingOff<br>";
+            $observationsCounterDisplay .= __('Total ascents') . ": $observationsCounter->totalPassengersOnBoard<br>";
+            $observationsCounterDisplay .= __('Total descents') . ": $observationsCounter->totalPassengersGettingOff<br>";
+            $observationsCounterDisplay .= __('Current passengers on board') . ": $observationsCounter->currentPassengersOnBoard<br>";
+            $observationsCounterDisplay .= __('Calculated') . " » $observationsCounter->totalPassengers";
+
+            return $observationsCounterDisplay;
+        }
+        return '';
+    }
+
+    public function displayInitialObservationsCounter()
+    {
+        return $this->displayObservationsCounter($this->initial_counter_obs);
+    }
+
+    public function displayFinalObservationsCounter()
+    {
+        return $this->displayObservationsCounter($this->final_counter_obs);
     }
 
     const CREATED_AT = 'date_created';

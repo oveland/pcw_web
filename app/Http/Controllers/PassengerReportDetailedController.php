@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
-use App\PassengersDispatchRegister;
 use App\Traits\CounterByRecorder;
 use Excel;
 use App\Route;
