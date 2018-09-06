@@ -313,19 +313,21 @@ class DispatchRegister extends Model
 
     public function displayObservationsCounter($observationsCounter)
     {
+        $observationsCounterDisplay = '';
         if ($observationsCounter) {
-            $observationsCounter = json_decode($observationsCounter, false);
-
-            $observationsCounterDisplay = __('Ascents') . ": $observationsCounter->passengersOnBoard<br>";
-            $observationsCounterDisplay .= __('Descents') . ": $observationsCounter->passengersGettingOff<br>";
-            $observationsCounterDisplay .= __('Total ascents') . ": $observationsCounter->totalPassengersOnBoard<br>";
-            $observationsCounterDisplay .= __('Total descents') . ": $observationsCounter->totalPassengersGettingOff<br>";
-            $observationsCounterDisplay .= __('Current passengers on board') . ": $observationsCounter->currentPassengersOnBoard<br>";
-            $observationsCounterDisplay .= __('Calculated') . " » $observationsCounter->totalPassengers";
-
-            return $observationsCounterDisplay;
+            $observationsCounter = collect(json_decode($observationsCounter, true));
+            if ($observationsCounter->isNotEmpty()) {
+                $observationsCounterDisplay .= "<ul>";
+                $observationsCounterDisplay .= "<li>".__('Ascents') . ": " . $observationsCounter['passengersOnBoard'] . "</li>";
+                $observationsCounterDisplay .= "<li>".__('Descents') . ": " . $observationsCounter['passengersGettingOff'] . "</li>";
+                $observationsCounterDisplay .= "<li>".__('Total ascents') . ": " . $observationsCounter['totalPassengersOnBoard'] . "</li>";
+                $observationsCounterDisplay .= "<li>".__('Total descents') . ": " . $observationsCounter['totalPassengersGettingOff'] . "</li>";
+                $observationsCounterDisplay .= "<li>".__('Current passengers on board') . ": " . $observationsCounter['currentPassengersOnBoard'] . "</li>";
+                $observationsCounterDisplay .= "<li>". __('Calculated') . " » " . $observationsCounter['totalPassengers'] . "</li>";
+                $observationsCounterDisplay .= "</ul>";
+            }
         }
-        return '';
+        return $observationsCounterDisplay;
     }
 
     public function displayInitialObservationsCounter()
@@ -336,6 +338,11 @@ class DispatchRegister extends Model
     public function displayFinalObservationsCounter()
     {
         return $this->displayObservationsCounter($this->final_counter_obs);
+    }
+
+    public function hasObservationCounter()
+    {
+        return $this->vehicle->plate == 'VCK-531';
     }
 
     const CREATED_AT = 'date_created';

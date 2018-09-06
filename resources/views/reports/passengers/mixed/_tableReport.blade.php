@@ -235,7 +235,7 @@
                     @lang('Initial frame counter') ({{ $strTime->toString($dispatchRegister->initial_time_sensor_counter) }}):<br>
                     <hr class="col-md-3 m-t-3 m-b-4"><br>
                     @if($dispatchRegister->hasObservationCounter())
-                        {{ $dispatchRegister->displayInitialObservationsCounter() }}
+                        {!! $dispatchRegister->displayInitialObservationsCounter() !!}
                     @else
                         <ul class="col-md-3 m-l-20">
                             <li>@lang('Front door'): {{ $dispatchRegister->initial_front_sensor_counter }}</li>
@@ -252,7 +252,7 @@
                     @lang('Final frame counter') ({{ $strTime->toString($dispatchRegister->final_time_sensor_counter) }}):<br>
                     <hr class="col-md-3 m-t-3 m-b-4"><br>
                     @if($dispatchRegister->hasObservationCounter())
-                        {{ $dispatchRegister->displayFinalObservationsCounter() }}
+                        {!! $dispatchRegister->displayFinalObservationsCounter() !!}
                     @else
                         <ul class="col-md-3 m-l-20">
                             <li>@lang('Front door'): {{ $dispatchRegister->final_front_sensor_counter }}</li>
