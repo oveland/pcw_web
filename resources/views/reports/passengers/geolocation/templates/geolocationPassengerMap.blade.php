@@ -7,8 +7,18 @@
                 <hr class='hr'>
             </div>
             <div class=''>
-                <i class='fa fa-compass text-muted'></i> <b>@lang('Total') @lang('Recorder'): </b><span class="total-recorder"></span><br>
-                <i class='fa fa-crosshairs text-muted'></i> <b>@lang('Total') @lang('Sensor recorder'): </b><span class="total-sensor-recorder"></span><br>
+                <span class="counter">
+                    <i class='fa fa-compass text-muted'></i> <b>@lang('Total') @lang('Recorder'): </b><span class="total-recorder"></span>
+                </span>
+                <br>
+                <span class="counter">
+                    <i class='fa fa-crosshairs text-muted'></i> <b>@lang('Total') @lang('Sensor'): </b><span class="total-sensor"></span>
+                </span>
+                <br>
+                <span class="counter">
+                    <i class='fa fa-crosshairs text-muted'></i> <b>@lang('Total') @lang('Sensor recorder'): </b><span class="total-sensor-recorder"></span>
+                </span>
+                <br>
                 <hr class='hr'>
             </div>
             <div class='text-bold'>
@@ -20,7 +30,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12 p-0" style="position: relative; top: -128px;z-index: 1;">
+    <div class="col-md-12 p-0" style="position: relative; top: -148px;z-index: 1;">
         <div id="google-map-light-dream" class="height-lg" style="width: 100%"></div>
     </div>
 </div>

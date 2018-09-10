@@ -53,10 +53,17 @@ class GeolocationPassengersReportController extends Controller
             ]);
         }
 
+        $displayData = [
+            'showRecorderCount' => $vehicle->hasRecorderCount(),
+            'showSensorRecorderCount' => $vehicle->hasSensorRecorderCount(),
+            'showSensorCount' => $vehicle->hasSensorCount(),
+        ];
+
         $report = collect([
             'route' => $dispatchRegister->route,
             'counterBySensor' => $counterBySensor->report->history[$dispatchRegister->id],
             'counterByRecorder' => $counterByRecorder->report->history[$dispatchRegister->id],
+            'displayData' => $displayData,
             'data' => $data
         ]);
 

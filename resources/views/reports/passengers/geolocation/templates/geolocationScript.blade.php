@@ -3,7 +3,7 @@
 
     class GeolocationPassengerReport {
         static createMap(data){
-            $('.geolocation-map-container').slideUp();
+            $('.geolocation-map-container, .counter').slideUp();
             $('.loading-geolocation-map').html($('#loading').html()).slideDown();
 
             $.ajax({
@@ -22,18 +22,20 @@
                 initializeMap();
                 setTimeout(function(){
                     let lastMarker = null;
-                    let lastCount = 0;
+                    let lastSensorCount = 0;
+                    let lastSensorRecorderCount = 0;
                     let totalMarkers = 0;
                     $.each(report.data,function(i, r){
-                        if (r.totalSensorRecorder - lastCount > 0) {
-                            let passengerInfoWindow = GeolocationPassengerReport.createPassengerInfoWindow(r);
+                        if ( (r.totalSensorRecorder - lastSensorRecorderCount) > 0 || (r.total - lastSensorCount) > 0 ) {
+                            let passengerInfoWindow = GeolocationPassengerReport.createPassengerInfoWindow(r, report.displayData);
                             let marker = GeolocationPassengerReport.addPassengerMaker(r);
                             marker.addListener('click', function() {
                                 passengerInfoWindow.open(map, marker);
                                 $('.passenger-info-map').parent().css('overflow','hidden');
                             });
                             lastMarker = marker;
-                            lastCount = r.totalSensorRecorder;
+                            lastSensorCount = r.total;
+                            lastSensorRecorderCount = r.totalSensorRecorder;
                             totalMarkers++;
                         }
                     });
@@ -43,8 +45,10 @@
                         map: map
                     });
 
-                    $('.total-recorder').text(report.counterByRecorder.passengersByRoundTrip);
-                    $('.total-sensor-recorder').text(report.counterBySensor.totalBySensorRecorderByRoundTrip);
+                    if (report.displayData.showRecorderCount) $('.total-recorder').text(report.counterByRecorder.passengersByRoundTrip).parent().slideDown(500);
+                    if (report.displayData.showSensorCount) $('.total-sensor').text(report.counterBySensor.totalBySensorByRoundTrip).parent().slideDown(500);
+                    if (report.displayData.showSensorRecorderCount) $('.total-sensor-recorder').text(report.counterBySensor.totalBySensorRecorderByRoundTrip).parent().slideDown(500);
+
                     $('.departure-time').text(report.counterByRecorder.departureTime);
                     $('.arrival-time').text(report.counterByRecorder.arrivalTime);
 
@@ -63,33 +67,30 @@
             });
         }
 
-        static createPassengerInfoWindow(r){
+        static createPassengerInfoWindow(r, displayData){
             let contentString =
                 "<div class='row passenger-info-map' style='width: 200px'>" +
                 "<div class='col-md-12'>"+
                 "<div class=''>"+
-                "<h5 class='text-info'><i class='fa fa-users'></i> <b>Información de conteo</b></h5>"+
+                "<h5 class='text-info'><i class='fa fa-users'></i> <b>@lang('Count information')</b></h5>"+
                 "<hr class='hr'>"+
                 "</div>"+
+                "<div class='"+(displayData.showSensorRecorderCount ? '' : 'hide')+"'>"+
+                "<i class='fa fa-compass text-muted'></i> <b>@lang('Sensor recorder'): </b>"+r.totalSensorRecorder+"<br>"+
+                "<i class='fa fa-clock-o text-muted'></i> <small class='text-bold'>"+r.time+"</small><br>"+
+                "<hr class='hr'>"+
+                "</div>"+
+                "<div class='"+(displayData.showSensorCount ? '' : 'hide')+"'>"+
+                "<i class='fa fa-crosshairs text-muted'></i> <b>@lang('Sensor'): </b>"+r.total+"<br>"+
                 "<div class='hide'>"+
-                "<i class='fa fa-crosshairs text-muted'></i> <b>Sensor: </b>"+r.total+"<br>"+
                 "<i class='fa fa-arrow-circle-o-right text-muted'></i> <b>Front door: </b>"+r.totalFrontSensor+"<br>"+
                 "<i class='fa fa-arrow-circle-o-left text-muted'></i> <b>Back door: </b>"+r.totalBackSensor+"<br>"+
+                "</div>"+
                 "<i class='fa fa-clock-o text-muted'></i> <small class='text-bold'>"+r.time+"</small><br>"+
                 "<hr class='hr'>"+
                 "</div>"+
                 "<div class=''>"+
-                "<i class='fa fa-compass text-muted'></i> <b>Sensor Recorder: </b>"+r.totalSensorRecorder+"<br>"+
-                "<i class='fa fa-clock-o text-muted'></i> <small class='text-bold'>"+r.time+"</small><br>"+
-                "<hr class='hr'>"+
-                "</div>"+
-                "<div class='hide'>"+
-                "<i class='fa fa-compass text-muted'></i> <b> Recorder: </b>"+r.total+"<br>"+
-                "<i class='fa fa-clock-o text-muted'></i> <small class='text-bold'>"+r.time+"</small><br>"+
-                "<hr class='hr'>"+
-                "</div>"+
-                "<div class=''>"+
-                "<i class='fa fa-bus text-muted'></i> <b>Estado: </b><span class='text-"+r.vehicleStatus.main_class+"'><i class='"+r.vehicleStatus.icon_class+"'></i> "+r.vehicleStatus.des_status+"</span><br>"+
+                "<i class='fa fa-bus text-muted'></i> <b>@lang('Status'): </b><span class='text-"+r.vehicleStatus.main_class+"'><i class='"+r.vehicleStatus.icon_class+"'></i> "+r.vehicleStatus.des_status+"</span><br>"+
                 "</div>"+
                 "</div>"+
                 "</div>";

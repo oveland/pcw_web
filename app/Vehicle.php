@@ -95,4 +95,19 @@ class Vehicle extends Model
             'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ''
         ];
     }
+
+    public function hasRecorderCount()
+    {
+        return $this->company->hasRecorderCounter();
+    }
+
+    public function hasSensorRecorderCount()
+    {
+        return ($this->plate != 'VCK-531');
+    }
+
+    public function hasSensorCount()
+    {
+        return ($this->plate == 'VCK-531');
+    }
 }
