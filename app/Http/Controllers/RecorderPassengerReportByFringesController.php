@@ -39,7 +39,7 @@ class RecorderPassengerReportByFringesController extends Controller
 
         $dispatchRegisters = DispatchRegister::where('date', $dateReport)->active();
         if( $routeReport == 'all' ){
-            dd('Selecione una ruta');
+            dd('Seleccione una ruta');
             $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
         }
         else $dispatchRegisters = $dispatchRegisters->where('route_id', $routeReport);
