@@ -8,15 +8,14 @@ use App\Models\Passengers\PassengerCounterPerDaySixMonth;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Traits\CounterByRecorder;
+use App\Traits\CounterBySensor;
 use App\Vehicle;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 
-class PassengerReportController extends Controller
+class PassengerReportDailyController extends Controller
 {
-    use CounterByRecorder;
-
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -87,27 +86,27 @@ class PassengerReportController extends Controller
      */
     public function buildPassengerReport($company, $dateReport)
     {
-        // Query passenger by sensor counter
-        $passengersCounterPerDay = PassengerCounterPerDaySixMonth::where('date', $dateReport)
-            ->where('company_id', $company->id)
-            ->get();
+        $routes = Route::where('company_id', $company->id)->get();
+        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
+            ->sortBy('id');
 
-        $recorderCounterPerDays = $this->buildPassengersByRecorder($company, $dateReport);
+        $passengerBySensor = CounterBySensor::report($dispatchRegisters);
+        $passengerByRecorder = CounterByRecorder::report($dispatchRegisters);
 
         // Build report data
         $reports = array();
-        foreach ($recorderCounterPerDays->report as $recorderCounterPerDay) {
-            $vehicle = $recorderCounterPerDay->vehicle;
-            $sensor = $passengersCounterPerDay->where('vehicle_id', $vehicle->id)->first();
+        foreach ($passengerBySensor->report as $vehicleId => $sensor) {
+            $recorder = $passengerByRecorder->report["$vehicleId"];
 
             $reports[] = (object)[
-                'vehicle_id' => $vehicle->id,
+                'vehicle_id' => $vehicleId,
                 'date' => $dateReport,
                 'passengers' => (object)[
-                    'sensor' => $sensor ? $sensor->total : 0,
-                    'recorder' => $recorderCounterPerDay->passengers ?? 0,
-                    'start_recorder' => $recorderCounterPerDay->start_recorder,
-                    'issue' => $recorderCounterPerDay->issue
+                    'sensor' => $sensor->passengersBySensor,
+                    'sensorRecorder' => $sensor->passengersBySensorRecorder,
+                    'recorder' => $recorder->passengersByRecorder,
+                    'start_recorder' => $recorder->start_recorder,
+                    'issue' => $recorder->issue
                 ]
             ];
         }
@@ -116,26 +115,10 @@ class PassengerReportController extends Controller
             'date' => $dateReport,
             'companyId' => $company->id,
             'reports' => $reports,
-            'issues' => $recorderCounterPerDays->issues,
+            'issues' => $passengerByRecorder->issues,
         ];
 
         return $passengerReport;
-    }
-
-    /*
-     * Build Passengers by Recorder and check for issues
-     */
-    public function buildPassengersByRecorder($company, $dateReport)
-    {
-        $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes->pluck('id'))->where('date', $dateReport)->active()->get()
-            ->sortBy('id');
-
-        return self::report($dispatchRegisters);
-    }
-
-    static function report($dispatchRegisters){
-        return CounterByRecorder::report($dispatchRegisters);
     }
 
     /**

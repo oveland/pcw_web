@@ -167,6 +167,7 @@ trait CounterByRecorder
                 'vehicle' => $vehicle,
                 'start_recorder' => $firstStartRecorder,
                 'passengers' => $totalPassengersByVehicle,
+                'passengersByRecorder' => $totalPassengersByVehicle,
                 'timeRecorder' => $lastDispatchRegister->arrival_time,
                 'history' => $history,
                 'issue' => $issues->first()

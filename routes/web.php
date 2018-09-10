@@ -177,10 +177,10 @@ Route::group(['middleware' => ['auth']], function () {
                 /* Router for General Reports */
                 Route::prefix(__('consolidated'))->group(function () {
                     Route::prefix(__('daily'))->group(function () {
-                        Route::get('/','PassengerReportController@index')->name('report-passengers-recorders-consolidated-daily');
-                        Route::get('/show', 'PassengerReportController@show')->name('report-passengers-recorders-consolidated-daily-search');
-                        Route::get('/export', 'PassengerReportController@export')->name('report-passengers-recorders-consolidated-daily-export');
-                        Route::any('/ajax/{action}', 'PassengerReportController@ajax')->name('report-passengers-recorders-consolidated-daily-ajax-action');
+                        Route::get('/','PassengerReportDailyController@index')->name('report-passengers-recorders-consolidated-daily');
+                        Route::get('/show', 'PassengerReportDailyController@show')->name('report-passengers-recorders-consolidated-daily-search');
+                        Route::get('/export', 'PassengerReportDailyController@export')->name('report-passengers-recorders-consolidated-daily-export');
+                        Route::any('/ajax/{action}', 'PassengerReportDailyController@ajax')->name('report-passengers-recorders-consolidated-daily-ajax-action');
                     });
 
                     Route::prefix(__('date-range'))->group(function () {
