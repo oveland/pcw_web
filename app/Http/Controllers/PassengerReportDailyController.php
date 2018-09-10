@@ -58,13 +58,14 @@ class PassengerReportDailyController extends Controller
             $vehicle = Vehicle::find($report->vehicle_id);
             $sensor = $report->passengers->sensor;
             $recorder = $report->passengers->recorder;
+            $sensorRecorder = $report->passengers->sensorRecorder;
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                      # A CELL
                 __('Vehicle') => intval($vehicle->number),                              # B CELL
                 __('Plate') => $vehicle->plate,                                         # C CELL
-                __('Recorder') => intval($recorder),                                    # D CELL
-                __('Sensor') => intval($sensor),                                        # E CELL
-                __('Difference') => abs($sensor - $recorder),                   # F CELL
+                __('Sensor recorder') => intval($sensorRecorder),                       # D CELL
+                __('Recorder') => intval($recorder),                                    # E CELL
+                __('Sensor') => intval($sensor),                                        # F CELL
             ];
         }
 

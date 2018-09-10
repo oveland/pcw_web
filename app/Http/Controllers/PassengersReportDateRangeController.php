@@ -118,11 +118,11 @@ class PassengersReportDateRangeController extends Controller
         $dataExcel = array();
         foreach ($passengerReports->reports as $date => $report) {
             $data = collect([
-                __('N°') => count($dataExcel) + 1,                  # A CELL
-                __('Date') => $date,                                # B CELL
-                __('Sensor') => $report->totalBySensor,             # C CELL
-                __('Recorder') => $report->totalByRecorder,         # D CELL
-                __('Difference') => ''                              # E CELL
+                __('N°') => count($dataExcel) + 1,                          # A CELL
+                __('Date') => $date,                                        # B CELL
+                __('Sensor recorder') => $report->totalBySensorRecorder,    # C CELL
+                __('Recorder') => $report->totalByRecorder,                 # D CELL
+                __('Sensor') => $report->totalBySensor,                     # E CELL
             ]);
             if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
 
