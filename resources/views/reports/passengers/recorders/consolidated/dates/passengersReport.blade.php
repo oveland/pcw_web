@@ -23,7 +23,7 @@
                     <hr class="text-inverse-light">
                 </span>
 
-                <ul class="nav nav-pills nav-pills-success">
+                <ul class="nav nav-pills nav-pills-success hide">
                     <li class="active">
                         <a href="#all-report-tab" data-toggle="tab" aria-expanded="true" onclick="$('.sensor,.recorder').show()">
                             <i class="fa fa-asterisk" aria-hidden="true"></i> @lang('All')
@@ -49,24 +49,36 @@
                     <thead>
                     <tr class="inverse">
                         <th class="text-center">N°</th>
-                        <th class="text-center"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('Date')</th>
-                        <th class="text-center sensor"><i class="fa fa-microchip" aria-hidden="true"></i> @lang('Sensor')</th>
-                        <th class="text-center recorder"><i class="fa fa-compass" aria-hidden="true"></i> @lang('Recorder')</th>
-                        <th class="text-center sensor recorder"><i class="fa fa-minus" aria-hidden="true"></i> @lang('Difference')</th>
+                        <th class="text-center">
+                            <i class="fa fa-calendar" aria-hidden="true"></i> @lang('Date')
+                        </th>
+                        <th class="text-center sensor recorder">
+                            <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i> @lang('Sensor recorder')
+                        </th>
+                        <th class="text-center recorder">
+                            <i class="fa fa-compass" aria-hidden="true"></i> @lang('Recorder')
+                        </th>
+                        <th class="text-center sensor">
+                            <i class="fa fa-crosshairs" aria-hidden="true"></i> @lang('Sensor')
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
                     @php
                         $totalSensor = collect([]);
                         $totalRecorder = collect([]);
+                        $totalSensorRecorder = collect([]);
                     @endphp
                     @foreach($reports as $date => $report)
                         @php
+                            $sensorRecorder = $report->totalBySensorRecorder;
                             $recorder = $report->totalByRecorder;
                             $sensor = $report->totalBySensor;
                             $issuesByVehicles = $report->issues;
+
+                            $sensorRecorder > 0 ? $totalSensorRecorder->push($sensorRecorder):null;
+                            ($recorder > 0 && !count($issuesByVehicles)) ? $totalRecorder->push($recorder):null;
                             $sensor > 0 ? $totalSensor->push($sensor):null;
-                            $recorder > 0 ? $totalRecorder->push($recorder):null;
                         @endphp
 
                         @if(count($issuesByVehicles))
@@ -89,14 +101,14 @@
                         <tr class="text-center click" data-toggle="collapse" data-target="#collapse-{{ $date }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $date }} </td>
-                            <td class="sensor">{{ $sensor }}</td>
+                            <td class="sensor recorder">{{ $sensorRecorder }}</td>
                             <td class="recorder text-center">
                                 <span class="{{ count($issuesByVehicles) ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
                                       onclick="{{ count($issuesByVehicles) ? "$('#issue-$date').collapse('show');":""  }}">
                                     {{ $recorder }}
                                 </span>
                             </td>
-                            <td class="sensor recorder">{{ abs($sensor - $recorder) }}</td>
+                            <td class="sensor">{{ $sensor }}</td>
                         </tr>
                         <tr id="collapse-{{ $date }}" class="bg-inverse text-white text-bold collapse-frame fade collapse">
                             <td colspan="5" style="font-family: monospace">
@@ -125,14 +137,15 @@
                     @endforeach
                     <tr class="inverse bg-inverse-light text-white">
                         <td colspan="2" class="text-right">@lang('Total passengers')</td>
-                        <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
+                        <td class="text-center sensor recorder">{{ $totalSensorRecorder->sum() }}</td>
                         <td class="text-center recorder">{{ $totalRecorder->sum() }}</td>
-                        <td rowspan="2" class="sensor recorder"></td>
+                        <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
                     </tr>
                     <tr class="inverse bg-inverse text-white">
                         <td colspan="2" class="text-right">@lang('Average')</td>
-                        <td class="text-center sensor">{{ number_format($totalSensor->average(),1) }}</td>
+                        <td class="text-center sensor recorder">{{ number_format($totalSensorRecorder->average(),1) }}</td>
                         <td class="text-center recorder">{{ number_format($totalRecorder->average(),1) }}</td>
+                        <td class="text-center sensor">{{ number_format($totalSensor->average(),1) }}</td>
                     </tr>
                     </tbody>
                 </table>
