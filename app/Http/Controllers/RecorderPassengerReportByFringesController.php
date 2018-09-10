@@ -38,7 +38,10 @@ class RecorderPassengerReportByFringesController extends Controller
         $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
 
         $dispatchRegisters = DispatchRegister::where('date', $dateReport)->active();
-        if( $routeReport == 'all' )$dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
+        if( $routeReport == 'all' ){
+            dd('Selecione una ruta');
+            $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
+        }
         else $dispatchRegisters = $dispatchRegisters->where('route_id', $routeReport);
         $dispatchRegisters = $dispatchRegisters->orderBy('departure_time')->get();
 
