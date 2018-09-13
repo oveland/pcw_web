@@ -67,7 +67,7 @@ class PCWTrackService implements APIInterface
             ");
 
             if( count($report) && $report = $report[0] ){
-                Log::useDailyFiles(storage_path().'/logs/api/pcw-track-report.log',2);
+                //Log::useDailyFiles(storage_path().'/logs/api/pcw-track-report.log',2);
 
                 $dataMessage = collect([
                     'vp' => $report->vehicle_plate,
@@ -83,7 +83,7 @@ class PCWTrackService implements APIInterface
                 ]);
 
                 $data->put('data', $dataMessage);
-                Log::info( $dataMessage->toJson() );
+                //Log::info( $dataMessage->toJson() );
             }else{
                 $data->put('success', false);
                 $data->put('message', __('No registers found'));

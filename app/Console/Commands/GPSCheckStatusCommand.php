@@ -39,8 +39,8 @@ class GPSCheckStatusCommand extends Command
      */
     public function handle()
     {
-        Log::useDailyFiles(storage_path().'/logs/gps-check-status.log',10);
-        Log::info("---------------------------------------------------------");
+        //Log::useDailyFiles(storage_path().'/logs/gps-check-status.log',10);
+        //Log::info("---------------------------------------------------------");
         $gpsTimeForNOReportPowerOn = config('gps.gps_time_for_NO_report_power_ON');
         $gpsTimeForNOReportPowerOff = config('gps.gps_time_for_NO_report_power_OFF');
 
@@ -53,7 +53,7 @@ class GPSCheckStatusCommand extends Command
           AND status <> 6
         ";
         $queryForColombianGPSPowerON = DB::update($queryForColombianGPSPowerON);
-        Log::info("TOTAL NO REPORT WITH POWER ON (COL) $queryForColombianGPSPowerON");
+        //Log::info("TOTAL NO REPORT WITH POWER ON (COL) $queryForColombianGPSPowerON");
 
         $queryForColombianGPSPowerOFF = "
           UPDATE markers 
@@ -62,7 +62,7 @@ class GPSCheckStatusCommand extends Command
           AND status = 6
         ";
         $queryForColombianGPSPowerOFF = DB::update($queryForColombianGPSPowerOFF);
-        Log::info("TOTAL NO REPORT WITH POWER OFF (COL) $queryForColombianGPSPowerOFF");
+        //Log::info("TOTAL NO REPORT WITH POWER OFF (COL) $queryForColombianGPSPowerOFF");
 
         /* CHECK STATUS GPS FOR NICARAGUA */
         /*DB::update("SET TIMEZONE = 'America/Managua'");

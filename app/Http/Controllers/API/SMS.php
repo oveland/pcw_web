@@ -67,8 +67,8 @@ class SMS
         }
 
         $response['log'] = $responseLog . " $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
-        Log::useDailyFiles(storage_path().'/logs/sms.log',10);
-        Log::info($response['log']);
+        //Log::useDailyFiles(storage_path().'/logs/sms.log',10);
+        //Log::info($response['log']);
 
         return (object)$response;
     }

@@ -62,7 +62,7 @@ class SMSSendReportCommand extends Command
             ");
 
             if( count($report) && $report = $report[0] ){
-                Log::useDailyFiles(storage_path().'/logs/sms-report.log',10);
+                //Log::useDailyFiles(storage_path().'/logs/sms-report.log',10);
                 $date = Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.',$report->date)[0])->toDateTimeString();
 
                 $message = "$report->vehicle_plate ($report->vehicle_number):\nFecha: $date\n$report->route_name\nVuelta: $report->round_trip\nTurno: $report->turn\nDespachado: $report->departure_time\n\nProg.: $report->time_p\nMedido: $report->time_m\nEstado: $report->timed\n";
@@ -86,11 +86,11 @@ class SMSSendReportCommand extends Command
                 $sms = SMS::sendCommand($dataMessage, $simToReport);
 
                 $log = "Send report for $vehicleToReport to $simToReport";
-                Log::info($log);
+                //Log::info($log);
                 $this->info($log);
 
                 $log = "Send: ".($sms["resultado"] === 0)?'Success':'Unsuccessfully';
-                Log::info($log);
+                //Log::info($log);
                 $this->info($log);
             }
         }else{
