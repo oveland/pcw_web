@@ -36,7 +36,10 @@ trait CounterBySensor
         $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy('departure_time');
 
         $history = collect([]);
+        $issues = collect([]);
+
         $totalBySensor = 0;
+        $totalByRecorder = 0;
         $totalBySensorRecorder = 0;
 
         $lastDispatchRegister = null;
@@ -47,26 +50,76 @@ trait CounterBySensor
             $totalBySensorRecorderByRoundTrip = $dispatchRegister->passengersBySensorRecorder;
             $totalBySensorRecorder += $totalBySensorRecorderByRoundTrip;
 
+            $totalByRecorderByRoundTrip = $totalBySensorRecorderByRoundTrip;
+            $totalByRecorder += $totalByRecorderByRoundTrip;
+
             $driver = $dispatchRegister->driver;
 
             $history->put($dispatchRegister->id, (object)[
-                'totalBySensorByRoundTrip' => $totalBySensorByRoundTrip,
-                'totalBySensorRecorderByRoundTrip' => $totalBySensorRecorderByRoundTrip,
+                /*
+                 * ----------------------------------------------------------
+                 *      Nomenclature:
+                 * ----------------------------------------------------------
+                 *      Passengers prefix:       Default passengers counter
+                 *
+                 *      Sensor prefix:           Passengers by Sensor counter
+                 *      Recorder prefix:         Passengers by Recorder counter
+                 *      Sensor Recorder prefix:  Passengers by Sensor Recorder counter
+                 *
+                */
 
-                'route' => $dispatchRegister->route,
-                'vehicle' => $dispatchRegister->route,
-                'dispatchRegister' => $dispatchRegister,
-                'driver' => $driver
+                'passengersByRoundTrip' => $totalBySensorRecorderByRoundTrip,
+                'totalPassengersByRoute' => $totalBySensorRecorder,
+
+                'totalBySensorByRoundTrip' => $totalBySensorByRoundTrip,
+                'totalBySensorByRoute' => $totalBySensor,
+
+                'totalByRecorderByRoundTrip' => $totalByRecorderByRoundTrip,
+                'totalByRecorderByRoute' => $totalByRecorder,
+
+                'totalBySensorRecorderByRoundTrip' => $totalBySensorRecorderByRoundTrip,
+                'totalBySensorRecorderByRoute' => $totalBySensorRecorder,
+
+
+                /* ---------- Dispatch Register info ---------- */
+
+                'startRecorder' => $dispatchRegister->initialPassengersBySensorRecorder,
+                'endRecorder' => $dispatchRegister->finalPassengersBySensorRecorder,
+
+                'route' => $dispatchRegister->route->name,
+                'roundTrip' => $dispatchRegister->round_trip,
+                'turn' => $dispatchRegister->turn,
+                'departureTime' => $dispatchRegister->departure_time,
+                'arrivalTime' => $dispatchRegister->arrival_time,
+                'statusDispatchRegister' => $dispatchRegister->status,
+                'dispatchRegisterIsComplete' => $dispatchRegister->complete(),
+                'driver' => $driver ? $driver->fullName() : __('Not assigned'),
+                'departureFringe' => $dispatchRegister->departureFringe,
+                'arrivalFringe' => $dispatchRegister->arrivalFringe,
+
+                'dispatchRegister' => $dispatchRegister
             ]);
+
+            // Save the last dispatch register
+            $lastDispatchRegister = $dispatchRegister;
         }
 
         $totalByVehicle = (object)[
             'report' => (object)[
                 'vehicle' => $vehicle,
-                'passengersBySensor' => $totalBySensor,
-                'passengersBySensorRecorder' => $totalBySensorRecorder,
+
+                'passengers' => $totalBySensorRecorder,                 // Default passengers
+
+                'passengersByRecorder' => $totalBySensorRecorder,       // Passengers By Recorder is the sensor recorder
+                'passengersBySensorRecorder' => $totalBySensorRecorder, // Passengers by Sensor recorder
+                'passengersBySensor' => $totalBySensor,                 // Passengers by Sensor
+
+                'start_recorder' => $history->isNotEmpty() ? $history->first()->startRecorder : 0,
+                'timeRecorder' => $lastDispatchRegister->arrival_time,
                 'history' => $history,
-            ]
+                'issue' => $issues->first()
+            ],
+            'issues' => $issues
         ];
 
         return $totalByVehicle;

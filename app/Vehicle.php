@@ -110,4 +110,12 @@ class Vehicle extends Model
     {
         return ($this->plate == 'VCK-531');
     }
+
+    public function countAllFromSensorRecorder()
+    {
+        $plates = collect([
+            'VCD-672'
+        ]);
+        return $plates->contains($this->plate);
+    }
 }

@@ -273,6 +273,17 @@ class DispatchRegister extends Model
         return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
     }
 
+    public function getInitialPassengersBySensorRecorderAttribute()
+    {
+        $hasReset = ($this->final_sensor_recorder < $this->initial_sensor_recorder);
+        return $hasReset ? 0 : $this->initial_sensor_recorder;
+    }
+
+    public function getFinalPassengersBySensorRecorderAttribute()
+    {
+        return $this->final_sensor_recorder;
+    }
+
     public function getPassengersBySensorRecorderAttribute()
     {
         $hasReset = ($this->final_sensor_recorder < $this->initial_sensor_recorder);
