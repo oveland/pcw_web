@@ -186,7 +186,7 @@ trait CounterByRecorder
 
         if ($issueField) {
             $issues->push((object)[
-                'field' => $issues->issueField,
+                'field' => $issueField,
                 'route_id' => $dispatchRegister->route_id,
                 'vehicle_id' => $vehicleId,
                 'start_recorder' => $startRecorder,
