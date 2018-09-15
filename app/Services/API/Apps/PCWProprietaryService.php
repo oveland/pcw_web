@@ -12,7 +12,7 @@ use App\CurrentLocation;
 use App\CurrentSensorPassengers;
 use App\DispatchRegister;
 use App\Proprietary;
-use App\Services\API\Apps\Contracts\APIInterface;
+use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\PCWSeatSensorGualas;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
@@ -21,7 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PCWProprietaryService implements APIInterface
+class PCWProprietaryService implements APIAppsInterface
 {
     //
     public static function serve(Request $request): JsonResponse
@@ -83,15 +83,12 @@ class PCWProprietaryService implements APIInterface
     public static function makeVehicleReport(Vehicle $vehicle)
     {
         $now = Carbon::now();
-        $passengersReportByVehicle = collect([]);
-        $allDispatchRegisters = DispatchRegister::where('date', $now->toDateString())
+        $allDispatchRegisters = DispatchRegister::active()
+            ->where('date', $now->toDateString())
+            ->where('vehicle_id', $vehicle->id)
+            ->orderBy('departure_time')
             ->with('vehicle')
             ->with('route')
-            ->where('vehicle_id', $vehicle->id)
-            ->where(function ($query) {
-                return $query->where('status', DispatchRegister::COMPLETE)->orWhere('status', DispatchRegister::IN_PROGRESS);
-            })
-            ->orderBy('departure_time')
             ->get();
 
         $completedDispatchRegisters = $allDispatchRegisters->filter(function ($dispatchRegister, $key) {
@@ -99,28 +96,22 @@ class PCWProprietaryService implements APIInterface
         });
 
         $lastDispatchRegister = $allDispatchRegisters->last();
-
-        $currentSensor = CurrentSensorPassengers::where('placa', $vehicle->plate)->get()->first(); // TODO Change column  placa when table contador is migrated
-        $timeSensor = explode('.', $currentSensor->timeStatus)[0];
-        $timeSensorRecorder = explode('.', $currentSensor->timeSensorRecorder)[0];
-
-        $currentLocation = CurrentLocation::where('vehicle_id', $vehicle->id)->get()->first();
+        $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
+        $currentLocation = CurrentLocation::whereVehicle($vehicle);
 
         /* ONLY FOR VEHICLES WITH SEATING SENSOR COUNTER */
         $seatingStatus = PCWSeatSensorGualas::getSeatingStatusFromHex($currentSensor->seating, $vehicle->plate);
 
         if ($completedDispatchRegisters->isNotEmpty()) {
             $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);
-            $timeRecorder = $counterByRecorder->report->timeRecorder;
-
             $counterBySensor = CounterBySensor::reportByVehicle($vehicle->id, $completedDispatchRegisters);
 
             $totalByRecorder = $counterByRecorder->report->passengers;
 
-            $totalSensorRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->pas_tot - $lastDispatchRegister->initial_sensor_counter);
+            $totalSensorRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->sensorCounter - $lastDispatchRegister->initial_sensor_counter);
             $passengersBySensor = $counterBySensor->report->passengersBySensor + $totalSensorRealTime;
 
-            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->des_p1 - $lastDispatchRegister->initial_sensor_recorder);
+            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->sensorRecorderCounter - $lastDispatchRegister->initial_sensor_recorder);
             $totalBySensorRecorder = $counterBySensor->report->passengersBySensorRecorder + $totalSensorRecorderRealTime;
 
             $passengersReportByVehicle = collect((object)[
@@ -130,9 +121,9 @@ class PCWProprietaryService implements APIInterface
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->getAPIFields() : null,
                 'vehicle' => $vehicle->getAPIFields($currentLocation),
                 'currentLocation' => $currentLocation->getAPIFields(),
-                'timeSensor' => $timeSensor,
-                'timeSensorRecorder' => $timeSensorRecorder,
-                'timeRecorder' => $timeRecorder,
+                'timeSensor' => $currentSensor->timeStatus,
+                'timeSensorRecorder' => $currentSensor->timeSensorRecorder,
+                'timeRecorder' => $counterByRecorder->report->timeRecorder,
                 'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor),
                 'seatingStatus' => $seatingStatus
             ]);
@@ -144,8 +135,8 @@ class PCWProprietaryService implements APIInterface
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->getAPIFields() : null,
                 'vehicle' => $vehicle->getAPIFields($currentLocation),
                 'currentLocation' => $currentLocation->getAPIFields(),
-                'timeSensor' => $timeSensor,
-                'timeSensorRecorder' => $timeSensorRecorder,
+                'timeSensor' => $currentSensor->timeStatus,
+                'timeSensorRecorder' => $currentSensor->timeSensorRecorder,
                 'timeRecorder' => '00:00:00',
                 'historyReport' => [],
                 'seatingStatus' => $seatingStatus

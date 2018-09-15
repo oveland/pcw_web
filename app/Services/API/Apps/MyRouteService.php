@@ -9,11 +9,11 @@
 namespace App\Services\API\Apps;
 
 use App\Route;
-use App\Services\API\Apps\Contracts\APIInterface;
+use App\Services\API\Apps\Contracts\APIAppsInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class MyRouteService implements APIInterface
+class MyRouteService implements APIAppsInterface
 {
     public static function serve(Request $request): JsonResponse
     {

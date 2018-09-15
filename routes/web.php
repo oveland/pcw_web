@@ -298,7 +298,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::prefix('api')->group(function () {
-    Route::get('/{api}', 'API\APIController@serve');
+    Route::get('/{appName}', 'API\APIController@app');
+    Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
 
     /*Route::prefix('peak-and-plate')->group(function () {
         Route::get('/{company}', 'ApiPeakAndPlateController@getVehiclesCurrentPeakAndPlate')->name('api-peak-and-plate-get-vehicles-current-peak-and-plate');

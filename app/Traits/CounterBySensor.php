@@ -101,7 +101,7 @@ trait CounterBySensor
             ]);
 
             // Save the last dispatch register
-            $lastDispatchRegister = $dispatchRegister;
+            if( $dispatchRegister->complete() )$lastDispatchRegister = $dispatchRegister;
         }
 
         $totalByVehicle = (object)[
@@ -115,7 +115,7 @@ trait CounterBySensor
                 'passengersBySensor' => $totalBySensor,                 // Passengers by Sensor
 
                 'start_recorder' => $history->isNotEmpty() ? $history->first()->startRecorder : 0,
-                'timeRecorder' => $lastDispatchRegister->arrival_time,
+                'timeRecorder' => $lastDispatchRegister?$lastDispatchRegister->arrival_time:'--:--:--',
                 'history' => $history,
                 'issue' => $issues->first()
             ],

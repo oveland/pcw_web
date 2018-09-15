@@ -37,9 +37,11 @@ trait CounterByRecorder
     {
         $vehicle = Vehicle::find($vehicleId);
 
-        if( $vehicle->countAllFromSensorRecorder() )return CounterBySensor::totalByVehicle($vehicleId, $dispatchRegistersByVehicle);
+        if ($vehicle->countAllFromSensorRecorder())return CounterBySensor::totalByVehicle($vehicleId, $dispatchRegistersByVehicle);
 
-        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy('departure_time');
+        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->filter(function (DispatchRegister $dispatchRegister, $key) {
+            return $dispatchRegister->complete();
+        })->sortBy('departure_time');
 
         $history = collect([]);
         $issues = collect([]);

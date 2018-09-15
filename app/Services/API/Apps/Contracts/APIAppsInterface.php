@@ -11,7 +11,7 @@ namespace App\Services\API\Apps\Contracts;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-interface APIInterface
+interface APIAppsInterface
 {
     public static function serve(Request $request): JsonResponse;
 }

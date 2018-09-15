@@ -114,7 +114,7 @@ class Vehicle extends Model
     public function countAllFromSensorRecorder()
     {
         $plates = collect([
-            'VCD-672'
+            'VCD-672',
         ]);
         return $plates->contains($this->plate);
     }

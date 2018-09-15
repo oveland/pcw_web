@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereVehicleStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereVehicle($vehicle)
  * @mixin \Eloquent
  * @property-read \App\CurrentDispatchRegister|null $dispatchRegister
  * @property-read \App\Vehicle|null $vehicle
@@ -77,5 +78,10 @@ class CurrentLocation extends Model
     public function vehicleStatus()
     {
         return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id', 'id_status');
+    }
+
+    public function scopeWhereVehicle($query, Vehicle $vehicle)
+    {
+        return $query->where('vehicle_id', $vehicle->id)->get()->first();
     }
 }

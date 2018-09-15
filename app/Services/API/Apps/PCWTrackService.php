@@ -8,7 +8,7 @@
 
 namespace App\Services\API\Apps;
 
-use App\Services\API\Apps\Contracts\APIInterface;
+use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\PCWTime;
 use App\Vehicle;
 use Carbon\Carbon;
@@ -17,7 +17,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
 
-class PCWTrackService implements APIInterface
+class PCWTrackService implements APIAppsInterface
 {
     //
     public static function serve(Request $request): JsonResponse
@@ -26,12 +26,6 @@ class PCWTrackService implements APIInterface
         if ($action) {
             switch ($action) {
                 case 'track-route-times':
-                    /*return response()->json([
-                        'error' => true,
-                        'message' => 'Temporal unavailable'
-                    ]);*/
-                    //$date = Carbon::now()->toDateTimeString();
-                    //return response()->json(json_decode("{\"success\":true,\"message\":\"\",\"data\":{\"vp\":\"VBZ-040\",\"vn\":\"364\",\"rd\":\"$date\",\"rn\":\"RUTA 1\",\"rr\":2,\"rt\":27,\"dpt\":\"15:25:00\",\"sch\":\"21:06:38\",\"dif\":\"-02:43:49\",\"st\":\"slow\"}}",true));
                     return self::trackRouteTime($request);
                     break;
                 default:

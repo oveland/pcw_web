@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
-use App\Models\Passengers\PassengerCounterPerDaySixMonth;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Traits\CounterByRecorder;

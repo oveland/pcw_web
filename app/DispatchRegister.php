@@ -123,14 +123,14 @@ class DispatchRegister extends Model
         return config('app.simple_date_time_format');
     }
 
-    public function getDepartureTimeAttribute($departureTime)
+    public function getDepartureTimeAttribute($departure_time)
     {
-        return StrTime::toString($departureTime);
+        return StrTime::toString($departure_time);
     }
 
-    public function getArrivalTimeAttribute($arrivalTime)
+    public function getArrivalTimeAttribute($arrival_time)
     {
-        return StrTime::toString($arrivalTime);
+        return StrTime::toString($arrival_time);
     }
 
     public function reports()
@@ -269,6 +269,11 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensorAttribute()
     {
+        if ($this->inProgress()) {
+            $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+            $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
+            return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
+        }
         $hasReset = ($this->final_sensor_counter < $this->initial_sensor_counter);
         return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
     }
@@ -286,6 +291,11 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensorRecorderAttribute()
     {
+        if ($this->inProgress()) {
+            $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+            $hasReset = ($currentSensor->sensorRecorderCounter < $this->initial_sensor_recorder);
+            return $currentSensor->sensorRecorderCounter - ($hasReset ? 0 : $this->initial_sensor_recorder);
+        }
         $hasReset = ($this->final_sensor_recorder < $this->initial_sensor_recorder);
         return ($this->final_sensor_recorder - ($hasReset ? 0 : $this->initial_sensor_recorder));
     }
@@ -329,12 +339,12 @@ class DispatchRegister extends Model
             $observationsCounter = collect(json_decode($observationsCounter, true));
             if ($observationsCounter->isNotEmpty()) {
                 $observationsCounterDisplay .= "<ul>";
-                $observationsCounterDisplay .= "<li>".__('Ascents') . ": " . $observationsCounter['passengersOnBoard'] . "</li>";
-                $observationsCounterDisplay .= "<li>".__('Descents') . ": " . $observationsCounter['passengersGettingOff'] . "</li>";
-                $observationsCounterDisplay .= "<li>".__('Total ascents') . ": " . $observationsCounter['totalPassengersOnBoard'] . "</li>";
-                $observationsCounterDisplay .= "<li>".__('Total descents') . ": " . $observationsCounter['totalPassengersGettingOff'] . "</li>";
-                $observationsCounterDisplay .= "<li>".__('Current passengers on board') . ": " . $observationsCounter['currentPassengersOnBoard'] . "</li>";
-                $observationsCounterDisplay .= "<li>". __('Calculated') . " » " . $observationsCounter['totalPassengers'] . "</li>";
+                $observationsCounterDisplay .= "<li>" . __('Ascents') . ": " . $observationsCounter['passengersOnBoard'] . "</li>";
+                $observationsCounterDisplay .= "<li>" . __('Descents') . ": " . $observationsCounter['passengersGettingOff'] . "</li>";
+                $observationsCounterDisplay .= "<li>" . __('Total ascents') . ": " . $observationsCounter['totalPassengersOnBoard'] . "</li>";
+                $observationsCounterDisplay .= "<li>" . __('Total descents') . ": " . $observationsCounter['totalPassengersGettingOff'] . "</li>";
+                $observationsCounterDisplay .= "<li>" . __('Current passengers on board') . ": " . $observationsCounter['currentPassengersOnBoard'] . "</li>";
+                $observationsCounterDisplay .= "<li>" . __('Calculated') . " » " . $observationsCounter['totalPassengers'] . "</li>";
                 $observationsCounterDisplay .= "</ul>";
             }
         }
