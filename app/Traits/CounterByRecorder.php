@@ -35,109 +35,115 @@ trait CounterByRecorder
 
     static function totalByVehicle($vehicleId, $dispatchRegisters, $dispatchRegistersByVehicle, $classifyByRoute = null)
     {
-        $vehicle = Vehicle::find($vehicleId);
-
-        if ($vehicle->countAllFromSensorRecorder())return CounterBySensor::totalByVehicle($vehicleId, $dispatchRegistersByVehicle);
-
-        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->filter(function (DispatchRegister $dispatchRegister, $key) {
-            return $dispatchRegister->complete();
-        })->sortBy('departure_time');
-
         $history = collect([]);
         $issues = collect([]);
+        $vehicle = Vehicle::find($vehicleId);
+
+        if ($vehicle->countAllFromSensorRecorder()) return CounterBySensor::totalByVehicle($vehicleId, $dispatchRegistersByVehicle);
+
+        /*$dispatchRegistersByVehicle = $dispatchRegistersByVehicle->filter(function (DispatchRegister $dispatchRegister, $key) {
+            return $dispatchRegister->complete();
+        })->sortBy('departure_time');*/
 
         $totalPassengers = 0;
-
-        $firstDispatchRegisterByVehicle = $dispatchRegistersByVehicle->first();
-        $startRecorder = $firstDispatchRegisterByVehicle->start_recorder;
-        $firstStartRecorder = $startRecorder;
-
+        $firstStartRecorder = 0;
         $lastDispatchRegister = null;
-        foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
-            $endRecorder = $dispatchRegister->end_recorder;
-            $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
+        $firstDispatchRegisterByVehicle = $dispatchRegistersByVehicle->first();
+
+        if ($firstDispatchRegisterByVehicle) {
+            $startRecorder = $firstDispatchRegisterByVehicle->start_recorder;
+            $firstStartRecorder = $startRecorder;
+
+            foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
+                $passengersByRoundTrip = 0;
+                $endRecorder = 0;
+                if( $dispatchRegister->complete() ){
+                    $endRecorder = $dispatchRegister->end_recorder;
+                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
 
 
-            if ($classifyByRoute) {
-                $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
-                    ->where('date', '=', $dispatchRegister->date)
-                    ->where('id', '<', $dispatchRegister->id)
-                    ->orderByDesc('id')
-                    ->limit(1)->get()->first();
-            }
-
-            /* For change route between prev and current dispatch registers when there are prev registers */
-            if ($lastDispatchRegister && $lastDispatchRegister->route->id != $dispatchRegister->route->id) {
-                if ($classifyByRoute) {
-                    $endRecorderByOtherRoutes = $lastDispatchRegister->end_recorder;
-                } else {
-                    $endRecorderByOtherRoutes = $dispatchRegisters->where('vehicle_id', $vehicleId)
+                    if ($classifyByRoute) {
+                        $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
+                            ->where('date', '=', $dispatchRegister->date)
                             ->where('id', '<', $dispatchRegister->id)
-                            ->where('id', '>=', $lastDispatchRegister->id ?? 0)
-                            ->last()->end_recorder ?? null;
-                }
-
-                $startRecorder = (($endRecorderByOtherRoutes > 0 && abs($startRecorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $startRecorder;
-            } else if (abs($endRecorder - $startRecorder) > 1000) {
-                $startRecorder = 0; // For search a properly value in the next logic
-            }
-
-            if ($startRecorder == 0) {
-                $startRecorder = DispatchRegister::where('vehicle_id', $vehicleId)
-                        ->where('date', '=', $dispatchRegister->date)
-                        ->where('id', '<', $dispatchRegister->id)
-                        ->orderByDesc('id')
-                        ->limit(1)->get()->first()
-                        ->end_recorder ?? 0;
-
-                if ($startRecorder == 0) {
-                    $startRecorder = DispatchRegister::where('vehicle_id', $vehicleId)
-                            ->where('date', '<', $dispatchRegister->date)
                             ->orderByDesc('id')
-                            ->limit(1)->get()->first()
-                            ->end_recorder ?? 0;
+                            ->limit(1)->get()->first();
+                    }
+
+                    /* For change route between prev and current dispatch registers when there are prev registers */
+                    if ($lastDispatchRegister && $lastDispatchRegister->route->id != $dispatchRegister->route->id) {
+                        if ($classifyByRoute) {
+                            $endRecorderByOtherRoutes = $lastDispatchRegister->end_recorder;
+                        } else {
+                            $endRecorderByOtherRoutes = $dispatchRegisters->where('vehicle_id', $vehicleId)
+                                    ->where('id', '<', $dispatchRegister->id)
+                                    ->where('id', '>=', $lastDispatchRegister->id ?? 0)
+                                    ->last()->end_recorder ?? null;
+                        }
+
+                        $startRecorder = (($endRecorderByOtherRoutes > 0 && abs($startRecorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $startRecorder;
+                    } else if (abs($endRecorder - $startRecorder) > 1000) {
+                        $startRecorder = 0; // For search a properly value in the next logic
+                    }
+
+                    if ($startRecorder == 0) {
+                        $startRecorder = DispatchRegister::where('vehicle_id', $vehicleId)
+                                ->where('date', '=', $dispatchRegister->date)
+                                ->where('id', '<', $dispatchRegister->id)
+                                ->orderByDesc('id')
+                                ->limit(1)->get()->first()
+                                ->end_recorder ?? 0;
+
+                        if ($startRecorder == 0) {
+                            $startRecorder = DispatchRegister::where('vehicle_id', $vehicleId)
+                                    ->where('date', '<', $dispatchRegister->date)
+                                    ->orderByDesc('id')
+                                    ->limit(1)->get()->first()
+                                    ->end_recorder ?? 0;
+                        }
+                    }
+
+                    // Recorder has 6 digits
+                    if ($startRecorder > 999900 && $endRecorder < 500) {
+                        $endRecorder = 999999 + $endRecorder;
+                    }
+
+                    $passengersByRoundTrip = $endRecorder - $startRecorder;
+                    $totalPassengers += $passengersByRoundTrip;
                 }
+
+                $driver = $dispatchRegister->driver;
+
+                $history->put($dispatchRegister->id, (object)[
+                    'passengersByRoundTrip' => $passengersByRoundTrip,
+                    'totalPassengersByRoute' => $totalPassengers,
+
+                    'startRecorder' => $startRecorder,
+                    'endRecorder' => $endRecorder,
+
+                    'route' => $dispatchRegister->route->name,
+                    'roundTrip' => $dispatchRegister->round_trip,
+                    'turn' => $dispatchRegister->turn,
+                    'departureTime' => $dispatchRegister->departure_time,
+                    'arrivalTime' => $dispatchRegister->arrival_time,
+                    'statusDispatchRegister' => $dispatchRegister->status,
+                    'dispatchRegisterIsComplete' => $dispatchRegister->complete(),
+                    'driver' => $driver ? $driver->fullName() : __('Not assigned'),
+                    'departureFringe' => $dispatchRegister->departureFringe,
+                    'arrivalFringe' => $dispatchRegister->arrivalFringe,
+
+                    'dispatchRegister' => $dispatchRegister
+                ]);
+
+                $issues = self::processIssues($vehicleId, $issues, $startRecorder, $endRecorder, $passengersByRoundTrip, $dispatchRegister, $lastDispatchRegister);
+                // The next Start recorder is the last end recorder
+                $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
+
+                // Save the last dispatch register
+                if( $dispatchRegister->complete() )$lastDispatchRegister = $dispatchRegister;
             }
-
-            // Recorder has 6 digits
-            if ($startRecorder > 999900 && $endRecorder < 500) {
-                $endRecorder = 999999 + $endRecorder;
-            }
-
-            $passengersByRoundTrip = $endRecorder - $startRecorder;
-            $totalPassengers += $passengersByRoundTrip;
-
-            $driver = $dispatchRegister->driver;
-
-            $history->put($dispatchRegister->id, (object)[
-                'passengersByRoundTrip' => $passengersByRoundTrip,
-                'totalPassengersByRoute' => $totalPassengers,
-
-                'startRecorder' => $startRecorder,
-                'endRecorder' => $endRecorder,
-
-                'route' => $dispatchRegister->route->name,
-                'roundTrip' => $dispatchRegister->round_trip,
-                'turn' => $dispatchRegister->turn,
-                'departureTime' => $dispatchRegister->departure_time,
-                'arrivalTime' => $dispatchRegister->arrival_time,
-                'statusDispatchRegister' => $dispatchRegister->status,
-                'dispatchRegisterIsComplete' => $dispatchRegister->complete(),
-                'driver' => $driver ? $driver->fullName() : __('Not assigned'),
-                'departureFringe' => $dispatchRegister->departureFringe,
-                'arrivalFringe' => $dispatchRegister->arrivalFringe,
-
-                'dispatchRegister' => $dispatchRegister
-            ]);
-
-            $issues = self::processIssues($vehicleId, $issues, $startRecorder, $endRecorder, $passengersByRoundTrip, $dispatchRegister, $lastDispatchRegister);
-
-            // The next Start recorder is the last end recorder
-            $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
-
-            // Save the last dispatch register
-            $lastDispatchRegister = $dispatchRegister;
         }
+
 
         $totalByVehicle = (object)[
             'report' => (object)[
@@ -147,7 +153,7 @@ trait CounterByRecorder
                 'passengers' => $totalPassengers,
                 'passengersByRecorder' => $totalPassengers,
 
-                'timeRecorder' => $lastDispatchRegister->arrival_time,
+                'timeRecorder' => $lastDispatchRegister ? $lastDispatchRegister->arrival_time : '--:--:--',
                 'history' => $history,
                 'issue' => $issues->first()
             ],
