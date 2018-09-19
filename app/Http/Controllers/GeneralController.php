@@ -34,7 +34,7 @@ class GeneralController extends Controller
 
         $dispatchRegisters = DispatchRegister::findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId);
 
-        return view('partials.selects.roundTrips', compact('dispatchRegisters'));
+        return view('partials.selects.round-trips', compact('dispatchRegisters'));
     }
 
     public function loadSelectVehicles(Request $request)

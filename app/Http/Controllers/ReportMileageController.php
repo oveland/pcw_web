@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Database;
-use App\Http\Controllers\Utils\Geolocation;
-use App\Location;
 use App\LocationReport;
 use App\Route;
 use App\Services\PCWExporter;

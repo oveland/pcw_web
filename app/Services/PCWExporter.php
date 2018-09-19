@@ -160,6 +160,22 @@ class PCWExporter
                 $sheet->setCellValue("C$lastRow", "TOTAL");
                 $sheet = self::styleFooter($sheet, $config);
                 break;
+
+            case 'roundTripsVehicleReport':
+                // Set general formulas
+                foreach (['D'] as $totalLetterPosition) {
+                    $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
+                }
+
+                $sheet->cells("A$config->startIndex:" . $config->lastLetter . $lastRow, function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->setCellValue("C$lastRow", "TOTAL");
+                $sheet = self::styleFooter($sheet, $config);
+                break;
+
             case 'mileageReport':
                 // Set general formulas
                 foreach (['E'] as $totalLetterPosition) {

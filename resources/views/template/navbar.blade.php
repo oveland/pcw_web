@@ -31,22 +31,22 @@
                 </form>
             </li>
             <li class="dropdown">
-                @if(\Carbon\Carbon::now()->toDateString() <= '2018-07-31')
+                @if(\Carbon\Carbon::now()->toDateString() <= '2018-09-22')
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
                     <i class="fa fa-bell faa-ring animated"></i>
                     <span class="badge badge-danger pull-right faa-float animated">1</span>
                 </a>
                 <ul class="dropdown-menu dropdown-notification pull-right">
                     <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">1</span></li>
-                    <li class="notification-item" data-toggle="tooltip" data-title="El 27 de Julio" data-placement="top">
-                        <a href="{{ route('report-passengers-geolocation') }}">
+                    <li class="notification-item" data-toggle="tooltip" data-title="El 20 de Septiembre" data-placement="top">
+                        <a href="{{ route('report-vehicle-round-trips') }}">
                             <div class="media">
-                                <i class="fa fa-map-marker faa-pulse animated"></i>
+                                <i class="fa fa-bus faa-pulse animated"></i>
                             </div>
                             <div class="message">
-                                <h6 class="title">@lang('Geolocation report')</h6>
+                                <h6 class="title">@lang('Nuevo reporte de vehículo')</h6>
                                 <div class="time">
-                                    <strong><i class="fa fa-users faa-vertical"></i> Reporte de Pasajeros</strong>
+                                    <strong><i class="fa fa-retweet faa-vertical"></i> Reporte de vueltas</strong>
                                 </div>
                             </div>
                             <div class="option faa-parent animated-hover"

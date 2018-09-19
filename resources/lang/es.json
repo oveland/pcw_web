@@ -18,6 +18,8 @@
   "Route times": "Tiempos de ruta",
   "Times": "Horas",
   "Round trips": "Vueltas",
+  "round trips": "vueltas",
+  "round-trips": "vueltas",
   "Search report": "Consultar reporte",
   "Date report": "Fecha de Reporte",
   "Search": "Consultar",
@@ -28,6 +30,7 @@
   "vehicles": "vehículos",
   "Hour dispatch": "Hora despachado",
   "Round Trip": "Vuelta",
+  "round trip": "vuelta",
   "Turn": "Turno",
   "No registers found": "No se encontraron registros",
   "Select an option": "Seleccione",
@@ -464,5 +467,10 @@
   "Ascents": "Ascensos",
   "Total descents": "Total descensos",
   "Total ascents": "Total ascensos",
-  "Count information": "Información de conteo"
+  "Count information": "Información de conteo",
+  "Arrival time on last round trip": "Hora de llegada de última vuelta",
+  "Departure time on first round trip": "Hora de salida de primera vuelta",
+  "Hide details": "Ocultar detalles",
+  "Vehicle with mixed routes": "Vehículo con rutas mixtas",
+  "Round trip report": "Reporte de vueltas"
 }

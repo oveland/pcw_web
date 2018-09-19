@@ -185,6 +185,12 @@
                                     @lang('Mileage')
                                 </a>
                             </li>
+                            <li class="has-sub menu-report-vehicles-round-trips">
+                                <a href="{{ route('report-vehicle-round-trips')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-retweet faa-shake" aria-hidden="true"></i>
+                                    @lang('Round trips') / @lang('Routes')
+                                </a>
+                            </li>
                             @if( Auth::user()->isAdmin() )
                             <li class="has-sub menu-report-vehicles-status">
                                 <a href="{{ route('report-vehicle-status')  }}" class="faa-parent animated-hover">

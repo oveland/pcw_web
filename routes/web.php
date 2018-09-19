@@ -149,6 +149,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/ajax', 'ReportMileageController@ajax')->name('report-vehicle-mileage-ajax-action');
             });
 
+            /* Mileage report */
+            Route::prefix(__('round-trips'))->group(function () {
+                Route::get('/', 'ReportVehicleRoundTripsController@index')->name('report-vehicle-round-trips');
+                Route::get('/show', 'ReportVehicleRoundTripsController@show')->name('report-vehicle-round-trips-show');
+                Route::any('/ajax', 'ReportVehicleRoundTripsController@ajax')->name('report-vehicle-round-trips-ajax-action');
+            });
+
             /* Speeding report */
             Route::prefix(__('status'))->group(function () {
                 Route::get('/', 'VehicleStatusReportController@index')->name('report-vehicle-status');
