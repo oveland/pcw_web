@@ -126,6 +126,7 @@ class ManagerGPSController extends Controller
                 53,
                 92
             ];
+            $selection = array();
             switch ($optionSelection) {
                 case 'all':
                     foreach ($simGPSList as $simGPS) {
@@ -324,25 +325,42 @@ class ManagerGPSController extends Controller
 
     public function updateSIMGPS(SimGPS $simGPS, Request $request)
     {
+        $sim = $request->get('sim');
+        $gpsType = $request->get('gps_type');
+        $imei = $request->get('imei');
+        $vehicle = $simGPS->vehicle;
+        $gpsVehicle = $vehicle->gpsVehicle;
+        $error = "";
+        $updated = false;
         try {
-            $sim = $request->get('sim');
-            $gpsType = $request->get('gps_type');
-
             $checkGPS = SimGPS::where('id', '<>', $simGPS->id)->where('sim', $sim)->get()->first();
             if ($checkGPS) {
-                $error = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']);
-            } else {
+                $error .= __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']);
+            }
+
+            $checkImei = GpsVehicle::where('id', '<>', $gpsVehicle->id)->where('imei', $imei)->get()->first();
+            if ($checkImei) {
+                $error .= "<br>".__('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']);
+            }
+
+            if( !$error ){
                 $simGPS->sim = $sim;
                 $simGPS->gps_type = $gpsType;
                 $simGPS->operator = starts_with($sim, '350') ? 'avantel' : 'movistar';
                 $simGPS->save();
+
+                $gpsVehicle->imei = $imei;
+                $gpsVehicle->save();
                 $updated = true;
+
+                \DB::update("UPDATE crear_vehiculo SET imei_gps = '$imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
             }
-        } catch (Exception $exception) {
+
+        } catch (\Exception $exception) {
             $error = $exception->getMessage();
         }
 
-        return view('admin.gps.manage.gpsVehicleDetail', compact(['simGPS', 'updated', 'error']));
+        return view('admin.gps.manage.gpsVehicleDetail', compact(['simGPS', 'updated', 'error', 'gpsVehicle']));
     }
 
     public function deleteSIMGPS(SimGPS $simGPS, Request $request)

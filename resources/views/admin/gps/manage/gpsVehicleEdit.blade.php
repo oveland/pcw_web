@@ -1,23 +1,44 @@
 @php
     $id = $simGPS->id;
     $vehicle = $simGPS->vehicle;
+    $vehicleStatus = $vehicle->currentLocation?$vehicle->currentLocation->vehicleStatus:null;
 @endphp
-<td class="text-center bg-info text-white">{!! $loop->iteration !!}</td>
-<td>{{ $vehicle->plate ?? 'NONE'  }}</td>
-<td>{{ $vehicle->number ?? 'NONE'  }}</td>
-<td width="40%" colspan="2">
+<td class="text-center bg-inverse text-white">{!! $loop->iteration !!}</td>
+<td class="text-center">
+    {!!  $vehicle->numberAndPlate ?? 'NONE'  !!}
+    @if( $vehicleStatus )
+        <br><small class="text-{{ $vehicleStatus->main_class }}">
+            <i class="{{ $vehicleStatus->icon_class }}"></i> {{ $vehicleStatus->des_status }}
+        </small>
+    @endif
+</td>
+<td class="text-center" width="60%" colspan="3">
     <form id="form-edit-sim-gps-{{ $id }}" data-id="{{ $id }}" action="{{ route('admin-gps-manage-update-sim-gps',['simGPS' => $id]) }}" class="form-edit-sim-gps" data-target="#detail-{{ $id }}">
         {{ csrf_field() }}
         <div class="row">
-            <div class="col-md-6">
-                <select id="gps-type-{{ $id }}" name="gps_type" class="form-control input-sm" title="@lang('GPS type')">
+            <div class="col-md-4">
+                <select id="gps-type-{{ $id }}" name="gps_type" class="form-control input-sm gps-type" title="@lang('GPS type')"
+                        onchange="">
                     @foreach( \App\SimGPS::DEVICES as $device )
                         <option value="{{ $device }}">{{ $device }}</option>
                     @endforeach
                 </select>
-                <script>$('#gps-type-{{ $id }}').val('{{ $simGPS->gps_type }}')</script>
+                <script>
+                    $('#gps-type-{{ $id }}').val('{{ $simGPS->gps_type }}');
+                    $('.gps-type').change(function(){
+                        if ($(this).val() === '{{ \App\SimGPS::COBAN }}') {
+                        } else {
+                        }
+                    });
+                </script>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4 text-center ">
+                <div class="form-group has-success has-feedback m-b-0">
+                    <input name="imei" type="text" class="form-control input-sm" value="{{ $gpsVehicle->imei }}" placeholder="Imei" style="border-radius: 50px">
+                    <span class="fa fa-tag form-control-feedback"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="form-group has-success has-feedback m-b-0">
                     <input name="sim" type="number" class="form-control input-sm" value="{{ $simGPS->sim }}" placeholder="SIM" style="border-radius: 50px">
                     <span class="fa fa-phone form-control-feedback"></span>

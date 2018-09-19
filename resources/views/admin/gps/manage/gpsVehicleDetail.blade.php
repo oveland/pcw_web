@@ -4,11 +4,17 @@
     $error = $error ?? false;
     $updated = $updated ?? false;
 @endphp
-<td class="text-center bg-info text-white">{!! $loop->iteration ?? '*' !!}</td>
-<td>{{ $vehicle->plate ?? 'NONE'  }}</td>
-<td>{{ $vehicle->number ?? 'NONE'  }}</td>
-<td width="20%"><span class="btn btn-sm btn-rounded btn-{{ $simGPS->getGPSTypeCssColor() }}">{{ $simGPS->gps_type }}</span></td>
-<td width="20%">
+<td class="text-center bg-inverse text-white">{!! $loop->iteration ?? '*' !!}</td>
+<td class="text-center">{!!  $vehicle->numberAndPlate ?? 'NONE'  !!}</td>
+<td width="20%" class="text-center">
+    <span class="btn btn-sm btn-rounded btn-{{ $simGPS->getGPSTypeCssColor() }}">{{ $simGPS->gps_type }}</span>
+</td>
+<td width="20%" class="text-center">
+    <span class="{{ $gpsVehicle->hasValidImei()?'':'text-danger text-bold tooltips' }}" data-title="@lang('The imei must have a length of 15 characters')">
+        {{ $gpsVehicle->imei }}
+    </span>
+</td>
+<td class="text-center" width="20%">
     <button class="btn btn-{{ $simGPS->operator == 'movistar'?'info':($simGPS->operator == 'avantel'?'purple':'white') }} btn-rounded active">
         @if( $simGPS->operator == 'movistar' )
             <img src="https://cdn.iconverticons.com/files/png/1a712eaf7266f623_256x256.png" width="15px">

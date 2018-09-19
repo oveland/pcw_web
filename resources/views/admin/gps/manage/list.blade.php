@@ -194,7 +194,7 @@
                 @if( $simGPSList )
                     <div class="tab-pane fade" id="tab-2">
                         <!-- begin panel -->
-                        <div class="panel panel-info">
+                        <div class="panel panel-inverse">
                             <div class="panel-heading">
                                 <div class="panel-heading-btn pull-rigth">
                                     <a class="btn btn-sm btn-icon btn-rounded btn-lime" data-toggle="modal" data-target="#modal-create-sim-gps">
@@ -220,30 +220,30 @@
                                 </h4>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-striped table-td-valign-middle table-hover">
+                                <table class="table table-striped table-td-valign-middle table-hover table-report">
                                     <thead>
-                                    <tr class="info">
+                                    <tr class="inverse">
                                         <th class="text-center">
-                                            <i class="icon-list"></i>
+                                            <i class="icon-list"></i><br>
                                         </th>
-                                        <th>
-                                            <i class="fa fa-car"></i>
+                                        <th class="text-center">
+                                            <i class="fa fa-car"></i><br>
                                             @lang('Vehicle')
                                         </th>
-                                        <th>
-                                            <i class="fa fa-car"></i>
-                                            @lang('Number')
-                                        </th>
-                                        <th>
-                                            <i class="fa fa-podcast"></i>
+                                        <th class="text-center">
+                                            <i class="fa fa-podcast"></i><br>
                                             @lang('GPS Type')
                                         </th>
-                                        <th>
-                                            <i class="fa fa-phone"></i>
+                                        <th class="text-center">
+                                            <i class="fa fa-tag"></i><br>
+                                            @lang('Imei')
+                                        </th>
+                                        <th class="text-center">
+                                            <i class="fa fa-phone"></i><br>
                                             @lang('GPS SIM')
                                         </th>
                                         <th class="text-center">
-                                            <i class="fa fa-cogs"></i>
+                                            <i class="fa fa-cogs"></i><br>
                                             @lang('Actions')
                                         </th>
                                     </tr>
@@ -251,6 +251,7 @@
                                     <tbody>
                                     @foreach($simGPSList as $simGPS)
                                         @php( $vehicle = $simGPS->vehicle )
+                                        @php( $gpsVehicle = $vehicle->gpsVehicle )
                                         <tr id="detail-{{ $simGPS->id }}" class="vehicle-list" data-vehicle-number="{{ $vehicle->number ?? '' }}">
                                             @include('admin.gps.manage.gpsVehicleDetail')
                                         </tr>
@@ -345,6 +346,7 @@
 </div>
 
 <script type="application/javascript">
+    hideSideBar();
     var editedSIM = false;
     $('.default-select2').select2();
     setTimeout(function () {

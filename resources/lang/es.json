@@ -317,8 +317,10 @@
   "counter": "contador",
   "Reset Command": "Comando de reinicio",
   "The SIM number :sim is already associated with another GPS (Vehicle :vehicle)": "El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)",
+  "The Imei number :imei is already associated to vehicle :vehicle": "El número de imei :imei ya está asociado al vehículo :vehicle",
   "A Start Recorder less than the last End Recorder": "Registradora de salida menor que registradora de llegada anterior",
   "Please refresh the report once you finish the fix bugs": "Porfavor actualice el reporte una vez termine la corrección de inconsistencias",
+  "Please refresh the report once you finish the update all data": "Porfavor actualice el reporte una vez termine la actualización de datos",
   "The company haven´t issues in your counters at the selected date": "La empresa no tiene incidencias en sus contadores en la fecha seleccionada",
   "List of counter issues": "Listado de incidencias en contador",
   "alarms": "Alarmas",
@@ -472,5 +474,6 @@
   "Departure time on first round trip": "Hora de salida de primera vuelta",
   "Hide details": "Ocultar detalles",
   "Vehicle with mixed routes": "Vehículo con rutas mixtas",
-  "Round trip report": "Reporte de vueltas"
+  "Round trip report": "Reporte de vueltas",
+  "The imei must have a length of 15 characters": "El imei debe tener una longitud de 15 caracteres"
 }

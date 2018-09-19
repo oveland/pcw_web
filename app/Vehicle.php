@@ -118,4 +118,14 @@ class Vehicle extends Model
         ]);
         return $plates->contains($this->plate);
     }
+
+    public function gpsVehicle()
+    {
+        return $this->hasOne(GpsVehicle::class);
+    }
+
+    public function currentLocation()
+    {
+        return $this->hasOne(CurrentLocation::class);
+    }
 }

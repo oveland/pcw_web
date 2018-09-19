@@ -25,4 +25,14 @@ class GpsVehicle extends Model
     {
         return config('app.date_time_format');
     }
+
+    public function hasValidImei()
+    {
+        return strlen($this->imei) == 15;
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
 }
