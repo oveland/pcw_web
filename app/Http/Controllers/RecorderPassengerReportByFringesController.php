@@ -61,7 +61,7 @@ class RecorderPassengerReportByFringesController extends Controller
                 return view('reports.passengers.recorders.fringes.fringesMerged',compact(['dispatchRegistersByVehicles', 'fringes']));
                 break;
             case 'round_trips':
-                return view('reports.passengers.recorders.fringes.round-trips',compact('dispatchRegistersByVehicles'));
+                return view('reports.passengers.recorders.fringes.roundTrips',compact('dispatchRegistersByVehicles'));
                 break;
             default:
                 return null;
