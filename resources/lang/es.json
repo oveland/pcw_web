@@ -152,8 +152,12 @@
   "Fringes": "Franjas",
   "By Fringes": "Por franjas",
   "Start Recorder": "Registradora inicial",
+  "Start recorder": "Registradora inicial",
+  "First start recorder": "Primera registradora inicial",
   "Start Rec.": "Reg. inicial",
   "End Recorder": "Registradora final",
+  "End recorder": "Registradora final",
+  "Last end recorder": "Última registradora final",
   "Arrived Recorder": "Registradora llegada",
   "End Rec.": "Reg. final",
   "All": "Todos",
@@ -475,5 +479,7 @@
   "Hide details": "Ocultar detalles",
   "Vehicle with mixed routes": "Vehículo con rutas mixtas",
   "Round trip report": "Reporte de vueltas",
-  "The imei must have a length of 15 characters": "El imei debe tener una longitud de 15 caracteres"
+  "The imei must have a length of 15 characters": "El imei debe tener una longitud de 15 caracteres",
+  "Dispatch users": "Usuarios despacho",
+  "dispatch-users": "usuarios-despacho"
 }

@@ -116,10 +116,9 @@ Route::group(['middleware' => ['auth']], function () {
             });
 
             /* Control Points report */
-            Route::prefix(__('consolidated'))->group(function () {
-                Route::prefix(__('month'))->group(function () {
-                    Route::get('/', 'RouteReportController@index')->name('report-route-consolidated-month');
-                });
+            Route::prefix(__('dispatch-users'))->group(function () {
+                Route::get('/', 'ReportRouteUserDispatchController@index')->name('report-route-dispatch-users');
+                Route::get('/show', 'ReportRouteUserDispatchController@show')->name('report-route-dispatch-users-show');
             });
         });
 

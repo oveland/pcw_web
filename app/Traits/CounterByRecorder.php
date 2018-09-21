@@ -45,13 +45,16 @@ trait CounterByRecorder
 
         $totalPassengers = 0;
         $firstStartRecorder = 0;
-        $lastDispatchRegister = null;
+        $lastEndRecorder = 0;
         $firstDispatchRegisterByVehicle = $dispatchRegistersByVehicle->first();
+        $lastDispatchRegisterByVehicle = $dispatchRegistersByVehicle->last();
 
+        $lastDispatchRegister = null;
         if ($firstDispatchRegisterByVehicle) {
-            $startRecorder = $firstDispatchRegisterByVehicle->start_recorder;
-            $firstStartRecorder = $startRecorder;
+            $firstStartRecorder = $firstDispatchRegisterByVehicle->start_recorder;
+            $lastEndRecorder = $lastDispatchRegisterByVehicle->end_recorder;
 
+            $startRecorder = $firstStartRecorder;
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
                 $passengersByRoundTrip = 0;
                 $endRecorder = 0;
@@ -110,6 +113,8 @@ trait CounterByRecorder
                     $totalPassengers += $passengersByRoundTrip;
                 }
 
+                if (!$firstStartRecorder) $firstStartRecorder = $startRecorder;
+
                 $driver = $dispatchRegister->driver;
 
                 $history->put($dispatchRegister->id, (object)[
@@ -148,6 +153,9 @@ trait CounterByRecorder
                 'vehicle' => $vehicle,
 
                 'start_recorder' => $firstStartRecorder,
+                'firstStartRecorder' => $firstStartRecorder,
+                'lastEndRecorder' => $lastEndRecorder,
+
                 'passengers' => $totalPassengers,
                 'passengersByRecorder' => $totalPassengers,
 

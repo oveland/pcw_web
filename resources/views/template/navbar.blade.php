@@ -34,10 +34,27 @@
                 @if(\Carbon\Carbon::now()->toDateString() <= '2018-09-22')
                 <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" data-click="toggle-notify">
                     <i class="fa fa-bell faa-ring animated"></i>
-                    <span class="badge badge-danger pull-right faa-float animated">1</span>
+                    <span class="badge badge-danger pull-right faa-float animated">2</span>
                 </a>
                 <ul class="dropdown-menu dropdown-notification pull-right">
-                    <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">1</span></li>
+                    <li class="dropdown-header">Notificaciones <span class="badge badge-danger pull-right">2</span></li>
+                    <li class="notification-item" data-toggle="tooltip" data-title="El 20 de Septiembre" data-placement="top">
+                        <a href="{{ route('report-route-dispatch-users') }}">
+                            <div class="media">
+                                <i class="fa fa-flag faa-pulse animated"></i>
+                            </div>
+                            <div class="message">
+                                <h6 class="title">@lang('Reporte de usuarios de despacho')</h6>
+                                <div class="time">
+                                    <strong><i class="fa fa-user faa-vertical"></i> <i class="fa fa-compass faa-vertical"></i> Seguimiento de incidencias de registradora</strong>
+                                </div>
+                            </div>
+                            <div class="option faa-parent animated-hover"
+                                 data-click="set-message-status" data-status="unread" data-container="body">
+                                <i class="fa fa-dot-circle-o faa-vertical"></i>
+                            </div>
+                        </a>
+                    </li>
                     <li class="notification-item" data-toggle="tooltip" data-title="El 20 de Septiembre" data-placement="top">
                         <a href="{{ route('report-vehicle-round-trips') }}">
                             <div class="media">
