@@ -106,6 +106,10 @@
                                 <tr id="vehicle-{{ $vehicleId }}-{{ $userId }}" class="collapse fade">
                                     <td colspan="6">
                                         <div class="row">
+                                            @if( $loop->last && $loop->parent->last )
+                                                {{ dd($report->dispatchRegistersByVehicles[$vehicleId]->toArray(), $report->counterByRecorderByVehicles[$vehicleId]) }}
+                                                {{ dd($issues) }}
+                                            @endif
                                             <div class="col-md-12 p-0">
                                                 @if($issues->isNotEmpty())
                                                     <div class="alert alert-warning alert-bordered fade in m-b-0" style="border-radius: 0px">
