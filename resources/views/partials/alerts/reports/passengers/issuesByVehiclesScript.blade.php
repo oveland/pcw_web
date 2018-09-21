@@ -13,7 +13,9 @@
     $(document).ready(function () {
         $('body').on('click', '.box-edit', function () {
             $(this).find('.box-info').hide();
-            $(this).find('.box-edit').show();
+            let boxEdit = $(this).find('.box-edit');
+            let inputEdit = boxEdit.fadeIn(1500).find('input');
+            inputEdit.val( inputEdit.val() ).focus();
         });
 
         $('body').on('keyup', '.edit-input-recorder', function (e) {

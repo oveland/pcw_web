@@ -7,11 +7,11 @@
             @lang('Route')
         </th>
         <th>
-            <i class="fa fa-list-ol text-muted"></i><br>
+            <i class="fa fa-retweet text-muted"></i><br>
             @lang('Round Trip')
         </th>
         <th>
-            <i class="fa fa-retweet text-muted"></i><br>
+            <i class="fa fa-list-ol text-muted"></i><br>
             @lang('Turn')
         </th>
         <th class="{{ $typeReport == 'group-vehicles'?'hide':'' }}">
