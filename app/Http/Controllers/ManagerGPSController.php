@@ -294,10 +294,11 @@ class ManagerGPSController extends Controller
         try {
             $sim = $request->get('sim');
             $gpsType = $request->get('gps_type');
-            $vehicleId = $request->get('vehicle_id');
+            $vehicle = Vehicle::find($request->get('vehicle_id'));
 
             $checkGPS = SimGPS::where('sim', $sim)->get()->first();
-            $checkVehicle = SimGPS::where('vehicle_id', $vehicleId)->get()->first();
+            $checkVehicle = SimGPS::where('vehicle_id', $vehicle->id)->get()->first();
+
             if ($checkGPS) {
                 $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']);
             } elseif ($checkVehicle) {
@@ -305,12 +306,20 @@ class ManagerGPSController extends Controller
             } else {
                 $simGPS = new SimGPS();
                 $simGPS->sim = $sim;
-                $simGPS->vehicle_id = $vehicleId;
+                $simGPS->vehicle_id = $vehicle->id;
                 $simGPS->gps_type = $gpsType;
                 $simGPS->operator = starts_with($sim, '350') ? 'avantel' : 'movistar';
                 if ($simGPS->save()) {
                     $created = true;
                     $message = __('Register created successfully');
+
+                    if( $simGPS->isSkypatrol() ){
+                        $gpsVehicle = $vehicle->gpsVehicle;
+                        $gpsVehicle->imei = $vehicle->plate;
+                        $gpsVehicle->save();
+
+                        \DB::update("UPDATE crear_vehiculo SET imei_gps = '$vehicle->plate' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
+                    }
                 } else {
                     $message = __('Error');
                 }
@@ -327,8 +336,8 @@ class ManagerGPSController extends Controller
     {
         $sim = $request->get('sim');
         $gpsType = $request->get('gps_type');
-        $imei = $request->get('imei');
         $vehicle = $simGPS->vehicle;
+        $imei = ( $simGPS->isCoban() )?$request->get('imei'):$vehicle->plate;
         $gpsVehicle = $vehicle->gpsVehicle;
         $error = "";
         $updated = false;

@@ -437,7 +437,11 @@
                 success: function(data){
                     if( data.success ){
                         gsuccess(data.message);
+                        editedSIM = true;
                         $('.modal').modal('hide');
+                        setTimeout(function(){
+                            $('.form-search-report').submit();
+                        },1000);
                     }else{
                         gerror(data.message);
                     }
@@ -446,10 +450,6 @@
                     gerror('@lang('An error occurred in the process. Contact your administrator')');
                 },
                 complete:function(){
-                    setTimeout(function(){
-                        $('.form-search-report').submit();
-                    },500);
-                    editedSIM = true;
                 }
             });
         }

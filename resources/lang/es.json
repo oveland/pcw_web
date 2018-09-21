@@ -475,5 +475,7 @@
   "Hide details": "Ocultar detalles",
   "Vehicle with mixed routes": "Vehículo con rutas mixtas",
   "Round trip report": "Reporte de vueltas",
-  "The imei must have a length of 15 characters": "El imei debe tener una longitud de 15 caracteres"
+  "The imei must have a length of 15 characters": "El imei debe tener una longitud de 15 caracteres",
+  "Updated at": "Actualizado a las",
+  "Last report": "Último reporte"
 }

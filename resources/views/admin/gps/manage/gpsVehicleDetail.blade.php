@@ -1,11 +1,20 @@
 @php
     $id = $simGPS->id;
     $vehicle = $simGPS->vehicle;
+    $currentLocation = $vehicle->currentLocation;
+    $vehicleStatus = $currentLocation?$currentLocation->vehicleStatus:null;
     $error = $error ?? false;
     $updated = $updated ?? false;
 @endphp
 <td class="text-center bg-inverse text-white">{!! $loop->iteration ?? '*' !!}</td>
-<td class="text-center">{!!  $vehicle->numberAndPlate ?? 'NONE'  !!}</td>
+<td class="text-center">
+    {!!  $vehicle->numberAndPlate ?? 'NONE'  !!}
+    @if( $vehicleStatus )
+        <br><small class="text-{{ $vehicleStatus->main_class }} tooltips" data-html="true" data-title="@lang('Last report'): {{ $currentLocation->date }} <br> @lang('Updated at'): {{ Carbon\Carbon::now()->toTimeString() }}">
+            <i class="{{ $vehicleStatus->icon_class }}"></i> {{ $vehicleStatus->des_status }}
+        </small>
+    @endif
+</td>
 <td width="20%" class="text-center">
     <span class="btn btn-sm btn-rounded btn-{{ $simGPS->getGPSTypeCssColor() }}">{{ $simGPS->gps_type }}</span>
 </td>

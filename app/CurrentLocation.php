@@ -53,6 +53,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CurrentLocation extends Model
 {
+    protected $dates = ['date'];
+
+    protected function getDateFormat()
+    {
+        return config('app.date_time_format');
+    }
+
     public function dispatchRegister()
     {
         return $this->belongsTo(CurrentDispatchRegister::class, 'dispatch_register_id', 'dispatch_register_id');
