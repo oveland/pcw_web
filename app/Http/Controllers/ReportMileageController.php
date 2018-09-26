@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\CurrentLocationReport;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Database;
 use App\LocationReport;
@@ -45,11 +46,12 @@ class ReportMileageController extends Controller
     public function buildMileageReport(Company $company = null, $dateReport)
     {
         $vehicles = $company->vehicles;
-        $locationReportModel = Database::findLocationReportModelInstanceByDate($dateReport);
+        //$locationReportModel = Database::findLocationReportModelInstanceByDate($dateReport);
+        $locationReportModel = new CurrentLocationReport();
 
         $locationReports = $locationReportModel::whereIn('vehicle_id', $vehicles->pluck('id'))
             ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
-            ->orderBy('location_id')
+            ->orderBy('location_date')
             ->get();
 
         $locationReportsByVehicle = $locationReports->groupBy('vehicle_id');

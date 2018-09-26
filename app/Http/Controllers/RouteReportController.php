@@ -211,10 +211,9 @@ class RouteReportController extends Controller
     {
         sleep(0.5); // For wait init map on view
         $dataReport = ['empty' => true];
-        //$locations = $dispatchRegister->locations()->with('report')->get();
-        $locations = $dispatchRegister->locationReports()->get();
-        $offRoadLocation = true;
-        if ($locations->isNotEmpty()) {
+        $reports = $dispatchRegister->reports()->with('location')->get();
+
+        if ($reports->isNotEmpty()) {
             $vehicle = $dispatchRegister->vehicle;
 
             $route = $dispatchRegister->route;
@@ -222,20 +221,19 @@ class RouteReportController extends Controller
             $routeDistance = $routeCoordinates->last()->distance;
             $controlPoints = $route->controlPoints;
 
-            $reports = array();
-            $lastReport = $locations->first();
-            $lastLocation = $locations->first();
+            $reportData = array();
+            $lastReport = $reports->first();
+            $lastSpeed = 0;
 
-            foreach ($locations as $location) {
-                //$report = $location->report;
-                $report = $location;
+            foreach ($reports as $report) {
+                $location = $report->location;
                 if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
                     $offRoad = $location->off_road == 't' ? true : false;
                     if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
                         $offRoad = self::checkOffRoad($location, $routeCoordinates);
                     }
 
-                    $reports[] = (object)[
+                    $reportData[] = (object)[
                         'date' => $report->date,
                         'time' => $report->timed,
                         'distance' => $report->distancem,
@@ -246,21 +244,21 @@ class RouteReportController extends Controller
                     ];
 
                     $lastReport = $report;
-                    $lastLocation = $location;
+                    $lastSpeed = $location->speed;
                 }
             }
 
             $dataReport = (object)[
                 'vehicle' => $vehicle->number,
                 'plate' => $vehicle->plate,
-                'vehicleSpeed' => round($lastLocation ? $lastLocation->speed : 0, 2),
+                'vehicleSpeed' => round($lastSpeed, 2),
                 'route' => $route->name,
                 'routeDistance' => $routeDistance,
                 'routePercent' => round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1),
                 'controlPoints' => $controlPoints,
                 'urlLayerMap' => $route->url,
                 'routeCoordinates' => $routeCoordinates->toArray(),
-                'reports' => $reports,
+                'reports' => $reportData,
                 'offRoadFromLocation' => !$dispatchRegister->dateLessThanDateNewOffRoadReport()
             ];
         }
@@ -276,49 +274,37 @@ class RouteReportController extends Controller
     public
     function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
     {
-        //$locations = $dispatchRegister->locations()->with('report')->get();
-        $locations = $dispatchRegister->locationReports()->get();
-
+        $reports = $dispatchRegister->reports()->with('location')->get();
         $off_road_report_list = array();
-
-        if ($locations->isNotEmpty()) {
-            $route = $dispatchRegister->route;
-
-            $routeCoordinates = false;
-            if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
-                $routeCoordinates = self::getRouteCoordinates($route->url);
-            }
-
-            $reports = array();
-            foreach ($locations as $location) {
-                //$report = $location->report;
-                $report = $location;
+        if ($reports->isNotEmpty()) {
+            $reportData = array();
+            foreach ($reports as $report) {
+                $location = $report->location;
                 if ($report && $location->isValid()) {
                     $offRoad = $location->off_road == 't' ? true : false;
-                    if ($routeCoordinates != false) {
-                        $offRoad = self::checkOffRoad($location, $routeCoordinates);
-                    }
-                    $reports[] = (object)[
+                    $reportData[] = (object)[
                         'date' => $report->date,
                         'time' => $report->timed,
                         'distance' => $report->distancem,
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
-                        'offRoad' => $offRoad//$this->checkOffRoad($location, $routeCoordinates)
+                        'offRoad' => $offRoad
                     ];
                 }
             }
 
             $offRoad = false;
             $export = $request->get('export');
-            foreach ($reports as $report) {
-                if ((!$offRoad || $export) ? $report->offRoad : false) $off_road_report_list[] = $report;
+
+            foreach ($reportData as $report) {
+                if ((!$offRoad) ? $report->offRoad : false) $off_road_report_list[] = $report;
                 $offRoad = $report->offRoad;
             }
 
             if ($export) $this->exportOffRoads($dispatchRegister, $off_road_report_list);
         }
+
         return view('reports.route.route.offRoadReport', compact('off_road_report_list', 'dispatchRegister'));
     }
 
