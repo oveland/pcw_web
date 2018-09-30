@@ -209,7 +209,7 @@ class RouteReportController extends Controller
     public
     function chart(DispatchRegister $dispatchRegister)
     {
-        sleep(0.5); // For wait init map on view
+        sleep(1); // For wait init map on view
         $dataReport = ['empty' => true];
         $reports = $dispatchRegister->reports()->with('location')->get();
 
