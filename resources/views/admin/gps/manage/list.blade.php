@@ -162,7 +162,7 @@
                                                             ">
                                                                 <div class="checkbox">
                                                                     <label>
-                                                                        <input name="auto-set-plate" type="checkbox" value="true">
+                                                                        <input name="auto-set-plate" type="checkbox" value="true" checked>
                                                                         @lang('Auto set plate')
                                                                     </label>
                                                                 </div>
