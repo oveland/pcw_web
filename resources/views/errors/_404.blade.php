@@ -1,3 +1,6 @@
+@if( !Auth::user() )
+    @include('template.header')
+@endif
 <!-- begin error -->
 <div class="error">
     <div class="error-code">404</div>

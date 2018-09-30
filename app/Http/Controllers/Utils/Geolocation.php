@@ -24,16 +24,16 @@ class Geolocation
      */
     public static function getDistance($latitude1, $longitude1, $latitude2, $longitude2)
     {
-        $earth_radius = 6371;
-
+        $earth_radius = 6372.8;
         $dLat = deg2rad($latitude2 - $latitude1);
         $dLon = deg2rad($longitude2 - $longitude1);
+        $latitude1 = deg2rad($latitude1);
+        $latitude2 = deg2rad($latitude2);
 
-        $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * sin($dLon / 2) * sin($dLon / 2);
+        $a = sin($dLat / 2) * sin($dLat / 2) + sin($dLon / 2) * sin($dLon / 2) * cos($latitude1) * cos($latitude2);
         $c = 2 * asin(sqrt($a));
-        $d = $earth_radius * $c;
 
-        return $d * 1000;
+        return $earth_radius * $c * 1000;
     }
 
     /**

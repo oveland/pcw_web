@@ -57,8 +57,39 @@ class APIController extends Controller
             case 'migrations':
                 $migrationController = new MigrationController();
                 switch ($request->get('action')) {
+                    case 'companies':
+                        $migrationController->migrateCompanies($request);
+                        break;
+                    case 'routes':
+                        $migrationController->migrateRoutes($request);
+                        break;
+                    case 'dispatches':
+                        $migrationController->migrateDispatches($request);
+                        break;
+                    case 'users':
+                        $migrationController->migrateUsers($request);
+                        break;
                     case 'vehicles':
                         $migrationController->migrateVehicles($request);
+                        break;
+                    case 'control-points':
+                        $migrationController->migrateControlPoints($request);
+                        break;
+                    case 'fringes':
+                        $migrationController->migrateFringes($request);
+                        break;
+                    case 'control-point-times':
+                        $migrationController->migrateControlPointTimes($request);
+                        break;
+                    case 'all':
+                        $migrationController->migrateCompanies($request);
+                        $migrationController->migrateRoutes($request);
+                        $migrationController->migrateDispatches($request);
+                        $migrationController->migrateUsers($request);
+                        $migrationController->migrateVehicles($request);
+                        $migrationController->migrateControlPoints($request);
+                        $migrationController->migrateFringes($request);
+                        $migrationController->migrateControlPointTimes($request);
                         break;
                 }
                 break;
