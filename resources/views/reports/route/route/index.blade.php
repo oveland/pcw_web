@@ -324,7 +324,7 @@
 
                             data.routeCoordinates.forEach(function (rc, i) {
                                 new google.maps.Marker({
-                                    title: rc.index + ": distance "+rc.distance+" m.",
+                                    title: rc.index + ": distance " + rc.distance + " m. (" + rc.latitude + ", " + rc.longitude + ")",
                                     map: map,
                                     icon: routeCoordinateIcon,
                                     //animation: google.maps.Animation.DROP,

@@ -6,6 +6,7 @@ use Auth;
 use App\Company;
 use App\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class MigrationControlPointController extends Controller
 {
@@ -30,13 +31,15 @@ class MigrationControlPointController extends Controller
         dd($control_points->toArray());
     }
 
-    public function exportCoordinates(Route $route)
+    public function exportCoordinates(Route $route, Request $request)
     {
         $coordinates = RouteReportController::getRouteCoordinates($route->url);
         $content = "";
         foreach ($coordinates as $coordinate){
             $coordinate = (object) $coordinate;
-            $content.="$coordinate->latitude, $coordinate->longitude\n";
+            if( $request->get('with-extras') )$content.="$coordinate->index > $coordinate->latitude, $coordinate->longitude > $coordinate->distance\n";
+            else $content.="$coordinate->latitude, $coordinate->longitude\n";
+
         }
 
         $filename = "Coordinates $route->name.txt";
