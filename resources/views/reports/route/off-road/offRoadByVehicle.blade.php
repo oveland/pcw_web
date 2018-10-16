@@ -110,6 +110,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @php($dispatchRegister = null)
+                                                        @php($offRoadReport = $offRoadReport->sortBy('date'))
                                                         @foreach($offRoadReport as $offRoad)
                                                             @php($dispatchRegister = $offRoad->dispatchRegister)
                                                             @php($driver = $dispatchRegister->driver)

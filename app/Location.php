@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -41,12 +42,21 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $vehicle_status_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereVehicleStatusId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister witOffRoads()
  */
 class Location extends Model
 {
+    const CREATED_AT = 'date_created';
+    const UPDATED_AT = 'last_updated';
+
     protected function getDateFormat()
     {
         return config('app.date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
     }
 
     /**
@@ -55,6 +65,14 @@ class Location extends Model
     public function report()
     {
         return $this->hasOne(Report::class,'location_id','id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function dispatchRegister()
+    {
+        return $this->belongsTo(DispatchRegister::class);
     }
 
     /**
@@ -67,6 +85,21 @@ class Location extends Model
         return ($this->latitude != 0 && $this->longitude != 0)?true:false;
     }
 
-    const CREATED_AT = 'date_created';
-    const UPDATED_AT = 'last_updated';
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeValidCoordinates($query)
+    {
+        return $query->where('latitude', '<>', 0)->where('longitude', '<>', 0);
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWitOffRoads($query)
+    {
+        return $query->where('off_road', true);
+    }
 }

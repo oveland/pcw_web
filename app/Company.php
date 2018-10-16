@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $active
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property mixed $routes
+ * @property \Illuminate\Database\Eloquent\Collection|\App\Route[] $routes
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Company whereCreatedAt($value)

@@ -303,15 +303,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
 });
 
-Route::prefix('api')->group(function () {
-    Route::get('/{appName}', 'API\APIController@app');
-    Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
-
-    /*Route::prefix('peak-and-plate')->group(function () {
-        Route::get('/{company}', 'ApiPeakAndPlateController@getVehiclesCurrentPeakAndPlate')->name('api-peak-and-plate-get-vehicles-current-peak-and-plate');
-    });*/
-});
-
 Route::prefix('logs')->group(function () {
     Route::get('/register-gps', 'LogController@registerGPS')->name('logs-register-gps');
 });
+
+Route::get('/mail/{company}/{prevDays}', 'ToolsController@mail');

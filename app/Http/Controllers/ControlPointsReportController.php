@@ -7,11 +7,27 @@ use App\ControlPointTimeReport;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
 use App\Route;
+use App\Services\pcwserviciosgps\reports\routes\ControlPointService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ControlPointsReportController extends Controller
 {
+    /**
+     * @var ControlPointService
+     */
+    private $controlPointService;
+
+    /**
+     * ControlPointsReportController constructor.
+     * @param ControlPointService $controlPointService
+     */
+    public function __construct(ControlPointService $controlPointService)
+    {
+        $this->controlPointService = $controlPointService;
+    }
+
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -29,21 +45,13 @@ class ControlPointsReportController extends Controller
      */
     public function searchReport(Request $request)
     {
+        $company = GeneralController::getCompany($request);
         $dateReport = $request->get('date-report');
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $route = Route::find($request->get('route-report'));
 
         if (!$route || !$route->belongsToCompany($company)) abort(404);
 
-        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
-            ->where('route_id', '=', $route->id)
-            ->active()
-            ->orderBy('departure_time')
-            ->get();
-
-        $controlPointTimeReports = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-            ->orderBy('date_created')
-            ->get();
+        $controlPointTimeReports = $this->controlPointService->allControlPointTimeReport($route, $dateReport);
 
         switch ($request->get('type-report')){
             case 'round-trip':

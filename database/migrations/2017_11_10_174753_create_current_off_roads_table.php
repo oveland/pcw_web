@@ -37,26 +37,27 @@ class CreateCurrentOffRoadsTable extends Migration
 
         /* Create function that save current_off_roads alerts from INSERT off_roads_table */
         DB::statement("
-            CREATE OR REPLACE FUNCTION off_roads_function() RETURNS TRIGGER
-            language plpgsql
-            as $$
+            CREATE OR REPLACE FUNCTION locations_function() RETURNS TRIGGER
+            LANGUAGE plpgsql
+            AS $$
             DECLARE
               off_road_vehicle RECORD;
               alert_off_road_vehicle BOOLEAN;
             BEGIN
-              IF (TG_OP = 'INSERT' ) THEN
-                IF (NEW.latitude = 0 OR NEW.longitude = 0) THEN
-                  RETURN OLD;
-                END IF;
+              IF NEW.date > CURRENT_TIMESTAMP THEN
+                NEW.date = CURRENT_TIMESTAMP;
+              END IF;
             
-                SELECT * FROM current_off_roads WHERE vehicle_id = NEW.vehicle_id LIMIT 1 INTO off_road_vehicle;
+              IF (NEW.latitude = 0 OR NEW.longitude = 0) THEN
+                RETURN NULL;
+              END IF;
             
-                IF off_road_vehicle.id IS NOT NULL THEN
-                    alert_off_road_vehicle := FALSE;
+              IF (TG_OP = 'INSERT') THEN
+                IF (NEW.off_road IS TRUE) THEN
             
-                    IF (NEW.date - off_road_vehicle.date)::TIME > '00:03:00'::TIME THEN
-                      alert_off_road_vehicle := TRUE;
-                    END IF;
+                  SELECT * FROM current_off_roads WHERE vehicle_id = NEW.vehicle_id LIMIT 1 INTO off_road_vehicle;
+            
+                  IF off_road_vehicle.id IS NOT NULL THEN
             
                     UPDATE current_off_roads SET
                       date = NEW.date,
@@ -68,29 +69,14 @@ class CreateCurrentOffRoadsTable extends Migration
                       odometer = NEW.odometer,
                       speed = NEW.speed,
                       off_road = NEW.off_road,
-                      alert_off_road = alert_off_road_vehicle,
-                      updated_at = current_timestamp
-                     WHERE vehicle_id = NEW.vehicle_id;
-                ELSE
-                  INSERT INTO current_off_roads
-                  (
-                    vehicle_id,
-                    date,
-                    dispatch_register_id,
-                    distance,
-                    longitude,
-                    latitude,
-                    orientation,
-                    odometer,
-                    speed,
-                    off_road,
-                    alert_off_road,
-                    created_at,
-                    updated_at
-                  )
-                  VALUES (
+                      alert_off_road = ((NEW.date - off_road_vehicle.date) :: TIME > '00:03:00' :: TIME),
+                      updated_at = CURRENT_TIMESTAMP
+                    WHERE vehicle_id = NEW.vehicle_id;
+                  ELSE
+                    INSERT INTO current_off_roads (vehicle_id,date,dispatch_register_id,distance,longitude,latitude,orientation,odometer,speed,off_road,alert_off_road,created_at,updated_at)
+                    VALUES (
                     NEW.vehicle_id,
-                    current_timestamp,
+                    CURRENT_TIMESTAMP,
                     NEW.dispatch_register_id,
                     NEW.distance,
                     NEW.longitude,
@@ -100,23 +86,22 @@ class CreateCurrentOffRoadsTable extends Migration
                     NEW.speed,
                     NEW.off_road,
                     TRUE,
-                    current_timestamp,
-                    current_timestamp
-                  );
+                    CURRENT_TIMESTAMP,
+                    CURRENT_TIMESTAMP
+                    );
+                  END IF;
                 END IF;
-            
               END IF;
               RETURN NEW;
             END;
-            $$
-            ;
+            $$;
         ");
 
         /* Create trigger on off_roads table to execute current_off_roads_function on INSERT */
         DB::statement("
-            CREATE TRIGGER off_roads_trigger AFTER INSERT
+            CREATE TRIGGER locations_trigger AFTER INSERT
                 ON off_roads FOR EACH ROW
-            EXECUTE PROCEDURE off_roads_function();
+            EXECUTE PROCEDURE locations_function();
         ");
     }
 
@@ -127,8 +112,8 @@ class CreateCurrentOffRoadsTable extends Migration
      */
     public function down()
     {
-        DB::statement("DROP TRIGGER IF EXISTS off_roads_trigger ON off_roads");
-        DB::statement("DROP FUNCTION IF EXISTS off_roads_function()");
+        DB::statement("DROP TRIGGER IF EXISTS locations_trigger ON off_roads");
+        DB::statement("DROP FUNCTION IF EXISTS locations_function()");
         Schema::dropIfExists('current_off_roads');
     }
 }

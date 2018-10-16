@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <strong>{{ $controlPoint->name }}</strong>
+                        <strong>({{ $controlPoint->id }}) {{ $controlPoint->name }}</strong>
                         <hr class="m-t-5 m-b-5">
                         <div class="m-t-2">
                             <div class="pull-left m-t-5">

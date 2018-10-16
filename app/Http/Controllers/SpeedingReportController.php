@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\pcwserviciosgps\reports\routes\SpeedingService;
 use App\Speeding;
 use App\Vehicle;
 use Excel;
@@ -15,6 +16,19 @@ use Route;
 
 class SpeedingReportController extends Controller
 {
+    private $speedingService;
+
+    /**
+     * SpeedingReportController constructor.
+     *
+     * @param SpeedingService $speedingService
+     */
+    public function __construct(SpeedingService $speedingService)
+    {
+        $this->speedingService = $speedingService;
+    }
+
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -34,50 +48,17 @@ class SpeedingReportController extends Controller
     {
         $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $vehicles = $company->vehicles;
         $dateReport = $request->get('date-report');
 
-        $allSpeedingReportByVehicle = Speeding::where('date',$dateReport)
-            ->whereIn('vehicle_id',$vehicles->pluck('id'))
-            ->get()
-            ->groupBy('vehicle_id');
+        $allSpeeding =$this->speedingService->allSpeeding($company, $dateReport);
 
-        $speedingReportByVehicle = array();
-        foreach ($allSpeedingReportByVehicle as $vehicleId => $allSpeedingByVehicle) {
-            $speedings = self::groupByFirstSpeeding($allSpeedingByVehicle);
-            if(count($speedings))$speedingReportByVehicle[$vehicleId] = $speedings;
-        }
+        $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding);
 
-        if( $request->get('export') )$this->export($speedingReportByVehicle,$dateReport);
+        if( $request->get('export') )$this->export($speedingReportByVehicles,$dateReport);
 
-        return view('reports.vehicles.speeding.show', compact(['speedingReportByVehicle', 'stringParams']));
+        return view('reports.vehicles.speeding.show', compact(['speedingReportByVehicles', 'stringParams']));
     }
 
-    /**
-     * @param $allSpeedingByVehicle
-     * @return array
-     */
-    public static function groupByFirstSpeeding($allSpeedingByVehicle)
-    {
-
-        if(!count($allSpeedingByVehicle))return collect([]);
-
-        $speedingReport = array();
-        $prevOffRoad = null;
-
-        foreach ($allSpeedingByVehicle as $speeding) {
-            if ($prevOffRoad) {
-                if ($speeding->time->diff($prevOffRoad->time)->format('%H:%I:%S') > '00:05:00') {
-                    $speedingReport[] = $speeding;
-                }
-            } else {
-                //$speedingReport[] = $speeding;
-            }
-            $prevOffRoad = $speeding;
-        }
-
-        return collect($speedingReport)->sortBy('date');
-    }
 
     /**
      * @param $speedingReportByVehicle

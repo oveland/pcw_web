@@ -36,8 +36,8 @@
 @section('content')
     <!-- begin breadcrumb -->
     <ol class="breadcrumb pull-right">
-        <li><a href="javascript:;">@lang('Reports')</a></li>
-        <li><a href="javascript:;">@lang('Routes')</a></li>
+        <li><a href="javascript:void(0);">@lang('Reports')</a></li>
+        <li><a href="javascript:void(0);">@lang('Routes')</a></li>
         <li class="active">@lang('Off road report')</li>
     </ol>
     <!-- end breadcrumb -->
@@ -55,13 +55,13 @@
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                        <a href="javascript:void(0);" class="btn btn-xs btn-icon btn-circle btn-warning"
                            data-click="panel-collapse" data-original-title="" title="@lang('Expand / Compress')">
                             <i class="fa fa-minus"></i>
                         </a>
                     </div>
                     <button type="submit" class="btn btn-success btn-sm btn-search-report">
-                        <i class="fa fa-search"></i> @lang('Search report')
+                        <i class="fa fa-search"></i> @lang('Search')
                     </button>
                 </div>
                 <div class="panel-body p-b-15">
@@ -153,7 +153,7 @@
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <!-- begin widget -->
                                 <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
-                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i
+                                    <div class="widget-stat-btn"><a href="javascript:void(0);" data-click="widget-reload"><i
                                                     class="fa fa-repeat"></i></a></div>
                                     <div class="widget-stat-icon"><i class="ion-clipboard fa-fw"></i></div>
                                     <div class="widget-stat-info">
@@ -176,7 +176,7 @@
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <!-- begin widget -->
                                 <div class="widget widget-stat widget-stat-right bg-inverse text-white">
-                                    <div class="widget-stat-btn"><a href="javascript:;" data-click="widget-reload"><i
+                                    <div class="widget-stat-btn"><a href="javascript:void(0);" data-click="widget-reload"><i
                                                     class="fa fa-repeat"></i></a></div>
                                     <div class="widget-stat-icon"><i class="fa fa-bus"></i></div>
                                     <div class="widget-stat-info">
@@ -205,7 +205,7 @@
                     </div>
                 </div>
                 <div class="modal-footer hide" style="width:90%;">
-                    <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
+                    <a href="javascript:void(0);" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
                 </div>
             </div>
         </div>
@@ -224,7 +224,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="javascript:;" class="btn width-100 btn-default" data-dismiss="modal">@lang('Close')</a>
+                    <a href="javascript:void(0);" class="btn width-100 btn-default" data-dismiss="modal">@lang('Close')</a>
                 </div>
             </div>
         </div>
@@ -239,26 +239,27 @@
 
     <script type="application/javascript">
         $('.menu-routes, .menu-off-road-report').addClass('active');
-        var busMarker = null;
-        var iconbus = '{{ asset('img/bus.png') }}';
+        let form = $('.form-search-report');
+        let mainContainer = $('.report-container');
+        let busMarker = null;
+        let iconBus = '{{ asset('img/bus.png') }}';
 
-        var controlPointIcon = [
+        let controlPointIcon = [
             '{{ asset('img/control-point-0.png') }}',
             '{{ asset('img/control-point-1.png') }}'
         ];
 
         $(document).ready(function () {
-            $('.form-search-report').submit(function (e) {
+            form.submit(function (e) {
                 e.preventDefault();
-                var form = $(this);
+                mainContainer.slideUp();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-
                     $.ajax({
                         url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            $('.report-container').empty().hide().html(data).fadeIn();
+                            mainContainer.empty().hide().html(data).fadeIn();
                         },
                         complete: function () {
                             form.find('.btn-search-report').removeClass(loadingClass);
@@ -267,15 +268,26 @@
                 }
             });
 
+            $('#date-report, #type-report, #company-report').change(function () {
+                mainContainer.slideUp();
+                if (form.isValid(false)) {
+                    form.submit();
+                }
+            });
+
+            $('#modal-route-report').on('shown.bs.modal', function () {
+                initializeMap();
+            });
+
             $('body').on('click', '.btn-show-address', function () {
-                var el = $(this);
+                let el = $(this);
                 el.attr('disabled', true);
                 el.find('span').hide();
                 el.find('i').removeClass('hide');
                 $($(this).data('target')).load($(this).data('url'), function (response, status, xhr) {
                     console.log(status);
                     el.attr('disabled', false);
-                    if (status == "error") {
+                    if (status === "error") {
                         if (el.hasClass('second-time')) {
                             el.removeClass('second-time');
                         } else {
@@ -285,24 +297,14 @@
                         el.fadeOut(1000);
                     }
                 });
-            });
-
-            $('#date-report, #type-report, #company-report').change(function () {
-                var form = $('.form-search-report');
-                $('.report-container').slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
-            });
-
-            $('body').on('click', '.accordion-vehicles', function () {
+            })
+            .on('click', '.accordion-vehicles', function () {
                 $($(this).data('parent'))
                     .find('.collapse').collapse('hide')
                     .find($(this).data('target')).collapse('show');
-            });
-
-            $('body').on('keyup', '.search-vehicle-list', function () {
-                var vehicle = $(this).val();
+            })
+            .on('keyup', '.search-vehicle-list', function () {
+                let vehicle = $(this).val();
                 if (is_not_null(vehicle)) {
                     $('.vehicle-list').slideUp("fast", function () {
                         $('#vehicle-list-' + vehicle).slideDown();
@@ -310,16 +312,11 @@
                 } else {
                     $('.vehicle-list').slideDown();
                 }
-            });
-
-            $('#modal-route-report').on('shown.bs.modal', function () {
-                initializeMap();
-            });
-
-            $('body').on('click', '.btn-show-off-road-report', function (e) {
+            })
+            .on('click', '.btn-show-off-road-report', function (e) {
                 e.preventDefault();
-                var url = $(this).attr('href');
-                var tableOffRoadReport = $('.modal-off-road-report-table');
+                let url = $(this).attr('href');
+                let tableOffRoadReport = $('.modal-off-road-report-table');
                 tableOffRoadReport.empty().html(loading);
                 if (is_not_null(url)) {
                     $('#modal-off-road-report').modal('show');
@@ -334,12 +331,11 @@
                         }
                     });
                 }
-            });
-
-            $('body').on('click', '.btn-show-chart-route-report', function () {
+            })
+            .on('click', '.btn-show-chart-route-report', function () {
                 //map.clearAllMarkers();
                 $('.btn-show-off-road-report').attr('href', $(this).data('url-off-road-report'));
-                var chartRouteReport = $("#chart-route-report");
+                let chartRouteReport = $("#chart-route-report");
                 chartRouteReport.html(loading);
                 $('.report-info').html(loading);
                 $.ajax({
@@ -369,14 +365,14 @@
                                 map: map
                             });
 
-                            var dataDates = [];
-                            var dataTimes = [];
-                            var dataValues = [];
-                            var dataDistances = [];
-                            var dataPercentDistances = [];
-                            var latitudes = [];
-                            var longitudes = [];
-                            var offRoads = [];
+                            let dataDates = [];
+                            let dataTimes = [];
+                            let dataValues = [];
+                            let dataDistances = [];
+                            let dataPercentDistances = [];
+                            let latitudes = [];
+                            let longitudes = [];
+                            let offRoads = [];
 
                             data.reports.forEach(function (report, i) {
                                 dataDates[i] = report.date;
@@ -424,16 +420,15 @@
                             }).slideDown();
 
                             chartRouteReport.bind('sparklineRegionChange', function (ev) {
-                                //var sparkline = ev.sparklines[0],info = sparkline.getCurrentRegionFields();
                                 setTimeout(function () {
-                                    var t = $('.info-route-report');
-                                    var latitude = t.find('.latitude').html();
-                                    var longitude = t.find('.longitude').html();
+                                    let t = $('.info-route-report');
+                                    let latitude = t.find('.latitude').html();
+                                    let longitude = t.find('.longitude').html();
 
                                     if (!busMarker) {
                                         busMarker = new google.maps.Marker({
                                             map: map,
-                                            icon: iconbus,
+                                            icon: iconBus,
                                             animation: google.maps.Animation.DROP
                                         });
                                     }

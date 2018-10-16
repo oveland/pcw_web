@@ -14,5 +14,13 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
+    dd('GOs');
     return $request->user();
+});
+
+Route::get('/{appName}', 'API\APIController@app');
+Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
+
+Route::prefix('peak-and-plate')->group(function () {
+    Route::get('/{company}', 'ApiPeakAndPlateController@getVehiclesCurrentPeakAndPlate');
 });

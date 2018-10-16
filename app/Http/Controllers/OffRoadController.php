@@ -4,15 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
+use App\Location;
 use App\OffRoad;
 use App\Route;
 use App\Services\PCWExporter;
+use App\Services\pcwserviciosgps\reports\routes\OffRoadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Excel;
 
 class OffRoadController extends Controller
 {
+    private $offRoadService;
+
+    /**
+     * OffRoadController constructor.
+     * @param OffRoadService $offRoadService
+     */
+    public function __construct(OffRoadService $offRoadService)
+    {
+        $this->offRoadService = $offRoadService;
+    }
+
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -30,26 +44,14 @@ class OffRoadController extends Controller
      */
     public function searchReport(Request $request)
     {
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $vehicles = $company->activeVehicles;
+        $company = GeneralController::getCompany($request);
         $dateReport = $request->get('date-report');
 
-        $allOffRoads = OffRoad::validCoordinates()
-            ->whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
-            ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->orderBy('date')
-            ->get();
+        $allOffRoads = $this->offRoadService->allOffRoads($company, $dateReport);
 
         switch ($request->get('type-report')) {
             case 'vehicle':
-                $allOffRoadsByVehicles = collect($allOffRoads->groupBy('vehicle_id'));
-                $offRoadsByVehicles = array();
-                foreach ($allOffRoadsByVehicles as $vehicleId => $offRoadsByVehicle) {
-                    $offRoadsByVehicles[$vehicleId] = self::groupByFirstOffRoad($offRoadsByVehicle);
-                }
-
-                //if ($request->get('export')) $this->export($offRoadsByVehicles,$dateReport);
-
+                $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
                 return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','dateReport','company']));
                 break;
             case 'route':
@@ -59,67 +61,6 @@ class OffRoadController extends Controller
         }
 
         return redirect(route('report-route-off-road-index'));
-    }
-
-    /**
-     * Temporal function **** Delete on date greater than 2018-03-16 (Because data locations are saved only for 6 months)
-     *
-     * @param $dateReport
-     * @return bool
-     */
-    public function dateLessThanNewOffRoadCalculateProcess($dateReport)
-    {
-        return ($dateReport <= '2017-09-16');
-    }
-
-    /**
-     * @param $offRoads
-     * @param $recCheckOffRoad
-     * @return array
-     */
-    public
-    static function groupByFirstOffRoad($offRoads, $recCheckOffRoad = false)
-    {
-        if (!count($offRoads)) return collect([]);
-
-        $offRoadsReport = array();
-        $prevOffRoad = null;
-
-        foreach ($offRoads as $offRoad) {
-            if ($prevOffRoad) {
-                if ($offRoad->date->diff($prevOffRoad->date)->format('%H:%I:%S') > '00:05:00') {
-                    $offRoadsReport[] = $offRoad;
-                }
-            } else {
-                $offRoadsReport[] = $offRoad;
-            }
-            $prevOffRoad = $offRoad;
-        }
-
-        $offRoadsReport = collect($offRoadsReport)
-            ->sortBy(function ($offRoad, $key) {
-                return $offRoad->dispatchRegister->route->name;
-            })
-            ->groupBy(function ($offRoad, $key) {
-                return $offRoad->dispatchRegister->route->id;
-            });
-
-        if ($recCheckOffRoad) {
-            foreach ($offRoadsReport as $routeId => $offRoadReport) {
-                $route = Route::find($routeId);
-                $routeCoordinates = RouteReportController::getRouteCoordinates($route->url);
-                $checkedOffRoadReport = array();
-                foreach ($offRoadReport as $offRoad) {
-                    if (RouteReportController::checkOffRoad($offRoad, $routeCoordinates)) {
-                        $checkedOffRoadReport[] = $offRoad;
-                    }
-                }
-                if (count($checkedOffRoadReport) > 0) $offRoadsReport[$routeId] = $checkedOffRoadReport;
-                else unset($offRoadsReport[$routeId]);
-            }
-        }
-
-        return $offRoadsReport;
     }
 
     /**

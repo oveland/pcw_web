@@ -45,7 +45,8 @@ class GeneralController extends Controller
 
     public static function getCompany(Request $request)
     {
-        return (Auth::user()->isAdmin() ? Company::find($request->get('company')) : Auth::user()->company);
+        $requestCompany = $request->get('company') ?? $request->get('company-report');
+        return (Auth::user()->isAdmin() && $requestCompany ? Company::find($requestCompany) : Auth::user()->company);
     }
 
     public static function getRoutesFromVehicleAndDate(Vehicle $vehicle, $date)

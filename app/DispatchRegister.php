@@ -35,9 +35,9 @@ use Carbon\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Report[] $reports
- * @property-read \App\Route|null $route
- * @property-read \App\Vehicle|null $vehicle
- * @property-read \App\User|null $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Route|null $route
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Vehicle|null $vehicle
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTimeDifference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereArrivalTimeScheduled($value)
@@ -164,7 +164,7 @@ class DispatchRegister extends Model
      */
     public function offRoads()
     {
-        return $this->hasMany(OffRoad::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->where('off_road',true)->orderBy('date', 'asc');
     }
 
     /**

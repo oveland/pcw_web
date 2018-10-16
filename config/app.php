@@ -183,6 +183,11 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+
+        /*
+         * PCW Application Service Providers...
+         */
+        \App\Providers\ConsolidatedReportsServiceProvider::class,
     ],
 
     /*

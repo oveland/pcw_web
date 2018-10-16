@@ -45,20 +45,21 @@ class Geolocation
      */
     public static function getAddressFromCoordinates($latitude, $longitude)
     {
-        if ($latitude == 0 || $longitude == 0) return 'Invalid Address';
-        $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&sensor=false&token=" . config('road.google_api_token');
+        $address = __('Unavailable');
+        if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90 ) return $address."*";
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=" . config('road.google_api_token');
         $response = file_get_contents($url);
 
         sleep(0.2);
 
-        $json = collect(json_decode($response, true));
-        $address = (object)collect($json->first())->first();
+
         try {
-            $address = explode(',', $address->formatted_address);
+            $data = (object)json_decode($response, true);
+            $result = (object) collect($data->results)->first();
+            $address = explode(',', $result->formatted_address)[0];
         } catch (\Exception $e) {
-            return "No disponible";
         }
-        return $address[0];
+        return $address;
     }
 
     /**

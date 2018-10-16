@@ -65,7 +65,7 @@ class RouteReportController extends Controller
 
                 if ($request->get('export')) $this->exportByVehicle($dispatchRegistersByVehicles, $dateReport);
 
-                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles','reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
+                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
                 break;
             default:
                 $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
@@ -125,8 +125,7 @@ class RouteReportController extends Controller
                 $excel = PCWExporter::createHeaders($excel, $dataExport);
                 $excel = PCWExporter::createSheet($excel, $dataExport);
             }
-        })->
-        export('xlsx');
+        })->export('xlsx');
     }
 
     /**
@@ -198,8 +197,7 @@ class RouteReportController extends Controller
                 $excel = PCWExporter::createHeaders($excel, $dataExport);
                 $excel = PCWExporter::createSheet($excel, $dataExport);
             }
-        })->
-        export('xlsx');
+        })->export('xlsx');
     }
 
     /**

@@ -43,6 +43,14 @@ class Speeding extends Model
         return Carbon::createFromFormat(config('app.simple_time_format'),explode('.',$time)[0]);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function dispatchRegister()
+    {
+        return $this->belongsTo(DispatchRegister::class);
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
