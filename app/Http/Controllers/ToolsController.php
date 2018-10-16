@@ -27,6 +27,7 @@ class ToolsController extends Controller
 
     public function mail(Company $company, $prevDays, Request $request)
     {
+        //dd($company);
         if( !$company )return "Company not found";
         $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
