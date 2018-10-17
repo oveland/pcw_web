@@ -102,8 +102,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('off-road'))->group(function () {
                 Route::get('/', 'OffRoadController@index')->name('report-route-off-road-index');
                 Route::get('/show', 'OffRoadController@searchReport')->name('report-route-off-road-search');
-                Route::get('/address/{offRoad}', 'OffRoadController@getAddressFromCoordinates')->name('report-route-off-road-geolocation-address');
-                Route::get('/image/{offRoad}', 'OffRoadController@getImageFromCoordinate')->name('report-route-off-road-geolocation-image');
+                Route::get('/address/{location}', 'OffRoadController@getAddressFromCoordinates')->name('report-route-off-road-geolocation-address');
+                Route::get('/image/{location}', 'OffRoadController@getImageFromCoordinate')->name('report-route-off-road-geolocation-image');
                 Route::any('/ajax', 'OffRoadController@ajax')->name('report-route-off-road-ajax-action');
             });
 

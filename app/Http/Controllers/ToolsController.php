@@ -33,8 +33,10 @@ class ToolsController extends Controller
 
         $mail = new ConsolidatedReportMail($company, $dateReport);
         if ($mail->buildReport()){
-            Mail::to('oscarivelan@gmail.com', 'Oscar Velásquez')->send($mail);
-            return "Mail send for date $dateReport!";
+            Mail::to('olatorre22@hotmail.com', $company->name)
+                ->cc('oscarivelan@gmail.com')
+                ->send($mail);
+            return "$company->name Mail send for date $dateReport!";
         }else{
             return "No reports found for date $dateReport";
         }

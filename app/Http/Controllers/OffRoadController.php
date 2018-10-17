@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Location;
-use App\OffRoad;
 use App\Route;
-use App\Services\PCWExporter;
 use App\Services\pcwserviciosgps\reports\routes\OffRoadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Excel;
 
 class OffRoadController extends Controller
 {
@@ -64,23 +61,23 @@ class OffRoadController extends Controller
     }
 
     /**
-     * @param OffRoad $offRoad
+     * @param Location $location
      * @return mixed
      */
-    public function getAddressFromCoordinates(OffRoad $offRoad)
+    public function getAddressFromCoordinates(Location $location)
     {
         sleep(1); // Because google (Free layer) only lets 50 request/second
-        return Geolocation::getAddressFromCoordinates($offRoad->latitude, $offRoad->longitude);
+        return Geolocation::getAddressFromCoordinates($location->latitude, $location->longitude);
     }
 
     /**
-     * @param OffRoad $offRoad
+     * @param Location $location
      * @return mixed
      */
-    public function getImageFromCoordinate(OffRoad $offRoad)
+    public function getImageFromCoordinate(Location $location)
     {
-        $route = $offRoad->dispatchRegister->route;
-        return Geolocation::getImageRouteWithANearLocation($route, $offRoad);
+        $route = $location->dispatchRegister->route;
+        return Geolocation::getImageRouteWithANearLocation($route, $location);
     }
 
     /**
