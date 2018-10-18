@@ -31,7 +31,6 @@ use Carbon\Carbon;
  * @property int|null $end_recorder
  * @property int|null $user_id
  * @property-read \App\Models\Passengers\RecorderCounterPerDay|null $recorderCounter
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\LocationReport[] $locationReports
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Report[] $reports
@@ -136,19 +135,6 @@ class DispatchRegister extends Model
     public function reports()
     {
         return $this->hasMany(Report::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function locationReports()
-    {
-        if ($this->date) {
-            $stringClassLocationReport = Database::findLocationReportModelStringByDate($this->getParsedDate());
-        } else {
-            $stringClassLocationReport = LocationReport::class;
-        }
-        return $this->hasMany($stringClassLocationReport, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**

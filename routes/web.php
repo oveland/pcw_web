@@ -95,6 +95,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/show', 'RouteReportController@show')->name('report-route-search');
                 Route::any('/chart/{dispatchRegister}', 'RouteReportController@chart')->name('report-route-chart');
                 Route::any('/off_road/{dispatchRegister}', 'RouteReportController@offRoadReport')->name('report-route-off-road');
+                Route::any('/get-log/{dispatchRegister}', 'RouteReportController@getReportLog')->name('report-route-get-log');
                 Route::any('/ajax', 'RouteReportController@ajax')->name('route-ajax-action');
             });
 

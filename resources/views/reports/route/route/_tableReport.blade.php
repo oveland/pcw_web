@@ -70,7 +70,7 @@
                 </small>
             </th>
         @endif
-        <th>
+        <th width="10%">
             <i class="fa fa-rocket text-muted"></i><br>
             @lang('Actions')
         </th>
@@ -114,7 +114,7 @@
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
             <th width="5%" class="bg-inverse text-white text-center {{ $typeReport == 'group-vehicles'?'hide':'' }}">{{ $vehicle->number }}</th>
             @if( $company->hasDriverRegisters() )
-            <td width="30%" class="text-uppercase">
+            <td width="25%" class="text-uppercase">
                 @if( Auth::user()->isAdmin() )
                     @php( $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code )
                     <div class="tooltips box-edit" data-title="@lang('Driver')">
@@ -242,7 +242,22 @@
                 </td>
             @endif
 
-            <td width="5%" class="text-center">
+            <td width="10%" class="text-center">
+                @if( Auth::user()->belongsToCootransol() )
+                <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover tooltips"
+                        data-original-title="@lang('Execute DAR')">
+                    <i class="fa fa-cogs faa-pulse"></i>
+                </button>
+                @endif
+
+                @if( Auth::user()->isSuperAdmin() )
+                    <a href="#modal-report-log"
+                       data-toggle="modal"
+                       onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
+                       class="btn btn-xs btn-danger faa-parent animated-hover tooltips" data-original-title="@lang('Show report details')">
+                        <i class="fa fa-code faa-pulse"></i>
+                    </a>
+                @endif
                 <a href="#modal-route-report"
                    class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
                    data-toggle="modal"
@@ -258,3 +273,36 @@
     </tbody>
 </table>
 <!-- end table -->
+
+@if( Auth::user()->belongsToCootransol() )
+<script type="application/javascript">
+    let modalExecuteDAR = $('#modal-execute-DAR');
+
+    function executeDAR(dispatchRegisterId){
+        modalExecuteDAR.modal('show');
+        modalExecuteDAR.find('pre').html('@lang('This process can take several minutes')...');
+        $.ajax({
+            url: '{{ route('route-ajax-action') }}',
+            data:{
+                option:'executeDAR',
+                dispatchRegisterId: dispatchRegisterId
+            },
+            dataType:'json',
+            timeout: 0,
+            success:function(data){
+                if( data.success ){
+                    gsuccess('@lang('Process executed successfully')');
+                    modalExecuteDAR.find('pre').html(data.infoProcess.totalNewReports+' @lang('locations have been processed')<br>@lang('Detected route'): '+data.infoProcess.routeName);
+                }else{
+                    let message = '@lang('An error occurred in the process. Contact your administrator')';
+                    gerror(message);
+                    modalExecuteDAR.find('pre').html(message + '<hr>Data: ' + JSON.stringify(data));
+                }
+            },
+            error:function(){
+                gerror('@lang('An error occurred in the process. Contact your administrator')')
+            }
+        });
+    }
+</script>
+@endif

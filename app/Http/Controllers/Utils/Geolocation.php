@@ -10,9 +10,79 @@ namespace App\Http\Controllers\Utils;
 
 use App\Http\Controllers\RouteReportController;
 use Image;
+use ZipArchive;
 
 class Geolocation
 {
+    /**
+     * Get route coordinates from google kmz file
+     *
+     * @param $url
+     * @return array
+     */
+    public
+    static function getRouteCoordinates($url)
+    {
+        $milliseconds = round(microtime(true) * 1000);
+        $dir_name = "ziptmp$milliseconds";
+        $file = 'doc.kml';
+
+        $ext = pathinfo($url, PATHINFO_EXTENSION);
+        $temp = tempnam(sys_get_temp_dir(), $ext);
+        copy($url, $temp);
+
+        $zip = new ZipArchive();
+        if ($zip->open($temp, ZIPARCHIVE::CREATE) === TRUE) {
+            $zip->extractTo($dir_name);
+            $zip->close();
+        }
+
+        $data = file_get_contents($dir_name . '/' . $file);
+
+        unlink($temp);
+        array_map('unlink', glob("$dir_name/*.*"));
+        chmod($dir_name, 0777);
+        rmdir($dir_name);
+
+        $dataXML = simplexml_load_string($data);
+        $documents = $dataXML->Document->Folder;
+        $documents = $documents->Placemark ? $documents : $dataXML->Document;
+
+        /* Extract coordinates for xml file */
+        $routeCoordinates = collect();
+        $prevLatitude = null;
+        $prevLongitude = null;
+        $distance = 0;
+        $indexCoordinate = 0;
+        foreach ($documents as $document) {
+            foreach ($document->Placemark as $placemark) {
+                $routeCoordinatesXML = explode(' ', trim($placemark->LineString->coordinates));
+                foreach ($routeCoordinatesXML as $index => $routeCoordinate) {
+                    $array_coordinates = collect(explode(',', trim($routeCoordinate)));
+
+                    if ($array_coordinates->count() > 2) {
+                        list($longitude, $latitude, $angle) = explode(',', trim($routeCoordinate));
+                        $latitudeRoute = doubleval($latitude);
+                        $longitudeRoute = doubleval($longitude);
+
+                        $distance += ($prevLatitude && $prevLongitude) ? self::getDistance($prevLatitude, $prevLongitude, $latitudeRoute, $longitudeRoute) : 0;
+                        $routeCoordinates->push((object)[
+                            'index' => $indexCoordinate,
+                            'latitude' => $latitudeRoute,
+                            'longitude' => $longitudeRoute,
+                            'distance' => intval($distance)
+                        ]);
+                        $indexCoordinate++;
+                        $prevLatitude = $latitudeRoute;
+                        $prevLongitude = $longitudeRoute;
+                    }
+                }
+            }
+        }
+
+        return $routeCoordinates;
+    }
+
     /**
      * Get distance in meters from two coordinates in decimal
      *
@@ -93,7 +163,7 @@ class Geolocation
 
     public static function getImageRouteWithANearLocation($route, $location)
     {
-        $routeCoordinates = RouteReportController::getRouteCoordinates($route->url);
+        $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
         $nearestRouteCoordinates = self::filterNearestRouteCoordinates($location, $routeCoordinates);
 
         $routePath = "path=color:0x0000ff";

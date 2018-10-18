@@ -38,11 +38,10 @@ class DatabaseManageMarkersReportsCommand extends Command
      */
     public function handle()
     {
-        $dbConnectionMonth = 'GPS_MONTH';
         $this->info("Refreshing views for Markers Month...");
 
         foreach (range(1, 10) as $segment) {
-            DB::connection($dbConnectionMonth)->statement("REFRESH MATERIALIZED VIEW markers_historial_mes_$segment");
+            DB::connection('GPS_MONTH')->statement("REFRESH MATERIALIZED VIEW markers_historial_mes_$segment");
             $this->info("Refreshed MH_M_$segment");
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\Geolocation;
 use Auth;
 use App\Company;
 use App\Route;
@@ -33,7 +34,7 @@ class MigrationControlPointController extends Controller
 
     public function exportCoordinates(Route $route, Request $request)
     {
-        $coordinates = RouteReportController::getRouteCoordinates($route->url);
+        $coordinates = Geolocation::getRouteCoordinates($route->url);
         $content = "";
         foreach ($coordinates as $coordinate){
             $coordinate = (object) $coordinate;

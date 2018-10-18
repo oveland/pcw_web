@@ -6,10 +6,12 @@ use App\Company;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
+use App\Report;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Traits\CounterByRecorder;
 use App\Vehicle;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -215,7 +217,7 @@ class RouteReportController extends Controller
             $vehicle = $dispatchRegister->vehicle;
 
             $route = $dispatchRegister->route;
-            $routeCoordinates = self::getRouteCoordinates($route->url);
+            $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
             $routeDistance = $routeCoordinates->last()->distance;
             $controlPoints = $route->controlPoints;
 
@@ -416,6 +418,21 @@ class RouteReportController extends Controller
     }
 
     /**
+     * Gets table logs for calculated reports
+     *
+     * @param DispatchRegister $dispatchRegister
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getReportLog(DispatchRegister $dispatchRegister)
+    {
+        $reports = Report::where('dispatch_register_id', $dispatchRegister->id)
+            ->orderBy('date')
+            ->get();
+
+        return view('reports.route.route._tableReportLog', compact('reports'));
+    }
+
+    /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
@@ -428,79 +445,20 @@ class RouteReportController extends Controller
                 $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
                 return view('partials.selects.routes', compact('routes'));
                 break;
+            case 'executeDAR':
+                ini_set('MAX_EXECUTION_TIME', 0);
+                set_time_limit(0);
+                $dispatchRegisterId = $request->get('dispatchRegisterId');
+
+                $client = new Client();
+                $response = $client->request('GET',config('gps.server.url') . "/autoDispatchRegister/processDispatchRegister/$dispatchRegisterId?sync=true", ['timeout' => 0]);
+
+                return $response->getBody();
+                break;
             default:
                 return "Nothing to do";
                 break;
         }
-    }
-
-    /**
-     * Get route coordinates from google kmz file
-     *
-     * @param $url
-     * @return array
-     */
-    public
-    static function getRouteCoordinates($url)
-    {
-        $milliseconds = round(microtime(true) * 1000);
-        $dir_name = "ziptmp$milliseconds";
-        $file = 'doc.kml';
-
-        $ext = pathinfo($url, PATHINFO_EXTENSION);
-        $temp = tempnam(sys_get_temp_dir(), $ext);
-        copy($url, $temp);
-
-        $zip = new ZipArchive();
-        if ($zip->open($temp, ZIPARCHIVE::CREATE) === TRUE) {
-            $zip->extractTo($dir_name);
-            $zip->close();
-        }
-
-        $data = file_get_contents($dir_name . '/' . $file);
-
-        unlink($temp);
-        array_map('unlink', glob("$dir_name/*.*"));
-        chmod($dir_name, 0777);
-        rmdir($dir_name);
-
-        $dataXML = simplexml_load_string($data);
-        $documents = $dataXML->Document->Folder;
-        $documents = $documents->Placemark ? $documents : $dataXML->Document;
-
-        /* Extract coordinates for xml file */
-        $routeCoordinates = collect();
-        $prevLatitude = null;
-        $prevLongitude = null;
-        $distance = 0;
-        $indexCoordinate = 0;
-        foreach ($documents as $document) {
-            foreach ($document->Placemark as $placemark) {
-                $routeCoordinatesXML = explode(' ', trim($placemark->LineString->coordinates));
-                foreach ($routeCoordinatesXML as $index => $routeCoordinate) {
-                    $array_coordinates = collect(explode(',', trim($routeCoordinate)));
-
-                    if ($array_coordinates->count() > 2) {
-                        list($longitude, $latitude, $angle) = explode(',', trim($routeCoordinate));
-                        $latitudeRoute = doubleval($latitude);
-                        $longitudeRoute = doubleval($longitude);
-
-                        $distance += ($prevLatitude && $prevLongitude) ? Geolocation::getDistance($prevLatitude, $prevLongitude, $latitudeRoute, $longitudeRoute) : 0;
-                        $routeCoordinates->push((object)[
-                            'index' => $indexCoordinate,
-                            'latitude' => $latitudeRoute,
-                            'longitude' => $longitudeRoute,
-                            'distance' => intval($distance)
-                        ]);
-                        $indexCoordinate++;
-                        $prevLatitude = $latitudeRoute;
-                        $prevLongitude = $longitudeRoute;
-                    }
-                }
-            }
-        }
-
-        return $routeCoordinates;
     }
 
     /**

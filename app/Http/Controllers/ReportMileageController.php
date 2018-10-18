@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\CurrentLocationReport;
 use App\DispatchRegister;
-use App\Http\Controllers\Utils\Database;
-use App\LocationReport;
+use App\Location;
 use App\Route;
 use App\Services\PCWExporter;
 use App\Vehicle;
@@ -46,22 +44,21 @@ class ReportMileageController extends Controller
     public function buildMileageReport(Company $company = null, $dateReport)
     {
         $vehicles = $company->vehicles;
-        //$locationReportModel = Database::findLocationReportModelInstanceByDate($dateReport);
-        $locationReportModel = new CurrentLocationReport();
 
-        $locationReports = $locationReportModel::whereIn('vehicle_id', $vehicles->pluck('id'))
+        $locations = Location::where('dispatch_register_id', '<>', null)
             ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
-            ->orderBy('location_date')
+            ->whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->orderBy('date')
             ->get();
 
-        $locationReportsByVehicle = $locationReports->groupBy('vehicle_id');
+        $locationsByVehicles = $locations->groupBy('vehicle_id');
         $reports = collect([]);
-        foreach ($locationReportsByVehicle as $vehicleId => $locationReport) {
+        foreach ($locationsByVehicles as $vehicleId => $locationsByVehicle) {
             $vehicle = Vehicle::find($vehicleId);
 
             $mileageByRoutes = collect([]);
-            $locationReportByDispatchRegisters = $locationReport->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id');
-            foreach ($locationReportByDispatchRegisters as $dispatchRegisterId => $locationReportByDispatchRegister) {
+            $locationsByDispatchRegisters = $locationsByVehicle->groupBy('dispatch_register_id');
+            foreach ($locationsByDispatchRegisters as $dispatchRegisterId => $locationsByDispatchRegister) {
                 $dispatchRegister = DispatchRegister::find($dispatchRegisterId);
                 $route = $dispatchRegister->route;
                 $mileageByRoutes->put(
@@ -69,7 +66,7 @@ class ReportMileageController extends Controller
                     (object)[
                         'route' => $route,
                         'dispatchRegister' => $dispatchRegister,
-                        'mileage' => LocationReport::calculateMileageFromGroup($locationReportByDispatchRegister),
+                        'mileage' => self::calculateMileageFromGroup($locationsByDispatchRegister),
                     ]
                 );
             }
@@ -78,7 +75,7 @@ class ReportMileageController extends Controller
                 $vehicleId,
                 (object)[
                     'vehicle' => $vehicle,
-                    'mileage' => LocationReport::calculateMileageFromGroup($locationReport),
+                    'mileage' => self::calculateMileageFromGroup($locationsByVehicle),
                     'byRoutes' => $mileageByRoutes,
                     'mileageByAllRoutes' => $mileageByRoutes->sum('mileage'),
                 ]
@@ -155,5 +152,14 @@ class ReportMileageController extends Controller
                 return "Nothing to do";
                 break;
         }
+    }
+
+    private static function calculateMileageFromGroup($locationReport)
+    {
+        $firstLocation =  $locationReport->first();
+        $lastLocation =  $locationReport->last();
+        $totalKm = ($lastLocation->odometer - $firstLocation->odometer)/1000;
+
+        return $totalKm;
     }
 }

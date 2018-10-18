@@ -56,28 +56,34 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function company(){
+    public function company()
+    {
         return $this->belongsTo(Company::class);
     }
 
     public function isAdmin()
     {
-        return $this->company?$this->company->id === 6:false;
+        return $this->company ? $this->company->id === 6 : false;
     }
 
     public function isSuperAdmin()
     {
-        return $this->isAdmin() && ($this->id == 625565 ||$this->id == 940736);
+        return $this->isAdmin() && ($this->id == 625565 || $this->id == 940736);
     }
 
     public function belongsToTaxcentral()
     {
-        return $this->company?$this->company->id === 21:false;
+        return $this->company ? ($this->company->id === 21 || $this->isSuperAdmin()) : false;
     }
 
     public function belongsToAlameda()
     {
-        return $this->company?$this->company->id === 14:false;
+        return $this->company ? ($this->company->id === 14 || $this->isSuperAdmin()) : false;
+    }
+
+    public function belongsToCootransol()
+    {
+        return $this->company ? ($this->company->id === 12 || $this->isSuperAdmin()) : false;
     }
 
     public function belongsToCompany($company)

@@ -8,6 +8,11 @@
 
 return [
 
+    'server' => [
+        'url' => env('GPS_SERVER_URL', 'http://localhost:8181'),
+        'urlAPI' => env('GPS_SERVER_URL', 'http://localhost:8181')."/api"
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Check time for NO report on GPS with status Power ON

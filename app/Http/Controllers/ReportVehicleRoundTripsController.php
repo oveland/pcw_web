@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
-use App\Http\Controllers\Utils\Database;
-use App\LocationReport;
 use App\Route;
 use App\Services\PCWExporter;
-use App\Vehicle;
 use Auth;
-use Excel;
 use Illuminate\Http\Request;
 
 class ReportVehicleRoundTripsController extends Controller

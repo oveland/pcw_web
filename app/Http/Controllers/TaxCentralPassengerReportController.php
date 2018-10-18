@@ -59,7 +59,7 @@ class TaxCentralPassengerReportController extends Controller
     public function showByDispatch(DispatchRegister $dispatchRegister, Request $request)
     {
         $route = $dispatchRegister->route;
-        $routeCoordinates = RouteReportController::getRouteCoordinates($route->url);
+        $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
 
         $dispatchArrivaltime = (self::DISPATCH_COMPLETE == $dispatchRegister->status) ? $dispatchRegister->arrival_time : $dispatchRegister->arrival_time_scheduled;
         $dispatchArrivaltime = ($dispatchArrivaltime > "23:59:59") ? "23:59:59" : $dispatchArrivaltime;

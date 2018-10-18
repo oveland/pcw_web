@@ -31,7 +31,7 @@ class ControlPointService
             ->get();
 
         return ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-            ->orderBy('date_created')
+            ->orderBy('dispatch_register_id')
             ->get();
     }
 

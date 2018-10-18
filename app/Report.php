@@ -62,6 +62,11 @@ class Report extends Model
         return config('app.date_time_format');
     }
 
+    public function controlPoint()
+    {
+        return $this->belongsTo(ControlPoint::class);
+    }
+
     /*const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';*/
 }

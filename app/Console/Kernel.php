@@ -13,16 +13,21 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        /* Commands for vehicles */
         Commands\LogParkedVehiclesCommand::class,
-        Commands\DatabaseManageLocationReportsCommand::class,
         Commands\DatabaseManageMarkersReportsCommand::class,
         Commands\GPSRestartCommand::class,
         Commands\GPSCheckStatusCommand::class,
 
+        /* Commands for SMS */
         Commands\SMSSendReportCommand::class,
         Commands\SMSSendProprietaryReportCommand::class,
 
+        /* Commands for Database */
         Commands\DatabaseManageOLDRoutinesCommand::class,
+
+        /* Commands for Mails */
+        Commands\ConsolidatedReportMailCommand::class
     ];
 
     /**
@@ -35,18 +40,18 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('log:parked-vehicles')->everyMinute();
 
-        $schedule->command('db:manage-location-reports')->dailyAt('01:00');
         $schedule->command('db:manage-markers-reports')->dailyAt('02:00');
-
         $schedule->command('db:manage-old-routines')->dailyAt('03:00');
 
 
         $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
         $schedule->command('gps:check-status')->everyMinute();
 
-        $schedule->command('sms:send-report')->cron(config('sms.sms_cron_report'));
-        $schedule->command('sms:send-proprietary-report')->cron(config('sms.sms_cron_proprietary_report'));
+        //$schedule->command('sms:send-report')->cron(config('sms.sms_cron_report'));
+        //$schedule->command('sms:send-proprietary-report')->cron(config('sms.sms_cron_proprietary_report'));
 
+
+        $schedule->command('send-mail:consolidated')->dailyAt('04:00');
     }
 
     /**

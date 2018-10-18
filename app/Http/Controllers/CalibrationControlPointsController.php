@@ -34,7 +34,7 @@ class CalibrationControlPointsController extends Controller
     public function process(Route $route)
     {
         $controlPoints = $route->controlPoints->sortBy('order');
-        $routeCoordinates = collect(RouteReportController::getRouteCoordinates($route->url));
+        $routeCoordinates = collect(Geolocation::getRouteCoordinates($route->url));
 
         $controlPointsCalibrated = collect([]);
         foreach ($routeCoordinates as $index => $routeCoordinate) {
@@ -124,7 +124,7 @@ class CalibrationControlPointsController extends Controller
 
     public function paintKmz(Route $route)
     {
-        $coordinates = RouteReportController::getRouteCoordinates($route->url);
+        $coordinates = Geolocation::getRouteCoordinates($route->url);
         $this->printCoordinates($coordinates);
     }
 
@@ -140,7 +140,7 @@ class CalibrationControlPointsController extends Controller
 
     public function printCalibration($route, $controlPointsCalibrated)
     {
-        $routeCoordinates = RouteReportController::getRouteCoordinates($route->url);
+        $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
         $content = "";
         foreach ($routeCoordinates as $routeCoordinate) {
             $found = "";

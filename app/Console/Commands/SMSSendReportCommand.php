@@ -2,12 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\CurrentLocationReport;
 use App\Http\Controllers\API\SMS;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
-use Log;
 
 class SMSSendReportCommand extends Command
 {

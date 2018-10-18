@@ -491,5 +491,10 @@
   "Speeding details": "Detalles excesos de velocidad",
   "Off roads details": "Detalles salidas de ruta",
   "Control points details": "Detalles de puntos de control",
-  "Unavailable": "No disponible"
+  "Unavailable": "No disponible",
+  "Process executed successfully": "Proceso ejecutado correctamente",
+  "Building route report": "Construyendo reporte de ruta",
+  "This process can take several minutes": "Este proceso puede tardar vaiors minutos",
+  "locations have been processed": "ubicaciones han sido procesadas",
+  "Detected route": "Ruta detectada"
 }
