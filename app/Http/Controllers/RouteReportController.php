@@ -221,7 +221,7 @@ class RouteReportController extends Controller
             $routeDistance = $routeCoordinates->last()->distance;
             $controlPoints = $route->controlPoints;
 
-            $reportData = array();
+            $reportData = collect([]);
             $lastReport = $reports->first();
             $lastSpeed = 0;
 
@@ -233,7 +233,7 @@ class RouteReportController extends Controller
                         $offRoad = self::checkOffRoad($location, $routeCoordinates);
                     }
 
-                    $reportData[] = (object)[
+                    $reportData->push((object)[
                         'date' => $report->date,
                         'time' => $report->timed,
                         'distance' => $report->distancem,
@@ -241,7 +241,7 @@ class RouteReportController extends Controller
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
                         'offRoad' => $offRoad
-                    ];
+                    ]);
 
                     $lastReport = $report;
                     $lastSpeed = $location->speed;
@@ -451,7 +451,7 @@ class RouteReportController extends Controller
                 $dispatchRegisterId = $request->get('dispatchRegisterId');
 
                 $client = new Client();
-                $response = $client->request('GET',config('gps.server.url') . "/autoDispatchRegister/processDispatchRegister/$dispatchRegisterId?sync=true", ['timeout' => 0]);
+                $response = $client->request('GET', config('gps.server.url') . "/autoDispatchRegister/processDispatchRegister/$dispatchRegisterId?sync=true", ['timeout' => 0]);
 
                 return $response->getBody();
                 break;

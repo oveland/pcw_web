@@ -41,15 +41,15 @@ class ConsolidatedReportMailCommand extends Command
      */
     public function handle()
     {
-        $company = Company::find(12);
+        $company = Company::find(14);
         $prevDays = 1;
 
         $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
         $mail = new ConsolidatedReportMail($company, $dateReport);
         if ($mail->buildReport()) {
-            Mail::to('olatorre22@hotmail.com', $company->name)
-                ->cc('oscarivelan@gmail.com')
+            Mail::to('gerencia@alameda.com.co', $company->name)
+                ->cc('soportenivel2pcwtecnologia@outlook.com')
                 ->send($mail);
             $this->info("$company->name Mail send for date $dateReport!");
         } else {

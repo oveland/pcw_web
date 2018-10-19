@@ -119,6 +119,7 @@ class ConsolidatedReportsService
                 foreach ($reportVehicleByRoute as $reportByVehicle) {
                     $vehicle = $reportByVehicle->vehicle;
                     $dispatchRegister = $reportByVehicle->dispatchRegister;
+                    $driver = $dispatchRegister->driver;
 
                     $details = $this->buildStringDetails($reportByVehicle);
 
@@ -127,12 +128,13 @@ class ConsolidatedReportsService
                         __('Turn') => $dispatchRegister->turn,                                                     # B CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                         # C CELL
                         __('Vehicle') => intval($vehicle->number),                                                 # D CELL
-                        __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # E CELL
-                        __('Off roads details') => $details->offRoadReportString,                                           # F CELL
-                        __('Speeding') => $reportByVehicle->totalSpeeding,                                         # G CELL
-                        __('Speeding details') => $details->speedingReportString,                                           # H CELL
-                        __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # I CELL
-                        __('Control points details') => $details->delayControlPointsReportString,                           # J CELL
+                        __('Driver') => $driver?$driver->fullName():__('Not assigned'),                       # E CELL
+                        __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # F CELL
+                        __('Off roads details') => $details->offRoadReportString,                                  # G CELL
+                        __('Speeding') => $reportByVehicle->totalSpeeding,                                         # H CELL
+                        __('Speeding details') => $details->speedingReportString,                                  # I CELL
+                        __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # J CELL
+                        __('Control points details') => $details->delayControlPointsReportString,                  # K CELL
                     ];
                 }
 
@@ -176,7 +178,9 @@ class ConsolidatedReportsService
         $speedingReportString = "";
         foreach ($reportByVehicle->speedingReport as $speedingReport) {
             $ln = $index > 0 ? "\n" : "";
-            $speedingReportString .= "$ln • $speedingReport->time → " . Geolocation::getAddressFromCoordinates($speedingReport->latitude, $speedingReport->longitude);
+            $time = $speedingReport->time->toTimeString();
+
+            $speedingReportString .= "$ln • $time → $speedingReport->speed Km/h " . Geolocation::getAddressFromCoordinates($speedingReport->latitude, $speedingReport->longitude);
             $index++;
         }
 

@@ -11,6 +11,36 @@
         .icon-vehicle-status{
             position: sticky;
         }
+
+        .report-tab-cp {
+            font-size:70%;
+            position:relative;
+            top:-3px;
+        }
+
+        .report-tab-cp button span{
+            font-size:80%;
+            position:relative;
+            top:-3px;
+        }
+
+        .report-tab-cp button{
+            padding-left:2px;
+            padding-right:2px;
+            height:15px
+        }
+
+        .report-tab-cp th {
+            padding:8px !important;
+        }
+
+        .report-tab-cp td {
+            padding:5px !important;
+        }
+
+        .report-tab-cp .bg-warning{
+            color:white !important;
+        }
     </style>
 
 @endsection

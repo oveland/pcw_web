@@ -33,7 +33,7 @@
         <div class="tab-content panel p-0">
             @foreach($controlPointTimeReportsByVehicles as $vehicleId => $controlPointTimeReportByVehicle)
                 @php($vehicle = \App\Vehicle::find( $vehicleId ))
-                <div id="report-tab-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first ? 'active in':'' }}">
+                <div id="report-tab-{{ $vehicleId }}" class="tab-pane report-tab-cp fade {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
                         <div class="table-responsive col-md-12" style="padding-bottom: 90px">
                             @php
@@ -95,7 +95,7 @@
                                             {{ $strTime::toString($departureTime) }}
                                             @if( $dispatchRegister->complete() )
                                                 <br>{{ $strTime::toString($arrivalTime) }}
-                                                <hr class="m-5">
+                                                <hr class="m-1">
                                                 {{ $strTime::subStrTime($arrivalTime,$departureTime) }}
                                             @else
                                                 {{ '--:--:--' }}
@@ -148,7 +148,7 @@
                                                             }
                                                         @endphp
                                                         <div class="tooltipss" data-title="{{ $controlPoint->name }}">
-                                                            <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
+                                                            <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $statusColor }}"></i>
                                                             <br>
                                                             <button type="button" class="f-s-12 m-t-5 btn btn-{{ $statusColor }} light btn-xs"
                                                                     data-placement="bottom"

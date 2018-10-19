@@ -31,7 +31,7 @@
 
         <div class="tab-content panel p-0">
             @foreach($controlPointTimeReportsByRoundTrip as $roundTrip => $controlPointTimeReportByRoundTrip)
-                <div id="report-tab-{{ $roundTrip }}" class="tab-pane fade {{ $loop->first ? 'active in':'' }}">
+                <div id="report-tab-{{ $roundTrip }}" class="tab-pane fade report-tab-cp {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
                         <div class="table-responsive col-md-12" style="padding-bottom: 90px">
                             @php
@@ -84,7 +84,7 @@
                                                 <span class="status-html">{!! $dispatchRegister->status !!}</span>
                                             </th>
                                             <th class="bg-inverse text-uppercase text-muted">
-                                                {{ $vehicle->number }} <br> {{ $vehicle->plate }} <br>
+                                                {{ $vehicle->number }}
                                             </th>
                                             <th class="bg-inverse text-uppercase text-muted">
                                                 {{ $driver?$driver->fullName():__('Not assigned') }}
@@ -93,7 +93,7 @@
                                                 {{ $strTime::toString($departureTime) }}
                                                 @if( $dispatchRegister->complete() )
                                                 <br>{{ $strTime::toString($arrivalTime) }}
-                                                <hr class="m-5">
+                                                <hr class="m-1">
                                                 {{ $strTime::subStrTime($arrivalTime,$departureTime) }}
                                                 @else
                                                     {{ '--:--:--' }}
@@ -146,7 +146,7 @@
                                                                 }
                                                             @endphp
                                                             <div class="tooltipss" data-title="{{ $controlPoint->name }}">
-                                                                <i class="fa fa-bus f-s-20 icon-vehicle-status text-{{ $statusColor }}"></i>
+                                                                <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $statusColor }}"></i>
                                                                 <br>
                                                                 <button type="button" class="f-s-12 m-t-5 btn btn-{{ $statusColor }} light btn-xs"
                                                                         data-placement="bottom"
