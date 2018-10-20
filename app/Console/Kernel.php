@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Aws\Command;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -27,7 +28,10 @@ class Kernel extends ConsoleKernel
         Commands\DatabaseManageOLDRoutinesCommand::class,
 
         /* Commands for Mails */
-        Commands\ConsolidatedReportMailCommand::class
+        Commands\ConsolidatedReportMailCommand::class,
+
+        /* Commands for DAR (Automatic Route Detection) */
+        Commands\DARCommand::class
     ];
 
     /**
@@ -52,6 +56,7 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->command('send-mail:consolidated')->dailyAt('04:00');
+        $schedule->command('dar:run')->dailyAt('00:45');
     }
 
     /**
