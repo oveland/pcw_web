@@ -234,12 +234,13 @@ class RouteReportController extends Controller
                     }
 
                     $reportData->push((object)[
-                        'date' => $report->date,
-                        'time' => $report->timed,
+                        'time' => $report->date->toTimeString(),
+                        'timeReport' => $report->timed,
                         'distance' => $report->distancem,
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
+                        'speed' => $location->speed,
                         'offRoad' => $offRoad
                     ]);
 

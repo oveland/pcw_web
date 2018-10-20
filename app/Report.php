@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -47,6 +48,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Report extends Model
 {
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
+    }
+
     public function dispatchRegister()
     {
         return $this->belongsTo(DispatchRegister::class,'dispatch_register_id','id');
@@ -55,11 +66,6 @@ class Report extends Model
     public function location()
     {
         return $this->belongsTo(Location::class,'location_id','id');
-    }
-
-    protected function getDateFormat()
-    {
-        return config('app.date_time_format');
     }
 
     public function controlPoint()

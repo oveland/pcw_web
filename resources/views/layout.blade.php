@@ -3,6 +3,7 @@
 <head>
     @include('template.header')
     @yield('stylesheets')
+    @yield('templateStyles')
 </head>
 <body class="">
 
@@ -35,9 +36,11 @@
 
 @include('template.plugins')
 @include('partials.alerts.reports.passengers.issuesByVehiclesScript')
+
+@yield('templateScripts')
 @yield('scripts')
 
-<script>
+<script type="application/javascript">
     var loading = $('#loading').html();
     $(document).ready(function () {
         App.init();

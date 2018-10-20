@@ -137,3 +137,11 @@ span.icon-report{
     border-radius: 0px;
     background-color: rgba(71, 115, 110, 0.97);
 }
+
+.box-edit .box-info:hover{
+    border: 1px solid gray;
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}

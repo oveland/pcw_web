@@ -18,7 +18,7 @@ class Geolocation
      * Get route coordinates from google kmz file
      *
      * @param $url
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public
     static function getRouteCoordinates($url)

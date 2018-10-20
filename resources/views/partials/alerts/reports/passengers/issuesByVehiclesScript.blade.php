@@ -1,14 +1,4 @@
 @if( Auth::user()->isAdmin() )
-<style>
-    .box-edit .box-info:hover{
-        border: 1px solid gray;
-        border-radius: 6px;
-        cursor: pointer;
-        -webkit-transition: all 0.2s;
-        transition: all 0.2s;
-    }
-</style>
-
 <script type="application/javascript">
     $(document).ready(function () {
         $('body').on('click', '.box-edit', function () {

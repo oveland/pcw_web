@@ -496,5 +496,7 @@
   "Building route report": "Construyendo reporte de ruta",
   "This process can take several minutes": "Este proceso puede tardar vaiors minutos",
   "locations have been processed": "ubicaciones han sido procesadas",
-  "Detected route": "Ruta detectada"
+  "Detected route": "Ruta detectada",
+  "Vehicle information": "Información del vehículo",
+  "Off road vehicle": "Vehículo fuera de ruta"
 }
