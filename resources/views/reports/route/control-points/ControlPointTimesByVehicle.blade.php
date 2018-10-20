@@ -68,6 +68,10 @@
                                             {{ $controlPoint->name }}
                                         </th>
                                     @endforeach
+                                    <th class="bg-inverse-dark text-muted">
+                                        <i class="fa fa-rocket"></i><br>
+                                        @lang('Actions')
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -184,6 +188,16 @@
                                                 @endif
                                             </td>
                                         @endforeach
+                                        <td class="text-center">
+                                            <a href="#modal-route-report"
+                                               class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
+                                               data-toggle="modal"
+                                               data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                               data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                               data-original-title="@lang('Graph report detail')">
+                                                <i class="fa fa-area-chart faa-pulse"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
