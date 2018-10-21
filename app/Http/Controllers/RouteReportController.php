@@ -240,7 +240,8 @@ class RouteReportController extends Controller
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
                         'longitude' => $location->longitude,
-                        'speed' => $location->speed,
+                        'speed' => number_format($location->speed, 1, ',','.'),
+                        'speeding' => $location->speeding,
                         'offRoad' => $offRoad
                     ]);
 

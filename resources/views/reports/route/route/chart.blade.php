@@ -214,11 +214,12 @@
                             let latitudes = [];
                             let longitudes = [];
                             let offRoads = [];
+                            let speeding = [];
                             let speed = [];
 
                             data.reports.forEach(function (report, i) {
                                 let percent = ((report.distance / data.routeDistance) * 100).toFixed(1);
-                                let routeDistance = report.distance / 1000;
+                                let routeDistance = report.distance;
                                 dataTimes[i] = report.time;
                                 dataTimesReports[i] = report.timeReport;
                                 dataValues[i] = report.value * 60;
@@ -228,6 +229,7 @@
                                 longitudes[i] = report.longitude;
                                 offRoads[i] = report.offRoad ? '' : 'hide';
                                 speed[i] = report.speed;
+                                speeding[i] = report.speeding ? 'label-danger' : '';
 
                                 new google.maps.Marker({
                                     title: report.date + " | " + report.time + " | " + routeDistance + " Km | " + "  " + percent + "%",
@@ -236,6 +238,12 @@
                                     position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}
                                 });
                             });
+
+                            speed.forEach(function (sp, i){
+                                console.log('Seeed '+sp+' >> '+speeding[i]);
+                            });
+
+
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {
                                 type: 'line',
@@ -255,9 +263,9 @@
                                         "</span>"+
                                         "<b class=\'m-t-10\'>'.__('Status').':</b> {{offset:timesReports}} <br>"+
                                         "<b>'.__('Time').':</b> {{offset:times}} <br>"+
-                                        "<b>'.__('Distance').':</b> {{offset:distance}} Km <br>"+
-                                        "<b>'.__('Total %').':</b> {{offset:percent}}% <br>"+
-                                        "<span class=\'hide\'><b>'.__('Speed').':</b> {{offset:speed}} Km/h <br></span>"+
+                                        "<b>'.__('Distance').':</b> {{offset:distance}} m <br>"+
+                                        "<b>'.__('Completed').':</b> {{offset:percent}}% <br>"+
+                                        "<span class=\'label {{offset:speed}}\'><b>'.__('Speed').':</b> {{offset:speed}} Km/h <br></span>"+
                                         "<span class=\'hide latitude\'>{{offset:latitude}}</span><br>"+
                                         "<span class=\'hide longitude\'>{{offset:longitude}}</span>"+
                                     "</div>'?>",
@@ -267,6 +275,7 @@
                                     'times': dataTimes,
                                     'distance': dataDistances,
                                     'speed': speed,
+                                    'speeding': speeding,
                                     'percent': dataPercentDistances,
                                     'latitude': latitudes,
                                     'longitude': longitudes

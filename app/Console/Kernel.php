@@ -55,8 +55,8 @@ class Kernel extends ConsoleKernel
         //$schedule->command('sms:send-proprietary-report')->cron(config('sms.sms_cron_proprietary_report'));
 
 
-        $schedule->command('send-mail:consolidated')->dailyAt('04:00');
-        //$schedule->command('dar:run')->dailyAt('00:45');
+        //$schedule->command('send-mail:consolidated')->dailyAt('04:00');
+        $schedule->command('dar:run')->dailyAt('02:03');
     }
 
     /**
