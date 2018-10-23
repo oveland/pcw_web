@@ -25,7 +25,7 @@ class RouteReportController extends Controller
     public function index()
     {
         if (Auth::user()->isAdmin()) {
-            $companies = Company::where('active', '=', true)->orderBy('short_name', 'asc')->get();
+            $companies = Company::active()->get();
         }
         return view('reports.route.route.index', compact('companies'));
     }
@@ -80,6 +80,105 @@ class RouteReportController extends Controller
                 break;
 
         }
+    }
+
+    /**
+     * @param DispatchRegister $dispatchRegister
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public
+    function chart(DispatchRegister $dispatchRegister)
+    {
+        sleep(1); // For wait init map on view
+        return response()->json($this->buildRouteLocationsReport($dispatchRegister));
+    }
+
+    /**
+     * Gets table logs for calculated reports
+     *
+     * @param DispatchRegister $dispatchRegister
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getReportLog(DispatchRegister $dispatchRegister)
+    {
+        $reports = Report::where('dispatch_register_id', $dispatchRegister->id)
+            ->with('location')
+            ->orderBy('date')
+            ->get();
+
+        $locationsReports = $this->buildRouteLocationsReport($dispatchRegister);
+
+        return view('reports.route.route._tableReportLog', compact(['reports', 'locationsReports']));
+    }
+
+    /**
+     * Builds route report for all dispatch register's locations
+     *
+     * @param DispatchRegister $dispatchRegister
+     * @return object
+     */
+    public function buildRouteLocationsReport(DispatchRegister $dispatchRegister)
+    {
+        $reports = $dispatchRegister->reports()->with('location')->get();
+        $locationsReports = (object)['empty' => $reports->isEmpty(), 'notEmpty' => $reports->isNotEmpty()];
+
+        if ($reports->isNotEmpty()) {
+            $vehicle = $dispatchRegister->vehicle;
+            $route = $dispatchRegister->route;
+            $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
+            $controlPoints = $route->controlPoints;
+            $routeDistance = $controlPoints->last()->distance_from_dispatch;
+
+            $reportData = collect([]);
+            $lastReport = $reports->first();
+            $lastSpeed = 0;
+
+            foreach ($reports as $report) {
+                $location = $report->location;
+                if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
+                    $offRoad = $location->off_road == 't' ? true : false;
+
+                    $completedPercent = ($report->distancem / $routeDistance) * 100;
+                    if ($completedPercent > 100) $completedPercent = 100;
+
+                    $reportData->push((object)[
+                        'time' => $report->date->toTimeString(),
+                        'timeReport' => $report->timed,
+                        'distance' => $report->distancem,
+                        'completedPercent' => number_format($completedPercent, 1, ',', '.'),
+                        'value' => $report->status_in_minutes,
+                        'latitude' => $location->latitude,
+                        'longitude' => $location->longitude,
+                        'speed' => number_format($location->speed, 1, ',', '.'),
+                        'speeding' => $location->speeding,
+                        'offRoad' => $offRoad
+                    ]);
+
+                    $lastReport = $report;
+                    $lastSpeed = $location->speed;
+                }
+            }
+
+            $routePercent = round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1);
+
+            $locationsReports = (object)[
+                'empty' => $reports->isEmpty(),
+                'notEmpty' => $reports->isNotEmpty(),
+                'vehicle' => $vehicle->number,
+                'plate' => $vehicle->plate,
+                'vehicleSpeed' => round($lastSpeed, 2),
+                'route' => $route->name,
+                'routeDistance' => $routeDistance,
+                'routePercent' => $routePercent > 100 ? 100 : $routePercent,
+                'controlPoints' => $controlPoints,
+                'urlLayerMap' => $route->url,
+                'routeCoordinates' => $routeCoordinates->toArray(),
+                'reports' => $reportData,
+                'offRoadFromLocation' => !$dispatchRegister->dateLessThanDateNewOffRoadReport()
+            ];
+        }
+
+        return $locationsReports;
     }
 
     /**
@@ -200,72 +299,6 @@ class RouteReportController extends Controller
                 $excel = PCWExporter::createSheet($excel, $dataExport);
             }
         })->export('xlsx');
-    }
-
-    /**
-     * @param DispatchRegister $dispatchRegister
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public
-    function chart(DispatchRegister $dispatchRegister)
-    {
-        sleep(1); // For wait init map on view
-        $dataReport = ['empty' => true];
-        $reports = $dispatchRegister->reports()->with('location')->get();
-
-        if ($reports->isNotEmpty()) {
-            $vehicle = $dispatchRegister->vehicle;
-
-            $route = $dispatchRegister->route;
-            $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
-            $routeDistance = $routeCoordinates->last()->distance;
-            $controlPoints = $route->controlPoints;
-
-            $reportData = collect([]);
-            $lastReport = $reports->first();
-            $lastSpeed = 0;
-
-            foreach ($reports as $report) {
-                $location = $report->location;
-                if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
-                    $offRoad = $location->off_road == 't' ? true : false;
-                    if ($dispatchRegister->dateLessThanDateNewOffRoadReport()) {
-                        $offRoad = self::checkOffRoad($location, $routeCoordinates);
-                    }
-
-                    $reportData->push((object)[
-                        'time' => $report->date->toTimeString(),
-                        'timeReport' => $report->timed,
-                        'distance' => $report->distancem,
-                        'value' => $report->status_in_minutes,
-                        'latitude' => $location->latitude,
-                        'longitude' => $location->longitude,
-                        'speed' => number_format($location->speed, 1, ',','.'),
-                        'speeding' => $location->speeding,
-                        'offRoad' => $offRoad
-                    ]);
-
-                    $lastReport = $report;
-                    $lastSpeed = $location->speed;
-                }
-            }
-
-            $dataReport = (object)[
-                'vehicle' => $vehicle->number,
-                'plate' => $vehicle->plate,
-                'vehicleSpeed' => round($lastSpeed, 2),
-                'route' => $route->name,
-                'routeDistance' => $routeDistance,
-                'routePercent' => round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1),
-                'controlPoints' => $controlPoints,
-                'urlLayerMap' => $route->url,
-                'routeCoordinates' => $routeCoordinates->toArray(),
-                'reports' => $reportData,
-                'offRoadFromLocation' => !$dispatchRegister->dateLessThanDateNewOffRoadReport()
-            ];
-        }
-
-        return response()->json($dataReport);
     }
 
     /**
@@ -420,23 +453,9 @@ class RouteReportController extends Controller
     }
 
     /**
-     * Gets table logs for calculated reports
-     *
-     * @param DispatchRegister $dispatchRegister
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getReportLog(DispatchRegister $dispatchRegister)
-    {
-        $reports = Report::where('dispatch_register_id', $dispatchRegister->id)
-            ->orderBy('date')
-            ->get();
-
-        return view('reports.route.route._tableReportLog', compact('reports'));
-    }
-
-    /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public
     function ajax(Request $request)

@@ -498,5 +498,8 @@
   "locations have been processed": "ubicaciones han sido procesadas",
   "Detected route": "Ruta detectada",
   "Vehicle information": "Información del vehículo",
-  "Off road vehicle": "Vehículo fuera de ruta"
+  "Off road vehicle": "Vehículo fuera de ruta",
+  "With speeding": "Con exceso de velocidad",
+  "Possible issue": "Posible incidencia",
+  "Invalid sequence": "Secuencia inválida"
 }

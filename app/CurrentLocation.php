@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -58,6 +59,11 @@ class CurrentLocation extends Model
     protected function getDateFormat()
     {
         return config('app.date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
     }
 
     public function dispatchRegister()

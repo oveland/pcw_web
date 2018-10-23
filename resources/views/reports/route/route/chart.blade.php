@@ -210,7 +210,7 @@
                             let dataTimesReports = [];
                             let dataValues = [];
                             let dataDistances = [];
-                            let dataPercentDistances = [];
+                            let completedPercent = [];
                             let latitudes = [];
                             let longitudes = [];
                             let offRoads = [];
@@ -218,13 +218,13 @@
                             let speed = [];
 
                             data.reports.forEach(function (report, i) {
-                                let percent = ((report.distance / data.routeDistance) * 100).toFixed(1);
+                                let percent = report.completedPercent;
                                 let routeDistance = report.distance;
                                 dataTimes[i] = report.time;
                                 dataTimesReports[i] = report.timeReport;
                                 dataValues[i] = report.value * 60;
                                 dataDistances[i] = routeDistance;
-                                dataPercentDistances[i] = percent;
+                                completedPercent[i] = percent;
                                 latitudes[i] = report.latitude;
                                 longitudes[i] = report.longitude;
                                 offRoads[i] = report.offRoad ? '' : 'hide';
@@ -276,7 +276,7 @@
                                     'distance': dataDistances,
                                     'speed': speed,
                                     'speeding': speeding,
-                                    'percent': dataPercentDistances,
+                                    'percent': completedPercent,
                                     'latitude': latitudes,
                                     'longitude': longitudes
                                 }
