@@ -294,12 +294,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('map'))->group(function () {
             Route::get('/', 'ToolsController@map')->name('tools-map');
             Route::get('/get-route-distance/{route}', 'ToolsController@getRouteDistance')->name('tools-map-get-route-distance');
-            Route::get('/get-route-distance', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-urlwwwwwwwwwwww');
-            Route::get('/get-route-coordinates', 'ToolsController@getRouteDistanceFromUrl')->name('tools-map-get-route-distance-from-url');
         });
 
-        Route::prefix(__('calibration-control-points'))->group(function () {
-            Route::get('/', 'CalibrationControlPointsController@calibrate')->name('tools-calibration-control-points');
+        Route::prefix(__('smart-recovery'))->group(function () {
+            Route::get('/', 'ToolsController@smartRecovery')->name('tools-smart-recovery');
+        });
+
+        Route::prefix(__('scripts'))->group(function () {
+            Route::get('/{gps}', 'ToolsController@showScript')->name('tools-scripts');
         });
     });
 });

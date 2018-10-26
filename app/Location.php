@@ -49,6 +49,8 @@ class Location extends Model
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 
+    protected $fillable = ['vehicle_id', 'date', 'latitude', 'longitude', 'orientation', 'odometer', 'status', 'speed', 'speeding', 'vehicle_status_id', 'distance', 'dispatch_register_id', 'off_road'];
+
     protected function getDateFormat()
     {
         return config('app.date_time_format');
@@ -56,7 +58,7 @@ class Location extends Model
 
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
     /**
@@ -64,7 +66,7 @@ class Location extends Model
      */
     public function report()
     {
-        return $this->hasOne(Report::class,'location_id','id');
+        return $this->hasOne(Report::class, 'location_id', 'id');
     }
 
     /**
@@ -82,7 +84,7 @@ class Location extends Model
      */
     public function isValid()
     {
-        return ($this->latitude != 0 && $this->longitude != 0)?true:false;
+        return ($this->latitude != 0 && $this->longitude != 0) ? true : false;
     }
 
     /**

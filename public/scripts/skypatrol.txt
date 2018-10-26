@@ -1,0 +1,128 @@
+AT&F
+
+AT+CGDCONT=1,"IP","internet.movistar.com.co"
+AT$CGPCO=1,"movistar, movistar",1
+AT$TTSRVDST=1,1,"52.38.73.219",998,1
+AT$TTMSGMASK=1,17961214
+AT$TTDEVID="PLA-123"
+AT$TTACCAM=1,2,2,4
+AT$TTGPSRI=1,2
+AT$TTGPSSTT=2
+
+AT$TTNETWD=5,3,0,1
+AT$TTRSTCFG=2,1
+AT$TTWAKEUP=1,6
+AT$TTHB=180
+
+'Time report every 5 min with Ignition OFF
+'contador reporte
+AT$TTCNT=1,2,300
+'activa el contador 1
+AT$TTFNT=14,1,14,1,0
+'verifica el estado de ignición
+AT$TTFNT=14,2,9,0,0
+'envía reporte vía TCP con la etiqueta 20
+AT$TTFNT=14,3,37,20,1
+'Envía reporte vía puerto serial AUX
+AT$TTFNT=14,3,57,9,1
+'Envía reporte vía puerto serial
+AT$TTFNT=14,3,38,9,1
+
+'Time report every 15 sec with Ignition ON
+''contador reporte
+AT$TTCNT=2,2,15
+'activa el contador 2
+AT$TTFNT=10,1,14,2,0
+'verifica el estado de ignición
+AT$TTFNT=10,2,9,1,1
+'envía reporte vía TCP con la etiqueta 9
+AT$TTFNT=10,3,37,9,1
+'Envía reporte vía puerto serial AUX
+AT$TTFNT=10,3,57,9,1
+'Envía reporte vía puerto serial
+AT$TTFNT=10,3,38,9,1
+
+'Ignition ON
+'VERIFICA ESTADO DE IGNICIÓN EN ON
+AT$TTFNT=11,0,9,1,1
+'Transmite vía TCP con la etiqueta 11 máscara 1
+AT$TTFNT=11,3,37,11,1
+'Reinicia el modulo GSM
+AT$TTFNT=11,3,50,1,1
+
+'Ignition OFF
+'VERIFICA ESTADO DE IGNICIÓN EN OFF
+AT$TTFNT=12,0,9,0,0
+'Transmite vía TCP con la etiqueta 12 máscara 1
+AT$TTFNT=12,3,37,12,1
+'Reinicia el dispositivo
+AT$TTFNT=12,3,51,1,1
+
+'Desconexion a bateria del vehiculo
+'Verifica desconexión de batería principal
+AT$TTFNT=91,0,3,0,0
+'Envía reporte vía TCp con la etiqueta 91 máscara 1
+AT$TTFNT=91,3,37,91,1
+
+'Exceso de velocidad
+'Verifica la velocidad actual del dispositivo, al superar 33 nudos envía alerta
+AT$TTFNT=13,0,15,33,250
+'Envía reporte vía TCP con la etiqueta 13 y máscara 1
+AT$TTFNT=13,3,37,13,1
+
+AT$TTCAIDLST=1,2,"3?????????"
+'Reset modulo GSM
+AT$TTFNT=15,0,50,1,1
+'Reporte vía puerto serial
+AT$TTFNT=15,3,38,23,1
+AT$TTFNT=15,3,5,1,1
+
+'Datos
+AT$AUXURTCFG=115200,8,0,1
+AT$TTTCPCFG=1800,900,24330,65000
+AT$TTPASPCFG=1,3600,3600,512,08,"52.38.73.219",997,00,0D,50
+AT$TTPASPCMF=000B
+AT$TTPASP=2,2
+
+'Llamadas
+ATS0=3
+AT$TTMRG=24
+AT$TTSVL=5
+
+'Reset unidad GSM
+AT$TTFNT=80,0,12,2,4
+AT$TTFNT=80,4,12,0,0
+AT$TTFNT=80,3,27,7,0
+AT$TTFNT=80,3,56,7,0
+
+AT$TTCNT=7,2,180
+AT$TTFNT=81,1,14,7,0
+AT$TTFNT=81,2,12,2,4
+AT$TTFNT=81,3,28,12,0
+
+AT$TTFNT=82,1,14,7,0
+AT$TTFNT=82,2,12,0,0
+AT$TTFNT=82,3,28,12,0
+AT$TTSTOCMD=12,AT$RESET
+
+AT$TTFNT=83,0,12,1,1
+AT$TTFNT=83,4,12,5,5
+AT$TTFNT=83,3,55,7,0
+
+AT$TTARG=2
+
+'RESET DISPOSITIVO
+AT$TTFNT=70,0,10,1,1
+AT$TTFNT=70,3,20,70,1
+AT$TTFNT=70,3,38,70,1
+
+AT$TTFNT=72,0,19,0,0
+AT$TTFNT=72,3,20,72,1
+AT$TTFNT=72,3,38,72,1
+
+AT$TTFNT=73,0,19,1,1
+AT$TTFNT=73,3,20,73,1
+AT$TTFNT=73,3,38,73,1
+
+AT&W
+AT$RESET

@@ -1,0 +1,6 @@
+begin123456
+adminip123456 52.38.73.219 912
+APN123456 internet.movistar.com.co
+up123456 movistar movistar
+time zone123456 0
+GPRS123456

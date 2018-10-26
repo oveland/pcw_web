@@ -168,6 +168,7 @@
   "Back door": "Puerta trasera",
   "Difference": "Diferencia",
   "reports": "reportes",
+  "locations": "ubicaciones",
   "url-reports": "reportes",
   "routes": "rutas",
   "route": "ruta",
@@ -501,5 +502,7 @@
   "Off road vehicle": "Vehículo fuera de ruta",
   "With speeding": "Con exceso de velocidad",
   "Possible issue": "Posible incidencia",
-  "Invalid sequence": "Secuencia inválida"
+  "Invalid sequence": "Secuencia inválida",
+  "Great distance traveled": "Gran distancia recorrida",
+  "Calculated speed": "Velocidad calculada"
 }

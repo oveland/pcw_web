@@ -242,7 +242,7 @@
                 </td>
             @endif
 
-            <td width="10%" class="text-center">
+            <td width="15%" class="text-center">
                 @if( Auth::user()->belongsToCootransol() )
                 <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover tooltips"
                         data-original-title="@lang('Execute DAR')">
@@ -266,6 +266,14 @@
                    data-original-title="@lang('Graph report detail')">
                     <i class="fa fa-area-chart faa-pulse"></i>
                 </a>
+                @if( Auth::user()->isSuperAdmin() )
+                    @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                    @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                    <hr class="hr no-padding">
+                    <small>{!! $totalLocations !!} @lang('locations')</small><br>
+                    <small>{!! $totalReports !!} @lang('reports')</small>
+
+                @endif
             </td>
         </tr>
         @php( $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time )

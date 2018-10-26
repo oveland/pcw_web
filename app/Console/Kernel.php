@@ -56,7 +56,7 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->command('send-mail:consolidated')->dailyAt('04:00');
-        $schedule->command('dar:run')->dailyAt('00:05');
+        $schedule->command('dar:run')->dailyAt('04:20');
     }
 
     /**

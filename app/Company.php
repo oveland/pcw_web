@@ -41,6 +41,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Company extends Model
 {
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class);
