@@ -188,7 +188,7 @@
                                                 @endif
                                             </td>
                                         @endforeach
-                                        <td class="text-center">
+                                        <td class="text-center" width="10%">
                                             <a href="#modal-route-report"
                                                class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
                                                data-toggle="modal"
@@ -197,6 +197,13 @@
                                                data-original-title="@lang('Graph report detail')">
                                                 <i class="fa fa-area-chart faa-pulse"></i>
                                             </a>
+                                            @if( Auth::user()->isSuperAdmin() )
+                                                @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                                @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                                <hr class="hr no-padding">
+                                                <small>{!! $totalLocations !!} @lang('locations')</small><br>
+                                                <small>{!! $totalReports !!} @lang('reports')</small>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

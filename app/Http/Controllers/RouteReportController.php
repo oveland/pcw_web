@@ -472,7 +472,7 @@ class RouteReportController extends Controller
                 $dispatchRegisterId = $request->get('dispatchRegisterId');
 
                 $client = new Client();
-                $response = $client->request('GET', config('gps.server.url') . "/autoDispatchRegister/processDispatchRegister/$dispatchRegisterId?sync=true", ['timeout' => 0]);
+                $response = $client->request('GET', config('gps.server.url') . "/autoDispatcher/processDispatchRegister/$dispatchRegisterId?sync=true", ['timeout' => 0]);
 
                 return $response->getBody();
                 break;
