@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\ControlPointTime;
 use App\ControlPointTimeReport;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
@@ -51,22 +52,25 @@ class ControlPointsReportController extends Controller
 
         if (!$route || !$route->belongsToCompany($company)) abort(404);
 
-        $controlPointTimeReports = $this->controlPointService->allControlPointTimeReport($route, $dateReport);
+        $reportsByControlPoints = $this->controlPointService->buildReportsByControlPoints($route, $dateReport);
 
-        switch ($request->get('type-report')){
+        switch ($request->get('type-report')) {
             case 'round-trip':
-                $controlPointTimeReportsByRoundTrip = $controlPointTimeReports->groupBy(function ($controlPointTimeReport) {
-                    return $controlPointTimeReport->dispatchRegister->round_trip;
+                $controlPointTimeReportsByRoundTrip = $reportsByControlPoints->groupBy(function ($reportsByControlPoints) {
+                    return $reportsByControlPoints->dispatchRegister->round_trip;
                 });
 
-                return view('reports.route.control-points.ControlPointTimesByRoundTrip', compact(['controlPointTimeReportsByRoundTrip','route']));
+                return view('reports.route.control-points.ControlPointTimesByRoundTrip', compact(['controlPointTimeReportsByRoundTrip', 'route']));
                 break;
             case 'vehicle':
-                $controlPointTimeReportsByVehicles = $controlPointTimeReports->groupBy('vehicle_id');
-                return view('reports.route.control-points.ControlPointTimesByVehicle', compact(['controlPointTimeReportsByVehicles','route']));
+                $controlPointTimeReportsByVehicles = $reportsByControlPoints->groupBy(function ($reportsByControlPoints) {
+                    return $reportsByControlPoints->vehicle->id;
+                });
+
+                return view('reports.route.control-points.ControlPointTimesByVehicle', compact(['controlPointTimeReportsByVehicles', 'route']));
                 break;
             default:
-                return view('reports.route.control-points.ControlPointTimesByAll', compact(['controlPointTimeReports','route']));
+                return view('reports.route.control-points.ControlPointTimesByAll', compact(['reportsByControlPoints', 'route']));
                 break;
         }
     }

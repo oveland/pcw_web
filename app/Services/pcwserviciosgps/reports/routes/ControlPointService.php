@@ -9,43 +9,138 @@
 namespace App\Services\pcwserviciosgps\reports\routes;
 
 use App\ControlPoint;
+use App\ControlPointTime;
 use App\ControlPointTimeReport;
 use App\DispatchRegister;
+use App\Http\Controllers\Utils\StrTime;
 use App\Route;
 
 class ControlPointService
 {
     /**
-     * Gets all control point time report of a route and date
-     *
      * @param Route $route
      * @param $dateReport
-     * @return ControlPointTimeReport[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection
      */
-    function allControlPointTimeReport(Route $route, $dateReport)
+    function buildReportsByControlPoints(Route $route, $dateReport)
     {
         $dispatchRegisters = DispatchRegister::active()
             ->where('date', '=', $dateReport)
             ->where('route_id', '=', $route->id)
-            ->orderBy('departure_time')
-            ->get();
+            ->orderBy('departure_time')->get();
 
-        return ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-            ->orderBy('dispatch_register_id')
-            ->get();
+        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get()->sortBy(function (ControlPointTimeReport $report) {
+            return $report->dispatchRegister->departure_time;
+        });
+        $reportsByDispatchRegister = $allReportsByControlPoints->groupBy('dispatch_register_id');
+
+        $reportsByControlPoints = collect([]);
+        foreach ($reportsByDispatchRegister as $dispatchRegisterId => $reportByDispatchRegister) {
+            $dispatchRegister = DispatchRegister::find($dispatchRegisterId);
+            $reportsByControlPoints->push($this->buildControlPointReportsByDispatchRegister($dispatchRegister, $reportByDispatchRegister));
+        }
+
+        return $reportsByControlPoints;
     }
 
+
     /**
-     * Gets control point time report of a dispatch register
-     *
      * @param DispatchRegister $dispatchRegister
-     * @return ControlPointTimeReport[]|\Illuminate\Support\Collection
+     * @param \Illuminate\Support\Collection $reportByDispatchRegister
+     * @return object
      */
-    function controlPointReportsByDispatchRegister(DispatchRegister $dispatchRegister)
+    public function buildControlPointReportsByDispatchRegister(DispatchRegister $dispatchRegister, $reportByDispatchRegister)
     {
-        return ControlPointTimeReport::where('dispatch_register_id', $dispatchRegister->id)
-            ->orderBy('date_created')
-            ->get();
+        $controlPoints = $dispatchRegister->route->controlPoints;
+        $vehicle = $dispatchRegister->vehicle;
+        $driver = $dispatchRegister->driver;
+
+        $departureTime = $dispatchRegister->departure_time;
+        $arrivalTime = $dispatchRegister->arrival_time;
+        $arrivalTimeScheduled = $dispatchRegister->arrival_time_scheduled;
+
+        $reportsByControlPoint = collect([]);
+        foreach ($controlPoints as $controlPoint) {
+            $first = $controlPoint->id == $controlPoints->first()->id;
+            $last = $controlPoint->id == $controlPoints->last()->id;
+
+            $hasReport = false;
+            $scheduledControlPointTime = '--:--:--';
+            $measuredControlPointTime = '--:--:--';
+            $difference = '--:--:--';
+            $statusColor = '';
+            $statusText = '';
+            $timeScheduled = '00:00:00';
+            $timeMeasured = '00:00:00';
+
+            $controlPointTimeReport = $reportByDispatchRegister
+                ->sortBy(function (ControlPointTimeReport $report) {
+                    return $report->dispatchRegister->departure_time;
+                })
+                ->where('control_point_id', $controlPoint->id)
+                ->first();
+
+            if ($controlPointTimeReport || $first || ($last && $dispatchRegister->complete())) {
+                $statusColor = 'lime';
+                $statusText = __('on time');
+                $hasReport = true;
+                if ($first) { // On first control point take 'At time' status
+                    $scheduledControlPointTime = $departureTime;
+                    $measuredControlPointTime = $departureTime;
+                } else if ($last && $dispatchRegister->complete()) { // On last control point take the dispatch's times
+                    $scheduledControlPointTime = $arrivalTimeScheduled;
+                    $measuredControlPointTime = $arrivalTime;
+
+                    $timeScheduled = StrTime::subStrTime($arrivalTimeScheduled, $departureTime);
+                    $timeMeasured = StrTime::subStrTime($arrivalTime, $departureTime);
+                } else { // On middle control points calculates the params report with the interpolation process
+                    $controlPointTime = ControlPointTime::where('control_point_id', $controlPoint->id)
+                        ->where('fringe_id', $controlPointTimeReport->fringe_id)
+                        ->get()->first();
+
+                    $timeScheduled = $controlPointTime->time_from_dispatch;
+                    $timeMeasured = StrTime::segToStrTime(
+                        StrTime::toSeg($timeScheduled) * StrTime::toSeg($controlPointTimeReport->timem) / StrTime::toSeg($controlPointTimeReport->timep)
+                    );
+
+                    $scheduledControlPointTime = StrTime::addStrTime($departureTime, $timeScheduled);
+                    $measuredControlPointTime = StrTime::addStrTime($departureTime, $timeMeasured);
+                }
+
+                if (StrTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00') {
+                    $isFast = StrTime::timeAGreaterThanTimeB($scheduledControlPointTime, $measuredControlPointTime);
+                    $statusColor = $isFast ? 'primary' : 'danger';
+                    $statusText = __($isFast ? 'fast' : 'slow');
+                }
+
+                $difference = StrTime::difference($measuredControlPointTime, $scheduledControlPointTime);
+            }
+
+            $reportsByControlPoint->put($controlPoint->id, (object)[
+                'first' => $first,
+                'last' => $last,
+                'controlPointId' => $controlPoint->id,
+                'dispatchRegisterId' => $dispatchRegister->id,
+                'controlPoint' => $controlPoint,
+                'hasReport' => $hasReport,
+                'statusColor' => $statusColor,
+                'statusText' => $statusText,
+                'scheduledControlPointTime' => $scheduledControlPointTime,
+                'measuredControlPointTime' => $measuredControlPointTime,
+                'timeScheduled' => $timeScheduled,
+                'timeMeasured' => $timeMeasured,
+                'timep' => $controlPointTimeReport->timep ?? '--:--:--',
+                'timem' => $controlPointTimeReport->timem ?? '--:--:--',
+                'difference' => $difference
+            ]);
+        }
+
+        return (object)[
+            'dispatchRegister' => $dispatchRegister,
+            'vehicle' => $vehicle,
+            'driver' => $driver,
+            'reportsByControlPoint' => $reportsByControlPoint,
+        ];
     }
 
     /**
@@ -59,24 +154,30 @@ class ControlPointService
         $controlPointReportWithDelay = collect([]);
         $route = $dispatchRegister->route;
 
-        $configParamsRoute = collect(config('report.consolidated.controlPoints.withDelay'))->where('routeId', $route->id)->first();
+        $configParamsRoutesControlPointsWithDelay = collect(config('report.routes.controlPoints.withDelay'))->where('routeId', $route->id)->first();
 
-        $controlPointReports = $this->controlPointReportsByDispatchRegister($dispatchRegister);
+        if ($configParamsRoutesControlPointsWithDelay) {
+            $controlPointsToDetect = ((object)$configParamsRoutesControlPointsWithDelay)->controlPoints;
 
-        if ($configParamsRoute) {
-            $controlPointsIDToDetect = ((object)$configParamsRoute)->controlPoints;
+            $controlPointReports = $this->buildControlPointReportsByDispatchRegister($dispatchRegister, $dispatchRegister->controlPointTimeReports);
 
-            foreach ($controlPointsIDToDetect as $controlPointParam) {
-                $controlPointParam = (object)$controlPointParam;
-                $controlPoint = ControlPoint::find($controlPointParam->id);
-                $controlPointReport = $controlPointReports->where('control_point_id', $controlPointParam->id)->first();
-                if ($controlPoint && $controlPointReport) {
-                    if ($controlPointReport->timem > $controlPointParam->maxTime) {
-                        $controlPointReportWithDelay->push((object)[
-                            'controlPointName' => $controlPoint->name,
-                            'timeReport' => $controlPointReport->timem,
-                            'maxTime' => $controlPointParam->maxTime,
-                        ]);
+            foreach ($controlPointsToDetect as $controlPointToDetect) {
+                $controlPointToDetect = (object)$controlPointToDetect;
+                $controlPoint = ControlPoint::find($controlPointToDetect->id);
+                if ($controlPoint) {
+                    $controlPointReport = $controlPointReports->reportsByControlPoint
+                        ->where('controlPointId', $controlPoint->id)
+                        ->first();
+
+                    if ($controlPointReport) {
+                        if ($controlPointReport->timeMeasured > $controlPointToDetect->maxTime) {
+
+                            $controlPointReportWithDelay->push((object)[
+                                'controlPointName' => $controlPoint->name,
+                                'report' => $controlPointReport,
+                                'maxTime' => $controlPointToDetect->maxTime,
+                            ]);
+                        }
                     }
                 }
             }

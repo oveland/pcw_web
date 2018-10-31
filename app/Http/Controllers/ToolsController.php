@@ -23,6 +23,7 @@ class ToolsController extends Controller
         $prevDays = 1;
 
         $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
+        $dateReport = '2018-09-25';
 
         $mail = new ConsolidatedReportMail($company, $dateReport);
         if ($mail->buildReport()) {

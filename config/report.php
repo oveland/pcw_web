@@ -12,7 +12,7 @@ return [
     | Config for consolidated reports
     |--------------------------------------------------------------------------
     */
-    'consolidated' => [
+    'routes' => [
         'controlPoints' => [
             'withDelay' => [
                 [

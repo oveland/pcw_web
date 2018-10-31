@@ -21,8 +21,8 @@ return [
         'threshold_low_count' => 200
     ],
     'sensor' => [
-        'seating' => [
-            'distribution' => [
+        'distribution' => [
+            'gualas' => [
                 'MBI-711' => [
                     'row1' => [
                         '2-3' => [22, 23],

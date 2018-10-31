@@ -15,7 +15,7 @@ class PCWSeatSensorGualas
 {
     static function getDistribution($plate)
     {
-        return config("counter.sensor.seating.distribution.$plate");
+        return config("counter.sensor.distribution.gualas.$plate");
     }
 
     static function makeHtmlTemplate(Passenger $passenger)

@@ -15,12 +15,17 @@ use App\Services\PCWExporter;
 use App\Services\pcwserviciosgps\reports\routes\ControlPointService;
 use App\Services\pcwserviciosgps\reports\routes\OffRoadService;
 use App\Services\pcwserviciosgps\reports\routes\SpeedingService;
-use Carbon\Carbon;
 use Excel;
 
 class ConsolidatedReportsService
 {
+    /**
+     * @var OffRoadService
+     */
     private $offRoadService;
+    /**
+     * @var SpeedingService
+     */
     private $speedingService;
     /**
      * @var ControlPointService
@@ -187,8 +192,9 @@ class ConsolidatedReportsService
         $index = 0;
         $delayControlPointsReportString = "";
         foreach ($reportByVehicle->controlPointReport as $controlPointReport) {
+            $report = $controlPointReport->report;
             $ln = $index > 0 ? "\n" : "";
-            $delayControlPointsReportString .= "$ln • $controlPointReport->controlPointName (Ref. $controlPointReport->maxTime) → " . __('Reported at') . " $controlPointReport->timeReport ";
+            $delayControlPointsReportString .= "$ln • ".__('Time')." $report->measuredControlPointTime $controlPointReport->controlPointName (Ref. $controlPointReport->maxTime) → " . __('Reported at') . " $report->timeMeasured";
             $index++;
         }
 

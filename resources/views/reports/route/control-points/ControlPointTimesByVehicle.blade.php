@@ -43,7 +43,7 @@
                                 });
                             @endphp
 
-                            <table class="table table-bordered table-striped table-hover table-valign-middle table-report-control-point data-table-report">
+                            <table class="table table-bordered table-condensed table-hover table-valign-middle table-report-control-point data-table-report">
                                 <thead>
                                 <tr class="">
                                     <th class="text-center bg-inverse-dark text-muted">

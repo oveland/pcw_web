@@ -1,4 +1,4 @@
-@if(count($controlPointTimeReports))
+@if(count($reportsByControlPoints))
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -23,7 +23,7 @@
             <div id="report-tab" class="tab-pane fade active in report-tab-cp">
                 <div class="row">
                     <div class="table-responsive col-md-12" style="padding-bottom: 90px">
-                        <table class="table table-bordered table-striped table-hover table-valign-middle table-report-control-point data-table-report">
+                        <table class="table table-bordered table-condensed table-hover table-valign-middle table-report-control-point data-table-report">
                             <thead>
                             <tr class="">
                                 <th class="text-center bg-inverse-dark text-muted">
@@ -60,18 +60,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @php
-                                $reportsByDispatchRegister = $controlPointTimeReports->groupBy('dispatch_register_id')
-                            @endphp
-                            @foreach( $reportsByDispatchRegister as $dispatchRegisterId => $reportByDispatchRegister )
+
+                            @foreach( $reportsByControlPoints as $reportsByControlPoint )
                                 @php
-                                    $dispatchRegister = \App\DispatchRegister::find($dispatchRegisterId);
-                                    $vehicle = $reportByDispatchRegister->first()->vehicle;
-                                    $strTime = new \App\Http\Controllers\Utils\StrTime();
-                                    $driver = $dispatchRegister->driver;
-                                    $departureTime = $dispatchRegister->departure_time;
-                                    $arrivalTime = $dispatchRegister->arrival_time;
-                                    $arrivalTimeScheduled = $dispatchRegister->arrival_time_scheduled;
+                                    $dispatchRegister = $reportsByControlPoint->dispatchRegister;
+                                    $vehicle = $reportsByControlPoint->vehicle;
+                                    $driver = $reportsByControlPoint->driver;
                                 @endphp
                                 <tr class="">
                                     <th class="text-capitalize text-muted bg-{{ $dispatchRegister->inProgress() ? 'warning':'inverse' }}">
@@ -88,97 +82,58 @@
                                         {{ $driver?$driver->fullName():__('Not assigned') }}
                                     </th>
                                     <th class="bg-inverse text-uppercase text-muted">
-                                        {{ $strTime::toString($departureTime) }}
                                         @if( $dispatchRegister->complete() )
-                                            <br>{{ $strTime::toString($arrivalTime) }}
+                                            {{ $dispatchRegister->departure_time }}
+                                            <br>{{ $dispatchRegister->arrival_time }}
                                             <hr class="m-1">
-                                            {{ $strTime::subStrTime($arrivalTime,$departureTime) }}
+                                            {{ $dispatchRegister->getRouteTime() }}
                                         @else
                                             {{ '--:--:--' }}
                                         @endif
                                     </th>
-                                    @foreach($controlPoints as $controlPoint)
-                                        @php( $report = $reportByDispatchRegister->where('control_point_id',$controlPoint->id)->first() ?? null )
-                                        <td class="text-center">
-                                            @if( $report || ($loop->last && $dispatchRegister->complete() ) )
-                                                @php
-                                                    if( $loop->last && $dispatchRegister->complete() ){ // For last control point
-                                                        $measuredControlPointTime = $arrivalTime;
-                                                        $scheduledControlPointTime = $arrivalTimeScheduled;
-                                                    }else{
-                                                        $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPoint->id)
-                                                        ->where('fringe_id',$report->fringe_id)
-                                                        ->get()->first();
-
-                                                        $measuredTime = $strTime::addStrTime($departureTime,$report->timem);
-                                                        $scheduledTime = $strTime::addStrTime($departureTime,$report->timep);
-
-                                                        $scheduledControlPointTime = $controlPointTime?$strTime::addStrTime($departureTime,$controlPointTime->time_from_dispatch):$scheduledTime;
-
-                                                        $measuredControlPointTime = "";
-                                                        if( $loop->first ){
-                                                            $measuredControlPointTime = $departureTime;
-                                                        }
-                                                        else{
-                                                            $measuredControlPointTime = $strTime::segToStrTime(
-                                                                $strTime::toSeg($scheduledControlPointTime)*$strTime::toSeg($measuredTime)/
-                                                                $strTime::toSeg($scheduledTime)
-                                                            );
-                                                        }
-                                                    }
-                                                @endphp
-
-                                                @if( $measuredControlPointTime && $scheduledControlPointTime )
-                                                    @php
-                                                        $statusColor =  'lime';
-                                                        $statusText =  __('on time');
-                                                        if( $strTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00' ){
-                                                            if( $report ){
-                                                                $statusColor = $report->fast() ? 'primary':'danger';
-                                                                $statusText = __($report->status);
-                                                            }else{
-                                                                $isFast = $strTime::timeAGreaterThanTimeB($scheduledControlPointTime,$measuredControlPointTime);
-                                                                $statusColor =  $isFast ? 'primary':'danger';
-                                                                $statusText =  __($isFast ? 'fast':'slow');
-                                                            }
-                                                        }
-                                                    @endphp
-                                                    <div class="tooltipss" data-title="{{ $controlPoint->name }}">
-                                                        <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $statusColor }}"></i>
-                                                        <br>
-                                                        <button type="button" class="f-s-12 m-t-5 btn btn-{{ $statusColor }} light btn-xs"
-                                                                data-placement="bottom"
-                                                                data-toggle="popover"
-                                                                data-html="true"
-                                                                data-trigger="hover"
-                                                                title="
-                                                                            &nbsp;<i class='fa fa-map-marker text-muted'></i> {{ $controlPoint->name }}<br>
-                                                                            <span class='f-s-12'>
-                                                                                <i class='fa fa-car text-muted'></i>
-                                                                                {{ $vehicle->number }}:
-                                                                            </span>
-                                                                            <b class='f-s-12 text-{{ $statusColor }}'>{{ $statusText }}</b>
-                                                                        "
-                                                                data-content="
-                                                                            <div style='width:200px'>
-                                                                                <strong>@lang('Scheduled Time'):</strong> {{ $strTime::toString($scheduledControlPointTime) }}<br>
-                                                                                <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $strTime::toString($measuredControlPointTime) }}
-                                                                        </div>
-"
-                                                        >
-                                                                    <span>
-                                                                        {{ $strTime::difference($measuredControlPointTime, $scheduledControlPointTime) }}
-                                                                    </span>
-                                                        </button>
-                                                        <br>
-                                                    </div>
-                                                @else
-                                                    @lang('--!--!--')
-                                                @endif
-                                            @else
-                                                @lang('--:--:--')
-                                            @endif
-                                        </td>
+                                    @foreach($reportsByControlPoint->reportsByControlPoint as $reportByControlPoint)
+                                        @php( $controlPoint = $reportByControlPoint->controlPoint )
+                                        @if( $reportByControlPoint->hasReport )
+                                            <td class="text-center">
+                                                <div class="tooltipss" data-title="{{ $controlPoint->name }}">
+                                                    <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $reportByControlPoint->statusColor }}"></i>
+                                                    <br>
+                                                    <button type="button" class="f-s-12 m-t-5 btn btn-{{ $reportByControlPoint->statusColor }} light btn-xs"
+                                                            data-placement="bottom" data-toggle="popover" data-html="true" data-trigger="hover"
+                                                            title="&nbsp;<i class='fa fa-map-marker text-muted'></i> {{ $controlPoint->name }}<br>
+                                                                <span class='f-s-12'>
+                                                                    <i class='fa fa-car text-muted'></i>
+                                                                    {{ $vehicle->number }}:
+                                                                </span>
+                                                                <b class='f-s-12 text-{{ $reportByControlPoint->statusColor }}'>{{ $reportByControlPoint->statusText }}</b><br>
+                                                                <span class='f-s-12'>
+                                                                    <i class='fa fa-retweet text-muted'></i>
+                                                                    @lang('Round trip'): {{ $dispatchRegister->round_trip }}
+                                                                </span>
+                                                            "
+                                                            data-content="<div style='width:200px'>
+                                                                <strong>@lang('Scheduled Time'):</strong> {{ $reportByControlPoint->scheduledControlPointTime }}<br>
+                                                                <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $reportByControlPoint->measuredControlPointTime }}
+                                                                <hr class='hr'>
+                                                                <strong>@lang('Interpolation report'):</strong><br>
+                                                                <small><strong>@lang('Time scheduled from dispatch'):</strong> {{ $reportByControlPoint->timeScheduled }}</small><br>
+                                                                <small><strong>@lang('Time measured from dispatch'):</strong> {{ $reportByControlPoint->timeMeasured }}</small><br><br>
+                                                                <strong>@lang('GPS report'):</strong><br>
+                                                                <small><strong>@lang('Time scheduled from dispatch'):</strong> {{ $reportByControlPoint->timep }}</small><br>
+                                                                <small><strong>@lang('Time measured from dispatch'):</strong> {{ $reportByControlPoint->timem }}</small>
+                                                            </div>">
+                                                        <span>
+                                                            {{ $reportByControlPoint->difference }}
+                                                        </span>
+                                                    </button>
+                                                    <br>
+                                                </div>
+                                            </td>
+                                        @else
+                                            <td class="text-center">
+                                                {{ $reportByControlPoint->difference }}
+                                            </td>
+                                        @endif
                                     @endforeach
                                     <td class="text-center" width="10%">
                                         <a href="#modal-route-report"

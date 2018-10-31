@@ -128,8 +128,8 @@
                                 <div class="form-group">
                                     <select name="type-report" id="type-report" class="default-select2 form-control col-md-12">
                                         <option value="all">@lang('All')</option>
-                                        <option value="vehicle">@lang('Vehicles')</option>
-                                        <option value="round-trip">@lang('Round trips')</option>
+                                        <option disabled value="vehicle">@lang('Vehicles')</option>
+                                        <option disabled value="round-trip">@lang('Round trips')</option>
                                     </select>
                                 </div>
                             </div>
