@@ -981,61 +981,7 @@
                             </table>
                             <!-- end header -->
                             <!-- begin content -->
-                            <table class="row content" style="display: none">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <!-- begin row -->
-                                        <table class="row">
-                                            <tbody>
-                                            <tr>
-                                                <!-- begin wrapper -->
-                                                <td class="wrapper last">
-                                                    <table class="twelve columns">
-                                                        <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <h4>Dear Customer,</h4>
-                                                                <p class="m-b-15">
-                                                                    Your payment is Successful. Login to your <a href="javascript:;">account</a> to check the status of your order.
-                                                                </p>
-                                                                <table class="table-invoice">
-                                                                    <tbody>
-                                                                    <tr class="table-header">
-                                                                        <td>Product</td>
-                                                                        <td class="text-center">Unit</td>
-                                                                        <td class="text-right">Price</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>1 Year Web Hosting</td>
-                                                                        <td class="text-center">1</td>
-                                                                        <td class="text-right">$192.88</td>
-                                                                    </tr>
-                                                                    <tr class="grey">
-                                                                        <td>1 Year Domain Registration</td>
-                                                                        <td class="text-center">1</td>
-                                                                        <td class="text-right">$14.99</td>
-                                                                    </tr>
-                                                                    <tr class="total">
-                                                                        <td class="text-right" colspan="2">Total Charge</td>
-                                                                        <td class="text-right"><b>$207.87</b></td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                                <!-- end wrapper -->
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <!-- end row -->
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+
                             <!-- end content -->
                             <!-- begin footer -->
                             <table class="row footer">

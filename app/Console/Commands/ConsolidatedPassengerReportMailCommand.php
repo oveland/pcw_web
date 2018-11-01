@@ -48,14 +48,9 @@ class ConsolidatedPassengerReportMailCommand extends Command
 
         $mail = new ConsolidatedPassengersReportMail($company, $dateReport);
         if ($mail->buildReport()) {
-            Mail::to('soportenivel2pcwtecnologia@outlook.com', $company->name)
-                ->cc(['oscarivelan@gmail.com', 'olatorre22@hotmail.com'])
+            Mail::to(['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'], $company->name)
+                ->bcc(['oscarivelan@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'])
                 ->send($mail);
-
-            Mail::to('gerencia@alameda.com.co', $company->name)
-                ->cc(['movilidad@alameda.com.co', 'jeferh@alameda.cok.co'])
-                ->send($mail);
-
 
             $this->info("$company->name Consolidated Passengers Mail send for date $dateReport!");
         } else {
