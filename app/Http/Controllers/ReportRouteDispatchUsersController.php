@@ -11,7 +11,7 @@ use App\User;
 use Auth;
 use Illuminate\Http\Request;
 
-class ReportRouteUserDispatchController extends Controller
+class ReportRouteDispatchUsersController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

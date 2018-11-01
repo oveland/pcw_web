@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
 
         /* Commands for Mails */
         Commands\ConsolidatedReportMailCommand::class,
+        Commands\ConsolidatedPassengerReportMailCommand::class,
 
         /* Commands for DAR (Automatic Route Detection) */
         Commands\DARCommand::class
@@ -56,6 +57,8 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->command('send-mail:consolidated')->dailyAt('04:00');
+        $schedule->command('send-mail:consolidated-passengers')->dailyAt('04:10');
+
         $schedule->command('dar:run')->dailyAt('02:00');
     }
 

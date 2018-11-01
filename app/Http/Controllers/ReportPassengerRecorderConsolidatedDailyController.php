@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 
-class PassengerReportDailyController extends Controller
+class ReportPassengerRecorderConsolidatedDailyController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -78,6 +78,42 @@ class PassengerReportDailyController extends Controller
     }
 
     /**
+     * Export and store report to excel format
+     * returns tag
+     *
+     * @param $passengerReports
+     * @return string
+     */
+    public function storeExcel($passengerReports)
+    {
+        $dateReport = $passengerReports->date;
+
+        $dataExcel = array();
+        foreach ($passengerReports->reports as $report) {
+            $vehicle = Vehicle::find($report->vehicle_id);
+            $sensor = $report->passengers->sensor;
+            $recorder = $report->passengers->recorder;
+            $sensorRecorder = $report->passengers->sensorRecorder;
+            $dataExcel[] = [
+                __('N°') => count($dataExcel) + 1,                                      # A CELL
+                __('Vehicle') => intval($vehicle->number),                              # B CELL
+                __('Plate') => $vehicle->plate,                                         # C CELL
+                __('Sensor recorder') => intval($sensorRecorder),                       # D CELL
+                __('Recorder') => intval($recorder),                                    # E CELL
+                __('Sensor') => intval($sensor),                                        # F CELL
+            ];
+        }
+
+        return PCWExporter::store([
+            'fileName' => __('Passengers report') . " $dateReport",
+            'title' => __('Passengers report') . " $dateReport",
+            'subTitle' => __('Consolidated per day'),
+            'data' => $dataExcel,
+            'type' => 'passengerReportTotalFooter'
+        ]);
+    }
+
+    /**
      * Build passenger report from company and date
      *
      * @param $company
@@ -94,11 +130,11 @@ class PassengerReportDailyController extends Controller
         $passengerByRecorder = CounterByRecorder::report($dispatchRegisters);
 
         // Build report data
-        $reports = array();
+        $reports = collect([]);
         foreach ($passengerBySensor->report as $vehicleId => $sensor) {
             $recorder = $passengerByRecorder->report["$vehicleId"];
 
-            $reports[] = (object)[
+            $reports->push((object)[
                 'vehicle_id' => $vehicleId,
                 'date' => $dateReport,
                 'passengers' => (object)[
@@ -108,13 +144,14 @@ class PassengerReportDailyController extends Controller
                     'start_recorder' => $recorder->start_recorder,
                     'issue' => $recorder->issue
                 ]
-            ];
+            ]);
         }
 
         $passengerReport = (object)[
             'date' => $dateReport,
             'companyId' => $company->id,
             'reports' => $reports,
+            'totalReports' => $reports->count(),
             'issues' => $passengerByRecorder->issues,
         ];
 

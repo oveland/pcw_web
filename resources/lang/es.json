@@ -509,5 +509,7 @@
   "Time scheduled from dispatch": "Tiempo programado",
   "Time measured from dispatch": "Tiempo medido",
   "Interpolation report": "Reporte con interpolación",
-  "GPS report": "Reporte GPS"
+  "GPS report": "Reporte GPS",
+  "Consolidated passengers report daily": "Reporte consolidado diario de pasajeros",
+  "Consolidated route report daily": "Reporte consolidado diario de ruta"
 }

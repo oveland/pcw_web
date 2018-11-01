@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers\Utils;
 
-use App\Http\Controllers\RouteReportController;
+use App\Http\Controllers\ReportRouteController;
 use GuzzleHttp\Client;
 use Image;
 use ZipArchive;

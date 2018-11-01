@@ -959,7 +959,7 @@
                                                         <tr>
                                                             <td class="eight sub-columns">
                                                                 <h3 class="header-title">
-                                                                    @lang('Consolidated route report daily')
+                                                                    @lang('Consolidated passengers report daily')
                                                                 </h3>
                                                             </td>
                                                             <td class="four sub-columns last">

@@ -31,6 +31,26 @@ class PCWExporter
         })->export('xlsx');
     }
 
+    /**
+     * Save excel file and returns storage path
+     *
+     * @param $dataExport
+     * @return string
+     */
+    public static function store($dataExport)
+    {
+        $dataExport = (object)$dataExport;
+        $fileName = str_replace([' ', '-'], '_', $dataExport->fileName);
+        $fileExtension = 'xlsx';
+        $excel = Excel::create($fileName, function ($excel) use ($dataExport) {
+            /* SHEETS */
+            $excel = self::createHeaders($excel, $dataExport);
+            $excel = self::createSheet($excel, $dataExport);
+        })->store($fileExtension);
+
+        return "$excel->storagePath/$fileName.$fileExtension";
+    }
+
     public static function createHeaders($excel, $dataExport)
     {
         /* INFO DOCUMENT */

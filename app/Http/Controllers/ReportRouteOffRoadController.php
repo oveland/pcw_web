@@ -10,12 +10,12 @@ use App\Services\pcwserviciosgps\reports\routes\OffRoadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OffRoadController extends Controller
+class ReportRouteOffRoadController extends Controller
 {
     private $offRoadService;
 
     /**
-     * OffRoadController constructor.
+     * ReportRouteOffRoadController constructor.
      * @param OffRoadService $offRoadService
      */
     public function __construct(OffRoadService $offRoadService)
