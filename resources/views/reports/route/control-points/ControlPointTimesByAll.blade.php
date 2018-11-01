@@ -43,14 +43,17 @@
                                     @lang('Driver')
                                 </th>
                                 <th class="text-center bg-inverse-dark text-muted">
-                                    <i class="fa fa-clock-o"></i><br>
+                                    <i class="ion-android-stopwatch"></i><br>
                                     @lang('Route Time')
                                 </th>
                                 @php($controlPoints =  $route->controlPoints)
                                 @foreach($controlPoints as $controlPoint)
-                                    <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}">
-                                        <i class="fa fa-map-marker"></i><br>
-                                        {{ $controlPoint->name }}
+                                    <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}" style="padding: 3px !important;">
+                                        <span>{{ $controlPoint->name }}</span>
+                                        <br>
+                                        <small>
+                                            <i style="font-size: 100% !important;" class="fa fa-map-marker"></i> <strong class="control-point-distance">{{ $controlPoint->distance_from_dispatch }} m</strong>
+                                        </small>
                                     </th>
                                 @endforeach
                                 <th class="bg-inverse-dark text-muted">
@@ -100,27 +103,35 @@
                                                     <br>
                                                     <button type="button" class="f-s-12 m-t-5 btn btn-{{ $reportByControlPoint->statusColor }} light btn-xs"
                                                             data-placement="bottom" data-toggle="popover" data-html="true" data-trigger="hover"
-                                                            title="&nbsp;<i class='fa fa-map-marker text-muted'></i> {{ $controlPoint->name }}<br>
-                                                                <span class='f-s-12'>
-                                                                    <i class='fa fa-car text-muted'></i>
-                                                                    {{ $vehicle->number }}:
-                                                                </span>
-                                                                <b class='f-s-12 text-{{ $reportByControlPoint->statusColor }}'>{{ $reportByControlPoint->statusText }}</b><br>
-                                                                <span class='f-s-12'>
-                                                                    <i class='fa fa-retweet text-muted'></i>
-                                                                    @lang('Round trip'): {{ $dispatchRegister->round_trip }}
-                                                                </span>
+                                                            title="
+                                                                <strong>
+                                                                    <i class='fa fa-map-marker text-muted'></i>  {{ $controlPoint->name }}
+                                                                </strong>
+                                                                <small class='text-bold text-{{ $reportByControlPoint->statusColor }} pull-right'>
+                                                                    <i class='ion-android-stopwatch'></i> {{ $reportByControlPoint->statusText }}
+                                                                </small><br>
+                                                                <small>
+                                                                    <i class='fa fa-car text-muted'></i> {{ $vehicle->number }}
+                                                                </small>
+                                                                <small class='pull-right'>
+                                                                    <i class='fa fa-retweet text-muted'></i> @lang('Round trip') {{ $dispatchRegister->round_trip }}
+                                                                </small>
+                                                                <br>
+                                                                <small class='text-bold'>
+                                                                    @lang('Scheduled Time'): {{ $reportByControlPoint->scheduledControlPointTime }}
+                                                                </small><br>
+                                                                <small class='text-bold'>
+                                                                    @lang('Reported Time'):&nbsp;&nbsp;&nbsp; {{ $reportByControlPoint->measuredControlPointTime }}
+                                                                </small>
                                                             "
                                                             data-content="<div style='width:200px'>
-                                                                <strong>@lang('Scheduled Time'):</strong> {{ $reportByControlPoint->scheduledControlPointTime }}<br>
-                                                                <strong>@lang('Reported Time'):&nbsp;&nbsp;&nbsp;</strong> {{ $reportByControlPoint->measuredControlPointTime }}
-                                                                <hr class='hr'>
+                                                                <strong>@lang('Fringe'):</strong> <small>{{ $reportByControlPoint->fringeName }}</small><br>
                                                                 <strong>@lang('Interpolation report'):</strong><br>
-                                                                <small><strong>@lang('Time scheduled from dispatch'):</strong> {{ $reportByControlPoint->timeScheduled }}</small><br>
-                                                                <small><strong>@lang('Time measured from dispatch'):</strong> {{ $reportByControlPoint->timeMeasured }}</small><br><br>
+                                                                <small><strong> • @lang('Time scheduled from dispatch'):</strong> {{ $reportByControlPoint->timeScheduled }}</small><br>
+                                                                <small><strong> • @lang('Time measured from dispatch'):</strong> {{ $reportByControlPoint->timeMeasured }}</small><br><br>
                                                                 <strong>@lang('GPS report'):</strong><br>
-                                                                <small><strong>@lang('Time scheduled from dispatch'):</strong> {{ $reportByControlPoint->timep }}</small><br>
-                                                                <small><strong>@lang('Time measured from dispatch'):</strong> {{ $reportByControlPoint->timem }}</small>
+                                                                <small><strong> • @lang('Time scheduled from dispatch'):</strong> {{ $reportByControlPoint->timep }}</small><br>
+                                                                <small><strong> • @lang('Time measured from dispatch'):</strong> {{ $reportByControlPoint->timem }}</small>
                                                             </div>">
                                                         <span>
                                                             {{ $reportByControlPoint->difference }}

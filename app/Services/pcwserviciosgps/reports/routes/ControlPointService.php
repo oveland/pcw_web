@@ -121,6 +121,7 @@ class ControlPointService
                 'last' => $last,
                 'controlPointId' => $controlPoint->id,
                 'dispatchRegisterId' => $dispatchRegister->id,
+                'fringeName' => $dispatchRegister->departureFringe->name,
                 'controlPoint' => $controlPoint,
                 'hasReport' => $hasReport,
                 'statusColor' => $statusColor,
