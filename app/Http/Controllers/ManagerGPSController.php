@@ -337,7 +337,7 @@ class ManagerGPSController extends Controller
         $sim = $request->get('sim');
         $gpsType = $request->get('gps_type');
         $vehicle = $simGPS->vehicle;
-        $imei = ( $simGPS->isCoban() )?$request->get('imei'):$vehicle->plate;
+        $imei = $request->get('imei');
         $gpsVehicle = $vehicle->gpsVehicle;
         $error = "";
         $updated = false;
