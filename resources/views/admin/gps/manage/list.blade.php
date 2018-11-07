@@ -275,6 +275,7 @@
 
                         <div class="modal fade" id="modal-create-sim-gps">
                             <form id="form-create-sim-gps" action="{{ route('admin-gps-manage-create-sim-gps') }}" class="form-create-sim-gps">
+                                <input type="hidden" id="create-register" value="">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -287,16 +288,17 @@
                                                 <div class="col-md-8 col-md-offset-1">
                                                     <div class="form-group">
                                                         <div class="text-right col-md-5">
-                                                            <i class="fa fa-car"></i>
                                                             <label for="vehicle_id" class="control-label field-required">
                                                                 @lang('Vehicle')
                                                             </label>
+                                                            <i class="fa fa-car"></i>
                                                         </div>
                                                         <div class="input-group col-md-7">
-                                                            <select id="vehicle_id" name="vehicle_id" class="default-select2 form-control input-sm" title="@lang('Vehicle')">
+                                                            <select id="vehicle_id" name="vehicle_id" class="default-select2 form-control input-sm" title="@lang('Vehicle')"
+                                                                    onchange="$('#create-imei').val($(this).find('option:selected').data('plate'))">
                                                                 <option value="">@lang('Select an option')</option>
                                                                 @foreach( $unAssignedVehicles as $vehicle )
-                                                                    <option value="{{ $vehicle->id }}">{{ "#$vehicle->number | $vehicle->plate" }}</option>
+                                                                    <option data-plate="{{ $vehicle->plate }}" value="{{ $vehicle->id }}">{{ "#$vehicle->number | $vehicle->plate" }}</option>
                                                                 @endforeach
                                                             </select>
                                                             <small>{{ count($unAssignedVehicles) }} @lang('unassigned vehicles')</small>
@@ -304,10 +306,10 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="text-right col-md-5">
-                                                            <i class="fa fa-podcast"></i>
                                                             <label for="gps_type" class="control-label field-required">
                                                                 @lang('GPS Type')
                                                             </label>
+                                                            <i class="fa fa-podcast"></i>
                                                         </div>
                                                         <div class="input-group col-md-7">
                                                             <select id="gps_type" name="gps_type" class="default-select2 form-control input-sm" title="@lang('GPS type')">
@@ -321,10 +323,24 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="text-right col-md-5">
-                                                            <i class="fa fa-phone"></i>
+                                                            <label for="imei" class="control-label field-required">
+                                                                @lang('Imei')
+                                                            </label>
+                                                            <i class="fa fa-tag"></i>
+                                                        </div>
+                                                        <div class="input-group col-md-7">
+                                                            <div class="form-group has-success has-feedback m-b-0">
+                                                                <input id="create-imei" name="imei" type="text" class="form-control input-sm" value="" placeholder="Imei" style="border-radius: 50px">
+                                                                <span class="fa fa-tag form-control-feedback"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="text-right col-md-5">
                                                             <label for="sim" class="control-label field-required">
                                                                 @lang('GPS SIM')
                                                             </label>
+                                                            <i class="fa fa-phone"></i>
                                                         </div>
                                                         <div class="input-group col-md-7">
                                                             <div class="form-group has-success has-feedback m-b-0">
@@ -340,7 +356,7 @@
                                             <button type="button" class="btn width-100 btn-default btn-rounded btn-sm" data-dismiss="modal">
                                                 <i class="fa fa-undo"></i> @lang('Close')
                                             </button>
-                                            <button type="submit" class="btn width-100 btn-lime btn-rounded btn-sm">
+                                            <button type="submit" class="btn width-100 btn-lime btn-rounded btn-sm" onclick="$('#create-register').val(true)">
                                                 <i class="icon-plus"></i> @lang('Create')
                                             </button>
                                         </div>
@@ -460,6 +476,7 @@
                     gerror('@lang('An error occurred in the process. Contact your administrator')');
                 },
                 complete:function(){
+
                 }
             });
         }

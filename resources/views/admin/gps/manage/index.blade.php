@@ -137,6 +137,11 @@
                         url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
+                            if( is_not_null($('#create-register').val()) ){
+                                setTimeout(function(){
+                                    $('a[href="#tab-2"]').click();
+                                },400);
+                            }
                             mainContainer.empty().hide().html(data).fadeIn();
                         },
                         complete:function(){
