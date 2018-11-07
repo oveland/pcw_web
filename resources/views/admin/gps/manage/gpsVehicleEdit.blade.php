@@ -26,11 +26,6 @@
                 </select>
                 <script>
                     $('#gps-type-{{ $id }}').val('{{ $simGPS->gps_type }}');
-                    $('.gps-type').change(function(){
-                        if ($(this).val() === '{{ \App\SimGPS::COBAN }}') {
-                        } else {
-                        }
-                    });
                 </script>
             </div>
             <div class="col-md-4 text-center ">

@@ -141,6 +141,14 @@
                                                                     </li>
                                                                     <li class="divider"></li>
                                                                     @endif
+                                                                    @if( $gpsReport === \App\SimGPS::RUPTELA )
+                                                                        <li>
+                                                                            <a href="javascript:getScript('ruptela')">
+                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela')
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="divider"></li>
+                                                                    @endif
                                                                     <li>
                                                                         <a href="javascript:;" class="set-reset-command">
                                                                             <i class="fa fa-undo text-primary" aria-hidden="true"></i>
@@ -304,7 +312,9 @@
                                                         <div class="input-group col-md-7">
                                                             <select id="gps_type" name="gps_type" class="default-select2 form-control input-sm" title="@lang('GPS type')">
                                                                 @foreach( \App\SimGPS::DEVICES as $device )
-                                                                    <option value="{{ $device }}" data-reset-command="{{ \App\SimGPS::RESET_COMMAND[ $device ] }}">{{ $device }}</option>
+                                                                    <option value="{{ $device }}" {{ $device == $gpsReport?'selected':'' }} data-reset-command="{{ \App\SimGPS::RESET_COMMAND[ $device ] }}">
+                                                                        {{ $device }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>

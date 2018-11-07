@@ -16,7 +16,9 @@
     @endif
 </td>
 <td width="20%" class="text-center">
-    <span class="btn btn-sm btn-rounded btn-{{ $simGPS->getGPSTypeCssColor() }}">{{ $simGPS->gps_type }}</span>
+    <span class="btn btn-sm btn-rounded btn-{{ $simGPS->getGPSTypeCssColor() }}">
+        <i class="icon-tag"></i> {{ $simGPS->gps_type }}
+    </span>
 </td>
 <td width="20%" class="text-center">
     <span class="{{ $gpsVehicle->hasValidImei()?'':'text-danger text-bold tooltips' }}" data-title="@lang('The imei must have a length of 15 characters')">
@@ -24,13 +26,8 @@
     </span>
 </td>
 <td class="text-center" width="20%">
-    <button class="btn btn-{{ $simGPS->operator == 'movistar'?'info':($simGPS->operator == 'avantel'?'purple':'white') }} btn-rounded active">
-        @if( $simGPS->operator == 'movistar' )
-            <img src="https://cdn.iconverticons.com/files/png/1a712eaf7266f623_256x256.png" width="15px">
-        @elseif( $simGPS->operator == 'avantel' )
-            <img src="https://static-s.aa-cdn.net/img/gp/20600003166342/9dHdvx-VIURI3nv_XqIiGitDqIOCZ0ZlvFcISfYSF7EnoqM1VjC78aujcafZwocwgA=w300" width="20px">
-        @else
-        @endif
+    <button class="btn btn-{{ $simGPS->getOperatorCssColor() }} btn-rounded active tooltips" data-title="{{ strtoupper($simGPS->operator) }}">
+        {!! $simGPS->getUrlImageOperator() !!}
         {{ $simGPS->sim }}
     </button>
 </td>

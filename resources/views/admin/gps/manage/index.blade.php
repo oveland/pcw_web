@@ -43,7 +43,6 @@
                                     <label for="company-report" class="control-label field-required text-bold">@lang('Company')</label>
                                     <div class="form-group">
                                         <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
-                                            <option value="any">@lang('Any GPS')</option>
                                             @foreach($companies as $company)
                                                 <option value="{{ $company->id }}">{{ $company->short_name }}</option>
                                             @endforeach
@@ -75,44 +74,34 @@
                                             @lang('Selection')
                                         </label>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="radio m-0 m-b-5">
                                             <label>
                                                 <input type="radio" name="option-selection" value="none" checked> @lang('None')
                                             </label>
                                         </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <div class="radio m-0 m-b-5">
                                             <label>
                                                 <input type="radio" name="option-selection" value="all"> @lang('All')
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="radio m-0 m-b-5">
                                             <label>
                                                 <input type="radio" name="option-selection" value="no-report"> @lang('No report')
                                             </label>
                                         </div>
+                                    </div>
+                                    <div class="col-md-3">
                                         <div class="radio m-0 m-b-5">
                                             <label>
                                                 <input type="radio" name="option-selection" value="without-gps-signal"> @lang('Without GPS signal')
                                             </label>
                                         </div>
                                     </div>
-                                    @if( Auth::user()->isAdmin() )
-                                        <div class="col-md-3">
-                                            <div class="radio m-0 m-b-5">
-                                                <label>
-                                                    <input type="radio" name="option-selection" value="ready"> @lang('Ready')
-                                                </label>
-                                            </div>
-                                            <div class="radio m-0 m-b-5">
-                                                <label>
-                                                    <input type="radio" name="option-selection" value="unready"> @lang('Unready')
-                                                </label>
-                                            </div>
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         @endif

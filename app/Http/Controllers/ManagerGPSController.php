@@ -36,8 +36,7 @@ class ManagerGPSController extends Controller
         if ($companyReport != 'any') {
             $company = (Auth::user()->isAdmin()) ? Company::find($companyReport) : Auth::user()->company;
             $vehiclesCompany = $company->vehicles;
-            $simGPSList = SimGPS::
-            whereIn('vehicle_id', $vehiclesCompany->pluck('id'))
+            $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))
                 ->where('gps_type', $gpsReport)
                 ->get();
 
@@ -52,93 +51,11 @@ class ManagerGPSController extends Controller
                     return $vehicle->number;
                 });
 
-            $readyVehicles = [
-                //6,
-                17,
-                21,
-                22,
-                24,
-                25,
-                27,
-                29,
-                40,
-                42,
-                46,
-                47,
-                49,
-                50,
-                51,
-                61,
-                66,
-                67,
-                //70,
-                //77,
-                83,
-                84,
-                93,
-                100,
-                101,
-                110,
-                111,
-                113,
-                //114,
-                125,
-                132,
-                // On May 3rd
-                1,
-                2,
-                7,
-                8,
-                10,
-                18,
-                23,
-                28,
-                30,
-                32,
-                34,
-                37,
-                38,
-                41,
-                43,
-                48,
-                54,
-                56,
-                59,
-                //62,
-                64,
-                87,
-                90,
-                116,
-                122,
-                135,
-                // On May 8th
-                71,
-                // On may 21th
-                4,
-                6,
-                62,
-                70,
-                77,
-                85,
-                114,
-                33,
-                39,
-                53,
-                92
-            ];
             $selection = array();
             switch ($optionSelection) {
                 case 'all':
                     foreach ($simGPSList as $simGPS) {
                         $selection[] = $simGPS->vehicle->number;
-                    }
-                    break;
-                case 'ready':
-                    $selection = $readyVehicles;
-                    break;
-                case 'unready':
-                    foreach ($simGPSList as $simGPS) {
-                        if (!in_array($simGPS->vehicle->number, $readyVehicles)) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 case 'no-report':
@@ -221,7 +138,7 @@ class ManagerGPSController extends Controller
             $gpsCommands = explode("\n", $commands);
 
             switch ($request->get('gps-type')) {
-                case 'SKYPATROL':
+                case SimGPS::SKYPATROL:
                     $totalCMD = "";
                     $smsCommands = [];
 
@@ -266,7 +183,7 @@ class ManagerGPSController extends Controller
                         $gpsCommands = $smsCommands;
                     }
                     break;
-                case 'COBAN':
+                case SimGPS::COBAN:
                     break;
             }
 
@@ -308,17 +225,17 @@ class ManagerGPSController extends Controller
                 $simGPS->sim = $sim;
                 $simGPS->vehicle_id = $vehicle->id;
                 $simGPS->gps_type = $gpsType;
-                $simGPS->operator = starts_with($sim, '350') ? 'avantel' : 'movistar';
+
                 if ($simGPS->save()) {
                     $created = true;
                     $message = __('Register created successfully');
 
-                    if( $simGPS->isSkypatrol() ){
+                    if ($simGPS->isSkypatrol()) {
                         $gpsVehicle = $vehicle->gpsVehicle;
                         $gpsVehicle->imei = $vehicle->plate;
                         $gpsVehicle->save();
 
-                        \DB::update("UPDATE crear_vehiculo SET imei_gps = '$vehicle->plate' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
+                        \DB::update("UPDATE crear_vehiculo SET imei_gps = '$gpsVehicle->imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
                     }
                 } else {
                     $message = __('Error');
@@ -349,13 +266,12 @@ class ManagerGPSController extends Controller
 
             $checkImei = GpsVehicle::where('id', '<>', $gpsVehicle->id)->where('imei', $imei)->get()->first();
             if ($checkImei) {
-                $error .= "<br>".__('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']);
+                $error .= "<br>" . __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']);
             }
 
-            if( !$error ){
+            if (!$error) {
                 $simGPS->sim = $sim;
                 $simGPS->gps_type = $gpsType;
-                $simGPS->operator = starts_with($sim, '350') ? 'avantel' : 'movistar';
                 $simGPS->save();
 
                 $gpsVehicle->imei = $imei;
@@ -405,6 +321,9 @@ class ManagerGPSController extends Controller
                 break;
             case 'coban':
                 $fileScript = 'ScriptCoban.txt';
+                break;
+            case 'ruptela':
+                $fileScript = 'ScriptRuptela.txt';
                 break;
             default:
                 $fileScript = '';
