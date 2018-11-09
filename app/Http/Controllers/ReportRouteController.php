@@ -8,14 +8,13 @@ use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
 use App\Report;
 use App\Route;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use App\Vehicle;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use ZipArchive;
 
 class ReportRouteController extends Controller
 {
@@ -173,60 +172,11 @@ class ReportRouteController extends Controller
                 'controlPoints' => $controlPoints,
                 'urlLayerMap' => $route->url,
                 'routeCoordinates' => $routeCoordinates->toArray(),
-                'reports' => $reportData,
-                'offRoadFromLocation' => !$dispatchRegister->dateLessThanDateNewOffRoadReport()
+                'reports' => $reportData
             ];
         }
 
         return $locationsReports;
-    }
-
-    /**
-     * Export excel by Round Trip option
-     *
-     * @param $roundTripDispatchRegisters
-     * @param $route
-     * @param $dateReport
-     */
-    public function exportByRoundTrip($roundTripDispatchRegisters, $route, $dateReport)
-    {
-        Excel::create(__('Dispatch report') . " A " . " $dateReport", function ($excel) use ($roundTripDispatchRegisters, $dateReport, $route) {
-            foreach ($roundTripDispatchRegisters as $roundTrip => $dispatchRegisters) {
-                $dataExcel = array();
-                foreach ($dispatchRegisters as $dispatchRegister) {
-                    $vehicle = $dispatchRegister->vehicle;
-                    $driver = $dispatchRegister->driver;
-                    $dataExcel[] = [
-                        __('N°') => count($dataExcel) + 1,                                                                                  # A CELL
-                        __('Turn') => $dispatchRegister->turn,                                                                              # B CELL
-                        __('Vehicle') => intval($vehicle->number),                                                                          # C CELL
-                        __('Plate') => $vehicle->plate,                                                                                     # D CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                                            # E CELL
-                        __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                                       # F CELL
-                        __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),                       # G CELL
-                        __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                                           # H CELL
-                        __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference),                     # I CELL
-                        __('Route Time') =>
-                            $dispatchRegister->complete() ?
-                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) :
-                                '',                                                                                                              # J CELL
-                        __('Status') => $dispatchRegister->status,                                                                          # K CELL
-                        __('Passengers') . ' | ' . __('Day') => intval($dispatchRegister->recorderCounterPerRoundTrip->passengers),    # L CELL
-                    ];
-                }
-
-                $dataExport = (object)[
-                    'fileName' => __('Dispatch report') . " R $dateReport",
-                    'title' => __('Dispatch report') . " | $route->name: $dateReport",
-                    'subTitle' => __('Round Trip') . " $roundTrip",
-                    'data' => $dataExcel
-                ];
-
-                /* SHEETS */
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
-            }
-        })->export('xlsx');
     }
 
     /**
@@ -295,8 +245,8 @@ class ReportRouteController extends Controller
                     'type' => 'routeReportByVehicle'
                 ];
                 /* SHEETS */
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
         })->export('xlsx');
     }

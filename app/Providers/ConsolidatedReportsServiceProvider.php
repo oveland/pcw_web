@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\pcwserviciosgps\ConsolidatedReportsService;
-use App\Services\pcwserviciosgps\reports\routes\ControlPointService;
-use App\Services\pcwserviciosgps\reports\routes\OffRoadService;
-use App\Services\pcwserviciosgps\reports\routes\SpeedingService;
+use App\Services\Reports\ConsolidatedReportsService;
+use App\Services\Reports\Routes\ControlPointService;
+use App\Services\Reports\Routes\OffRoadService;
+use App\Services\Reports\Routes\SpeedingService;
 use Illuminate\Support\ServiceProvider;
 
 class ConsolidatedReportsServiceProvider extends ServiceProvider

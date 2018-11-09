@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DispatchRegister;
-use App\Models\Passengers\PassengerCounterPerDaySixMonth;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Services\PCWTime;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
@@ -13,7 +12,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Auth;
 use App\Company;
-use phpDocumentor\Reflection\Types\Self_;
 
 class PassengersReportDateRangeController extends Controller
 {
@@ -130,7 +128,7 @@ class PassengersReportDateRangeController extends Controller
         }
 
         $infoVehicle = ($vehicle ? __("#") . $vehicle->number . " " : "");
-        PCWExporter::excel([
+        PCWExporterService::excel([
             'fileName' => $infoVehicle . __('Consolidated per dates'),
             'title' => __('Passengers report') . "\n $initialDate - $finalDate",
             'subTitle' => str_limit($infoVehicle . __('Consolidated per dates'), 28),

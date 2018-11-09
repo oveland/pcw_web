@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\ParkingReport;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use Auth;
 use Illuminate\Http\Request;
 use Route;
@@ -70,7 +70,7 @@ class ParkedVehiclesReportController extends Controller
             ];
         }
 
-        PCWExporter::excel([
+        PCWExporterService::excel([
             'fileName' => __('Parked report') . " $dateReport",
             'title' => __('Parked report') . " $dateReport",
             'subTitle' => __('Parked report'),

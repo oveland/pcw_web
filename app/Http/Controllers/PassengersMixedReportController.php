@@ -6,7 +6,7 @@ use App\Company;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
 use App\Route;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use App\Vehicle;
 use Auth;
@@ -141,8 +141,8 @@ class PassengersMixedReportController extends Controller
                     'type' => 'routeReportByVehicle'
                 ];
                 /* SHEETS */
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
         })->
         export('xlsx');

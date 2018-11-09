@@ -3,11 +3,10 @@
 namespace App\Mail;
 
 use App\Company;
-use App\Services\pcwserviciosgps\ConsolidatedReportsService;
+use App\Services\Reports\ConsolidatedReportsService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ConsolidatedReportMail extends Mailable
 {

@@ -10,7 +10,7 @@ namespace App\Services;
 
 use Excel;
 
-class PCWExporter
+class PCWExporterService
 {
     public static $fontStyle = 'Segoe UI Light';
     public static $fontColorInverse = '#eeeeee';

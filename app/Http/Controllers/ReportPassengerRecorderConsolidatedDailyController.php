@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\DispatchRegister;
 use App\Route;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Vehicle;
@@ -68,7 +68,7 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
             ];
         }
 
-        PCWExporter::excel([
+        PCWExporterService::excel([
             'fileName' => __('Passengers report') . " $dateReport",
             'title' => __('Passengers report') . " $dateReport",
             'subTitle' => __('Consolidated per day'),
@@ -104,7 +104,7 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
             ];
         }
 
-        return PCWExporter::store([
+        return PCWExporterService::store([
             'fileName' => __('Passengers report') . " $dateReport",
             'title' => __('Passengers report') . " $dateReport",
             'subTitle' => __('Consolidated per day'),

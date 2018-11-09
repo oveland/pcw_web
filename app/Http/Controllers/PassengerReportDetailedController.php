@@ -7,7 +7,7 @@ use App\DispatchRegister;
 use App\Traits\CounterByRecorder;
 use Excel;
 use App\Route;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,8 +80,8 @@ class PassengerReportDetailedController extends Controller
                 ];
                 //foreach ()
                 /* SHEETS */
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
         })->
         export('xlsx');

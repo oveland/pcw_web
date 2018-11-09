@@ -45,6 +45,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $fringe_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereControlPointId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Report whereFringeId($value)
+ * @property-read \App\ControlPoint|null $controlPoint
  */
 class Report extends Model
 {

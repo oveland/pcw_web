@@ -52,6 +52,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereTotalBackSensor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereTotalFrontSensor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereTotalSensorRecorder($value)
+ * @property int|null $fringe_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Passenger whereFringeId($value)
  */
 class Passenger extends Model
 {

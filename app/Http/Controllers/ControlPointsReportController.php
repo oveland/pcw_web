@@ -3,12 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\ControlPointTime;
-use App\ControlPointTimeReport;
-use App\DispatchRegister;
-use App\Http\Controllers\Utils\StrTime;
 use App\Route;
-use App\Services\pcwserviciosgps\reports\routes\ControlPointService;
+use App\Services\Reports\Routes\ControlPointService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

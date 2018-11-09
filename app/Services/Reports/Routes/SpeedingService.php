@@ -6,7 +6,7 @@
  * Time: 10:16 PM
  */
 
-namespace App\Services\pcwserviciosgps\reports\routes;
+namespace App\Services\Reports\Routes;
 
 
 use App\Company;

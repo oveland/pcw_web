@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Speeding whereSpeed($value)
  * @property int|null $dispatch_register_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Speeding whereDispatchRegisterId($value)
+ * @property-read \App\DispatchRegister|null $dispatchRegister
  */
 class Speeding extends Model
 {

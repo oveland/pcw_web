@@ -6,29 +6,40 @@
  * Time: 11:34 PM
  */
 
-namespace App\Services;
+namespace App\Services\Reports\Passengers;
 
 
 use App\Passenger;
+use App\Vehicle;
+use App\VehicleSeatDistribution;
 
-class PCWSeatSensorGualas
+class SeatDistributionGualasService
 {
-    static function getDistribution($plate)
+    /**
+     * @param Vehicle $vehicle
+     * @return mixed|null
+     */
+    static function getDistribution(Vehicle $vehicle)
     {
-        return config("counter.sensor.distribution.gualas.$plate");
+        $vehicleSeatDistribution = VehicleSeatDistribution::where('vehicle_id', $vehicle->id)->get()->first();
+
+        if ($vehicleSeatDistribution) {
+            return json_decode($vehicleSeatDistribution->json_distribution, true);
+        }
+        return null;
     }
 
     static function makeHtmlTemplate(Passenger $passenger)
     {
         $hexSeating = $passenger->hexSeats;
-        $seatingStatus = self::getSeatingStatusFromHex($hexSeating, $passenger->vehicle->plate);
+        $seatingStatus = self::getSeatingStatusFromHex($hexSeating, $passenger->vehicle);
         return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus', 'hexSeating'));
     }
 
     static function getSeatingStatus(Passenger $passenger)
     {
         return [
-            'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats, $passenger->vehicle->plate),
+            'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats, $passenger->vehicle),
             'hexSeating' => $passenger->hexSeats,
             'location' => [
                 'latitude' => $passenger->latitude,
@@ -46,13 +57,13 @@ class PCWSeatSensorGualas
 
     /**
      * @param $seatingStatusHexadecimal
-     * @param $plate
+     * @param $vehicle
      * @return object
      */
-    static function getSeatingStatusFromHex($seatingStatusHexadecimal, $plate)
+    static function getSeatingStatusFromHex($seatingStatusHexadecimal, Vehicle $vehicle)
     {
         $seatingStatusFromHex = collect([]);
-        $distribution = self::getDistribution($plate);
+        $distribution = self::getDistribution($vehicle);
 
         if (!$distribution || strlen($seatingStatusHexadecimal) < 6) return null;
 

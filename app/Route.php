@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route active()
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Fringe[] $fringes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\CurrentDispatchRegister[] $currentDispatchRegisters
+ * @property-read \App\Dispatch $dispatch
  */
 class Route extends Model
 {

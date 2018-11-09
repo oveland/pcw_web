@@ -43,6 +43,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $vehicle_status_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereVehicleStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister witOffRoads()
+ * @property bool|null $speeding
+ * @property-read \App\DispatchRegister|null $dispatchRegister
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Location validCoordinates()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereSpeeding($value)
  */
 class Location extends Model
 {

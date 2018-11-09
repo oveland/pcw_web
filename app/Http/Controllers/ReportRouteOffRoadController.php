@@ -6,7 +6,7 @@ use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Location;
 use App\Route;
-use App\Services\pcwserviciosgps\reports\routes\OffRoadService;
+use App\Services\Reports\Routes\OffRoadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

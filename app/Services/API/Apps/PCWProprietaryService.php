@@ -13,7 +13,7 @@ use App\CurrentSensorPassengers;
 use App\DispatchRegister;
 use App\Proprietary;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
-use App\Services\PCWSeatSensorGualas;
+use App\Services\Reports\Passengers\SeatDistributionGualasService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Vehicle;
@@ -29,7 +29,7 @@ class PCWProprietaryService implements APIAppsInterface
         $action = $request->get('action');
         if ($action) {
             switch ($action) {
-                case 'track-passengers':
+                case 'track-Passengers':
                     return self::trackPassengers($request);
                     break;
                 default:
@@ -68,7 +68,7 @@ class PCWProprietaryService implements APIAppsInterface
             $data->put('proprietaryName', $proprietary->simpleName);
         } else {
             $data->put('success', false);
-            $data->put('message', __('Proprietary not found in platform'));
+            $data->put('message', __('Proprietaries not found in platform'));
         }
 
 
@@ -100,7 +100,7 @@ class PCWProprietaryService implements APIAppsInterface
         $currentLocation = CurrentLocation::whereVehicle($vehicle);
 
         /* ONLY FOR VEHICLES WITH SEATING SENSOR COUNTER */
-        $seatingStatus = PCWSeatSensorGualas::getSeatingStatusFromHex($currentSensor->seating, $vehicle->plate);
+        $seatingStatus = SeatDistributionGualasService::getSeatingStatusFromHex($currentSensor->seating, $vehicle);
 
         if ($completedDispatchRegisters->isNotEmpty()) {
             $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);

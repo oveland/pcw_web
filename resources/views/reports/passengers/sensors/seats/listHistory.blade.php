@@ -2,7 +2,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand"
+                <a href="javascript:void(0);" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand"
                    title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
@@ -15,9 +15,9 @@
         </div>
         <div class="tab-content panel">
             <div class="row">
-                <div class="col-md-3 p-20 p-b-0" style="border-radius: 10px;border: 1px solid #cdcdcd;-webkit-box-shadow: 3px 0px 23px -9px rgba(0,0,0,0.75);-moz-box-shadow: 3px 0px 23px -9px rgba(0,0,0,0.75);box-shadow: 3px 0px 23px -9px rgba(0,0,0,0.75);">
+                <div class="col-md-3 p-20 p-b-0" style="border-radius: 10px;border: 1px solid #cdcdcd;-webkit-box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);-moz-box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);">
                     <div class="seating-template text-center">
-                        {!! \App\Services\PCWSeatSensorGualas::makeHtmlTemplate($passengers->first()) !!}
+                        {!! \App\Services\Reports\Passengers\SeatDistributionGualasService::makeHtmlTemplate($passengers->first()) !!}
                     </div>
 
                     <hr class="m-0 m-t-10 m-b-10">
@@ -39,9 +39,9 @@
                     <!-- begin progress-bar -->
                     <div class="col-md-12 m-t-10 m-b-10">
                         <div class="progress progress-sm progress-striped active m-0">
-                            <div class="progress-bar progress-bar-info play-progress" style="width: 0%">0</div>
+                            <div class="progress-bar progress-bar-info play-progress" style="width: 0">0</div>
                         </div>
-                        <input id="ex1" data-slider-id='ex1Slider' type="text"/>
+                        <input id="ex1" title="@lang('Sidebar')" data-slider-id='ex1Slider' type="text"/>
                     </div>
                     <!-- end progress-bar -->
 
@@ -71,16 +71,16 @@
     <script type="application/javascript">
         @php( $seatingStatusReport = collect([]) )
         @foreach($passengers as $passenger)
-            @php( $seatingStatusReport->push(\App\Services\PCWSeatSensorGualas::getSeatingStatus($passenger)) )
+            @php( $seatingStatusReport->push(\App\Services\Reports\Passengers\SeatDistributionGualasService::getSeatingStatus($passenger)) )
         @endforeach
-        var seatingStatusReport = JSON.parse('{!! $seatingStatusReport->toJson() !!}');
+        let seatingStatusReport = JSON.parse('{!! $seatingStatusReport->toJson() !!}');
 
-        var indexes = seatingStatusReport.length;
-        var currentIndex = 0;
-        var running = false;
+        let indexes = seatingStatusReport.length;
+        let currentIndex = 0;
+        let running = false;
 
         function render(){
-            var report = seatingStatusReport[currentIndex];
+            let report = seatingStatusReport[currentIndex];
 
             console.log(report.hexSeating);
             $('.hex-seating').html(report.hexSeating);
@@ -88,7 +88,7 @@
                 console.log(container,seating);
 
                 $.each(seating, function (seat, status) {
-                    var seatView = $('.data-'+container).find('#seat-'+seat);
+                    let seatView = $('.data-'+container).find('#seat-'+seat);
                     seatView.removeClass('seat-active').removeClass('seat-inactive');
                     seatView.addClass( status === 1 ? 'seat-active':'seat-inactive' );
                 });
@@ -96,10 +96,10 @@
             });
 
             /* Track events on google maps */
-            var location = report.location;
-            var time = report.time;
-            var passengers = report.passengers;
-            var route = report.route;
+            let location = report.location;
+            let time = report.time;
+            let passengers = report.passengers;
+            let route = report.route;
 
             if (trackingPoint) {
                 trackingPoint.marker.setPosition(new google.maps.LatLng({
@@ -167,20 +167,20 @@
         /*
         *    Functions for tracking events seating on google Maps
         */
-        var markers = [];
-        var trackingPoint = {
+        let markers = [];
+        let trackingPoint = {
             marker:null,
             infowindow:null
         };
-        var infowindows = [];
-        var bounds = new google.maps.LatLngBounds();
+        let infowindows = [];
+        let bounds = new google.maps.LatLngBounds();
 
         initializeMap();
 
         setTimeout(function(){
             seatingStatusReport.forEach(function(report,i){
-                var location = report.location;
-                var contentMarker = makeContentMarkerMain(report);
+                let location = report.location;
+                let contentMarker = makeContentMarkerMain(report);
 
                 addMarker(
                     new google.maps.LatLng({
@@ -210,7 +210,7 @@
 
         // Adds a marker to the map and push to the array.
         function addMarker(location,content,icon) {
-            var marker = new google.maps.Marker({
+            let marker = new google.maps.Marker({
                 position: location,
                 map: map
             });
@@ -220,7 +220,7 @@
             //extend the bounds to include each marker's position
             bounds.extend(marker.position);
 
-            var infowindow = new google.maps.InfoWindow({
+            let infowindow = new google.maps.InfoWindow({
                 content: content
             });
 
@@ -238,13 +238,13 @@
         }
 
         function makeContentMarkerMain(report){
-            var time = report.time;
-            var route = report.route;
-            var passengers = report.passengers;
-            var passengersPlatform = report.passengersPlatform;
-            var vehicleStatus = report.vehicleStatus;
-            var vehicleStatusIconClass = report.vehicleStatusIconClass;
-            var vehicleStatusMainClass = report.vehicleStatusMainClass;
+            let time = report.time;
+            let route = report.route;
+            let passengers = report.passengers;
+            let passengersPlatform = report.passengersPlatform;
+            let vehicleStatus = report.vehicleStatus;
+            let vehicleStatusIconClass = report.vehicleStatusIconClass;
+            let vehicleStatusMainClass = report.vehicleStatusMainClass;
 
             return "<div class='p-5'>"+
                     "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> " + time + "<br>" +

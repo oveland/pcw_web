@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\pcwserviciosgps\reports\routes\SpeedingService;
+use App\Services\Reports\Routes\SpeedingService;
 use App\Speeding;
 use App\Vehicle;
 use Excel;
 use Illuminate\Http\Request;
 use App\Company;
 use App\Http\Controllers\Utils\Geolocation;
-use App\ParkingReport;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use Auth;
 use Route;
 
@@ -95,8 +94,8 @@ class SpeedingReportController extends Controller
                 ];
                 //foreach ()
                 /* SHEETS */
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
         })->
         export('xlsx');

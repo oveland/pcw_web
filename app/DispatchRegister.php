@@ -2,9 +2,7 @@
 
 namespace App;
 
-use App\Http\Controllers\Utils\Database;
 use App\Http\Controllers\Utils\StrTime;
-use App\Models\Passengers\RecorderCounterPerRoundTrip;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
@@ -30,9 +28,8 @@ use Carbon\Carbon;
  * @property int|null $start_recorder
  * @property int|null $end_recorder
  * @property int|null $user_id
- * @property-read \App\Models\Passengers\RecorderCounterPerDay|null $recorderCounter
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\OffRoad[] $offRoads
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $offRoads
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Report[] $reports
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Route|null $route
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Vehicle|null $vehicle
@@ -56,7 +53,6 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereTypeOfDay($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereVehicleId($value)
  * @mixin \Eloquent
- * @property-read \App\Models\Passengers\RecorderCounterPerRoundTrip $recorderCounterPerRoundTrip
  * @property string|null $driver_code
  * @property mixed $departure_fringe
  * @property mixed $arrival_fringe
@@ -111,6 +107,10 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialFrontSensorCounter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialTimeSensorCounter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId)
+ * @property-read mixed $final_passengers_by_sensor_recorder
+ * @property-read mixed $initial_passengers_by_sensor_recorder
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereFinalCounterObs($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatchRegister whereInitialCounterObs($value)
  */
 class DispatchRegister extends Model
 {
@@ -173,16 +173,6 @@ class DispatchRegister extends Model
     {
         if ($this->date == null) dd($this->id, $this->date);
         return Carbon::createFromFormat(config('app.date_format'), $this->date);
-    }
-
-    public function dateLessThanDateNewOffRoadReport()
-    {
-        return $this->getParsedDate()->format('Y-m-d') < '2017-09-16';
-    }
-
-    public function recorderCounterPerRoundTrip()
-    {
-        return $this->hasOne(RecorderCounterPerRoundTrip::class);
     }
 
     public function driver()

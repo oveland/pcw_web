@@ -1,5 +1,5 @@
 <div class="col-md-8 col-md-offset-2 col-sm-12 col-xs-12 m-t-10">
-    @php( $speedingReport = \App\Services\pcwserviciosgps\reports\routes\SpeedingService::groupByFirstSpeedingEvent($dispatchRegister->speedingReport) )
+    @php( $speedingReport = \App\Services\Reports\Routes\SpeedingService::groupByFirstSpeedingEvent($dispatchRegister->speedingReport) )
 
     @if( $speedingReport->isNotEmpty() )
         <script>$('.badge-speeding-{{ $dispatchRegister->id }}').html('{{ count($speedingReport) }}').removeClass('hide')</script>

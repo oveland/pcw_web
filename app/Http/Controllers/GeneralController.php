@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
-use App\Route;
 use App\Vehicle;
 use Auth;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class GeneralController extends Controller

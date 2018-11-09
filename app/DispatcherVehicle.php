@@ -20,6 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatcherVehicle whereRouteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatcherVehicle whereVehicleId($value)
  * @mixin \Eloquent
+ * @property-read \App\Dispatch $dispatch
+ * @property-read \App\Route|null $route
+ * @property-read \App\Vehicle $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DispatcherVehicle active()
  */
 class DispatcherVehicle extends Model
 {

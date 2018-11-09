@@ -22,10 +22,9 @@ class SeatReportController extends Controller
 
     public function play(Request $request)
     {
-        $companyReport = $request->get('company-report');
+        $company = GeneralController::getCompany($request);
         $vehicleReport = $request->get('vehicle-report');
         $typeReport = $request->get('type-report');
-        $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
         $vehicle = Vehicle::find($vehicleReport);
         if (!$vehicle || !$vehicle->belongsToCompany($company)) return view('errors._403');
 
@@ -35,14 +34,12 @@ class SeatReportController extends Controller
                 $finalDate = $request->get('final-date');
                 if ($initialDate > $finalDate) return view('partials.dates.invalidRange');
 
-                $passengers = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')
-                    //->paginate(config('database.total_pagination'));
-                    ->paginate(1000);
+                $allPassengers = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id');
 
-                $passengers->appends($request->all());
+                $initialPassengerCount = $allPassengers->get()->first();
+                $lastPassengerCount = $allPassengers->get()->last();
+                $passengers = $allPassengers->paginate(1000)->appends($request->all());
 
-                $initialPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')->limit(1)->get()->first();
-                $lastPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderByDesc('id')->limit(1)->get()->first();
 
                 return view('reports.passengers.sensors.seats.listHistory', compact('passengers'))->with([
                     'initialPassengerCount' => $initialPassengerCount,

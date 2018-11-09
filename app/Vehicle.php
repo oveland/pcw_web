@@ -32,6 +32,9 @@ use Sofa\Eloquence\Mappable;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\MaintenanceVehicle[] $maintenance
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\PeakAndPlate[] $peakAndPlate
  * @property-read mixed $number_and_plate
+ * @property-read \App\CurrentLocation $currentLocation
+ * @property-read \App\DispatcherVehicle $dispatcherVehicle
+ * @property-read \App\GpsVehicle $gpsVehicle
  */
 class Vehicle extends Model
 {

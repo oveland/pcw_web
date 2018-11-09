@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\GpsVehicle whereImei($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\GpsVehicle whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\GpsVehicle whereVehicleId($value)
+ * @property-read \App\Vehicle $vehicle
  */
 class GpsVehicle extends Model
 {

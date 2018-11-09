@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\DispatchRegister;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -67,7 +67,7 @@ class DriverConsolidatedController extends Controller
             ];
         }
 
-        PCWExporter::excel([
+        PCWExporterService::excel([
             'fileName' => __('Passengers report') . " $dateReport",
             'title' => __('Passengers report') . " $dateReport",
             'subTitle' => __('Consolidated per day'),

@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereVehiclePlate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereVehicleStatusId($value)
  * @mixin \Eloquent
+ * @property string|null $time_period
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocationsGPS whereTimePeriod($value)
  */
 class CurrentLocationsGPS extends Model
 {

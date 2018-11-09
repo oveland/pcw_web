@@ -6,13 +6,12 @@
  * Time: 10:16 PM
  */
 
-namespace App\Services\pcwserviciosgps\reports\routes;
+namespace App\Services\Reports\Routes;
 
 
 use App\Company;
 use App\DispatchRegister;
 use App\Location;
-use App\OffRoad;
 use App\Vehicle;
 
 class OffRoadService
@@ -47,7 +46,7 @@ class OffRoadService
      *
      * @param Company $company
      * @param $dateReport
-     * @return OffRoad[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
     function allOffRoads(Company $company, $dateReport)
     {
@@ -63,7 +62,7 @@ class OffRoadService
      *
      * @param Vehicle $vehicle
      * @param $dateReport
-     * @return OffRoad[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
     function offRoadsByVehicle(Vehicle $vehicle, $dateReport)
     {
@@ -78,7 +77,7 @@ class OffRoadService
      * Get all offRoads of a dispatch register
      *
      * @param DispatchRegister $dispatchRegister
-     * @return OffRoad[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
     function offRoadsByDispatchRegister(DispatchRegister $dispatchRegister)
     {

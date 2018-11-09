@@ -52,10 +52,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
         $schedule->command('gps:check-status')->everyMinute();
 
-        //$schedule->command('sms:send-report')->cron(config('sms.sms_cron_report'));
-        //$schedule->command('sms:send-proprietary-report')->cron(config('sms.sms_cron_proprietary_report'));
-
-
         $schedule->command('send-mail:consolidated')->dailyAt('04:00');
         $schedule->command('send-mail:consolidated-passengers')->dailyAt('04:10');
 

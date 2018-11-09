@@ -6,15 +6,15 @@
  * Time: 9:47 PM
  */
 
-namespace App\Services\pcwserviciosgps;
+namespace App\Services\Reports;
 
 use App\Company;
 use App\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
-use App\Services\PCWExporter;
-use App\Services\pcwserviciosgps\reports\routes\ControlPointService;
-use App\Services\pcwserviciosgps\reports\routes\OffRoadService;
-use App\Services\pcwserviciosgps\reports\routes\SpeedingService;
+use App\Services\PCWExporterService;
+use App\Services\Reports\Routes\ControlPointService;
+use App\Services\Reports\Routes\OffRoadService;
+use App\Services\Reports\Routes\SpeedingService;
 use Excel;
 
 class ConsolidatedReportsService
@@ -152,8 +152,8 @@ class ConsolidatedReportsService
                 ];
 
                 /* SHEETS */
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             })->store($fileExtension);
 
             $pathsToConsolidatesReportFiles->push("$excel->storagePath/$fileName.$fileExtension");

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\DispatchRegister;
 use App\Route;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use App\User;
 use Auth;
@@ -113,7 +113,7 @@ class ReportRouteDispatchUsersController extends Controller
             ];;
         }
 
-        PCWExporter::excel([
+        PCWExporterService::excel([
             'fileName' => __('Round trip report') . " $dateReport",
             'title' => __('Round trip report'),
             'subTitle' => $dateReport,

@@ -6,7 +6,7 @@ use App\DispatchRegister;
 use Excel;
 use Illuminate\Http\Request;
 use App\Route;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use Carbon\Carbon;
 use Auth;
@@ -105,8 +105,8 @@ class PassengerReportDetailedDateRangeController extends Controller
                     'data' => $dataExcel,
                     'type' => 'passengerReportByRangeTotalFooter'
                 ];
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
         })->
         export('xlsx');

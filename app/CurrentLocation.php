@@ -51,6 +51,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\VehicleStatus|null $vehicleStatus
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereCurrentMileage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereYesterdayOdometer($value)
+ * @property bool|null $speeding
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CurrentLocation whereSpeeding($value)
  */
 class CurrentLocation extends Model
 {

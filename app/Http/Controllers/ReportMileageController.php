@@ -6,7 +6,7 @@ use App\Company;
 use App\DispatchRegister;
 use App\Location;
 use App\Route;
-use App\Services\PCWExporter;
+use App\Services\PCWExporterService;
 use App\Vehicle;
 use Auth;
 use Excel;
@@ -128,8 +128,8 @@ class ReportMileageController extends Controller
                 ];
 
                 /* SHEETS */
-                $excel = PCWExporter::createHeaders($excel, $dataExport);
-                $excel = PCWExporter::createSheet($excel, $dataExport);
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
         })->
         export('xlsx');
