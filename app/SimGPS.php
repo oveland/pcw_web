@@ -55,7 +55,7 @@ class SimGPS extends Model
     const RESET_COMMAND = [
         self::SKYPATROL => 'AT$RESET',
         self::COBAN => 'reset123456',
-        self::RUPTELA => 'reset123456',
+        self::RUPTELA => 'reset',
     ];
 
     const GPS_COLOR = [

@@ -48,11 +48,22 @@ class ConsolidatedReportMailCommand extends Command
 
         $mail = new ConsolidatedReportMail($company, $dateReport);
         if ($mail->buildReport()) {
-            Mail::to(['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'], $company->name)
-                ->cc(['oscarivelan@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'])
+            $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
+            $mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+
+            Mail::to($mailTo, $company->name)
+                ->bcc($mailToBcc)
                 ->send($mail);
 
             $this->info("$company->name Mail send for date $dateReport!");
+            foreach ($mailTo as $to){
+                $this->info("   >> To: $to");
+            }
+
+            $this->info("-------------------------------------------");
+            foreach ($mailToBcc as $bcc){
+                $this->info("   >> Bcc: $bcc");
+            }
         } else {
             $this->info("No reports found for date $dateReport");
         }

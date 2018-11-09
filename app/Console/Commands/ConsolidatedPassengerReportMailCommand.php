@@ -48,11 +48,22 @@ class ConsolidatedPassengerReportMailCommand extends Command
 
         $mail = new ConsolidatedPassengersReportMail($company, $dateReport);
         if ($mail->buildReport()) {
-            Mail::to(['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'], $company->name)
-                ->bcc(['oscarivelan@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'])
+            $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
+            $mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+
+            Mail::to($mailTo, $company->name)
+                ->bcc($mailToBcc)
                 ->send($mail);
 
             $this->info("$company->name Consolidated Passengers Mail send for date $dateReport!");
+            foreach ($mailTo as $to){
+                $this->info("   >> To: $to");
+            }
+
+            $this->info("-------------------------------------------");
+            foreach ($mailToBcc as $bcc){
+                $this->info("   >> Bcc: $bcc");
+            }
         } else {
             $this->info("No consolidated passengers reports found for date $dateReport");
         }
