@@ -232,7 +232,7 @@
                                 speeding[i] = report.speeding ? 'label-danger' : '';
 
                                 new google.maps.Marker({
-                                    title: report.date + " | " + report.time + " | " + routeDistance + " Km | " + "  " + percent + "%",
+                                    title: report.controlPointName + " | " + report.time + " | " + routeDistance + " m | " + "  " + percent + "%",
                                     map: map,
                                     icon: pointMap[report.offRoad ? 1 : 0],
                                     position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}

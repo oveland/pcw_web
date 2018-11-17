@@ -7,6 +7,7 @@ use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
 use App\Mail\ConsolidatedReportMail;
+use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Mail;
 use Illuminate\Http\Request;
@@ -32,7 +33,11 @@ class ToolsController extends Controller
 
         dump("STARTING RECOVERY PROCESS FOR $company->short_name at $date");
 
-        $vehicles = $company->vehicles;
+        //$vehicles = $company->vehicles;
+        $plate = $request->get('plate');
+        $vehicle = Vehicle::where('plate',$plate)->get()->first();
+        if($vehicle)$vehicles = collect([])->push($vehicle);
+        else dd("Vehicle $plate not found");
 
         foreach ($vehicles as $vehicle) {
             $dispatchRegisters = DispatchRegister::completed()
@@ -43,7 +48,7 @@ class ToolsController extends Controller
 
             if( $dispatchRegisters->isNotEmpty() ){
                 $processed = false;
-                dump("Process for vehicle $vehicle->number:");
+                dump("Process for vehicle $vehicle->number ($vehicle->plate):");
                 dump("---------------------------------");
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $route = $dispatchRegister->route;
@@ -54,7 +59,7 @@ class ToolsController extends Controller
 
                     $historicLocations = collect(\DB::select("
                     SELECT TO_CHAR((fecha||' '||hora)::TIMESTAMP, 'DD/MM/YYYY HH24:MI:SS') date, hora \"time\", lat latitude, lng longitude, orientacion orientation, estado status 
-                    FROM markers_historial_23_octubre_2018 
+                    FROM markers_historial 
                     WHERE fecha = '$date' 
                     AND id_gps = '$vehicle->plate' 
                     AND hora BETWEEN '$startTimeRange' AND '$endTimeRange' 

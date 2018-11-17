@@ -144,6 +144,7 @@ class ReportRouteController extends Controller
                         'time' => $report->date->toTimeString(),
                         'timeReport' => $report->timed,
                         'distance' => $report->distancem,
+                        'controlPointName' => $report->controlPoint->name,
                         'completedPercent' => number_format($completedPercent, 1, ',', '.'),
                         'value' => $report->status_in_minutes,
                         'latitude' => $location->latitude,
