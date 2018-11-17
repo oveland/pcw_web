@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\PeakAndPlate;
+use App\Models\Company\Company;
+use App\Models\Vehicles\PeakAndPlate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

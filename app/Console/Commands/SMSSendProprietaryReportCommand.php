@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\CurrentDispatchRegister;
-use App\CurrentSensorPassengers;
-use App\DispatchRegister;
+use App\Models\Routes\CurrentDispatchRegister;
+use App\Models\Passengers\CurrentSensorPassengers;
+use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\API\SMS;
-use App\Proprietary;
+use App\Models\Proprietaries\Proprietary;
 use App\Traits\CounterByRecorder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;

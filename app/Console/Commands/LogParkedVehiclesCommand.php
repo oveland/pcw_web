@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\CurrentParkingReport;
-use App\ParkingReport;
+use App\Models\Vehicles\CurrentParkingReport;
+use App\Models\Vehicles\ParkingReport;
 use DB;
 use Illuminate\Console\Command;
 

@@ -8,8 +8,8 @@
 
 namespace App\Traits;
 
-use App\DispatchRegister;
-use App\Vehicle;
+use App\Models\Routes\DispatchRegister;
+use App\Models\Vehicles\Vehicle;
 
 trait CounterByRecorder
 {

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Company;
+use App\Models\Company\Company;
 use App\Mail\ConsolidatedPassengersReportMail;
 use Carbon\Carbon;
 use Illuminate\Console\Command;

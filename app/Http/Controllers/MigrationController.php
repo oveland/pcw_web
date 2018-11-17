@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Dispatch;
+use App\Models\Routes\Dispatch;
 use Auth;
 use App\CobanVehicle;
-use App\Company;
-use App\ControlPoint;
-use App\ControlPointTime;
-use App\Fringe;
-use App\GpsVehicle;
+use App\Models\Company\Company;
+use App\Models\Routes\ControlPoint;
+use App\Models\Routes\ControlPointTime;
+use App\Models\Routes\Fringe;
+use App\Models\Vehicles\GpsVehicle;
 use App\Http\Controllers\Utils\Database;
-use App\Route;
-use App\RouteGoogle;
-use App\User;
-use App\Vehicle;
+use App\Models\Routes\Route;
+use App\Models\Routes\RouteGoogle;
+use App\Models\Users\User;
+use App\Models\Vehicles\Vehicle;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

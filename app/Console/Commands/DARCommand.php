@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Company;
+use App\Models\Company\Company;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;

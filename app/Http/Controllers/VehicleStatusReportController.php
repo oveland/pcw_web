@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\VehicleStatus;
-use App\Vehicle;
-use App\VehicleStatusReport;
+use App\Models\Company\Company;
+use App\Models\Vehicles\VehicleStatus;
+use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleStatusReport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 

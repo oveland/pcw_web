@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\API\SMS;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use DB;
 use Illuminate\Console\Command;
 

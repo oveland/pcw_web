@@ -76,7 +76,7 @@
                                 <label for="driver-report" class="control-label">@lang('Driver')(es)</label>
                                 <div class="form-group">
                                     <select name="driver-report[]" id="driver-report" class="default-select2 form-control col-md-12" multiple>
-                                        @foreach(\App\Driver::where('company_id',14)->get() as $driver)
+                                        @foreach(\App\Models\Drivers\Driver::where('company_id',14)->get() as $driver)
                                             <option value="{{$driver->code}}">#{{ $driver->code }} | {{ $driver->fullName() }}</option>
                                         @endforeach
                                     </select>

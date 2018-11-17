@@ -86,7 +86,7 @@
                             <tbody>
                             @foreach($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle)
                                 @php
-                                    $vehicle = \App\Vehicle::find($vehicleId);
+                                    $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
                                     $counterByRecorder = $counterByRecorderByVehicles->where('vehicleId', $vehicleId)->first()->counter;
                                     $issues = $counterByRecorder->issues;
                                     $counterByRecorderByVehicle = $counterByRecorder->report[$vehicleId];

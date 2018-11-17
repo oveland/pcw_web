@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\DispatchRegister;
+use App\Models\Routes\DispatchRegister;
 use Excel;
 use Illuminate\Http\Request;
-use App\Route;
+use App\Models\Routes\Route;
 use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use Carbon\Carbon;
 use Auth;
-use App\Company;
+use App\Models\Company\Company;
 
 class PassengerReportDetailedDateRangeController extends Controller
 {

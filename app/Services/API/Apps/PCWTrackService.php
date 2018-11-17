@@ -10,7 +10,7 @@ namespace App\Services\API\Apps;
 
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\PCWTime;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;

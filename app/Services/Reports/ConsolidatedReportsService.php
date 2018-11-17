@@ -8,8 +8,8 @@
 
 namespace App\Services\Reports;
 
-use App\Company;
-use App\DispatchRegister;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\ControlPointService;

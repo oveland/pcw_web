@@ -6,7 +6,7 @@
 <div class="col-sm-12 col-xs-12 col-md-12">
     <ul class="list-group">
         @foreach($route->controlPoints->sortBy('order') as $controlPoint)
-            @php($controlPointTimes = \App\ControlPointTime::whereControlPointId($controlPoint->id)->orderBy('day_type_id')->get())
+            @php($controlPointTimes = \App\Models\Routes\ControlPointTime::whereControlPointId($controlPoint->id)->orderBy('day_type_id')->get())
             <li class="list-group-item text-muted text-left bg-{{$loop->first && $controlPoint->type !='Inicial'?'danger':''}} bg-{{$loop->last && $controlPoint->type !='Normal'?'danger':''}}"
                 data-toggle="collapse" data-target="#control-point-{{ $controlPoint->id }}">
                 <div class="row">
@@ -42,7 +42,7 @@
                             @endphp
 
                             @foreach($controlPointTimesByDay as $dayTypeId => $controlPointTimes)
-                                @php($dayType = \App\DayType::find($dayTypeId))
+                                @php($dayType = \App\Models\Routes\DayType::find($dayTypeId))
                                 <div class="m-t-3 tab-pane fade {{ $loop->first ? 'active in':'' }} day-type-{{ $dayTypeId }}-{{ $route->id }}" title="@lang('Time from dispatch') - {{ $dayType->description ?? 'None' }}">
                                     @php
                                         $controlPointTimes = $controlPointTimes->sortBy(function($controlPointTime){

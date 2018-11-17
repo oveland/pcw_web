@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\DispatchRegister;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
-use App\Location;
+use App\Models\Vehicles\Location;
 use App\Mail\ConsolidatedReportMail;
 use Carbon\Carbon;
 use Mail;

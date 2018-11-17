@@ -8,13 +8,13 @@
 
 namespace App\Services\API\Web;
 
-use App\Company;
-use App\CurrentSensorPassengers;
-use App\DispatchRegister;
+use App\Models\Company\Company;
+use App\Models\Passengers\CurrentSensorPassengers;
+use App\Models\Routes\DispatchRegister;
 use App\Services\API\Web\Contracts\APIWebInterface;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

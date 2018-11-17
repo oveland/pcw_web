@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\DispatchRegister;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
 use Auth;
 use Illuminate\Http\Request;

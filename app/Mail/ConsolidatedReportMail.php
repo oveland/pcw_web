@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Company;
+use App\Models\Company\Company;
 use App\Services\Reports\ConsolidatedReportsService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

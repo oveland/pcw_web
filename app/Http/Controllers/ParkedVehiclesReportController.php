@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
+use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
-use App\ParkingReport;
+use App\Models\Vehicles\ParkingReport;
 use App\Services\PCWExporterService;
 use Auth;
 use Illuminate\Http\Request;

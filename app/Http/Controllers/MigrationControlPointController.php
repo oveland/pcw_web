@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Utils\Geolocation;
 use Auth;
-use App\Company;
-use App\Route;
+use App\Models\Company\Company;
+use App\Models\Routes\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 

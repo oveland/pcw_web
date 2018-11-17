@@ -9,8 +9,8 @@
 namespace App\Http\Controllers\API;
 
 
-use App\SimGPS;
-use App\Vehicle;
+use App\Models\Vehicles\SimGPS;
+use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 

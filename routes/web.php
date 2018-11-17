@@ -137,8 +137,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('speeding'))->group(function () {
                 Route::get('/', 'SpeedingReportController@index')->name('report-vehicle-speeding');
                 Route::get('/show', 'SpeedingReportController@show')->name('report-vehicle-speeding-search-report');
-                Route::get('/address/{speeding}', 'SpeedingReportController@getAddressFromCoordinates')->name('report-vehicle-speeding-geolocation-address');
-                Route::get('/image/{speeding}', 'SpeedingReportController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
+                Route::get('/address/{location}', 'SpeedingReportController@getAddressFromCoordinates')->name('report-vehicle-speeding-geolocation-address');
+                Route::get('/image/{location}', 'SpeedingReportController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
                 Route::any('/ajax', 'SpeedingReportController@ajax')->name('report-vehicle-speeding-ajax-action');
             });
 

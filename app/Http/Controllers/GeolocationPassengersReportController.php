@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\DispatchRegister;
-use App\Passenger;
-use App\Route;
+use App\Models\Routes\DispatchRegister;
+use App\Models\Passengers\Passenger;
+use App\Models\Routes\Route;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Auth;
-use App\Company;
+use App\Models\Company\Company;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

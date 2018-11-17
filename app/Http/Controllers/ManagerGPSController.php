@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\CurrentLocationsGPS;
-use App\GpsVehicle;
+use App\Models\Company\Company;
+use App\Models\Vehicles\CurrentLocationsGPS;
+use App\Models\Vehicles\GpsVehicle;
 use App\Http\Controllers\API\SMS;
-use App\SimGPS;
-use App\Vehicle;
-use App\VehicleStatus;
+use App\Models\Vehicles\SimGPS;
+use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleStatus;
 use Auth;
 use Carbon\Carbon;
 use Dompdf\Exception;

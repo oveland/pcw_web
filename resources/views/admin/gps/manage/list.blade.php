@@ -105,7 +105,7 @@
                                                                     <span class="caret"></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu">
-                                                                    @if( $gpsReport === \App\SimGPS::SKYPATROL )
+                                                                    @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL )
                                                                     <li>
                                                                         <a href="javascript:getScript('general-skypatrol')">
                                                                             <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script General Skypatrol')
@@ -133,7 +133,7 @@
                                                                     </li>
                                                                     <li class="divider"></li>
                                                                     @endif
-                                                                    @if( $gpsReport === \App\SimGPS::COBAN )
+                                                                    @if( $gpsReport === \App\Models\Vehicles\SimGPS::COBAN )
                                                                     <li>
                                                                         <a href="javascript:getScript('coban')">
                                                                             <i class="fa fa-podcast text-warning" aria-hidden="true"></i> @lang('Script Coban')
@@ -141,7 +141,7 @@
                                                                     </li>
                                                                     <li class="divider"></li>
                                                                     @endif
-                                                                    @if( $gpsReport === \App\SimGPS::RUPTELA )
+                                                                    @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
                                                                         <li>
                                                                             <a href="javascript:getScript('ruptela')">
                                                                                 <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela')
@@ -313,8 +313,8 @@
                                                         </div>
                                                         <div class="input-group col-md-7">
                                                             <select id="gps_type" name="gps_type" class="default-select2 form-control input-sm" title="@lang('GPS type')">
-                                                                @foreach( \App\SimGPS::DEVICES as $device )
-                                                                    <option value="{{ $device }}" {{ $device == $gpsReport?'selected':'' }} data-reset-command="{{ \App\SimGPS::RESET_COMMAND[ $device ] }}">
+                                                                @foreach( \App\Models\Vehicles\SimGPS::DEVICES as $device )
+                                                                    <option value="{{ $device }}" {{ $device == $gpsReport?'selected':'' }} data-reset-command="{{ \App\Models\Vehicles\SimGPS::RESET_COMMAND[ $device ] }}">
                                                                         {{ $device }}
                                                                     </option>
                                                                 @endforeach

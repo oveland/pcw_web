@@ -9,7 +9,7 @@
 namespace App\Traits;
 
 
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 
 trait CounterBySensor
 {

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vehicles\Location;
 use App\Services\Reports\Routes\SpeedingService;
-use App\Speeding;
-use App\Vehicle;
+use App\Models\Vehicles\Speeding;
+use App\Models\Vehicles\Vehicle;
 use Excel;
 use Illuminate\Http\Request;
-use App\Company;
+use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
 use Auth;
@@ -102,23 +103,21 @@ class SpeedingReportController extends Controller
     }
 
     /**
-     * @param Speeding $speeding
+     * @param Location $location
      * @return mixed
      */
-    public function getAddressFromCoordinates(Speeding $speeding)
+    public function getAddressFromCoordinates(Location $location)
     {
-        sleep(1); // Because google (Free layer) only lets 50 request/second
-        return Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude);
+        return Geolocation::getAddressFromCoordinates($location->latitude, $location->longitude);
     }
 
     /**
-     * @param Speeding $speeding
+     * @param Location $location
      * @return mixed
      */
-    public function getImageLocationFromCoordinates(Speeding $speeding)
+    public function getImageLocationFromCoordinates(Location $location)
     {
-        sleep(1); // Because google (Free layer) only lets 50 request/second
-        return Geolocation::getImageLocationFromCoordinates($speeding->latitude, $speeding->longitude);
+        return Geolocation::getImageLocationFromCoordinates($location->latitude, $location->longitude);
     }
 
     /**

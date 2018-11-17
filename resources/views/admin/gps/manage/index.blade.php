@@ -60,8 +60,8 @@
                                     <label for="gps-report" class="control-label field-required text-bold">@lang('GPS')</label>
                                     <div class="form-group">
                                         <select name="gps-report" id="gps-report" class="default-select2 form-control col-md-12">
-                                            @foreach( \App\SimGPS::DEVICES as $device )
-                                                <option value="{{ $device }}" data-reset-command="{{ \App\SimGPS::RESET_COMMAND[ $device ] }}">{{ $device }}</option>
+                                            @foreach( \App\Models\Vehicles\SimGPS::DEVICES as $device )
+                                                <option value="{{ $device }}" data-reset-command="{{ \App\Models\Vehicles\SimGPS::RESET_COMMAND[ $device ] }}">{{ $device }}</option>
                                             @endforeach
                                         </select>
                                     </div>

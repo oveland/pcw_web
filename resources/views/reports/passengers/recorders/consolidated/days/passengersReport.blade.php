@@ -80,7 +80,7 @@
                     @endphp
                     @foreach($reports as $report)
                         @php
-                            $vehicle = \App\Vehicle::find($report->vehicle_id);
+                            $vehicle = \App\Models\Vehicles\Vehicle::find($report->vehicle_id);
                             $sensorRecorder = $report->passengers->sensorRecorder;
                             $recorder = $report->passengers->recorder;
                             $sensor = $report->passengers->sensor;

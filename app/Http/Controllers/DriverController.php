@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\Driver;
+use App\Models\Company\Company;
+use App\Models\Drivers\Driver;
 use App\Http\Controllers\Utils\CSV;
 use Auth;
 use Illuminate\Http\Request;

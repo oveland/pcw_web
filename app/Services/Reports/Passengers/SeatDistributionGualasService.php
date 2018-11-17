@@ -9,9 +9,9 @@
 namespace App\Services\Reports\Passengers;
 
 
-use App\Passenger;
-use App\Vehicle;
-use App\VehicleSeatDistribution;
+use App\Models\Passengers\Passenger;
+use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleSeatDistribution;
 
 class SeatDistributionGualasService
 {

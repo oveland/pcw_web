@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\DispatchRegister;
-use App\HistorySeat;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
+use App\Models\Passengers\HistorySeat;
 use App\Http\Controllers\Utils\Geolocation;
-use App\Route;
+use App\Models\Routes\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;

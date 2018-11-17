@@ -22,7 +22,7 @@
                 </div>
             </h5>
             @foreach($unAssignedPeakAndPlates as $unAssignedPeakAndPlate)
-                @php($vehicle = \App\Vehicle::find($unAssignedPeakAndPlate->vehicleId))
+                @php($vehicle = \App\Models\Vehicles\Vehicle::find($unAssignedPeakAndPlate->vehicleId))
                 <div class="fc-event" data-id="{{ $vehicle->id }}">
                     <div class="fc-event-icon">
                         <i class="fa fa-car fa-fw text-success-light"></i>

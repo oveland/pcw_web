@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\DispatchRegister;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
-use App\Report;
-use App\Route;
+use App\Models\Routes\Report;
+use App\Models\Routes\Route;
 use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

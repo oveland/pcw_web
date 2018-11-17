@@ -9,8 +9,8 @@
 namespace App\Interfaces;
 
 
-use App\Passenger;
-use App\Vehicle;
+use App\Models\Passengers\Passenger;
+use App\Models\Vehicles\Vehicle;
 
 interface SeatDistributionInterface
 {

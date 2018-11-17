@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\CounterIssue;
-use App\Passenger;
-use App\Route;
-use App\Vehicle;
+use App\Models\Company\Company;
+use App\Models\Passengers\CounterIssue;
+use App\Models\Passengers\Passenger;
+use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
 use Auth;
 use Illuminate\Http\Request;
 

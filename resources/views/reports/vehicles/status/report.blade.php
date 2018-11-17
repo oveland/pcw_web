@@ -9,7 +9,7 @@
             <div class="text-white m-t-10">
                 <ul class="nav nav-pills nav-pills-success">
                     @foreach($vehicleStatusReports as $vehicleId => $vehicleStatusReport)
-                    @php( $vehicle = \App\Vehicle::find($vehicleId) )
+                    @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
                     <li class="{{ $loop->first ? 'active':'' }} tooltips" data-title="{{ $vehicle->plate }} ({{ $vehicle->company->short_name }})">
                         <a href="#vehicle-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true">
                             <i class="fa fa-car" aria-hidden="true"></i> {{ $vehicle->number }}
@@ -21,7 +21,7 @@
         </div>
         <div class="tab-content p-0">
             @foreach($vehicleStatusReports as $vehicleId => $vehicleStatusReport)
-                @php( $vehicle = \App\Vehicle::find($vehicleId) )
+                @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
                 <div id="vehicle-{{ $vehicle->id }}" class="table-responsive tab-pane fade {{ $loop->first ? 'active in':'' }}">
                 <!-- begin table -->
                     <table class="table table-bordered table-striped table-hover table-valign-middle">

@@ -21,7 +21,7 @@
 
             <ul class="nav nav-pills nav-pills-success">
                 @foreach($routeReports as $route_id => $routeReport)
-                    @php( $route = \App\Route::find($route_id) )
+                    @php( $route = \App\Models\Routes\Route::find($route_id) )
                     <li class="{{ $loop->first ? 'active':'' }}">
                         <a href="#route-report-tab-{{ $route_id }}" data-toggle="tab" aria-expanded="true">
                             <i class="fa fa-bus" aria-hidden="true"></i> {{ $route->name }}
@@ -34,7 +34,7 @@
         <div class="tab-content p-0">
             @foreach($routeReports as $route_id => $routeReport)
                 @php
-                    $route = \App\Route::find($route_id);
+                    $route = \App\Models\Routes\Route::find($route_id);
                     $report = $routeReport->report;
                     $issuesByVehicles = $routeReport->issues;
                 @endphp

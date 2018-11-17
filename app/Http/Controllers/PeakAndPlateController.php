@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\PeakAndPlate;
-use App\Vehicle;
+use App\Models\Company\Company;
+use App\Models\Vehicles\PeakAndPlate;
+use App\Models\Vehicles\Vehicle;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

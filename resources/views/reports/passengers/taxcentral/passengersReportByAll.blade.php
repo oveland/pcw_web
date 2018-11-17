@@ -69,7 +69,7 @@
                                 {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }}
                             </td>
                         </tr>
-                        @php($routeTaxCentral = \App\Route::find(158))
+                        @php($routeTaxCentral = \App\Models\Routes\Route::find(158))
                         <tr class="inverse bg-inverse text-white">
                             <td colspan="6" class="text-right">@lang('Route distance') (Km)</td>
                             <td colspan="2" class="text-left">

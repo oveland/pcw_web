@@ -11,7 +11,7 @@
 @foreach($issuesByVehicles as $vehicle_id => $issuesByVehicle)
     @if( count($issuesByVehicle) )
          @php($index++)
-        @php( $vehicle = \App\Vehicle::find($vehicle_id) )
+        @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicle_id) )
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-t-5">
             <!-- begin widget -->
             <div class="widget">

@@ -84,7 +84,7 @@
                                                     <div class="col-md-12">
                                                         <div class="panel">
                                                             <ul class="nav nav-tabs nav-tabs-primary nav-justified">
-                                                                @foreach(\App\DayType::all()->sortBy('id') as $dayType)
+                                                                @foreach(\App\Models\Routes\DayType::all()->sortBy('id') as $dayType)
                                                                     <li class="{{ $loop->first ? 'active': '' }}">
                                                                         <a href=".day-type-{{ $dayType->id }}-{{ $route->id }}" data-toggle="tab">
                                                                             <i class="fa fa-calendar-check-o text-info" aria-hidden="true"></i>

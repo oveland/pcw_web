@@ -29,7 +29,7 @@
                         <div data-scrollbar="true" data-height="400px" data-distance="0px">
                             <ul class="widget-todolist">
                                 @foreach($offRoadsByVehicles as $vehicleId => $offRoadReport)
-                                    @php( $vehicle = App\Vehicle::find($vehicleId) )
+                                    @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
                                     @php( $totalOffRoads = $offRoadReport->sum(function ($route) { return count($route); }) )
 
                                     <li id="vehicle-list-{{ $vehicle->number }}" class="vehicle-list accordion-toggle accordion-toggle-styled {{ $loop->first ? 'collapsed':'' }} accordion-vehicles" data-toggle="collapse" data-parent="#accordion-vehicles" data-target="#vehicle-{{ $vehicleId }}" {{ $loop->first ? 'aria-expanded=true':'' }}>
@@ -58,14 +58,14 @@
                 </div>
                 <div id="accordion-vehicles" class="col-md-6 col-lg-8 col-sm-12 col-sm-12">
                     @foreach($offRoadsByVehicles as $vehicleId => $offRoadReports)
-                        @php( $vehicle = App\Vehicle::find($vehicleId) )
+                        @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
                         <div id="vehicle-{{ $vehicleId }}" class="panel-collapse collapse {{ $loop->first ? 'in':'' }}" aria-expanded="false">
                             <!-- begin panel -->
                             <div class="panel panel-white panel-with-tabs">
                                 <div class="panel-heading">
                                     <ul id="panel-tab" class="nav nav-tabs nav-tabs-warning pull-right">
                                         @foreach($offRoadReports as $routeId => $offRoadReport)
-                                            @php($route = \App\Route::find($routeId))
+                                            @php($route = \App\Models\Routes\Route::find($routeId))
                                             <li class="{{ $loop->first ? 'active':'' }}">
                                                 <a href="#panel-tab-{{ $vehicleId }}-{{ $route->id }}" data-toggle="tab">
                                                     <span class="badge badge-danger m-b-5">{{ count($offRoadReport) }}</span>
@@ -80,7 +80,7 @@
                                 </div>
                                 <div id="panel-tab-content" class="tab-content">
                                     @foreach($offRoadReports as $routeId => $offRoadReport)
-                                        @php($route = \App\Route::find($routeId))
+                                        @php($route = \App\Models\Routes\Route::find($routeId))
                                         <div id="panel-tab-{{ $vehicleId }}-{{ $routeId }}" class="tab-pane fade in {{ $loop->first ? 'active':'' }}">
                                             <div class="table-responsive">
                                                 <table class="table table-bordered table-striped table-hover table-valign-middle table-report">

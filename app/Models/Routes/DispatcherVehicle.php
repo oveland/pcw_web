@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Models\Routes;
+
+use App\Models\Vehicles\Vehicle;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * App\Models\Routes\DispatcherVehicle
+ *
+ * @property int $id
+ * @property string $date
+ * @property int $day_type_id
+ * @property int $dispatch_id
+ * @property int $route_id
+ * @property int $vehicle_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereDayTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereDispatchId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereRouteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereVehicleId($value)
+ * @mixin \Eloquent
+ * @property-read \App\Models\Routes\Dispatch $dispatch
+ * @property-read \App\Models\Routes\Route|null $route
+ * @property-read \App\Models\Vehicles\Vehicle $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle active()
+ */
+class DispatcherVehicle extends Model
+{
+    public $timestamps = false;
+
+    public $fillable = ['vehicle_id', 'route_id', 'dispatch_id'];
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class)->orderBy('number');
+    }
+
+    public function route()
+    {
+        return $this->belongsTo(Route::class)->orderBy('name');
+    }
+
+    public function dispatch()
+    {
+        return $this->belongsTo(Dispatch::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('route_id', '<>', null);
+    }
+}

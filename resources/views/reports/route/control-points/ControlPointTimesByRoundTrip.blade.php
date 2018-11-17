@@ -74,7 +74,7 @@
                                 <tbody>
                                     @foreach( $reportsByVehicles as $vehicleId => $reportByVehicles )
                                         @php
-                                            $vehicle = \App\Vehicle::find($vehicleId);
+                                            $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
                                             $strTime = new \App\Http\Controllers\Utils\StrTime();
                                             $dispatchRegister = $reportByVehicles->first()->dispatchRegister;
                                             $driver = $dispatchRegister->driver;
@@ -112,7 +112,7 @@
                                                                 $measuredControlPointTime = $arrivalTime;
                                                                 $scheduledControlPointTime = $arrivalTimeScheduled;
                                                             }else{
-                                                                $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPoint->id)
+                                                                $controlPointTime = \App\Models\Routes\ControlPointTime::where('control_point_id',$controlPoint->id)
                                                                 ->where('fringe_id',$report->fringe_id)
                                                                 ->get()->first();
 

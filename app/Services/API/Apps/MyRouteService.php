@@ -8,7 +8,7 @@
 
 namespace App\Services\API\Apps;
 
-use App\Route;
+use App\Models\Routes\Route;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

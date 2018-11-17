@@ -9,10 +9,10 @@
 namespace App\Services\Reports\Routes;
 
 
-use App\Company;
-use App\DispatchRegister;
-use App\Location;
-use App\Vehicle;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
+use App\Models\Vehicles\Location;
+use App\Models\Vehicles\Vehicle;
 
 class OffRoadService
 {

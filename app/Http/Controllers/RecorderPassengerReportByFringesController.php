@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\DispatchRegister;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
-use App\Route;
+use App\Models\Routes\Route;
 use App\Traits\CounterByRecorder;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Auth;
 use Illuminate\Http\Request;
 

@@ -8,12 +8,12 @@
 
 namespace App\Services\Reports\Routes;
 
-use App\ControlPoint;
-use App\ControlPointTime;
-use App\ControlPointTimeReport;
-use App\DispatchRegister;
+use App\Models\Routes\ControlPoint;
+use App\Models\Routes\ControlPointTime;
+use App\Models\Routes\ControlPointTimeReport;
+use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
-use App\Route;
+use App\Models\Routes\Route;
 
 class ControlPointService
 {

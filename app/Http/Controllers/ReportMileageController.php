@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\DispatchRegister;
-use App\Location;
-use App\Route;
+use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
+use App\Models\Vehicles\Location;
+use App\Models\Routes\Route;
 use App\Services\PCWExporterService;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AccessLog;
-use App\UserLog;
+use App\Models\Users\AccessLog;
+use App\Models\Users\UserLog;
 use PDF;
 use Carbon\Carbon;
 

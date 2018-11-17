@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\MaintenanceVehicle;
+use App\Models\Company\Company;
+use App\Models\Vehicles\MaintenanceVehicle;
 use App\Services\PCWTime;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Auth;
 use Carbon\Carbon;
 use DB;

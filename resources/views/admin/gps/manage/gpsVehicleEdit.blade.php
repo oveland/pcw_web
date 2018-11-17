@@ -20,7 +20,7 @@
             <div class="col-md-4">
                 <select id="gps-type-{{ $id }}" name="gps_type" class="form-control input-sm gps-type" title="@lang('GPS type')"
                         onchange="">
-                    @foreach( \App\SimGPS::DEVICES as $device )
+                    @foreach( \App\Models\Vehicles\SimGPS::DEVICES as $device )
                         <option value="{{ $device }}">{{ $device }}</option>
                     @endforeach
                 </select>

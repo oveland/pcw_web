@@ -20,7 +20,7 @@
 
             <ul class="nav nav-pills nav-pills-success">
                 @foreach($controlPointTimeReportsByVehicles->keys() as $vehicleId)
-                    @php($vehicle = \App\Vehicle::find( $vehicleId ))
+                    @php($vehicle = \App\Models\Vehicles\Vehicle::find( $vehicleId ))
                     <li class="{{ $loop->first ? 'active':'' }} tooltips" data-title="{{ $vehicle->plate }}">
                         <a href="#report-tab-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true">
                             <i class="fa fa-car" aria-hidden="true"></i> {{ $vehicle->number }}
@@ -32,7 +32,7 @@
 
         <div class="tab-content panel p-0">
             @foreach($controlPointTimeReportsByVehicles as $vehicleId => $controlPointTimeReportByVehicle)
-                @php($vehicle = \App\Vehicle::find( $vehicleId ))
+                @php($vehicle = \App\Models\Vehicles\Vehicle::find( $vehicleId ))
                 <div id="report-tab-{{ $vehicleId }}" class="tab-pane report-tab-cp fade {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
                         <div class="table-responsive col-md-12" style="padding-bottom: 90px">
@@ -114,7 +114,7 @@
                                                             $measuredControlPointTime = $arrivalTime;
                                                             $scheduledControlPointTime = $arrivalTimeScheduled;
                                                         }else{
-                                                            $controlPointTime = \App\ControlPointTime::where('control_point_id',$controlPoint->id)
+                                                            $controlPointTime = \App\Models\Routes\ControlPointTime::where('control_point_id',$controlPoint->id)
                                                             ->where('fringe_id',$report->fringe_id)
                                                             ->get()->first();
 

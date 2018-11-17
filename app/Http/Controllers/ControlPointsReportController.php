@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\Route;
+use App\Models\Company\Company;
+use App\Models\Routes\Route;
 use App\Services\Reports\Routes\ControlPointService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

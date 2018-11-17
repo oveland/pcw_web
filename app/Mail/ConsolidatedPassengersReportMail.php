@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Company;
+use App\Models\Company\Company;
 use App\Http\Controllers\ReportPassengerRecorderConsolidatedDailyController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

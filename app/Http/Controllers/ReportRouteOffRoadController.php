@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
+use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
-use App\Location;
-use App\Route;
+use App\Models\Vehicles\Location;
+use App\Models\Routes\Route;
 use App\Services\Reports\Routes\OffRoadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

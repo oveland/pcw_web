@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Utils\Geolocation;
-use App\Route;
+use App\Models\Routes\Route;
 use DB;
 use Illuminate\Http\Request;
 

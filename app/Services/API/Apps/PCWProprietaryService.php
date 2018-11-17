@@ -8,15 +8,15 @@
 
 namespace App\Services\API\Apps;
 
-use App\CurrentLocation;
-use App\CurrentSensorPassengers;
-use App\DispatchRegister;
-use App\Proprietary;
+use App\Models\Vehicles\CurrentLocation;
+use App\Models\Passengers\CurrentSensorPassengers;
+use App\Models\Routes\DispatchRegister;
+use App\Models\Proprietaries\Proprietary;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\Reports\Passengers\SeatDistributionGualasService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

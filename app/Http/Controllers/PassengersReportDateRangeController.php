@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\DispatchRegister;
+use App\Models\Routes\DispatchRegister;
 use App\Services\PCWExporterService;
 use App\Services\PCWTime;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
-use App\Vehicle;
+use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Auth;
-use App\Company;
+use App\Models\Company\Company;
 
 class PassengersReportDateRangeController extends Controller
 {
