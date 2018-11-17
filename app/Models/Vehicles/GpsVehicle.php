@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class GpsVehicle extends Model
 {
+    protected $fillable = ['imei'];
+
     protected function getDateFormat()
     {
         return config('app.date_time_format');

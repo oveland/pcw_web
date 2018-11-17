@@ -94,20 +94,24 @@ class ManagerGPSController extends Controller
         foreach ($simGPSList as $sim) {
             $simGPS = SimGPS::where('sim', $sim)->get()->first();
             $vehicle = $simGPS->vehicle;
-            $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
-            $vehicleStatus = $currentLocationGPS->vehicleStatus;
-            $timePeriod = $currentLocationGPS->getTimePeriod();
+            $currentLocationGPS = CurrentLocationsGPS::where('vehicle_id', $vehicle->id)->get()->first() ?? null;
 
             $classStatus = null;
-            if ($vehicleStatus->id == 6 && ($timePeriod >= "00:04:00" && $timePeriod <= "00:06:00")) $classStatus = "btn btn-lime btn-xs";
-            elseif (($timePeriod >= "00:00:13" && $timePeriod <= "00:00:17")) $classStatus = "btn btn-lime btn-xs";
+            if($currentLocationGPS){
+                $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                $timePeriod = $currentLocationGPS->getTimePeriod();
 
-            $statusList .= $vehicleStatus ? "<div class='row' style='height: 20px'><div class='col-md-1 col-sm-1 col-xs-1 text-right'><small class='$classStatus hide'>$index</small></div><div class='col-md-10 col-sm-10 col-xs-10'><span class='tooltips click' title='$vehicleStatus->des_status' data-placement='right'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i><span style='width: 20px'>$vehicle->number</span> $currentLocationGPS->date (<span class='$classStatus'>$timePeriod</span>)<br></span></div></div>" : "********";
+                if ($vehicleStatus->id == 6 && ($timePeriod >= "00:04:00" && $timePeriod <= "00:06:00")) $classStatus = "btn btn-lime btn-xs";
+                elseif (($timePeriod >= "00:00:13" && $timePeriod <= "00:00:17")) $classStatus = "btn btn-lime btn-xs";
 
-            $reportsStatus->push((object)[
-                'statusId' => $vehicleStatus->id,
-                'status' => $vehicleStatus
-            ]);
+                $statusList .= $vehicleStatus ? "<div class='row' style='height: 20px'><div class='col-md-1 col-sm-1 col-xs-1 text-right'><small class='$classStatus hide'>$index</small></div><div class='col-md-10 col-sm-10 col-xs-10'><span class='tooltips click' title='$vehicleStatus->des_status' data-placement='right'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i><span style='width: 20px'>$vehicle->number</span> $currentLocationGPS->date (<span class='$classStatus'>$timePeriod</span>)<br></span></div></div>" : "********";
+
+                $reportsStatus->push((object)[
+                    'statusId' => $vehicleStatus->id,
+                    'status' => $vehicleStatus
+                ]);
+            }
+
 
             if ($classStatus) $totalOKPeriod++;
             $index++;
@@ -207,82 +211,112 @@ class ManagerGPSController extends Controller
 
     public function createSIMGPS(Request $request)
     {
+        $transaction = \DB::transaction(function () use ($request){
+            $sim = $request->get('sim');
+            $gpsType = $request->get('gps_type');
+            $imei = $request->get('imei');
 
-        $sim = $request->get('sim');
-        $gpsType = $request->get('gps_type');
-        $imei = $request->get('imei');
-
-        $vehicle = Vehicle::find($request->get('vehicle_id'));
-        $gpsVehicle = $vehicle->gpsVehicle;
-
-        $created = false;
-        try {
-            $checkGPS = SimGPS::where('sim', $sim)->get()->first();
-            $checkImei = GpsVehicle::where('imei', $imei)->get()->first();
-
-            if ($checkGPS) {
-                $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']);
-            } elseif ($checkImei) {
-                $message = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']);
-            } else {
-                $simGPS = new SimGPS();
-                $simGPS->sim = $sim;
-                $simGPS->vehicle_id = $vehicle->id;
-                $simGPS->gps_type = $gpsType;
-
-                if ($simGPS->save()) {
-                    $message = __('Register created successfully');
-
-                    $gpsVehicle->imei = $imei;
-                    $gpsVehicle->save();
-                    $created = true;
-
-                    \DB::update("UPDATE crear_vehiculo SET imei_gps = '$gpsVehicle->imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
-                } else {
-                    $message = __('Error');
-                }
+            $vehicle = Vehicle::find($request->get('vehicle_id'));
+            $gpsVehicle = $vehicle->gpsVehicle;
+            if( !$gpsVehicle ){
+                $gpsVehicle = new GpsVehicle();
+                $gpsVehicle->vehicle_id = $vehicle->id;
             }
-        } catch (Exception $exception) {
-            $message = $exception->getMessage();
-        }
 
-        return response()->json(['success' => $created, 'message' => $message]);
+            $created = false;
+            try {
+                $checkGPS = SimGPS::where('sim', $sim)->get()->first();
+                $checkImei = GpsVehicle::where('imei', $imei)->get()->first();
+
+                if ($checkGPS) {
+                    $companyVehicleCheck = $checkGPS->vehicle->company->short_name;
+                    $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE'])." ($companyVehicleCheck)";
+                } elseif ($checkImei) {
+                    $companyVehicleCheck = $checkImei->vehicle->company->short_name;
+                    $message = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE'])." ($companyVehicleCheck)";
+                } else {
+                    $simGPS = new SimGPS();
+                    $simGPS->sim = $sim;
+                    $simGPS->vehicle_id = $vehicle->id;
+                    $simGPS->gps_type = $gpsType;
+
+                    if ($simGPS->save()) {
+                        $message = __('Register created successfully');
+
+                        $gpsVehicle->imei = $imei;
+                        $gpsVehicle->save();
+                        $created = true;
+
+                        \DB::update("UPDATE crear_vehiculo SET imei_gps = '$gpsVehicle->imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
+                    } else {
+                        $message = __('Error');
+                    }
+                }
+            } catch (Exception $exception) {
+                $message = $exception->getMessage();
+            }
+
+            return (object)[
+                'created' => $created,
+                'message' => $message,
+            ];
+        });
+
+        return response()->json(['success' => $transaction->created, 'message' => $transaction->message]);
     }
 
 
     public function updateSIMGPS(SimGPS $simGPS, Request $request)
     {
-        $sim = $request->get('sim');
-        $gpsType = $request->get('gps_type');
-        $imei = $request->get('imei');
+        $transaction = \DB::transaction(function () use ($request, $simGPS) {
+            $sim = $request->get('sim');
+            $gpsType = $request->get('gps_type');
+            $imei = $request->get('imei');
 
-        $vehicle = $simGPS->vehicle;
-        $gpsVehicle = $vehicle->gpsVehicle;
-
-        $error = "";
-        $updated = false;
-        try {
-            $checkGPS = SimGPS::where('id', '<>', $simGPS->id)->where('sim', $sim)->get()->first();
-            $checkImei = GpsVehicle::where('id', '<>', $gpsVehicle->id)->where('imei', $imei)->get()->first();
-
-            if ($checkGPS) {
-                $error = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']);
-            } elseif ($checkImei) {
-                $error = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']);
-            } else {
-                $simGPS->sim = $sim;
-                $simGPS->gps_type = $gpsType;
-                $simGPS->save();
-
-                $gpsVehicle->imei = $imei;
-                $gpsVehicle->save();
-                $updated = true;
-
-                \DB::update("UPDATE crear_vehiculo SET imei_gps = '$imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
+            $vehicle = $simGPS->vehicle;
+            $gpsVehicle = $vehicle->gpsVehicle;
+            if (!$gpsVehicle) {
+                $gpsVehicle = new GpsVehicle();
+                $gpsVehicle->vehicle_id = $vehicle->id;
             }
-        } catch (\Exception $exception) {
-            $error = $exception->getMessage();
-        }
+
+            $error = "";
+            $updated = false;
+            try {
+                $checkGPS = SimGPS::where('id', '<>', $simGPS->id)->where('sim', $sim)->get()->first();
+                $checkImei = GpsVehicle::where('id', '<>', $gpsVehicle->id)->where('imei', $imei)->get()->first();
+
+                if ($checkGPS) {
+                    $companyVehicleCheck = $checkGPS->vehicle->company->short_name;
+                    $error = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
+                } elseif ($checkImei) {
+                    $companyVehicleCheck = $checkImei->vehicle->company->short_name;
+                    $error = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
+                } else {
+                    $simGPS->sim = $sim;
+                    $simGPS->gps_type = $gpsType;
+                    $simGPS->save();
+
+                    $gpsVehicle->imei = $imei;
+                    $gpsVehicle->save();
+                    $updated = true;
+
+                    \DB::update("UPDATE crear_vehiculo SET imei_gps = '$imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
+                }
+            } catch (\Exception $exception) {
+                $error = $exception->getMessage();
+            }
+
+            return (object)[
+                'updated' => $updated,
+                'error' => $error,
+            ];
+        });
+
+        $simGPS = $simGPS->fresh(['vehicle']);
+        $gpsVehicle = $simGPS->vehicle->gpsVehicle->fresh();
+        $updated = $transaction->updated;
+        $error = $transaction->error;
 
         return view('admin.gps.manage.gpsVehicleDetail', compact(['simGPS', 'updated', 'error', 'gpsVehicle']));
     }
@@ -291,7 +325,13 @@ class ManagerGPSController extends Controller
     {
         $deleted = false;
         try {
+            $vehicle = $simGPS->vehicle;
+            $gpsVehicle = $vehicle->gpsVehicle;
             $deleted = ($simGPS->delete() > 0);
+
+            if( $gpsVehicle ){
+                $deleted = ($gpsVehicle->delete() > 0);
+            }
             if ($deleted) $message = __('Register deleted successfully');
             else $message = __('Error');
         } catch (Exception $exception) {
@@ -318,8 +358,11 @@ class ManagerGPSController extends Controller
             case 'ip-skypatrol':
                 $fileScript = 'ScriptIPSkypatrol.txt';
                 break;
-            case 'coban':
-                $fileScript = 'ScriptCoban.txt';
+            case 'apn-claro-coban':
+                $fileScript = 'ApnClaroScriptCoban.txt';
+                break;
+            case 'apn-movistar-coban':
+                $fileScript = 'ApnMovistarScriptCoban.txt';
                 break;
             case 'ruptela':
                 $fileScript = 'ScriptRuptela.txt';

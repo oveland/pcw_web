@@ -91,4 +91,14 @@ class User extends Authenticatable
     {
         return $this->company->id == $company->id;
     }
+
+    public function canAdmin()
+    {
+        return ($this->isAdmin() || $this->id == 999459|| $this->id == 841403 || $this->id == 679396 || $this->id == 23994798);
+    }
+
+    public function canAdminGPS()
+    {
+        return ($this->isAdmin() || $this->id == 999459|| $this->id == 841403 || $this->id == 679396 || $this->id == 23994798);
+    }
 }

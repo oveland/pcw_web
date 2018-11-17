@@ -135,8 +135,13 @@
                                                                     @endif
                                                                     @if( $gpsReport === \App\Models\Vehicles\SimGPS::COBAN )
                                                                     <li>
-                                                                        <a href="javascript:getScript('coban')">
-                                                                            <i class="fa fa-podcast text-warning" aria-hidden="true"></i> @lang('Script Coban')
+                                                                        <a href="javascript:getScript('apn-claro-coban')">
+                                                                            <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Script Coban - CLARO')
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:getScript('apn-movistar-coban')">
+                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Coban - MOVISTAR')
                                                                         </a>
                                                                     </li>
                                                                     <li class="divider"></li>
