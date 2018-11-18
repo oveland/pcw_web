@@ -6,6 +6,7 @@ use App\Http\Controllers\MigrationController;
 use App\Services\API\Apps\MyRouteService;
 use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
+use App\Services\API\Web\Reports\APIReportService;
 use App\Services\API\Web\PCWPassengersService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -52,6 +53,10 @@ class APIController extends Controller
         switch ($api) {
             case 'passengers':
                 return PCWPassengersService::serve($service, $request);
+                break;
+
+            case 'reports':
+                return APIReportService::serve($service, $request);
                 break;
 
             case 'migrations':

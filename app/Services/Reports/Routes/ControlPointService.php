@@ -64,8 +64,12 @@ class ControlPointService
             $first = $controlPoint->id == $controlPoints->first()->id;
             $last = $controlPoint->id == $controlPoints->last()->id;
 
+            $controlPointTime = ControlPointTime::where('control_point_id', $controlPoint->id)
+                ->where('fringe_id', $dispatchRegister->departure_fringe_id)
+                ->get()->first();
+
             $hasReport = false;
-            $scheduledControlPointTime = '--:--:--';
+            $scheduledControlPointTime = $controlPointTime ? StrTime::addStrTime($departureTime, $controlPointTime->time_from_dispatch) : '--:--:--';
             $measuredControlPointTime = '--:--:--';
             $difference = '--:--:--';
             $statusColor = '';
