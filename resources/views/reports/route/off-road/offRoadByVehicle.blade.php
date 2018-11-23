@@ -103,8 +103,8 @@
                                                                 @lang('Time')
                                                             </th>
                                                             <th>
-                                                                <i class="fa fa-map text-muted"></i><br>
-                                                                @lang('Address')
+                                                                <i class="fa fa-rocket text-muted"></i><br>
+                                                                @lang('Actions')
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -119,21 +119,36 @@
                                                                 <td>{{ $dispatchRegister->round_trip }}</td>
                                                                 <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
                                                                 <td>{{ $offRoad->date->toTimeString() }}</td>
-                                                                <td>
-                                                                    <a href="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-sm">
+                                                                <td class="text-center">
+                                                                    <a href="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-xs hide">
                                                                         <i class="fa fa-file-excel-o"></i>
                                                                     </a>
-                                                                    <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" data-title="@lang('Location')">
-                                                                        <i class="fa fa-map-marker"></i>
-                                                                        <span>@lang('Location')</span>
+                                                                    <button class="btn btn-xs btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" data-title="@lang('Location')">
+                                                                        &nbsp;<i class="fa fa-map-marker"></i>&nbsp;
                                                                     </button>
                                                                     <span id="address-{{ $offRoad->id }}" class="tooltips" data-title="@lang('Address')"></span>
-                                                                    <button class="btn btn-sm btn-info btn-show-address" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
+                                                                    <button class="btn btn-xs btn-info btn-show-address tooltips" data-title="@lang('Address')" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
                                                                             data-url="{{ route('report-route-off-road-geolocation-address',['offRoad'=>$offRoad->id]) }}"
                                                                             data-target="#address-{{ $offRoad->id }}">
                                                                         <i class="fa fa-refresh faa-spin animated-hover hide"></i>
-                                                                        <span>@lang('Address')</span>
+                                                                        <i class="fa fa-map"></i>
                                                                     </button>
+
+                                                                    <a href="#modal-route-report"
+                                                                       class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
+                                                                       data-toggle="modal"
+                                                                       data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                                                       data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                                                       data-original-title="@lang('Graph report detail')">
+                                                                        <i class="fa fa-area-chart faa-pulse"></i>
+                                                                    </a>
+                                                                    @if( Auth::user()->isSuperAdmin() )
+                                                                        @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                                                        @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                                                        <hr class="hr no-padding">
+                                                                        <small>{!! $totalLocations !!} @lang('locations')</small><br>
+                                                                        <small>{!! $totalReports !!} @lang('reports')</small>
+                                                                    @endif
                                                                 </td>
                                                             </tr>
                                                             <tr id="image-{{ $offRoad->id }}" class="collapse fade collapse-off-road-image" data-url="{{ route('report-route-off-road-geolocation-image',['offRoad'=>$offRoad->id]) }}">

@@ -118,6 +118,10 @@
         <!-- end content report -->
     </div>
     <!-- end row -->
+
+    <!-- Include template for show modal report with char and historic route coordinates -->
+    @include('reports.route.route.chart')
+    <!-- end template -->
 @endsection
 
 

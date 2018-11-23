@@ -49,20 +49,27 @@
     ];
 
     function initializeMap() {
+        let windowHeight = window.innerHeight - 40;
+        $('#modal-route-report .modal-dialog').css('height', windowHeight+"px");
+        $('#google-map-light-dream').css('height', ((windowHeight - 30 - $('#modal-route-report .modal-header').height())+"px"));
+
         setTimeout(function(){
             let mapOptions = {
                 zoom: 14,
                 center: new google.maps.LatLng(
                     3.445951192812193, -76.52618682268542
                 ),
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false
             };
 
             map = new google.maps.Map(document.getElementById('google-map-light-dream'), mapOptions);
             map.setOptions({styles: mapLightDreamStyles});
-            map.setOptions({styles: styles['hide']});
             routeLayerKML = new google.maps.KmlLayer();
             trafficLayer = new google.maps.TrafficLayer();
+
+            //var styleControl = document.getElementById('info-route');
+            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(styleControl);
         },300);
     }
 </script>

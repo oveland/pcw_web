@@ -4,23 +4,28 @@
             font-size: 15px !important;
             font-weight: 900;
         }
+        .info-control-points{
+            position: absolute;
+            z-index: 1;
+            right: 100px;
+            background: #ffffffd1;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 100%;
+        }
     </style>
 @endsection
 
 <div class="modal modal-message fade" id="modal-route-report">
-    <div class="modal-dialog" style="height: 1000px !important;">
+    <div class="modal-dialog" style="height: 500px !important;">
         <div class="modal-content">
             <div class="modal-header" style="width: 100%">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="fa fa-times"></i>
                 </button>
                 <div class="row">
-                    <blockquote class="m-0">
-                        <h3 class="m-3">@lang('Route report') <span id="date-report-details"></span></h3>
-                    </blockquote>
-                    <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
                     <h4 class="modal-title">
-                        <i class="fa fa-area-chart"></i> @lang('Historic time chart')
+                        <i class="fa fa-area-chart"></i> @lang('Historic route time chart'): <span id="date-report-details"></span>
                     </h4>
                     <div class="col-md-12 p-5">
                         <div id="chart-route-report" style="height: 80px"></div>
@@ -28,45 +33,41 @@
                 </div>
             </div>
             <div class="modal-body" style="width:100%;">
-                <h4>
-                    <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
+                <h4 class="info-control-points">
                     <span class="pull-right"><img src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>                        &nbsp;&nbsp;
                     <span class="pull-right p-r-20"><img src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
-                    <a href="" class="btn-primary btn btn-show-off-road-report pull-right">
+                    <a href="" class="btn-primary btn btn-show-off-road-report pull-right hide">
                         <i class="ion-merge m-r-5 fa-fw"></i> @lang('See off road report')
                     </a>
                 </h4>
                 <div class="row">
-                    <div class="col-md-3 col-sm-4 col-xs-12">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div id="info-route" class="col-md-3 col-sm-4 col-xs-12 p-0 p-t-15" style="float: left !important;position: absolute;z-index: 1;">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="opacity: 0.92">
                             <!-- begin widget -->
                             <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
                                 <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
-                                <div class="widget-stat-icon"><i class="ion-clipboard fa-fw"></i></div>
-                                <div class="widget-stat-info">
+                                <div class="widget-stat-info m-0">
                                     <div class="widget-stat-title">@lang('Route info')</div>
                                     <div class="widget-stat-number modal-report-route-name report-info"></div>
                                 </div>
                                 <div class="widget-stat-progress">
                                     <div class="progress progress-striped progress-xs active">
-                                        <div class="progress-bar progress-bar-lime modal-report-route-percent-progress report-info"
-                                             style="width: 50%"></div>
+                                        <div class="progress-bar progress-bar-lime modal-report-route-percent-progress report-info" style="width: 50%"></div>
                                     </div>
                                 </div>
                                 <div class="widget-stat-footer text-left">
-                                    <i class="fa fa-flag-checkered" aria-hidden="true"></i> <span
-                                            class="modal-report-route-percent report-info"></span>% @lang('of the route')
+                                    <i class="fa fa-flag-checkered" aria-hidden="true"></i>
+                                    <span class="modal-report-route-percent report-info"></span>% @lang('of the route')
                                 </div>
                             </div>
                             <!-- end widget -->
                         </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="opacity: 0.92">
                             <!-- begin widget -->
                             <div class="widget widget-stat widget-stat-right bg-inverse text-white">
                                 <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
-                                <div class="widget-stat-icon"><i class="fa fa-bus"></i></div>
-                                <div class="widget-stat-info">
-                                    <div class="widget-stat-title">@lang('Vehicle information')</div>
+                                <div class="widget-stat-info m-0">
+                                    <div class="widget-stat-title">@lang('Vehicle')</div>
                                     <div class="widget-stat-number modal-report-vehicle report-info"></div>
                                 </div>
                                 <div class="widget-stat-progress">
@@ -83,10 +84,8 @@
                             <!-- end widget -->
                         </div>
                     </div>
-                    <div class="col-md-9 col-sm-8 col-xs-12">
-                        <div class="col-md-12 p-5">
-                            <div id="google-map-light-dream" class="height-lg"></div>
-                        </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 p-0">
+                        <div id="google-map-light-dream"></div>
                     </div>
                 </div>
             </div>
@@ -244,7 +243,7 @@
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {
                                 type: 'line',
-                                width: '1180px',
+                                width: (window.innerWidth-50)+'px',
                                 height: '80px',
                                 fillColor: 'transparent',
                                 spotColor: '#f0eb54',
