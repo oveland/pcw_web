@@ -21,7 +21,7 @@
         @if( $company->hasDriverRegisters() )
         <th>
             <i class="fa fa-user text-muted"></i><br>
-            @lang('Driver')
+            @lang('Driver') <hr class="m-0"> @lang('Dispatcher')
         </th>
         @endif
         <th>
@@ -131,6 +131,12 @@
                     </div>
                 @else
                     {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
+                @endif
+                @if( $dispatchRegister->user )
+                    <hr class="m-0">
+                    <small class="text-muted tooltips" data-title="@lang('User') @lang('Dispatcher')" data-placement="bottom">
+                        {{ $dispatchRegister->user->name }}
+                    </small>
                 @endif
             </td>
             @endif

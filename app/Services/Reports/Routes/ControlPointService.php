@@ -84,7 +84,7 @@ class ControlPointService
                 ->where('control_point_id', $controlPoint->id)
                 ->first();
 
-            if ($controlPointTimeReport || $first || ($last && $dispatchRegister->complete())) {
+            if ($controlPointTimeReport || $first || ($last && $dispatchRegister->complete() && $dispatchRegister->arrival_time_scheduled)) {
                 $statusColor = 'lime';
                 $statusText = __('on time');
                 $hasReport = true;

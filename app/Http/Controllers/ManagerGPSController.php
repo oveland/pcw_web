@@ -364,6 +364,9 @@ class ManagerGPSController extends Controller
             case 'apn-movistar-coban':
                 $fileScript = 'ApnMovistarScriptCoban.txt';
                 break;
+            case 'apn-avantel-coban':
+                $fileScript = 'ApnAvantelScriptCoban.txt';
+                break;
             case 'ruptela':
                 $fileScript = 'ScriptRuptela.txt';
                 break;

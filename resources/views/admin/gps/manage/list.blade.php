@@ -144,6 +144,11 @@
                                                                             <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Coban - MOVISTAR')
                                                                         </a>
                                                                     </li>
+                                                                    <li>
+                                                                        <a href="javascript:getScript('apn-avantel-coban')">
+                                                                            <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Coban - AVANTEL')
+                                                                        </a>
+                                                                    </li>
                                                                     <li class="divider"></li>
                                                                     @endif
                                                                     @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
