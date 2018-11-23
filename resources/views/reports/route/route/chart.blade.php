@@ -134,6 +134,7 @@
 
         let pointMap = [
             '{{ asset('img/point-map-on-road.png') }}',
+            '{{ asset('img/point-map-on-return-road.png') }}',
             '{{ asset('img/point-map-off-road.png') }}'
         ];
 
@@ -183,7 +184,7 @@
 
                             data.controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
-                                    title: cp.name,
+                                    title: cp.name+" > "+cp.distance_from_dispatch+" m.",
                                     map: map,
                                     icon: controlPointIcon[cp.trajectory],
                                     animation: google.maps.Animation.DROP,
@@ -231,19 +232,15 @@
                                 speed[i] = report.speed;
                                 speeding[i] = report.speeding ? 'label-danger' : '';
 
+                                icon = pointMap[report.offRoad ? 2 : (report.trajectoryOfReturn ? 1 : 0)];
+
                                 new google.maps.Marker({
-                                    title: report.controlPointName + " | " + report.time + " | " + routeDistance + " m | " + "  " + percent + "%",
+                                    title: report.controlPointName + " | " + report.time + "("+report.timeReport+") | " + routeDistance + " m. | " + "  " + percent + "%",
                                     map: map,
-                                    icon: pointMap[report.offRoad ? 1 : 0],
+                                    icon: icon,
                                     position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}
                                 });
                             });
-
-                            speed.forEach(function (sp, i){
-                                console.log('Seeed '+sp+' >> '+speeding[i]);
-                            });
-
-
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {
                                 type: 'line',

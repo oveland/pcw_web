@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
+use App\Models\Routes\ControlPoint;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
@@ -126,7 +127,10 @@ class ReportRouteController extends Controller
             $route = $dispatchRegister->route;
             $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
             $controlPoints = $route->controlPoints;
+            $controlPointOfReturn = $controlPoints->where('type', ControlPoint::RETURN)->first();
+
             $routeDistance = $controlPoints->last()->distance_from_dispatch;
+            $distanceOfReturn = $controlPointOfReturn ? $controlPointOfReturn->distance_from_dispatch : $routeDistance;
 
             $reportData = collect([]);
             $lastReport = $reports->first();
@@ -140,19 +144,22 @@ class ReportRouteController extends Controller
                     $completedPercent = ($report->distancem / $routeDistance) * 100;
                     if ($completedPercent > 100) $completedPercent = 100;
 
-                    $reportData->push((object)[
-                        'time' => $report->date->toTimeString(),
-                        'timeReport' => $report->timed,
-                        'distance' => $report->distancem,
-                        'controlPointName' => $report->controlPoint->name,
-                        'completedPercent' => number_format($completedPercent, 1, ',', '.'),
-                        'value' => $report->status_in_minutes,
-                        'latitude' => $location->latitude,
-                        'longitude' => $location->longitude,
-                        'speed' => number_format($location->speed, 1, ',', '.'),
-                        'speeding' => $location->speeding,
-                        'offRoad' => $offRoad
-                    ]);
+                    if( $report->controlPoint ){
+                        $reportData->push((object)[
+                            'time' => $report->date->toTimeString(),
+                            'timeReport' => $report->timed,
+                            'distance' => $report->distancem,
+                            'controlPointName' => $report->controlPoint->name,
+                            'completedPercent' => number_format($completedPercent, 1, ',', '.'),
+                            'value' => $report->status_in_minutes,
+                            'latitude' => $location->latitude,
+                            'longitude' => $location->longitude,
+                            'trajectoryOfReturn' => $report->distancem >= $distanceOfReturn,
+                            'speed' => number_format($location->speed, 1, ',', '.'),
+                            'speeding' => $location->speeding,
+                            'offRoad' => $offRoad
+                        ]);
+                    }
 
                     $lastReport = $report;
                     $lastSpeed = $location->speed;
@@ -431,66 +438,5 @@ class ReportRouteController extends Controller
                 return "Nothing to do";
                 break;
         }
-    }
-
-    /**
-     * Check if location is off road from kml route coordinates
-     *
-     * @param $location
-     * @param $routeCoordinates
-     * @return bool
-     */
-    public
-    static function checkOffRoad($location, $routeCoordinates)
-    {
-        $offRoad = true;
-        $locationLatitude = $location->latitude;
-        $locationLongitude = $location->longitude;
-        //dump($locationLatitude.', '.$locationLongitude);
-        $threshold = config('road.route_sampling_area');
-        $threshold_location = [
-            'la_up' => $locationLatitude + $threshold,
-            'la_down' => $locationLatitude - $threshold,
-            'lo_up' => $locationLongitude + $threshold,
-            'lo_down' => $locationLongitude - $threshold
-        ];
-        /*dump($threshold_location['la_up'].', '.$threshold_location['lo_up']);
-        dump($threshold_location['la_up'].', '.$threshold_location['lo_down']);
-        dump($threshold_location['la_down'].', '.$threshold_location['lo_up']);
-        dd($threshold_location['la_down'].', '.$threshold_location['lo_down']);*/
-
-
-        $routeCoordinates = collect($routeCoordinates);
-        $routeCoordinates = $routeCoordinates->filter(function ($value, $key) use ($threshold_location) {
-            return
-                $value['latitude'] > $threshold_location['la_down'] && $value['latitude'] < $threshold_location['la_up'] &&
-                $value['longitude'] > $threshold_location['lo_down'] && $value['longitude'] < $threshold_location['lo_up'];
-        })->values()->toArray();
-
-        foreach ($routeCoordinates as $index => $routeCoordinate) {
-            $routeLatitude = $routeCoordinate['latitude'];
-            $routeLongitude = $routeCoordinate['longitude'];
-
-            $radiusDistance = Geolocation::getDistance($locationLatitude, $locationLongitude, $routeLatitude, $routeLongitude);
-
-            if ($radiusDistance <= config('road.route_distance_threshold')) {
-                $offRoad = false;
-                break;
-            } else if ($radiusDistance < config('road.route_sampling_radius') && $index > 0) {
-                $prevRouteLatitude = $routeCoordinates[$index - 1]['latitude'];
-                $prevRouteLongitude = $routeCoordinates[$index - 1]['longitude'];
-                $a = (double)$radiusDistance;
-                $b = (double)Geolocation::getDistance($locationLatitude, $locationLongitude, $prevRouteLatitude, $prevRouteLongitude);
-                $c = (double)Geolocation::getDistance($routeLatitude, $routeLongitude, $prevRouteLatitude, $prevRouteLongitude);
-                $angle = Geolocation::getAngleC($a, $b, $c);
-                $thresholdAngle = Geolocation::getThresholdAngleC(config('road.route_distance_threshold'), $a, $b);
-
-                if ($angle >= $thresholdAngle) {
-                    $offRoad = false;
-                    break;
-                }
-            }
-        }
-        return $offRoad;
     }
 }

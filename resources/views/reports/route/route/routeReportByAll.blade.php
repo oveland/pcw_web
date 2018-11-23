@@ -1,3 +1,4 @@
+@include('template.google.maps')
 @if(count($dispatchRegisters))
     <div class="col-md-12 alert alert-info p-t-5 container-alert-new-values" style="display: none">
         <strong>

@@ -36,6 +36,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ControlPoint extends Model
 {
+    const INITIAL = 'Inicial';
+    const FINAL = 'Final';
+    const RETURN = 'Final';
+
     protected function getDateFormat()
     {
         return config('app.simple_date_time_format');
