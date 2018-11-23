@@ -41,8 +41,8 @@
                     </a>
                 </h4>
                 <div class="row">
-                    <div id="info-route" class="col-md-3 col-sm-4 col-xs-12 p-0 p-t-15" style="float: left !important;position: absolute;z-index: 1;">
-                        <div class="col-md-12 col-sm-12 col-xs-12" style="opacity: 0.92">
+                    <div id="info-route" class="col-md-3 col-sm-4 col-xs-6 p-0 p-t-15" style="float: left !important;position: absolute;z-index: 1;">
+                        <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
                             <!-- begin widget -->
                             <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
                                 <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
@@ -62,7 +62,7 @@
                             </div>
                             <!-- end widget -->
                         </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12" style="opacity: 0.92">
+                        <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
                             <!-- begin widget -->
                             <div class="widget widget-stat widget-stat-right bg-inverse text-white">
                                 <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
