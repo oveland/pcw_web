@@ -141,14 +141,21 @@ class OffRoadService
         if (!count($offRoadsByVehicle)) return $offRoadsEvents;
 
         $lastOffRoad = null;
+        $totalByGroup = 0;
+        $firstOffRoadOnGroup = null;
         foreach ($offRoadsByVehicle as $offRoad) {
-            if ($lastOffRoad) {
-                if ($offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:05:00') {
-                    $offRoadsEvents->push($offRoad);
-                }
-            } else {
-                $offRoadsEvents->push($offRoad);
+            if (!$lastOffRoad || $offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:05:00') {
+                $firstOffRoadOnGroup = $offRoad;
+                $totalByGroup = 1;
+            } else if ($totalByGroup > 0) {
+                $totalByGroup++;
             }
+
+            if ($totalByGroup > 3) {
+                $offRoadsEvents->push($firstOffRoadOnGroup);
+                $totalByGroup = 0;
+            }
+
             $lastOffRoad = $offRoad;
         }
 
