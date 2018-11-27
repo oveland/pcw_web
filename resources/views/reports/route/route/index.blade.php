@@ -101,7 +101,7 @@
     <!-- end row -->
 
     <!-- Include template for show modal report with char and historic route coordinates -->
-    @include('reports.route.route.chart')
+    @include('reports.route.route.templates.chart._chartModal')
     <!-- end template -->
 
     @if( Auth::user()->belongsToCootransol() )

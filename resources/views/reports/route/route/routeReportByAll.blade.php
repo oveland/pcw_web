@@ -25,7 +25,7 @@
         <div class="tab-content panel p-0">
             <div id="report-tab" class="table-responsive tab-pane fade active in">
                 <!-- begin table -->
-                @include('reports.route.route._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport'))
+                @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport'))
                 <!-- end table -->
             </div>
         </div>

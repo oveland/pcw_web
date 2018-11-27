@@ -137,11 +137,12 @@
                                                                     <a href="#modal-route-report"
                                                                        class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
                                                                        data-toggle="modal"
-                                                                       data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                                                       data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}?centerOnLocation={{ $offRoad->id }}"
                                                                        data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
                                                                        data-original-title="@lang('Graph report detail')">
                                                                         <i class="fa fa-area-chart faa-pulse"></i>
                                                                     </a>
+
                                                                     @if( Auth::user()->isSuperAdmin() )
                                                                         @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
                                                                         @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
@@ -152,7 +153,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr id="image-{{ $offRoad->id }}" class="collapse fade collapse-off-road-image" data-url="{{ route('report-route-off-road-geolocation-image',['offRoad'=>$offRoad->id]) }}">
-                                                                <td colspan="4" class="text-center">
+                                                                <td colspan="5" class="text-center">
                                                                     <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
                                                                 </td>
                                                             </tr>

@@ -1,119 +1,20 @@
 @section('templateStyles')
-    <style type="text/css">
-        .widget-stat-number{
-            font-size: 15px !important;
-            font-weight: 900;
-        }
-        .info-control-points{
-            position: absolute;
-            z-index: 1;
-            right: 100px;
-            background: #ffffffd1;
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 100%;
-        }
-    </style>
+<style type="text/css">
+    .widget-stat-number{
+        font-size: 15px !important;
+        font-weight: 900;
+    }
+    .info-control-points{
+        position: absolute;
+        z-index: 1;
+        right: 100px;
+        background: #ffffffd1;
+        padding: 5px;
+        border-radius: 4px;
+        font-size: 100%;
+    }
+</style>
 @endsection
-
-<div class="modal modal-message fade" id="modal-route-report">
-    <div class="modal-dialog" style="height: 500px !important;">
-        <div class="modal-content">
-            <div class="modal-header" style="width: 100%">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="fa fa-times"></i>
-                </button>
-                <div class="row">
-                    <h4 class="modal-title">
-                        <i class="fa fa-area-chart"></i> @lang('Historic route time chart'): <span id="date-report-details"></span>
-                    </h4>
-                    <div class="col-md-12 p-5">
-                        <div id="chart-route-report" style="height: 80px"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body" style="width:100%;">
-                <h4 class="info-control-points">
-                    <span class="pull-right"><img src="{{ asset('img/control-point-1.png') }}"> @lang('Control point return')</span>                        &nbsp;&nbsp;
-                    <span class="pull-right p-r-20"><img src="{{ asset('img/control-point-0.png') }}"> @lang('Control point going')</span>
-                    <a href="" class="btn-primary btn btn-show-off-road-report pull-right hide">
-                        <i class="ion-merge m-r-5 fa-fw"></i> @lang('See off road report')
-                    </a>
-                </h4>
-                <div class="row">
-                    <div id="info-route" class="col-md-3 col-sm-4 col-xs-6 p-0 p-t-15" style="float: left !important;position: absolute;z-index: 1;">
-                        <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
-                            <!-- begin widget -->
-                            <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
-                                <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
-                                <div class="widget-stat-info m-0">
-                                    <div class="widget-stat-title">@lang('Route info')</div>
-                                    <div class="widget-stat-number modal-report-route-name report-info"></div>
-                                </div>
-                                <div class="widget-stat-progress">
-                                    <div class="progress progress-striped progress-xs active">
-                                        <div class="progress-bar progress-bar-lime modal-report-route-percent-progress report-info" style="width: 50%"></div>
-                                    </div>
-                                </div>
-                                <div class="widget-stat-footer text-left">
-                                    <i class="fa fa-flag-checkered" aria-hidden="true"></i>
-                                    <span class="modal-report-route-percent report-info"></span>% @lang('of the route')
-                                </div>
-                            </div>
-                            <!-- end widget -->
-                        </div>
-                        <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
-                            <!-- begin widget -->
-                            <div class="widget widget-stat widget-stat-right bg-inverse text-white">
-                                <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
-                                <div class="widget-stat-info m-0">
-                                    <div class="widget-stat-title">@lang('Vehicle')</div>
-                                    <div class="widget-stat-number modal-report-vehicle report-info"></div>
-                                </div>
-                                <div class="widget-stat-progress">
-                                    <div class="progress progress-striped progress-xs active">
-                                        <div class="progress-bar progress-success modal-report-vehicle-speed-progress report-info"
-                                             style="width: 50%"></div>
-                                    </div>
-                                </div>
-                                <div class="widget-stat-footer text-left">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i> <span
-                                            class="modal-report-vehicle-speed report-info"></span> Km/h
-                                </div>
-                            </div>
-                            <!-- end widget -->
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12 p-0">
-                        <div id="google-map-light-dream"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer hide" style="width:90%;">
-                <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modal-off-road-report" style="background: #535353;opacity: 0.96;">
-    <div class="modal-dialog modal-lg" style="width: 80%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">@lang('Off road report')</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 modal-off-road-report-table"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a href="javascript:;" class="btn width-100 btn-default" data-dismiss="modal">@lang('Close')</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section('templateScripts')
     @include('template.google.maps')
@@ -140,6 +41,10 @@
         $(document).ready(function () {
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
+            });
+
+            $('#modal-route-report').on('hidden.bs.modal', function () {
+                busMarker = null;
             });
 
             $('body').on('click', '.btn-show-off-road-report', function (e) {
@@ -174,12 +79,22 @@
                     success: function (data) {
                         if (!data.empty) {
                             $('.modal-report-vehicle').html(data.vehicle + ' <i class="fa fa-hand-o-right" aria-hidden="true"></i> ' + data.plate);
-                            $('.modal-report-vehicle-speed').html(data.vehicleSpeed);
-                            $('.modal-report-vehicle-speed-progress').css('width', parseInt(data.vehicleSpeed) + '%');
+                            $('.modal-report-vehicle-speed').html('...');
+                            $('.modal-report-vehicle-speed-average').html('...');
+                            $('.modal-report-vehicle-speed-progress').css('width', parseInt(0) + '%');
 
-                            $('.modal-report-route-name').html(data.route);
+                            $('.modal-report-dispatch-route-name').html(data.dispatchRegister.route.name);
+                            $('.modal-report-dispatch-turn').html(data.dispatchRegister.turn);
+                            $('.modal-report-dispatch-round-trip').html(data.dispatchRegister.round_trip);
+                            $('.modal-report-dispatch-departure-time').html(data.dispatchRegister.departure_time);
+                            $('.modal-report-dispatch-arrival-time').html(data.dispatchRegister.arrival_time);
+                            $('.modal-report-dispatch-route-time').html(data.dispatchRegister.route_time);
+                            $('.modal-report-dispatch-status').html(data.dispatchRegister.status);
+
                             $('.modal-report-route-percent').html(data.routePercent);
                             $('.modal-report-route-percent-progress').css('width', parseInt(data.routePercent) + '%');
+
+                            $('.modal-report-driver').html(data.dispatchRegister.driver_name);
 
                             data.controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
@@ -216,6 +131,7 @@
                             let offRoads = [];
                             let speeding = [];
                             let speed = [];
+                            let averageSpeed = [];
 
                             data.reports.forEach(function (report, i) {
                                 let percent = report.completedPercent;
@@ -229,6 +145,7 @@
                                 longitudes[i] = report.longitude;
                                 offRoads[i] = report.offRoad ? '' : 'hide';
                                 speed[i] = report.speed;
+                                averageSpeed[i] = report.averageSpeed;
                                 speeding[i] = report.speeding ? 'label-danger' : '';
 
                                 icon = pointMap[report.offRoad ? 2 : (report.trajectoryOfReturn ? 1 : 0)];
@@ -240,6 +157,15 @@
                                     position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}
                                 });
                             });
+
+                            if( data.center ){
+                                setTimeout(()=>{
+                                    map.setZoom(15);
+
+                                    map.setCenter(new google.maps.LatLng(data.center.latitude, data.center.longitude));
+                                    console.log('Center on ',data.center);
+                                },2000);
+                            }
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {
                                 type: 'line',
@@ -259,9 +185,9 @@
                                         "</span>"+
                                         "<b class=\'m-t-10\'>'.__('Status').':</b> {{offset:timesReports}} <br>"+
                                         "<b>'.__('Time').':</b> {{offset:times}} <br>"+
-                                        "<b>'.__('Distance').':</b> {{offset:distance}} m <br>"+
-                                        "<b>'.__('Completed').':</b> {{offset:percent}}% <br>"+
-                                        "<span class=\'label {{offset:speed}}\'><b>'.__('Speed').':</b> {{offset:speed}} Km/h <br></span>"+
+                                        "<b>'.__('Traveled').':</b> {{offset:distance}} m <br>"+
+                                        "<b>'.__('Completed').':</b> <span class=\'route-percent\'>{{offset:percent}}</span>%<br>"+
+                                        "<span class=\'label p-0 {{offset:speed}} speed\' data-speed=\'{{offset:speed}}\' data-average=\'{{offset:averageSpeed}}\'><b>'.__('Speed').':</b> {{offset:speed}} Km/h <br></span>"+
                                         "<span class=\'hide latitude\'>{{offset:latitude}}</span><br>"+
                                         "<span class=\'hide longitude\'>{{offset:longitude}}</span>"+
                                     "</div>'?>",
@@ -271,6 +197,7 @@
                                     'times': dataTimes,
                                     'distance': dataDistances,
                                     'speed': speed,
+                                    'averageSpeed': averageSpeed,
                                     'speeding': speeding,
                                     'percent': completedPercent,
                                     'latitude': latitudes,
@@ -284,6 +211,9 @@
                                     let t = $('.info-route-report');
                                     let latitude = t.find('.latitude').html();
                                     let longitude = t.find('.longitude').html();
+                                    let speed = t.find('.speed').data('speed');
+                                    let averageSpeed = t.find('.speed').data('average');
+                                    let routePercent = t.find('.route-percent').html();
 
                                     if (!busMarker) {
                                         busMarker = new google.maps.Marker({
@@ -292,11 +222,23 @@
                                             animation: google.maps.Animation.DROP
                                         });
                                     }
-                                    busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
+                                    busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)});
+
+                                    if( !map.getBounds().contains(busMarker.getPosition()) ){
+                                        //map.setCenter(busMarker.getPosition());
+                                    }
+
+                                    if( !isNaN(parseInt(speed)) && !isNaN(parseInt(averageSpeed))){
+                                        $('.modal-report-vehicle-speed').html("@lang("Speed"): "+parseInt(speed)+" Km/h");
+                                        $('.modal-report-vehicle-speed-average').html("@lang("Average speed"): "+parseInt(averageSpeed)+" Km/h");
+                                        $('.modal-report-vehicle-speed-progress').css('width', parseInt(speed) + '%');
+                                    }
+
+                                    $('.modal-report-route-percent-progress').css('width', parseInt(routePercent) + '%');
                                 }, 10);
                             }).bind('mouseleave', function () {
-                                busMarker ? busMarker.setMap(null) : null;
-                                busMarker = null;
+                                //busMarker ? busMarker.setMap(null) : null;
+                                //busMarker = null;
                             });
                         } else {
                             gerror('@lang('No report found for this vehicle')');

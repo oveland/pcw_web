@@ -15,7 +15,7 @@ class ConsolidatedReportMailCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'send-mail:consolidated';
+    protected $signature = 'send-mail:consolidated {--company=14} {--prev-days=1} {--date=}';
 
     /**
      * The console command description.
@@ -41,32 +41,39 @@ class ConsolidatedReportMailCommand extends Command
      */
     public function handle()
     {
-        $company = Company::find(14);
-        $prevDays = 1;
+        $company = Company::find($this->option('company'));
 
-        $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
+        if( $company ){
+            $prevDays = $this->option('prev-days');
 
-        $mail = new ConsolidatedReportMail($company, $dateReport);
-        if ($mail->buildReport()) {
-            //$mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
-            $mailTo= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-            //$mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+            if ($this->option('date')) $dateReport = $this->option('date');
+            else $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
-            Mail::to($mailTo, $company->name)
-                //->bcc($mailToBcc)
-                ->send($mail);
+            $this->info("$company->name > $dateReport");
 
-            $this->info("$company->name Mail send for date $dateReport!");
-            foreach ($mailTo as $to){
-                $this->info("   >> To: $to");
+            $mail = new ConsolidatedReportMail($company, $dateReport);
+            if ($mail->buildReport()) {
+                //$mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
+                $mailTo = ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                //$mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+
+                Mail::to($mailTo, $company->name)
+                    //->bcc($mailToBcc)
+                    ->send($mail);
+
+                foreach ($mailTo as $to) {
+                    $this->info("   >> To: $to");
+                }
+
+                /*$this->info("-------------------------------------------");
+                foreach ($mailToBcc as $bcc){
+                    $this->info("   >> Bcc: $bcc");
+                }*/
+            } else {
+                $this->info("No reports found for date $dateReport");
             }
-
-            /*$this->info("-------------------------------------------");
-            foreach ($mailToBcc as $bcc){
-                $this->info("   >> Bcc: $bcc");
-            }*/
-        } else {
-            $this->info("No reports found for date $dateReport");
+        }else{
+            $this->info("No company found for id ".$this->option('company'));
         }
     }
 }

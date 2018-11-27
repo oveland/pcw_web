@@ -90,6 +90,7 @@
   "All Routes": "Todas las rutas",
   "All routes": "Todas las rutas",
   "Chart": "Gráfica",
+  "url-chart": "grafico",
   "Passenger report detail": "Ver reporte de pasajeros",
   "Passengers report by route": "Reporte de pasajeros por ruta",
   "Passengers register historic": "Histórico de registro de pasajeros",
@@ -510,5 +511,9 @@
   "Interpolation report": "Reporte con interpolación",
   "GPS report": "Reporte GPS",
   "Consolidated passengers report daily": "Reporte consolidado diario de pasajeros",
-  "Consolidated route report daily": "Reporte consolidado diario de ruta"
+  "Consolidated route report daily": "Reporte consolidado diario de ruta",
+  "General report": "Reporte general",
+  "Refresh": "Actualizar",
+  "Distance": "Distancia",
+  "Average speed": "Vel. media"
 }

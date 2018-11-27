@@ -17,9 +17,29 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/{appName}', 'API\APIController@app');
-Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
 
-Route::prefix('peak-and-plate')->group(function () {
-    Route::get('/{company}', 'ApiPeakAndPlateController@getVehiclesCurrentPeakAndPlate');
-});
+/*
+|--------------------------------------------------------------------------
+| API Routes for MOBILE APPS
+|--------------------------------------------------------------------------
+|
+| For request with central controller
+|
+*/
+
+Route::get('/{appName}', 'API\APIController@app');
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| API Routes for WEB APPS
+|--------------------------------------------------------------------------
+|
+| For request with central controller
+|
+*/
+
+/* General route */
+Route::get('/v1/{apiName}/{service}', 'API\APIController@web');

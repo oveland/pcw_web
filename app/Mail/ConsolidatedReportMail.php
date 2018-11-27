@@ -44,13 +44,21 @@ class ConsolidatedReportMail extends Mailable
     }
 
     /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function makeFiles()
+    {
+        return $this->consolidatedReportsService->generateConsolidatedReportFiles($this->consolidatedReports);
+    }
+
+    /**
      * Build the message.
      *
      * @return $this
      */
     public function build()
     {
-        $pathToConsolidatesReportFiles = $this->consolidatedReportsService->generateConsolidatedReportFiles($this->consolidatedReports);
+        $pathToConsolidatesReportFiles = $this->makeFiles();
 
         $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " | " . __('Consolidated report daily') . " | $this->dateReport");
         if ($pathToConsolidatesReportFiles->isNotEmpty()) {

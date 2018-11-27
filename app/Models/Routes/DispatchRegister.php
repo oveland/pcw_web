@@ -227,7 +227,7 @@ class DispatchRegister extends Model
 
     public function getRouteTime()
     {
-        return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : '';
+        return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : '--:--:--';
     }
 
     public function departureFringe()
@@ -307,12 +307,13 @@ class DispatchRegister extends Model
             'round_trip' => $this->round_trip,
             'departure_time' => $this->departure_time,
             'arrival_time_scheduled' => $this->arrival_time_scheduled,
-            'arrival_time' => $this->arrival_time,
+            'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
             'difference_time' => $this->arrival_time_difference,
             'route_time' => $this->getRouteTime(),
             'route' => $this->route->toArray(),
             'status' => $this->status,
-            'driver_name' => $this->driver ? $this->driver->fullName() : '',
+            'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
+            'dispatcherName' => $this->user ? $this->user->name: __('Unassigned'),
         ];
     }
 

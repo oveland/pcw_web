@@ -93,7 +93,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('route-report'))->group(function () {
                 Route::get('/', 'ReportRouteController@index')->name('report-route');
                 Route::get('/show', 'ReportRouteController@show')->name('report-route-search');
-                Route::any('/chart/{dispatchRegister}', 'ReportRouteController@chart')->name('report-route-chart');
+                Route::any(__('url-chart').'/{dispatchRegister}', 'ReportRouteController@chart')->name('report-route-chart');
+                Route::any(__('url-chart').'/{dispatchRegister}/{location}', 'ReportRouteController@chartView')->name('report-route-chart-view');
                 Route::any('/off_road/{dispatchRegister}', 'ReportRouteController@offRoadReport')->name('report-route-off-road');
                 Route::any('/get-log/{dispatchRegister}', 'ReportRouteController@getReportLog')->name('report-route-get-log');
                 Route::any('/ajax', 'ReportRouteController@ajax')->name('route-ajax-action');

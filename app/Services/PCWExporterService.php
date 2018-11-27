@@ -135,6 +135,9 @@ class PCWExporterService
                     'bold' => true
                 ));
             });
+
+            // Set auto size for sheet
+            $sheet->getStyle('A' . $startIndex . ':' . $config->lastLetter . $config->totalRows)->getAlignment()->setWrapText(true);
         });
     }
 

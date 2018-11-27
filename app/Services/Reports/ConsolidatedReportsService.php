@@ -77,7 +77,7 @@ class ConsolidatedReportsService
                 $hasEvent = ($totalOffRoads > 0 || $totalSpeeding > 0 || $controlPointReportTotal > 0);
 
                 if ($hasEvent) {
-                    $reportVehicleByRoute->put($dispatchRegister->turn, (object)[
+                    $reportVehicleByRoute->put($dispatchRegister->id, (object)[
                         'vehicle' => $vehicle,
                         'dispatchRegister' => $dispatchRegister,
                         'offRoadReport' => $offRoadReport,
@@ -135,7 +135,7 @@ class ConsolidatedReportsService
                         __('Vehicle') => intval($vehicle->number),                                                 # D CELL
                         __('Driver') => $driver?$driver->fullName():__('Not assigned'),                       # E CELL
                         __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # F CELL
-                        __('Off roads details') => $details->offRoadReportString,                                  # G CELL
+                        __('Off roads details') => "$details->offRoadReportString",                                # G CELL
                         __('Speeding') => $reportByVehicle->totalSpeeding,                                         # H CELL
                         __('Speeding details') => $details->speedingReportString,                                  # I CELL
                         __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # J CELL
@@ -148,7 +148,7 @@ class ConsolidatedReportsService
                     'title' => __('Consolidated') . " $route->name",
                     'subTitle' => "$date",
                     'sheetTitle' => "$route->name",
-                    'data' => $dataExcel
+                    'data' => $dataExcel,
                 ];
 
                 /* SHEETS */
