@@ -19,6 +19,11 @@ class CurrentSensorPassengers extends Model
         return $this->pas_tot;
     }
 
+    public function getDateAttribute()
+    {
+        return explode('.', $this->fecha)[0];
+    }
+
     public function getTimeStatusAttribute()
     {
         return explode('.', $this->hora_status)[0];

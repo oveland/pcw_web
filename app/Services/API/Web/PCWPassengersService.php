@@ -85,6 +85,7 @@ class PCWPassengersService implements APIWebInterface
                     'sensorRecorder' => $sensor->passengersBySensorRecorder,
                     'timeRecorder' => $recorder->timeRecorder,
                     'timeSensor' => $currentSensor->timeSensor,
+                    'dateSensor' => $currentSensor->date,
                     'timeSensorRecorder' => $currentSensor->timeSensorRecorder,
                 ]
             ];
