@@ -73,9 +73,9 @@
                 $('.report-info').html(loading);
 
                 let panelOffRoad = $('.panel-off-road').slideUp();
-                let panelOffRoadBody = panelOffRoad.find('tbody');
-                panelOffRoadBody.find('.off-road').hide();
-                panelOffRoadBody.find('.no-off-road').hide();
+                let panelOffRoadBody = panelOffRoad.find('tbody').empty();
+                panelOffRoad.find('.off-road').hide();
+                panelOffRoad.find('.no-off-road').hide();
 
                 $.ajax({
                     url: $(this).data('url'),
@@ -171,7 +171,7 @@
                             }
 
                             if( data.offRoadReport ){
-                                panelOffRoadBody.find('.off-road').slideDown();
+                                panelOffRoad.find('.off-road').slideDown();
                                 data.offRoadReport.forEach(function(offRoadReport, i){
                                     let offRoadDate = moment(offRoadReport.date.date);
                                     let tr = $('<tr></tr>');
@@ -194,7 +194,7 @@
                                     panelOffRoadBody.append(tr);
                                 });
                             }else{
-                                panelOffRoadBody.find('.no-off-road').slideDown();
+                                panelOffRoad.find('.no-off-road').slideDown();
                             }
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {
