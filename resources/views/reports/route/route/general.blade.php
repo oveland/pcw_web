@@ -29,7 +29,7 @@
                 </a>
                 <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-info pull-right btn-show-chart-route-report tooltips"
                    style="right: 55px;position: absolute;top: 10px;z-index: 1;"
-                   data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}?centerOnLocation={{ $location->id }}"
+                   data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}?centerOnLocation={{ $locationId }}"
                    data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
                    data-original-title="@lang('Refresh')"
                    data-placement="bottom">

@@ -65,19 +65,24 @@
                         }
                     });
                 }
-            });
-
-            $('body').on('click', '.btn-show-chart-route-report', function () {
+            }).on('click', '.btn-show-chart-route-report', function () {
                 //map.clearAllMarkers();
-                $('#date-report-details').html($('#date-report').val());
                 $('.btn-show-off-road-report').attr('href', $(this).data('url-off-road-report'));
                 let chartRouteReport = $("#chart-route-report");
                 chartRouteReport.html(loading);
                 $('.report-info').html(loading);
+
+                let panelOffRoad = $('.panel-off-road').slideUp();
+                let panelOffRoadBody = panelOffRoad.find('tbody');
+                panelOffRoadBody.find('.off-road').hide();
+                panelOffRoadBody.find('.no-off-road').hide();
+
                 $.ajax({
                     url: $(this).data('url'),
                     success: function (data) {
                         if (!data.empty) {
+                            panelOffRoad.slideDown();
+                            $('#date-report-details').html(data.date);
                             $('.modal-report-vehicle').html(data.vehicle + ' <i class="fa fa-hand-o-right" aria-hidden="true"></i> ' + data.plate);
                             $('.modal-report-vehicle-speed').html('...');
                             $('.modal-report-vehicle-speed-average').html('...');
@@ -161,10 +166,35 @@
                             if( data.center ){
                                 setTimeout(()=>{
                                     map.setZoom(15);
-
                                     map.setCenter(new google.maps.LatLng(data.center.latitude, data.center.longitude));
-                                    console.log('Center on ',data.center);
                                 },2000);
+                            }
+
+                            if( data.offRoadReport ){
+                                panelOffRoadBody.find('.off-road').slideDown();
+                                data.offRoadReport.forEach(function(offRoadReport, i){
+                                    let offRoadDate = moment(offRoadReport.date.date);
+                                    let tr = $('<tr></tr>');
+                                    let tdDate = $('<td></td>').append(offRoadDate.format('hh:mm:ss'));
+                                    tdDate.css('width', '40% !important');
+                                    tr.append(tdDate);
+
+                                    let optionsOffRoad = $('#template-button-off-road');
+                                    let tdOptions = $('<td></td>').append(optionsOffRoad.html());
+                                    tdOptions.css('width', '60% !important');
+
+                                    let btnSeeOffRoad = tdOptions.find('.btn-see-off-road');
+                                    btnSeeOffRoad.data('latitude', offRoadReport.latitude);
+                                    btnSeeOffRoad.data('longitude', offRoadReport.longitude);
+
+                                    let btnFakeOffRoad = tdOptions.find('.btn-fake-off-road');
+                                    btnFakeOffRoad.attr('href', btnFakeOffRoad.attr('href') +'/'+offRoadReport.id);
+
+                                    tr.append(tdOptions);
+                                    panelOffRoadBody.append(tr);
+                                });
+                            }else{
+                                panelOffRoadBody.find('.no-off-road').slideDown();
                             }
 
                             chartRouteReport.empty().hide().sparkline(dataValues, {
@@ -235,6 +265,7 @@
                                     }
 
                                     $('.modal-report-route-percent-progress').css('width', parseInt(routePercent) + '%');
+                                    $('.modal-report-route-percent').html(routePercent);
                                 }, 10);
                             }).bind('mouseleave', function () {
                                 //busMarker ? busMarker.setMap(null) : null;
@@ -251,6 +282,25 @@
                         $('.report-info').empty();
                         $('.modal').modal('hide');
                         gerror('@lang('Oops, something went wrong!')');
+                    }
+                });
+            }).on('click', '.btn-see-off-road', function(e){
+                map.setZoom(12);
+                setTimeout(()=>{
+                    map.setZoom(15);
+                    map.panTo(new google.maps.LatLng($(this).data('latitude'), $(this).data('longitude')));
+                },800);
+            }).on('click', '.btn-fake-off-road', function(e){
+                event.preventDefault();
+                $.ajax({
+                    url: $(this).attr('href'),
+                    type: 'POST',
+                    success: function(data){
+                        console.log(data);
+                        $('.btn-show-chart-route-report').click();
+                    },
+                    error:function(){
+                        gerror('@lang('An error occurred in the process. Contact your administrator')');
                     }
                 });
             });

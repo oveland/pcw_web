@@ -128,18 +128,21 @@ class ConsolidatedReportsService
 
                     $details = $this->buildStringDetails($reportByVehicle);
 
+                    $link = route('report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => 0]);
+
+
                     $dataExcel[] = [
                         __('Turn') => $dispatchRegister->turn,                                                     # A CELL
-                        __('Turn') => $dispatchRegister->turn,                                                     # B CELL
-                        __('Round Trip') => $dispatchRegister->round_trip,                                         # C CELL
-                        __('Vehicle') => intval($vehicle->number),                                                 # D CELL
-                        __('Driver') => $driver?$driver->fullName():__('Not assigned'),                       # E CELL
-                        __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # F CELL
-                        __('Off roads details') => "$details->offRoadReportString",                                # G CELL
-                        __('Speeding') => $reportByVehicle->totalSpeeding,                                         # H CELL
-                        __('Speeding details') => $details->speedingReportString,                                  # I CELL
-                        __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # J CELL
-                        __('Control points details') => $details->delayControlPointsReportString,                  # K CELL
+                        __('Round Trip') => $dispatchRegister->round_trip,                                         # B CELL
+                        __('Vehicle') => intval($vehicle->number),                                                 # C CELL
+                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                   # D CELL
+                        __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # E CELL
+                        __('Off roads details') => "$details->offRoadReportString",                                # F CELL
+                        __('Speeding') => $reportByVehicle->totalSpeeding,                                         # G CELL
+                        __('Speeding details') => $details->speedingReportString,                                  # H CELL
+                        __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # I CELL
+                        __('Control points details') => $details->delayControlPointsReportString,                  # J CELL
+                        __('Details') => $link,                                                                    # K CELLs
                     ];
                 }
 
@@ -149,6 +152,7 @@ class ConsolidatedReportsService
                     'subTitle' => "$date",
                     'sheetTitle' => "$route->name",
                     'data' => $dataExcel,
+                    'type' => 'consolidatedRouteReport'
                 ];
 
                 /* SHEETS */
@@ -175,6 +179,7 @@ class ConsolidatedReportsService
         foreach ($reportByVehicle->offRoadReport as $offRoadReport) {
             $ln = $index > 0 ? "\n" : "";
             $time = $offRoadReport->date->toTimeString();
+
             $offRoadReportString .= "$ln • $time → " . Geolocation::getAddressFromCoordinates($offRoadReport->latitude, $offRoadReport->longitude);
             $index++;
         }
@@ -194,7 +199,7 @@ class ConsolidatedReportsService
         foreach ($reportByVehicle->controlPointReport as $controlPointReport) {
             $report = $controlPointReport->report;
             $ln = $index > 0 ? "\n" : "";
-            $delayControlPointsReportString .= "$ln • ".__('Time')." $report->measuredControlPointTime $controlPointReport->controlPointName (Ref. $controlPointReport->maxTime) → " . __('Reported at') . " $report->timeMeasured";
+            $delayControlPointsReportString .= "$ln • " . __('Time') . " $report->measuredControlPointTime $controlPointReport->controlPointName (Ref. $controlPointReport->maxTime) → " . __('Reported at') . " $report->timeMeasured";
             $index++;
         }
 

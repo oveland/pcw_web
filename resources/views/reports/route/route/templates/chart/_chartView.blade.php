@@ -20,7 +20,7 @@
         </a>
     </h4>
     <div class="row">
-        <div id="info-route" class="col-md-3 col-sm-4 col-xs-6 p-0 p-t-15" style="float: left !important;position: absolute;z-index: 1;">
+        <div class="col-md-2 col-sm-4 col-xs-6 p-0 p-t-15" style="float: left !important;position: absolute;z-index: 1;">
             <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
                 <!-- begin widget -->
                 <div class="widget widget-stat widget-stat-right bg-inverse text-white">
@@ -52,30 +52,33 @@
                         <div class="widget-stat-title">
                             <i class="fa fa-flag"></i> @lang('Route info')
                         </div>
-                        <div class="widget-stat-number modal-report-dispatch-route-name report-info"></div>
+                        <div class="col-md-12 no-padding">
+                            <span class="widget-stat-number modal-report-dispatch-route-name report-info"></span>
+                            <small class="modal-report-dispatch-status report-info"></small>
+                        </div>
                         <div class="col-md-12 no-padding">
                             <hr class="hr col-md-12 no-padding">
                         </div>
-                        <div class="col-md-12 no-padding">
+                        <small class="col-md-12 no-padding">
                             <i class="fa fa-list-ol" aria-hidden="true"></i> @lang('Turn')
                             <span class="modal-report-dispatch-turn report-info"></span>
-                        </div>
-                        <div class="col-md-12 no-padding">
+                        </small>
+                        <small class="col-md-12 no-padding">
                             <i class="fa fa-retweet" aria-hidden="true"></i> @lang('Round trip')
                             <span class="modal-report-dispatch-round-trip report-info"></span>
-                        </div>
-                        <div class="col-md-12 no-padding">
+                        </small>
+                        <small class="col-md-12 no-padding">
                             <i class="fa fa-clock-o" aria-hidden="true"></i> @lang('Departure time')
                             <span class="modal-report-dispatch-departure-time report-info"></span>
-                        </div>
-                        <div class="col-md-12 no-padding">
+                        </small>
+                        <small class="col-md-12 no-padding">
                             <i class="fa fa-clock-o" aria-hidden="true"></i> @lang('Arrival time')
                             <span class="modal-report-dispatch-arrival-time report-info"></span>
-                        </div>
-                        <div class="col-md-12 no-padding">
+                        </small>
+                        <small class="col-md-12 no-padding">
                             <i class="ion-android-stopwatch" aria-hidden="true"></i> @lang('Route time')
                             <span class="modal-report-dispatch-route-time report-info"></span>
-                        </div>
+                        </small>
                     </div>
                     <div class="widget-stat-progress">
                         <div class="progress progress-striped progress-xs active">
@@ -83,10 +86,10 @@
                         </div>
                     </div>
                     <div class="widget-stat-footer text-left row">
-                        <div class="col-md-12 no-padding">
+                        <small class="col-md-12 no-padding">
                             <i class="fa fa-flag-checkered" aria-hidden="true"></i>
-                            <span class="modal-report-route-percent"></span>% @lang('of the route'). <span class="modal-report-dispatch-status report-info"></span>
-                        </div>
+                            <span class="modal-report-route-percent"></span>% @lang('of the route')
+                        </small>
                     </div>
                 </div>
                 <!-- end widget -->
@@ -106,6 +109,53 @@
                 <!-- end widget -->
             </div>
         </div>
+
+        <div class="col-md-2 col-sm-4 col-xs-6 p-0 p-t-15" style="float: right !important;position: absolute;z-index: 1;right: 5px; top: 100px;">
+            <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
+                <!-- begin panel off roads -->
+                <div class="panel panel-danger panel-off-road">
+                    <div class="panel-heading p-10">
+                        <div class="panel-heading-btn">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-white" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
+                        <h5 class="panel-title text-bold">
+                            <i class="fa fa-random"></i> @lang('Off road')
+                        </h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-condensed table-td-valign-middle">
+                            <thead class="off-road">
+                            <tr class="danger">
+                                <th class="text-center p-10" width="40%">
+                                    <small>
+                                        <i class="fa fa-clock-o f-s-5"></i> @lang('Time')
+                                    </small>
+                                </th>
+                                <th class="text-center p-10" width="60%">
+                                    <small>
+                                        <i class="fa fa-rocket f-s-5"></i> @lang('Actions')
+                                    </small>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="off-road"></tbody>
+                            <tfoot class="no-off-road">
+                            <tr>
+                                <td colspan="4">
+                                    <p class="text-center">
+                                        <i class="fa fa-check-circle-o text-lime fa-2x"></i><br>
+                                        @lang("The vehicle haven't off road")
+                                    </p>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!-- end panel off roads -->
+            </div>
+        </div>
+
         <div class="col-md-12 col-sm-12 col-xs-12 p-0">
             <div id="google-map-light-dream"></div>
         </div>
@@ -114,3 +164,24 @@
 <div class="modal-footer hide" style="width:90%;">
     <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
 </div>
+
+<template id="template-button-off-road">
+    <div class="btn-group m-b-5 m-r-5">
+        <a href="javascript:;" data-latitude="" data-longitude="" class="btn btn-warning btn-xs btn-see-off-road">
+            <i class="fa fa-map-marker"></i>
+        </a>
+
+        @if( Auth::user()->isAdmin() )
+            <a href="javascript:;" data-toggle="dropdown" class="btn btn-xs btn-danger dropdown-toggle" aria-expanded="false">
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="{{ route('report-route-off-road-is-fake', ['location' => '']) }}" class="text-danger btn-fake-off-road">
+                        <i class="fa fa-thumbs-down"></i> @lang('Mark as fake')
+                    </a>
+                </li>
+            </ul>
+        @endif
+    </div>
+</template>

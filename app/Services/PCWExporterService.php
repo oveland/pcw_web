@@ -14,6 +14,7 @@ class PCWExporterService
 {
     public static $fontStyle = 'Segoe UI Light';
     public static $fontColorInverse = '#eeeeee';
+    public static $fontColorLink = '#0d0dff';
 
     /**
      * General exporter table from view
@@ -84,9 +85,14 @@ class PCWExporterService
             /* GENEREAL STYLE */
             $sheet->setOrientation('landscape');
             $sheet->setFontFamily(self::$fontStyle);
+
+            // Set auto size for sheet
+            $sheet->getStyle('A' . $startIndex . ':' . $config->lastLetter . $config->totalRows)->getAlignment()->setWrapText(true);
+
             $sheet->setBorder("A1:$config->lastLetter" . $config->totalRows, 'thin');
             $sheet->cells("A1:$config->lastLetter" . $config->totalRows, function ($cells) {
                 $cells->setFontFamily(self::$fontStyle);
+                $cells->setValignment('center');
             });
 
             /* SORTABLE COLUMN HEADERS */
@@ -135,9 +141,6 @@ class PCWExporterService
                     'bold' => true
                 ));
             });
-
-            // Set auto size for sheet
-            $sheet->getStyle('A' . $startIndex . ':' . $config->lastLetter . $config->totalRows)->getAlignment()->setWrapText(true);
         });
     }
 
@@ -207,6 +210,40 @@ class PCWExporterService
 
                 $sheet->setCellValue("D$lastRow", "TOTAL");
                 $sheet = self::styleFooter($sheet, $config);
+                break;
+
+            case 'consolidatedRouteReport':
+                $startIndex = $config->startIndex + 1;
+                $rows = range($config->startIndex + 1, $config->totalRows, 1);
+                foreach ($rows as $row){
+                    $cell = $sheet->getCell("K$row");
+                    $cellLink = $cell->getValue();
+
+                    $cell->getHyperlink()->setUrl($cellLink);
+                    $cell->setValueExplicit(__('Chart'));
+                }
+
+                $sheet->cells("K$startIndex:K$config->totalRows", function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                    $cells->setBackground('#0a0a15');
+                    $cells->setFontColor(self::$fontColorInverse);
+                    $cells->setFont(array(
+                        'family' => 'Calibri',
+                        'size' => '13',
+                        'bold' => true,
+                        'italic' => true,
+                        'underline' => \PHPExcel_Style_Font::UNDERLINE_SINGLE
+                    ));
+                });
+
+                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("B$config->startIndex:B$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("C$config->startIndex:C$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+
+                $sheet->cells("G$config->startIndex:G$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+
                 break;
         }
         return $sheet;

@@ -81,6 +81,15 @@ class ReportRouteOffRoadController extends Controller
     }
 
     /**
+     * @param Location $location
+     */
+    public function markLocationAsFakeOffRoad(Location $location)
+    {
+        $location->status = 'FOR';
+        $location->save();
+    }
+
+    /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */

@@ -11,6 +11,7 @@ use App\Models\Routes\Report;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Location;
 use App\Services\PCWExporterService;
+use App\Services\Reports\Routes\RouteService;
 use App\Traits\CounterByRecorder;
 use App\Models\Vehicles\Vehicle;
 use GuzzleHttp\Client;
@@ -20,6 +21,21 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportRouteController extends Controller
 {
+    /**
+     * @var RouteService
+     */
+    private $routeService;
+
+    /**
+     * ReportRouteController constructor.
+     * @param RouteService $routeService
+     */
+    public function __construct(RouteService $routeService)
+    {
+
+        $this->routeService = $routeService;
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -85,13 +101,13 @@ class ReportRouteController extends Controller
 
     /**
      * @param DispatchRegister $dispatchRegister
-     * @param Location $location
+     * @param $locationId
      * @param Request $request
      * @return string
      */
-    public function chartView(DispatchRegister $dispatchRegister, Location $location, Request $request)
+    public function chartView(DispatchRegister $dispatchRegister, $locationId, Request $request)
     {
-        return view('reports.route.route.general', compact(['dispatchRegister', 'location']));
+        return view('reports.route.route.general', compact(['dispatchRegister', 'locationId']));
     }
 
     /**
@@ -99,13 +115,10 @@ class ReportRouteController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public
-    function chart(DispatchRegister $dispatchRegister, Request $request)
+    public function chart(DispatchRegister $dispatchRegister, Request $request)
     {
-        sleep(1); // For wait init map on view
         $centerOnLocation = ($request->get('centerOnLocation')) ? Location::find(($request->get('centerOnLocation'))) : null;
-
-        return response()->json($this->buildRouteLocationsReport($dispatchRegister, $centerOnLocation));
+        return response()->json($this->routeService->buildRouteLocationsReport($dispatchRegister, $centerOnLocation));
     }
 
     /**
@@ -121,100 +134,9 @@ class ReportRouteController extends Controller
             ->orderBy('date')
             ->get();
 
-        $locationsReports = $this->buildRouteLocationsReport($dispatchRegister);
+        $locationsReports = $this->routeService->buildRouteLocationsReport($dispatchRegister);
 
         return view('reports.route.route._tableReportLog', compact(['reports', 'locationsReports']));
-    }
-
-    /**
-     * Builds route report for all dispatch register's locations
-     *
-     * @param DispatchRegister $dispatchRegister
-     * @param Location|null $centerOnLocation
-     * @return object
-     */
-    public function buildRouteLocationsReport(DispatchRegister $dispatchRegister, Location $centerOnLocation = null)
-    {
-        $reports = $dispatchRegister->reports()->with('location')->get();
-        $locationsReports = (object)['empty' => $reports->isEmpty(), 'notEmpty' => $reports->isNotEmpty()];
-
-        if ($reports->isNotEmpty()) {
-            $vehicle = $dispatchRegister->vehicle;
-            $route = $dispatchRegister->route;
-            $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
-            $controlPoints = $route->controlPoints;
-            $controlPointOfReturn = $controlPoints->where('type', ControlPoint::RETURN)->first();
-
-            $routeDistance = $controlPoints->last()->distance_from_dispatch;
-            $distanceOfReturn = $controlPointOfReturn ? $controlPointOfReturn->distance_from_dispatch : $routeDistance;
-
-            $reportData = collect([]);
-            $lastReport = $reports->first();
-            $lastSpeed = 0;
-            $totalSpeed = 0;
-
-            foreach ($reports as $report) {
-                $location = $report->location;
-                if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
-                    $offRoad = $location->off_road == 't' ? true : false;
-
-                    $completedPercent = ($report->distancem / $routeDistance) * 100;
-                    if ($completedPercent > 100) $completedPercent = 100;
-
-                    if ($report->controlPoint) {
-                        $reportData->push((object)[
-                            'locationId' => $location->id,
-                            'time' => $report->date->toTimeString(),
-                            'timeReport' => $report->timed,
-                            'distance' => $report->distancem,
-                            'controlPointName' => $report->controlPoint->name,
-                            'completedPercent' => number_format($completedPercent, 1, ',', '.'),
-                            'value' => $report->status_in_minutes,
-                            'latitude' => $location->latitude,
-                            'longitude' => $location->longitude,
-                            'trajectoryOfReturn' => $report->distancem >= $distanceOfReturn,
-                            'speed' => number_format($location->speed, 1, ',', '.'),
-                            'averageSpeed' => ($reportData->count() > 0) ? $totalSpeed / $reportData->count() : 0,
-                            'speeding' => $location->speeding,
-                            'offRoad' => $offRoad
-                        ]);
-                    }
-
-                    $lastReport = $report;
-                    $lastSpeed = $location->speed;
-                    $totalSpeed += $lastSpeed;
-                }
-            }
-
-            $routePercent = round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1);
-
-            $center = false;
-            if ($centerOnLocation) {
-                $center = [
-                    'latitude' => $centerOnLocation->latitude,
-                    'longitude' => $centerOnLocation->longitude,
-                ];
-            }
-
-            $locationsReports = (object)[
-                'empty' => $reports->isEmpty(),
-                'notEmpty' => $reports->isNotEmpty(),
-                'vehicle' => $vehicle->number,
-                'plate' => $vehicle->plate,
-                'vehicleSpeed' => round($lastSpeed, 2),
-                'route' => $route->name,
-                'dispatchRegister' => $dispatchRegister->getAPIFields(),
-                'routeDistance' => $routeDistance,
-                'routePercent' => $routePercent > 100 ? 100 : $routePercent,
-                'controlPoints' => $controlPoints,
-                'urlLayerMap' => $route->url,
-                'routeCoordinates' => $routeCoordinates->toArray(),
-                'reports' => $reportData,
-                'center' => $center
-            ];
-        }
-
-        return $locationsReports;
     }
 
     /**

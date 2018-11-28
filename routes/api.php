@@ -43,3 +43,4 @@ Route::get('/{appName}', 'API\APIController@app');
 
 /* General route */
 Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
+

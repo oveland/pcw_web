@@ -14,11 +14,11 @@
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', function(){
+    Route::get('/', function () {
         return redirect(route('report-route'));
     })->name('home');
 
-    Route::get('/home', function(){
+    Route::get('/home', function () {
         return redirect(route('report-route'));
     })->name('index');
 
@@ -93,8 +93,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('route-report'))->group(function () {
                 Route::get('/', 'ReportRouteController@index')->name('report-route');
                 Route::get('/show', 'ReportRouteController@show')->name('report-route-search');
-                Route::any(__('url-chart').'/{dispatchRegister}', 'ReportRouteController@chart')->name('report-route-chart');
-                Route::any(__('url-chart').'/{dispatchRegister}/{location}', 'ReportRouteController@chartView')->name('report-route-chart-view');
+                Route::any(__('url-chart') . '/{dispatchRegister}', 'ReportRouteController@chart')->name('report-route-chart');
+                Route::any(__('url-chart') . '/{dispatchRegister}/{location}', 'ReportRouteController@chartView')->name('report-route-chart-view');
                 Route::any('/off_road/{dispatchRegister}', 'ReportRouteController@offRoadReport')->name('report-route-off-road');
                 Route::any('/get-log/{dispatchRegister}', 'ReportRouteController@getReportLog')->name('report-route-get-log');
                 Route::any('/ajax', 'ReportRouteController@ajax')->name('route-ajax-action');
@@ -106,6 +106,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/show', 'ReportRouteOffRoadController@searchReport')->name('report-route-off-road-search');
                 Route::get('/address/{location}', 'ReportRouteOffRoadController@getAddressFromCoordinates')->name('report-route-off-road-geolocation-address');
                 Route::get('/image/{location}', 'ReportRouteOffRoadController@getImageFromCoordinate')->name('report-route-off-road-geolocation-image');
+                Route::post('/is-fake/{location}', 'ReportRouteOffRoadController@markLocationAsFakeOffRoad')->name('report-route-off-road-is-fake');
                 Route::any('/ajax', 'ReportRouteOffRoadController@ajax')->name('report-route-off-road-ajax-action');
             });
 
@@ -124,7 +125,7 @@ Route::group(['middleware' => ['auth']], function () {
             });
         });
 
-        Route::prefix(__('url-vehicles'))->group(function(){
+        Route::prefix(__('url-vehicles'))->group(function () {
             /* Off Road report */
             Route::prefix(__('parked'))->group(function () {
                 Route::get('/', 'ParkedVehiclesReportController@index')->name('report-vehicle-parked');
@@ -185,14 +186,14 @@ Route::group(['middleware' => ['auth']], function () {
                 /* Router for General Reports */
                 Route::prefix(__('consolidated'))->group(function () {
                     Route::prefix(__('daily'))->group(function () {
-                        Route::get('/','ReportPassengerRecorderConsolidatedDailyController@index')->name('report-passengers-recorders-consolidated-daily');
+                        Route::get('/', 'ReportPassengerRecorderConsolidatedDailyController@index')->name('report-passengers-recorders-consolidated-daily');
                         Route::get('/show', 'ReportPassengerRecorderConsolidatedDailyController@show')->name('report-passengers-recorders-consolidated-daily-search');
                         Route::get('/export', 'ReportPassengerRecorderConsolidatedDailyController@export')->name('report-passengers-recorders-consolidated-daily-export');
                         Route::any('/ajax/{action}', 'ReportPassengerRecorderConsolidatedDailyController@ajax')->name('report-passengers-recorders-consolidated-daily-ajax-action');
                     });
 
                     Route::prefix(__('date-range'))->group(function () {
-                        Route::get('/','PassengersReportDateRangeController@index')->name('report-passengers-recorders-consolidated-date-range');
+                        Route::get('/', 'PassengersReportDateRangeController@index')->name('report-passengers-recorders-consolidated-date-range');
                         Route::get('/show', 'PassengersReportDateRangeController@show')->name('report-passengers-recorders-consolidated-date-range-search');
                         Route::get('/export', 'PassengersReportDateRangeController@export')->name('report-passengers-recorders-consolidated-date-range-export');
                     });
@@ -201,13 +202,13 @@ Route::group(['middleware' => ['auth']], function () {
                 /* Router for General Reports */
                 Route::prefix(__('detailed'))->group(function () {
                     Route::prefix(__('daily'))->group(function () {
-                        Route::get('/','PassengerReportDetailedController@index')->name('report-passengers-recorders-detailed-daily');
+                        Route::get('/', 'PassengerReportDetailedController@index')->name('report-passengers-recorders-detailed-daily');
                         Route::get('/show', 'PassengerReportDetailedController@show')->name('report-passengers-recorders-detailed-daily-search');
                         Route::get('/export', 'PassengerReportDetailedController@export')->name('report-passengers-recorders-detailed-daily-export');
                     });
 
                     Route::prefix(__('date-range'))->group(function () {
-                        Route::get('/','PassengerReportDetailedDateRangeController@index')->name('report-passengers-recorders-detailed-date-range');
+                        Route::get('/', 'PassengerReportDetailedDateRangeController@index')->name('report-passengers-recorders-detailed-date-range');
                         Route::get('/show', 'PassengerReportDetailedDateRangeController@show')->name('report-passengers-recorders-detailed-date-range-search');
                         Route::get('/export', 'PassengerReportDetailedDateRangeController@export')->name('report-passengers-recorders-detailed-date-range-export');
                     });
@@ -246,14 +247,14 @@ Route::group(['middleware' => ['auth']], function () {
         /* Routes for drivers report */
         Route::prefix(__('drivers'))->group(function () {
             Route::prefix(__('consolidated'))->group(function () {
-                Route::get('/','DriverConsolidatedController@index')->name('report-drivers-consolidated');
+                Route::get('/', 'DriverConsolidatedController@index')->name('report-drivers-consolidated');
                 Route::get('/show', 'DriverConsolidatedController@show')->name('report-drivers-consolidated-search');
                 Route::get('/export', 'DriverConsolidatedController@export')->name('report-drivers-consolidated-export');
             });
 
             /* Router for General Reports */
             Route::prefix(__('detailed'))->group(function () {
-                Route::get('/','DriverDetailedController@index')->name('report-drivers-detailed');
+                Route::get('/', 'DriverDetailedController@index')->name('report-drivers-detailed');
                 Route::get('/show', 'DriverDetailedController@show')->name('report-drivers-detailed-search');
                 Route::get('/export', 'DriverDetailedController@export')->name('report-drivers-detailed-export');
             });
@@ -306,9 +307,3 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 });
-
-Route::prefix('logs')->group(function () {
-    Route::get('/register-gps', 'LogController@registerGPS')->name('logs-register-gps');
-});
-
-Route::get('/mail/{company}/{prevDays}', 'ToolsController@mail');

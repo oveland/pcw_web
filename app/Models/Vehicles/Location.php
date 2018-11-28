@@ -142,4 +142,14 @@ class Location extends Model
         $thresholdTruncateSpeeding = config('vehicle.threshold_truncate_speeding');
         return ($speed > $thresholdTruncateSpeeding);
     }
+
+    public function isFakeOffRoad()
+    {
+        return $this->status == 'FOR';
+    }
+
+    public function isTrueOffRoad()
+    {
+        return (!$this->isFakeOffRoad() && $this->off_road );
+    }
 }

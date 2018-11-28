@@ -130,6 +130,14 @@ class OffRoadService
     }
 
     /**
+     * @param $offRoadsByVehicle
+     * @return \Illuminate\Support\Collection
+     */
+    function groupByFirstOffRoad($offRoadsByVehicle){
+        return self::groupByFirstOffRoadEvent($offRoadsByVehicle);
+    }
+
+    /**
      * Extract first event of the all off roads
      *
      * @param $offRoadsByVehicle
@@ -152,13 +160,14 @@ class OffRoadService
             }
 
             if ($totalByGroup > 3) {
-                $offRoadsEvents->push($firstOffRoadOnGroup);
+                if( $firstOffRoadOnGroup->isTrueOffRoad() ){
+                    $offRoadsEvents->push($firstOffRoadOnGroup);
+                }
                 $totalByGroup = 0;
             }
 
             $lastOffRoad = $offRoad;
         }
-
         return $offRoadsEvents;
     }
 }

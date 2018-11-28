@@ -515,5 +515,7 @@
   "General report": "Reporte general",
   "Refresh": "Actualizar",
   "Distance": "Distancia",
-  "Average speed": "Vel. media"
+  "Average speed": "Vel. media",
+  "The vehicle haven't off road": "El vehículo no presenta salidas de ruta",
+  "See": "Ver"
 }
