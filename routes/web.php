@@ -307,3 +307,8 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 });
+
+Route::any(__('link') . '/' . __('reports') . '/' . __('routes') . '/' . __('url-chart') . '/{dispatchRegister}/{location}', function ($d, $l) {
+    $link = route('report-route-chart-view', ['dispatchRegister' => $d, 'location' => $l]);
+    return view('reports.route.route.templates._externalLinks', compact('link'));
+})->name('link-report-route-chart-view');

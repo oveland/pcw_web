@@ -128,7 +128,7 @@ class ConsolidatedReportsService
 
                     $details = $this->buildStringDetails($reportByVehicle);
 
-                    $link = route('report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => 0]);
+                    $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => 0]);
 
 
                     $dataExcel[] = [
