@@ -53,7 +53,7 @@ class ConsolidatedReportMailCommand extends Command
 
             $mail = new ConsolidatedReportMail($company, $dateReport);
             if ($mail->buildReport()) {
-                $mail->makeFiles();
+                //$mail->makeFiles();
                 //$mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
                 $mailTo= ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
                 //$mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
