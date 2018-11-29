@@ -55,12 +55,12 @@ class ConsolidatedReportMailCommand extends Command
             if ($mail->buildReport()) {
                 $mail->makeFiles();
                 //$mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
-                $mailTo = ['oiva.pcw@gmail.com'];
+                $mailTo= ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
                 //$mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
 
-                /*Mail::to($mailTo, $company->name)
+                Mail::to($mailTo, $company->name)
                     //->bcc($mailToBcc)
-                    ->send($mail);*/
+                    ->send($mail);
 
                 foreach ($mailTo as $to) {
                     $this->info("   >> To: $to");
