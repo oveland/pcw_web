@@ -159,7 +159,7 @@ class OffRoadService
                 $totalByGroup++;
             }
 
-            if ($totalByGroup > 3) {
+            if ($totalByGroup > 1) {
                 if( $firstOffRoadOnGroup->isTrueOffRoad() ){
                     $offRoadsEvents->push($firstOffRoadOnGroup);
                 }
