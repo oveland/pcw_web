@@ -13,6 +13,10 @@
         <br><small class="text-{{ $vehicleStatus->main_class }} tooltips" data-html="true" data-title="@lang('Last report'): {{ $currentLocation->date }} <br> @lang('Updated at'): {{ Carbon\Carbon::now()->toTimeString() }}">
             <i class="{{ $vehicleStatus->icon_class }}"></i> {{ $vehicleStatus->des_status }}
         </small>
+    @else
+        <br><small class="badge badge-danger m-b-5">
+            <i class="fa fa-tag"></i> @lang('New')
+        </small>
     @endif
 </td>
 <td width="20%" class="text-center">
@@ -30,6 +34,11 @@
         {!! $simGPS->getUrlImageOperator() !!}
         {{ $simGPS->sim }}
     </button>
+</td>
+<td class="text-center">
+    {{ $simGPS->created_at }}
+    <hr class="hr">
+    {{ $simGPS->updated_at }}
 </td>
 <td class="text-center">
     <button class="btn btn-sm btn-white tooltips btn-rounded" onclick="$('#detail-{{ $id }}').addClass('hide');$('#edit-{{ $id }}').removeClass('hide');" data-title="@lang('Edit')">

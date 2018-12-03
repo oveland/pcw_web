@@ -74,6 +74,13 @@ class ManagerGPSController extends Controller
                         if ($vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
+
+                case 'new':
+                    foreach ($simGPSList as $simGPS) {
+                        $vehicle = $simGPS->vehicle;
+                        if( !$vehicle || !$vehicle->currentLocation )$selection[] = $simGPS->vehicle->number;
+                    }
+                    break;
                 default:
                     $selection = [];
                     break;
@@ -89,7 +96,7 @@ class ManagerGPSController extends Controller
 
         $statusList = "";
         $reportsStatus = collect([]);
-        $totalOKPeriod = 0;
+        $totalOK = 0;
         $index = 1;
         foreach ($simGPSList as $sim) {
             $simGPS = SimGPS::where('sim', $sim)->get()->first();
@@ -101,10 +108,12 @@ class ManagerGPSController extends Controller
                 $vehicleStatus = $currentLocationGPS->vehicleStatus;
                 $timePeriod = $currentLocationGPS->getTimePeriod();
 
-                if ($vehicleStatus->id == 6 && ($timePeriod >= "00:04:00" && $timePeriod <= "00:06:00")) $classStatus = "btn btn-lime btn-xs";
-                elseif (($timePeriod >= "00:00:13" && $timePeriod <= "00:00:17")) $classStatus = "btn btn-lime btn-xs";
+                if ($vehicleStatus->id == VehicleStatus::OK || $vehicleStatus->id == VehicleStatus::PARKED || $vehicleStatus->id == VehicleStatus::POWER_OFF){
+                    $classStatus = "bg-lime p-2 text-white text-bold";
+                    $totalOK++;
+                }
 
-                $statusList .= $vehicleStatus ? "<div class='row' style='height: 20px'><div class='col-md-1 col-sm-1 col-xs-1 text-right'><small class='$classStatus hide'>$index</small></div><div class='col-md-10 col-sm-10 col-xs-10'><span class='tooltips click' title='$vehicleStatus->des_status' data-placement='right'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i><span style='width: 20px'>$vehicle->number</span> $currentLocationGPS->date (<span class='$classStatus'>$timePeriod</span>)<br></span></div></div>" : "********";
+                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='$classStatus' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date (<span class=''>$timePeriod</span>)</a><br><br>" : "********";
 
                 $reportsStatus->push((object)[
                     'statusId' => $vehicleStatus->id,
@@ -112,12 +121,9 @@ class ManagerGPSController extends Controller
                 ]);
             }
 
-
-            if ($classStatus) $totalOKPeriod++;
             $index++;
         }
 
-        $statusList = "<div class='text-center'><span class='btn btn-xs btn-lime'>Período OK » $totalOKPeriod</span></div>$statusList";
         $headerReport = "";
         $reportsByStatus = $reportsStatus->sortBy('statusId')->groupBy('statusId');
         foreach ($reportsByStatus as $statusId => $reportStatus) {
@@ -127,7 +133,7 @@ class ManagerGPSController extends Controller
             }
         }
 
-        return "<div class='text-center'>Total: " . count($simGPSList) . "<br>$headerReport</div> <hr class='m-t-5 m-b-5'>$statusList";
+        return "<div class='text-center'>GPS OK $totalOK of " . count($simGPSList) . " in total<br>$headerReport</div> <hr class='m-t-5 m-b-5'>$statusList";
     }
 
     public function sendSMS(Request $request)

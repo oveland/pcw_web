@@ -43,7 +43,7 @@
         </div>
     </form>
 </td>
-<td class="text-center">
+<td class="text-center" colspan="2">
     <button type="button" class="btn btn-sm btn-default tooltips btn-rounded" onclick="$('#detail-{{ $id }}').removeClass('hide');$('#edit-{{ $id }}').addClass('hide');" data-title="@lang('Cancel')">
         <i class="fa fa-undo"></i>
     </button>

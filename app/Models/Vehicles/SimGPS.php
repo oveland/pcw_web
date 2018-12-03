@@ -70,6 +70,16 @@ class SimGPS extends Model
 
     protected $fillable = ['sim', 'operator', 'gps_type', 'vehicle_id', 'active'];
 
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+    }
+
     public function scopeFindByVehicleId($query, $vehicle_id)
     {
         return $query->where('vehicle_id', $vehicle_id)->where('active', true);

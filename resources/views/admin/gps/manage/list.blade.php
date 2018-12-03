@@ -25,7 +25,7 @@
                             <input type="hidden" id="gps-type" name="gps-type" value="" data-reset-command="">
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-6">
+                            <div class="col-md-6 col-sm-12 col-xs-12 p-0">
                                 <div class="form-group col-md-12 has-success has-feedback">
                                     <i class="fa fa-signal f-s-17" aria-hidden="true"></i>
                                     <label for="sim-gps" class="control-label field-required">
@@ -33,7 +33,7 @@
                                     </label>
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="input-group m-b-15 col-md-12">
+                                    <div class="m-b-15 col-md-12 p-0">
                                         @if( $simGPSList )
                                             <select id="sim-gps" name="sim-gps[]" class="form-control select default-select2 col-md-12" multiple>
                                                 @foreach($simGPSList as $simGPS)
@@ -51,8 +51,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-6">
-                                <div class="row info-gps">
+                            <div class="col-md-6 col-sm-12 col-xs-12 p-0">
+                                <div class="info-gps">
                                     @if( $simGPSList )
                                         <div class="col-md-12">
                                             <button type="button" class="btn btn-inverse m-b-5 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
@@ -62,7 +62,9 @@
                                                 <i class="fa fa-podcast faa-burst animated"></i>
                                                 @lang('Status GPS'):
                                             </label>
-                                            <pre class="pre col-md-12 text-info status-gps-container">@lang('Select a SIM number')</pre>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <pre class="col-md-12 text-info status-gps-container text-center" style="overflow: inherit">@lang('Select a SIM number')</pre>
                                         </div>
                                     @endif
                                 </div>
@@ -259,6 +261,10 @@
                                         <th class="text-center">
                                             <i class="fa fa-phone"></i><br>
                                             @lang('GPS SIM')
+                                        </th>
+                                        <th class="text-center">
+                                            <i class="fa fa-calendar"></i><br>
+                                            @lang('Created')<hr class="hr">@lang('Updated')
                                         </th>
                                         <th class="text-center">
                                             <i class="fa fa-cogs"></i><br>

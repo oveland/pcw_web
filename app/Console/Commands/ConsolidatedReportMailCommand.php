@@ -15,7 +15,7 @@ class ConsolidatedReportMailCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'send-mail:consolidated {--company=14} {--prev-days=1} {--date=}';
+    protected $signature = 'send-mail:consolidated {--company=14} {--prev-days=1} {--date=} {--prod=}';
 
     /**
      * The console command description.
@@ -54,22 +54,27 @@ class ConsolidatedReportMailCommand extends Command
             $mail = new ConsolidatedReportMail($company, $dateReport);
             if ($mail->buildReport()) {
                 //$mail->makeFiles();
-                //$mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
-                $mailTo= ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-                //$mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
 
-                Mail::to($mailTo, $company->name)
-                    //->bcc($mailToBcc)
-                    ->send($mail);
+                if ($this->option('prod')){
+                    $this->info("Sending report for 'prod' case...");
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
+                    $mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                }else{
+                    $this->info("Sending report for 'test' case...");
+                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                    $mailToBcc= ['olatorre22@hotmail.com'];
+                }
+
+                Mail::to($mailTo, $company->name)->bcc($mailToBcc)->send($mail);
 
                 foreach ($mailTo as $to) {
                     $this->info("   >> To: $to");
                 }
 
-                /*$this->info("-------------------------------------------");
+                $this->info("-------------------------------------------");
                 foreach ($mailToBcc as $bcc){
                     $this->info("   >> Bcc: $bcc");
-                }*/
+                }
             } else {
                 $this->info("No reports found for date $dateReport");
             }

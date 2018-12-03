@@ -95,10 +95,17 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="radio m-0 m-b-5">
                                             <label>
-                                                <input type="radio" name="option-selection" value="without-gps-signal"> @lang('Without GPS signal')
+                                                <input type="radio" name="option-selection" value="new"> @lang('GPS') @lang('New')
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="radio m-0 m-b-5">
+                                            <label>
+                                                <input type="radio" name="option-selection" value="without-gps-signal"> @lang('SS')
                                             </label>
                                         </div>
                                     </div>
