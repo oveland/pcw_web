@@ -61,7 +61,7 @@ class RouteService
 
             foreach ($reports as $report) {
                 $location = $report->location;
-                if ($report && $location->isValid() && $report->distancem >= $lastReport->distancem ?? 0) {
+                if ($report && $location->isValid()) {
                     $offRoad = $location->off_road == 't' ? true : false;
 
                     $completedPercent = ($report->distancem / $routeDistance) * 100;

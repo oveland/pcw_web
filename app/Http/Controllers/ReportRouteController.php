@@ -136,7 +136,7 @@ class ReportRouteController extends Controller
 
         $locationsReports = $this->routeService->buildRouteLocationsReport($dispatchRegister);
 
-        return view('reports.route.route._tableReportLog', compact(['reports', 'locationsReports']));
+        return view('reports.route.route.templates._tableReportLog', compact(['reports', 'locationsReports']));
     }
 
     /**
