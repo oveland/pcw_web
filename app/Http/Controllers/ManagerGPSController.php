@@ -195,14 +195,24 @@ class ManagerGPSController extends Controller
                     break;
                 case SimGPS::COBAN:
                     break;
+                case SimGPS::RUPTELA:
+                    $smsCommands = [];
+                    foreach ($gpsCommands as $gpsCommand) {
+                        $command = $gpsCommand;
+                        if( !starts_with($gpsCommand, ' ') ){
+                            $command = " $command";
+                        }
+                        $smsCommands[] = $command;
+                    }
+
+                    $gpsCommands = $smsCommands;
+                    break;
             }
 
             $totalSent = 0;
             foreach ($gpsCommands as $smsCommand) {
-                $smsCommand = trim($smsCommand);
                 $totalSent++;
                 $responseSMS = SMS::sendCommand($smsCommand, $sim);
-                //$responseSMS = ['resultado' => 1];
                 $length = strlen($smsCommand);
 
                 $dump .= ("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")") . "\n\n";

@@ -145,7 +145,7 @@
                 <small class="tooltips text-info" data-title="@lang('Vehicles without route')" data-placement="bottom">
                     {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
                 </small>
-                @if( isset($lastArrivalTime[$vehicle->id]) )
+                @if( isset($lastArrivalTime[$vehicle->id]) && $lastArrivalTime[$vehicle->id] )
                     @php($deadTime = $strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime[$vehicle->id]))
                     @php($totalDeadTime[$vehicle->id] = $strTime->addStrTime($totalDeadTime[$vehicle->id], $deadTime))
                     <br>
@@ -161,14 +161,14 @@
                 @endif
             </td>
             <td width="10%" class="text-center">
-                <small class="tooltips text-bold" data-title="@lang('Arrival Time')">
+                <small class="tooltips text-bold" data-title="@lang('Arrival Time')"  data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time) }}
                 </small>
-                <small class="tooltips text-muted" data-title="@lang('Arrival Time Scheduled')">
+                <small class="tooltips text-muted" data-title="@lang('Arrival Time Scheduled')" data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}
                 </small>
                 <hr class="m-0">
-                <small class="tooltips text" data-title="@lang('Arrival Time Difference')">
+                <small class="tooltips text" data-title="@lang('Arrival Time Difference')"  data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time_difference) }} <i class="ion-android-stopwatch text-muted"></i>
                 </small>
             </td>
