@@ -383,8 +383,11 @@ class ManagerGPSController extends Controller
             case 'apn-avantel-coban':
                 $fileScript = 'ApnAvantelScriptCoban.txt';
                 break;
-            case 'ruptela':
-                $fileScript = 'ScriptRuptela.txt';
+            case 'ip-ruptela':
+                $fileScript = 'IpScriptRuptela.txt';
+                break;
+            case 'time-report-ruptela':
+                $fileScript = 'TimeReportScriptRuptela.txt';
                 break;
             default:
                 $fileScript = '';

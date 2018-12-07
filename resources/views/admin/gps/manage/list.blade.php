@@ -156,7 +156,12 @@
                                                                     @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
                                                                         <li>
                                                                             <a href="javascript:getScript('ruptela')">
-                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela')
+                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | IP
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:getScript('time-report-ruptela')">
+                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | @lang('Time report')
                                                                             </a>
                                                                         </li>
                                                                         <li class="divider"></li>
