@@ -33,7 +33,7 @@ class TaxCentralPassengerReportController extends Controller
     public function show(Request $request)
     {
         $dateReport = $request->get('date-report');
-        $routeId = $request->get('report-route');
+        $routeId = $request->get('route-report');
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $vehiclesForCompany = $company->activeVehicles->pluck('plate');
 
@@ -44,6 +44,7 @@ class TaxCentralPassengerReportController extends Controller
             $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
                 ->where('route_id', '=', $routeId)//->where('status','=',self::DISPATCH_COMPLETE)
                 ->orderBy('round_trip')->get()->groupBy('round_trip');
+
             return view('reports.passengers.taxcentral.passengersReportByRoute', compact('roundTripDispatchRegisters'));
         }
         //$historySeats = $historySeats->whereBetween('active_time',[$dateReport.' '.$dispatchRegister->departure_time,$dateReport.' '.$dispatchRegister->arrival_time_scheduled]);
@@ -98,12 +99,12 @@ class TaxCentralPassengerReportController extends Controller
         $inactive_km = 0;
 
         foreach ($route_coordinates as $index => $route_coordinate) {
-            $route_latitude = $route_coordinate['latitude'];
-            $route_longitude = $route_coordinate['longitude'];
+            $route_latitude = $route_coordinate->latitude;
+            $route_longitude = $route_coordinate->longitude;
 
             if ($index > 0) {
-                $prev_route_latitude = $route_coordinates[$index - 1]['latitude'];
-                $prev_route_longitude = $route_coordinates[$index - 1]['longitude'];
+                $prev_route_latitude = $route_coordinates[$index - 1]->latitude;
+                $prev_route_longitude = $route_coordinates[$index - 1]->longitude;
                 $prev_distance = Geolocation::getDistance($route_latitude, $route_longitude, $prev_route_latitude, $prev_route_longitude);
 
                 /* Process active seat locations */

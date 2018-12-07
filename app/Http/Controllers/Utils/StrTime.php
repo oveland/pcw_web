@@ -11,25 +11,9 @@ namespace App\Http\Controllers\Utils;
 
 class StrTime
 {
-    /*
-    protected static $strTime;
-    public function __construct($strTime)
-    {
-        $this::$strTime = $strTime;
-    }
-
-    public function make($strTime)
-    {
-        return new static($strTime);
-    }
-    */
-
-    function hola(){
-
-    }
-
     static function toSeg($strTime)
     {
+        if( $strTime == '--:--:--' )return 0;
         $strTimeArray = explode(":", $strTime);
         return $strTimeArray[0] * 3600 + $strTimeArray[1] * 60 + $strTimeArray[2];
     }
