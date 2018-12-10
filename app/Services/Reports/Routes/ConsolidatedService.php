@@ -2,22 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: Oscar
- * Date: 10/10/2018
- * Time: 9:47 PM
+ * Date: 9/12/2018
+ * Time: 12:09 AM
  */
 
-namespace App\Services\Reports;
+namespace App\Services\Reports\Routes;
 
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
-use App\Services\Reports\Routes\ControlPointService;
-use App\Services\Reports\Routes\OffRoadService;
-use App\Services\Reports\Routes\SpeedingService;
 use Excel;
 
-class ConsolidatedReportsService
+class ConsolidatedService
 {
     /**
      * @var OffRoadService
@@ -50,7 +47,7 @@ class ConsolidatedReportsService
      * @param $dateReport
      * @return \Illuminate\Support\Collection
      */
-    function generateConsolidatedReportDaily(Company $company, $dateReport)
+    function buildDailyReport(Company $company, $dateReport)
     {
 
         $consolidatedReports = collect([]);
@@ -105,7 +102,7 @@ class ConsolidatedReportsService
      * @param $consolidatedReports
      * @return \Illuminate\Support\Collection
      */
-    function generateConsolidatedReportFiles($consolidatedReports)
+    function buildDailyReportFiles($consolidatedReports)
     {
         $pathsToConsolidatesReportFiles = collect([]);
         foreach ($consolidatedReports as $consolidatedReport) {
@@ -172,7 +169,7 @@ class ConsolidatedReportsService
      * @param $reportByVehicle
      * @return object
      */
-    function buildStringDetails($reportByVehicle)
+    private function buildStringDetails($reportByVehicle)
     {
         $index = 0;
         $offRoadReportString = "";

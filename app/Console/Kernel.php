@@ -49,11 +49,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('db:manage-old-routines')->dailyAt('03:00');
 
 
-        $schedule->command('gps:restart')->hourly()->between(config('sms.sms_reset_start_at'),config('sms.sms_reset_end_at'));
+        $schedule->command('gps:restart')->dailyAt('12:00');
         $schedule->command('gps:check-status')->everyMinute();
 
-        $schedule->command('send-mail:consolidated')->dailyAt('04:00');
-        $schedule->command('send-mail:consolidated-passengers')->dailyAt('04:10');
+        $schedule->command('send-mail:consolidated --prod=true')->dailyAt('04:00');
+        $schedule->command('send-mail:consolidated-passengers --prod=true')->dailyAt('04:10');
 
         $schedule->command('dar:run')->dailyAt('02:00');
     }

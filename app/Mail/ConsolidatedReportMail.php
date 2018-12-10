@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Company\Company;
-use App\Services\Reports\ConsolidatedReportsService;
+use App\Services\Reports\Routes\RouteService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,9 +12,9 @@ class ConsolidatedReportMail extends Mailable
 {
     use Queueable, SerializesModels;
     /**
-     * @var ConsolidatedReportsService
+     * @var RouteService
      */
-    private $consolidatedReportsService;
+    private $routeService;
 
     /**
      * @var Company
@@ -33,12 +33,12 @@ class ConsolidatedReportMail extends Mailable
     {
         $this->company = $company;
         $this->dateReport = $dateReport;
-        $this->consolidatedReportsService = app(ConsolidatedReportsService::class);
+        $this->routeService = app(RouteService::class);
     }
 
     public function buildReport()
     {
-        $this->consolidatedReports = $this->consolidatedReportsService->generateConsolidatedReportDaily($this->company, $this->dateReport);
+        $this->consolidatedReports = $this->routeService->consolidated->buildDailyReport($this->company, $this->dateReport);
 
         return $this->consolidatedReports->sum('totalReports') > 0;
     }
@@ -48,7 +48,7 @@ class ConsolidatedReportMail extends Mailable
      */
     public function makeFiles()
     {
-        return $this->consolidatedReportsService->generateConsolidatedReportFiles($this->consolidatedReports);
+        return $this->routeService->consolidated->buildDailyReportFiles($this->consolidatedReports);
     }
 
     /**

@@ -43,26 +43,24 @@ class ConsolidatedReportMailCommand extends Command
     {
         $company = Company::find($this->option('company'));
 
-        if( $company ){
+        if ($company) {
             $prevDays = $this->option('prev-days');
 
             if ($this->option('date')) $dateReport = $this->option('date');
             else $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
-            $this->info("$company->name > $dateReport");
+            $this->info("CONSOLIDATED ROUTES: $company->name > $dateReport");
 
             $mail = new ConsolidatedReportMail($company, $dateReport);
             if ($mail->buildReport()) {
-                //$mail->makeFiles();
-
-                if ($this->option('prod')){
+                if ($this->option('prod')) {
                     $this->info("Sending report for 'prod' case...");
                     $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
-                    $mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-                }else{
+                    $mailToBcc = ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                } else {
                     $this->info("Sending report for 'test' case...");
                     $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-                    $mailToBcc= ['olatorre22@hotmail.com'];
+                    $mailToBcc = ['olatorre22@hotmail.com'];
                 }
 
                 Mail::to($mailTo, $company->name)->bcc($mailToBcc)->send($mail);
@@ -72,14 +70,14 @@ class ConsolidatedReportMailCommand extends Command
                 }
 
                 $this->info("-------------------------------------------");
-                foreach ($mailToBcc as $bcc){
+                foreach ($mailToBcc as $bcc) {
                     $this->info("   >> Bcc: $bcc");
                 }
             } else {
                 $this->info("No reports found for date $dateReport");
             }
-        }else{
-            $this->info("No company found for id ".$this->option('company'));
+        } else {
+            $this->info("No company found for id " . $this->option('company'));
         }
     }
 }

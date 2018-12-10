@@ -104,6 +104,16 @@
                             </td>
                             <td class="sensor recorder">{{ $sensor }}</td>
                         </tr>
+                        <tr class="hide">
+                            <td colspan="5">
+                                @foreach($report->historyRoutesByRecorder as $routeId => $historyRecorder)
+                                    @php
+                                        $lastHistory = $historyRecorder->last();
+                                    @endphp
+                                    <p>{{ $lastHistory->routeName }}: {{ $lastHistory->roundTrip }} @lang('round trips')</p>
+                                @endforeach
+                            </td>
+                        </tr>
                     @endforeach
                     <tr class="inverse bg-inverse-light text-white">
                         <td colspan="2" class="text-right">@lang('Total passengers')</td>

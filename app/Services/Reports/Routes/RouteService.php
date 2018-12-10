@@ -21,14 +21,20 @@ class RouteService
      * @var OffRoadService
      */
     private $offRoadService;
+    /**
+     * @var ConsolidatedService
+     */
+    public $consolidated;
 
     /**
      * RouteService constructor.
      * @param OffRoadService $offRoadService
+     * @param ConsolidatedService $consolidatedService
      */
-    public function __construct(OffRoadService $offRoadService)
+    public function __construct(OffRoadService $offRoadService, ConsolidatedService $consolidatedService)
     {
         $this->offRoadService = $offRoadService;
+        $this->consolidated = $consolidatedService;
     }
 
 

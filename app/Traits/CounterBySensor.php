@@ -91,7 +91,8 @@ trait CounterBySensor
                 'startRecorder' => $dispatchRegister->initialPassengersBySensorRecorder,
                 'endRecorder' => $dispatchRegister->finalPassengersBySensorRecorder,
 
-                'route' => $dispatchRegister->route->name,
+                'routeId' => $dispatchRegister->route->id,
+                'routeName' => $dispatchRegister->route->name,
                 'roundTrip' => $dispatchRegister->round_trip,
                 'turn' => $dispatchRegister->turn,
                 'departureTime' => $dispatchRegister->departure_time,

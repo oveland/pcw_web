@@ -152,12 +152,15 @@ class PCWExporterService
         switch ($config->type) {
             case 'passengerReportTotalFooter':
                 // Set general formulas
-                foreach (['D', 'E', 'F'] as $totalLetterPosition) {
+                foreach (['E', 'F', 'G', 'H'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 
                 $sheet->setCellValue("A$lastRow", "TOTAL");
                 $sheet = self::styleFooter($sheet, $config);
+
+                $sheet->cells("A$config->startIndex:C$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("E$config->startIndex:H$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
                 break;
 
             case 'passengerReportByRangeTotalFooter':

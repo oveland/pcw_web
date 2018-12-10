@@ -15,7 +15,7 @@ class ConsolidatedPassengerReportMailCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'send-mail:consolidated-passengers';
+    protected $signature = 'send-mail:consolidated-passengers {--company=14} {--prev-days=1} {--date=} {--prod=}';
 
     /**
      * The console command description.
@@ -41,31 +41,43 @@ class ConsolidatedPassengerReportMailCommand extends Command
      */
     public function handle()
     {
-        $company = Company::find(14);
-        $prevDays = 1;
+        $company = Company::find($this->option('company'));
 
-        $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
+        if ($company) {
+            $prevDays = $this->option('prev-days');
 
-        $mail = new ConsolidatedPassengersReportMail($company, $dateReport);
-        if ($mail->buildReport()) {
-            $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
-            $mailToBcc= ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+            if ($this->option('date')) $dateReport = $this->option('date');
+            else $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
-            Mail::to($mailTo, $company->name)
-                ->bcc($mailToBcc)
-                ->send($mail);
+            $this->info("CONSOLIDATED PASSENGERS: $company->name > $dateReport");
 
-            $this->info("$company->name Consolidated Passengers Mail send for date $dateReport!");
-            foreach ($mailTo as $to){
-                $this->info("   >> To: $to");
-            }
+            $mail = new ConsolidatedPassengersReportMail($company, $dateReport);
+            if ($mail->buildReport()) {
+                if ($this->option('prod')) {
+                    $this->info("Sending report for 'prod' case...");
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
+                    $mailToBcc = ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                } else {
+                    $this->info("Sending report for 'test' case...");
+                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                    $mailToBcc = ['olatorre22@hotmail.com'];
+                }
 
-            $this->info("-------------------------------------------");
-            foreach ($mailToBcc as $bcc){
-                $this->info("   >> Bcc: $bcc");
+                Mail::to($mailTo, $company->name)->bcc($mailToBcc)->send($mail);
+
+                foreach ($mailTo as $to) {
+                    $this->info("   >> To: $to");
+                }
+
+                $this->info("-------------------------------------------");
+                foreach ($mailToBcc as $bcc) {
+                    $this->info("   >> Bcc: $bcc");
+                }
+            } else {
+                $this->info("No consolidated passengers reports found for date $dateReport");
             }
         } else {
-            $this->info("No consolidated passengers reports found for date $dateReport");
+            $this->info("No company found for id " . $this->option('company'));
         }
     }
 }

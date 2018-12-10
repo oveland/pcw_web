@@ -187,7 +187,7 @@ return [
         /*
          * PCW Application Service Providers...
          */
-        \App\Providers\ConsolidatedReportsServiceProvider::class,
+        \App\Providers\ReportsServiceProvider::class,
     ],
 
     /*
