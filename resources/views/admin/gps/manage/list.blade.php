@@ -229,7 +229,7 @@
                                 </div>
                                 <div class="navbar-form form-input-flat pull-right m-0">
                                     <div class="form-group">
-                                        <input type="number" class="form-control input-sm input-search-vehicle" placeholder="@lang('Search vehicle')">
+                                        <input type="text" class="form-control input-sm input-search-vehicle" placeholder="@lang('Search vehicle')">
                                         <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
                                     </div>
                                 </div>
@@ -394,7 +394,7 @@
 
 <script type="application/javascript">
     hideSideBar();
-    var editedSIM = false;
+    let editedSIM = false;
     $('.default-select2').select2();
     setTimeout(function () {
         $('.form-send-message .select2-container').css('width','100%');
@@ -402,9 +402,9 @@
     },100);
 
     $('.input-search-vehicle').keyup(function(){
-        var target = $(this).val();
+        let target = $(this).val();
         $('.vehicle-list').each(function (i, e) {
-            if (String($(e).data('vehicle-number')) === target || target === '') {
+            if (String($(e).data('vehicle-number')).toLowerCase() === target.toLowerCase() || target === '') {
                 $(e).slideDown();
             } else {
                 $(e).hide();
@@ -413,7 +413,7 @@
     });
 
     function getScript(device) {
-        var url = '{{ route('admin-gps-manage-get-script','_DEVICE') }}';
+        let url = '{{ route('admin-gps-manage-get-script','_DEVICE') }}';
         $.ajax({
             url: url.replace('_DEVICE',device),
             success: function (data) {
@@ -424,8 +424,8 @@
 
     $('.form-send-message').submit(function(e){
         e.preventDefault();
-        var smsResponseContainer = $('.sms-response-container');
-        var formSendSMS = $(this);
+        let smsResponseContainer = $('.sms-response-container');
+        let formSendSMS = $(this);
         if (formSendSMS.isValid()) {
             formSendSMS.find('.btn-submit').addClass(loadingClass);
             smsResponseContainer.slideUp();
@@ -451,8 +451,8 @@
 
     $('.form-edit-sim-gps').submit(function(event){
         event.preventDefault();
-        var form = $(this);
-        var simGPSId = form.data('id');
+        let form = $(this);
+        let simGPSId = form.data('id');
         if( form.isValid() ){
             $.ajax({
                 url: form.attr('action'),
@@ -475,7 +475,7 @@
 
     $('#form-create-sim-gps').submit(function(e){
         e.preventDefault();
-        var form = $(this);
+        let form = $(this);
         if( form.isValid() ){
             $.ajax({
                 url: form.attr('action'),
@@ -505,7 +505,7 @@
 
     $('.form-delete-sim-gps').submit(function(e){
         e.preventDefault();
-        var form = $(this);
+        let form = $(this);
         $.ajax({
             url: form.attr('action'),
             type: 'DELETE',
@@ -529,9 +529,9 @@
     });
 
     $('#sim-gps').change(function(){
-        var simGPS = $(this);
-        var simNumber = simGPS.val();
-        var statusGPSContainer = $('.status-gps-container');
+        let simGPS = $(this);
+        let simNumber = simGPS.val();
+        let statusGPSContainer = $('.status-gps-container');
         if( !simGPS.data('any-gps') ){
             statusGPSContainer.parent().slideDown();
             if( is_not_null(simNumber) ){
@@ -558,7 +558,7 @@
     });
 
     $('.set-reset-command').click(function(){
-        var resetCommand = $('#gps-type').data('reset-command');
+        let resetCommand = $('#gps-type').data('reset-command');
         if( is_not_null(resetCommand) ){
             $('#command-gps').val(resetCommand);
         }else{
@@ -566,7 +566,7 @@
         }
     });
 
-    var gpsType = $('#gps-type');
+    let gpsType = $('#gps-type');
     gpsType.val( $("#gps-report").val() );
     gpsType.data('reset-command', $('#gps-report option:selected').data('reset-command'));
 </script>

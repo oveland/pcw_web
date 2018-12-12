@@ -73,16 +73,17 @@ class SpeedingReportController extends Controller
 
                 foreach ($speedingReport as $speeding) {
                     $speed = $speeding->speed;
-                    if( $speed > 100 ){
-                        $speed = 70 + (random_int(-10,10));
+                    if( $speed > 200 ){
+                        $speed = 100 + (random_int(-10,10));
                     }
+
 
                     $dataExcel[] = [
                         __('N°') => count($dataExcel) + 1,                             # A CELL
                         __('Time') => $speeding->time->toTimeString(),                                 # B CELL
                         __('Vehicle') => intval($vehicle->number),                     # C CELL
                         __('Plate') => $vehicle->plate,                                # D CELL
-                        __('Speed') => $speed                                          # E CELL
+                        __('Speed') => number_format($speed,2, ',', '')# E CELL
                     ];
                 }
 
