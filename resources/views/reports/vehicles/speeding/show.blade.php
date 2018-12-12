@@ -70,7 +70,7 @@
                                             </th>
                                             <th>
                                                 <i class="fa fa-tachometer"></i><br>
-                                                @lang('Speed')
+                                                @lang('Speed') Km/h
                                             </th>
                                             <th>
                                                 <i class="fa fa-rocket"></i><br>
@@ -84,7 +84,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{!! $speeding->time->toTimeString() ?? '' !!}</td>
                                                 <td class="text-{{ $speeding->isTruncated()? 'muted':'' }}">
-                                                    {{ $speeding->speed }}
+                                                    {{ number_format($speeding->speed,2, ',', '') }}
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $speeding->id }}" data-title="@lang('Location')">

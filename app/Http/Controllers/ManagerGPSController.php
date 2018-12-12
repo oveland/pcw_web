@@ -188,17 +188,23 @@ class ManagerGPSController extends Controller
                                 }
                             }
                         }
-                        $smsCommands[] = str_start($totalCMD, "AT") . "&W";
+                        $smsCommands[] = trim(str_start($totalCMD, "AT") . "&W");
 
                         $gpsCommands = $smsCommands;
                     }
                     break;
                 case SimGPS::COBAN:
+                    $smsCommands = [];
+                    $smsCommands2 = [];
+                    foreach ($gpsCommands as $gpsCommand) {
+                        $smsCommands[] = trim($gpsCommand);
+                    }
+                    $gpsCommands = $smsCommands;
                     break;
                 case SimGPS::RUPTELA:
                     $smsCommands = [];
                     foreach ($gpsCommands as $gpsCommand) {
-                        $command = $gpsCommand;
+                        $command = trim($gpsCommand);
                         if( !starts_with($gpsCommand, ' ') ){
                             $command = " $command";
                         }

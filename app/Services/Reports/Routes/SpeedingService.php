@@ -124,7 +124,6 @@ class SpeedingService
      */
     public static function groupByFirstSpeedingEvent($speedingByVehicle)
     {
-
         $speedingEvents = collect([]);
         if (!count($speedingByVehicle)) return $speedingEvents;
 
@@ -135,7 +134,7 @@ class SpeedingService
                     $speedingEvents->push($speeding);
                 }
             } else {
-                //$speedingEvents->push($speeding);
+                $speedingEvents->push($speeding);
             }
             $lastSpeeding = $speeding;
         }
