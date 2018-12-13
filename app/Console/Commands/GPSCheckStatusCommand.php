@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -44,19 +45,27 @@ class GPSCheckStatusCommand extends Command
 
         /* CHECK STATUS GPS */
 
-        DB::update("
+        $now = Carbon::now();
+        $dateNow = $now->toDateString();
+        $timeNow = $now->toTimeString();
+
+        $sql = "
           UPDATE markers
           SET status = 1, period = 0 
-          WHERE ( fecha < current_date OR (fecha = current_date AND hora < (current_time - '$gpsTimeForNOReportPowerOn'::TIME) ) ) 
+          WHERE ( fecha < '$dateNow'::DATE OR (fecha = '$dateNow'::DATE AND hora < ('$timeNow'::TIME - '$gpsTimeForNOReportPowerOn'::TIME) ) ) 
           AND status <> 6
-        ");
+        ";
+        DB::update($sql);
+        $this->info($sql);
 
-        DB::update("
+        $sql = "
           UPDATE markers 
           SET status = 1, period = 0 
-          WHERE ( fecha < current_date OR (fecha = current_date AND hora < (current_time - '$gpsTimeForNOReportPowerOff'::TIME) ) ) 
+          WHERE ( fecha < '$dateNow'::DATE OR ('$dateNow'::DATE = current_date AND hora < ('$timeNow'::TIME - '$gpsTimeForNOReportPowerOff'::TIME) ) ) 
           AND status = 6
-        ");
+        ";
+        DB::update($sql);
+        $this->info($sql);
 
     }
 }
