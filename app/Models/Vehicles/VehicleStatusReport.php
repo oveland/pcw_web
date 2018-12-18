@@ -2,6 +2,7 @@
 
 namespace App\Models\Vehicles;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -39,6 +40,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class VehicleStatusReport extends Model
 {
+    protected $dates = ['date'];
+
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat( config('app.date_format'), $date );
+    }
+
     public function status()
     {
         return $this->belongsTo(VehicleStatus::class,'vehicle_status_id','id_status');

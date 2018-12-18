@@ -28,7 +28,8 @@
                         <thead>
                         <tr class="inverse">
                             <th class="text-center">N°</th>
-                            <th class="text-center"><i class="fa fa-clock-o" aria-hidden="true"></i> @lang('Time')</th>
+                            <th class="text-center"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('Date') @lang('Status')</th>
+                            <th class="text-center"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('Date') @lang('GPS')</th>
                             <th class="text-center"><i class="fa fa-podcast" aria-hidden="true"></i> @lang('Status')</th>
                             <th class="text-center"><i class="fa fa-map-marker" aria-hidden="true"></i> @lang('Latitude')</th>
                             <th class="text-center"><i class="fa fa-map-marker" aria-hidden="true"></i> @lang('Longitude')</th>
@@ -39,7 +40,14 @@
                         @foreach($vehicleStatusReport as $report)
                             <tr class="text-center">
                                 <td >{{ $loop->iteration }}</td>
-                                <td >{{ $report->time }}</td>
+                                <td >
+                                    <small class="text-muted">{{ $report->created_at->toDateString() }}</small><br>
+                                    {{ $report->created_at->toTimeString() }}
+                                </td>
+                                <td >
+                                    <small class="text-muted">{{ $report->date->toDateString() }}</small><br>
+                                    {{ $report->time }}
+                                </td>
                                 <td >{{ $report->status->des_status }}</td>
                                 <td >{{ $report->latitude }}</td>
                                 <td >{{ $report->longitude }}</td>

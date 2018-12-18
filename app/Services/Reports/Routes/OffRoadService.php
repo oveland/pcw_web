@@ -50,11 +50,16 @@ class OffRoadService
      */
     function allOffRoads(Company $company, $dateReport)
     {
-        return Location::whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
+        $allOffRoads = Location::whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
             ->where('off_road', true)
             ->whereIn('vehicle_id', $company->vehicles->pluck('id'))
             ->orderBy('date')
             ->get();
+
+        return $allOffRoads->filter(function ($location) {
+            $dispatchRegister = $location->dispatchRegister;
+            return ($dispatchRegister && $dispatchRegister->complete());
+        });
     }
 
     /**
