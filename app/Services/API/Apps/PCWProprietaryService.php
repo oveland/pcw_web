@@ -29,7 +29,7 @@ class PCWProprietaryService implements APIAppsInterface
         $action = $request->get('action');
         if ($action) {
             switch ($action) {
-                case 'track-Passengers':
+                case 'track-passengers':
                     return self::trackPassengers($request);
                     break;
                 default:
@@ -166,8 +166,8 @@ class PCWProprietaryService implements APIAppsInterface
                 'totalByRecorder' => $historyRecorder->passengersByRoundTrip,
                 'totalBySensorRecorder' => $historySensor->totalBySensorRecorderByRoundTrip,
                 'totalBySensor' => $historySensor->totalBySensorByRoundTrip,
-                'dispatchRegister' => $dispatchRegister,
-                'vehicle' => $vehicle,
+                'dispatchRegister' => $dispatchRegister->getAPIFields(),
+                'vehicle' => $vehicle->getAPIFields(),
                 'timeSensor' => $dispatchRegister->arrivalTime,
                 'timeRecorder' => $dispatchRegister->arrivalTime,
             ]);
