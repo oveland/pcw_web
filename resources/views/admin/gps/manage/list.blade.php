@@ -156,7 +156,12 @@
                                                                     @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
                                                                         <li>
                                                                             <a href="javascript:getScript('ip-ruptela')">
-                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | IP
+                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 1°
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:getScript('connection-report-ruptela')">
+                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 2°
                                                                             </a>
                                                                         </li>
                                                                         <li>

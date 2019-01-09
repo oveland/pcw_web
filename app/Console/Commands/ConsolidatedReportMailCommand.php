@@ -49,35 +49,49 @@ class ConsolidatedReportMailCommand extends Command
             if ($this->option('date')) $dateReport = $this->option('date');
             else $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
-            $this->info("CONSOLIDATED ROUTES: $company->name > $dateReport");
+            $this->logData("CONSOLIDATED ROUTES: $company->name > $dateReport");
 
             $mail = new ConsolidatedReportMail($company, $dateReport);
             if ($mail->buildReport()) {
                 if ($this->option('prod')) {
-                    $this->info("Sending report for 'prod' case...");
-                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
-                    $mailToBcc = ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                    $mail->setProduction(true);
+                    $this->logData("Sending report for 'prod' case...");
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com', 'olatorre22@hotmail.com'];
+                    $mailTo = ['oiva.pcw@gmail.com', 'sistemas@alameda.com.co'];
                 } else {
-                    $this->info("Sending report for 'test' case...");
+                    $this->logData("Sending report for 'test' case...");
+
                     $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-                    $mailToBcc = ['olatorre22@hotmail.com'];
                 }
 
-                Mail::to($mailTo, $company->name)->bcc($mailToBcc)->send($mail);
+                Mail::to($mailTo, $company->name)->send($mail);
 
                 foreach ($mailTo as $to) {
-                    $this->info("   >> To: $to");
-                }
-
-                $this->info("-------------------------------------------");
-                foreach ($mailToBcc as $bcc) {
-                    $this->info("   >> Bcc: $bcc");
+                    $this->logData("   >> To: $to");
                 }
             } else {
-                $this->info("No reports found for date $dateReport");
+                $this->logData("No reports found for date $dateReport", 'error');
             }
         } else {
-            $this->info("No company found for id " . $this->option('company'));
+            $this->logData("No company found for id " . $this->option('company'), 'error');
+        }
+    }
+
+    public function logData($message,$level = 'info'){
+        $this->info($message);
+
+        $message = "CONSOLIDATED ROUTE > $message";
+
+        switch ($level){
+            case 'warning':
+                \Log::warning($message);
+                break;
+            case 'error':
+                \Log::error($message);
+                break;
+            default:
+                \Log::info($message);
+                break;
         }
     }
 }

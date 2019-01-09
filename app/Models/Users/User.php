@@ -94,11 +94,20 @@ class User extends Authenticatable
 
     public function canAdmin()
     {
-        return ($this->isAdmin() || $this->id == 999459|| $this->id == 841403 || $this->id == 679396 || $this->id == 23994798 || $this->id == 123994798);
+        $usersCanAdmin = [
+            999459,
+            841403,
+            679396,
+            23994798,
+            123994798,
+            323994798
+        ];
+
+        return in_array( $this->id, $usersCanAdmin );
     }
 
     public function canAdminGPS()
     {
-        return ($this->isAdmin() || $this->id == 999459|| $this->id == 841403 || $this->id == 679396 || $this->id == 23994798 || $this->id == 123994798);
+        return $this->canAdmin();
     }
 }

@@ -50,7 +50,7 @@ class CurrentLocationsGPS extends Model
 
     public function scopeFindByVehicleId($query, $vehicleId)
     {
-        return $query->where('vehicle_id', $vehicleId)->get()->first() ?? null;
+        return $query->where('vehicle_id', $vehicleId);
     }
 
     public function vehicleStatus()

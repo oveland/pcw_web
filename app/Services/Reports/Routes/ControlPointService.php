@@ -102,10 +102,15 @@ class ControlPointService
                         ->where('fringe_id', $controlPointTimeReport->fringe_id)
                         ->get()->first();
 
-                    $timeScheduled = $controlPointTime->time_from_dispatch;
-                    $timeMeasured = StrTime::segToStrTime(
-                        StrTime::toSeg($timeScheduled) * StrTime::toSeg($controlPointTimeReport->timem) / StrTime::toSeg($controlPointTimeReport->timep)
-                    );
+                    if($controlPointTime){
+                        $timeScheduled = $controlPointTime->time_from_dispatch;
+                        $timeMeasured = StrTime::segToStrTime(
+                            StrTime::toSeg($timeScheduled) * StrTime::toSeg($controlPointTimeReport->timem) / StrTime::toSeg($controlPointTimeReport->timep)
+                        );
+                    }else{
+                        $timeScheduled = $controlPointTimeReport->timep;
+                        $timeMeasured = $controlPointTimeReport->timem;
+                    }
 
                     $scheduledControlPointTime = StrTime::addStrTime($departureTime, $timeScheduled);
                     $measuredControlPointTime = StrTime::addStrTime($departureTime, $timeMeasured);

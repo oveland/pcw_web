@@ -61,17 +61,25 @@ class ManagerGPSController extends Controller
                 case 'no-report':
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
-                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
-                        $vehicleStatus = $currentLocationGPS->vehicleStatus;
-                        if ($vehicleStatus->id == VehicleStatus::NO_REPORT) $selection[] = $simGPS->vehicle->number;
+                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
+                        if( $currentLocationGPS ){
+                            try{
+                                $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                            }catch (\Exception $exception){
+                                dd($currentLocationGPS);
+                            }
+                            if ($vehicleStatus->id == VehicleStatus::NO_REPORT) $selection[] = $simGPS->vehicle->number;
+                        }
                     }
                     break;
                 case 'without-gps-signal':
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
-                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id);
-                        $vehicleStatus = $currentLocationGPS->vehicleStatus;
-                        if ($vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) $selection[] = $simGPS->vehicle->number;
+                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
+                        if( $currentLocationGPS ){
+                            $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                            if ($vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) $selection[] = $simGPS->vehicle->number;
+                        }
                     }
                     break;
 
@@ -248,7 +256,8 @@ class ManagerGPSController extends Controller
             $created = false;
             try {
                 $checkGPS = SimGPS::where('sim', $sim)->get()->first();
-                $checkImei = GpsVehicle::where('imei', $imei)->get()->first();
+                $checkImei = GpsVehicle::where('imei', $imei)->where('imei', '<>', $vehicle->plate)->get()->first();
+
 
                 if ($checkGPS) {
                     $companyVehicleCheck = $checkGPS->vehicle->company->short_name;
@@ -394,6 +403,9 @@ class ManagerGPSController extends Controller
                 break;
             case 'time-report-ruptela':
                 $fileScript = 'TimeReportScriptRuptela.txt';
+                break;
+            case 'connection-report-ruptela':
+                $fileScript = 'ConnectionScriptRuptela.txt';
                 break;
             default:
                 $fileScript = '';

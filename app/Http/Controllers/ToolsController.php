@@ -20,7 +20,31 @@ class ToolsController extends Controller
      */
     public function map(Request $request)
     {
-        
+
+        $dates = [
+            '2018-12-20',
+            '2018-12-21',
+            '2018-12-22',
+            '2018-12-26',
+            '2018-12-27',
+            '2018-12-28',
+            '2018-12-29',
+            '2018-12-30',
+            '2018-12-31',
+            '2018-12-02',
+            '2018-12-03'
+        ];
+
+        foreach ($dates as $date){
+            $exitCode = \Artisan::call('send-mail:consolidated', [
+                '--date' => $date,
+                '--prod' => true
+            ]);
+
+            dump("Send report via email for date $date => CODE: $exitCode");
+        }
+
+        dd('End process!!');
 
         return view('tools.map');
     }
