@@ -57,7 +57,7 @@ class ConsolidatedReportMailCommand extends Command
                     $mail->setProduction(true);
                     $this->logData("Sending report for 'prod' case...");
                     $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com', 'olatorre22@hotmail.com'];
-                    $mailTo = ['oiva.pcw@gmail.com', 'sistemas@alameda.com.co'];
+                    //$mailTo = ['oiva.pcw@gmail.com', 'sistemas@alameda.com.co'];
                 } else {
                     $this->logData("Sending report for 'test' case...");
 
