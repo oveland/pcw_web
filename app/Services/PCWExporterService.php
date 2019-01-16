@@ -67,7 +67,7 @@ class PCWExporterService
         $sheetTitle = isset($dataExport->sheetTitle) ? $dataExport->sheetTitle : $dataExport->subTitle;
         return $excel->sheet($sheetTitle, function ($sheet) use ($dataExport) {
             $startIndex = 3;
-            $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', '...'];
+            $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '...'];
 
             $config = (object)[
                 'type' => isset($dataExport->type) ? $dataExport->type : null,

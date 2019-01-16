@@ -120,7 +120,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 hide">
                             <div class="form-group">
                                 <label for="type-report" class="control-label field-required">
                                     @lang('Type of report') @lang('by')

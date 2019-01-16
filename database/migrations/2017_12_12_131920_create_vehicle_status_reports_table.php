@@ -18,6 +18,7 @@ class CreateVehicleStatusReportsTable extends Migration
             $table->date('date');
             $table->time('time');
             $table->bigInteger('vehicle_id')->nullable();
+            $table->bigInteger('dispatch_register_id')->nullable();
             $table->integer('vehicle_status_id')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
@@ -29,6 +30,7 @@ class CreateVehicleStatusReportsTable extends Migration
 
             /* table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
+            //$table->foreign('dispatch_register_id')->references('id')->on('dispatch_registers')->onDelete('cascade');
         });
     }
 

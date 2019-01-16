@@ -2,8 +2,9 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-control-points-export-report') }}?date-report={{ '' }}&company-report={{ '' }}" class="btn btn-lime bg-lime-dark btn-sm hide">
-                    <i class="fa fa-file-excel-o"></i> @lang('Export excel')
+                <a href="{{ route('report-route-control-points-search-report') }}?export=true&type-report={{ $query->typeReport }}&date-report={{ $query->dateReport }}&company-report={{ $query->company->id }}&route-report={{ $query->route->id }}" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
+                   data-title="@lang('Export excel')" data-placement="bottom">
+                    <i class="fa fa-file-excel-o"></i>
                 </a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-info " data-click="panel-expand" title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
