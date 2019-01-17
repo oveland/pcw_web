@@ -9,10 +9,15 @@
 namespace App\Services\Reports\Routes;
 
 
+use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
+use App\Services\PCWExporterService;
+use Excel;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
+use App\Models\Routes\Route;
 
 class OffRoadService
 {
@@ -174,5 +179,54 @@ class OffRoadService
             $lastOffRoad = $offRoad;
         }
         return $offRoadsEvents;
+    }
+
+    /**
+     * @param $dataReport
+     * @param $query
+     * @return LaravelExcelWriter
+     */
+    public function exportByVehicles($dataReport, $query)
+    {
+        return Excel::create(__('Off Roads') . " $query->dateReport", function ($excel) use ($dataReport, $query) {
+            foreach ($dataReport as $vehicleId => $reportByRoutes) {
+                $vehicle = Vehicle::find($vehicleId);
+                $dataExcel = array();
+
+                foreach ($reportByRoutes as $routeID => $reportByRoute) {
+                    $route = Route::find($routeID);
+                    foreach ($reportByRoute as $report){
+                        $dispatchRegister = $report->dispatchRegister;
+
+                        $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => $report->id]);
+
+                        $dataExcel[] = [
+                            __('N°') => count($dataExcel) + 1,                                                              # A CELL
+                            __('Vehicle') => intval($vehicle->number),                                                      # B CELL
+                            __('Plate') => $vehicle->plate,                                                                 # C CELL
+                            __('Route') => $route->name,                                                                    # D CELL
+                            __('Turn') => $dispatchRegister->turn,                                                          # E CELL
+                            __('Round Trip') => $dispatchRegister->round_trip,                                              # F CELL
+                            __('Time') => $report->date->toTimeString(),                                                    # G CELL
+                            //__('Location') => Geolocation::getAddressFromCoordinates($report->latitude, $report->longitude),
+                            __('Details') => $link                                                                          # H CELL
+                        ];
+                    }
+                }
+
+                $dataExport = (object)[
+                    'fileName' => __('Off road report by Vehicle') . " $query->dateReport",
+                    'title' => __('Off road report by Vehicle') . " $query->dateReport",
+                    'subTitle' => "$vehicle->number",
+                    'sheetTitle' => "$vehicle->number",
+                    'data' => $dataExcel,
+                    'type' => 'offRoadReport'
+                ];
+                //foreach ()
+                /* SHEETS */
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
+            }
+        })->export('xlsx');
     }
 }

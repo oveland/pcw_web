@@ -215,6 +215,32 @@ class PCWExporterService
                 $sheet = self::styleFooter($sheet, $config);
                 break;
 
+            case 'offRoadReport':
+                $startIndex = $config->startIndex + 1;
+                $rows = range($config->startIndex + 1, $config->totalRows, 1);
+                foreach ($rows as $row){
+                    $cell = $sheet->getCell("H$row");
+                    $cellLink = $cell->getValue();
+
+                    $cell->getHyperlink()->setUrl($cellLink);
+                    $cell->setValueExplicit(__('Chart'));
+                }
+
+                $sheet->cells("H$startIndex:H$config->totalRows", function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                    $cells->setBackground('#0a0a15');
+                    $cells->setFontColor(self::$fontColorInverse);
+                    $cells->setFont(array(
+                        'family' => 'Calibri',
+                        'size' => '13',
+                        'bold' => true,
+                        'italic' => true,
+                        'underline' => \PHPExcel_Style_Font::UNDERLINE_SINGLE
+                    ));
+                });
+                break;
+
             case 'consolidatedRouteReport':
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);

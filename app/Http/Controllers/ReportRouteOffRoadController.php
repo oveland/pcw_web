@@ -6,9 +6,12 @@ use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
+use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\OffRoadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Excel;
 
 class ReportRouteOffRoadController extends Controller
 {
@@ -43,13 +46,23 @@ class ReportRouteOffRoadController extends Controller
     {
         $company = GeneralController::getCompany($request);
         $dateReport = $request->get('date-report');
+        $typeReport = $request->get('type-report');
+
+        $query = (object)[
+            'company' => $company,
+            'dateReport' => $dateReport,
+            'typeReport' => $typeReport,
+        ];
 
         $allOffRoads = $this->offRoadService->allOffRoads($company, $dateReport);
 
-        switch ($request->get('type-report')) {
+        switch ($typeReport) {
             case 'vehicle':
                 $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
-                return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','dateReport','company']));
+
+                if( $request->get('export') )$this->exportByVehicles($offRoadsByVehicles, $query);
+
+                return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','query']));
                 break;
             case 'route':
                 //$offRoadsByVehicle = $allOffRoads->groupBy('dispatch_register_id');
@@ -87,6 +100,15 @@ class ReportRouteOffRoadController extends Controller
     {
         $location->status = 'FOR';
         $location->save();
+    }
+
+    /**
+     * @param $dataReport
+     * @param $query
+     */
+    public function exportByVehicles($dataReport, $query)
+    {
+        $this->offRoadService->exportByVehicles($dataReport, $query);
     }
 
     /**

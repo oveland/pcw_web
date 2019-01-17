@@ -41,6 +41,10 @@ class GeneralController extends Controller
         return view('partials.selects.vehicles', compact('vehicles'));
     }
 
+    /**
+     * @param Request $request
+     * @return Company|Company[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
     public static function getCompany(Request $request)
     {
         $requestCompany = $request->get('company') ?? $request->get('company-report');

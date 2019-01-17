@@ -2,14 +2,17 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand"
+                <a href="{{ route('report-route-off-road-search') }}?export=true&date-report={{ $query->dateReport }}&company={{ $query->company->id }}&type-report={{ $query->typeReport }}" class="btn btn-lime bg-lime-dark btn-sm btn-rounded tooltips"
+                data-title="@lang('Export excel')">
+                    <i class="fa fa-file-excel-o"></i>
+                </a>
+                <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime " data-click="panel-expand"
                    title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
             </div>
             <h5 class="text-white m-t-10 text-uppercase">
-                <i class="fa fa-road"></i> <i class="fa fa-share" aria-hidden="true"></i>
-                @lang('Off road report by Vehicle')
+                <i class="fa fa-random"></i> @lang('Off road report by Vehicle')
             </h5>
         </div>
         <div class="tab-content panel">
@@ -120,9 +123,6 @@
                                                                 <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
                                                                 <td>{{ $offRoad->date->toTimeString() }}</td>
                                                                 <td class="text-center">
-                                                                    <a href="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}?export=true" class="btn btn-lime bg-lime-dark btn-xs hide">
-                                                                        <i class="fa fa-file-excel-o"></i>
-                                                                    </a>
                                                                     <button class="btn btn-xs btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" data-title="@lang('Location')">
                                                                         &nbsp;<i class="fa fa-map-marker"></i>&nbsp;
                                                                     </button>
