@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
+use App\Models\Passengers\Passenger;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
@@ -20,6 +21,19 @@ class ToolsController extends Controller
      */
     public function map(Request $request)
     {
+/*
+        $passengers = Passenger::where('dispatch_register_id', 329026)->orderBy('date')->get();
+
+        $total = 0;
+        foreach ($passengers as $passenger){
+            if($passenger->total != $total){
+                dump("$passenger->date $passenger->total > $total".(($passenger->total < $total)?" XXXXXXXXXXXXXXXXXXXXXXXXXX":" OK"));
+            }
+            $total = $passenger->total;
+        }
+
+        dd("TOTAL $total - ".$passengers->first()->total." = ".($passengers->last()->total - $passengers->first()->total) );
+*/
         return view('tools.map');
     }
 
@@ -145,5 +159,26 @@ class ToolsController extends Controller
         $scriptText = \File::get(public_path($fileName));
         $scriptText = trim($scriptText);
         return view('tools.scripts', compact(['scriptText','gps']));
+    }
+
+    function sendMailReports(){
+        $dates = [
+            '2019-01-16',
+            '2019-01-17',
+            '2019-01-18',
+            '2019-01-19',
+            '2019-01-20',
+        ];
+
+        foreach ($dates as $date){
+            $exitCode = \Artisan::call('send-mail:consolidated', [
+                '--date' => $date,
+                '--prod' => true
+            ]);
+
+            dump("Send report via email for date $date => CODE: $exitCode");
+        }
+
+        dd('End process!!');
     }
 }

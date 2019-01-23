@@ -301,6 +301,10 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/', 'ToolsController@smartRecovery')->name('tools-smart-recovery');
         });
 
+        Route::prefix(__('send-mail-reports'))->group(function () {
+            Route::get('/', 'ToolsController@sendMailReports')->name('tools-send-mail-reports');
+        });
+
         Route::prefix(__('scripts'))->group(function () {
             Route::get('/{gps}', 'ToolsController@showScript')->name('tools-scripts');
         });

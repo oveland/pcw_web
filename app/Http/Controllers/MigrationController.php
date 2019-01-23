@@ -32,8 +32,8 @@ class MigrationController extends Controller
         'control_point_times' => 'tiempos_punto_control',
     ];
 
-    const ROUTES_FOR_MIGRATE = [124, 125, 126, 127, 128, 129, 135, 136, 137, 155, 156, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182];
-    const ROUTES_FOR_MIGRATE_CP = [124, 125, 126, 127, 128, 129, 155, 156, 135, 136, 137, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182];
+    const ROUTES_FOR_MIGRATE = [124, 125, 126, 127, 128, 129, 135, 136, 137, 155, 156, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182, 184];
+    const ROUTES_FOR_MIGRATE_CP = [124, 125, 126, 127, 128, 129, 155, 156, 135, 136, 137, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182, 184];
 
     /**
      * Create a new controller instance.
@@ -225,6 +225,7 @@ class MigrationController extends Controller
             $dispatch->longitude = $dispatchOLD->longitude;
             $dispatch->company_id = $dispatchOLD->id_empresa;
             $dispatch->active = $dispatchOLD->estado == 0 ? true : false;
+            $dispatch->radio_geofence = $dispatchOLD->radio_geofence;
 
             try {
                 $dispatch->save();

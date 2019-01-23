@@ -47,11 +47,27 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HistorySeat extends Model
 {
+    /*protected $dates = [
+      'date','time','active_time','inactive_time','busy_time'
+    ];*/
+
     protected function getDateFormat()
     {
         return config('app.date_time_format');
     }
-    /*protected $dates = [
-      'date','time','active_time','inactive_time','busy_time'
-    ];*/
+
+    public function getBusyKmAttribute($value)
+    {
+        return intval($value);
+    }
+
+    public function getActiveKmAttribute($value)
+    {
+        return intval($value);
+    }
+
+    public function getInactiveKmAttribute($value)
+    {
+        return intval($value);
+    }
 }

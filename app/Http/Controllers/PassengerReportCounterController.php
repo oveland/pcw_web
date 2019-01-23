@@ -99,6 +99,8 @@ class PassengerReportCounterController extends Controller
                 $initialPassengerCount = Passenger::findAllByRoundTrip($vehicle->id, $route->id, $routeRoundTrip, $routeReportDate)->orderBy('passengers.id')->limit(1)->get()->first();
                 $lastPassengerCount = Passenger::findAllByRoundTrip($vehicle->id, $route->id, $routeRoundTrip, $routeReportDate)->orderByDesc('passengers.id')->limit(1)->get()->first();
 
+                $initialPassengerCount->total = $initialPassengerCount->dispatchRegister->initial_sensor_counter;
+
                 return view('admin.counter.report.listByRoute', compact('passengers'))->with([
                     'initialPassengerCount' => $initialPassengerCount,
                     'lastPassengerCount' => $lastPassengerCount,

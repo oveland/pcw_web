@@ -72,13 +72,13 @@ class TaxCentralPassengerReportController extends Controller
 
         foreach ($historySeats as $historySeat) {
             if ($historySeat->complete == 1) {
-                $busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);
-                $historySeat->active_km = $busyDistance->active_km;
-                $historySeat->inactive_km = $busyDistance->inactive_km;
-                $historySeat->busy_km = $busyDistance->busy_km;
+                //$busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);
+                $historySeat->active_km = $historySeat->active_km - $dispatchRegister->start_odometer;
+                $historySeat->inactive_km = $historySeat->inactive_km - $dispatchRegister->start_odometer;
+                //$historySeat->busy_km = $historySeat->busy_km;
             }
         }
-
+        
         if ($request->get('export')) $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
 
         return view('reports.passengers.taxcentral.passengersReport', compact(['historySeats', 'dispatchRegister', 'dispatchArrivaltime']));
@@ -141,8 +141,11 @@ class TaxCentralPassengerReportController extends Controller
                             $found_inactive_seat_location = true;
                         }
                     }
-
                     $inactive_km += $prev_distance;
+
+                    if( $active_km < $inactive_km ){
+                        $found_inactive_seat_location = false;
+                    }
                 }
             }
         }

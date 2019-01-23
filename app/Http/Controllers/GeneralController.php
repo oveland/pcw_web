@@ -18,7 +18,7 @@ class GeneralController extends Controller
         $date = $request->get('date');
         $withAll = $request->get('with-all');
 
-        if ($company) $routes = self::getRoutesFromCompany();
+        if ($company) $routes = self::getRoutesFromCompany($company);
         else if ($vehicle && $date) $routes = self::getRoutesFromVehicleAndDate($vehicle, $date);
 
         return view('partials.selects.routes', compact(['routes', 'withAll']));
@@ -32,7 +32,7 @@ class GeneralController extends Controller
 
         $dispatchRegisters = DispatchRegister::findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId);
 
-        return view('partials.selects.round-trips', compact('dispatchRegisters'));
+        return view('partials.selects.roundTrips', compact('dispatchRegisters'));
     }
 
     public function loadSelectVehicles(Request $request)

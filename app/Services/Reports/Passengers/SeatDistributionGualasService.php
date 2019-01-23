@@ -70,7 +70,7 @@ class SeatDistributionGualasService
         $seatingStatusBinary = self::decodeSeatingStatusFromHex($seatingStatusHexadecimal);
 
         foreach ($distribution as $row => $distributionSeating) {
-            $seatingStatusFromHex->put($row, self::makeDistribution($distributionSeating, $seatingStatusBinary));
+            if( is_array($distributionSeating) )$seatingStatusFromHex->put($row, self::makeDistribution($distributionSeating, $seatingStatusBinary));
         }
 
         return $seatingStatusFromHex;
@@ -86,10 +86,18 @@ class SeatDistributionGualasService
     static function makeDistribution($distribution, $seatingStatusBinary)
     {
         $seatingStatus = array();
+        
         foreach ($distribution as $seat => $sensors) {
             $seatingStatus[$seat] = 0;
-            foreach ($sensors as $sensor) {
-                if ($seatingStatusBinary[$sensor - 1] == 1) {
+
+            if( is_array($sensors) ){
+                foreach ($sensors as $sensor) {
+                    if ($seatingStatusBinary[$sensor - 1] == 1) {
+                        $seatingStatus[$seat] = 1;
+                    }
+                }
+            }else{
+                if ($seatingStatusBinary[$sensors - 1] == 1) {
                     $seatingStatus[$seat] = 1;
                 }
             }

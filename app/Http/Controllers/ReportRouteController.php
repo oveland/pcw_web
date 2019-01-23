@@ -117,6 +117,7 @@ class ReportRouteController extends Controller
      */
     public function chart(DispatchRegister $dispatchRegister, Request $request)
     {
+        sleep(1);
         $centerOnLocation = ($request->get('centerOnLocation')) ? Location::find(($request->get('centerOnLocation'))) : null;
         return response()->json($this->routeService->buildRouteLocationsReport($dispatchRegister, $centerOnLocation));
     }

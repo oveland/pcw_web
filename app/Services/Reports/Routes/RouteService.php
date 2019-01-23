@@ -70,7 +70,7 @@ class RouteService
                 if ($report && $location->isValid()) {
                     $offRoad = $location->off_road == 't' ? true : false;
 
-                    $completedPercent = ($report->distancem / $routeDistance) * 100;
+                    $completedPercent = $routeDistance > 0 ? ($report->distancem / $routeDistance) * 100 : 0;
                     if ($completedPercent > 100) $completedPercent = 100;
 
                     if ($report->controlPoint) {
@@ -98,7 +98,7 @@ class RouteService
                 }
             }
 
-            $routePercent = round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1);
+            $routePercent = $routeDistance > 0 ? round((($lastReport ? $lastReport->distancem : 0) / $routeDistance) * 100, 1) : 0;
 
             $center = false;
             if ($centerOnLocation) {
