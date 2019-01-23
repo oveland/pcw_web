@@ -22,5 +22,5 @@ interface APIWebInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public static function serve($service, Request $request): JsonResponse;
+    public function serve($service, Request $request): JsonResponse;
 }

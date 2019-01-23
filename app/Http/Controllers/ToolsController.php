@@ -21,20 +21,27 @@ class ToolsController extends Controller
      */
     public function map(Request $request)
     {
-/*
-        $passengers = Passenger::where('dispatch_register_id', 329026)->orderBy('date')->get();
+
+        $dr = DispatchRegister::find(328855);
+
+        dump("SEARCH ON $dr->departure_time, $dr->arrival_time");
+
+        $passengers = \DB::table('contador_eventos')
+            ->where('fecha', $dr->date)
+            ->where('id_gps', $dr->vehicle->plate)
+            ->whereBetween('hora', [$dr->departure_time, $dr->arrival_time])
+            ->orderBy('id_cont_eventos')->get();
+
 
         $total = 0;
+        $index = 1;
         foreach ($passengers as $passenger){
-            if($passenger->total != $total){
-                dump("$passenger->date $passenger->total > $total".(($passenger->total < $total)?" XXXXXXXXXXXXXXXXXXXXXXXXXX":" OK"));
-            }
+            echo ("<br>$index $passenger->hora $passenger->total > $total".(($passenger->total < $total)?" XXXXXXXXXXXXXXXXXXXXXXXXXX":" OK"));
             $total = $passenger->total;
+            $index++;
         }
 
-        dd("TOTAL $total - ".$passengers->first()->total." = ".($passengers->last()->total - $passengers->first()->total) );
-*/
-        return view('tools.map');
+        dd("TOTAL $total - ".$passengers->first()->total." = ".($passengers->last()->total - $passengers->first()->total) );return view('tools.map');
     }
 
     public function smartRecovery(Request $request)
@@ -163,11 +170,8 @@ class ToolsController extends Controller
 
     function sendMailReports(){
         $dates = [
-            '2019-01-16',
-            '2019-01-17',
-            '2019-01-18',
-            '2019-01-19',
-            '2019-01-20',
+            '2019-01-21',
+            '2019-01-22',
         ];
 
         foreach ($dates as $date){

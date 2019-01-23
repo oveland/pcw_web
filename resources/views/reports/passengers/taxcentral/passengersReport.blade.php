@@ -116,7 +116,8 @@
                     @foreach($historySeats as $historySeat)
                         <div class="col-md-12 p-0">
                             @php($activeSeatRouteDistance = $historySeat->active_km)
-                            @php($inactiveSeatRouteDistance = $historySeat->inactive_km)
+                            @php($inactiveSeatRouteDistance = $historySeat->inactive_km < $routeDistance? $historySeat->inactive_km: $routeDistance)
+                            @php($historySeat->busy_km = $inactiveSeatRouteDistance - $activeSeatRouteDistance)
 
                             @php($inactivePercent = number_format($activeSeatRouteDistance*100/$routeDistance,'2','.',''))
                             @php($activePercent = number_format($historySeat->busy_km*100/$routeDistance,'2','.',''))

@@ -13,6 +13,18 @@ use App\Http\Controllers\Controller;
 
 class APIController extends Controller
 {
+    protected $apiReportService;
+
+    /**
+     * APIController constructor.
+     * @param APIReportService $apiReportService
+     */
+    public function __construct(APIReportService $apiReportService)
+    {
+        $this->apiReportService = $apiReportService;
+    }
+
+
     /**
      * API for mobile apps
      *
@@ -56,7 +68,7 @@ class APIController extends Controller
                 break;
 
             case 'reports':
-                return APIReportService::serve($service, $request);
+                return $this->apiReportService->serve($service, $request);
                 break;
 
             case 'migrations':

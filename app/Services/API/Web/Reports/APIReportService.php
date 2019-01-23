@@ -22,12 +22,23 @@ use Illuminate\Http\Request;
 
 class APIReportService implements APIWebInterface
 {
+    public $controlPointService;
+    /**
+     * APIReportService constructor.
+     * @param ControlPointService $controlPointService
+     */
+    public function __construct(ControlPointService $controlPointService)
+    {
+        $this->controlPointService = $controlPointService;
+    }
+
+
     /**
      * @param $service
      * @param Request $request
      * @return JsonResponse
      */
-    public static function serve($service, Request $request): JsonResponse
+    public function serve($service, Request $request): JsonResponse
     {
         switch ($service) {
             case 'control-points':
@@ -36,7 +47,7 @@ class APIReportService implements APIWebInterface
                 if( $dispatchRegister ){
                     $response = [
                         'error' => false,
-                        'report' => self::build($dispatchRegister)
+                        'report' => $this->build($dispatchRegister)
                     ];
                 }else{
                     $response = [
@@ -65,10 +76,9 @@ class APIReportService implements APIWebInterface
      * @param $dispatchRegister
      * @return object
      */
-    public static function build(DispatchRegister $dispatchRegister)
+    public function build(DispatchRegister $dispatchRegister)
     {
-        $service = new ControlPointService();
-        $controlPointReportsByDispatchRegister = $service->buildControlPointReportsByDispatchRegister($dispatchRegister, $dispatchRegister->controlPointTimeReports);
+        $controlPointReportsByDispatchRegister = $this->controlPointService->buildControlPointReportsByDispatchRegister($dispatchRegister, $dispatchRegister->controlPointTimeReports);
 
         $report = collect([]);
         $report->put('dispatchRegister', $dispatchRegister->getAPIFields());

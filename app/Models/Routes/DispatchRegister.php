@@ -310,7 +310,7 @@ class DispatchRegister extends Model
             'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
             'difference_time' => $this->arrival_time_difference,
             'route_time' => $this->getRouteTime(),
-            'route' => $this->route->toArray(),
+            'route' => $this->route->getAPIFields(),
             'status' => $this->status,
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
             'dispatcherName' => $this->user ? $this->user->name: __('Unassigned'),
