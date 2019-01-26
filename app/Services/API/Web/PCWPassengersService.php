@@ -26,7 +26,7 @@ class PCWPassengersService implements APIWebInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public static function serve($service, Request $request): JsonResponse
+    public function serve($service, Request $request): JsonResponse
     {
         switch ($service) {
             case 'report':
@@ -35,7 +35,7 @@ class PCWPassengersService implements APIWebInterface
 
                 return response()->json([
                     'error' => false,
-                    'passengersReport' => self::buildPassengersReport($company, $dateReport)
+                    'passengersReport' => $this->buildPassengersReport($company, $dateReport)
                 ]);
 
                 break;
@@ -56,7 +56,7 @@ class PCWPassengersService implements APIWebInterface
      * @param $dateReport
      * @return object
      */
-    public static function buildPassengersReport(Company $company, $dateReport)
+    public function buildPassengersReport(Company $company, $dateReport)
     {
         $routes = $company->routes;
         $allDispatchRegisters = DispatchRegister::active()

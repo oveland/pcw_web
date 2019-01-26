@@ -70,12 +70,17 @@ class TaxCentralPassengerReportController extends Controller
             ->whereBetween('time',[$dispatchRegister->departure_time,($dispatchRegister->canceled ? $dispatchRegister->time_canceled : $dispatchArrivaltime)])
             ->get()->sortBy('active_time');
 
+        $routeDistance = $dispatchRegister->route->distance * 1000;
+
         foreach ($historySeats as $historySeat) {
             if ($historySeat->complete == 1) {
-                //$busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);
-                $historySeat->active_km = $historySeat->active_km - $dispatchRegister->start_odometer;
+                //$busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);                
+                $historySeat->active_km = $historySeat->active_km < $dispatchRegister->start_odometer ? 0 : ($historySeat->active_km - $dispatchRegister->start_odometer);
+
                 $historySeat->inactive_km = $historySeat->inactive_km - $dispatchRegister->start_odometer;
-                //$historySeat->busy_km = $historySeat->busy_km;
+                $historySeat->inactive_km = $historySeat->inactive_km < $routeDistance ? $historySeat->inactive_km : $routeDistance;
+
+                $historySeat->busy_km = $historySeat->inactive_km - $historySeat->active_km;
             }
         }
         

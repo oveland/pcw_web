@@ -14,14 +14,17 @@ use App\Http\Controllers\Controller;
 class APIController extends Controller
 {
     protected $apiReportService;
+    protected $passengersService;
 
     /**
      * APIController constructor.
      * @param APIReportService $apiReportService
+     * @param PCWPassengersService $passengersService
      */
-    public function __construct(APIReportService $apiReportService)
+    public function __construct(APIReportService $apiReportService, PCWPassengersService $passengersService)
     {
         $this->apiReportService = $apiReportService;
+        $this->passengersService = $passengersService;
     }
 
 
@@ -64,7 +67,7 @@ class APIController extends Controller
     {
         switch ($api) {
             case 'passengers':
-                return PCWPassengersService::serve($service, $request);
+                return $this->passengersService->serve($service, $request);
                 break;
 
             case 'reports':

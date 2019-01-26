@@ -78,13 +78,25 @@
                     <tbody>
                     @php($totalKm = 0)
                     @foreach($historySeats as $historySeat)
+                        @php($activeSeatRouteDistance = $historySeat->active_km)
+                        @php($inactiveSeatRouteDistance = $historySeat->inactive_km)
+
+                        @php($activeSeatRouteKm = number_format($activeSeatRouteDistance/1000,'2',',','.'))
+
                         <tr class="{{ $historySeat->busy_km>$threshold_km?'':'text-danger' }}">
                             <td>{{$loop->index+1}}</td>
                             <td>{{$historySeat->plate}}</td>
                             <td>{{$historySeat->seat}}</td>
-                            <td>{{$historySeat->active_time?date('H:i:s',strtotime(explode(" ",$historySeat->active_time)[1])):__('Still busy')}}</td>
+                            <td>
+                                {{$historySeat->active_time ? date('H:i:s',strtotime(explode(" ",$historySeat->active_time)[1])) : __('Still busy') }}
+                                <br><small class="text-muted">{{ $activeSeatRouteKm }} Km</small>
+                            </td>
                             @if($historySeat->inactive_time)
-                                <td>{{date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1]))}}</td>
+                                @php($inactiveSeatRouteKm = number_format($inactiveSeatRouteDistance/1000,'2',',','.'))
+                                <td>
+                                    {{ date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1])) }}
+                                    <br><small class="text-muted">{{ $inactiveSeatRouteKm }} Km</small>
+                                </td>
                                 <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
                                 @php($km=$historySeat->busy_km/1000)
                                 @php($historySeat->busy_km>$threshold_km?($totalKm += $km):null )
@@ -116,8 +128,7 @@
                     @foreach($historySeats as $historySeat)
                         <div class="col-md-12 p-0">
                             @php($activeSeatRouteDistance = $historySeat->active_km)
-                            @php($inactiveSeatRouteDistance = $historySeat->inactive_km < $routeDistance? $historySeat->inactive_km: $routeDistance)
-                            @php($historySeat->busy_km = $inactiveSeatRouteDistance - $activeSeatRouteDistance)
+                            @php($inactiveSeatRouteDistance = $historySeat->inactive_km)
 
                             @php($inactivePercent = number_format($activeSeatRouteDistance*100/$routeDistance,'2','.',''))
                             @php($activePercent = number_format($historySeat->busy_km*100/$routeDistance,'2','.',''))
