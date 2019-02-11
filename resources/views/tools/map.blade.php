@@ -54,39 +54,35 @@
 
 @section('scripts')
     <script type="text/javascript">
-        var markers = [];
-        var infowindows = [];
+        let markers = [];
+        let infowindows = [];
         $(document).ready(function () {
             initializeMap();
 
 
             $('.btn-paint-coordinates').on('click',function () {
-                var coordinates = $('#input-coordinates').val();
+                let coordinates = $('#input-coordinates').val();
                 if( is_null(coordinates) ){
-                    alert_type('@lang('Type coordinates!')')
+                    gerror('@lang('Type coordinates!')')
                 }else{
                     (coordinates.split("\n")).forEach(function (c,i) {
                         c = c.split(", ");
-                        var latitude = c[0];
-                        var longitude = c[1];
+                        let latitude = c[0];
+                        let longitude = c[1];
                         addMarker(new google.maps.LatLng({lat: parseFloat(latitude), lng: parseFloat(longitude)}));
                     });
                 }
             });
 
             $('.btn-draw-route-kmz').on('click',function () {
-                var routeKmz = $('#route-kmz').val();
+                let routeKmz = $('#route-kmz').val();
                 if( is_null(routeKmz) ){
                     alert_type('@lang('Select a route')')
                 }else{
-                    $.ajax({
-                        url:''
-                    });
-
                     (coordinates.split("\n")).forEach(function (c,i) {
                         c = c.split(", ");
-                        var latitude = c[0];
-                        var longitude = c[1];
+                        let latitude = c[0];
+                        let longitude = c[1];
                         addMarker(new google.maps.LatLng({lat: parseFloat(latitude), lng: parseFloat(longitude)}));
                     });
                 }
@@ -109,14 +105,15 @@
 
         // Adds a marker to the map and push to the array.
         function addMarker(location,clicked) {
-            var marker = new google.maps.Marker({
+            let marker = new google.maps.Marker({
                 position: location,
                 map: map
             });
 
             if(clicked)marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+            else marker.setIcon('{{ asset('img/point-map-on-road.png') }}');
 
-            var infowindow = new google.maps.InfoWindow({
+            let infowindow = new google.maps.InfoWindow({
                 content: location.lat()+', '+location.lng()
             });
 
@@ -130,7 +127,7 @@
 
         // Sets the map on all markers in the array.
         function setMapOnAll(map) {
-            for (var i = 0; i < markers.length; i++) {
+            for (let i = 0; i < markers.length; i++) {
                 markers[i].setMap(map);
             }
         }

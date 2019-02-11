@@ -22,7 +22,7 @@ class ToolsController extends Controller
     public function map(Request $request)
     {
 
-        $dr = DispatchRegister::find(328855);
+        /*$dr = DispatchRegister::find(328855);
 
         dump("SEARCH ON $dr->departure_time, $dr->arrival_time");
 
@@ -41,7 +41,9 @@ class ToolsController extends Controller
             $index++;
         }
 
-        dd("TOTAL $total - ".$passengers->first()->total." = ".($passengers->last()->total - $passengers->first()->total) );return view('tools.map');
+        dd("TOTAL $total - ".$passengers->first()->total." = ".($passengers->last()->total - $passengers->first()->total) );*/
+
+        return view('tools.map');
     }
 
     public function smartRecovery(Request $request)
@@ -168,21 +170,50 @@ class ToolsController extends Controller
         return view('tools.scripts', compact(['scriptText','gps']));
     }
 
-    function sendMailReports(){
-        $dates = [
-            '2019-01-21',
-            '2019-01-22',
-        ];
+    function sendMailReports(Request $request){
 
-        foreach ($dates as $date){
-            $exitCode = \Artisan::call('send-mail:consolidated', [
-                '--date' => $date,
-                '--prod' => true
-            ]);
+        switch ($request->get('type')){
+            case 'routes':
 
-            dump("Send report via email for date $date => CODE: $exitCode");
+                $dates = [
+                    '2019-02-09',
+                    '2019-02-10',
+                ];
+
+                foreach ($dates as $date){
+                    $exitCode = \Artisan::call('send-mail:consolidated', [
+                        '--date' => $date,
+                        '--prod' => true
+                    ]);
+
+                    dump("Send report via email for date $date => CODE: $exitCode");
+                }
+
+                dd('End process!!');
+
+                break;
+            case 'passengers':
+
+                $dates = [
+                    '2019-02-09',
+                    '2019-02-10',
+                ];
+
+                foreach ($dates as $date){
+                    $exitCode = \Artisan::call('send-mail:consolidated-passengers', [
+                        '--date' => $date,
+                        '--prod' => true
+                    ]);
+                    
+                    dump("Send passengers report via email for date $date => CODE: $exitCode");
+                }
+
+                dd('End process!!');
+
+                break;
+            default:
+                dd('No type report found!');
+                break;
         }
-
-        dd('End process!!');
     }
 }
