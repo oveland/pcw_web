@@ -79,7 +79,7 @@ class RouteService
                             'time' => $report->date->toTimeString(),
                             'timeReport' => $report->timed,
                             'distance' => $report->distancem,
-                            'controlPointName' => !Auth::user()->isSuperAdmin() ? $report->controlPoint->name : '',
+                            'controlPointName' => $report->controlPoint->name,
                             'completedPercent' => number_format($completedPercent, 1, ',', '.'),
                             'value' => $report->status_in_minutes,
                             'latitude' => $location->latitude,
