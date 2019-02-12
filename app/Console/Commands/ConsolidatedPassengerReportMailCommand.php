@@ -49,35 +49,65 @@ class ConsolidatedPassengerReportMailCommand extends Command
             if ($this->option('date')) $dateReport = $this->option('date');
             else $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
-            $this->info("CONSOLIDATED PASSENGERS: $company->name > $dateReport");
+            $this->logData("CONSOLIDATED PASSENGERS: $company->name > $dateReport");
 
             $mail = new ConsolidatedPassengersReportMail($company, $dateReport);
             if ($mail->buildReport()) {
-                if ($this->option('prod')) {
-                    $this->info("Sending report for 'prod' case...");
-                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co'];
-                    $mailToBcc = ['oiva.pcw@gmail.com', 'olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-                } else {
-                    $this->info("Sending report for 'test' case...");
-                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-                    $mailToBcc = ['olatorre22@hotmail.com'];
-                }
+                $mail->setProduction($this->option('prod'));
+                $mailTo = $this->getMailToFromCompany($company, $this->option('prod'));
 
-                Mail::to($mailTo, $company->name)->bcc($mailToBcc)->send($mail);
+                Mail::to($mailTo, $company->name)->send($mail);
 
                 foreach ($mailTo as $to) {
-                    $this->info("   >> To: $to");
-                }
-
-                $this->info("-------------------------------------------");
-                foreach ($mailToBcc as $bcc) {
-                    $this->info("   >> Bcc: $bcc");
+                    $this->logData("   >> To: $to");
                 }
             } else {
-                $this->info("No consolidated passengers reports found for date $dateReport");
+                $this->logData("No consolidated passengers reports found for date $dateReport");
             }
         } else {
-            $this->info("No company found for id " . $this->option('company'));
+            $this->logData("No company found for id " . $this->option('company'));
         }
+    }
+
+    public function logData($message, $level = 'info')
+    {
+        $message = "CONSOLIDATED PASSENGERS > $message";
+
+        switch ($level) {
+            case 'warning':
+                \Log::warning($message);
+                break;
+            case 'error':
+                \Log::error($message);
+                break;
+            default:
+                \Log::info($message);
+                break;
+        }
+    }
+
+    /**
+     * @param Company $company
+     * @param bool $production
+     * @return array
+     */
+    public function getMailToFromCompany(Company $company, $production = false)
+    {
+        $this->logData("Making mail passenger report for '" . ($production ? 'production' : 'development') . "' case...");
+
+        switch ($company->id) {
+            case 14:
+                if ($production) {
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com'];
+                } else {
+                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                }
+                break;
+            default:
+                $mailTo = ['oiva.pcw@gmail.com'];
+                break;
+        }
+
+        return $mailTo;
     }
 }

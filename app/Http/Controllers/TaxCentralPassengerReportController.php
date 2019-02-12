@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Passengers\HistorySeat;
@@ -13,8 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class TaxCentralPassengerReportController extends Controller
 {
-    const DISPATCH_COMPLETE = 'Terminó';
-
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -42,7 +41,7 @@ class TaxCentralPassengerReportController extends Controller
 
         if ($routeId != 'all') {
             $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
-                ->where('route_id', '=', $routeId)//->where('status','=',self::DISPATCH_COMPLETE)
+                ->where('route_id', '=', $routeId)//->where('status','=',DispatchRegister::COMPLETE)
                 ->orderBy('round_trip')->get()->groupBy('round_trip');
 
             return view('reports.passengers.taxcentral.passengersReportByRoute', compact('roundTripDispatchRegisters'));
@@ -62,12 +61,15 @@ class TaxCentralPassengerReportController extends Controller
         $route = $dispatchRegister->route;
         $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
 
-        $dispatchArrivaltime = (self::DISPATCH_COMPLETE == $dispatchRegister->status) ? $dispatchRegister->arrival_time : $dispatchRegister->arrival_time_scheduled;
+        $dispatchArrivaltime = (DispatchRegister::COMPLETE == $dispatchRegister->status) ? $dispatchRegister->arrival_time : $dispatchRegister->arrival_time_scheduled;
         $dispatchArrivaltime = ($dispatchArrivaltime > "23:59:59") ? "23:59:59" : $dispatchArrivaltime;
+
+        $initialTimeRange = StrTime::subStrTime($dispatchRegister->departure_time, '00:30:00');
+        $finalTimeRange = StrTime::addStrTime(($dispatchRegister->canceled ? $dispatchRegister->time_canceled : $dispatchArrivaltime), '00:30:00');
 
         $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
             ->where('date', '=', $dispatchRegister->date)
-            ->whereBetween('time',[$dispatchRegister->departure_time,($dispatchRegister->canceled ? $dispatchRegister->time_canceled : $dispatchArrivaltime)])
+            ->whereBetween('time',[$initialTimeRange,$finalTimeRange])
             ->get()->sortBy('active_time');
 
         $routeDistance = $dispatchRegister->route->distance * 1000;

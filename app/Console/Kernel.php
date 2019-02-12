@@ -32,7 +32,10 @@ class Kernel extends ConsoleKernel
         Commands\ConsolidatedPassengerReportMailCommand::class,
 
         /* Commands for DAR (Automatic Route Detection) */
-        Commands\DARCommand::class
+        Commands\DARCommand::class,
+
+        /* Commands for routes and dispatch registers */
+        Commands\CloseDispatchRegistersCommand::class
     ];
 
     /**
@@ -52,10 +55,17 @@ class Kernel extends ConsoleKernel
         $schedule->command('gps:restart')->dailyAt('12:00');
         $schedule->command('gps:check-status')->everyMinute();
 
+        /* Route report for TUPAL (CompanyId = 28) */
+        $schedule->command('send-mail:consolidated --company=28 --prod=true')->dailyAt('04:00');
+
+        /* Reports for ALAMEDA */
         $schedule->command('send-mail:consolidated')->dailyAt('08:00');
-        $schedule->command('send-mail:consolidated-passengers --prod=true')->dailyAt('08:10');
+        $schedule->command('send-mail:consolidated-passengers')->dailyAt('08:10');
 
         $schedule->command('dar:run')->dailyAt('02:00');
+
+        /* Close the fake dispatch registers */
+        $schedule->command('dispatch-registers:close')->dailyAt('00:05');
     }
 
     /**

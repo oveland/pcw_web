@@ -53,16 +53,8 @@ class ConsolidatedReportMailCommand extends Command
 
             $mail = new ConsolidatedReportMail($company, $dateReport);
             if ($mail->buildReport()) {
-                if ($this->option('prod')) {
-                    $mail->setProduction(true);
-                    $this->logData("Sending report for 'prod' case...");
-                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com', 'olatorre22@hotmail.com'];
-                    //$mailTo = ['oiva.pcw@gmail.com', 'sistemas@alameda.com.co'];
-                } else {
-                    $this->logData("Sending report for 'test' case...");
-
-                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
-                }
+                $mail->setProduction($this->option('prod'));
+                $mailTo = $this->getMailToFromCompany($company, $this->option('prod'));
 
                 Mail::to($mailTo, $company->name)->send($mail);
 
@@ -77,12 +69,11 @@ class ConsolidatedReportMailCommand extends Command
         }
     }
 
-    public function logData($message,$level = 'info'){
-        $this->info($message);
-
+    public function logData($message, $level = 'info')
+    {
         $message = "CONSOLIDATED ROUTE > $message";
 
-        switch ($level){
+        switch ($level) {
             case 'warning':
                 \Log::warning($message);
                 break;
@@ -93,5 +84,37 @@ class ConsolidatedReportMailCommand extends Command
                 \Log::info($message);
                 break;
         }
+    }
+
+    /**
+     * @param Company $company
+     * @param bool $production
+     * @return array
+     */
+    public function getMailToFromCompany(Company $company, $production = false)
+    {
+        $this->logData("Making mail route report for '" . ($production ? 'production' : 'development') . "' case...");
+
+        switch ($company->id) {
+            case 14:
+                if ($production) {
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com'];
+                } else {
+                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                }
+                break;
+            case 28:
+                if ($production) {
+                    $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com', 'oiva.pcw@gmail.com'];
+                } else {
+                    $mailTo = ['oiva.fz@gmail.com'];
+                }
+                break;
+            default:
+                $mailTo = ['oiva.pcw@gmail.com'];
+                break;
+        }
+
+        return $mailTo;
     }
 }

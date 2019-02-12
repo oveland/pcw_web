@@ -133,7 +133,7 @@ class Location extends Model
     public function getSpeedAttribute($speed)
     {
         $thresholdTruncateSpeeding = config('vehicle.threshold_truncate_speeding');
-        return ($speed > $thresholdTruncateSpeeding) ? $thresholdTruncateSpeeding : $speed;
+        return intval(($speed > $thresholdTruncateSpeeding) ? $thresholdTruncateSpeeding : $speed);
     }
 
     public function isTruncated()

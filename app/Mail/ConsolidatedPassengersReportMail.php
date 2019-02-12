@@ -23,6 +23,7 @@ class ConsolidatedPassengersReportMail extends Mailable
     public $company;
     public $dateReport;
     public $consolidatedReports;
+    public $production;
 
     public $pathToConsolidatesReportFile;
 
@@ -37,6 +38,12 @@ class ConsolidatedPassengersReportMail extends Mailable
         $this->company = $company;
         $this->dateReport = $dateReport;
         $this->passengersReporter = app(PassengersReporter::class);
+        $this->production = false;
+    }
+
+    public function setProduction($production = false)
+    {
+        $this->production = $production;
     }
 
     public function buildReport()
@@ -54,7 +61,7 @@ class ConsolidatedPassengersReportMail extends Mailable
      */
     public function build()
     {
-        $email = $this->view('email.reports.consolidated.passengers.daily')->subject(__('Passengers') . " | " . __('Consolidated report daily') . " | $this->dateReport");
+        $email = $this->view('email.reports.consolidated.passengers.daily')->subject(__('Passengers') . " | " . __('Consolidated report daily') . " | $this->dateReport ".($this->production ? '* Revisado':'> Para revisar'));
         if ($this->pathToConsolidatesReportFile) {
             $email->attach($this->pathToConsolidatesReportFile);
         }

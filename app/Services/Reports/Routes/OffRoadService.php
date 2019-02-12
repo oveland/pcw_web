@@ -63,7 +63,7 @@ class OffRoadService
 
         return $allOffRoads->filter(function ($location) {
             $dispatchRegister = $location->dispatchRegister;
-            return ($dispatchRegister && $dispatchRegister->complete());
+            return ($dispatchRegister && $dispatchRegister->complete() && $dispatchRegister->reports()->count() > 100);
         });
     }
 

@@ -303,6 +303,7 @@ class DispatchRegister extends Model
     {
         return (object)[
             'id' => $this->id,
+            'date' => $this->getParsedDate()->toDateString(),
             'turn' => $this->turn,
             'round_trip' => $this->round_trip,
             'departure_time' => $this->departure_time,
@@ -311,6 +312,7 @@ class DispatchRegister extends Model
             'difference_time' => $this->arrival_time_difference,
             'route_time' => $this->getRouteTime(),
             'route' => $this->route->getAPIFields(),
+            'vehicle' => $this->vehicle->getAPIFields(),
             'status' => $this->status,
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
             'dispatcherName' => $this->user ? $this->user->name: __('Unassigned'),

@@ -51,7 +51,8 @@ class ConsolidatedService
     {
 
         $consolidatedReports = collect([]);
-        $routes = $company->routes;
+        $routes = $company->activeRoutes
+            ->where('id', '<>', 183); // TODO: Let route 183 when all parameters are configured
 
         foreach ($routes as $route) {
             $dispatchRegisters = DispatchRegister::active()
@@ -108,56 +109,63 @@ class ConsolidatedService
         foreach ($consolidatedReports as $consolidatedReport) {
             $route = $consolidatedReport->route;
             $date = $consolidatedReport->date;
-            $reportVehicleByRoute = $consolidatedReport->reportVehicleByRoute;
 
-            $fileNameSheet = __('Consolidated') . " $route->name" . " $date";
-            $fileName = str_replace([' ', '-'], '_', $fileNameSheet);
-            $fileExtension = 'xlsx';
+            if( $consolidatedReport->totalReports ){
+                $reportVehicleByRoute = $consolidatedReport->reportVehicleByRoute;
 
-
-            $excel = Excel::create($fileName, function ($excel) use ($fileNameSheet, $reportVehicleByRoute, $route, $date) {
-
-                $dataExcel = array();
-                foreach ($reportVehicleByRoute as $reportByVehicle) {
-                    $vehicle = $reportByVehicle->vehicle;
-                    $dispatchRegister = $reportByVehicle->dispatchRegister;
-                    $driver = $dispatchRegister->driver;
-
-                    $details = $this->buildStringDetails($reportByVehicle);
-
-                    $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => 0]);
+                $fileNameSheet = __('Consolidated') . " $route->name" . " $date";
+                $fileName = str_replace([' ', '-'], '_', $fileNameSheet);
+                $fileExtension = 'xlsx';
 
 
-                    $dataExcel[] = [
-                        __('Turn') => $dispatchRegister->turn,                                                     # A CELL
-                        __('Round Trip') => $dispatchRegister->round_trip,                                         # B CELL
-                        __('Vehicle') => intval($vehicle->number),                                                 # C CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                   # D CELL
-                        __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # E CELL
-                        __('Off roads details') => "$details->offRoadReportString",                                # F CELL
-                        __('Speeding') => $reportByVehicle->totalSpeeding,                                         # G CELL
-                        __('Speeding details') => $details->speedingReportString,                                  # H CELL
-                        __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # I CELL
-                        __('Control points details') => $details->delayControlPointsReportString,                  # J CELL
-                        __('Details') => $link,                                                                    # K CELLs
-                    ];
-                }
+                $excel = Excel::create($fileName, function ($excel) use ($fileNameSheet, $reportVehicleByRoute, $route, $date) {
 
-                $dataExport = (object)[
-                    'fileName' => $fileNameSheet,
-                    'title' => __('Consolidated') . " $route->name",
-                    'subTitle' => "$date",
-                    'sheetTitle' => "$route->name",
-                    'data' => $dataExcel,
-                    'type' => 'consolidatedRouteReport'
-                ];
+                    $dataExcel = array();
+                    foreach ($reportVehicleByRoute as $reportByVehicle) {
+                        $vehicle = $reportByVehicle->vehicle;
+                        $dispatchRegister = $reportByVehicle->dispatchRegister;
+                        $driver = $dispatchRegister->driver;
 
-                /* SHEETS */
-                $excel = PCWExporterService::createHeaders($excel, $dataExport);
-                $excel = PCWExporterService::createSheet($excel, $dataExport);
-            })->store($fileExtension);
+                        $details = $this->buildStringDetails($reportByVehicle);
 
-            $pathsToConsolidatesReportFiles->push("$excel->storagePath/$fileName.$fileExtension");
+                        $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => 0]);
+
+
+                        $dataExcel[] = [
+                            __('Turn') => $dispatchRegister->turn,                                                     # A CELL
+                            __('Round Trip') => $dispatchRegister->round_trip,                                         # B CELL
+                            __('Vehicle') => $vehicle->number,                                                         # C CELL
+                            __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                   # D CELL
+                            __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # E CELL
+                            __('Off roads details') => "$details->offRoadReportString",                                # F CELL
+                            __('Speeding') => $reportByVehicle->totalSpeeding,                                         # G CELL
+                            __('Speeding details') => $details->speedingReportString,                                  # H CELL
+                            __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # I CELL
+                            __('Control points details') => $details->delayControlPointsReportString,                  # J CELL
+                            __('Details') => $link,                                                                    # K CELLs
+                        ];
+                    }
+
+                    if($dataExcel){
+                        $dataExport = (object)[
+                            'fileName' => $fileNameSheet,
+                            'title' => __('Consolidated') . " $route->name",
+                            'subTitle' => "$date",
+                            'sheetTitle' => "$route->name",
+                            'data' => $dataExcel,
+                            'type' => 'consolidatedRouteReport'
+                        ];
+
+                        /* SHEETS */
+                        $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                        $excel = PCWExporterService::createSheet($excel, $dataExport);
+                    }
+                })->store($fileExtension);
+
+                $pathsToConsolidatesReportFiles->push("$excel->storagePath/$fileName.$fileExtension");
+            }else{
+                dump("No reports found for $route->name on date $date");
+            }
         }
 
         return $pathsToConsolidatesReportFiles;
