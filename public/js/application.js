@@ -3,8 +3,10 @@
  */
 
 var loadingClass = 'disabled faa-tada animated';
+var loading;
 
 $(document).ready(function () {
+    loading = $('#loading').html();
     $('.body-content').fadeIn(1000);
 
     $.ajaxSetup({

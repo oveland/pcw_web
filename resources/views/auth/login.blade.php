@@ -31,7 +31,7 @@
     <div class="login">
         <!-- begin login-brand -->
         <div class="login-brand text-white transparent-header">
-            <i class="icon-user pull-right fa fa-2x"></i> @lang('Log In')
+            <i class="icon-user pull-right fa fa-2x"></i> @lang('Log In')!
         </div>
         <!-- end login-brand -->
         <!-- begin login-content -->
