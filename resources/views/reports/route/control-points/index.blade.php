@@ -13,15 +13,16 @@
         }
 
         .report-tab-cp {
-            font-size:70%;
+            font-size:80% !important;
             position:relative;
             top:-3px;
         }
 
         .report-tab-cp button span{
-            font-size:80%;
+            font-size:80% !important;
             position:relative;
             top:-3px;
+            padding: 5px
         }
 
         .report-tab-cp button{
@@ -59,7 +60,7 @@
         @lang('Route report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Control Points')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -156,7 +157,7 @@
 @section('scripts')
 
     <script type="application/javascript">
-        $('.menu-routes, .menu-report-control-points').addClass('active');
+        $('.menu-routes, .menu-report-control-points').addClass('active-animated');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {

@@ -2,14 +2,17 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
+                <a href="{{ route('report-vehicle-speeding-search-report') }}?{{ $stringParams }}&export=true" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
+                   title="@lang('Export excel')" data-placement="bottom">
+                    <i class="fa fa-file-excel-o"></i>
+                </a>
+
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand"
                    title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
             </div>
-            <a href="{{ route('report-vehicle-speeding-search-report') }}?{{ $stringParams }}&export=true" class="btn btn-lime bg-lime-dark pull-right m-r-10">
-                <i class="fa fa-file-excel-o"></i> @lang('Export excel')
-            </a>
+
             <h5 class="text-white label-vehicles">{{ count($speedingReportByVehicles) }} @lang('Vehicles') @lang('with') @lang('Speeding')</h5>
         </div>
         <div class="tab-content panel">

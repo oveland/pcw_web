@@ -18,7 +18,7 @@
         @lang('Routes Report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Dispatch users')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -81,7 +81,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-report-routes, .menu-report-routes-dispatch-users').addClass('active');
+        $('.menu-report-routes, .menu-report-routes-dispatch-users').addClass('active-animated');
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 let form = $(this);

@@ -16,7 +16,7 @@
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Passengers report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Register historic')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -203,7 +203,7 @@
     @include('template.google.maps')
 
     <script type="application/javascript">
-        $('.menu-passengers, .menu-passengers-taxcentral').addClass('active');
+        $('.menu-passengers, .menu-passengers-taxcentral').addClass('active-animated');
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
 

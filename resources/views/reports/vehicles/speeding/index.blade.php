@@ -56,7 +56,7 @@
     <h1 class="page-header"><i class="fa fa-bus animated" aria-hidden="true"></i> @lang('Vehicles Report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Speeding')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -104,6 +104,21 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="type-report" class="control-label">@lang('Options')</label>
+                                <div class="form-group">
+                                    <div class="has-warning">
+                                        <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
+                                            <label class="text-bold">
+                                                <input id="type-report" name="type-report" type="checkbox" value="group" checked> @lang('Group')
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,7 +138,7 @@
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-speeding').addClass('active');
+        $('.menu-report-vehicles, .menu-report-vehicles-speeding').addClass('active-animated');
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 var form = $(this);
@@ -145,7 +160,7 @@
                 }
             });
 
-            $('#company-report, #date-report').change(function () {
+            $('#company-report, #date-report, #type-report').change(function () {
                 var form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {

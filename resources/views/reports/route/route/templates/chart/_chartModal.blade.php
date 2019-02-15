@@ -1,5 +1,5 @@
 <div class="modal modal-message fade" id="modal-route-report">
-    <div class="modal-dialog" style="height: 500px !important;">
+    <div class="modal-dialog modal-full" style="height: 500px !important;margin-top: 1px">
         <div class="modal-content">
             @include('reports.route.route.templates.chart._chartView')
         </div>

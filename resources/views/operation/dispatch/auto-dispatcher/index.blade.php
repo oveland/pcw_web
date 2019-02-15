@@ -16,7 +16,7 @@
     <h1 class="page-header"><i class="fa fa-life-ring fa-spin" aria-hidden="true"></i> @lang('Operation')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Auto Dispatcher')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -73,7 +73,7 @@
         let mainContainer = $('.main-container');
         let form = $('.form-search-operation');
 
-        $('.menu-operation-dispatch, .menu-operation-dispatch-automatic').addClass('active');
+        $('.menu-operation-dispatch, .menu-operation-dispatch-automatic').addClass('active-animated');
 
         $(document).ready(function () {
             form.submit(function (e) {

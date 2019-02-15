@@ -22,8 +22,8 @@
 
         <div class="tab-content panel p-0">
             <div id="report-tab" class="tab-pane fade active in report-tab-cp">
-                <div class="row">
-                    <div class="table-responsive col-md-12" style="padding-bottom: 90px">
+                <div class="">
+                    <div class="table-responsive col-md-12 p-0" style="padding-bottom: 90px">
                         <table class="table table-bordered table-condensed table-hover table-valign-middle table-report-control-point data-table-report">
                             <thead>
                             <tr class="">
@@ -45,16 +45,18 @@
                                 </th>
                                 <th class="text-center bg-inverse-dark text-muted">
                                     <i class="ion-android-stopwatch"></i><br>
-                                    @lang('Route Time')
+                                    @lang('In route')
                                 </th>
                                 @php($controlPoints =  $route->controlPoints)
                                 @foreach($controlPoints as $controlPoint)
-                                    <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}" style="padding: 3px !important;">
-                                        <span>{{ $controlPoint->name }}</span>
-                                        <br>
-                                        <small>
-                                            <i style="font-size: 100% !important;" class="fa fa-map-marker"></i> <strong class="control-point-distance">{{ $controlPoint->distance_from_dispatch }} m</strong>
-                                        </small>
+                                    <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}" style="">
+                                        <div style="display: inline-block;vertical-align: middle;float: none;">
+                                            <span>{{ $controlPoint->name }}</span>
+                                            <br><br>
+                                            <small>
+                                                <i style="font-size: 100% !important;" class="fa fa-map-marker"></i> <strong class="control-point-distance">{{ $controlPoint->distance_from_dispatch }} m</strong>
+                                            </small>
+                                        </div>
                                     </th>
                                 @endforeach
                                 <th class="bg-inverse-dark text-muted">
@@ -103,7 +105,7 @@
                                                     <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $reportByControlPoint->statusColor }}"></i>
                                                     <br>
                                                     <button type="button" class="f-s-12 m-t-5 btn btn-{{ $reportByControlPoint->statusColor }} light btn-xs"
-                                                            data-placement="bottom" data-toggle="popover" data-html="true" data-trigger="hover"
+                                                            data-placement="bottom" data-toggle="popover" data-html="true" data-trigger="click"
                                                             title="
                                                                 <strong>
                                                                     <i class='fa fa-map-marker text-muted'></i>  {{ $controlPoint->name }}
@@ -160,8 +162,7 @@
                                             @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
                                             @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
                                             <hr class="hr no-padding">
-                                            <small>{!! $totalLocations !!} @lang('locations')</small><br>
-                                            <small>{!! $totalReports !!} @lang('reports')</small>
+                                            <small class="tooltips" data-title="@lang('Locations')">{!! $totalLocations !!}</small>/<small class="tooltips" title="@lang('Reports')">{!! $totalReports !!}</small>
                                         @endif
                                     </td>
                                 </tr>
@@ -173,7 +174,7 @@
             </div>
         </div>
     </div>
-    <script type="application/javascript">hideSideBar();</script>
+    <script type="application/javascript">hideSideBar();$('.tooltips').tooltip();alert('Tootlrip enavle')</script>
 @else
     <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
         <div class="col-md-2" style="padding-top: 10px">

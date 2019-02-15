@@ -43,6 +43,7 @@ class SpeedingReportController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function show(Request $request)
     {
@@ -54,7 +55,7 @@ class SpeedingReportController extends Controller
 
         $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding);
 
-        if( $request->get('export') )$this->export($speedingReportByVehicles,$dateReport);
+        if( $request->get('export') )$this->export($speedingReportByVehicles,$dateReport, $request->get('type-report'));
 
         return view('reports.vehicles.speeding.show', compact(['speedingReportByVehicles', 'stringParams']));
     }
@@ -63,44 +64,81 @@ class SpeedingReportController extends Controller
     /**
      * @param $speedingReportByVehicle
      * @param $dateReport
+     * @param $typeReport
+     * @throws \Exception
      */
-    public function export($speedingReportByVehicle, $dateReport)
+    public function export($speedingReportByVehicle, $dateReport, $typeReport)
     {
-        Excel::create(__('Speeding Report') . " $dateReport", function ($excel) use ($speedingReportByVehicle, $dateReport) {
-            foreach ($speedingReportByVehicle as $vehicleId => $speedingReport) {
-                $vehicle = Vehicle::find($vehicleId);
-                $dataExcel = array();
+        if( $typeReport == 'group' ){
+            Excel::create(__('Speeding') . " $dateReport", function ($excel) use ($speedingReportByVehicle, $dateReport) {
+                foreach ($speedingReportByVehicle as $speedingReport) {
+                    $vehicle = $speedingReport->first()->vehicle;
+                    $dataExcel = array();
 
-                foreach ($speedingReport as $speeding) {
-                    $speed = $speeding->speed;
-                    if( $speed > 200 ){
-                        $speed = 100 + (random_int(-10,10));
+                    foreach ($speedingReport as $speeding) {
+                        $speed = $speeding->speed;
+                        if( $speed > 200 ){
+                            $speed = 100 + (random_int(-10,10));
+                        }
+
+
+                        $dataExcel[] = [
+                            __('N°') => count($dataExcel) + 1,                             # A CELL
+                            __('Time') => $speeding->time->toTimeString(),                                 # B CELL
+                            __('Vehicle') => intval($vehicle->number),                     # C CELL
+                            __('Plate') => $vehicle->plate,                                # D CELL
+                            __('Speed') => number_format($speed,2, ',', '')# E CELL
+                        ];
                     }
 
-
-                    $dataExcel[] = [
-                        __('N°') => count($dataExcel) + 1,                             # A CELL
-                        __('Time') => $speeding->time->toTimeString(),                                 # B CELL
-                        __('Vehicle') => intval($vehicle->number),                     # C CELL
-                        __('Plate') => $vehicle->plate,                                # D CELL
-                        __('Speed') => number_format($speed,2, ',', '')# E CELL
+                    $dataExport = (object)[
+                        'fileName' => __('Speeding') . " $dateReport",
+                        'title' => __('Speeding') . " $dateReport",
+                        'subTitle' => count($speedingReport)." ".__('Speeding'),
+                        'sheetTitle' => "$vehicle->number",
+                        'data' => $dataExcel
                     ];
+                    //foreach ()
+                    /* SHEETS */
+                    $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                    $excel = PCWExporterService::createSheet($excel, $dataExport);
+                }
+            })->
+            export('xlsx');
+        }else{
+            $speedingReport = $speedingReportByVehicle->collapse();
+
+            $dataExcel = array();
+
+            foreach ($speedingReport as $speeding) {
+                $vehicle = $speeding->vehicle;
+                $speed = $speeding->speed;
+                if( $speed > 200 ){
+                    $speed = 100 + (random_int(-10,10));
                 }
 
-                $dataExport = (object)[
-                    'fileName' => __('Speeding Report') . " $dateReport",
-                    'title' => __('Speeding Report') . " $dateReport",
-                    'subTitle' => count($speedingReport)." ".__('Speeding'),
-                    'sheetTitle' => "$vehicle->number",
-                    'data' => $dataExcel
+                $dataExcel[] = [
+                    __('N°') => count($dataExcel) + 1,                             # A CELL
+                    __('Time') => $speeding->time->toTimeString(),                 # C CELL
+                    __('Vehicle') => $vehicle->number,                             # B CELL
+                    __('Plate') => $vehicle->plate,                                # D CELL
+                    __('Speed') => number_format($speed,2, ',', ''),# E CELL
+                    __('Address') => ''# E CELL
                 ];
-                //foreach ()
-                /* SHEETS */
-                $excel = PCWExporterService::createHeaders($excel, $dataExport);
-                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
-        })->
-        export('xlsx');
+
+            $fileData = (object)[
+                'fileName' => __('Speeding') . " $dateReport",
+                'title' => " $dateReport",
+                'subTitle' => count($speedingReport)." ".__('Speeding'),
+                'sheetTitle' => __('Speeding') . " $dateReport",
+                'data' => $dataExcel
+            ];
+            //foreach ()
+            /* SHEETS */
+
+            PCWExporterService::excel($fileData);
+        }
     }
 
     /**

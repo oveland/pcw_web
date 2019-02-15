@@ -16,7 +16,7 @@
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Administration')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Manage drivers')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -82,7 +82,7 @@
         var mainContainer = $('.main-container');
         var form = $('.form-search-report');
 
-        $('.menu-passengers, .menu-passengers-recorders-fringes').addClass('active');
+        $('.menu-passengers, .menu-passengers-recorders-fringes').addClass('active-animated');
 
         $(document).ready(function () {
             form.submit(function (e) {

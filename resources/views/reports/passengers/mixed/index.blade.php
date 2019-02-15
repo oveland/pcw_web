@@ -17,7 +17,7 @@
     <h1 class="page-header">@lang('Passengers report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mixed report')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -129,7 +129,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
     <script type="application/javascript">
-        $('.menu-passengers, .menu-passengers-mixed, .menu-passengers-mixed-recorder-vs-sensor').addClass('active');
+        $('.menu-passengers, .menu-passengers-mixed, .menu-passengers-mixed-recorder-vs-sensor').addClass('active-animated');
         let mainContainer = $('.report-container');
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {

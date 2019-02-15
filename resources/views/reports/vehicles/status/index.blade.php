@@ -57,7 +57,7 @@
         <i class="fa fa-podcast blue faa-burst" aria-hidden="true"></i> @lang('Vehicles Report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Status')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -118,7 +118,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-status').addClass('active');
+        $('.menu-report-vehicles, .menu-report-vehicles-status').addClass('active-animated');
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 var form = $(this);

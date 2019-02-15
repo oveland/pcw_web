@@ -16,7 +16,7 @@
     <h1 class="page-header"><i class="fa fa-bus animated" aria-hidden="true"></i> @lang('Vehicles Report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Round trips')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -79,7 +79,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-round-trips').addClass('active');
+        $('.menu-report-vehicles, .menu-report-vehicles-round-trips').addClass('active-animated');
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 let form = $(this);

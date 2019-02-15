@@ -1,9 +1,5 @@
 @section('templateStyles')
 <style type="text/css">
-    .widget-stat-number{
-        font-size: 15px !important;
-        font-weight: 900;
-    }
     .info-control-points{
         position: absolute;
         z-index: 1;
@@ -12,6 +8,10 @@
         padding: 5px;
         border-radius: 4px;
         font-size: 100%;
+    }
+    .info-route-report{
+        position: relative;
+        z-index: 1 !important;
     }
 </style>
 @endsection
@@ -259,8 +259,8 @@
                                     }
 
                                     if( !isNaN(parseInt(speed)) && !isNaN(parseInt(averageSpeed))){
-                                        $('.modal-report-vehicle-speed').html("@lang("Speed"): "+parseInt(speed)+" Km/h");
-                                        $('.modal-report-vehicle-speed-average').html("@lang("Average speed"): "+parseInt(averageSpeed)+" Km/h");
+                                        $('.modal-report-vehicle-speed').html(parseInt(speed)+" Km/h");
+                                        $('.modal-report-vehicle-speed-average').html(parseInt(averageSpeed)+" Km/h");
                                         $('.modal-report-vehicle-speed-progress').css('width', parseInt(speed) + '%');
                                     }
 

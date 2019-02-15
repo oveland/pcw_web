@@ -5,6 +5,8 @@
 var loadingClass = 'disabled faa-tada animated';
 
 $(document).ready(function () {
+    $('.body-content').fadeIn(1000);
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -63,6 +65,13 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+
+    let timmer = 1000;
+    $('.active-animated').each(function (i, e) {
+        setTimeout(() => {
+            $(e).addClass('active');
+        }, timmer += 400);
     });
 });
 

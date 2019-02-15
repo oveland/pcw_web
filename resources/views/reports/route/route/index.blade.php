@@ -17,7 +17,7 @@
     <h1 class="page-header">@lang('Route report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Route times')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -56,7 +56,7 @@
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ '2018-11-20' }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -148,7 +148,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-routes, .menu-route-report').addClass('active');
+        $('.menu-routes, .menu-route-report').addClass('active-animated');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {

@@ -56,7 +56,7 @@
     <h1 class="page-header"><i class="fa fa-bus animated" aria-hidden="true"></i> @lang('Vehicles Report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -123,7 +123,7 @@
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-mileage').addClass('active');
+        $('.menu-report-vehicles, .menu-report-vehicles-mileage').addClass('active-animated');
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 var form = $(this);

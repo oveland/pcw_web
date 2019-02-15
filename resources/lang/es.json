@@ -346,6 +346,8 @@
   "Of issues": "De incidencias",
   "History": "Historial",
   "Historic": "Histórico",
+  "historic": "histórico",
+  "url-historic": "historico",
   "See frame": "Ver trama",
   "By routes": "Por rutas",
   "Text copied": "Texto copiado",
@@ -517,5 +519,6 @@
   "Distance": "Distancia",
   "Average speed": "Vel. media",
   "The vehicle haven't off road": "El vehículo no presenta salidas de ruta",
-  "See": "Ver"
+  "See": "Ver",
+  "In route": "En ruta"
 }

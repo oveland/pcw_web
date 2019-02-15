@@ -45,7 +45,7 @@
     <h1 class="page-header">@lang('Route report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Off road report')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -129,7 +129,7 @@
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-routes, .menu-off-road-report').addClass('active');
+        $('.menu-routes, .menu-off-road-report').addClass('active-animated');
         let form = $('.form-search-report');
         let mainContainer = $('.report-container');
 

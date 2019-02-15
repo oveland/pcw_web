@@ -16,7 +16,7 @@
     <h1 class="page-header"><i class="fa fa-cogs" aria-hidden="true"></i> @lang('Administration')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Seats report')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->
@@ -146,7 +146,7 @@
         var form = $('.form-search-report');
         var tout = null;
 
-        $('.menu-passengers, .menu-passengers-sensors, .menu-passengers-sensors-seats').addClass('active');
+        $('.menu-passengers, .menu-passengers-sensors, .menu-passengers-sensors-seats').addClass('active-animated');
 
         $(document).ready(function () {
             form.submit(function (e) {

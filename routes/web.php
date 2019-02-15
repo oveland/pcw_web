@@ -13,6 +13,10 @@
 
 Auth::routes();
 
+Route::get('/metronic', function(){
+    return view('metronic');
+})->name('metronic');
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect(route('report-route'));
@@ -98,6 +102,12 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/off_road/{dispatchRegister}', 'ReportRouteController@offRoadReport')->name('report-route-off-road');
                 Route::any('/get-log/{dispatchRegister}', 'ReportRouteController@getReportLog')->name('report-route-get-log');
                 Route::any('/ajax', 'ReportRouteController@ajax')->name('route-ajax-action');
+            });
+
+            Route::prefix(__('url-historic'))->group(function () {
+                Route::get('/', 'ReportRouteController@index')->name('report-route-historic');
+                Route::get('/show', 'ReportRouteController@show')->name('report-route-historic-search');
+                Route::any('/ajax', 'ReportRouteController@ajax')->name('report-route-historic-ajax');
             });
 
             /* Off Road report */

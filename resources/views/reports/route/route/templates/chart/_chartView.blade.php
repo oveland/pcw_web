@@ -2,7 +2,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
         <i class="fa fa-times"></i>
     </button>
-    <div class="row">
+    <div class="">
         <h4 class="modal-title">
             <i class="fa fa-area-chart"></i> @lang('Historic route time chart'): <span id="date-report-details"></span>
         </h4>
@@ -22,62 +22,94 @@
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-6 p-0 p-t-15" style="float: left !important;position: absolute;z-index: 1;">
             <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
-                <!-- begin widget -->
-                <div class="widget widget-stat widget-stat-right bg-inverse text-white">
-                    <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
-                    <div class="widget-stat-info m-0">
-                        <div class="widget-stat-title">
-                            <i class="fa fa-bus"></i> @lang('Vehicle')
-                        </div>
-                        <div class="widget-stat-number modal-report-vehicle report-info"></div>
+
+                <div class="dashboard-stat blue hide">
+                    <div class="visual">
+                        <i class="fa fa-bus"></i>
                     </div>
-                    <div class="widget-stat-progress">
-                        <div class="progress progress-striped progress-xs active">
+                    <div class="details">
+                        <div class="number">
+                            <span data-counter="counterup" data-value="1349">1349</span>
+                        </div>
+                        <div class="desc"> New Feedbacks </div>
+                    </div>
+                    <a class="more" href="javascript:;"> View more
+                        <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+
+                <div class="dashboard-stat2 blue">
+                    <div class="display">
+                        <div class="number">
+                            <small>@lang('Vehicle')</small>
+                            <h3 class="font-green-sharp">
+                                <span data-counter="counterup" data-value="7800">
+                                    <div class="widget-stat-number modal-report-vehicle report-info"></div>
+                                </span>
+                                <small class="font-green-sharp">
+
+                                </small>
+                            </h3>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-bus"></i>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <div class="progress progress-striped progress-xs active green-sharp">
                             <div class="progress-bar progress-success modal-report-vehicle-speed-progress report-info" style="width: 50%"></div>
                         </div>
-                    </div>
-                    <div class="widget-stat-footer text-left">
-                        <i class="fa fa-tachometer" aria-hidden="true"></i> <span class="modal-report-vehicle-speed report-info"></span><br>
-                        <i class="fa fa-tachometer" aria-hidden="true"></i> <span class="modal-report-vehicle-speed-average report-info"></span>
+
+                        <div class="status">
+                            <div class="status-title">
+                                <i class="fa fa-tachometer" aria-hidden="true"></i> @lang('Speed')<br>
+                                <i class="fa fa-tachometer" aria-hidden="true"></i> @lang('Average')
+                            </div>
+                            <div class="status-number">
+                                <span class="modal-report-vehicle-speed report-info"></span><br>
+                                <span class="modal-report-vehicle-speed-average report-info"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- begin widget -->
+
                 <!-- end widget -->
             </div>
 
             <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
                 <!-- begin widget -->
-                <div class="widget widget-stat widget-stat-right bg-success-dark text-white">
+                <div class="widget-stat-chart widget-stat-chart-green text-white">
                     <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
                     <div class="widget-stat-info m-0 row">
-                        <div class="widget-stat-title">
-                            <i class="fa fa-flag"></i> @lang('Route info')
-                        </div>
                         <div class="col-md-12 no-padding">
+                            <i class="fa fa-flag"></i>
                             <span class="widget-stat-number modal-report-dispatch-route-name report-info"></span>
-                            <small class="modal-report-dispatch-status report-info"></small>
+                            <small class="modal-report-dispatch-status report-info pull-right"></small>
                         </div>
                         <div class="col-md-12 no-padding">
                             <hr class="hr col-md-12 no-padding">
                         </div>
                         <small class="col-md-12 no-padding">
                             <i class="fa fa-list-ol" aria-hidden="true"></i> @lang('Turn')
-                            <span class="modal-report-dispatch-turn report-info"></span>
+                            <span class="modal-report-dispatch-turn report-info pull-right"></span>
                         </small>
                         <small class="col-md-12 no-padding">
                             <i class="fa fa-retweet" aria-hidden="true"></i> @lang('Round trip')
-                            <span class="modal-report-dispatch-round-trip report-info"></span>
+                            <span class="modal-report-dispatch-round-trip report-info pull-right"></span>
                         </small>
                         <small class="col-md-12 no-padding">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i> @lang('Departure time')
-                            <span class="modal-report-dispatch-departure-time report-info"></span>
+                            <i class="fa fa-clock-o" aria-hidden="true"></i> @lang('Dispatched')
+                            <span class="modal-report-dispatch-departure-time report-info pull-right"></span>
                         </small>
                         <small class="col-md-12 no-padding">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i> @lang('Arrival time')
-                            <span class="modal-report-dispatch-arrival-time report-info"></span>
+                            <i class="fa fa-clock-o" aria-hidden="true"></i> @lang('Arrived')
+                            <span class="modal-report-dispatch-arrival-time report-info pull-right"></span>
                         </small>
                         <small class="col-md-12 no-padding">
-                            <i class="ion-android-stopwatch" aria-hidden="true"></i> @lang('Route time')
-                            <span class="modal-report-dispatch-route-time report-info"></span>
+                            <i class="ion-android-stopwatch" aria-hidden="true"></i> @lang('In route')
+                            <span class="modal-report-dispatch-route-time report-info pull-right"></span>
                         </small>
                     </div>
                     <div class="widget-stat-progress">
@@ -85,8 +117,8 @@
                             <div class="progress-bar progress-bar-lime modal-report-route-percent-progress report-info" style="width: 50%"></div>
                         </div>
                     </div>
-                    <div class="widget-stat-footer text-left row">
-                        <small class="col-md-12 no-padding">
+                    <div class="widget-stat-footer text-left">
+                        <small class="no-padding">
                             <i class="fa fa-flag-checkered" aria-hidden="true"></i>
                             <span class="modal-report-route-percent"></span>% @lang('of the route')
                         </small>
@@ -97,13 +129,16 @@
 
             <div class="col-md-12 col-sm-12 col-xs-10" style="opacity: 0.92">
                 <!-- begin widget -->
-                <div class="widget widget-stat widget-stat-right bg-info text-white">
+                <div class="widget-stat-chart widget-stat-chart-blue text-white">
                     <div class="widget-stat-btn"><a href="javascript:;" class="hide" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
                     <div class="widget-stat-info m-0">
-                        <div class="widget-stat-title">
+                        <div class="widget-stat-title text-uppercase text-bold">
                             <i class="fa fa-user"></i> @lang('Driver')
                         </div>
-                        <div class="widget-stat-number modal-report-driver report-info"></div>
+                        <div class="col-md-12 no-padding">
+                            <hr class="hr col-md-12 no-padding">
+                        </div>
+                        <small class="modal-report-driver report-info text-capitalize"></small>
                     </div>
                 </div>
                 <!-- end widget -->

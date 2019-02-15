@@ -13,7 +13,7 @@
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Migrations')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Tables')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <!-- begin row -->

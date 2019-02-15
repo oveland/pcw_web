@@ -22,7 +22,7 @@
 <script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-select/bootstrap-select.min.js')}}"></script>
 <script src="{{asset('assets/plugins/select2/dist/js/select2.min.js')}}"></script>
-<script src="{{asset('assets/js/apps.min.js')}}"></script>
+{{--<script src="{{asset('assets/js/apps.min.js')}}"></script>--}}
 <script src="{{asset('js/application.js')}}"></script>
 <script src="{{asset('js/jquery.validate.oiva.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->

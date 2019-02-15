@@ -16,7 +16,7 @@
     <h1 class="page-header">@lang('Route report')
         <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('General')</small>
     </h1>
-    <hr class="col-md-12 hr">
+
     <!-- end page-header -->
 
     <div class="row">
@@ -48,7 +48,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-routes, .menu-route-report').addClass('active');
+        $('.menu-routes, .menu-route-report').addClass('active-animated');
 
         $(document).ready(function(){
             initializeMap();
