@@ -20,6 +20,7 @@ class CreateDispatchesTable extends Migration
             $table->double('longitude')->defult(0);
             $table->bigInteger('company_id')->unsigned()->default(6);
             $table->boolean('active')->default(true);
+            $table->integer('radio_geofence')->default(0);
             $table->timestamps();
 
             /* table relations */
