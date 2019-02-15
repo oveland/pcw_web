@@ -59,7 +59,7 @@
                         }
                         if( $recorderCounterHistory ){
                             $recorderCounterHistoriesDataValues->push( $startRecorderCounter ? $recorderCounterHistory->passengersByRoundTrip : 0);
-                            $roundTrips->push( $startRecorderCounter ? "⇄ $recorderCounterHistory->roundTrip ($recorderCounterHistory->route)": '' );
+                            $roundTrips->push( $startRecorderCounter ? "⇄ $recorderCounterHistory->roundTrip ($recorderCounterHistory->routeName)": '' );
                             $routeTimes->push( $startRecorderCounter ? __('Between')." ".$strTime::toShortString($recorderCounterHistory->departureTime)." ".__('and')." ".$strTime::toShortString($recorderCounterHistory->arrivalTime) : '' );
                         }
                     }

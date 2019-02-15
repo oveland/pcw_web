@@ -2,9 +2,12 @@
  * Created by Oscar on 30/04/2017.
  */
 
-var loadingClass = 'disabled faa-vertical animated';
+
+let loadingClass = 'disabled faa-vertical animated';
+let loading;
 
 $(document).ready(function () {
+    loading = $('#loading').html();
     $('.body-content').fadeIn(1000);
 
     $.ajaxSetup({

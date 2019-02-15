@@ -74,11 +74,11 @@
                         $recorderCounterHistoriesDataValues->push( $totalByStep);
 
                         if( $startRecorderCounter ){
-                            $roundTrips->push( "⇄ $recorderCounterHistory->roundTrip ($recorderCounterHistory->route)" );
+                            $roundTrips->push( "⇄ $recorderCounterHistory->roundTrip ($recorderCounterHistory->routeName)" );
                             $routeTimes->push( "⚐ ".__('Departure')." ".$strTime::toShortString($recorderCounterHistory->departureTime)." ".__('Arrived')." ".$strTime::toShortString($recorderCounterHistory->arrivalTime) );
                         }else if ($endRecorderCounter){
                             $totalPassengersByRoute += $currentRecorderCounterHistory->passengersByRoundTrip;
-                            $roundTrips->push( "⇄ $currentRecorderCounterHistory->roundTrip ($currentRecorderCounterHistory->route)" );
+                            $roundTrips->push( "⇄ $currentRecorderCounterHistory->roundTrip ($currentRecorderCounterHistory->routeName)" );
                             $routeTimes->push( "⚐ ".__('Departure')." ".$strTime::toShortString($currentRecorderCounterHistory->departureTime)." ".__('Arrived')." ".$strTime::toShortString($currentRecorderCounterHistory->arrivalTime) );
                         }
                         else{
