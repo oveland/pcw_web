@@ -105,9 +105,9 @@ Route::group(['middleware' => ['auth']], function () {
             });
 
             Route::prefix(__('url-historic'))->group(function () {
-                Route::get('/', 'ReportRouteController@index')->name('report-route-historic');
-                Route::get('/show', 'ReportRouteController@show')->name('report-route-historic-search');
-                Route::any('/ajax', 'ReportRouteController@ajax')->name('report-route-historic-ajax');
+                Route::get('/', 'ReportRouteHistoricController@index')->name('report-route-historic');
+                Route::get('/show', 'ReportRouteHistoricController@show')->name('report-route-historic-search');
+                Route::any('/ajax', 'ReportRouteHistoricController@ajax')->name('report-route-historic-ajax');
             });
 
             /* Off Road report */

@@ -55,10 +55,6 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                @if(\Carbon\Carbon::now()->toDateString() <= '2018-05-16')
-                                    <script>setTimeout(function(){ginfo("Nueva opción de consulta por vehículo")},3000)</script>
-                                    <small class="badge badge-danger pull-right faa-float animated">@lang('New')</small>
-                                @endif
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
                                     <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">

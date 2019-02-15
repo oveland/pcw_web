@@ -2,7 +2,7 @@
  * Created by Oscar on 30/04/2017.
  */
 
-var loadingClass = 'disabled faa-tada animated';
+var loadingClass = 'disabled faa-vertical animated';
 
 $(document).ready(function () {
     $('.body-content').fadeIn(1000);
@@ -75,6 +75,8 @@ $(document).ready(function () {
                 }
             });
         }
+    }).on('click', '.nav-item', function(){
+        $(this).addClass('active').addClass('active-animated');
     });
 
     let timmer = 1000;

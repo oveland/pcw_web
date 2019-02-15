@@ -130,6 +130,11 @@ class Location extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
+    public function vehicleStatus()
+    {
+        return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id', 'id_status');
+    }
+
     public function getSpeedAttribute($speed)
     {
         $thresholdTruncateSpeeding = config('vehicle.threshold_truncate_speeding');
