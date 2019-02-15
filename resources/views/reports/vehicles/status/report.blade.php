@@ -63,7 +63,9 @@
     </div>
 
     <script type="text/javascript">
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip({
+            container: 'body'
+        });
     </script>
 @else
     @include('partials.alerts.noRegistersFound')

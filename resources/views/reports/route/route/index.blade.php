@@ -27,7 +27,7 @@
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" data-original-title="" title="@lang('Expand / Compress')">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning tooltips" data-click="panel-collapse" data-original-title="" title="@lang('Expand / Compress')">
                             <i class="fa fa-minus"></i>
                         </a>
                     </div>

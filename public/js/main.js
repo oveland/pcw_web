@@ -21,7 +21,9 @@ $(document).ready(function () {
         },
         complete: function () {
             $('.tooltip').remove();
-            $('.tooltips').tooltip();
+            $('.tooltips').tooltip({
+                container: 'body'
+            });
             App.initComponents();
         }
     });

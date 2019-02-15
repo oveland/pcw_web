@@ -104,4 +104,4 @@
     {{-- END ROW 3 --}}
 </div>
 
-<script type='application/javascript'>$('.tooltips').tooltip();</script>
+<script type='application/javascript'>$('.tooltips').tooltip({container: 'body'});</script>
