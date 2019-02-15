@@ -100,12 +100,12 @@ class ConsolidatedReportMailCommand extends Command
                 if ($production) {
                     $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com'];
                 } else {
-                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                    $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
                 }
                 break;
             case 28:
                 if ($production) {
-                    $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com', 'oiva.pcw@gmail.com'];
+                    $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com'];
                 } else {
                     $mailTo = ['oiva.fz@gmail.com'];
                 }
