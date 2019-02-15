@@ -41,7 +41,7 @@
 
                     foreach ($report->history as $history){
                         if( $history->dispatchRegisterIsComplete ){
-                            $roundTrips->push( "⇄ $history->roundTrip ($history->route)" );
+                            $roundTrips->push( "⇄ $history->roundTrip ($history->routeName)" );
                             $passengersByRoundTrips->push( $history->passengersByRoundTrip );
                             $routeTimes->push( __('Between')." ".$strTime::toShortString($history->departureTime)." ".__('and')." ".$strTime::toShortString($history->arrivalTime) );
 
