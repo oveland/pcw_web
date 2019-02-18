@@ -87,7 +87,8 @@ class SpeedingReportController extends Controller
                             __('Time') => $speeding->time->toTimeString(),                                 # B CELL
                             __('Vehicle') => intval($vehicle->number),                     # C CELL
                             __('Plate') => $vehicle->plate,                                # D CELL
-                            __('Speed') => number_format($speed,2, ',', '')# E CELL
+                            __('Speed') => number_format($speed,2, ',', ''),# E CELL
+                            __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
                         ];
                     }
 
@@ -123,7 +124,7 @@ class SpeedingReportController extends Controller
                     __('Vehicle') => $vehicle->number,                             # B CELL
                     __('Plate') => $vehicle->plate,                                # D CELL
                     __('Speed') => number_format($speed,2, ',', ''),# E CELL
-                    __('Address') => ''# E CELL
+                    __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
                 ];
             }
 
