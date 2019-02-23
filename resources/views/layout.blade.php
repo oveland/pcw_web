@@ -65,13 +65,6 @@ License: You must have a valid license purchased only from themeforest(the above
     <link href="{{asset('assets/global/plugins/bootstrap-toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- END "GLOBAL" PAGE LEVEL PLUGINS -->
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-
-
-
-
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
 
     <link href="{{asset('assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css')}}" rel="stylesheet"/>
@@ -89,8 +82,10 @@ License: You must have a valid license purchased only from themeforest(the above
     <link href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css')}}" rel="stylesheet"/>
     <link href="{{asset('assets/plugins/bootstrap-eonasdan-datetimepicker/build/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet"/>
 
-    <link href="{{asset('css/application.css')}}" rel="stylesheet"/>
     <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <!-- ================== BEGIN BASE JS ================== -->
 {{--<script src="{{asset('assets/plugins/pace/pace.min.js')}}"></script>--}}
@@ -1640,8 +1635,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{{ asset('assets/global/plugins/excanvas.min.js') }}"></script>
 <![endif]-->
 <!-- BEGIN CORE PLUGINS -->
-<script src="{{asset('assets/plugins/jquery/jquery-1.9.1.min.js')}}"></script>
-
+<script src="{{ asset('assets/global/plugins/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/global/plugins/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/global/plugins/js.cookie.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js') }}" type="text/javascript"></script>
@@ -1650,10 +1644,6 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{{ asset('assets/global/plugins/uniform/jquery.uniform.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->
-
-<!-- BEGIN THEME GLOBAL SCRIPTS -->
-<script src="{{asset('assets/global/scripts/app.min.js')}}" type="text/javascript"></script>
-<!-- END THEME GLOBAL SCRIPTS -->
 
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 <script src="{{ asset('assets/global/scripts/app.js') }}" type="text/javascript"></script>
@@ -1667,13 +1657,8 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <!-- BEGIN "GLOBAL"PAGE LEVEL PLUGINS -->
 <script src="{{ asset('assets/global/plugins/bootstrap-toastr/toastr.min.js') }}" type="text/javascript"></script>
+<script src="{{asset('assets/plugins/fullcalendar/lib/moment.min.js')}}"></script>
 <!-- END "GLOBAL"PAGE LEVEL PLUGINS -->
-
-<script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
-
-
-
-
 
 <template id="loading">
     <div class="row">
@@ -1684,19 +1669,6 @@ License: You must have a valid license purchased only from themeforest(the above
 <template id="select-loading">
     <option value=""><i class="fa fa-spinner fa-pulse fa-fw"></i> @lang('Loading...')</option>
 </template>
-
-<!-- ================== BEGIN BASE JS ================== -->
-<script src="{{asset('assets/plugins/fullcalendar/lib/moment.min.js')}}"></script>
-<script src="{{asset('assets/plugins/jquery/jquery-migrate-1.1.0.min.js')}}"></script>
-<script src="{{asset('assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
-
-<!--[if lt IE 9]>
-<script src="{{asset('assets/crossbrowserjs/html5shiv.js')}}"></script>
-<script src="{{asset('assets/crossbrowserjs/respond.min.js')}}"></script>
-<script src="{{asset('assets/crossbrowserjs/excanvas.min.js')}}"></script>
-<![endif]-->
-<script src="{{asset('assets/plugins/jquery-cookie/jquery.cookie.js')}}"></script>
-<!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
@@ -1711,6 +1683,8 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{{asset('js/application.js')}}"></script>
 <script src="{{asset('js/jquery.validate.oiva.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->
+
+<script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
 
 @include('partials.scripts.general')
 @include('partials.alerts.reports.passengers.issuesByVehiclesScript')

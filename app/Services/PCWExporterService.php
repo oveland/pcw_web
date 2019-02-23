@@ -274,6 +274,15 @@ class PCWExporterService
                 $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
 
                 break;
+
+            case 'historicRouteReport':
+                $sheet->cells("A$config->startIndex:E". $lastRow, function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
+
+                break;
+
         }
         return $sheet;
     }

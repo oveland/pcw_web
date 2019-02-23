@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Dispatch whereLatitude($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Dispatch whereLongitude($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\DispatcherVehicle[] $dispatcherVehicles
+ * @property int|null $radio_geofence
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Dispatch whereRadioGeofence($value)
  */
 class Dispatch extends Model
 {

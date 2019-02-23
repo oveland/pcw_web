@@ -88,6 +88,7 @@
   "Passengers Report": "Reporte de pasajeros",
   "Report travel time and travel distance for vehicle seats": "Reporte de tiempo y recorrido de los asientos del vehículo",
   "Export excel": "Exportar a excel",
+  "Export": "Exportar",
   "Date": "Fecha",
   "All Routes": "Todas las rutas",
   "All routes": "Todas las rutas",
@@ -281,7 +282,6 @@
   "administration": "administración",
   "url-administration": "administracion",
   "url-vehicles": "vehiculos",
-  "Unasigned": "Sin asignar",
   "Projects": "Proyectos",
   "prev": "anterior",
   "Menu": "Menú",
@@ -522,5 +522,9 @@
   "Average speed": "Vel. media",
   "The vehicle haven't off road": "El vehículo no presenta salidas de ruta",
   "See": "Ver",
-  "In route": "En ruta"
+  "In route": "En ruta",
+  "YES": "SI",
+  "NO": "NO",
+  "Info route": "Info Ruta",
+  "Vehicle status": "Estado vehículo"
 }

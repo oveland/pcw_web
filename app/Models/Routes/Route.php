@@ -91,6 +91,6 @@ class Route extends Model
     {
         $dataAPI = $this->toArray();
         $dataAPI['company'] = $this->company->toArray();
-        return $dataAPI;
+        return (object) $dataAPI;
     }
 }

@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatDistribution whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatDistribution whereVehicleId($value)
  * @mixin \Eloquent
+ * @property int $vehicle_seat_topology_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatDistribution whereVehicleSeatTopologyId($value)
  */
 class VehicleSeatDistribution extends Model
 {

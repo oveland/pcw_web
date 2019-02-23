@@ -131,5 +131,5 @@ function gerror(message) {
 }
 
 function hideSideBar() {
-    $('.slimScrollDiv .sidebar-minify-btn').click();
+    $('.menu-toggler.sidebar-toggler').click();
 }

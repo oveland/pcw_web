@@ -1061,7 +1061,7 @@ input[readonly="readonly"] {
 .transparent-header {
     background: rgba(0, 0, 0, 0.67) !important;
 }
-.sidebar{
+.page-sidebar, .sidebar{
     transition: all 1s !important;
 }
 .content{

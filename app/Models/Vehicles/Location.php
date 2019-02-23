@@ -2,6 +2,7 @@
 
 namespace App\Models\Vehicles;
 
+use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
 use Carbon\Carbon;
@@ -49,6 +50,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location validCoordinates()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereSpeeding($value)
+ * @property float|null $current_mileage
+ * @property-read mixed $time
+ * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
+ * @property-read \App\Models\Vehicles\VehicleStatus|null $vehicleStatus
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereCurrentMileage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location witSpeeding()
+ * @property-read \App\Models\Vehicles\AddressLocation $addressLocation
  */
 class Location extends Model
 {
@@ -155,6 +163,30 @@ class Location extends Model
 
     public function isTrueOffRoad()
     {
-        return (!$this->isFakeOffRoad() && $this->off_road );
+        return (!$this->isFakeOffRoad() && $this->off_road);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function addressLocation()
+    {
+        return $this->hasOne(AddressLocation::class);
+    }
+
+    public function getAddress($refresh = false)
+    {
+        $addressLocation = $this->addressLocation;
+        $address = "";
+
+        if ($refresh && !$addressLocation) {
+            $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude);
+            $this->addressLocation()->create([
+                'address' => $address,
+                'status' => 0,
+            ]);
+        }
+
+        return $addressLocation ? $addressLocation->address : $address;
     }
 }

@@ -22,7 +22,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="position">{!! Auth::user()->company?Auth::user()->company->name:__('Unasigned') !!}</div>
+                    <div class="position">{!! Auth::user()->company?Auth::user()->company->name:__('Unassigned') !!}</div>
                 </div>
             </li>
             <li class="">

@@ -174,7 +174,7 @@
             </div>
         </div>
     </div>
-    <script type="application/javascript">hideSideBar();$('.tooltips').tooltip();alert('Tootlrip enavle')</script>
+    <script type="application/javascript">hideSideBar();</script>
 @else
     <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
         <div class="col-md-2" style="padding-top: 10px">

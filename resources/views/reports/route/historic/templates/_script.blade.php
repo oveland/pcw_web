@@ -98,17 +98,24 @@
                     "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): "+dr.driver_name+"</small><br>"+
                     "<hr class='hr'>";
             }
+            let infoAddress = "";
+            if(r.address){
+                infoAddress = ""+
+                    "<small class='text-bold'><i class='fa fa-map-o text-muted'></i> "+r.address+"</small><br>"+
+                "";
+            }
 
             let contentString =
                 "<div class='historic-info-map' style='width: 200px'>" +
                     "<div class='col-md-12'>"+
                         "<div class=''>"+
                             "<h5 class='text-info'><i class='fa fa-bus'></i> <b>@lang('Information')</b></h5>"+
+                            infoAddress +
                             "<hr class='hr'>"+
                         "</div>"+
                         "<div class=''>"+
-                            "<small class='text-bold'><i class='fa fa-tachometer text-muted'></i> @lang('Speed'): "+r.speed+" Km/h</small><br>"+
                             "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> "+r.time+"</small><br>"+
+                            "<small class='text-bold text-"+( r.speeding ?'danger':'')+"'><i class='fa fa-tachometer text-muted'></i> @lang('Speed'): "+r.speed+" Km/h</small><br>"+
                             "<small class='text-bold'><i class='fa fa-road text-muted'></i> "+r.currentMileage+" Km</small><br>"+
                             "<hr class='hr'>"+infoDispatchRegister+
                             "<small class='text-bold text-"+r.vehicleStatus.mainClass+"'><i class='"+r.vehicleStatus.iconClass+"'></i> "+r.vehicleStatus.status+"</small><br>"+

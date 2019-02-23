@@ -115,19 +115,19 @@
                             <div class="form-group">
                                 <label for="search" class="control-label"></label>
                                 <div class="form-group">
-                                    <button id="search" type="submit" class="btn btn-success btn-search-report m-t-5">
+                                    <button id="search" type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report m-t-5">
                                         <i class="fa fa-map-o"></i> @lang('Map')
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1 form-export">
                             <div class="form-group">
                                 <label for="search" class="control-label"></label>
                                 <div class="form-group">
-                                    <button id="search" type="button" onclick="ginfo('@lang('Feature on development')')" class="btn btn-info btn-search-report-list m-t-5">
-                                        <i class="fa fa-list-ul"></i> @lang('List')
-                                    </button>
+                                    <a href="#" class="btn btn-lime btn-export m-t-5" style="display: none">
+                                        <i class="fa fa-file-excel-o"></i> @lang('Export')
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -177,6 +177,7 @@
 
             $('.form-search-report').submit(function (e) {
                 let form = $(this);
+                let btnExport = $('.btn-export').fadeOut();
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
@@ -186,6 +187,10 @@
                         data: form.serialize(),
                         success: function (report) {
                             ReportRouteHistoric.processHistoricReportData(report);
+                            setTimeout(()=>{
+                                if( report.total > 0 )btnExport.fadeIn();
+                                btnExport.attr('href', report.exportLink);
+                            },1000);
                             hideSideBar();
                         },
                         complete:function(){

@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereTrajectory($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereUpdatedAt($value)
+ * @property bool $reportable
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereReportable($value)
  */
 class ControlPoint extends Model
 {

@@ -13,7 +13,7 @@ return [
     | Threshold for truncate speeding
     |--------------------------------------------------------------------------
     */
-    'threshold_truncate_speeding' => 200,
+    'threshold_truncate_speeding' => 150,
 
     /*
     |--------------------------------------------------------------------------
