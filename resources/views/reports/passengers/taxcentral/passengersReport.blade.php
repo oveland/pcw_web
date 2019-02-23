@@ -166,7 +166,7 @@
                                     @foreach($controlPoints as $controlPoint)
                                         @php($width = $controlPoint->distance_next_point*100/$routeDistance )
                                         @php($trajectory = $controlPoint->name.' ➤ '.($loop->index+1<count($controlPoints)?$controlPoints[$loop->index + 1]->name:'') )
-                                        <div class="progress-bar bg-inverse-{{ $loop->index%2==0?'dark':'light' }} p-0" style="width:{{ number_format(( $width-0.05 ),'1','.','') }}%"
+                                        <div class="progress-bar bg-inverse-{{ $loop->index%2==0?'dark':'light' }} p-0" style="width:{{ number_format(( $width-0.05 ),'1','.','') }}%;font-size: 120%"
                                              data-toggle="tooltip" data-html="true" data-placement="top"
                                              data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                              title="{{ '<i class="m-t-40 icon-direction"></i> '.$trajectory }}"
@@ -212,7 +212,11 @@
     </div>
 
     <script type="text/javascript">
-        $('[data-toggle="tooltip"]').tooltip();
+        setTimeout(()=>{
+            $('[data-toggle="tooltip"]').tooltip({
+                container: '#report-tab-chart'
+            });
+        },2000);
     </script>
 @else
     @include('partials.alerts.noRegistersFound')

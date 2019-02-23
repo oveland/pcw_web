@@ -83,8 +83,8 @@ class ReportRouteHistoricController extends Controller
                     'iconClass' => $location->vehicleStatus->icon_class,
                     'mainClass' => $location->vehicleStatus->main_class,
                 ],
-                'dispatchRegister' => $dispatchRegister->getAPIFields(),
-                'vehicle' => $vehicle->getAPIFields()
+                'dispatchRegister' => $location->dispatchRegister ? $location->dispatchRegister->getAPIFields() : null,
+                'vehicle' => $location->vehicle->getAPIFields()
             ]);
         }
 

@@ -1,7 +1,24 @@
 @extends('layout')
 
 @section('stylesheets')
+    <style>
+        .progress {
+            height: 20px !important;
+        }
 
+        .progress.progress-lg .progress-bar {
+            font-size: 18px !important;
+        }
+
+        .bg-warning-dark {
+            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c41111+0,ff7c4c+36,fc7120+67,e01008+100 */
+            background: #c41111 !important; /* Old browsers */
+            background: -moz-linear-gradient(left, #c41111 0%, #ff7c4c 36%, #fc7120 67%, #e01008 100%) !important; /* FF3.6-15 */
+            background: -webkit-linear-gradient(left, #c41111 0%,#ff7c4c 36%,#fc7120 67%,#e01008 100%) !important; /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to right, #c41111 0%,#ff7c4c 36%,#fc7120 67%,#e01008 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c41111', endColorstr='#e01008',GradientType=1 ) !important; /* IE6-9 */
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -91,9 +108,9 @@
     <!-- end row -->
 
     <div class="modal modal-message fade" id="modal-passengers-route-report">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-full">
             <div class="modal-content">
-                <div class="modal-header" style="width: 90%">
+                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         <i class="fa fa-times"></i>
                     </button>
@@ -104,7 +121,7 @@
                         <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
                     </div>
                 </div>
-                <div class="modal-body" style="width:90%;">
+                <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 p-5">
                             <div id="google-map-light-dream" class="height-sm hide"></div>
@@ -112,7 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer hide" style="width:90%;">
+                <div class="modal-footer hide">
                     <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
                 </div>
             </div>
@@ -120,9 +137,9 @@
     </div>
 
     <div class="modal modal-message fade" id="modal-report-seat">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-full">
             <div class="modal-content">
-                <div class="modal-header" style="width: 90%">
+                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         <i class="fa fa-times"></i>
                     </button>
@@ -133,7 +150,7 @@
                         <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
                     </div>
                 </div>
-                <div class="modal-body" style="width:90%;">
+                <div class="modal-body">
                     <h4>
                         <i class="fa fa-map-marker text-primary fa-fw"></i> @lang('Track on map')
                     </h4>
@@ -189,7 +206,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer hide" style="width:90%;">
+                <div class="modal-footer hide">
                     <a href="javascript:;" class="btn width-100 btn-danger" data-dismiss="modal">@lang('Close')</a>
                 </div>
             </div>
