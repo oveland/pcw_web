@@ -98,7 +98,7 @@ class ConsolidatedReportMailCommand extends Command
         switch ($company->id) {
             case 14:
                 if ($production) {
-                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com'];
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com', 'olatorre22@hotmail.com'];
                 } else {
                     $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
                 }

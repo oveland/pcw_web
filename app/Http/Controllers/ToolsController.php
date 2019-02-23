@@ -176,8 +176,9 @@ class ToolsController extends Controller
             case 'routes':
 
                 $dates = [
-                    '2019-02-12',
-                    '2019-02-13',
+                    '2019-02-19',
+                    '2019-02-20',
+                    '2019-02-21',
                 ];
 
                 foreach ($dates as $date){
@@ -195,8 +196,9 @@ class ToolsController extends Controller
             case 'passengers':
 
                 $dates = [
-                    '2019-02-12',
-                    '2019-02-13',
+                    '2019-02-19',
+                    '2019-02-20',
+                    '2019-02-21',
                 ];
 
                 foreach ($dates as $date){

@@ -39,7 +39,7 @@ class CloseDispatchRegistersCommand extends Command
     {
         $thresholdMinTotalReports = 80;
         $query = "
-            UPDATE registrodespacho SET cancelado = TRUE, observaciones = 'No terminó.<a class=\"masObservaciones\" data-toggle=\"popover\" title=\"\" data-placement=\"top\"  data-content=\"Falsa salida de despacho. DAD\"><i class=\"fa fa-search\"></i></a>'
+            UPDATE registrodespacho SET cancelado = TRUE, h_reg_cancelado = current_time, observaciones = 'No terminó.<a class=\"masObservaciones\" data-toggle=\"popover\" title=\"\" data-placement=\"top\"  data-content=\"Falsa salida de despacho. DAD\"><i class=\"fa fa-search\"></i></a>'
             WHERE id_registro IN (
               SELECT dr.id
               FROM (
