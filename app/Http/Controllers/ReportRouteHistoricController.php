@@ -60,7 +60,7 @@ class ReportRouteHistoricController extends Controller
             ->with('dispatchRegister')
             ->with('vehicleStatus')
             ->where('vehicle_id', $vehicleReport)
-            ->orderBy('id')
+            ->orderBy('date')
             ->get();
 
         $dataLocations = collect([]);
