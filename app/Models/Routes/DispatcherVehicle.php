@@ -51,4 +51,11 @@ class DispatcherVehicle extends Model
     {
         return $query->where('route_id', '<>', null);
     }
+
+    public function defaultDispatcherVehicle()
+    {
+        return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')
+            ->where('default', true)
+            ->where('active', true);
+    }
 }

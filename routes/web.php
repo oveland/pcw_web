@@ -292,8 +292,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Routes for tools */
     Route::prefix(__('tools'))->group(function () {
+        Route::get('/check-gps-limbo', 'ToolsController@checkGPSLimbo')->name('tools-check-gps-limbo');
+
         Route::prefix(__('map'))->group(function () {
             Route::get('/', 'ToolsController@map')->name('tools-map');
+            Route::get('/test', 'ToolsController@test')->name('tools-map-test');
             Route::get('/get-route-distance/{route}', 'ToolsController@getRouteDistance')->name('tools-map-get-route-distance');
         });
 

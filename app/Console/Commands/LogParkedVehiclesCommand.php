@@ -47,7 +47,7 @@ class LogParkedVehiclesCommand extends Command
             SELECT
               current_timestamp date,
               v.id vehicle_id,
-              m.lat latitude, m.lng longitude, m.orientacion orientation,
+              cl.latitude, cl.longitude, cl.orientation,
               cl.id location_id, cl.odometer, cl.speed,
               cr.id report_id, cr.dispatch_register_id, cr.distancem, cr.distanced, cr.distanced, cr.timem, cr.timep, cr.timed, cr.status_in_minutes, cr.control_point_id, cr.fringe_id
             FROM markers as m
