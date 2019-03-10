@@ -9,17 +9,25 @@
             min-height: 100%;
             z-index: -2;
             margin: 0 !important;
-            background: url(img/login.jpg) no-repeat top center fixed !important;
-            -moz-background-size: cover;
-            -webkit-background-size: cover;
-            -o-background-size: cover;
-            background-size: cover;
+
+            background: url(img/map-bg.jpg) repeat center center fixed !important;
         }
         .transparent{
             background: rgba(0, 0, 0, 0.39) !important;
         }
         .transparent-header{
             background: rgba(0, 0, 0, 0.67) !important;
+        }
+
+        @media (max-width: 420px){
+            .login, .register {
+                width: 100%;
+                left: 0;
+                top: 0;
+                margin: 0;
+                bottom: 0;
+                background: initial !important;
+            }
         }
     </style>
 @endsection

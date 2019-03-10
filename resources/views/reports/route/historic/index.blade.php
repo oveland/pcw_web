@@ -104,7 +104,8 @@
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    {{--<input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>--}}
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ '2018-11-20' }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -166,14 +167,47 @@
     <!-- END PAGE LEVEL PLUGINS -->
 
     @include('template.google.maps')
+
     @include('reports.route.historic.templates._script')
+
+    <template id="marker-animation-scripts"></template>
 
     <script type="application/javascript">
         let reportContainer = $('.report-container');
         $('.menu-routes, .menu-report-route-historic').addClass('active-animated');
 
+        function loadScript(url, callback)
+        {
+            // Adding the script tag to the head as suggested before
+            var head = document.head;
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+
+            // Then bind the event to the callback function.
+            // There are several events for cross browser compatibility.
+            script.onreadystatechange = callback;
+            script.onload = callback;
+
+            // Fire the loading
+            head.appendChild(script);
+        }
+
         $(document).ready(function () {
             initializeMap();
+
+            setTimeout(() => {
+                loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
+                    loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
+                        loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
+                            SlidingMarker.initializeGlobally();
+                            console.log("All animation marker loaded!");
+                        });
+                    });
+                });
+            },1000);
+
+            $('#company-report').val(14).change();
 
             $('.form-search-report').submit(function (e) {
                 let form = $(this);
@@ -235,7 +269,7 @@
             $("#time-range-report").ionRangeSlider({
                 type: "double",
                 from: 96,
-                to: 144,
+                to: 100,
                 values: timeRange,
                 drag_interval: true,
                 //max_interval: 48,
@@ -258,10 +292,14 @@
                 from: 0,
                 step: 1,
                 onChange: function(slide){
-                    ReportRouteHistoric.updateBusMarker(markers[slide.from], historicInfoWindows[slide.from]);
+                    const historicLocation = historicLocations[slide.from];
+                    if (historicLocation) {
+                        ReportRouteHistoric.updateBusMarker(historicLocation);
+                    }
                 },
                 onFinish: function(slide){
-                    if (markers[slide.from]) map.setCenter(markers[slide.from].getPosition());
+                    const historicLocation = historicLocations[slide.from];
+                    //if (historicLocation) map.setCenter(historicLocation.marker.getPosition());
                 }
             });
         });

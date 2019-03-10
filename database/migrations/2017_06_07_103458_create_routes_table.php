@@ -22,6 +22,7 @@ class CreateRoutesTable extends Migration
             $table->bigInteger('company_id')->unsigned()->default(6);
             $table->integer('dispatch_id')->default(0);
             $table->boolean('active')->default(true);
+            $table->boolean('as_group')->default(false);
             $table->timestamps();
 
             /* table relations */

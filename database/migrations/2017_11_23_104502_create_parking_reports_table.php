@@ -23,7 +23,7 @@ class CreateParkingReportsTable extends Migration
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->double('orientation')->nullable();
-            $table->integer('speed')->nullable();
+            $table->double('speed')->nullable();
             $table->double('odometer')->nullable();
 
             /* Route report */
