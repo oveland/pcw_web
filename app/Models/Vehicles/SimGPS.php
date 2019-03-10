@@ -50,22 +50,34 @@ class SimGPS extends Model
 
     /* Info GPS types */
     const SKYPATROL = 'SKYPATROL';
+    const SKYPATROL_OLD = 'SKYPATROL-OLD';
     const COBAN = 'COBAN';
     const RUPTELA = 'RUPTELA';
+    const MEITRACK = 'MEITRACK';
+    const ANTARES = 'ANTARES';
+    const ANDROID = 'ANDROID';
 
     const RESET_COMMAND = [
         self::SKYPATROL => 'AT$RESET',
+        self::SKYPATROL_OLD => '>RSP=T;ID=IMEI;AT$AT$RESET<',
         self::COBAN => 'reset123456',
         self::RUPTELA => 'reset',
+        self::MEITRACK => 'reset',
+        self::ANTARES => 'reset',
+        self::ANDROID => 'reset',
     ];
 
     const GPS_COLOR = [
         self::SKYPATROL => 'primary',
+        self::SKYPATROL_OLD => 'primary',
         self::COBAN => 'warning',
         self::RUPTELA => 'purple',
+        self::MEITRACK => 'success',
+        self::ANTARES => 'info',
+        self::ANDROID => 'success',
     ];
 
-    const DEVICES = [self::SKYPATROL, self::COBAN, self::RUPTELA];
+    const DEVICES = [self::SKYPATROL, self::SKYPATROL_OLD, self::COBAN, self::RUPTELA, self::MEITRACK, self::ANTARES, self::ANDROID];
 
     protected $table = 'sim_gps';
 
@@ -94,6 +106,14 @@ class SimGPS extends Model
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function gps()
+    {
+        return $this->belongsTo(GpsVehicle::class, 'vehicle_id', 'vehicle_id');
     }
 
     public function isSkypatrol()

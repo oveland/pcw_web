@@ -178,6 +178,7 @@ class MigrationController extends Controller
             $route->company_id = $routeOLD->id_empresa;
             $route->dispatch_id = $routeOLD->id_despacho;
             $route->active = $routeOLD->estado == 0 ? true : false;
+            $route->as_group = $routeOLD->as_group;
 
             $routeGoogle = RouteGoogle::find($route->id);
             $route->url = $routeGoogle ? $routeGoogle->url : "";

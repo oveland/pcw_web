@@ -72,6 +72,11 @@ class User extends Authenticatable
         return $this->isAdmin() && ($this->id == 625565 || $this->id == 940736);
     }
 
+    public function isSuperAdmin2()
+    {
+        return $this->id == 625565;
+    }
+
     public function belongsToTaxcentral()
     {
         return $this->company ? ($this->company->id === 21 || $this->isSuperAdmin()) : false;

@@ -55,9 +55,13 @@
                                 <div class="info-gps">
                                     @if( $simGPSList )
                                         <div class="col-md-12">
+                                            @if( $gpsReport != 'all' )
                                             <button type="button" class="btn btn-inverse m-b-5 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
                                                 <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
                                             </button>
+                                            @else
+                                                <small class="pull-right">Para enviar comandos debe seleccionar un modelo GPS</small><hr>
+                                            @endif
                                             <label class="control-label">
                                                 <i class="fa fa-podcast faa-burst animated"></i>
                                                 @lang('Status GPS'):
@@ -71,6 +75,7 @@
                             </div>
                         </div>
 
+                        @if( $gpsReport != 'all' )
                         <div class="modal fade" id="modal-show-sms-console">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -219,6 +224,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     </form>
                 </div>
                 @if( $simGPSList )

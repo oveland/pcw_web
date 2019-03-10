@@ -62,7 +62,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('send-mail:consolidated')->dailyAt('08:00');
         $schedule->command('send-mail:consolidated-passengers')->dailyAt('08:10');
 
-        $schedule->command('dar:run')->dailyAt('02:00');
+        $schedule->command('dar:run')->dailyAt('03:00');
 
         /* Close the fake dispatch registers */
         $schedule->command('dispatch-registers:close')->dailyAt('00:05');

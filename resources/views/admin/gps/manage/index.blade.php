@@ -43,6 +43,7 @@
                                     <label for="company-report" class="control-label field-required text-bold">@lang('Company')</label>
                                     <div class="form-group">
                                         <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                            <option value="">@lang('Select a company')</option>
                                             @foreach($companies as $company)
                                                 <option value="{{ $company->id }}">{{ $company->short_name }}</option>
                                             @endforeach
@@ -50,6 +51,21 @@
                                     </div>
                                 </div>
                             </div>
+                            @if(Auth::user()->isAdmin())
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="route-report" class="control-label">@lang('Route')</label>
+                                    <div class="form-group">
+                                        <select name="route-report" id="route-report"
+                                                class="default-select2 form-control col-md-12">
+                                            <option value="null">@lang('Select a company')</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                        @else
+                            <input type="hidden" name="route-report" id="route-report" value="all"/>
                         @endif
                     </div>
 
@@ -60,6 +76,9 @@
                                     <label for="gps-report" class="control-label field-required text-bold">@lang('GPS')</label>
                                     <div class="form-group">
                                         <select name="gps-report" id="gps-report" class="default-select2 form-control col-md-12">
+                                            @if(Auth::user()->isSuperAdmin())
+                                                <option value="all" data-reset-command="">@lang('All')</option>
+                                            @endif
                                             @foreach( \App\Models\Vehicles\SimGPS::DEVICES as $device )
                                                 <option value="{{ $device }}" data-reset-command="{{ \App\Models\Vehicles\SimGPS::RESET_COMMAND[ $device ] }}">{{ $device }}</option>
                                             @endforeach
@@ -67,12 +86,32 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="col-md-12">
-                                    <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        @if(Auth::user()->isSuperAdmin2())
+                                        <label for="show-vehicle-ready" class="text-bold">
+                                            @lang('Limbo')
+                                        </label>
+                                        @endif
+                                    </div>
+
+                                    <div class="col-md-10">
                                         <label for="show-vehicle-ready" class="text-bold">
                                             @lang('Selection')
                                         </label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @if(Auth::user()->isSuperAdmin2())
+                                            <div class="radio m-0 m-b-5">
+                                                <label>
+                                                    <input type="radio" name="limbo" value="si"> Si
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="limbo" value="no" checked> No
+                                                </label>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="col-md-2">
                                         <div class="radio m-0 m-b-5">
@@ -91,7 +130,14 @@
                                     <div class="col-md-2">
                                         <div class="radio m-0 m-b-5">
                                             <label>
-                                                <input type="radio" name="option-selection" value="no-report"> @lang('No report')
+                                                <input type="radio" name="option-selection" value="ok"> @lang('OK')
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="radio m-0 m-b-5">
+                                            <label>
+                                                <input type="radio" name="option-selection" value="no-report"> @lang('NR')
                                             </label>
                                         </div>
                                     </div>
@@ -99,13 +145,6 @@
                                         <div class="radio m-0 m-b-5">
                                             <label>
                                                 <input type="radio" name="option-selection" value="new"> @lang('GPS') @lang('New')
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="radio m-0 m-b-5">
-                                            <label>
-                                                <input type="radio" name="option-selection" value="without-gps-signal"> @lang('SS')
                                             </label>
                                         </div>
                                     </div>
@@ -173,5 +212,27 @@
                 $('#sim-gps').change();
             },10000);
         },1000);
+
+
+        $('#company-report').change(function () {
+            loadRouteReport($(this).val());
+        });
+
+        @if(!Auth::user()->isAdmin())
+        loadRouteReport(null);
+        @endif
+
+        function loadRouteReport(company) {
+            var routeSelect = $('#route-report');
+            routeSelect.html($('#select-loading').html()).trigger('change.select2');
+            routeSelect.load('{{ route('route-ajax-action') }}', {
+                option: 'loadRoutes',
+                company: company
+            }, function () {
+                routeSelect.find('option[value=""]').remove();
+                routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
+                routeSelect.val('all').change();
+            });
+        }
     </script>
 @endsection

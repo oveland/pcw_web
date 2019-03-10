@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
+use App\Models\Routes\DispatcherVehicle;
+use App\Models\Routes\Route;
 use App\Models\Vehicles\CurrentLocationsGPS;
 use App\Models\Vehicles\GpsVehicle;
 use App\Http\Controllers\API\SMS;
@@ -23,26 +25,40 @@ class ManagerGPSController extends Controller
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
-        return view('admin.gps.manage.index', compact('companies'));
-    }
 
+        $routes = Route::where('company_id', 21)->get();
+        return view('admin.gps.manage.index', compact(['companies', 'routes']));
+    }
+  
     public function list(Request $request)
     {
         $companyReport = $request->get('company-report');
         $gpsReport = $request->get('gps-report');
         $optionSelection = $request->get('option-selection');
+        $routeReport = $request->get('route-report');
+        $isInLimbo = $request->get('limbo') == "si" ? true : false;
+
+        $dispatcherVehicle = $routeReport != 'all' ? DispatcherVehicle::where('route_id', $routeReport)->get() : collect([]);
 
         $simGPSList = null;
         if ($companyReport != 'any') {
             $company = (Auth::user()->isAdmin()) ? Company::find($companyReport) : Auth::user()->company;
             $vehiclesCompany = $company->vehicles;
-            $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))
-                ->where('gps_type', $gpsReport)
-                ->get();
+            $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'));
+
+            $simGPSList = ($gpsReport != 'all') ? $simGPSList->where('gps_type', $gpsReport)->get() : $simGPSList->get();
+
+            if( $isInLimbo ){
+                $gpsLimbo = collect(['7', '9', '10', '23', '24', '2000', '2038', '2066', '2070', '2182', '2342', '2346', '2347', '2349', '2406', '2420', '2427', '2430', '2448', '2477', '2484', '4402', '4455', '4456', '4466', '4483', '4484', '4486', '4492', '4516', '4559']);
+                $simGPSList = $simGPSList->filter(function ($simGPS) use ($gpsLimbo) {
+                    return $gpsLimbo->contains($simGPS->vehicle->number);
+                });
+            }
 
             $simGPSList = $simGPSList->sortBy(function ($simGPS) {
                 return $simGPS->vehicle->number ?? true;
             });
+
 
             $unAssignedVehicles = $vehiclesCompany
                 ->where('active', true)
@@ -55,10 +71,12 @@ class ManagerGPSController extends Controller
             switch ($optionSelection) {
                 case 'all':
                     foreach ($simGPSList as $simGPS) {
-                        $selection[] = $simGPS->vehicle->number;
+                        $vehicle = $simGPS->vehicle;
+                        if($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count()) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 case 'no-report':
+
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
                         $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
@@ -68,17 +86,17 @@ class ManagerGPSController extends Controller
                             }catch (\Exception $exception){
                                 dd($currentLocationGPS);
                             }
-                            if ($vehicleStatus->id == VehicleStatus::NO_REPORT) $selection[] = $simGPS->vehicle->number;
+                            if ($vehicleStatus->id == VehicleStatus::NO_REPORT && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count())) $selection[] = $simGPS->vehicle->number;
                         }
                     }
                     break;
-                case 'without-gps-signal':
+                case 'ok':
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
                         $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
                         if( $currentLocationGPS ){
                             $vehicleStatus = $currentLocationGPS->vehicleStatus;
-                            if ($vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) $selection[] = $simGPS->vehicle->number;
+                            if ($vehicleStatus->id != VehicleStatus::NO_REPORT) $selection[] = $simGPS->vehicle->number;
                         }
                     }
                     break;
@@ -86,7 +104,7 @@ class ManagerGPSController extends Controller
                 case 'new':
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
-                        if( !$vehicle || !$vehicle->currentLocation )$selection[] = $simGPS->vehicle->number;
+                        if( !$vehicle || !$vehicle->currentLocation && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count()) )$selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 default:
@@ -156,11 +174,32 @@ class ManagerGPSController extends Controller
             $gpsCommands = explode("\n", $commands);
 
             switch ($request->get('gps-type')) {
+                case SimGPS::SKYPATROL_OLD:
+                    $smsCommands = [];
+
+                    foreach ($gpsCommands as $gpsCommand) {
+                        $gpsCommand = explode(";", $gpsCommand);
+                        $simGPS = SimGPS::findBySim($sim);
+                        if($simGPS && $simGPS->gps){
+                            foreach ($gpsCommand as &$c){
+                                if( str_contains($c, "ID=") ){
+                                    $imei = $simGPS->gps->imei;
+                                    $c = "ID=$imei";
+                                }
+                            }
+                            dd($gpsCommand);
+                            $smsCommands[] = implode(";", $gpsCommand);
+                        }
+                    }
+
+                    $gpsCommands = $smsCommands;
+                    dd($gpsCommands);
+                    break;
                 case SimGPS::SKYPATROL:
                     $totalCMD = "";
                     $smsCommands = [];
 
-                    if ($commands != 'AT$RESET') {
+                    if ($commands != 'AT&W' && $commands != 'AT$RESET') {
                         $flagStartCMD = true;
                         foreach ($gpsCommands as $gpsCommand) {
                             $individualCommand = trim(explode("'", $gpsCommand)[0]);
@@ -189,14 +228,14 @@ class ManagerGPSController extends Controller
                                         $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
                                         $flagStartCMD = false;
                                     } else {
-                                        $smsCommands[] = str_start($totalCMD, "AT") . "&W";
+                                        $smsCommands[] = str_start($totalCMD, "AT") . ";&W";
                                         $totalCMD = $individualCommand . ";";
                                         $flagStartCMD = true;
                                     }
                                 }
                             }
                         }
-                        $smsCommands[] = trim(str_start($totalCMD, "AT") . "&W");
+                        $smsCommands[] = trim(str_start($totalCMD, "AT") . ";&W");
 
                         $gpsCommands = $smsCommands;
                     }
