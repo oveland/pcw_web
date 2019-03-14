@@ -108,7 +108,7 @@ class User extends Authenticatable
             323994798
         ];
 
-        return in_array( $this->id, $usersCanAdmin );
+        return in_array( $this->id, $usersCanAdmin ) || $this->isAdmin();
     }
 
     public function canAdminGPS()

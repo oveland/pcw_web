@@ -273,6 +273,7 @@ class MigrationController extends Controller
             $user->role = $userOLD->nombre;
             $user->active = $userOLD->estado;
             $user->company_id = $userOLD->id_empresa;
+            $user->role_id = $userOLD->nivel;
 
             try {
                 $user->save();
