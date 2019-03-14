@@ -5,9 +5,11 @@ namespace App\Models\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\Dispatch;
+use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\Company\Company
@@ -46,37 +48,81 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Company extends Model
 {
+    const COOTRANSOL = 12;
+    const ALAMEDA = 14;
+    const MONTEBELLO = 21;
+    const TUPAL = 28;
+    const YUMBENOS = 17;
+
+    /**
+     * @return mixed|string
+     */
     protected function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class);
     }
 
-    public function routes()
-    {
-        return $this->hasMany(Route::class)->orderBy('name');
-    }
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function activeVehicles()
     {
-        return $this->hasMany(Vehicle::class)->where('active',true);
+        return $this->vehicles()->where('active', true);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function routes()
+    {
+        $user = Auth::user();
+        $routes = $this->hasMany(Route::class)->orderBy('name');
+
+        if ($user && $user->isProprietary()) {
+            $proprietaryVehiclesID = collect(
+                \DB::select("
+                    SELECT id FROM vehicles 
+                    WHERE plate IN (
+                      SELECT placa FROM usuario_vehi 
+                      WHERE usuario = '$user->username'
+                    )                    
+                ")
+            )->pluck('id');
+
+            $routes->whereIn('id', DispatcherVehicle::whereIn('vehicles_id', $proprietaryVehiclesID)->pluck('route_id'));
+        }
+
+        return $routes;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function activeRoutes()
     {
-        return $this->hasMany(Route::class)->where('active',true);
+        return $this->routes()->where('active', true);
     }
 
-    public function scopeActive($query){
-        return $query->where('active','=',true)->orderBy('short_name');
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('active', '=', true)->orderBy('short_name');
     }
 
-    public function scopeFindAllActive($query){
-        return $query->where('active','=',true)->orderBy('short_name', 'asc')->get();
+    public function scopeFindAllActive($query)
+    {
+        return $query->where('active', '=', true)->orderBy('short_name', 'asc')->get();
     }
 
     /*
@@ -90,6 +136,9 @@ class Company extends Model
         return $this->id == 14;
     }
 
+    /**
+     * @return bool
+     */
     public function hasDriverRegisters()
     {
         return $this->id == 14;
@@ -106,21 +155,33 @@ class Company extends Model
         return $this->id == 12;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function drivers()
     {
         return $this->hasMany(Driver::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function activeDrivers()
+    {
+        return $this->drivers()->where('active', true);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function dispatches()
     {
         return $this->hasMany(Dispatch::class)->orderBy('name');
     }
 
-    public function activeDrivers()
-    {
-        return $this->hasMany(Driver::class)->where('active',true);
-    }
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function proprietaries()
     {
         return $this->hasMany(Proprietary::class);

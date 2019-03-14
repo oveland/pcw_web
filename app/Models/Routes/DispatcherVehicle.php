@@ -25,6 +25,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Routes\Route|null $route
  * @property-read \App\Models\Vehicles\Vehicle $vehicle
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle active()
+ * @property bool|null $default
+ * @property bool|null $active
+ * @property-read \App\Models\Routes\DispatcherVehicle $defaultDispatcherVehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereDefault($value)
  */
 class DispatcherVehicle extends Model
 {

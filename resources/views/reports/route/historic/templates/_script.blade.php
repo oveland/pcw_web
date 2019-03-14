@@ -1,38 +1,38 @@
 <script type="application/javascript">
     'use strict';
 
-    let historicLocations = [];
-    let historicInfoWindows = [];
-    let markerBus = null;
-    let currentLocation = null;
-
     class ReportRouteHistoric {
+        constructor(map){
+            this.historicLocations = [];
+            this.markerBus = null;
+            this.currentLocation = null;
+            this.map = map;
+        }
 
-        static historicIcon = '{{ asset('img/point-map-blue.png') }}';
-
-        static processHistoricReportData(report) {
+        processHistoricReportData(report) {
             $('.map-report-historic').css('height', (window.innerHeight - 200));
 
-            historicLocations.forEach(function (historicLocation) {
+            this.historicLocations.forEach(function (historicLocation) {
                 historicLocation.marker.setMap(null);
             });
-            historicLocations = [];
+            this.historicLocations = [];
 
-            if (markerBus) {
-                markerBus.setMap(null);
-                markerBus = null;
+            if (this.markerBus) {
+                this.markerBus.setMap(null);
+                this.markerBus = null;
             }
 
-            $.each(report.historic, function (i, reportLocation) {
-                let historicInfoWindow = ReportRouteHistoric.createInfoWindow(reportLocation);
-                let marker = ReportRouteHistoric.addMarker(reportLocation);
+            $.each(report.historic, (i, reportLocation) => {
+                let historicInfoWindow = this.createInfoWindow(reportLocation);
+                let marker = this.addHistoricMarker(reportLocation);
                 marker.addListener('click', function () {
-                    historicInfoWindow.open(map, marker);
+                    historicInfoWindow.open(this.map, marker);
                     $('.historic-info-map').parent().css('overflow', 'hidden');
                 });
                 
-                historicLocations.push({
+                this.historicLocations.push({
                     marker: marker,
+                    shadowMarker: this.addShadowMarker(reportLocation),
                     infoWindow: historicInfoWindow,
                     reportLocation: reportLocation
                 });
@@ -40,7 +40,7 @@
 
             /*new google.maps.KmlLayer({
                 url: report.route.url,
-                map: map
+                map: this.map
             });*/
 
             $('.time-from').text(report.from);
@@ -53,24 +53,49 @@
                 from: 0
             });
 
-            if (historicLocations.length) {
-                this.updateBusMarker(historicLocations[0]);
+            if (this.historicLocations.length) {
+                this.updateBusMarker(0);
             }
 
-            if (markerBus) map.setCenter(markerBus.getPosition());
+            if (this.markerBus) this.map.setCenter(this.markerBus.getPosition());
         }
 
-        static addMarker(r) {
+        addHistoricMarker(r) {
             return new google.maps.Marker({
                 title: r.vehicleStatus.status + " " + r.time,
-                map: map,
-                icon: this.historicIcon,
-                //animation: google.maps.Animation.DROP,
+                map: null,
+                icon: '{{ asset('img/point-map-on-road.png') }}',
                 position: {lat: parseFloat(r.latitude), lng: parseFloat(r.longitude)}
             });
         }
 
-        static updateBusMarker(historicLocation) {            
+        addShadowMarker(r) {
+            return new google.maps.Marker({
+                title: r.vehicleStatus.status + " " + r.time,
+                map: this.map,
+                icon: '{{ asset('img/point-map-blue.png') }}',
+                position: {lat: parseFloat(r.latitude), lng: parseFloat(r.longitude)}
+            });
+        }
+
+        paintHistoricPathTo(index) {
+            this.historicLocations.forEach((historicLocation, i) => {
+                if(i <= index){
+                    historicLocation.marker.setMap(this.map);
+                    historicLocation.shadowMarker.setMap(null);
+                }else{
+                    historicLocation.marker.setMap(null);
+                    historicLocation.shadowMarker.setMap(this.map);
+                }
+            });
+        }
+
+        updateBusMarker(index) {
+            const historicLocation = this.historicLocations[index];
+            if(!historicLocation)return false;
+
+            this.paintHistoricPathTo(index);
+
             const marker = historicLocation.marker;
             const infoWindow = historicLocation.infoWindow;
             const reportLocation = historicLocation.reportLocation;
@@ -85,16 +110,16 @@
                 strokeWeight: 1,
                 strokeColor: '#d8001b',
                 anchor: new google.maps.Point(200, 130),
-                rotation: rotation > 0 ? rotation - 90 : (markerBus ? markerBus.getIcon().rotation : rotation)
+                rotation: rotation > 0 ? rotation - 90 : (this.markerBus ? this.markerBus.getIcon().rotation : rotation)
             };
 
-            if (markerBus) {
-                markerBus.setPosition(marker.getPosition());
-                markerBus.setIcon(icon);
+            if (this.markerBus) {
+                this.markerBus.setPosition(marker.getPosition());
+                this.markerBus.setIcon(icon);
             } else {
 
-                markerBus = new google.maps.Marker({
-                    map: map,
+                this.markerBus = new google.maps.Marker({
+                    map: this.map,
                     position: marker.getPosition(),
                     icon: icon,
                     duration: 500,
@@ -104,16 +129,17 @@
                 });
             }
 
-            if (currentLocation) currentLocation.infoWindow.close();
+            if (this.currentLocation) this.currentLocation.infoWindow.close();
 
-            infoWindow.open(map, markerBus);
-            currentLocation = historicLocation;
+            infoWindow.open(this.map, this.markerBus);
+            this.currentLocation = historicLocation;
 
             $('.gm-style-iw-c, .gm-style-iw-d').css('max-height', '300px').css('height', '270px');
         }
 
-        static createInfoWindow(r){
+        createInfoWindow(r){
             let infoDispatchRegister = '';
+            let height = '200px';
             if(r.dispatchRegister){
                 let dr = r.dispatchRegister;
                 infoDispatchRegister = ""+
@@ -123,6 +149,8 @@
                     "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> @lang('Dispatched'): "+dr.departure_time+"</small><br>"+
                     "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): "+dr.driver_name+"</small><br>"+
                     "<hr class='hr'>";
+
+                let height = '250px';
             }
             let infoAddress = "";
             if(r.address){
@@ -133,13 +161,14 @@
 
             let contentString =
                 "<div class='historic-info-map' style='width: 200px'>" +
-                    "<div class='col-md-12' style='height:250px'>"+
+                    "<div class='col-md-12' style='height:"+height+"'>"+
                         "<div class=''>"+
-                            "<h5 class='text-info'><i class='fa fa-bus'></i> <b>@lang('Information')</b></h5>"+
+                            "<h5 class='text-info'><i class='fa fa-bus'></i> <b>"+r.vehicle.number+"</b></h5>"+
                             infoAddress +
                             "<hr class='hr'>"+
                         "</div>"+
                         "<div class=''>"+
+                            "<small class='text-bold'><i class='fa fa-calendar text-muted'></i> "+r.date+"</small><br>"+
                             "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> "+r.time+"</small><br>"+
                             "<small class='text-bold text-"+( r.speeding ?'danger':'')+"'><i class='fa fa-tachometer text-muted'></i> @lang('Speed'): "+r.speed+" Km/h</small><br>"+
                             "<small class='text-bold'><i class='fa fa-road text-muted'></i> "+r.currentMileage+" Km</small><br>"+

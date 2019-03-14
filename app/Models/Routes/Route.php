@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Fringe[] $fringes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\CurrentDispatchRegister[] $currentDispatchRegisters
  * @property-read \App\Models\Routes\Dispatch $dispatch
+ * @property bool|null $as_group
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereAsGroup($value)
  */
 class Route extends Model
 {

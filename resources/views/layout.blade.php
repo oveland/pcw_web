@@ -22,85 +22,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN HEAD -->
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content="https://www.linkedin.com/in/oveland/" name="author"/>
-    <meta content="{{ config('app.name', 'PCW | Servicios GPS') }}" name="description"/>
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>PCW | {{ __(ucfirst($current)) }}</title>
-
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="{{ asset('fonts/Google_Open_Sand.css') }}" rel="stylesheet" type="text/css"/>
-
-    <link href="{{asset('assets/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet"/>
-    <link href="{{asset('assets/plugins/font-awesome/css/font-awesome-animation.min.css')}}" rel="stylesheet">
-
-    <link href="{{asset('assets/global/plugins/simple-line-icons/simple-line-icons.min.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="{{asset('assets/global/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="{{asset('assets/global/plugins/uniform/css/uniform.default.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="{{asset('assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css')}}" rel="stylesheet" type="text/css"/>
-    <!-- END GLOBAL MANDATORY STYLES -->
-
-    <!-- BEGIN PAGE LEVEL PLUGINS -->
-    <link href="{{ asset('assets/global/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/global/plugins/select2/css/select2-bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-    <!-- END PAGE LEVEL PLUGINS -->
-
-    <!-- BEGIN THEME GLOBAL STYLES -->
-    <link href="{{asset('assets/global/css/components-md.min.css')}}" rel="stylesheet" id="style_components" type="text/css"/>
-    <link href="{{asset('assets/global/css/plugins-md.min.css')}}" rel="stylesheet" type="text/css"/>
-    <!-- END THEME GLOBAL STYLES -->
-
-    <!-- BEGIN THEME LAYOUT STYLES -->
-    <link href="{{asset('assets/layouts/layout/css/layout.min.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="{{asset('assets/layouts/layout/css/themes/darkblue.min.css')}}" rel="stylesheet" type="text/css" id="style_color"/>
-    <link href="{{asset('assets/layouts/layout/css/custom.min.css')}}" rel="stylesheet" type="text/css"/>
-    <!-- END THEME LAYOUT STYLES -->
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
-
-    <!-- BEGIN "GLOBAL" PAGE LEVEL PLUGINS -->
-    <link href="{{asset('assets/global/plugins/bootstrap-toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
-    <!-- END "GLOBAL" PAGE LEVEL PLUGINS -->
-
-    <!-- ================== BEGIN BASE CSS STYLE ================== -->
-
-    <link href="{{asset('assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css')}}" rel="stylesheet"/>
-    <link href="{{asset('assets/plugins/ionicons/css/ionicons.min.css')}}" rel="stylesheet">
-    <link href="{{asset('assets/plugins/simple-line-icons/simple-line-icons.css')}}" rel="stylesheet">
-    <link href="{{asset('assets/css/animate.min.css')}}" rel="stylesheet"/>
-
-    <!-- ================== END BASE CSS STYLE ================== -->
-
-
-    <!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
-    <link href="{{asset('assets/plugins/gritter/css/jquery.gritter.css')}}" rel="stylesheet"/>
-    <link href="{{asset('assets/plugins/bootstrap-select/bootstrap-select.min.css')}}" rel="stylesheet">
-    <link href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css')}}" rel="stylesheet"/>
-    <link href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css')}}" rel="stylesheet"/>
-    <link href="{{asset('assets/plugins/bootstrap-eonasdan-datetimepicker/build/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet"/>
-
-    <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    <!-- ================== BEGIN BASE JS ================== -->
-{{--<script src="{{asset('assets/plugins/pace/pace.min.js')}}"></script>--}}
-<!-- ================== END BASE JS ================== -->
-
-
-    <script>
-        window.Laravel = '{!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!}';
-    </script>
-
-    @yield('stylesheets')
-    @yield('templateStyles')
-
+    @include('template.metronic.header')
 </head>
 <!-- END HEAD -->
 
@@ -114,7 +36,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <a href="{{ url('/')  }}" class="m-t-5 m-r-5 text-center animated">
                 <span class="text-white f-s-16">PCW</span><span class="text-success f-s-22">SMS</span>
             </a>
-            <div class="menu-toggler sidebar-toggler pull-right"></div>
+            <div class="menu-toggler sidebar-toggler-old pull-right"></div>
         </div>
         <!-- END LOGO -->
         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
@@ -1630,68 +1552,7 @@ License: You must have a valid license purchased only from themeforest(the above
     </div>
 </div>
 <!-- END FOOTER -->
-<!--[if lt IE 9]>
-<script src="{{ asset('assets/global/plugins/respond.min.js') }}"></script>
-<script src="{{ asset('assets/global/plugins/excanvas.min.js') }}"></script>
-<![endif]-->
-<!-- BEGIN CORE PLUGINS -->
-<script src="{{ asset('assets/global/plugins/jquery.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/global/plugins/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/global/plugins/js.cookie.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/global/plugins/jquery.blockui.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/global/plugins/uniform/jquery.uniform.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}" type="text/javascript"></script>
-<!-- END CORE PLUGINS -->
-
-<!-- BEGIN THEME GLOBAL SCRIPTS -->
-<script src="{{ asset('assets/global/scripts/app.js') }}" type="text/javascript"></script>
-<!-- END THEME GLOBAL SCRIPTS -->
-
-<!-- BEGIN THEME LAYOUT SCRIPTS -->
-<script src="{{ asset('assets/layouts/layout/scripts/layout.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/layouts/layout/scripts/demo.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/layouts/global/scripts/quick-sidebar.min.js') }}" type="text/javascript"></script>
-<!-- END THEME LAYOUT SCRIPTS -->
-
-<!-- BEGIN "GLOBAL"PAGE LEVEL PLUGINS -->
-<script src="{{ asset('assets/global/plugins/bootstrap-toastr/toastr.min.js') }}" type="text/javascript"></script>
-<script src="{{asset('assets/plugins/fullcalendar/lib/moment.min.js')}}"></script>
-<!-- END "GLOBAL"PAGE LEVEL PLUGINS -->
-
-<template id="loading">
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12 text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
-    </div>
-</template>
-
-<template id="select-loading">
-    <option value=""><i class="fa fa-spinner fa-pulse fa-fw"></i> @lang('Loading...')</option>
-</template>
-
-<!-- ================== BEGIN PAGE LEVEL JS ================== -->
-<script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
-<script src="{{asset('assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
-<script src="{{asset('assets/plugins/bootstrap-eonasdan-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
-{{--<script src="{{asset('assets/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js')}}"></script>--}}
-<script src="{{asset('assets/plugins/gritter/js/jquery.gritter.js')}}"></script>
-
-<script src="{{asset('assets/plugins/bootstrap-select/bootstrap-select.min.js')}}"></script>
-<script src="{{asset('assets/plugins/select2/dist/js/select2.min.js')}}"></script>
-{{--<script src="{{asset('assets/js/apps.min.js')}}"></script>--}}
-<script src="{{asset('js/application.js')}}"></script>
-<script src="{{asset('js/jquery.validate.oiva.js')}}"></script>
-<!-- ================== END PAGE LEVEL JS ================== -->
-
-<script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
-
-@include('partials.scripts.general')
-@include('partials.alerts.reports.passengers.issuesByVehiclesScript')
-
-@yield('templateScripts')
-@yield('scripts')
-
+@include('template.metronic.plugins')
 </body>
 
 </html>

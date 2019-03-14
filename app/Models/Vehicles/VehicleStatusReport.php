@@ -37,6 +37,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \App\Models\Vehicles\VehicleStatus|null $status
  * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
+ * @property int|null $dispatch_register_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatusReport whereDispatchRegisterId($value)
  */
 class VehicleStatusReport extends Model
 {

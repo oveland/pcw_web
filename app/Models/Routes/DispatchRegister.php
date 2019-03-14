@@ -118,6 +118,10 @@ use Carbon\Carbon;
  * @property-read mixed $initial_passengers_by_sensor_recorder
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalCounterObs($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialCounterObs($value)
+ * @property float|null $start_odometer
+ * @property float|null $end_odometer
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereEndOdometer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereStartOdometer($value)
  */
 class DispatchRegister extends Model
 {

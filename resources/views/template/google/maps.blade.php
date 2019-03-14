@@ -48,7 +48,7 @@
         }
     ];
 
-    function initializeMap() {
+    function initializeMap(callback) {
         let windowHeight = window.innerHeight - 40;
         $('#modal-route-report .modal-dialog').css('height', windowHeight+"px");
         $('#google-map-light-dream').css('height', ((windowHeight - 30 - $('#modal-route-report .modal-header').height())+"px"));
@@ -70,6 +70,8 @@
 
             //var styleControl = document.getElementById('info-route');
             //map.controls[google.maps.ControlPosition.TOP_LEFT].push(styleControl);
+
+            if(callback)callback();
         },300);
     }
 </script>

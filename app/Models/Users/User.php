@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\Company\Company;
+use App\Models\Vehicles\Vehicle;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -34,9 +35,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereUsername($value)
  * @mixin \Eloquent
+ * @property int $role_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRoleId($value)
  */
 class User extends Authenticatable
 {
+    const PROPRIETARY_ROLE = 3;
+
     use Notifiable;
 
     /**
@@ -57,46 +62,74 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * @return bool
+     */
     public function isAdmin()
     {
         return $this->company ? $this->company->id === 6 : false;
     }
 
+    /**
+     * @return bool
+     */
     public function isSuperAdmin()
     {
         return $this->isAdmin() && ($this->id == 625565 || $this->id == 940736);
     }
 
+    /**
+     * @return bool
+     */
     public function isSuperAdmin2()
     {
         return $this->id == 625565;
     }
 
+    /**
+     * @return bool
+     */
     public function belongsToTaxcentral()
     {
         return $this->company ? ($this->company->id === 21 || $this->isSuperAdmin()) : false;
     }
 
+    /**
+     * @return bool
+     */
     public function belongsToAlameda()
     {
         return $this->company ? ($this->company->id === 14 || $this->isSuperAdmin()) : false;
     }
 
+    /**
+     * @return bool
+     */
     public function belongsToCootransol()
     {
         return $this->company ? ($this->company->id === 12 || $this->isSuperAdmin()) : false;
     }
 
+    /**
+     * @param $company
+     * @return bool
+     */
     public function belongsToCompany($company)
     {
         return $this->company->id == $company->id;
     }
 
+    /**
+     * @return bool
+     */
     public function canAdmin()
     {
         $usersCanAdmin = [
@@ -108,11 +141,39 @@ class User extends Authenticatable
             323994798
         ];
 
-        return in_array( $this->id, $usersCanAdmin );
+        return in_array($this->id, $usersCanAdmin);
     }
 
+    /**
+     * @return bool
+     */
     public function canAdminGPS()
     {
         return $this->canAdmin();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProprietary()
+    {
+        return $this->role_id == self::PROPRIETARY_ROLE;
+    }
+
+    /**
+     * @param bool $active
+     * @return Vehicle|Vehicle[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function assignedVehicles($active = true)
+    {
+        if ($this->isProprietary()) {
+            $assignedVehicles = Vehicle::whereIn('plate', collect(\DB::select("SELECT placa FROM usuario_vehi WHERE usuario = '$this->username'"))->pluck('id'));
+            if( $active ) $assignedVehicles = $assignedVehicles->active();
+            $assignedVehicles = $assignedVehicles->get();
+        } else {
+            $assignedVehicles = $active ? $this->company->activeVehicles : $this->company->vehicles;
+        }
+
+        return $assignedVehicles;
     }
 }

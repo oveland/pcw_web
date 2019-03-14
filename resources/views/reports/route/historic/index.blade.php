@@ -1,4 +1,5 @@
-@extends('layout')
+@extends(Auth::user()->isProprietary() ? 'layouts.blank' : 'layout')
+
 
 @section('stylesheets')
     <!-- BEGIN PAGE LEVEL PLUGINS -->
@@ -9,21 +10,21 @@
     <!-- END PAGE LEVEL PLUGINS -->
 
     <style>
-        .range-reports{
-            position:relative;
-            z-index:1;
-            padding-top:10px;
+        .range-reports {
+            position: relative;
+            z-index: 1;
+            padding-top: 10px;
             background: rgba(0, 12, 35, 0.59);
             color: white;
         }
 
-        .range-reports .irs-bar, .range-reports .irs-bar-edge, .range-reports .irs-single{
+        .range-reports .irs-bar, .range-reports .irs-bar-edge, .range-reports .irs-single {
             background: #f57c1e;
         }
 
-        #google-map-light-dream{
-            position:relative;
-            top:-50px
+        #google-map-light-dream {
+            position: relative;
+            top: -50px
         }
     </style>
 @endsection
@@ -65,16 +66,45 @@
                                 </div>
                             </div>
                         @endif
+
+                        <div class="col-md-3 hide">
+                            <div class="form-group">
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <div class="form-group">
+                                    <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
+                                        @if(!Auth::user()->isAdmin())
+                                            @php
+                                                $typeRoutes = $routes->groupBy('as_group');
+                                            @endphp
+
+                                            @foreach($typeRoutes as $asGroup => $routes)
+                                                <optgroup label="{{ $asGroup ?'Grupos':'Individuales' }}:">
+                                                    @foreach($routes as $route)
+                                                        <option value="{{ $route->id }}">{{ $route->name }}</option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
                                     <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company first')</option>
+                                        @if(!Auth::user()->isAdmin())
+                                            @foreach($vehicles as $vehicle)
+                                                <option value="{{ $vehicle->id }}">{{ $vehicle->plate }} #{{ $vehicle->number }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-3 hide">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
@@ -104,27 +134,24 @@
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    {{--<input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>--}}
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ '2018-11-20' }}"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1 col-sm-6 col-xs-6">
                             <div class="form-group">
-                                <label for="search" class="control-label"></label>
                                 <div class="form-group">
                                     <button id="search" type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report m-t-5">
-                                        <i class="fa fa-map-o"></i> @lang('Map')
+                                        <i class="fa fa-map-o"></i> @lang('Search')
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1 form-export">
+                        <div class="col-md-1 col-sm-6 col-xs-6 form-export">
                             <div class="form-group">
-                                <label for="search" class="control-label"></label>
                                 <div class="form-group">
                                     <a href="#" class="btn btn-lime btn-export m-t-5" style="display: none">
                                         <i class="fa fa-file-excel-o"></i> @lang('Export')
@@ -132,7 +159,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 col-xs-12 col-sm-12">
                             <input id="time-range-report" name="time-range-report" type="text" value="" />
                             <span class="help-block hide"> @lang('Quickly select a time range from 00:00 to 23:59') </span>
                         </div>
@@ -145,6 +172,9 @@
         <!-- begin content report -->
         <div class="report-container col-md-12">
             <div class="col-md-12 range-reports">
+                <div class="text-center" style="position: absolute;width: 100%">
+                    <small class="text-muted">Deslice para reproducir recorrido</small>
+                </div>
                 <input id="range_reports" type="text" />
                 <span class="help-block text-white">
                     <i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports') @lang('between') <i class="fa fa-clock"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock"></i> <span class="time-to">--:--:--</span>
@@ -173,6 +203,7 @@
     <template id="marker-animation-scripts"></template>
 
     <script type="application/javascript">
+        let reportRouteHistoric = null;
         let reportContainer = $('.report-container');
         $('.menu-routes, .menu-report-route-historic').addClass('active-animated');
 
@@ -194,18 +225,16 @@
         }
 
         $(document).ready(function () {
-            initializeMap();
-
-            setTimeout(() => {
+            initializeMap(() => {
+                reportRouteHistoric = new ReportRouteHistoric(map);
                 loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
                     loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
                         loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
                             SlidingMarker.initializeGlobally();
-                            console.log("All animation marker loaded!");
                         });
                     });
                 });
-            },1000);
+            });
 
             $('#company-report').val(14).change();
 
@@ -220,7 +249,7 @@
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (report) {
-                            ReportRouteHistoric.processHistoricReportData(report);
+                            reportRouteHistoric.processHistoricReportData(report);
                             setTimeout(()=>{
                                 if( report.total > 0 )btnExport.fadeIn();
                                 btnExport.attr('href', report.exportLink);
@@ -248,15 +277,9 @@
                 reportContainer.slideUp(100);
             });
 
-            @if(!Auth::user()->isAdmin())
-                loadSelectVehicleReport(1, false);
-            @else
+            @if(Auth::user()->isAdmin())
                 $('#company-report').change();
             @endif
-
-            setTimeout(function(){
-                $('.btn-show-off-road-report').click();
-            },500);
 
             let time = moment('00:00', 'HH:mm');
             let timeRange = [];
@@ -268,8 +291,8 @@
 
             $("#time-range-report").ionRangeSlider({
                 type: "double",
-                from: 96,
-                to: 100,
+                from: 60,
+                to: 144,
                 values: timeRange,
                 drag_interval: true,
                 //max_interval: 48,
@@ -292,14 +315,10 @@
                 from: 0,
                 step: 1,
                 onChange: function(slide){
-                    const historicLocation = historicLocations[slide.from];
-                    if (historicLocation) {
-                        ReportRouteHistoric.updateBusMarker(historicLocation);
-                    }
+                    reportRouteHistoric.updateBusMarker(slide.from);
                 },
                 onFinish: function(slide){
-                    const historicLocation = historicLocations[slide.from];
-                    //if (historicLocation) map.setCenter(historicLocation.marker.getPosition());
+
                 }
             });
         });

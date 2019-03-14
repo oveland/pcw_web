@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereVehicleId($value)
  * @mixin \Eloquent
  * @property-read mixed $date
+ * @property-read \App\Models\Vehicles\GpsVehicle $gps
  */
 class SimGPS extends Model
 {

@@ -17,10 +17,23 @@ class ReportRouteHistoricController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
+        $user = Auth::user();
+        if ($user->isAdmin()) {
             $companies = Company::active()->get();
+        }else{
+            $vehicles = $user->company->activeVehicles;
+
+            if( $user->isProprietary() ){
+                $proprietaryVehiclesID = collect(\DB::select(
+                    "SELECT id FROM vehicles WHERE plate IN (SELECT placa FROM usuario_vehi WHERE usuario = '$user->username' )"
+                ))->pluck('id');
+
+                $vehicles = $vehicles->whereIn('id',$proprietaryVehiclesID);
+            }
+
+            $routes = $user->company->routes;
         }
-        return view('reports.route.historic.index', compact('companies'));
+        return view('reports.route.historic.index', compact(['companies', 'vehicles', 'routes']));
     }
 
     /**
