@@ -1492,3 +1492,27 @@ span.icon-report{
     color:white !important;
     border:solid 2px #0000007a;
 }
+.nav.nav-pills.nav-pills-success li>a:hover {
+    background: #08747d !important;
+    color: white !important;
+    border: solid 2px #0000007a !important;
+}
+.modal {
+    z-index: 10000 !important;
+    outline: 0;
+    overflow-y: auto!important;
+}
+.modal-backdrop {
+    position: fixed;
+    z-index: 9999;
+    background-color: #000;
+}
+.label{
+    text-transform:none !important;
+}
+.info-route-report{
+    font-size: 80% !important;
+}
+.slimScrollDiv{
+    z-index:1;
+}

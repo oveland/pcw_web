@@ -373,9 +373,11 @@ class ReportRouteController extends Controller
     {
         switch ($request->get('option')) {
             case 'loadRoutes':
-                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
+                return (new GeneralController())->loadSelectRoutes($request);
+
+                /*$company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
                 $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('partials.selects.routes', compact('routes'));
+                return view('partials.selects.routes', compact('routes'));*/
                 break;
             case 'executeDAR':
                 ini_set('MAX_EXECUTION_TIME', 0);

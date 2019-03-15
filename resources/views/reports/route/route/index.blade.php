@@ -152,7 +152,7 @@
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
-                var form = $(this);
+                let form = $(this);
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
@@ -173,12 +173,10 @@
 
             $('#company-report').change(function () {
                 loadRouteReport($(this).val());
-            });
-
-            $('#company-report').change();
+            }).change();
 
             $('#route-report, #date-report, #type-report').change(function () {
-                var form = $('.form-search-report');
+                let form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {
                     form.submit();
@@ -195,7 +193,7 @@
         });
 
         function loadRouteReport(company) {
-            var routeSelect = $('#route-report');
+            let routeSelect = $('#route-report');
             routeSelect.html($('#select-loading').html()).trigger('change.select2');
             routeSelect.load('{{ route('route-ajax-action') }}', {
                 option: 'loadRoutes',

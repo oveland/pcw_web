@@ -75,7 +75,7 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return $this->company ? $this->company->id === 6 : false;
+        return $this->company ? $this->company->id === Company::PCW : false;
     }
 
     /**
@@ -99,7 +99,7 @@ class User extends Authenticatable
      */
     public function belongsToTaxcentral()
     {
-        return $this->company ? ($this->company->id === 21 || $this->isSuperAdmin()) : false;
+        return $this->company ? ($this->company->id === Company::MONTEBELLO || $this->isSuperAdmin()) : false;
     }
 
     /**
@@ -107,7 +107,7 @@ class User extends Authenticatable
      */
     public function belongsToAlameda()
     {
-        return $this->company ? ($this->company->id === 14 || $this->isSuperAdmin()) : false;
+        return $this->company ? ($this->company->id === Company::ALAMEDA || $this->isSuperAdmin()) : false;
     }
 
     /**
@@ -115,7 +115,15 @@ class User extends Authenticatable
      */
     public function belongsToCootransol()
     {
-        return $this->company ? ($this->company->id === 12 || $this->isSuperAdmin()) : false;
+        return $this->company ? ($this->company->id === Company::COOTRANSOL || $this->isSuperAdmin()) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function belongsToMontebello()
+    {
+        return $this->company ? ($this->company->id === Company::MONTEBELLO || $this->isSuperAdmin()) : false;
     }
 
     /**
@@ -141,7 +149,8 @@ class User extends Authenticatable
             323994798
         ];
 
-        return in_array($this->id, $usersCanAdmin);
+        return in_array( $this->id, $usersCanAdmin ) || $this->isAdmin();
+
     }
 
     /**
@@ -166,8 +175,8 @@ class User extends Authenticatable
      */
     public function assignedVehicles($active = true)
     {
-        if ($this->isProprietary()) {
-            $assignedVehicles = Vehicle::whereIn('plate', collect(\DB::select("SELECT placa FROM usuario_vehi WHERE usuario = '$this->username'"))->pluck('id'));
+        if ($this->isProprietary() && $this->belongsToMontebello()) {
+            $assignedVehicles = Vehicle::whereIn('plate', collect(\DB::select("SELECT placa plate FROM usuario_vehi WHERE usuario = '$this->username'"))->pluck('plate'));
             if( $active ) $assignedVehicles = $assignedVehicles->active();
             $assignedVehicles = $assignedVehicles->get();
         } else {
