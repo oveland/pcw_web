@@ -59,6 +59,11 @@ class Vehicle extends Model
 
     public function dispatcherVehicle()
     {
+        return $this->hasOne(DispatcherVehicle::class)->where('default', true)->where('active', true);
+    }
+
+    public function dispatcherVehicles()
+    {
         return $this->hasOne(DispatcherVehicle::class);
     }
 

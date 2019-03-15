@@ -67,28 +67,31 @@
                             </div>
                         @endif
 
-                        <div class="col-md-3 hide">
-                            <div class="form-group">
-                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                        @if(Auth::user()->belongsToMontebello())
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
-                                        @if(!Auth::user()->isAdmin())
-                                            @php
-                                                $typeRoutes = $routes->groupBy('as_group');
-                                            @endphp
+                                    <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                    <div class="form-group">
+                                        <select name="route-report" id="route-report" class="default-select2 form-control col-md-12">
+                                            <option value="all">@lang('All routes')</option>
+                                            @if(!Auth::user()->isAdmin())
+                                                @php
+                                                    $typeRoutes = $routes->groupBy('as_group');
+                                                @endphp
 
-                                            @foreach($typeRoutes as $asGroup => $routes)
-                                                <optgroup label="{{ $asGroup ?'Grupos':'Individuales' }}:">
-                                                    @foreach($routes as $route)
-                                                        <option value="{{ $route->id }}">{{ $route->name }}</option>
-                                                    @endforeach
-                                                </optgroup>
-                                            @endforeach
-                                        @endif
-                                    </select>
+                                                @foreach($typeRoutes as $asGroup => $routes)
+                                                    <optgroup label="{{ $asGroup ?'Grupos':'Individuales' }}:">
+                                                        @foreach($routes as $route)
+                                                            <option value="{{ $route->id }}">{{ $route->name }}</option>
+                                                        @endforeach
+                                                    </optgroup>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
 
                         <div class="col-md-3">
                             <div class="form-group">
@@ -105,17 +108,6 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 hide">
-                            <div class="form-group">
-                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
-                                <div class="form-group">
-                                    <select name="route-report" id="route-report"
-                                            class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company')</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-md-3 hide">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
@@ -266,14 +258,11 @@
 
             $('#company-report').change(function () {
                 loadSelectVehicleReport($(this).val(), false);
+                reportContainer.slideUp(100);
             });
 
-            $('#route-report, #date-report, #type-report').change(function () {
-                /*let form = $('.form-search-report');
-                $('.report-container').slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }*/
+            $('#route-report').change(function () {
+                loadSelectVehicleReportFromRoute($(this).val());
                 reportContainer.slideUp(100);
             });
 

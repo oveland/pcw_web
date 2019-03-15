@@ -2,20 +2,23 @@
 <div class="panel panel-inverse">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime pull-left" data-click="panel-expand" title="@lang('Expand / Compress')">
+            <a href="{{ route('report-vehicle-parked-search-report') }}?{{ $stringParams }}&export=true"
+               data-title="@lang('Export excel')"
+               class="btn btn-sm btn-lime btn-circle bg-lime-dark btn-icon pull-left tooltips">
+                <i class="fa fa-file-excel-o"></i>
+            </a>
+            <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime pull-right tooltips"
+               data-click="panel-expand" title="@lang('Expand / Compress')">
                 <i class="fa fa-expand"></i>
             </a>
         </div>
         <div class="row">
             <div class="col-md-11">
-                <a href="{{ route('report-vehicle-parked-search-report') }}?{{ $stringParams }}&export=true" class="btn btn-lime bg-lime-dark pull-right">
-                    <i class="fa fa-file-excel-o"></i> @lang('Export excel')
-                </a>
                 <ul class="nav nav-pills nav-pills-success">
                     @foreach($parkedReportsByVehicles as $vehicleId => $parkedReportsByVehicle)
                         @php( $vehicle = $parkedReportsByVehicle->first()->vehicle )
                         <li class="{{$loop->first?'active':''}}">
-                            <a href="#report-tab-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-title="{{ $vehicle->plate }}" data-title="{{ $vehicle->plate }}">
+                            <a href="#report-tab-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-title="{{ $vehicle->plate }}">
                                 {{ $vehicle->number }}
                             </a>
                         </li>

@@ -9,10 +9,6 @@
         border-radius: 4px;
         font-size: 100%;
     }
-    .info-route-report{
-        position: relative;
-        z-index: 1 !important;
-    }
 </style>
 @endsection
 
@@ -209,7 +205,7 @@
                                 lineWidth: 3.5,
                                 spotRadius: 7,
                                 normalRangeMin: -50, normalRangeMax: 50,
-                                tooltipFormat: "<?='<div class=\'info-route-report\'>"+
+                                tooltipFormat: "<?='<div class=\'info-route-report\' style=\'position: static !important;z-index: auto !important;\'>"+
                                         "<span class=\'{{offset:offRoads}}\'><span class=\'label label-danger f-s-10 m-b-10\'>"+
                                         "    <i class=\'ion-merge m-r-5 fs-12 fa-fw\'></i> '.__('Off road vehicle').'</span><hr class=\'m-5\'>"+
                                         "</span>"+

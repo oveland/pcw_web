@@ -48,6 +48,7 @@ use Illuminate\Support\Facades\Auth;
  */
 class Company extends Model
 {
+    const PCW = 6;
     const COOTRANSOL = 12;
     const ALAMEDA = 14;
     const MONTEBELLO = 21;
@@ -87,17 +88,8 @@ class Company extends Model
         $routes = $this->hasMany(Route::class)->orderBy('name');
 
         if ($user && $user->isProprietary()) {
-            $proprietaryVehiclesID = collect(
-                \DB::select("
-                    SELECT id FROM vehicles 
-                    WHERE plate IN (
-                      SELECT placa FROM usuario_vehi 
-                      WHERE usuario = '$user->username'
-                    )                    
-                ")
-            )->pluck('id');
-
-            $routes->whereIn('id', DispatcherVehicle::whereIn('vehicles_id', $proprietaryVehiclesID)->pluck('route_id'));
+            $assignedVehicles = $user->assignedVehicles(true);
+            $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
         }
 
         return $routes;
@@ -133,7 +125,7 @@ class Company extends Model
     */
     public function hasRecorderCounter()
     {
-        return $this->id == 14;
+        return collect([self::ALAMEDA]) . contains($this->id);
     }
 
     /**
@@ -141,7 +133,7 @@ class Company extends Model
      */
     public function hasDriverRegisters()
     {
-        return $this->id == 14;
+        return collect([self::ALAMEDA]) . contains($this->id);
     }
 
     /*
@@ -152,7 +144,7 @@ class Company extends Model
     */
     public function hasSeatSensorCounter()
     {
-        return $this->id == 12;
+        return collect([self::COOTRANSOL]) . contains($this->id);
     }
 
     /**
