@@ -1,7 +1,24 @@
 @extends('layout')
 
 @section('stylesheets')
-
+    <style>
+        .btn-group-gps .btn i {
+            opacity: 0.2 !important;
+            font-size: 1em;
+            position: absolute;
+            top: 10px;
+        }
+        .btn-group-gps .btn.active i {
+            opacity: 1 !important;
+            font-size: 1.5em !important;
+        }
+        .btn-group-gps .btn{
+            padding: 7px;
+        }
+        .btn-group-gps .radio{
+            visibility: hidden;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -71,7 +88,7 @@
 
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin() || true)
-                            <div class="col-md-2">
+                            <div class="col-md-2 col-sm-4 col-xs-12">
                                 <div class="form-group">
                                     <label for="gps-report" class="control-label field-required text-bold">@lang('GPS')</label>
                                     <div class="form-group">
@@ -86,8 +103,43 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="col-md-12">
+                            <div class="col-md-6 col-sm-8 col-xs-12">
+                                <div class="col-md-12 p-0">
+                                    <label for="show-vehicle-ready" class="text-bold">
+                                        @lang('Selection') <i class="fa fa-hand-o-right"></i> <span class="option-selected"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-12 p-0">
+                                    <div class="btn-group btn-group-gps" data-toggle="buttons">
+
+                                        <label class="btn btn-default active tooltips" data-title="@lang('None')">
+                                            <i class="fa fa-genderless"></i>
+                                            <input type="radio" name="option-selection" value="none" autocomplete="off">
+                                        </label>
+
+                                        <label class="btn btn-primary tooltips" data-title="@lang('All')">
+                                            <i class="fa fa-asterisk"></i>
+                                            <input type="radio" name="option-selection" value="all" autocomplete="off">
+                                        </label>
+
+                                        <label class="btn btn-success tooltips" data-title="@lang('OK')">
+                                            <i class="fa fa-dot-circle-o"></i>
+                                            <input type="radio" name="option-selection" value="ok" autocomplete="off">
+                                        </label>
+
+                                        <label class="btn btn-danger tooltips" data-title="@lang('NR')">
+                                            <i class="fa fa-clock-o"></i>
+                                            <input type="radio" name="option-selection" value="no-report" autocomplete="off">
+                                        </label>
+
+                                        <label class="btn btn-info tooltips" data-title="@lang('New')">
+                                            <i class="fa fa-tag faa-tada"></i>
+                                            <input type="radio" name="option-selection" value="new" autocomplete="off">
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 hide">
                                     <div class="col-md-2">
                                         @if(Auth::user()->isSuperAdmin2())
                                         <label for="show-vehicle-ready" class="text-bold">
@@ -174,6 +226,14 @@
         $('.menu-administration-gps, .menu-administration-gps-manage').addClass('active-animated');
 
         $(document).ready(function () {
+            $('.btn-group-gps .btn').click(function(){
+                $('.option-selected').text( $(this).data('title') );
+            });
+
+            setTimeout(() => {
+                $('.btn-group-gps .btn.active').click();
+            }, 1200);
+
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {

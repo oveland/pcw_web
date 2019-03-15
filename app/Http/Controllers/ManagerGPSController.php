@@ -187,13 +187,11 @@ class ManagerGPSController extends Controller
                                     $c = "ID=$imei";
                                 }
                             }
-                            dd($gpsCommand);
                             $smsCommands[] = implode(";", $gpsCommand);
                         }
                     }
 
                     $gpsCommands = $smsCommands;
-                    dd($gpsCommands);
                     break;
                 case SimGPS::SKYPATROL:
                     $totalCMD = "";
