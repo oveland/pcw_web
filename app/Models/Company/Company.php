@@ -48,6 +48,7 @@ use Illuminate\Support\Facades\Auth;
  */
 class Company extends Model
 {
+    const PCW = 6;
     const COOTRANSOL = 12;
     const ALAMEDA = 14;
     const MONTEBELLO = 21;

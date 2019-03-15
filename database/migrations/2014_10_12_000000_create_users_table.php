@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('role')->nullable();
             $table->boolean('active')->default(true);
+            $table->integer('role_id')->default(2);
 
             $table->bigInteger('company_id')->unsigned()->nullable()    ;
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
