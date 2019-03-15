@@ -51,7 +51,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <ul class="nav navbar-nav pull-right">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                <li class="dropdown dropdown-extended dropdown-notification hide" id="header_notification_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">
                         <i class="icon-bell"></i>
@@ -154,7 +154,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END NOTIFICATION DROPDOWN -->
                 <!-- BEGIN INBOX DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                <li class="dropdown dropdown-extended dropdown-inbox hide" id="header_inbox_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">
                         <i class="icon-envelope-open"></i>
@@ -225,7 +225,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END INBOX DROPDOWN -->
                 <!-- BEGIN TODO DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
+                <li class="dropdown dropdown-extended dropdown-tasks hide" id="header_task_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">
                         <i class="icon-calendar"></i>
@@ -354,31 +354,6 @@ License: You must have a valid license purchased only from themeforest(the above
                     </a>
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
-                            <a href="page_user_profile_1.html">
-                                <i class="icon-user"></i> My Profile </a>
-                        </li>
-                        <li>
-                            <a href="app_calendar.html">
-                                <i class="icon-calendar"></i> My Calendar </a>
-                        </li>
-                        <li>
-                            <a href="app_inbox.html">
-                                <i class="icon-envelope-open"></i> My Inbox
-                                <span class="badge badge-danger"> 3 </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="app_todo.html">
-                                <i class="icon-rocket"></i> My Tasks
-                                <span class="badge badge-success"> 7 </span>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="page_user_lock_1.html">
-                                <i class="icon-lock"></i> Lock Screen </a>
-                        </li>
-                        <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="icon-key"></i> @lang('Logout')
                             </a>
@@ -392,7 +367,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END USER LOGIN DROPDOWN -->
                 <!-- BEGIN QUICK SIDEBAR TOGGLER -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-quick-sidebar-toggler">
+                <li class="dropdown dropdown-quick-sidebar-toggler hide">
                     <a href="javascript:;" class="dropdown-toggle">
                         <i class="icon-logout"></i>
                     </a>
