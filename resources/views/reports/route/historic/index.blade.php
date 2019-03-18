@@ -265,6 +265,9 @@
             $('#route-report').change(function () {
                 loadSelectVehicleReportFromRoute($(this).val());
                 reportContainer.slideUp(100);
+
+                const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
+                console.log(kmzUrl);
             });
 
             @if(Auth::user()->isAdmin())

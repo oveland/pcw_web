@@ -88,7 +88,7 @@ class Company extends Model
         $routes = $this->hasMany(Route::class)->orderBy('name');
 
         if ($user && $user->isProprietary()) {
-            $assignedVehicles = $user->assignedVehicles(true);
+            $assignedVehicles = $user->assignedVehicles(null, true);
             $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
         }
 

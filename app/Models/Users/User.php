@@ -170,17 +170,19 @@ class User extends Authenticatable
     }
 
     /**
+     * @param Company $company
      * @param bool $active
      * @return Vehicle|Vehicle[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function assignedVehicles($active = true)
+    public function assignedVehicles($company, $active = true)
     {
         if ($this->isProprietary() && $this->belongsToMontebello()) {
             $assignedVehicles = Vehicle::whereIn('plate', collect(\DB::select("SELECT placa plate FROM usuario_vehi WHERE usuario = '$this->username'"))->pluck('plate'));
             if( $active ) $assignedVehicles = $assignedVehicles->active();
             $assignedVehicles = $assignedVehicles->get();
         } else {
-            $assignedVehicles = $active ? $this->company->activeVehicles : $this->company->vehicles;
+            $company = $company ? $company : $this->company;
+            $assignedVehicles = $active ? $company->activeVehicles : $company->vehicles;
         }
 
         return $assignedVehicles;

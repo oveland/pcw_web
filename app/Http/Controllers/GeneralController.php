@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use Auth;
 use Illuminate\Http\Request;
@@ -45,14 +46,16 @@ class GeneralController extends Controller
     public function loadSelectVehiclesFromRoute(Request $request)
     {
         $routeId = $request->get('route');
+        $route = Route::find($routeId);
 
         $user = Auth::user();
-        $vehicles = $user->assignedVehicles();
-
-        if ($routeId != 'all') {
+        if ($route) {
+            $vehicles = $user->assignedVehicles($route->company);
             $vehicles = $vehicles->filter(function($vehicle) use ($routeId){
                 return $vehicle->dispatcherVehicles()->where('route_id', $routeId)->get()->count();
             });
+        }else{
+            $vehicles = $user->assignedVehicles(null);
         }
 
         return view('partials.selects.vehicles', compact('vehicles'));
