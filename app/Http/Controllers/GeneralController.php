@@ -17,7 +17,7 @@ class GeneralController extends Controller
         $company = $this->getCompany($request);
         $vehicle = Vehicle::find($request->get('vehicle'));
         $date = $request->get('date');
-        $withAll = $request->get('with-all');
+        $withAll = $request->get('withAll');
 
         if ($company) $routes = self::getRoutesFromCompany($company);
         else if ($vehicle && $date) $routes = self::getRoutesFromVehicleAndDate($vehicle, $date);

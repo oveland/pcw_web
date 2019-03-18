@@ -2,9 +2,10 @@
     'use strict';
 
     class ReportRouteHistoric {
-        constructor(map){
+        constructor(map) {
             this.historicLocations = [];
             this.markerBus = null;
+            this.kmlLayer = null;
             this.currentLocation = null;
             this.map = map;
         }
@@ -12,15 +13,7 @@
         processHistoricReportData(report) {
             $('.map-report-historic').css('height', (window.innerHeight - 200));
 
-            this.historicLocations.forEach(function (historicLocation) {
-                historicLocation.marker.setMap(null);
-            });
-            this.historicLocations = [];
-
-            if (this.markerBus) {
-                this.markerBus.setMap(null);
-                this.markerBus = null;
-            }
+            this.clearMap();
 
             $.each(report.historic, (i, reportLocation) => {
                 let historicInfoWindow = this.createInfoWindow(reportLocation);
@@ -29,7 +22,7 @@
                     historicInfoWindow.open(this.map, marker);
                     $('.historic-info-map').parent().css('overflow', 'hidden');
                 });
-                
+
                 this.historicLocations.push({
                     marker: marker,
                     shadowMarker: this.addShadowMarker(reportLocation),
@@ -38,10 +31,13 @@
                 });
             });
 
-            /*new google.maps.KmlLayer({
-                url: report.route.url,
-                map: this.map
-            });*/
+            const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
+            if (kmzUrl) {
+                this.kmlLayer = new google.maps.KmlLayer({
+                    url: kmzUrl,
+                    map: this.map
+                });
+            }
 
             $('.time-from').text(report.from);
             $('.time-to').text(report.to);
@@ -58,6 +54,8 @@
             }
 
             if (this.markerBus) this.map.setCenter(this.markerBus.getPosition());
+
+
         }
 
         addHistoricMarker(r) {
@@ -78,12 +76,31 @@
             });
         }
 
+        clearMap() {
+            this.historicLocations.forEach((historicLocation) => {
+                historicLocation.marker.setMap(null);
+                historicLocation.shadowMarker.setMap(null);
+            });
+
+            this.historicLocations = [];
+
+            if (this.markerBus) {
+                this.markerBus.setMap(null);
+                this.markerBus = null;
+            }
+
+            if (this.kmlLayer) {
+                this.kmlLayer.setMap(null);
+                this.kmlLayer = null;
+            }
+        }
+
         paintHistoricPathTo(index) {
             this.historicLocations.forEach((historicLocation, i) => {
-                if(i <= index){
+                if (i <= index) {
                     historicLocation.marker.setMap(this.map);
                     historicLocation.shadowMarker.setMap(null);
-                }else{
+                } else {
                     historicLocation.marker.setMap(null);
                     historicLocation.shadowMarker.setMap(this.map);
                 }
@@ -92,7 +109,7 @@
 
         updateBusMarker(index) {
             const historicLocation = this.historicLocations[index];
-            if(!historicLocation)return false;
+            if (!historicLocation) return false;
 
             this.paintHistoricPathTo(index);
 
@@ -137,45 +154,45 @@
             $('.gm-style-iw-c, .gm-style-iw-d').css('max-height', '300px').css('height', '270px');
         }
 
-        createInfoWindow(r){
+        createInfoWindow(r) {
             let infoDispatchRegister = '';
             let height = '200px';
-            if(r.dispatchRegister){
+            if (r.dispatchRegister) {
                 let dr = r.dispatchRegister;
-                infoDispatchRegister = ""+
-                    "<small class='text-bold'><i class='fa fa-flag text-muted'></i> @lang('Route'): "+dr.route.name+"</small><br>"+
-                    "<small class='text-bold'><i class='fa fa-retweet text-muted'></i> @lang('Round Trip'): "+dr.round_trip+"</small><br>"+
-                    "<small class='text-bold'><i class='fa fa-list-ol text-muted'></i> @lang('Turn'): "+dr.turn+"</small><br>"+
-                    "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> @lang('Dispatched'): "+dr.departure_time+"</small><br>"+
-                    "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): "+dr.driver_name+"</small><br>"+
+                infoDispatchRegister = "" +
+                    "<small class='text-bold'><i class='fa fa-flag text-muted'></i> @lang('Route'): " + dr.route.name + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-retweet text-muted'></i> @lang('Round Trip'): " + dr.round_trip + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-list-ol text-muted'></i> @lang('Turn'): " + dr.turn + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> @lang('Dispatched'): " + dr.departure_time + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): " + dr.driver_name + "</small><br>" +
                     "<hr class='hr'>";
 
                 let height = '250px';
             }
             let infoAddress = "";
-            if(r.address){
-                infoAddress = ""+
-                    "<small class='text-bold'><i class='fa fa-map-o text-muted'></i> "+r.address+"</small><br>"+
-                "";
+            if (r.address) {
+                infoAddress = "" +
+                    "<small class='text-bold'><i class='fa fa-map-o text-muted'></i> " + r.address + "</small><br>" +
+                    "";
             }
 
             let contentString =
                 "<div class='historic-info-map' style='width: 200px'>" +
-                    "<div class='col-md-12' style='height:"+height+"'>"+
-                        "<div class=''>"+
-                            "<h5 class='text-info'><i class='fa fa-bus'></i> <b>"+r.vehicle.number+"</b></h5>"+
-                            infoAddress +
-                            "<hr class='hr'>"+
-                        "</div>"+
-                        "<div class=''>"+
-                            "<small class='text-bold'><i class='fa fa-calendar text-muted'></i> "+r.date+"</small><br>"+
-                            "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> "+r.time+"</small><br>"+
-                            "<small class='text-bold text-"+( r.speeding ?'danger':'')+"'><i class='fa fa-tachometer text-muted'></i> @lang('Speed'): "+r.speed+" Km/h</small><br>"+
-                            "<small class='text-bold'><i class='fa fa-road text-muted'></i> "+r.currentMileage+" Km</small><br>"+
-                            "<hr class='hr'>"+infoDispatchRegister+
-                            "<small class='text-bold text-"+r.vehicleStatus.mainClass+"'><i class='"+r.vehicleStatus.iconClass+"'></i> "+r.vehicleStatus.status+"</small><br>"+
-                        "</div>"+
-                    "</div>"+
+                "<div class='col-md-12' style='height:" + height + "'>" +
+                "<div class=''>" +
+                "<h5 class='text-info'><i class='fa fa-bus'></i> <b>" + r.vehicle.number + "</b></h5>" +
+                infoAddress +
+                "<hr class='hr'>" +
+                "</div>" +
+                "<div class=''>" +
+                "<small class='text-bold'><i class='fa fa-calendar text-muted'></i> " + r.date + "</small><br>" +
+                "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> " + r.time + "</small><br>" +
+                "<small class='text-bold text-" + (r.speeding ? 'danger' : '') + "'><i class='fa fa-tachometer text-muted'></i> @lang('Speed'): " + r.speed + " Km/h</small><br>" +
+                "<small class='text-bold'><i class='fa fa-road text-muted'></i> " + r.currentMileage + " Km</small><br>" +
+                "<hr class='hr'>" + infoDispatchRegister +
+                "<small class='text-bold text-" + r.vehicleStatus.mainClass + "'><i class='" + r.vehicleStatus.iconClass + "'></i> " + r.vehicleStatus.status + "</small><br>" +
+                "</div>" +
+                "</div>" +
                 "</div>";
 
             return new google.maps.InfoWindow({
