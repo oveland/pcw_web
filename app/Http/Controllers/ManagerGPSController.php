@@ -139,7 +139,7 @@ class ManagerGPSController extends Controller
                     $totalOK++;
                 }
 
-                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='$classStatus' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date (<span class=''>$timePeriod</span>)</a><br><br>" : "********";
+                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date (<span class=''>$timePeriod</span>)</a><br><br>" : "********";
 
                 $reportsStatus->push((object)[
                     'statusId' => $vehicleStatus->id,
@@ -155,7 +155,7 @@ class ManagerGPSController extends Controller
         foreach ($reportsByStatus as $statusId => $reportStatus) {
             if ($reportStatus->first()) {
                 $status = $reportStatus->first()->status;
-                $headerReport .= "<span class='tooltips click btn btn-$status->main_class btn-sm' style='border-radius: 0' title='$status->des_status' data-placement='bottom'><i class='text-white $status->icon_class' style='width: 15px'></i> <strong>" . count($reportStatus) . "</strong></span>";
+                $headerReport .= "<span class='tooltips click btn btn-$status->main_class btn-sm' style='border-radius: 0' title='$status->des_status' data-placement='bottom'><i class='$status->icon_class' style='width: 15px'></i> <strong>" . count($reportStatus) . "</strong></span>";
             }
         }
 
