@@ -1516,3 +1516,8 @@ span.icon-report{
 .slimScrollDiv{
     z-index:1;
 }
+
+.label.label-inverse{
+    background: black;
+    margin: 2px;
+}

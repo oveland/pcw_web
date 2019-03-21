@@ -22,7 +22,7 @@ class ReportRouteHistoricController extends Controller
             $companies = Company::active()->get();
         }else{
             $routes = $user->company->routes;
-            $vehicles = $user->assignedVehicles();
+            $vehicles = $user->assignedVehicles(null);
         }
         return view('reports.route.historic.index', compact(['companies', 'vehicles', 'routes']));
     }
@@ -131,7 +131,7 @@ class ReportRouteHistoricController extends Controller
         }
 
         $fileData = (object)[
-            'fileName' => __('Speeding') . " $report->dateReport",
+            'fileName' => __('Historic') ." ".$report->vehicle->number. " $report->dateReport",
             'title' => __('Historic') . " $report->dateReport - #" . $report->vehicle->number,
             'subTitle' => __('Time') . " $report->initialTime - $report->finalTime ",
             'sheetTitle' => __('Historic') . " " . $report->vehicle->number,

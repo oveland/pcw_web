@@ -82,7 +82,7 @@
                                                 @foreach($typeRoutes as $asGroup => $routes)
                                                     <optgroup label="{{ $asGroup ?'Grupos':'Individuales' }}:">
                                                         @foreach($routes as $route)
-                                                            <option value="{{ $route->id }}">{{ $route->name }}</option>
+                                                            <option data-kmz-url="{{ $route->url }}" value="{{ $route->id }}">{{ $route->name }}</option>
                                                         @endforeach
                                                     </optgroup>
                                                 @endforeach
@@ -133,24 +133,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1 col-sm-6 col-xs-6">
+                        <div class="col-md-3 col-sm-6 col-xs-6">
                             <div class="form-group">
+                                <label class="control-label"><br></label>
                                 <div class="form-group">
-                                    <button id="search" type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report m-t-5">
+                                    <button id="search" type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report">
                                         <i class="fa fa-map-o"></i> @lang('Search')
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-1 col-sm-6 col-xs-6 form-export">
-                            <div class="form-group">
-                                <div class="form-group">
-                                    <a href="#" class="btn btn-lime btn-export m-t-5" style="display: none">
+                                    <a href="#" class="btn btn-lime btn-export form-export" style="display: none">
                                         <i class="fa fa-file-excel-o"></i> @lang('Export')
                                     </a>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-12 col-xs-12 col-sm-12">
                             <input id="time-range-report" name="time-range-report" type="text" value="" />
                             <span class="help-block hide"> @lang('Quickly select a time range from 00:00 to 23:59') </span>
@@ -265,9 +261,6 @@
             $('#route-report').change(function () {
                 loadSelectVehicleReportFromRoute($(this).val());
                 reportContainer.slideUp(100);
-
-                const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
-                console.log(kmzUrl);
             });
 
             @if(Auth::user()->isAdmin())

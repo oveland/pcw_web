@@ -32,7 +32,9 @@
             });
 
             const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
+            console.log(kmzUrl);
             if (kmzUrl) {
+                console.log('SET ',kmzUrl);
                 this.kmlLayer = new google.maps.KmlLayer({
                     url: kmzUrl,
                     map: this.map
@@ -51,6 +53,8 @@
 
             if (this.historicLocations.length) {
                 this.updateBusMarker(0);
+            }else{
+                gwarning("@lang("No registers found")");
             }
 
             if (this.markerBus) this.map.setCenter(this.markerBus.getPosition());

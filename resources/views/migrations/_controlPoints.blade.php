@@ -51,8 +51,8 @@
                                     @endphp
                                     @foreach($controlPointTimes as $controlPointTime)
                                         @php($fringe = $controlPointTime->fringe)
-                                            <span data-title="<i class='fa fa-clock-o fa-spin text-warning'></i> @lang('From') {{ $fringe->from }} @lang('to') {{ $fringe->to }}" data-placement="bottom" data-html="true"
-                                                  class="label label-inverse pull-left m-l-1 m-t-1 p-t-10 p-b-10 tooltips">
+                                            <span data-title="<i class='fa fa-clock-o fa-spin text-warning'></i> {{ $controlPointTime->time }} <br> @lang('From') {{ $fringe->from }} @lang('to') {{ $fringe->to }}" data-placement="bottom" data-html="true"
+                                                  class="badge badge-warning m-t-1 m-b-1 tooltips">
                                                 {{ $controlPointTime->time_from_dispatch ?? 'None' }}
                                             </span>
                                     @endforeach
