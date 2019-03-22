@@ -100,7 +100,7 @@ class ConsolidatedPassengerReportMailCommand extends Command
                 if ($production) {
                     $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com'];
                 } else {
-                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
+                    $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
                 }
                 break;
             default:
