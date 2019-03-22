@@ -331,10 +331,21 @@ Route::prefix(__('link'))->group(function () {
         return view('reports.route.route.templates._externalLinks', compact('link'));
     })->name('link-report-route-chart-view');
 
-    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{user}', function (\App\Models\Users\User $user) {
+    // Url temporal. Because excel url on consolidated mail report was generated with url for historic view, instead of url for chart view on the month of March
+    // TODO: Delete next code on July 2019
+    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{dispatchRegister}', function (Illuminate\Http\Request $request, $first) {
+        $user = \App\Models\Users\User::find($first);
+        if(!$user){
+            return redirect(route('report-route-chart-view',['dispatchRegister' => $first, 'location' => 0]));
+        }
         Auth::login($user, true);
         return redirect(route('report-route-historic'));
-    })->name('link-report-route-chart-view');
+    });
+
+    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic-path') . '/{user}', function (\App\Models\Users\User $user) {
+        Auth::login($user, true);
+        return redirect(route('report-route-historic'));
+    })->name('link-report-route-historic-path');
 
 
 });
