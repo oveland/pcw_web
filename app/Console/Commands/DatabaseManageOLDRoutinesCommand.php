@@ -40,6 +40,10 @@ class DatabaseManageOLDRoutinesCommand extends Command
     {
         $client = new Client(['base_uri' => 'http://admin.pcwserviciosgps.com']);
         $response = $client->get('php/migrarContadorHistorialSeisMeses.php');
+        dump($response->getBody()->getContents());
+
+        $client = new Client(['base_uri' => 'http://www.pcwserviciosgps.com']);
+        $response = $client->get('pcw_gps/php/administrar_correos/enviar.php');
         dd($response->getBody()->getContents());
     }
 }
