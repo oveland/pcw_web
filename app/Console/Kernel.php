@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         Commands\SMSSendProprietaryReportCommand::class,
 
         /* Commands for Database */
+        Commands\DatabaseMigrations::class,
         Commands\DatabaseManageOLDRoutinesCommand::class,
 
         /* Commands for Mails */
@@ -48,6 +49,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('log:parked-vehicles')->everyMinute();
 
+        $schedule->command('db:pcw-migrations')->dailyAt('00:00');
         $schedule->command('db:manage-markers-reports')->dailyAt('02:00');
         $schedule->command('db:manage-old-routines')->dailyAt('03:00');
 
