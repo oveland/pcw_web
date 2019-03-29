@@ -17,6 +17,7 @@ class CreateGpsVehiclesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('vehicle_id')->unique();
             $table->string('imei')->unique();
+            $table->integer('report_period')->default(120);
             $table->timestamps();
 
             /* table relations */
