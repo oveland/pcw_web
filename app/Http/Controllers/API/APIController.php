@@ -76,7 +76,7 @@ class APIController extends Controller
 
             case 'migrations':
                 $migrationController = new MigrationController();
-                switch ($request->get('action')) {
+                switch ($service) {
                     case 'companies':
                         $migrationController->migrateCompanies($request);
                         break;
