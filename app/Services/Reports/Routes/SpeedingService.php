@@ -10,6 +10,7 @@ namespace App\Services\Reports\Routes;
 
 
 use App\Models\Company\Company;
+use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
@@ -49,13 +50,16 @@ class SpeedingService
      *
      * @param Company $company
      * @param $dateReport
+     * @param null $routeReport
      * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
-    function allSpeeding(Company $company, $dateReport)
+    function allSpeeding(Company $company, $dateReport, $routeReport = null)
     {
+        $vehicles = $company->userVehicles($routeReport);
+
         return Location::witSpeeding()
             ->whereBetween('date', [$dateReport, "$dateReport 23:59:59"])
-            ->whereIn('vehicle_id', $company->vehicles->pluck('id'))
+            ->whereIn('vehicle_id', $vehicles->pluck('id'))
             ->get();
     }
 

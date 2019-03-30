@@ -12,6 +12,16 @@ use Illuminate\Http\Request;
 
 class SeatReportController extends Controller
 {
+    /**
+     * @var GeneralController
+     */
+    private $generalController;
+
+    public function __construct(GeneralController $generalController)
+    {
+        $this->generalController = $generalController;
+    }
+
     public function index(Request $request)
     {
         if (Auth::user()->isAdmin()) {
@@ -22,7 +32,7 @@ class SeatReportController extends Controller
 
     public function play(Request $request)
     {
-        $company = GeneralController::getCompany($request);
+        $company = $this->generalController->getCompany($request);
         $vehicleReport = $request->get('vehicle-report');
         $typeReport = $request->get('type-report');
         $vehicle = Vehicle::find($vehicleReport);

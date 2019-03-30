@@ -15,14 +15,20 @@ class ControlPointsReportController extends Controller
      * @var ControlPointService
      */
     private $controlPointService;
+    /**
+     * @var GeneralController
+     */
+    private $generalController;
 
     /**
      * ControlPointsReportController constructor.
      * @param ControlPointService $controlPointService
+     * @param GeneralController $generalController
      */
-    public function __construct(ControlPointService $controlPointService)
+    public function __construct(ControlPointService $controlPointService, GeneralController $generalController)
     {
         $this->controlPointService = $controlPointService;
+        $this->generalController = $generalController;
     }
 
 
@@ -43,7 +49,7 @@ class ControlPointsReportController extends Controller
      */
     public function searchReport(Request $request)
     {
-        $company = GeneralController::getCompany($request);
+        $company = $this->generalController->getCompany($request);
         $dateReport = $request->get('date-report');
         $route = Route::find($request->get('route-report'));
         $typeReport = $request->get('type-report');
@@ -133,24 +139,5 @@ class ControlPointsReportController extends Controller
 
 
         return PCWExporterService::excel($fileData);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
-    public
-    function ajax(Request $request)
-    {
-        switch ($request->get('option')) {
-            case 'loadRoutes':
-                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
-                $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('partials.selects.routes', compact('routes'));
-                break;
-            default:
-                return "Nothing to do";
-                break;
-        }
     }
 }

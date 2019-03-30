@@ -164,6 +164,14 @@ class User extends Authenticatable
     /**
      * @return bool
      */
+    public function canSelectRouteReport()
+    {
+        return $this->belongsToMontebello();
+    }
+
+    /**
+     * @return bool
+     */
     public function isProprietary()
     {
         return $this->role_id == self::PROPRIETARY_ROLE;
@@ -172,7 +180,7 @@ class User extends Authenticatable
     /**
      * @param Company $company
      * @param bool $active
-     * @return Vehicle|Vehicle[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Vehicle|Vehicle[]
      */
     public function assignedVehicles($company, $active = true)
     {

@@ -148,21 +148,11 @@
             });
 
             @if(!Auth::user()->isAdmin())
-                loadRouteReport(null);
+                loadSelectRouteReport(null);
                 loadSelectVehicleReport(1, true);
             @else
                 $('#company-report').change();
             @endif
         });
-
-        function loadRouteReport(company) {
-            var routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('report-passengers-recorders-consolidated-daily-ajax-action',['action'=>'loadRoutes']) }}', {
-                company: company
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        }
     </script>
 @endsection

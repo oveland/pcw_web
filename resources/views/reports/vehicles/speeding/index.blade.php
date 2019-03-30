@@ -78,7 +78,7 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
@@ -91,7 +91,21 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-4">
+
+                        @if(Auth::user()->canSelectRouteReport())
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                    <div class="form-group">
+                                        <select name="route-report" id="route-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                            @include('partials.selects.routes', compact('routes'), ['withAll' => true])
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="date-report"
                                        class="control-label field-required">@lang('Date report')</label>
@@ -140,17 +154,21 @@
     <script type="application/javascript">
         $('.menu-report-vehicles, .menu-report-vehicles-speeding').addClass('active-animated');
         $(document).ready(function () {
-            $('.form-search-report').submit(function (e) {
+
+            const reportContainer = $('.report-container');
+            const formReport = $('.form-search-report');
+
+            formReport.submit(function (e) {
                 var form = $(this);
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    $('.report-container').slideUp(100);
+                    reportContainer.slideUp(100);
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            $('.report-container').empty().hide().html(data).fadeIn();
+                            reportContainer.empty().hide().html(data).fadeIn();
                             //hideSideBar();
                         },
                         complete:function(){
@@ -160,9 +178,8 @@
                 }
             });
 
-            $('#company-report, #date-report, #type-report').change(function () {
-                var form = $('.form-search-report');
-                $('.report-container').slideUp();
+            $('#route-report, #date-report, #type-report').change(function () {
+                reportContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
@@ -187,7 +204,12 @@
                 });
             });
 
-            $('#company-report').change();
+            @if(Auth::user()->isAdmin())
+                $('#company-report').change(function () {
+                    loadSelectRouteReport($(this).val());
+                    reportContainer.slideUp(100);
+                }).change();
+            @endif
 
             $('body').on('click', '.accordion-vehicles', function () {
                 $($(this).data('parent'))

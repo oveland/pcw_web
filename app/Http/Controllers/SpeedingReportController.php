@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicles\Location;
+use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\SpeedingService;
 use App\Models\Vehicles\Speeding;
 use App\Models\Vehicles\Vehicle;
@@ -16,16 +17,32 @@ use Route;
 
 class SpeedingReportController extends Controller
 {
+    /**
+     * @var PCWAuthService
+     */
+    private $pcwAuthService;
+
+    /**
+     * @var SpeedingService
+     */
     private $speedingService;
+    /**
+     * @var GeneralController
+     */
+    private $generalController;
 
     /**
      * SpeedingReportController constructor.
      *
+     * @param PCWAuthService $pcwAuthService
      * @param SpeedingService $speedingService
+     * @param GeneralController $generalController
      */
-    public function __construct(SpeedingService $speedingService)
+    public function __construct(PCWAuthService $pcwAuthService, SpeedingService $speedingService, GeneralController $generalController)
     {
         $this->speedingService = $speedingService;
+        $this->pcwAuthService = $pcwAuthService;
+        $this->generalController = $generalController;
     }
 
 
@@ -34,10 +51,11 @@ class SpeedingReportController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name', 'asc')->get();
-        }
-        return view('reports.vehicles.speeding.index', compact('companies'));
+        $access = $this->pcwAuthService->getAccessProperties();
+        $companies = $access->companies;
+        $routes = $access->routes;
+
+        return view('reports.vehicles.speeding.index', compact(['companies', 'routes']));
     }
 
     /**
@@ -48,11 +66,11 @@ class SpeedingReportController extends Controller
     public function show(Request $request)
     {
         $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
+        $company = $this->generalController->getCompany($request);
+        $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
 
-        $allSpeeding =$this->speedingService->allSpeeding($company, $dateReport);
-
+        $allSpeeding =$this->speedingService->allSpeeding($company, $dateReport, $routeReport);
         $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding);
 
         if( $request->get('export') )$this->export($speedingReportByVehicles,$dateReport, $request->get('type-report'));
@@ -80,7 +98,6 @@ class SpeedingReportController extends Controller
                         if( $speed > 200 ){
                             $speed = 100 + (random_int(-10,10));
                         }
-
 
                         $dataExcel[] = [
                             __('N°') => count($dataExcel) + 1,                             # A CELL
@@ -158,24 +175,5 @@ class SpeedingReportController extends Controller
     public function getImageLocationFromCoordinates(Location $location)
     {
         return Geolocation::getImageLocationFromCoordinates($location->latitude, $location->longitude);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
-    public
-    function ajax(Request $request)
-    {
-        switch ($request->get('option')) {
-            case 'loadRoutes':
-                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
-                $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('reports.route.off-road.routeSelect', compact('routes'));
-                break;
-            default:
-                return "Nothing to do";
-                break;
-        }
     }
 }

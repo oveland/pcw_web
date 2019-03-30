@@ -14,6 +14,16 @@ use Illuminate\Http\Request;
 class ReportRouteDispatchUsersController extends Controller
 {
     /**
+     * @var GeneralController
+     */
+    private $generalController;
+
+    public function __construct(GeneralController $generalController)
+    {
+        $this->generalController = $generalController;
+    }
+
+    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -30,7 +40,7 @@ class ReportRouteDispatchUsersController extends Controller
      */
     public function show(Request $request)
     {
-        $company = GeneralController::getCompany($request);
+        $company = $this->generalController->getCompany($request);
         $dateReport = $request->get('date-report');
 
         $dispatchUsersReport = $this->buildDispatchUsersReport($company, $dateReport);

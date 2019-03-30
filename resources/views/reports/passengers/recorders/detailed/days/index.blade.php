@@ -130,7 +130,7 @@
             });
 
             $('#company-report').change(function () {
-                loadRouteReport($(this).val());
+                loadSelectRouteReport($(this).val());
                 if (is_not_null($(this).val())) {
                     $('.form-search-report').submit();
                 }
@@ -145,18 +145,8 @@
             });
 
             @if(!Auth::user()->isAdmin())
-            loadRouteReport(null);
+            loadSelectRouteReport(null);
             @endif
         });
-
-        function loadRouteReport(company) {
-            var routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('report-passengers-recorders-consolidated-daily-ajax-action',['action'=>'loadRoutes']) }}', {
-                company: company
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        }
     </script>
 @endsection

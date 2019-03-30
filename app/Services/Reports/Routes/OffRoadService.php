@@ -51,13 +51,16 @@ class OffRoadService
      *
      * @param Company $company
      * @param $dateReport
+     * @param null $routeReport
      * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
-    function allOffRoads(Company $company, $dateReport)
+    function allOffRoads(Company $company, $dateReport, $routeReport = null)
     {
+        $vehicles = $company->userVehicles($routeReport);
+
         $allOffRoads = Location::whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
             ->where('off_road', true)
-            ->whereIn('vehicle_id', $company->vehicles->pluck('id'))
+            ->whereIn('vehicle_id', $vehicles->pluck('id'))
             ->orderBy('date')
             ->get();
 

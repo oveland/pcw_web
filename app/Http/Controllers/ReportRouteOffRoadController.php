@@ -7,6 +7,7 @@ use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\OffRoadService;
 use Illuminate\Http\Request;
@@ -15,15 +16,31 @@ use Excel;
 
 class ReportRouteOffRoadController extends Controller
 {
+    /**
+     * @var PCWAuthService
+     */
+    private $pcwAuthService;
+
+    /**
+     * @var OffRoadService
+     */
     private $offRoadService;
+    /**
+     * @var GeneralController
+     */
+    private $generalController;
 
     /**
      * ReportRouteOffRoadController constructor.
+     * @param PCWAuthService $pcwAuthService
      * @param OffRoadService $offRoadService
+     * @param GeneralController $generalController
      */
-    public function __construct(OffRoadService $offRoadService)
+    public function __construct(PCWAuthService $pcwAuthService, OffRoadService $offRoadService, GeneralController $generalController)
     {
+        $this->pcwAuthService = $pcwAuthService;
         $this->offRoadService = $offRoadService;
+        $this->generalController = $generalController;
     }
 
 
@@ -32,10 +49,11 @@ class ReportRouteOffRoadController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name', 'asc')->get();
-        }
-        return view('reports.route.off-road.index', compact('companies'));
+        $access = $this->pcwAuthService->getAccessProperties();
+        $companies = $access->companies;
+        $routes = $access->routes;
+
+        return view('reports.route.off-road.index', compact(['companies', 'routes']));
     }
 
     /**
@@ -44,7 +62,8 @@ class ReportRouteOffRoadController extends Controller
      */
     public function searchReport(Request $request)
     {
-        $company = GeneralController::getCompany($request);
+        $company = $this->generalController->getCompany($request);
+        $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
 
@@ -54,7 +73,7 @@ class ReportRouteOffRoadController extends Controller
             'typeReport' => $typeReport,
         ];
 
-        $allOffRoads = $this->offRoadService->allOffRoads($company, $dateReport);
+        $allOffRoads = $this->offRoadService->allOffRoads($company, $dateReport, $routeReport);
 
         switch ($typeReport) {
             case 'vehicle':
@@ -109,24 +128,5 @@ class ReportRouteOffRoadController extends Controller
     public function exportByVehicles($dataReport, $query)
     {
         $this->offRoadService->exportByVehicles($dataReport, $query);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
-    public
-    function ajax(Request $request)
-    {
-        switch ($request->get('option')) {
-            case 'loadRoutes':
-                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
-                $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('partials.selects.routes', compact('routes'));
-                break;
-            default:
-                return "Nothing to do";
-                break;
-        }
     }
 }

@@ -65,7 +65,7 @@ class GeneralController extends Controller
      * @param Request $request
      * @return Company|Company[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      */
-    public static function getCompany(Request $request)
+    public function getCompany(Request $request)
     {
         $requestCompany = $request->get('company') ?? $request->get('company-report');
         return (Auth::user()->isAdmin() && $requestCompany ? Company::find($requestCompany) : Auth::user()->company);

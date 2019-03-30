@@ -6,6 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Auth;
 use Illuminate\Http\Request;
@@ -13,18 +14,26 @@ use Illuminate\Http\Request;
 class ReportRouteHistoricController extends Controller
 {
     /**
+     * @var PCWAuthService
+     */
+    private $pcwAuthService;
+
+    public function __construct(PCWAuthService $pcwAuthService)
+    {
+        $this->pcwAuthService = $pcwAuthService;
+    }
+
+    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        $user = Auth::user();
-        if ($user->isAdmin()) {
-            $companies = Company::active()->get();
-        }else{
-            $routes = $user->company->routes;
-            $vehicles = $user->assignedVehicles(null);
-        }
-        return view('reports.route.historic.index', compact(['companies', 'vehicles', 'routes']));
+        $access = $this->pcwAuthService->getAccessProperties();
+        $companies = $access->companies;
+        $routes = $access->routes;
+        $vehicles = $access->vehicles;
+
+        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles']));
     }
 
     /**
@@ -124,14 +133,14 @@ class ReportRouteHistoricController extends Controller
                 __('Mileage') => $location->currentMileage,                                                         # C CELL
                 __('Speed') => number_format($location->speed, 2, ',', ''),         # D CELL
                 __('Exc.') => $location->speeding ? __('YES') : __('NO'),                        # E CELL
-                __('Vehicle status') => $location->vehicleStatus ? $location->vehicleStatus->status:'...',                                           # F CELL
+                __('Vehicle status') => $location->vehicleStatus ? $location->vehicleStatus->status : '...',                                           # F CELL
                 __('Address') => $location->address,                                                                # G CELL
                 __('Info route') => $infoRoute                                                                      # H CELL
             ];
         }
 
         $fileData = (object)[
-            'fileName' => __('Historic') ." ".$report->vehicle->number. " $report->dateReport",
+            'fileName' => __('Historic') . " " . $report->vehicle->number . " $report->dateReport",
             'title' => __('Historic') . " $report->dateReport - #" . $report->vehicle->number,
             'subTitle' => __('Time') . " $report->initialTime - $report->finalTime ",
             'sheetTitle' => __('Historic') . " " . $report->vehicle->number,
@@ -154,30 +163,11 @@ class ReportRouteHistoricController extends Controller
         $infoDispatchRegister = "";
         $dispatchRegister = $reportLocation->dispatchRegister;
 
-        if ($dispatchRegister){
+        if ($dispatchRegister) {
             $route = $dispatchRegister->route;
-            $infoDispatchRegister = "$route->name \n ".__('Round trip')." $dispatchRegister->round_trip \n ".__('Turn')." $dispatchRegister->turn \n ".__('Dispatched')." $dispatchRegister->departure_time \n ".__('Driver')." $dispatchRegister->driver_name";
+            $infoDispatchRegister = "$route->name \n " . __('Round trip') . " $dispatchRegister->round_trip \n " . __('Turn') . " $dispatchRegister->turn \n " . __('Dispatched') . " $dispatchRegister->departure_time \n " . __('Driver') . " $dispatchRegister->driver_name";
         }
 
         return $infoDispatchRegister;
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
-    public
-    function ajax(Request $request)
-    {
-        switch ($request->get('option')) {
-            case 'loadRoutes':
-                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
-                $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('partials.selects.routes', compact('routes'));
-                break;
-            default:
-                return "Nothing to do";
-                break;
-        }
     }
 }

@@ -290,26 +290,4 @@ class TaxCentralPassengerReportController extends Controller
     {
         return $historySeat;
     }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
-    public function ajax($action, Request $request)
-    {
-        switch ($action) {
-            case 'loadRoutes':
-                if (Auth::user()->isAdmin()) {
-                    $company = $request->get('company');
-                } else {
-                    $company = Auth::user()->company->id;
-                }
-                $routes = $company != 'null' ? Route::active()->whereCompanyId($company)->orderBy('name', 'asc')->get() : [];
-                return view('partials.selects.routes', compact('routes'));
-                break;
-            default:
-                return "Nothing to do";
-                break;
-        }
-    }
 }

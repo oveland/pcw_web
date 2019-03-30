@@ -97,23 +97,4 @@ class ParkedVehiclesReportController extends Controller
         $route = $parkingReport->dispatchRegister->route;
         return Geolocation::getImageRouteWithANearLocation($route, $parkingReport);
     }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
-    public
-    function ajax(Request $request)
-    {
-        switch ($request->get('option')) {
-            case 'loadRoutes':
-                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
-                $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('reports.route.off-road.routeSelect', compact('routes'));
-                break;
-            default:
-                return "Nothing to do";
-                break;
-        }
-    }
 }

@@ -10,6 +10,17 @@ use Illuminate\Http\Request;
 
 class ProprietaryController extends Controller
 {
+
+    /**
+     * @var GeneralController
+     */
+    private $generalController;
+
+    public function __construct(GeneralController $generalController)
+    {
+        $this->generalController = $generalController;
+    }
+
     public function index(Request $request)
     {
         if (Auth::user()->isAdmin()) {
@@ -20,7 +31,7 @@ class ProprietaryController extends Controller
 
     public function show(Request $request)
     {
-        $company = GeneralController::getCompany($request);
+        $company = $this->generalController->getCompany($request);
         $vehicles = $company->vehicles;
         $proprietaries = $company->proprietaries->sortBy('surname');
 

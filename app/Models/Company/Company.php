@@ -80,6 +80,22 @@ class Company extends Model
     }
 
     /**
+     * @param null $routeId
+     * @return Vehicle|Vehicle[]
+     */
+    public function userVehicles($routeId = null)
+    {
+        $user = Auth::user();
+        $vehicles = $user->assignedVehicles($this);
+        if( $routeId && $routeId != 'all' ){
+            $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::where('route_id', $routeId)->get()->pluck('vehicle_id');
+            $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+        }
+
+        return $vehicles;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function routes()

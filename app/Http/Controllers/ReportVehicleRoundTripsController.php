@@ -11,6 +11,17 @@ use Illuminate\Http\Request;
 
 class ReportVehicleRoundTripsController extends Controller
 {
+
+    /**
+     * @var GeneralController
+     */
+    private $generalController;
+
+    public function __construct(GeneralController $generalController)
+    {
+        $this->generalController = $generalController;
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -28,7 +39,7 @@ class ReportVehicleRoundTripsController extends Controller
      */
     public function show(Request $request)
     {
-        $company = GeneralController::getCompany($request);
+        $company = $this->generalController->getCompany($request);
         $dateReport = $request->get('date-report');
 
         $roundTripsReport = $this->buildRoundTripsReport($company, $dateReport);
@@ -121,24 +132,5 @@ class ReportVehicleRoundTripsController extends Controller
             'data' => $dataExcel,
             'type' => 'roundTripsVehicleReport'
         ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     */
-    public
-    function ajax(Request $request)
-    {
-        switch ($request->get('option')) {
-            case 'loadRoutes':
-                $company = Auth::user()->isAdmin() ? $request->get('company') : Auth::user()->company->id;
-                $routes = $company != 'null' ? Route::active()->where('company_id', '=', $company)->orderBy('name', 'asc')->get() : [];
-                return view('reports.route.off-road.routeSelect', compact('routes'));
-                break;
-            default:
-                return "Nothing to do";
-                break;
-        }
     }
 }

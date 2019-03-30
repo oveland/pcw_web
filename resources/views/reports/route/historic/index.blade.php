@@ -67,26 +67,13 @@
                             </div>
                         @endif
 
-                        @if(Auth::user()->belongsToMontebello())
+                        @if(Auth::user()->canSelectRouteReport())
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                     <div class="form-group">
                                         <select name="route-report" id="route-report" class="default-select2 form-control col-md-12" data-with-all="true">
-                                            <option value="all">@lang('All routes')</option>
-                                            @if(!Auth::user()->isAdmin())
-                                                @php
-                                                    $typeRoutes = $routes->groupBy('as_group');
-                                                @endphp
-
-                                                @foreach($typeRoutes as $asGroup => $routes)
-                                                    <optgroup label="{{ $asGroup ?'Grupos':'Individuales' }}:">
-                                                        @foreach($routes as $route)
-                                                            <option data-kmz-url="{{ $route->url }}" value="{{ $route->id }}">{{ $route->name }}</option>
-                                                        @endforeach
-                                                    </optgroup>
-                                                @endforeach
-                                            @endif
+                                            @include('partials.selects.routes', compact('routes'))
                                         </select>
                                     </div>
                                 </div>
@@ -98,11 +85,7 @@
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
                                     <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
-                                        @if(!Auth::user()->isAdmin())
-                                            @foreach($vehicles as $vehicle)
-                                                <option value="{{ $vehicle->id }}">{{ $vehicle->plate }} #{{ $vehicle->number }}</option>
-                                            @endforeach
-                                        @endif
+                                        @include('partials.selects.vehicles', compact('vehicles'))
                                     </select>
                                 </div>
                             </div>
@@ -252,19 +235,17 @@
                 }
             });
 
-            $('#company-report').change(function () {
-                loadSelectVehicleReport($(this).val(), false);
-                loadSelectRouteReport($(this).val());
-                reportContainer.slideUp(100);
-            });
-
             $('#route-report').change(function () {
                 loadSelectVehicleReportFromRoute($(this).val());
                 reportContainer.slideUp(100);
             });
 
             @if(Auth::user()->isAdmin())
-                $('#company-report').change();
+                $('#company-report').change(function () {
+                    loadSelectVehicleReport($(this).val(), false);
+                    loadSelectRouteReport($(this).val());
+                    reportContainer.slideUp(100);
+                }).change();
             @endif
 
             let time = moment('00:00', 'HH:mm');
