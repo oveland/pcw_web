@@ -124,10 +124,13 @@ class ManagerGPSController extends Controller
         $reportsStatus = collect([]);
         $totalOK = 0;
         $index = 1;
+
         foreach ($simGPSList as $sim) {
             $simGPS = SimGPS::where('sim', $sim)->get()->first();
             $vehicle = $simGPS->vehicle;
             $currentLocationGPS = CurrentLocationsGPS::where('vehicle_id', $vehicle->id)->get()->first() ?? null;
+
+            dd($currentLocationGPS);
 
             $classStatus = null;
             if($currentLocationGPS){

@@ -10,6 +10,7 @@ use App\Models\Vehicles\Vehicle;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AutoDispatcherController extends Controller
 {
@@ -32,7 +33,7 @@ class AutoDispatcherController extends Controller
     public function show(Request $request)
     {
         $company = $this->generalController->getCompany($request);
-        $routes = $company->routes;
+        $routes = $company->activeRoutes;
         $dispatches = $company->dispatches;
 
         $unassignedVehicles = $company->vehicles()
@@ -58,8 +59,8 @@ class AutoDispatcherController extends Controller
             $response->message = __('The Route has ben unassigned successfully');
 
             if ($dispatcherVehicle) {
-                $dispatcherVehicle->route_id = null;
-                if (!$dispatcherVehicle->save()) {
+                DB::delete("DELETE FROM auto_dispatch_registers WHERE dispatcher_vehicle_id = $dispatcherVehicle->id");
+                if (!$dispatcherVehicle->delete()) {
                     $response->success = false;
                     $response->message = __('An error occurred in the process. Contact your administrator');
                 }
@@ -70,6 +71,7 @@ class AutoDispatcherController extends Controller
                 $dispatcherVehicle->vehicle_id = $vehicle->id;
                 $dispatcherVehicle->day_type_id = 1;
             }
+            $dispatcherVehicle->default = true;
 
             $dispatcherVehicle->date = Carbon::now();
             $dispatcherVehicle->route_id = $route->id;

@@ -79,7 +79,7 @@
             <div class="row">
                 @foreach ($unassignedVehicles as $vehicle)
                     <div class="col-md-3 col-sm-4 col-xs-6 p-5">
-                        <button class="btn btn-sm btn-default col-md-12 col-sm-12 col-xs-12 btn-reassign-route unassigned-vehicle"
+                        <button class="btn btn-sm btn-default col-md-12 col-sm-12 col-xs-12 btn-reassign-route unassigned-vehicle tooltips" data-title="{{ $vehicle->id }}"
                                 data-toggle="modal" data-target="#modal-reassign-route"
                                 onclick="
                                         $('#btn-form-delete').hide();
@@ -102,7 +102,7 @@
             @foreach($dispatches as $dispatch)
                 <li class="{{ $loop->first ? 'active' : '' }}">
                     <a href="#dispatch-{{ $dispatch->id }}" data-toggle="tab" class="text-center">
-                        <i class="fa fa-map-signs"></i> {{ $dispatch->name }}<br>
+                        <i class="fa fa-map-signs"></i> {{ $dispatch->id }} - {{ $dispatch->name }}<br>
                         <small>
                             <i class="fa fa-car"></i> {{ $dispatch->dispatcherVehicles->count() }} @lang('Vehicles')
                         </small>
@@ -127,17 +127,20 @@
                                 <div class="widget">
                                     <div class="widget-header bg-inverse">
                                         <h4 class="text-white">
-                                            <i class="fa fa-flag"></i> {{ $route->name }}<br>
+                                            <i class="fa fa-flag"></i> {{ $route->id }} - {{ $route->name }}<br>
                                             <small class="text-white">
                                                 <i class="fa fa-car"></i> {{ $dispatcherVehicles->count() }} @lang('Vehicles')
                                             </small>
                                         </h4>
                                     </div>
-                                    <div class="row">
+                                    <div class="row p-l-20 p-r-20">
                                         @foreach($dispatcherVehicles as $dispatcherVehicle)
-                                            @php($vehicle = $dispatcherVehicle->vehicle)
-                                            <div class="col-md-1 col-sm-4 col-xs-6 p-5 tooltips" data-title="{{ $dispatcherVehicle->defaultDispatcherVehicle->route->name }}" data-placement="bottom">
-                                                <button class="btn btn-sm btn-default col-md-12 col-sm-12 col-xs-12 btn-reassign-route vehicle-{{ $vehicle->number }}"
+                                            @php
+                                                $vehicle = $dispatcherVehicle->vehicle;
+                                                $defaultDispatcherVehicle = $dispatcherVehicle->defaultDispatcherVehicle;
+                                            @endphp
+                                            <div class="col-md-1 col-sm-4 col-xs-6 p-5 tooltips" data-title="{!! $vehicle->id !!} - {{ $defaultDispatcherVehicle ? ($defaultDispatcherVehicle->route->name): 'SIN RUTA POR DEFECTO' }}" data-placement="bottom">
+                                                <button class="btn btn-sm btn-{{ $defaultDispatcherVehicle ? 'default' :'danger' }} col-md-12 col-sm-12 col-xs-12 btn-reassign-route vehicle-{{ $vehicle->number }}"
                                                         data-toggle="modal" data-target="#modal-reassign-route"
                                                         data-route-name="{{ $route->name }}" data-dispatch-name="{{ $dispatch->name }}"
                                                         onclick="
@@ -146,7 +149,7 @@
                                                                 $('#form-reassign-route-vehicle').val({{ $vehicle->id }});
                                                                 $('#new-route').val({{ $route->id }}).change();
                                                                 $('#vehicle-to-reassign').text('{{ $vehicle->number }}')">
-                                                    <i class="fa fa-car text-muted"></i> {!! $vehicle->number !!}
+                                                    <i class="fa fa-car text-{{ $dispatcherVehicle->default ? 'success':'warning' }}"></i> {!! $vehicle->number !!}
                                                 </button>
                                             </div>
                                         @endforeach
