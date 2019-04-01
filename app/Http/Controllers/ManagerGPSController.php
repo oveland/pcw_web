@@ -130,7 +130,7 @@ class ManagerGPSController extends Controller
             $vehicle = $simGPS->vehicle;
             $currentLocationGPS = CurrentLocationsGPS::where('vehicle_id', $vehicle->id)->get()->first() ?? null;
 
-            dd($currentLocationGPS);
+            //dd($currentLocationGPS);
 
             $classStatus = null;
             if($currentLocationGPS){
