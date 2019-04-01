@@ -3,11 +3,14 @@
 
     class ReportRouteHistoric {
         constructor(map) {
+            this.map = map;
+
+            this.currentLocation = null;
             this.historicLocations = [];
             this.markerBus = null;
+
+            this.historicPath = null;
             this.kmlLayer = null;
-            this.currentLocation = null;
-            this.map = map;
         }
 
         processHistoricReportData(report) {
@@ -31,10 +34,17 @@
                 });
             });
 
+            this.historicPath = new google.maps.Polyline({
+                path: [],
+                geodesic: true,
+                strokeColor: 'rgba(118,0,255,0.58)',
+                strokeOpacity: 1.0,
+                strokeWeight: 5,
+                map: this.map
+            });
+
             const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
-            console.log(kmzUrl);
             if (kmzUrl) {
-                console.log('SET ',kmzUrl);
                 this.kmlLayer = new google.maps.KmlLayer({
                     url: kmzUrl,
                     map: this.map
@@ -58,8 +68,6 @@
             }
 
             if (this.markerBus) this.map.setCenter(this.markerBus.getPosition());
-
-
         }
 
         addHistoricMarker(r) {
@@ -100,15 +108,25 @@
         }
 
         paintHistoricPathTo(index) {
+            let path = this.historicPath.getPath();
+
             this.historicLocations.forEach((historicLocation, i) => {
                 if (i <= index) {
                     historicLocation.marker.setMap(this.map);
                     historicLocation.shadowMarker.setMap(null);
+
+                    if(!path.getAt(i)){
+                        path.insertAt(i, historicLocation.marker.position);
+                    }
                 } else {
                     historicLocation.marker.setMap(null);
                     historicLocation.shadowMarker.setMap(this.map);
+
+                    path.removeAt(i);
                 }
             });
+
+            this.historicPath.setPath(path);
         }
 
         updateBusMarker(index) {
