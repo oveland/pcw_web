@@ -67,19 +67,19 @@
 
             if (this.historicLocations.length) {
                 this.updateBusMarker(0);
+
+                setTimeout(() => {
+                    if (this.markerBus) {
+                        this.map.panTo(this.markerBus.getPosition());
+                    }
+                    setTimeout(() => {
+                        $("html, body").animate({scrollTop: $(".range-reports").offset().top - 30}, 1000);
+                    },100);
+
+                }, 1500);
             } else {
                 gwarning("@lang("No registers found")");
             }
-
-            setTimeout(() => {
-                if (this.markerBus) {
-                    this.map.panTo(this.markerBus.getPosition());
-                }
-                setTimeout(() => {
-                    $("html, body").animate({scrollTop: $(".range-reports").offset().top - 50}, 1000);
-                },100);
-
-            }, 1500);
         }
 
         addHistoricMarker(r) {
