@@ -11,21 +11,18 @@
 
     <style>
         .range-reports {
-            position: relative;
             z-index: 1;
             padding-top: 10px;
+            padding-bottom: 5px;
             background: rgba(0, 12, 35, 0.59);
             color: white;
+            position: absolute;
         }
 
         .range-reports .irs-bar, .range-reports .irs-bar-edge, .range-reports .irs-single {
             background: #f57c1e;
         }
 
-        #google-map-light-dream {
-            position: relative;
-            top: -50px
-        }
     </style>
 @endsection
 

@@ -75,7 +75,10 @@
                 if (this.markerBus) {
                     this.map.panTo(this.markerBus.getPosition());
                 }
-                window.scrollTo(0, document.body.scrollHeight);
+                setTimeout(() => {
+                    $("html, body").animate({scrollTop: $(".range-reports").offset().top - 50}, 1000);
+                },100);
+
             }, 1500);
         }
 
