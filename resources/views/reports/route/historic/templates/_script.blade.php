@@ -73,7 +73,7 @@
                         this.map.panTo(this.markerBus.getPosition());
                     }
                     setTimeout(() => {
-                        $("html, body").animate({scrollTop: $(".range-reports").offset().top - 30}, 1000);
+                        $("html, body").animate({scrollTop: $(".range-reports").offset().top - 40}, 1000);
                     },100);
 
                 }, 1500);
