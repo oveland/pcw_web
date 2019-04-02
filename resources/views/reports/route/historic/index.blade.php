@@ -69,7 +69,7 @@
                                     <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                     <div class="form-group">
                                         <select name="route-report" id="route-report" class="default-select2 form-control col-md-12" data-with-all="true">
-                                            @include('partials.selects.routes', compact('routes'))
+                                            @include('partials.selects.routes', compact('routes'), ['withAll' => true])
                                         </select>
                                     </div>
                                 </div>
