@@ -143,16 +143,28 @@
         <hr class="hr">
         <!-- begin content report -->
         <div class="report-container col-md-12">
-            <div class="col-md-12 range-reports">
+            <div class="col-md-12 col-sm-12 col-xs-12 range-reports">
                 <div class="text-center" style="position: absolute;width: 100%">
-                    <small class="text-muted">Deslice para reproducir recorrido</small>
+                    <label for="range_reports">
+                        <small class="text-muted">Deslice para reproducir recorrido</small>
+                    </label>
                 </div>
                 <input id="range_reports" type="text" />
-                <span class="help-block text-white">
-                    <i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports') @lang('between') <i class="fa fa-clock"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock"></i> <span class="time-to">--:--:--</span>
-                </span>
+                <p class="help-block text-white show-info">
+                    <small class="col-md-6 col-sm-6 col-xs-6 p-0 text-left">
+                        <span><i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')</span>
+                        <span class="hidden-xs">
+                            @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
+                        </span>
+                    </small>
+                    <small class="col-md-6 col-sm-6 col-xs-12 p-0 text-right">
+                        <span><i class="fa fa-clock-o"></i> <span class="time">0</span></span> |
+                        <span><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span> |
+                        <span class="btn btn-default btn-xs btn-circle status-vehicle m-b-5" style="padding-left: 10px !important; padding-right: 10px !important; font-size: 0.8em !important;"></span>
+                    </small>
+                </p>
             </div>
-            <div id="google-map-light-dream" class="col-md-12 p-0 map-report-historic" style="height: 1000px"></div>
+            <div id="google-map-light-dream" class="col-md-12 col-sm-12 col-xs-12 p-0 map-report-historic" style="height: 1000px"></div>
         </div>
         <!-- end content report -->
     </div>
@@ -203,6 +215,7 @@
                     loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
                         loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
                             SlidingMarker.initializeGlobally();
+                            $('.map-report-historic').css('height', (window.innerHeight - 150));
                         });
                     });
                 });
@@ -245,7 +258,7 @@
                 $('#company-report').change(function () {
                     loadSelectVehicleReport($(this).val(), false);
                     loadSelectRouteReport($(this).val());
-                    reportContainer.slideUp(100);
+                    //reportContainer.slideUp(100);
                 }).change();
             @endif
 
@@ -268,11 +281,12 @@
                 skin: "modern",
                 grid: false,
                 decorate_both: true,
+                prettify: true,
                 keyboard: true,
                 grid_num: 10,
                 values_separator: " → ",
-                onChange: function () {
-                    
+                onChange: function (slider) {
+
                 }
             });
 
