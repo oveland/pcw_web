@@ -56,8 +56,8 @@ class ReportMileageController extends Controller
     {
         $vehicles = $company->vehicles;
 
-        $locations = Location::where('dispatch_register_id', '<>', null)
-            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+        //$locations = Location::where('dispatch_register_id', '<>', null)
+        $locations = Location::whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
             ->orderBy('date')
             ->get();
@@ -68,7 +68,10 @@ class ReportMileageController extends Controller
             $vehicle = Vehicle::find($vehicleId);
 
             $mileageByRoutes = collect([]);
-            $locationsByDispatchRegisters = $locationsByVehicle->groupBy('dispatch_register_id');
+            $locationsByDispatchRegisters = $locationsByVehicle
+                ->where('dispatch_register_id', '<>', null)
+                ->groupBy('dispatch_register_id');
+
             foreach ($locationsByDispatchRegisters as $dispatchRegisterId => $locationsByDispatchRegister) {
                 $dispatchRegister = DispatchRegister::find($dispatchRegisterId);
                 $route = $dispatchRegister->route;
@@ -128,6 +131,15 @@ class ReportMileageController extends Controller
                         __('Mileage') => number_format($reportByRoute->mileage,2, ',', '')   # E CELL
                     ];
                 }
+                $typeReport = '';
+                if(! count($dataExcel) ){
+                    $dataExcel[] = [
+                        __('Route') => __('No dispatch registers found'),
+                        __('Mileage') => number_format($report->mileage,2, ',', '')
+                    ];
+                }else{
+                    $typeReport = 'mileageReport';
+                }
 
                 $dataExport = (object)[
                     'fileName' => __('Mileage Report') . " $dateReport",
@@ -135,8 +147,9 @@ class ReportMileageController extends Controller
                     'subTitle' => __('Vehicle')." $vehicle->number:  ".number_format($report->mileage,2, ',', '')."Km ".__('in the day'),
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
-                    'type' => 'mileageReport'
+                    'type' => $typeReport
                 ];
+
 
                 /* SHEETS */
                 $excel = PCWExporterService::createHeaders($excel, $dataExport);

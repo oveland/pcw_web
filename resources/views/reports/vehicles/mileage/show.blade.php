@@ -37,7 +37,7 @@
                     $reportByRoutes = $report->byRoutes;
                 @endphp
                 <div id="report-tab-{{ $vehicle->id }}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}}">
-                    <h4><i class="fa fa-road"></i> {{ number_format($report->mileage,2) }} Km @lang('in the day')</h4>
+                    <h2 class="m-l-15" style="font-size: 1.3em !important;"><i class="fa fa-road"></i> {{ number_format($report->mileage,2) }} Km @lang('in the day')</h2>
                     <hr class="hr">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
@@ -66,6 +66,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @if($reportByRoutes->count())
                             @foreach($reportByRoutes as $dispatchRegisterId => $reportByRoute)
                                 @php
                                     $route = $reportByRoute->route;
@@ -83,6 +84,13 @@
                                 <td class="text-right" colspan="4">@lang('Total')</td>
                                 <td class="text-center">{{ $report->mileageByAllRoutes }} </td>
                             </tr>
+                            @else
+                                <tr class="bg-inverse text-white">
+                                    <td class="text-center" colspan="5">
+                                        @include('partials.alerts.noRegistersFound')
+                                    </td>
+                                </tr>
+                            @endif
                             </tbody>
                         </table>
                     </div>

@@ -33,6 +33,7 @@
   "round trip": "vuelta",
   "Turn": "Turno",
   "No registers found": "No se encontraron registros",
+  "No dispatch registers found": "No se encontraron despachos",
   "Select an option": "Seleccione",
   "Select a route": "Seleccione una ruta",
   "Select a vehicle": "Seleccione un vehículo",
