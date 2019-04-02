@@ -203,7 +203,7 @@
                     map: this.map,
                     position: marker.getPosition(),
                     icon: icon,
-                    duration: 500,
+                    duration: 800,
                     easing: "swing",
                     title: marker.getTitle(),
                     shadow: ""
