@@ -17,6 +17,7 @@
             background: rgba(0, 12, 35, 0.59);
             color: white;
             position: absolute;
+            width: 97.2%;
         }
 
         .range-reports .irs-bar, .range-reports .irs-bar-edge, .range-reports .irs-single {
