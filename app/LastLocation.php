@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -53,6 +54,16 @@ use Illuminate\Database\Eloquent\Model;
 class LastLocation extends Model
 {
     protected $dates = ['date'];
+
+    protected function getDateFormat()
+    {
+        return config('app.date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+    }
 
     public function vehicle()
     {

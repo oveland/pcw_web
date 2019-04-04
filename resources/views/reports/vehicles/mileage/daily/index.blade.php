@@ -137,16 +137,10 @@
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
-<<<<<<< HEAD:resources/views/reports/vehicles/mileage/index.blade.php
-        $('.menu-report-vehicles, .menu-report-vehicles-mileage').addClass('active-animated');
-        const form = $('.form-search-report');
-        const reportContainer = $('.report-container');
-
-=======
         $('.menu-report-vehicles, .menu-report-vehicles-mileage, .menu-report-vehicles-mileage-daily').addClass('active-animated');
         const form = $('.form-search-report');
         const reportContainer = $('.report-container');
->>>>>>> 24b5c16dbc4f2df89d567548a11deef6fefb1fe2:resources/views/reports/vehicles/mileage/daily/index.blade.php
+
         $(document).ready(function () {
             form.submit(function (e) {
                 e.preventDefault();
@@ -166,16 +160,6 @@
                 }
             });
 
-<<<<<<< HEAD:resources/views/reports/vehicles/mileage/index.blade.php
-            $('#route-report, #date-report').change(function () {
-                reportContainer.slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
-            });
-
-=======
->>>>>>> 24b5c16dbc4f2df89d567548a11deef6fefb1fe2:resources/views/reports/vehicles/mileage/daily/index.blade.php
             $('body').on('click', '.btn-show-address', function () {
                 var el = $(this);
                 el.attr('disabled', true);
@@ -193,13 +177,8 @@
                         el.fadeOut(1000);
                     }
                 });
-<<<<<<< HEAD:resources/views/reports/vehicles/mileage/index.blade.php
-            });
-
-            $('body').on('click', '.accordion-vehicles', function () {
-=======
             }).on('click', '.accordion-vehicles', function () {
->>>>>>> 24b5c16dbc4f2df89d567548a11deef6fefb1fe2:resources/views/reports/vehicles/mileage/daily/index.blade.php
+
                 $($(this).data('parent'))
                     .find('.collapse').collapse('hide')
                     .find($(this).data('target')).collapse('show');
@@ -215,19 +194,12 @@
             });
 
             @if(Auth::user()->isAdmin())
-<<<<<<< HEAD:resources/views/reports/vehicles/mileage/index.blade.php
-                $('#company-report').change(function () {
-                    loadSelectRouteReport($(this).val());
-                    reportContainer.slideUp(100);
-                }).change();
-=======
             $('#company').change(function () {
                 reportContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
             }).change();
->>>>>>> 24b5c16dbc4f2df89d567548a11deef6fefb1fe2:resources/views/reports/vehicles/mileage/daily/index.blade.php
             @endif
         });
     </script>

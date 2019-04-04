@@ -72,9 +72,11 @@ class ReportMileageDateRangeController extends Controller
 
         $lastLocations = LastLocation::whereBetween('date', ["$initialDateReport 00:00:00", "$finalDateReport 23:59:59"])
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->orderBy('vehicle_id')
-            ->orderBy('date')
             ->get();
+
+        $lastLocations = $lastLocations->sortBy(function($lastLocation){
+            return $lastLocation->date->toDateString()." ".intval($lastLocation->vehicle->number);
+        });
 
         $reports = collect([]);
         foreach ($lastLocations as $lastLocation) {
