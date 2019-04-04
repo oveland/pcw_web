@@ -6,6 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Routes\Route;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Models\Vehicles\Vehicle;
 use Auth;
@@ -14,14 +15,19 @@ use Illuminate\Http\Request;
 
 class ReportMileageController extends Controller
 {
+    /**
+     * @var PCWAuthService
+     */
+    private $pcwAuthService;
 
     /**
      * @var GeneralController
      */
     private $generalController;
 
-    public function __construct(GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService, GeneralController $generalController)
     {
+        $this->pcwAuthService = $pcwAuthService;
         $this->generalController = $generalController;
     }
 
@@ -30,10 +36,11 @@ class ReportMileageController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name', 'asc')->get();
-        }
-        return view('reports.vehicles.mileage.index', compact('companies'));
+        $access = $this->pcwAuthService->getAccessProperties();
+        $companies = $access->companies;
+        $routes = $access->routes;
+
+        return view('reports.vehicles.mileage.index', compact(['companies', 'routes']));
     }
 
     /**
@@ -42,19 +49,27 @@ class ReportMileageController extends Controller
      */
     public function show(Request $request)
     {
+        $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
         $company = $this->generalController->getCompany($request);
         $dateReport = $request->get('date-report');
+        $routeReport = $request->get('route-report');
 
-        $mileageReport = $this->buildMileageReport($company, $dateReport);
+        $mileageReport = $this->buildMileageReport($company, $dateReport, $routeReport);
 
         if ($request->get('export')) $this->export($mileageReport);
 
         return view('reports.vehicles.mileage.show', compact(['mileageReport', 'stringParams']));
     }
 
-    public function buildMileageReport(Company $company = null, $dateReport)
+    /**
+     * @param Company|null $company
+     * @param $dateReport
+     * @param null $routeReport
+     * @return object
+     */
+    public function buildMileageReport(Company $company = null, $dateReport, $routeReport = null)
     {
-        $vehicles = $company->vehicles;
+        $vehicles = $company->userVehicles($routeReport);
 
         //$locations = Location::where('dispatch_register_id', '<>', null)
         $locations = Location::whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])

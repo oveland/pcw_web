@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\ParkingReport;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Auth;
 use Illuminate\Http\Request;
@@ -13,14 +14,36 @@ use Route;
 class ParkedVehiclesReportController extends Controller
 {
     /**
+     * @var PCWAuthService
+     */
+    private $pcwAuthService;
+
+    /**
+     * @var GeneralController
+     */
+    private $generalController;
+
+    /**
+     * ParkedVehiclesReportController constructor.
+     * @param PCWAuthService $pcwAuthService
+     * @param GeneralController $generalController
+     */
+    public function __construct(PCWAuthService $pcwAuthService, GeneralController $generalController)
+    {
+        $this->pcwAuthService = $pcwAuthService;
+        $this->generalController = $generalController;
+    }
+
+    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name', 'asc')->get();
-        }
-        return view('reports.vehicles.parked.index', compact('companies'));
+        $access = $this->pcwAuthService->getAccessProperties();
+        $companies = $access->companies;
+        $routes = $access->routes;
+
+        return view('reports.vehicles.parked.index', compact(['companies', 'routes']));
     }
 
     /**
@@ -31,8 +54,10 @@ class ParkedVehiclesReportController extends Controller
     {
         $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $vehicles = $company->activeVehicles;
+        $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
+
+        $vehicles = $company->userVehicles($routeReport);
 
         $parkedReports = ParkingReport::whereIn('vehicle_id', $vehicles->pluck('id'))
             ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
