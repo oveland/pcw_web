@@ -54,7 +54,7 @@
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-bus animated" aria-hidden="true"></i> @lang('Vehicles Report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage') - @lang('Date range')</small>
     </h1>
 
     <!-- end page-header -->
@@ -62,7 +62,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('report-vehicle-mileage-show') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-vehicle-mileage-show-date-range') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -80,9 +80,9 @@
                         @if(Auth::user()->isAdmin())
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="company-report" class="control-label field-required">@lang('Company')</label>
+                                    <label for="company" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
-                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                        <select name="company" id="company" class="default-select2 form-control col-md-12">
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                             @endforeach
@@ -92,26 +92,33 @@
                             </div>
                         @endif
 
-                        @if(Auth::user()->canSelectRouteReport())
-                            <div class="col-md-3">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
-                                    <label for="route-report" class="control-label field-required">@lang('Route')</label>
-                                    <div class="form-group">
-                                        <select name="route-report" id="route-report" class="default-select2 form-control col-md-12" data-with-all="true">
-                                            @include('partials.selects.routes', compact('routes'), ['withAll' => true])
-                                        </select>
-                                    </div>
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
+                                        @include('partials.selects.vehicles', compact('vehicles'))
+                                    </select>
                                 </div>
                             </div>
-                        @endif
+                        </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="date-report"
-                                       class="control-label field-required">@lang('Date report')</label>
+                                <label for="initial-date-report" class="control-label field-required">@lang('Initial date')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control"
-                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="initial-date-report" id="initial-date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="final-date-report" class="control-label field-required">@lang('Final date')</label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="final-date-report" id="final-date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -137,10 +144,9 @@
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-mileage').addClass('active-animated');
+        $('.menu-report-vehicles, .menu-report-vehicles-mileage, .menu-report-vehicles-mileage-date-range').addClass('active-animated');
         const form = $('.form-search-report');
         const reportContainer = $('.report-container');
-
         $(document).ready(function () {
             form.submit(function (e) {
                 e.preventDefault();
@@ -160,13 +166,6 @@
                 }
             });
 
-            $('#route-report, #date-report').change(function () {
-                reportContainer.slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
-            });
-
             $('body').on('click', '.btn-show-address', function () {
                 var el = $(this);
                 el.attr('disabled', true);
@@ -174,7 +173,7 @@
                 el.find('i').removeClass('hide');
                 $($(this).data('target')).load($(this).data('url'), function (response, status, xhr) {
                     el.attr('disabled', false);
-                    if (status == "error") {
+                    if (status === "error") {
                         if (el.hasClass('second-time')) {
                             el.removeClass('second-time');
                         } else {
@@ -186,27 +185,13 @@
                 });
             });
 
-            $('body').on('click', '.accordion-vehicles', function () {
-                $($(this).data('parent'))
-                    .find('.collapse').collapse('hide')
-                    .find($(this).data('target')).collapse('show');
-            });
-
-            $('body').on('keyup', '.search-vehicle-list', function () {
-                var vehicle = $(this).val();
-                if (is_not_null(vehicle)) {
-                    $('.vehicle-list').slideUp("fast", function () {
-                        $('#vehicle-list-' + vehicle).slideDown();
-                    });
-                } else {
-                    $('.vehicle-list').slideDown();
-                }
+            $('#vehicle-report, #initial-date-report, #final-date-report').change(function(){
+                reportContainer.slideUp(100);
             });
 
             @if(Auth::user()->isAdmin())
-                $('#company-report').change(function () {
-                    loadSelectRouteReport($(this).val());
-                    reportContainer.slideUp(100);
+                $('#company').change(function () {
+                    loadSelectVehicleReport($(this).val(), true);
                 }).change();
             @endif
         });

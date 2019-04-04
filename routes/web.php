@@ -151,8 +151,15 @@ Route::group(['middleware' => ['auth']], function () {
 
             /* Mileage report */
             Route::prefix(__('mileage'))->group(function () {
-                Route::get('/', 'ReportMileageController@index')->name('report-vehicle-mileage');
-                Route::get('/show', 'ReportMileageController@show')->name('report-vehicle-mileage-show');
+                Route::prefix(__('daily'))->group(function () {
+                    Route::get('/', 'ReportMileageController@index')->name('report-vehicle-mileage');
+                    Route::get('/show', 'ReportMileageController@show')->name('report-vehicle-mileage-show');
+                });
+
+                Route::prefix(__('date-range'))->group(function () {
+                    Route::get('/', 'ReportMileageDateRangeController@index')->name('report-vehicle-mileage-date-range');
+                    Route::get('/show', 'ReportMileageDateRangeController@show')->name('report-vehicle-mileage-show-date-range');
+                });
             });
 
             /* Mileage report */
@@ -267,6 +274,16 @@ Route::group(['middleware' => ['auth']], function () {
                 /* Routes for logs */
                 Route::get('/', 'AccessLogController@index')->name('report-user-access-log');
                 Route::get('/{date}', 'AccessLogController@report')->name('report-user-access-log-export');
+            });
+        });
+    });
+
+    /* Routes for operation pages */
+    Route::prefix(__('takings'))->group(function () {
+        Route::prefix(__('passengers'))->group(function () {
+            Route::prefix(__('url-liquidation'))->group(function () {
+                Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');
+                Route::get('/search', 'TakingsPassengersLiquidationController@search')->name('takings-passengers-liquidation-search');
             });
         });
     });

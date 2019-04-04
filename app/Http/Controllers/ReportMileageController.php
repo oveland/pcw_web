@@ -5,30 +5,40 @@ namespace App\Http\Controllers;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
+<<<<<<< HEAD
 use App\Models\Routes\Route;
+=======
+>>>>>>> 24b5c16dbc4f2df89d567548a11deef6fefb1fe2
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Models\Vehicles\Vehicle;
-use Auth;
 use Excel;
 use Illuminate\Http\Request;
 
 class ReportMileageController extends Controller
 {
+<<<<<<< HEAD
     /**
      * @var PCWAuthService
      */
     private $pcwAuthService;
 
+=======
+>>>>>>> 24b5c16dbc4f2df89d567548a11deef6fefb1fe2
     /**
      * @var GeneralController
      */
     private $generalController;
+    /**
+     * @var PCWAuthService
+     */
+    private $pcwAuthService;
 
     public function __construct(PCWAuthService $pcwAuthService, GeneralController $generalController)
     {
         $this->pcwAuthService = $pcwAuthService;
         $this->generalController = $generalController;
+        $this->pcwAuthService = $pcwAuthService;
     }
 
     /**
@@ -36,11 +46,18 @@ class ReportMileageController extends Controller
      */
     public function index()
     {
+<<<<<<< HEAD
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;
 
         return view('reports.vehicles.mileage.index', compact(['companies', 'routes']));
+=======
+        $accessProperties = $this->pcwAuthService->getAccessProperties();
+        $companies = $accessProperties->companies;
+        $vehicles = $accessProperties->vehicles;
+        return view('reports.vehicles.mileage.daily.index', compact(['companies', 'vehicles']));
+>>>>>>> 24b5c16dbc4f2df89d567548a11deef6fefb1fe2
     }
 
     /**
@@ -58,7 +75,7 @@ class ReportMileageController extends Controller
 
         if ($request->get('export')) $this->export($mileageReport);
 
-        return view('reports.vehicles.mileage.show', compact(['mileageReport', 'stringParams']));
+        return view('reports.vehicles.mileage.daily.show', compact(['mileageReport', 'stringParams']));
     }
 
     /**

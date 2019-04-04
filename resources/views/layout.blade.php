@@ -592,10 +592,23 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </a>
                                 </li>
                                 <li class="nav-item menu-report-vehicles-mileage">
-                                    <a href="{{ route('report-vehicle-mileage')  }}" class="faa-parent animated-hover nav-link">
+                                    <a href="javascript:;" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-road faa-tada" aria-hidden="true"></i>
                                         @lang('Mileage')
                                     </a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item menu-route-report menu-report-vehicles-mileage-daily">
+                                            <a href="{{ route('report-vehicle-mileage')  }}" class="faa-parent animated-hover nav-link">
+                                                <i class="fa fa-calendar-o faa-vertical" aria-hidden="true"></i> @lang('Daily')
+                                            </a>
+                                        </li>
+                                        <li class="nav-item menu-route-report menu-report-vehicles-mileage-date-range">
+                                            <a href="{{ route('report-vehicle-mileage-date-range')  }}" class="faa-parent animated-hover nav-link">
+                                                <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i> @lang('Date range')
+                                            </a>
+                                        </li>
+                                    </ul>
+
                                 </li>
                                 <li class="nav-item menu-report-vehicles-round-trips">
                                     <a href="{{ route('report-vehicle-round-trips')  }}" class="faa-parent animated-hover nav-link">
@@ -777,6 +790,31 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </ul>
                             </li>
                         @endif
+                    </ul>
+                </li>
+
+                <li class="nav-item {{ $baseMenu == __('takings')?'active-animated':'' }}">
+                    <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
+                        <i class="fa fa-dollar faa-horizontal"></i>
+                        <span>@lang('Takings')</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item menu-takings-passengers">
+                            <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
+                                <i class="fa fa-users faa-vertical"></i>
+                                @lang('Passengers')
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="nav-item menu-takings-passengers-liquidation">
+                                    <a href="{{ route('takings-passengers-liquidation')  }}" class="faa-parent animated-hover nav-link">
+                                        <i class="fa fa-file-text faa-vertical" aria-hidden="true"></i>
+                                        @lang('Liquidation')
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
             </ul>

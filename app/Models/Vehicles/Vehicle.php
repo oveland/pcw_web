@@ -37,6 +37,7 @@ use Sofa\Eloquence\Mappable;
  * @property-read \App\Models\Vehicles\CurrentLocation $currentLocation
  * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicle
  * @property-read \App\Models\Vehicles\GpsVehicle $gpsVehicle
+ * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicles
  */
 class Vehicle extends Model
 {
