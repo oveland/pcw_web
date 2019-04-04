@@ -9,6 +9,8 @@ use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Models\Vehicles\Vehicle;
+use App\Services\PCWTime;
+use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\Request;
 
@@ -78,20 +80,32 @@ class ReportMileageDateRangeController extends Controller
             return $lastLocation->date->toDateString()." ".intval($lastLocation->vehicle->number);
         });
 
-        $reports = collect([]);
-        foreach ($lastLocations as $lastLocation) {
-            $vehicle = $lastLocation->vehicle;
+        $initialDate = Carbon::createFromFormat(config('app.date_format'), $initialDateReport);
+        $finalDate = Carbon::createFromFormat(config('app.date_format'), $finalDateReport);
 
-            $reports->push(
-                (object)[
-                    'vehicleId' => $vehicle->id,
-                    'vehiclePlate' => $vehicle->plate,
-                    'vehicleNumber' => $vehicle->number,
-                    'date' => $lastLocation->date->toDateString(),
-                    'mileage' => $lastLocation->current_mileage
-                ]
-            );
+        $dateRange = PCWTime::dateRange($initialDate, $finalDate);
+
+        $reports = collect([]);
+
+        foreach ($vehicles as $vehicle){
+            foreach ($dateRange as $date){
+                $lastLocation = $lastLocations->where('vehicle_id', $vehicle->id)->filter(function (LastLocation $ll) use ($date) {
+                    return $ll->date->toDateString() == $date->toDateString();
+                })->first();
+
+                $reports->push(
+                    (object)[
+                        'vehicleId' => $vehicle->id,
+                        'vehiclePlate' => $vehicle->plate,
+                        'vehicleNumber' => $vehicle->number,
+                        'date' => $date->toDateString(),
+                        'mileage' => $lastLocation ? $lastLocation->current_mileage : 0,
+                        'hasReports' => !!$lastLocation,
+                    ]
+                );
+            }
         }
+
 
         $mileageReport = (object)[
             'companyReport' => $company->id,

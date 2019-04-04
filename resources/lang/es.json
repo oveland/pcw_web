@@ -536,5 +536,6 @@
   "takings": "recaudo",
   "Liquidation": "Liquidación",
   "liquidation": "liquidación",
-  "url-liquidation": "liquidacion"
+  "url-liquidation": "liquidacion",
+  "No GPS reports found": "GPS no reportó datos"
 }

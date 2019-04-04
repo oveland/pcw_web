@@ -67,7 +67,9 @@
                                     <td class="text-center">{{ $report->date }} </td>
                                     <td class="text-center">{{ $report->vehicleNumber }} </td>
                                     <td class="text-center">{{ $report->vehiclePlate }} </td>
-                                    <td class="text-center">{{ number_format($report->mileage/1000,2, ',', '.') }} </td>
+                                    <td class="text-center {{ $report->hasReports ? '':'text-warning tooltips' }}"
+                                        data-title="{{ $report->hasReports ? '':__('No GPS reports found') }}">
+                                        {{ number_format($report->mileage/1000,2, ',', '.') }} </td>
                                 </tr>
                             @endforeach
 
