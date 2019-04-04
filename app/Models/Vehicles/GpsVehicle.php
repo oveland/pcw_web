@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereVehicleId($value)
  * @property-read \App\Models\Vehicles\Vehicle $vehicle
+ * @property int|null $gps_type_id
+ * @property int|null $report_period
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereGpsTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereReportPeriod($value)
  */
 class GpsVehicle extends Model
 {

@@ -54,7 +54,7 @@
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-bus animated" aria-hidden="true"></i> @lang('Vehicles Report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage') - @lang('Daily')</small>
     </h1>
 
     <!-- end page-header -->
@@ -123,33 +123,25 @@
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-mileage').addClass('active-animated');
+        $('.menu-report-vehicles, .menu-report-vehicles-mileage, .menu-report-vehicles-mileage-daily').addClass('active-animated');
+        const form = $('.form-search-report');
+        const reportContainer = $('.report-container');
         $(document).ready(function () {
-            $('.form-search-report').submit(function (e) {
-                var form = $(this);
+            form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    $('.report-container').slideUp(100);
+                    reportContainer.slideUp(100);
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            $('.report-container').empty().hide().html(data).fadeIn();
-                            //hideSideBar();
+                            reportContainer.empty().hide().html(data).fadeIn();
                         },
                         complete:function(){
                             form.find('.btn-search-report').removeClass(loadingClass);
                         }
                     });
-                }
-            });
-
-            $('#company, #date-report').change(function () {
-                var form = $('.form-search-report');
-                $('.report-container').slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
                 }
             });
 
@@ -160,7 +152,7 @@
                 el.find('i').removeClass('hide');
                 $($(this).data('target')).load($(this).data('url'), function (response, status, xhr) {
                     el.attr('disabled', false);
-                    if (status == "error") {
+                    if (status === "error") {
                         if (el.hasClass('second-time')) {
                             el.removeClass('second-time');
                         } else {
@@ -170,17 +162,11 @@
                         el.fadeOut(1000);
                     }
                 });
-            });
-
-            $('#company').change();
-
-            $('body').on('click', '.accordion-vehicles', function () {
+            }).on('click', '.accordion-vehicles', function () {
                 $($(this).data('parent'))
                     .find('.collapse').collapse('hide')
                     .find($(this).data('target')).collapse('show');
-            });
-
-            $('body').on('keyup', '.search-vehicle-list', function () {
+            }).on('keyup', '.search-vehicle-list', function () {
                 var vehicle = $(this).val();
                 if (is_not_null(vehicle)) {
                     $('.vehicle-list').slideUp("fast", function () {
@@ -190,6 +176,15 @@
                     $('.vehicle-list').slideDown();
                 }
             });
+
+            @if(Auth::user()->isAdmin())
+            $('#company').change(function () {
+                reportContainer.slideUp();
+                if (form.isValid(false)) {
+                    form.submit();
+                }
+            }).change();
+            @endif
         });
     </script>
 @endsection

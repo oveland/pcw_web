@@ -5,24 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
-use App\Models\Routes\Route;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Models\Vehicles\Vehicle;
-use Auth;
 use Excel;
 use Illuminate\Http\Request;
 
 class ReportMileageController extends Controller
 {
-
     /**
      * @var GeneralController
      */
     private $generalController;
+    /**
+     * @var PCWAuthService
+     */
+    private $pcwAuthService;
 
-    public function __construct(GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService, GeneralController $generalController)
     {
         $this->generalController = $generalController;
+        $this->pcwAuthService = $pcwAuthService;
     }
 
     /**
@@ -30,10 +33,10 @@ class ReportMileageController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name', 'asc')->get();
-        }
-        return view('reports.vehicles.mileage.index', compact('companies'));
+        $accessProperties = $this->pcwAuthService->getAccessProperties();
+        $companies = $accessProperties->companies;
+        $vehicles = $accessProperties->vehicles;
+        return view('reports.vehicles.mileage.daily.index', compact(['companies', 'vehicles']));
     }
 
     /**
@@ -49,7 +52,7 @@ class ReportMileageController extends Controller
 
         if ($request->get('export')) $this->export($mileageReport);
 
-        return view('reports.vehicles.mileage.show', compact(['mileageReport', 'stringParams']));
+        return view('reports.vehicles.mileage.daily.show', compact(['mileageReport', 'stringParams']));
     }
 
     public function buildMileageReport(Company $company = null, $dateReport)

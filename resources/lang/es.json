@@ -166,6 +166,8 @@
   "Arrived Recorder": "Registradora llegada",
   "End Rec.": "Reg. final",
   "All": "Todos",
+  "all": "todos",
+  "for all": "para todos",
   "Total passengers": "Total pasajeros",
   "Average per vehicle": "Promedio por vehículos",
   "Average": "Promedio",
@@ -529,5 +531,10 @@
   "YES": "SI",
   "NO": "NO",
   "Info route": "Info Ruta",
-  "Vehicle status": "Estado vehículo"
+  "Vehicle status": "Estado vehículo",
+  "Takings": "Recaudo",
+  "takings": "recaudo",
+  "Liquidation": "Liquidación",
+  "liquidation": "liquidación",
+  "url-liquidation": "liquidacion"
 }
