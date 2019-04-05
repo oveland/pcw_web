@@ -31,9 +31,9 @@
             </div>
             <small class="text-white label-vehicles hide"><i class="fa fa-car"></i> {{ count($reports) }} @lang('Dates')  <i class="fa fa-road"></i> {{ number_format($mileageReport->mileageByFleet,2, ',', '.') }} Km @lang('in total')</small>
 
-            <h2 class="text-white text-bold">
-                <i class="fa fa-road"></i> @lang('Report')
-            </h2>
+            <h1 class="text-white text-bold" style="font-size: 1.2em !important;">
+                <i class="fa fa-road"></i> @lang('Report') @lang('mileage')
+            </h1>
 
         </div>
         <div class="tab-content table-responsives">
@@ -43,6 +43,10 @@
                     <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
                         <thead>
                             <tr class="inverse">
+                                <th>
+                                    <i class="fa fa-list-o"></i><br>
+                                    @lang('#')
+                                </th>
                                 <th>
                                     <i class="fa fa-calendar-o"></i><br>
                                     @lang('Date')
@@ -64,6 +68,7 @@
                         <tbody>
                             @foreach($reports as $report)
                                 <tr>
+                                    <td class="text-center">{{ $loop->iteration }} </td>
                                     <td class="text-center">{{ $report->date }} </td>
                                     <td class="text-center">{{ $report->vehicleNumber }} </td>
                                     <td class="text-center">{{ $report->vehiclePlate }} </td>
@@ -74,8 +79,8 @@
                             @endforeach
 
                             <tr class="bg-inverse text-white">
-                                <td class="text-right" colspan="3">@lang('Total')</td>
-                                <td class="text-center">{{ number_format($mileageReport->mileageByFleet/1000,2, ',', '.') }} </td>
+                                <td class="text-right" colspan="4">@lang('TOTAL')</td>
+                                <td class="text-center">{{ number_format($mileageReport->mileageByFleet/1000,2, ',', '.') }} Km</td>
                             </tr>
                         </tbody>
                     </table>

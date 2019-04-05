@@ -70,42 +70,62 @@ class ReportMileageDateRangeController extends Controller
     public function buildMileageReport(Company $company, $vehicleReport, $initialDateReport, $finalDateReport)
     {
         $vehicles = $company->vehicles;
-        if($vehicleReport != 'all')$vehicles = $vehicles->where('id', $vehicleReport);
+        if ($vehicleReport != 'all') $vehicles = $vehicles->where('id', $vehicleReport);
 
+        $reports = collect([]);
         $lastLocations = LastLocation::whereBetween('date', ["$initialDateReport 00:00:00", "$finalDateReport 23:59:59"])
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
             ->get();
 
-        $lastLocations = $lastLocations->sortBy(function($lastLocation){
+        /*$lastLocations = $lastLocations->sortBy(function($lastLocation){
             return $lastLocation->date->toDateString()." ".intval($lastLocation->vehicle->number);
-        });
+        });*/
 
-        $initialDate = Carbon::createFromFormat(config('app.date_format'), $initialDateReport);
-        $finalDate = Carbon::createFromFormat(config('app.date_format'), $finalDateReport);
+        foreach ($lastLocations as $lastLocation) {
+            $vehicle = $lastLocation->vehicle;
+            $date = $lastLocation->date->toDateString();
+            $key = "$vehicle->id $date";
+            $reports->put($key,
+                (object)[
+                    'key' => $key,
+                    'vehicleId' => $vehicle->id,
+                    'vehiclePlate' => $vehicle->plate,
+                    'vehicleNumber' => $vehicle->number,
+                    'date' => $date,
+                    'mileage' => $lastLocation ? $lastLocation->current_mileage : 0,
+                    'hasReports' => !!$lastLocation,
+                ]
+            );
+        }
+
+        $initialDate = Carbon::createFromFormat('Y-m-d', $initialDateReport);
+        $finalDate = Carbon::createFromFormat('Y-m-d', $finalDateReport);
 
         $dateRange = PCWTime::dateRange($initialDate, $finalDate);
 
-        $reports = collect([]);
+        foreach ($vehicles as $vehicle) {
+            foreach ($dateRange as $date) {
+                $date = $date->toDateString();
+                $key = "$vehicle->id $date";
+                $report = $reports->get($key);
 
-        foreach ($vehicles as $vehicle){
-            foreach ($dateRange as $date){
-                $lastLocation = $lastLocations->where('vehicle_id', $vehicle->id)->filter(function (LastLocation $ll) use ($date) {
-                    return $ll->date->toDateString() == $date->toDateString();
-                })->first();
-
-                $reports->push(
-                    (object)[
-                        'vehicleId' => $vehicle->id,
-                        'vehiclePlate' => $vehicle->plate,
-                        'vehicleNumber' => $vehicle->number,
-                        'date' => $date->toDateString(),
-                        'mileage' => $lastLocation ? $lastLocation->current_mileage : 0,
-                        'hasReports' => !!$lastLocation,
-                    ]
-                );
+                if(!$report){
+                    $reports->put($key,
+                        (object)[
+                            'key' => $key,
+                            'vehicleId' => $vehicle->id,
+                            'vehiclePlate' => $vehicle->plate,
+                            'vehicleNumber' => $vehicle->number,
+                            'date' => $date,
+                            'mileage' => 0,
+                            'hasReports' => false,
+                        ]
+                    );
+                }
             }
         }
 
+        $reports = $reports->sortBy('key');
 
         $mileageReport = (object)[
             'companyReport' => $company->id,
@@ -133,19 +153,19 @@ class ReportMileageDateRangeController extends Controller
                 __('Date') => $report->date,         # B CELL
                 __('Number') => $report->vehicleNumber,      # C CELL
                 __('Plate') => $report->vehiclePlate,        # D CELL
-                __('Mileage')." (Km)" => "=$report->mileage/1000",   # E CELL
+                __('Mileage') . " (Km)" => "=$report->mileage/1000",   # E CELL
             ]);
         }
 
         $vehicleNumber = __("for all");
-        if($mileageReport->vehicleReport != 'all' && $dataExcel->count()){
-            $vehicleNumber = __('Vehicle')." ".$dataExcel->first()[__('Number')];
+        if ($mileageReport->vehicleReport != 'all' && $dataExcel->count()) {
+            $vehicleNumber = __('Vehicle') . " " . $dataExcel->first()[__('Number')];
         }
 
         $fileData = [
             'fileName' => __('Mileage') . " $mileageReport->initialDateReport $mileageReport->finalDateReport",
             'title' => __('Mileage') . " $mileageReport->initialDateReport $mileageReport->finalDateReport",
-            'subTitle' => __('Mileage')." $vehicleNumber",
+            'subTitle' => __('Mileage') . " $vehicleNumber",
             'data' => $dataExcel->toArray(),
             'type' => 'reportMileageDateRange'
         ];
@@ -155,9 +175,9 @@ class ReportMileageDateRangeController extends Controller
 
     private static function calculateMileageFromGroup($locationReport)
     {
-        $firstLocation =  $locationReport->first();
-        $lastLocation =  $locationReport->last();
-        $totalKm = ($lastLocation->odometer - $firstLocation->odometer)/1000;
+        $firstLocation = $locationReport->first();
+        $lastLocation = $locationReport->last();
+        $totalKm = ($lastLocation->odometer - $firstLocation->odometer) / 1000;
 
         return $totalKm;
     }
