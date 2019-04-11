@@ -38,7 +38,7 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
@@ -55,6 +55,17 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
+                                <label for="driver-report" class="control-label field-required">@lang('Driver')</label>
+                                <div class="form-group">
+                                    <select name="driver-report" id="driver-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                        <option value="null">@lang('Select a company first')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
                                     <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
@@ -64,7 +75,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
                                 <div class="input-group date datepicker" data-less="true" data-than="#final-date">
@@ -75,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="final-date" class="control-label field-required">@lang('Final date')</label>
                                 <div class="input-group date datepicker" data-greater="true" data-than="#initial-date">
@@ -104,11 +115,11 @@
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
     <script type="application/javascript">
         $('.menu-passengers, .menu-passengers-recorders, .menu-passengers-recorders-consolidated, .menu-passengers-recorders-consolidated-range').addClass('active-animated');
-        var mainContainer = $('.main-container');
+        const mainContainer = $('.main-container');
+        const form = $('.form-search-report');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
-                var form = $(this);
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
@@ -126,32 +137,35 @@
                 }
             });
 
-            $('#company-report').change(function () {
+            $('#initial-date, #final-date').change(function () {
                 mainContainer.slideUp();
-                loadSelectRouteReport($(this).val());
-                loadSelectVehicleReport($(this).val(), true);
             });
 
-            $('#date-report, #vehicle-report').change(function () {
-                var form = $('.form-search-report');
+            $('#driver-report, #vehicle-report').change(function () {
                 mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
             });
 
-            var clipboard = new Clipboard('.btn-copy');
+            const clipboard = new Clipboard('.btn-copy');
 
             clipboard.on('success', function (e) {
                 gsuccess("@lang('Text copied'):" + e.text);
                 e.clearSelection();
             });
 
-            @if(!Auth::user()->isAdmin())
+            @if(Auth::user()->isAdmin())
+                $('#company-report').change(function () {
+                    mainContainer.slideUp();
+                    loadSelectRouteReport($(this).val());
+                    loadSelectVehicleReport($(this).val(), true);
+                    loadSelectDriverReport($(this).val());
+                }).change();
+            @else
                 loadSelectRouteReport(null);
                 loadSelectVehicleReport(1, true);
-            @else
-                $('#company-report').change();
+                loadSelectDriverReport(null);
             @endif
         });
     </script>

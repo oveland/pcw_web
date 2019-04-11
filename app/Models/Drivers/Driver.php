@@ -35,8 +35,18 @@ class Driver extends Model
         return "$this->first_name $this->last_name" ?? "";
     }
 
+    public function getFullNameAttribute()
+    {
+        return $this->fullName();
+    }
+
     public function scopeWithCode($query,$code)
     {
         return $query->where('code',$code)->get()->first();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active',true);
     }
 }

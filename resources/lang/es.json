@@ -416,6 +416,7 @@
   "Mileage Report": "Reporte kilometraje",
   "Mileage report": "Reporte kilometraje",
   "Consolidated per dates": "Consolidado por fechas",
+  "Passengers per dates": "Pasajeros por fechas",
   "Manage proprietaries": "Administrar propietarios",
   "proprietary": "propietario",
   "Proprietary": "Propietario",
@@ -537,5 +538,7 @@
   "Liquidation": "Liquidación",
   "liquidation": "liquidación",
   "url-liquidation": "liquidacion",
-  "No GPS reports found": "GPS no reportó datos"
+  "No GPS reports found": "GPS no reportó datos",
+  "Select a driver": "Seleccione un conductor",
+  "No drivers found": "Sin conductores"
 }
