@@ -1,5 +1,7 @@
 @if(count($historySeats))
-    @php($threshold_km = 20000)
+    @php
+        $threshold_km = 20000;
+    @endphp
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -34,7 +36,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @php($totalKm = 0)
+                    @php
+                        $totalKm = 0;
+                    @endphp
                     @foreach($historySeats as $historySeat)
                         <tr class="{{ $historySeat->busy_km>$threshold_km?'':'text-danger' }}">
                             <td>{{$loop->index+1}}</td>
@@ -44,8 +48,10 @@
                             @if($historySeat->inactive_time)
                                 <td>{{date('H:i:s',strtotime(explode(" ",$historySeat->inactive_time)[1]))}}</td>
                                 <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
-                                @php($km=$historySeat->busy_km/1000)
-                                @php($historySeat->busy_km>$threshold_km?($totalKm += $km):null )
+                                @php
+                                    $km=$historySeat->busy_km/1000;
+                                    $historySeat->busy_km>$threshold_km?($totalKm += $km):null;
+                                @endphp
                                 <td class="{{ $historySeat->busy_km>$threshold_km?'':'danger' }}">{{number_format($km, 2, ',', '.')}}</td>
                             @else
                                 <td class="text-center" colspan="3">@lang('Still busy')</td>
@@ -69,7 +75,9 @@
                                 {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }}
                             </td>
                         </tr>
-                        @php($routeTaxCentral = \App\Models\Routes\Route::find(158))
+                        @php
+                            $routeTaxCentral = \App\Models\Routes\Route::find(158);
+                        @endphp
                         <tr class="inverse bg-inverse text-white">
                             <td colspan="6" class="text-right">@lang('Route distance') (Km)</td>
                             <td colspan="2" class="text-left">

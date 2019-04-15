@@ -30,11 +30,15 @@
             </tr>
         </thead>
         <tbody>
-        @php($prevFrame=null)
+        @php
+            $prevFrame=null;
+        @endphp
         @foreach($passengers as $passenger)
-            @php($vehicle = $passenger->vehicle)
-            @php($counterIssue = $passenger->counterIssue )
-            @php($dispatchRegister = $passenger->dispatchRegister )
+            @php
+                $vehicle = $passenger->vehicle;
+                $counterIssue = $passenger->counterIssue;
+                $dispatchRegister = $passenger->dispatchRegister;
+            @endphp
             <tr>
                 <td class="text-center" width="5%">{{ $loop->index + $passengers->firstItem() }}</td>
                 <td class="text-center">{{ $passenger->date }}</td>

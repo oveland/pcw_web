@@ -1,5 +1,7 @@
-@php( $unAssignedPeakAndPlates = $peakAndPlateReports->where('assigned',false) )
-@php( $assignedPeakAndPlates = $peakAndPlateReports->where('assigned',true) )
+@php
+    $unAssignedPeakAndPlates = $peakAndPlateReports->where('assigned',false);
+    $assignedPeakAndPlates = $peakAndPlateReports->where('assigned',true);
+@endphp
 <!-- begin fullcalendar -->
 <div class="fullcalendar vertical-box m-b-20">
     <!-- begin fullcalendar-event -->
@@ -22,7 +24,9 @@
                 </div>
             </h5>
             @foreach($unAssignedPeakAndPlates as $unAssignedPeakAndPlate)
-                @php($vehicle = \App\Models\Vehicles\Vehicle::find($unAssignedPeakAndPlate->vehicleId))
+                @php
+                    $vehicle = \App\Models\Vehicles\Vehicle::find($unAssignedPeakAndPlate->vehicleId);
+                @endphp
                 <div class="fc-event" data-id="{{ $vehicle->id }}">
                     <div class="fc-event-icon">
                         <i class="fa fa-car fa-fw text-success-light"></i>

@@ -116,7 +116,9 @@
             @if( $company->hasDriverRegisters() )
             <td width="25%" class="text-uppercase">
                 @if( Auth::user()->isAdmin() )
-                    @php( $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code )
+                    @php
+                        $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code;
+                    @endphp
                     <div class="tooltips box-edit" data-title="@lang('Driver')">
                         <span class="box-info">
                             <span class="{{ !$driverInfo?'text-danger text-bold':'' }} text-capitalize">
@@ -146,8 +148,10 @@
                     {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
                 </small>
                 @if( isset($lastArrivalTime[$vehicle->id]) && $lastArrivalTime[$vehicle->id] )
-                    @php($deadTime = $strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime[$vehicle->id]))
-                    @php($totalDeadTime[$vehicle->id] = $strTime->addStrTime($totalDeadTime[$vehicle->id], $deadTime))
+                    @php
+                        $deadTime = $strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime[$vehicle->id]);
+                        $totalDeadTime[$vehicle->id] = $strTime->addStrTime($totalDeadTime[$vehicle->id], $deadTime);
+                    @endphp
                     <br>
                     <small class="tooltips text-primary" data-title="@lang('Dead time')" data-placement="bottom">
                         <i class="ion-android-stopwatch text-muted"></i> {{ $deadTime }}
@@ -157,7 +161,9 @@
                         <i class="ion-android-stopwatch text-muted"></i> {{ $totalDeadTime[$vehicle->id] }}
                     </small>
                 @else
-                    @php($totalDeadTime[$vehicle->id] = '00:00:00')
+                    @php
+                        $totalDeadTime[$vehicle->id] = '00:00:00';
+                    @endphp
                 @endif
             </td>
             <td width="10%" class="text-center">
@@ -273,16 +279,19 @@
                     <i class="fa fa-area-chart faa-pulse"></i>
                 </a>
                 @if( Auth::user()->isSuperAdmin() )
-                    @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                    @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                    @php
+                        $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                        $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                    @endphp
                     <hr class="hr no-padding">
                     <small>{!! $totalLocations !!} @lang('locations')</small><br>
                     <small>{!! $totalReports !!} @lang('reports')</small>
-
                 @endif
             </td>
         </tr>
-        @php( $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time )
+        @php
+            $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time;
+        @endphp
     @endforeach
     </tbody>
 </table>

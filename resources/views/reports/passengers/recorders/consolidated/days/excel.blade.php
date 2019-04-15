@@ -1,4 +1,6 @@
-@php($reports = $passengerReport->reports)
+@php
+    $reports = $passengerReport->reports;
+@endphp
 @if(count($reports))
     <style>
         table.pcw_excel {

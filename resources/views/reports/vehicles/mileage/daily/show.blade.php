@@ -1,12 +1,16 @@
 @if(count($mileageReport->reports))
-    @php($reports = $mileageReport->reports)
+    @php
+        $reports = $mileageReport->reports;
+    @endphp
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-12">
                     <ul class="nav nav-pills nav-pills-success nav-vehicles">
                         @foreach($reports as $vehicleId => $report)
-                            @php( $vehicle = $report->vehicle )
+                            @php
+                                $vehicle = $report->vehicle;
+                            @endphp
                             <li class="{{$loop->first?'active':''}}">
                                 <a href="#report-tab-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
                                    data-original-title="{{ $vehicle->plate }}">

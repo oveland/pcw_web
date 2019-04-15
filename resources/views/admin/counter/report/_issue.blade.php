@@ -1,5 +1,7 @@
-@php($vehicle = $counterIssue->vehicle)
-@php($itemsIssues = collect(json_decode($counterIssue->items_issues,true)))
+@php
+    $vehicle = $counterIssue->vehicle;
+    $itemsIssues = collect(json_decode($counterIssue->items_issues,true));
+@endphp
 <tr>
     <td class="text-center" width="5%">{!! $loop->iteration  or 1 !!} </td>
     <td width="30%">{{ $counterIssue->date }}</td>

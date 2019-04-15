@@ -23,7 +23,9 @@
                 <div class="col-md-11">
                     <ul class="nav nav-pills nav-pills-success nav-vehicles">
                         @foreach($dispatchRegistersByVehicles as $vehicleId => $dispatchRegisters)
-                            @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
+                            @php
+                                $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                            @endphp
                             <li class="{{$loop->first?'active':''}}">
                                 <a href="#report-tab-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
                                    data-original-title="{{ $vehicle->plate }}">

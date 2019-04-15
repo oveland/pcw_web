@@ -1,5 +1,7 @@
 @if(count($roundTripsReport->reports))
-    @php($reports = $roundTripsReport->reports)
+    @php
+        $reports = $roundTripsReport->reports;
+    @endphp
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">

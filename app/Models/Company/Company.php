@@ -141,7 +141,7 @@ class Company extends Model
     */
     public function hasRecorderCounter()
     {
-        return collect([self::ALAMEDA]) . contains($this->id);
+        return collect([self::ALAMEDA])->contains($this->id);
     }
 
     /**
@@ -149,7 +149,7 @@ class Company extends Model
      */
     public function hasDriverRegisters()
     {
-        return collect([self::ALAMEDA]) . contains($this->id);
+        return collect([self::ALAMEDA])->contains($this->id);
     }
 
     /*
@@ -160,7 +160,7 @@ class Company extends Model
     */
     public function hasSeatSensorCounter()
     {
-        return collect([self::COOTRANSOL]) . contains($this->id);
+        return collect([self::COOTRANSOL])->contains($this->id);
     }
 
     /**

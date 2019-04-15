@@ -1,4 +1,6 @@
-@php($index = 0)
+@php
+    $index = 0;
+@endphp
 <div class="col-md-12 alert alert-info p-t-5 container-alert-new-values" style="display: none">
     <strong>
         <i class="fa fa-exclamation"></i> @lang('Registers updated')
@@ -10,8 +12,10 @@
 </div>
 @foreach($issuesByVehicles as $vehicle_id => $issuesByVehicle)
     @if( count($issuesByVehicle) )
-         @php($index++)
-        @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicle_id) )
+        @php
+            $index++;
+            $vehicle = \App\Models\Vehicles\Vehicle::find($vehicle_id);
+        @endphp
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-t-5">
             <!-- begin widget -->
             <div class="widget">
@@ -24,8 +28,10 @@
                 </div>
                 <ul class="widget-todolist">
                     @foreach($issuesByVehicle as $issue)
-                        @php($dispatchRegister = $issue->dispatchRegister)
-                        @php($lastDispatchRegister = $issue->lastDispatchRegister)
+                        @php
+                            $dispatchRegister = $issue->dispatchRegister;
+                            $lastDispatchRegister = $issue->lastDispatchRegister;
+                        @endphp
                         <li class="">
                             <div class="checkbox">
                                 <label>

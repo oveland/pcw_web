@@ -16,7 +16,9 @@
             <div class="col-md-11">
                 <ul class="nav nav-pills nav-pills-success">
                     @foreach($parkedReportsByVehicles as $vehicleId => $parkedReportsByVehicle)
-                        @php( $vehicle = $parkedReportsByVehicle->first()->vehicle )
+                        @php
+                            $vehicle = $parkedReportsByVehicle->first()->vehicle;
+                        @endphp
                         <li class="{{$loop->first?'active':''}}">
                             <a href="#report-tab-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-title="{{ $vehicle->plate }}">
                                 {{ $vehicle->number }}
@@ -53,7 +55,9 @@
                 </thead>
                 <tbody>
                 @foreach( $parkedReportsByVehicle as $parking )
-                    @php( $dispatchRegister = $parking->dispatchRegister )
+                    @php
+                        $dispatchRegister = $parking->dispatchRegister;
+                    @endphp
                     <tr>
                         <td class="bg-inverse text-white text-center">{{ $loop->iteration }}</td>
                         <td class="text-center">
@@ -76,7 +80,9 @@
                     </tr>
 
                     @if($dispatchRegister)
-                        @php( $driver = $dispatchRegister->driver )
+                        @php
+                            $driver = $dispatchRegister->driver;
+                        @endphp
                         <tr id="collapse-{{ $parking->id }}" class="collapse fade" aria-expanded="true">
                             <td class="bg-inverse text-white text-center">
                                 @lang('Details')

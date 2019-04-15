@@ -104,7 +104,9 @@
                                                 @endif
                                             </th>
                                             @foreach($controlPoints as $controlPoint)
-                                                @php( $report = $reportByVehicles->where('control_point_id',$controlPoint->id)->first() ?? null )
+                                                @php
+                                                    $report = $reportByVehicles->where('control_point_id',$controlPoint->id)->first() ?? null;
+                                                @endphp
                                                 <td class="text-center">
                                                     @if( $report || ($loop->last && $dispatchRegister->complete() ) )
                                                         @php
@@ -196,8 +198,10 @@
                                                     <i class="fa fa-area-chart faa-pulse"></i>
                                                 </a>
                                                 @if( Auth::user()->isSuperAdmin() )
-                                                    @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                                                    @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                                    @php
+                                                        $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                                        $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                                    @endphp
                                                     <hr class="hr no-padding">
                                                     <small>{!! $totalLocations !!} @lang('locations')</small><br>
                                                     <small>{!! $totalReports !!} @lang('reports')</small>

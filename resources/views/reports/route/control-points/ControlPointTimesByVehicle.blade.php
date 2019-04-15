@@ -20,7 +20,9 @@
 
             <ul class="nav nav-pills nav-pills-success">
                 @foreach($controlPointTimeReportsByVehicles->keys() as $vehicleId)
-                    @php($vehicle = \App\Models\Vehicles\Vehicle::find( $vehicleId ))
+                    @php
+                        $vehicle = \App\Models\Vehicles\Vehicle::find( $vehicleId );
+                    @endphp
                     <li class="{{ $loop->first ? 'active':'' }} tooltips" data-title="{{ $vehicle->plate }}">
                         <a href="#report-tab-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true">
                             <i class="fa fa-car" aria-hidden="true"></i> {{ $vehicle->number }}
@@ -32,7 +34,9 @@
 
         <div class="tab-content panel p-0">
             @foreach($controlPointTimeReportsByVehicles as $vehicleId => $controlPointTimeReportByVehicle)
-                @php($vehicle = \App\Models\Vehicles\Vehicle::find( $vehicleId ))
+                @php
+                    $vehicle = \App\Models\Vehicles\Vehicle::find( $vehicleId );
+                @endphp
                 <div id="report-tab-{{ $vehicleId }}" class="tab-pane report-tab-cp fade {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
                         <div class="table-responsive col-md-12" style="padding-bottom: 90px">
@@ -106,7 +110,9 @@
                                             @endif
                                         </th>
                                         @foreach($controlPoints as $controlPoint)
-                                            @php( $report = $reportByVehicles->where('control_point_id',$controlPoint->id)->first() ?? null )
+                                            @php
+                                                $report = $reportByVehicles->where('control_point_id',$controlPoint->id)->first() ?? null;
+                                            @endphp
                                             <td class="text-center">
                                                 @if( $report || ($loop->last && $dispatchRegister->complete() ) )
                                                     @php
@@ -198,8 +204,10 @@
                                                 <i class="fa fa-area-chart faa-pulse"></i>
                                             </a>
                                             @if( Auth::user()->isSuperAdmin() )
-                                                @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                                                @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                                @php
+                                                    $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                                    $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                                @endphp
                                                 <hr class="hr no-padding">
                                                 <small>{!! $totalLocations !!} @lang('locations')</small><br>
                                                 <small>{!! $totalReports !!} @lang('reports')</small>

@@ -47,7 +47,9 @@
                                     <i class="ion-android-stopwatch"></i><br>
                                     @lang('In route')
                                 </th>
-                                @php($controlPoints =  $route->controlPoints)
+                                @php
+                                    $controlPoints =  $route->controlPoints;
+                                @endphp
                                 @foreach($controlPoints as $controlPoint)
                                     <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}" style="">
                                         <div style="display: inline-block;vertical-align: middle;float: none;">
@@ -98,7 +100,9 @@
                                         @endif
                                     </th>
                                     @foreach($reportsByControlPoint->reportsByControlPoint as $reportByControlPoint)
-                                        @php( $controlPoint = $reportByControlPoint->controlPoint )
+                                        @php
+                                            $controlPoint = $reportByControlPoint->controlPoint;
+                                        @endphp
                                         @if( $reportByControlPoint->hasReport )
                                             <td class="text-center">
                                                 <div class="tooltipss" data-title="{{ $controlPoint->name }}">
@@ -159,8 +163,10 @@
                                             <i class="fa fa-area-chart faa-pulse"></i>
                                         </a>
                                         @if( Auth::user()->isSuperAdmin() )
-                                            @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                                            @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                            @php
+                                                $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                                $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                            @endphp
                                             <hr class="hr no-padding">
                                             <small class="tooltips" data-title="@lang('Locations')">{!! $totalLocations !!}</small>/<small class="tooltips" title="@lang('Reports')">{!! $totalReports !!}</small>
                                         @endif

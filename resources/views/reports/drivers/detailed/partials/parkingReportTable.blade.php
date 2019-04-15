@@ -1,5 +1,7 @@
 <div class="col-md-8 col-md-offset-2 col-sm-12 col-xs-12 m-t-10">
-    @php( $parkingReport = $dispatchRegister->parkingReport )
+    @php
+        $parkingReport = $dispatchRegister->parkingReport;
+    @endphp
 
     @if( $parkingReport && $parkingReport->isNotEmpty() )
         <script>$('.badge-parking-{{ $dispatchRegister->id }}').html('{{ count($parkingReport) }}').removeClass('hide')</script>

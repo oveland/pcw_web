@@ -117,7 +117,9 @@
                     @if( $dispatchRegister->complete() )
                         <span class="tooltips" data-title="@lang('Round trip')">
                             {{ $dispatchRegister->passengersBySensorRecorder }}
-                            @php( $error = $dispatchRegister->calculateErrorPercent(($endRecorder - $startRecorder), $dispatchRegister->passengersBySensorRecorder) )
+                            @php
+                                $error = $dispatchRegister->calculateErrorPercent(($endRecorder - $startRecorder), $dispatchRegister->passengersBySensorRecorder);
+                            @endphp
                             <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-right f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="right">
                                 {{  $error }}%
                             </span>
@@ -125,7 +127,9 @@
                         <hr class="m-0">
                         <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
                             {{ $totalPassengersBySensorRecorder }}
-                            @php( $error = $dispatchRegister->calculateErrorPercent($totalPassengersByRecorder, $totalPassengersBySensorRecorder) )
+                            @php
+                                $error = $dispatchRegister->calculateErrorPercent($totalPassengersByRecorder, $totalPassengersBySensorRecorder);
+                            @endphp
                             <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-right f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="right">
                                 {{  $error }}%
                             </span>
@@ -192,7 +196,9 @@
                 @if( $dispatchRegister->complete() )
                     <span class="tooltips" data-title="@lang('Round trip')">
                         {{ $dispatchRegister->passengersBySensor }}
-                        @php( $error = $dispatchRegister->calculateErrorPercent(($endRecorder - $startRecorder), $dispatchRegister->passengersBySensor) )
+                        @php
+                            $error = $dispatchRegister->calculateErrorPercent(($endRecorder - $startRecorder), $dispatchRegister->passengersBySensor);
+                        @endphp
                         <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-left f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="left">
                             {{  $error }}%
                         </span>
@@ -200,7 +206,9 @@
                     <hr class="m-0">
                     <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
                         {{ $totalPassengersBySensor }}
-                        @php( $error = $dispatchRegister->calculateErrorPercent($totalPassengersByRecorder, $totalPassengersBySensor) )
+                        @php
+                            $error = $dispatchRegister->calculateErrorPercent($totalPassengersByRecorder, $totalPassengersBySensor);
+                        @endphp
                         <span class="text-{{ abs($error) < 5.9?'success':'danger' }} text-bold col-md-4 pull-left f-s-9 p-1 tooltips" data-title="@lang('% error')" data-placement="left">
                             {{  $error }}%
                         </span>
@@ -265,7 +273,9 @@
             </td>
         </tr>
 
-        @php( $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time )
+        @php
+            $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time;
+        @endphp
     @endforeach
     </tbody>
 </table>

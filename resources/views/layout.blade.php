@@ -1,4 +1,6 @@
-@php( $current = request()->segment(count(request()->segments())) )
+@php
+    $current = request()->segment(count(request()->segments()));
+@endphp
         <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <!--
