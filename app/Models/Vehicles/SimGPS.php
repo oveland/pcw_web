@@ -60,7 +60,7 @@ class SimGPS extends Model
 
     const RESET_COMMAND = [
         self::SKYPATROL => 'AT$RESET',
-        self::SKYPATROL_OLD => '>RSP=T;ID=IMEI;AT$AT$RESET<',
+        self::SKYPATROL_OLD => '>RSP=T;ID=IMEI;AT$RESET<',
         self::COBAN => 'reset123456',
         self::RUPTELA => 'reset',
         self::MEITRACK => 'reset',

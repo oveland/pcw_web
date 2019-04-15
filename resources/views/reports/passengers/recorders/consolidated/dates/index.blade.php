@@ -165,7 +165,7 @@
             @else
                 loadSelectRouteReport(null);
                 loadSelectVehicleReport(1, true);
-                loadSelectDriverReport(null);
+                loadSelectDriverReport(1);
             @endif
         });
     </script>
