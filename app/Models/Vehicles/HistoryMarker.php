@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HistoryMarker extends Model
 {
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

@@ -51,7 +51,7 @@ class HistorySeat extends Model
       'date','time','active_time','inactive_time','busy_time'
     ];*/
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

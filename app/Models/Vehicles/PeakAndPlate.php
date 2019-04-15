@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PeakAndPlate extends Model
 {
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

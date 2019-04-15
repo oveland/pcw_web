@@ -58,7 +58,7 @@ class Company extends Model
     /**
      * @return mixed|string
      */
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

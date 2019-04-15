@@ -35,7 +35,7 @@ class Speeding extends Model
 {
     protected $table = 'speeding';
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

@@ -62,7 +62,7 @@ class ParkingReport extends Model
 {
     protected $dates = ['date'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

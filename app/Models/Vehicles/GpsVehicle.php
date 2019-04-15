@@ -28,7 +28,7 @@ class GpsVehicle extends Model
 {
     protected $fillable = ['imei'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

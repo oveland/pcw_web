@@ -63,7 +63,7 @@ class CurrentParkingReport extends Model
      */
     protected $fillable = ['*'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

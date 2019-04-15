@@ -128,7 +128,7 @@ class DispatchRegister extends Model
     const IN_PROGRESS = "En camino";
     const COMPLETE = "Terminó";
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

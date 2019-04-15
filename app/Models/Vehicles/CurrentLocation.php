@@ -59,7 +59,7 @@ class CurrentLocation extends Model
 {
     protected $dates = ['date'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

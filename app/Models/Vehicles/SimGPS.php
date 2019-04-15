@@ -84,7 +84,7 @@ class SimGPS extends Model
 
     protected $fillable = ['sim', 'operator', 'gps_type', 'vehicle_id', 'active'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }
