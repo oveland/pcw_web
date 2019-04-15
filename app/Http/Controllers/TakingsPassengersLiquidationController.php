@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Services\Auth\PCWAuthService;
+use App\Services\BEA\BEAService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class TakingsPassengersLiquidationController extends Controller
 {
@@ -11,10 +14,15 @@ class TakingsPassengersLiquidationController extends Controller
      * @var PCWAuthService
      */
     private $pcwAuthService;
+    /**
+     * @var BEAService
+     */
+    private $beaService;
 
-    public function __construct(PCWAuthService $pcwAuthService)
+    public function __construct(PCWAuthService $pcwAuthService, BEAService $beaService)
     {
         $this->pcwAuthService = $pcwAuthService;
+        $this->beaService = $beaService;
     }
 
     /**
@@ -23,21 +31,26 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function index(Request $request)
     {
-        $accessProperties = $this->pcwAuthService->getAccessProperties();
-        $companies = $accessProperties->companies;
+        //$accessProperties = $this->pcwAuthService->getAccessProperties();
+        //$companies = $accessProperties->companies;
+        $vehicles = $this->beaService->getAllVehicles();
 
-        return view('takings.passengers.liquidation.index', compact('companies'));
+        return view('takings.passengers.liquidation.index', compact('vehicles'));
     }
 
     /**
      * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws Exception
      */
     public function search(Request $request)
     {
-        $accessProperties = $this->pcwAuthService->getAccessProperties();
-        $companies = $accessProperties->company;
-        $vehicles = $accessProperties->vehicles;
+        $vehicleReport = $request->get('vehicle-report');
 
-        dd($accessProperties);
+        $beaMarks = $this->beaService->getBEAMarksFrom($vehicleReport);
+
+        return view('takings.passengers.liquidation.show', compact('beaMarks'));
     }
+
+
 }
