@@ -87,7 +87,7 @@ class PCWExporterService
             $sheet->setFontFamily(self::$fontStyle);
 
             // Set auto size for sheet
-            $sheet->getStyle('A' . $startIndex . ':' . $config->lastLetter . $config->totalRows)->getAlignment()->setWrapText(true);
+            $sheet->getStyle('A1:' . $config->lastLetter . $config->totalRows)->getAlignment()->setWrapText(true);
 
             $sheet->setBorder("A1:$config->lastLetter" . $config->totalRows, 'thin');
             $sheet->cells("A1:$config->lastLetter" . $config->totalRows, function ($cells) {

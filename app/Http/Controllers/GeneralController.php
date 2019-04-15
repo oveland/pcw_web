@@ -26,6 +26,15 @@ class GeneralController extends Controller
         return view('partials.selects.routes', compact(['routes', 'withAll']));
     }
 
+    public function loadSelectDrivers(Request $request)
+    {
+        $company = $this->getCompany($request);
+        $withAll = $request->get('withAll');
+        $drivers = $company->activeDrivers;
+
+        return view('partials.selects.drivers', compact(['drivers', 'withAll']));
+    }
+
     public function loadSelectRouteRoundTrips(Request $request)
     {
         $routeId = $request->get('route');

@@ -176,7 +176,7 @@ class Company extends Model
      */
     public function activeDrivers()
     {
-        return $this->drivers()->where('active', true);
+        return $this->drivers()->active();
     }
 
     /**

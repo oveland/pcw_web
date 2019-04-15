@@ -126,7 +126,7 @@
                                     <div class="has-warning">
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
-                                                <input id="type-report" name="type-report" type="checkbox" value="group" checked> @lang('Group')
+                                                <input id="type-report" name="type-report" type="checkbox" value="group"> @lang('Group')
                                             </label>
                                         </div>
                                     </div>
@@ -156,10 +156,9 @@
         $(document).ready(function () {
 
             const reportContainer = $('.report-container');
-            const formReport = $('.form-search-report');
+            const form = $('.form-search-report');
 
-            formReport.submit(function (e) {
-                var form = $(this);
+            form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);

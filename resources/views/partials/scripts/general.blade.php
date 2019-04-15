@@ -14,6 +14,21 @@
         }
     }
 
+    function loadSelectDriverReport(company) {
+        let driverSelect = $('#driver-report');
+        if (is_not_null(company)) {
+            driverSelect.html($('#select-loading').html()).trigger('change.select2');
+            driverSelect.load('{{ route('general-load-select-drivers') }}', {
+                company: company,
+                withAll: driverSelect.data('with-all')
+            }, function () {
+                driverSelect.trigger('change.select2');
+            });
+        } else {
+            driverSelect.html('<option value="null">@lang('Select an option')</option>').trigger('change.select2');
+        }
+    }
+
     function loadSelectRouteRoundTrips() {
         let dateReport = $('#date-report');
         let routeReport = $('#route-report');

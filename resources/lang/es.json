@@ -419,6 +419,7 @@
   "Mileage Report": "Reporte kilometraje",
   "Mileage report": "Reporte kilometraje",
   "Consolidated per dates": "Consolidado por fechas",
+  "Passengers per dates": "Pasajeros por fechas",
   "Manage proprietaries": "Administrar propietarios",
   "proprietary": "propietario",
   "Proprietary": "Propietario",
@@ -550,5 +551,7 @@
   "Commissions": "Comisiones",
   "Penalties": "Sanciones",
   "Liquidate": "Liquidar",
-  "Add other": "Añadir otro"
+  "Add other": "Añadir otro",
+  "Select a driver": "Seleccione un conductor",
+  "No drivers found": "Sin conductores"
 }

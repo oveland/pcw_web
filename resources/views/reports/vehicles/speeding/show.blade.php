@@ -21,7 +21,7 @@
                     <div class="widge p-t-0 report-by-vehicle-container">
                         <div class="widget-header bg-inverse m-0 row">
                             <div class="col-md-8 p-0">
-                                <input type="number" class="form-control input-sm col-md-4 search-vehicle-list" placeholder="@lang('Search')"/>
+                                <input type="number" class="form-control input-sm col-md-4 search-vehicle-list" placeholder="@lang('Vehicle')"/>
                             </div>
                             <div class="col-md-1">
                                 <i class="fa fa-times btn-clear-search btn btn-default btn-xs" onclick="$(this).parents('.label-vehicles').find('input').val('').keyup()"></i>

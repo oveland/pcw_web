@@ -3,7 +3,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-passengers-recorders-consolidated-date-range-export') }}?initial-date={{ $passengerReport->initialDate }}&final-date={{ $passengerReport->finalDate }}&company-report={{ $passengerReport->companyId }}&vehicle-report={{ $passengerReport->vehicleReport }}"
+                <a href="{{ route('report-passengers-recorders-consolidated-date-range-search') }}?export=true&company-report={{ $passengerReport->companyId }}&driver-report={{ $passengerReport->driverReport }}&vehicle-report={{ $passengerReport->vehicleReport }}&initial-date={{ $passengerReport->initialDate }}&final-date={{ $passengerReport->finalDate }}"
                    class="btn btn-lime bg-lime-dark btn-sm btn-rounded tooltips" data-title="@lang('Export excel')">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
@@ -17,11 +17,21 @@
                 </a>
             </div>
             <h5 class="text-white m-t-10">
-                <span class="hides">
+                <span class="text-bold">
                     <i class="fa fa-users" aria-hidden="true"></i>
                     @lang('Consolidated per date range')
-                    <hr class="text-inverse-light">
                 </span>
+                @if($passengerReport->driver)
+                <small class="text-white text-bold" style="font-size: 1em">
+                    | <i class="fa fa-user" aria-hidden="true"></i> {{ $passengerReport->driver->fullName }}
+                </small>
+                @endif
+                @if($passengerReport->vehicle)
+                <small class="text-white" style="font-size: 1em">
+                    | <i class="fa fa-car" aria-hidden="true"></i> {{ $passengerReport->vehicle->number }}
+                </small>
+                @endif
+                <br>
 
                 <ul class="nav nav-pills nav-pills-success hide">
                     <li class="active">
@@ -83,7 +93,7 @@
 
                         @if(count($issuesByVehicles))
                             <tr>
-                                <td colspan="3">
+                                <td colspan="5">
                                     <div class="alert alert-warning alert-bordered fade in m-b-0" style="border-radius: 0px">
                                         <i class="fa fa-exclamation-circle"></i>
                                         <strong>@lang('Warning'):</strong>
@@ -110,12 +120,15 @@
                             </td>
                             <td class="sensor">{{ $sensor }}</td>
                         </tr>
+
+                        @php
+                            $currentFrame = $report->frame;
+                            $comparedFrame = \App\Http\Controllers\PassengerReportCounterController::compareChangeFrames($currentFrame,$currentFrame);
+                        @endphp
+
+                        @if($currentFrame)
                         <tr id="collapse-{{ $date }}" class="bg-inverse text-white text-bold collapse-frame fade collapse">
                             <td colspan="5" style="font-family: monospace">
-                                @php
-                                    $currentFrame = $report->frame;
-                                    $comparedFrame = \App\Http\Controllers\PassengerReportCounterController::compareChangeFrames($currentFrame,$currentFrame);
-                                @endphp
                                 <span>
                                     @foreach($comparedFrame as $frame)
                                         <label class="p-0 text-center">
@@ -134,8 +147,9 @@
                                 </button>
                             </td>
                         </tr>
+                        @endif
                     @endforeach
-                    <tr class="inverse bg-inverse-light text-white">
+                    <tr class="inverse bg-inverse text-white">
                         <td colspan="2" class="text-right">@lang('Total passengers')</td>
                         <td class="text-center sensor recorder">{{ $totalSensorRecorder->sum() }}</td>
                         <td class="text-center recorder">{{ $totalRecorder->sum() }}</td>

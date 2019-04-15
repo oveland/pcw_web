@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Drivers\Driver;
 use App\Models\Routes\DispatchRegister;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Services\PCWTime;
 use App\Traits\CounterByRecorder;
@@ -17,15 +19,27 @@ class PassengersReportDateRangeController extends Controller
 {
     use CounterByRecorder;
 
+    private $pcwAuthService;
+
+    /**
+     * PassengersReportDateRangeController constructor.
+     * @param PCWAuthService $pcwAuthService
+     */
+    public function __construct(PCWAuthService $pcwAuthService)
+    {
+        $this->pcwAuthService = $pcwAuthService;
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name')->get();
-        }
-        return view('reports.passengers.recorders.consolidated.dates.index', compact('companies'));
+        $accessProperties = $this->pcwAuthService->getAccessProperties();
+        $companies = $accessProperties->companies;
+        $drivers = $accessProperties->drivers;
+
+        return view('reports.passengers.recorders.consolidated.dates.index', compact(['companies', 'drivers']));
     }
 
     /**
@@ -34,14 +48,17 @@ class PassengersReportDateRangeController extends Controller
      */
     public function show(Request $request)
     {
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
+        $company = $this->pcwAuthService->getCompanyFromRequest($request);
         $vehicle = Vehicle::find(intval($request->get('vehicle-report')));
+        $driver = Driver::find(intval($request->get('driver-report')));
         $initialDate = $request->get('initial-date');
         $finalDate = $request->get('final-date');
 
         if ($finalDate < $initialDate) return view('partials.dates.invalidRange');
 
-        $passengerReport = $this->buildPassengerReport($company, $vehicle, $initialDate, $finalDate);
+        $passengerReport = $this->buildPassengerReport($company, $driver, $vehicle, $initialDate, $finalDate);
+
+        if( $request->get('export') )return $this->export($passengerReport);
 
         return view('reports.passengers.recorders.consolidated.dates.passengersReport', compact('passengerReport'));
     }
@@ -49,18 +66,21 @@ class PassengersReportDateRangeController extends Controller
     /**
      * Build passenger report from company and date
      *
-     * @param $company
-     * @param $vehicle
+     * @param Company $company
+     * @param Driver $driver
+     * @param Vehicle $vehicle
      * @param $initialDate
      * @param $finalDate
      * @return object
      */
-    public function buildPassengerReport(Company $company, Vehicle $vehicle = null, $initialDate, $finalDate)
+    public function buildPassengerReport(Company $company, Driver $driver = null, Vehicle $vehicle = null, $initialDate, $finalDate)
     {
         $dateRange = PCWTime::dateRange(Carbon::parse($initialDate), Carbon::parse($finalDate));
 
         $dispatchRegisters = DispatchRegister::whereIn('route_id', $company->routes->pluck('id'));
         if ($vehicle) $dispatchRegisters = $dispatchRegisters->where('vehicle_id', $vehicle->id);
+        if ($driver) $dispatchRegisters = $dispatchRegisters->where('driver_code', $driver->code);
+
         $dispatchRegisters = $dispatchRegisters
             ->whereBetween('date', [$initialDate, $finalDate])
             ->active()
@@ -86,6 +106,9 @@ class PassengersReportDateRangeController extends Controller
         }
 
         $passengerReport = (object)[
+            'driver' => $driver,
+            'driverReport' => $driver ? $driver->id : 'all',
+            'vehicle' => $vehicle,
             'vehicleReport' => $vehicle ? $vehicle->id : 'all',
             'initialDate' => $initialDate,
             'finalDate' => $finalDate,
@@ -102,19 +125,17 @@ class PassengersReportDateRangeController extends Controller
     /**
      * Export report to excel format
      *
-     * @param Request $request
+     * @param $passengerReport
      */
-    public function export(Request $request)
+    public function export($passengerReport)
     {
-        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
-        $vehicle = Vehicle::find(intval($request->get('vehicle-report')));
-        $initialDate = $request->get('initial-date');
-        $finalDate = $request->get('final-date');
-
-        $passengerReports = $this->buildPassengerReport($company, $vehicle, $initialDate, $finalDate);
+        $vehicle = $passengerReport->vehicle;
+        $driver = $passengerReport->driver;
+        $initialDate = $passengerReport->initialDate;
+        $finalDate = $passengerReport->finalDate;
 
         $dataExcel = array();
-        foreach ($passengerReports->reports as $date => $report) {
+        foreach ($passengerReport->reports as $date => $report) {
             $data = collect([
                 __('N°') => count($dataExcel) + 1,                          # A CELL
                 __('Date') => $date,                                        # B CELL
@@ -127,11 +148,13 @@ class PassengersReportDateRangeController extends Controller
             $dataExcel[] = $data->toArray();
         }
 
-        $infoVehicle = ($vehicle ? __("#") . $vehicle->number . " " : "");
+        $infoVehicle = $vehicle ? __("Vehicle") . " " . $vehicle->number : "";
+        $infoDriver = $driver ? "C$driver->code: $driver->fullName" : "";
+
         PCWExporterService::excel([
-            'fileName' => $infoVehicle . __('Consolidated per dates'),
-            'title' => __('Passengers report') . "\n $initialDate - $finalDate",
-            'subTitle' => str_limit($infoVehicle . __('Consolidated per dates'), 28),
+            'fileName' => str_limit(str_limit($infoDriver,3)." $infoVehicle" . __('Passengers per dates'), 28),
+            'title' => str_limit(($infoDriver ? "$infoDriver\n":"").($infoVehicle ? "$infoVehicle | ":"" )." $initialDate - $finalDate",100),
+            'subTitle' => str_limit( __("Passengers per dates"), 28),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
         ]);
