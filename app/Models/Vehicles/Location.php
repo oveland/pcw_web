@@ -185,6 +185,7 @@ class Location extends Model
                 'address' => $address,
                 'status' => 0,
             ]);
+            sleep(0.1);
         }
 
         return $addressLocation ? $addressLocation->address : $address;

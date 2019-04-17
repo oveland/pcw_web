@@ -8,13 +8,76 @@
 
 namespace App\Services;
 
+use App\Exports\HistoricRouteExport;
+use App\Exports\MileageDateRangeExport;
+use App\Exports\RouteRoundTripsExport;
+use App\Exports\SpeedingExport;
 use Excel;
+use Maatwebsite\Excel\Exporter;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PCWExporterService
 {
     public static $fontStyle = 'Segoe UI Light';
     public static $fontColorInverse = '#eeeeee';
     public static $fontColorLink = '#0d0dff';
+
+    private $exporter;
+
+    /**
+     * PCWExporterService constructor.
+     * @param Exporter $exporter
+     */
+    public function __construct(Exporter $exporter)
+    {
+        $this->exporter = $exporter;
+    }
+
+    /**
+     * @param $exporter
+     * @return BinaryFileResponse
+     */
+    public function export($exporter)
+    {
+        return Excel::download($exporter, $exporter->getFileName());
+    }
+
+
+    /**
+     * @param $report
+     * @return MileageDateRangeExport
+     */
+    function exportMileageDateRange($report)
+    {
+        return new MileageDateRangeExport($report);
+    }
+
+    /**
+     * @param $report
+     * @return SpeedingExport
+     */
+    function exportSpeeding($report)
+    {
+        return new SpeedingExport($report);
+    }
+
+    /**
+     * @param $report
+     * @return RouteRoundTripsExport
+     */
+    function exportRouteRoundTrips($report)
+    {
+        return new RouteRoundTripsExport($report);
+    }
+
+    /**
+     * @param $report
+     * @return HistoricRouteExport
+     */
+    function exportHistoricRoute($report)
+    {
+        return new HistoricRouteExport($report);
+    }
 
     /**
      * General exporter table from view
@@ -159,12 +222,16 @@ class PCWExporterService
                 $sheet->setCellValue("A$lastRow", "TOTAL");
                 $sheet = self::styleFooter($sheet, $config);
 
-                $sheet->cells("A$config->startIndex:C$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("E$config->startIndex:H$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("A$config->startIndex:C$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("E$config->startIndex:H$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
                 break;
 
             case 'passengerReportByRangeTotalFooter':
-                foreach (['C','D','E'] as $totalLetterPosition) {
+                foreach (['C', 'D', 'E'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 
@@ -218,7 +285,7 @@ class PCWExporterService
             case 'offRoadReport':
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);
-                foreach ($rows as $row){
+                foreach ($rows as $row) {
                     $cell = $sheet->getCell("H$row");
                     $cellLink = $cell->getValue();
 
@@ -244,7 +311,7 @@ class PCWExporterService
             case 'consolidatedRouteReport':
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);
-                foreach ($rows as $row){
+                foreach ($rows as $row) {
                     $cell = $sheet->getCell("K$row");
                     $cellLink = $cell->getValue();
 
@@ -266,17 +333,27 @@ class PCWExporterService
                     ));
                 });
 
-                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("B$config->startIndex:B$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("C$config->startIndex:C$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("B$config->startIndex:B$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("C$config->startIndex:C$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
 
-                $sheet->cells("G$config->startIndex:G$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("G$config->startIndex:G$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
 
                 break;
 
             case 'historicRouteReport':
-                $sheet->cells("A$config->startIndex:E". $lastRow, function ($cells) {
+                $sheet->cells("A$config->startIndex:E" . $lastRow, function ($cells) {
                     $cells->setValignment('center');
                     $cells->setAlignment('center');
                 });

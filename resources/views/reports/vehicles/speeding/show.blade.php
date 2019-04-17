@@ -1,8 +1,11 @@
+@php
+    $speedingReportByVehicles = $speedingReport->report;
+@endphp
 @if(count($speedingReportByVehicles))
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-vehicle-speeding-search-report') }}?{{ $stringParams }}&export=true" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
+                <a href="{{ route('report-vehicle-speeding-search-report') }}?company={{ $speedingReport->companyReport }}&date-report={{ $speedingReport->dateReport }}&route-report={{ $speedingReport->routeReport }}&type-report={{ $speedingReport->typeReport }}&export=true" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
                    title="@lang('Export excel')" data-placement="bottom">
                     <i class="fa fa-file-excel-o"></i>
                 </a>

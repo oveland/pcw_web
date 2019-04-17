@@ -23,7 +23,7 @@
                 </div>
             </div>
             <hr class="hr">
-            <div class="panel-heading-btn">
+            <div class="panel-heading-btn hide">
                 <a href="{{ route('report-vehicle-mileage-show') }}?company={{ $mileageReport->company->id }}&date-report={{ $mileageReport->dateReport }}&export=true" class="btn btn-lime btn-sm bg-lime-dark btn-rounded tooltips" data-title="@lang('Export excel')">
                     <i class="fa fa-file-excel-o"></i>
                 </a>

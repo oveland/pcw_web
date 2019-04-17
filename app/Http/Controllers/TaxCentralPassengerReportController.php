@@ -52,7 +52,7 @@ class TaxCentralPassengerReportController extends Controller
             ->where('date', '=', $dateReport)
             ->get()->sortBy('active_time');
 
-        if ($request->get('export')) $this->export($historySeats, $company, $dateReport, null);
+        if ($request->get('export')) return $this->export($historySeats, $company, $dateReport, null);
         return view('reports.passengers.taxcentral.passengersReportByAll', compact('historySeats'));
     }
 
@@ -86,7 +86,7 @@ class TaxCentralPassengerReportController extends Controller
             }
         }
         
-        if ($request->get('export')) $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
+        if ($request->get('export')) return $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
 
         return view('reports.passengers.taxcentral.passengersReport', compact(['historySeats', 'dispatchRegister', 'dispatchArrivaltime']));
     }
