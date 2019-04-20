@@ -1106,7 +1106,7 @@ span.icon-report{
     font-size: 200%;
     color: rgba(211, 211, 211, 0.16);
     position: relative;
-    top: -5px;
+    top: 4px;
     float: unset;
 }
 .select2-container{
@@ -1529,4 +1529,52 @@ span.icon-report{
 .label.label-inverse{
     background: black;
     margin: 2px;
+}
+
+.label, .label.label-sm {
+    font-size: 9px !important;
+    font-weight: bold !important;
+}
+.span-full {
+    display: block !important;
+    height: 15px !important;
+    padding-top: 3px !important;
+    margin-top: 2px !important;
+    font-weight: bold !important;
+}
+
+.mt-element-step .step-line .mt-step-number {
+    font-size: 26px !important;
+    border-radius: 50%!important;
+    display: inline-block !important;
+    margin: auto auto 5px !important;
+    padding: 9px !important;
+    border: 3px solid #e5e5e5 !important;
+    position: relative !important;
+    z-index: 5 !important;
+    height: 60px !important;
+    width: 60px !important;
+    text-align: center !important;
+}
+.mt-element-step .step-line .mt-step-number>i {
+    position: relative;
+    top: 90% !important;
+    transform: translateY(-120%);
+}
+
+.mt-element-step .step-line .warning .mt-step-title:after,.mt-element-step .step-line .warning .mt-step-title:before {
+    background-color: #d26a23
+}
+
+.mt-element-step .step-line .warning .mt-step-number {
+    color: #d26a23!important;
+    border-color: #d26a23!important;
+}
+
+.mt-element-step .warning .mt-step-number {
+    color: #d26a23!important
+}
+
+.mt-element-step .warning .mt-step-content,.mt-element-step .warning .mt-step-title {
+    color: #d26a23!important
 }
