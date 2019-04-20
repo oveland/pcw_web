@@ -61,8 +61,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('send-mail:consolidated --company=28 --prod=true')->dailyAt('04:00');
 
         /* Reports for ALAMEDA */
-        $schedule->command('send-mail:consolidated')->dailyAt('08:00');
-        $schedule->command('send-mail:consolidated-passengers')->dailyAt('08:10');
+        $schedule->command('send-mail:consolidated --company=14 --prod=true')->dailyAt('08:00');
+        $schedule->command('send-mail:consolidated-passengers --company=14')->dailyAt('08:10');
 
         //$schedule->command('dar:run')->dailyAt('03:00');
 
