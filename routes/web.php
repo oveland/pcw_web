@@ -89,6 +89,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/reassign-route', 'AutoDispatcherController@reassignRoute')->name('operation-dispatch-auto-dispatcher-reassign-route');
             });
         });
+
+        Route::prefix(__('track'))->group(function () {
+            Route::prefix(__('map'))->group(function () {
+                Route::get('/', 'OperationTrackMapController@index')->name('operation-track-map');
+                Route::get('/get', 'OperationTrackMapController@get')->name('operation-track-map-get');
+            });
+        });
     });
 
     /* Routes for route report */
