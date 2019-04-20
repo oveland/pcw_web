@@ -1,7 +1,8 @@
 @extends('layout')
 
 @section('stylesheets')
-
+    <!-- FUELUX - WIZARD -->
+    <link href="{{ asset('assets/fuelux/css/fuelux.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -37,8 +38,8 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
-                        @if(Auth::user()->isAdmin())
-                            <div class="col-md-3">
+                        @if(false && Auth::user()->isAdmin())
+                            <div class="col-md-3 hide">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
@@ -53,12 +54,12 @@
                             </div>
                         @endif
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="company-report" class="control-label field-required">@lang('Vehicle')</label>
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
-                                    <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select an option')</option>
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
+                                        @include('partials.selects.vehicles', compact('vehicles'))
                                     </select>
                                 </div>
                             </div>
@@ -90,6 +91,7 @@
 
 
 @section('scripts')
+
     <script type="application/javascript">
         $('.menu-takings-passengers, .menu-takings-passengers-liquidation').addClass('active-animated');
 
@@ -97,6 +99,12 @@
         const reportContainer = $('.report-container');
 
         $(document).ready(function () {
+            $('body').on('click', '.phases', function () {
+                const el = $(this);
+                $('.phases').removeClass('done active error warning');
+                el.addClass($(this).data('active'));
+            });
+
             form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
@@ -122,7 +130,7 @@
                 }
             });
 
-            $('#date-report, #route-report').change(function () {
+            $('#date-report, #vehicle-report').change(function () {
                 reportContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
@@ -132,6 +140,8 @@
             @if(!Auth::user()->isAdmin())
                 loadSelectRouteReport(null);
             @endif
+
+            $('#vehicle-report').change();
         });
     </script>
 @endsection

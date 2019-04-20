@@ -57,7 +57,7 @@ class ReportMileageDateRangeController extends Controller
 
         if ($request->get('export')) $this->export($mileageReport);
 
-        return view('reports.vehicles.mileage.dates.show', compact(['mileageReport', 'stringParams']));
+        return view('reports.vehicles.mileage.dates.show', compact(['mileageReport']));
     }
 
     /**
