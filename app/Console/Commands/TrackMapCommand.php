@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Company\Company;
-use App\Models\Users\User;
 use App\Services\API\Web\Track\TrackMapService;
 use Illuminate\Console\Command;
 use Log;
@@ -79,7 +78,6 @@ class TrackMapCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
      * @throws PusherException
      */
     public function handle()
@@ -90,7 +88,7 @@ class TrackMapCommand extends Command
             $routes = $this->company->activeRoutes;
 
             foreach ($routes as $route) {
-                $trackData = collect($this->trackMapService->track($this->company->id, $route->id))->take(10)->chunk(8);
+                $trackData = collect($this->trackMapService->track($this->company->id, $route->id))->chunk(8);
 
                 foreach ($trackData as $track) {
                     $this->sendTrackData($track->values(), $route->id);
