@@ -95,7 +95,7 @@ class TrackMapService
               LIMIT 1)
             )
             LEFT JOIN current_dispatch_registers AS cdr ON (cdr.plate = m.name)
-            LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo AND dv_group.route_id = $routeID)
+            LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo ".($routeID ? 'AND': 'OR')." dv_group.route_id = $routeID)
             LEFT JOIN dispatcher_vehicles AS dv ON (dv.vehicle_id = dv_group.vehicle_id AND dv.\"default\" is true)
             LEFT JOIN routes AS r ON (r.id = dv.route_id)
             LEFT JOIN current_off_roads AS cof ON (cof.dispatch_register_id = cdr.dispatch_register_id AND cof.date >= (current_timestamp - '00:00:25'::TIME)::TIMESTAMP)
@@ -104,7 +104,7 @@ class TrackMapService
             LEFT JOIN current_parking_reports AS cpr ON (cpr.vehicle_id = v.id_crear_vehiculo AND cpr.date >= (current_timestamp - '00:00:30'::TIME)::TIMESTAMP)
             LEFT JOIN current_control_point_alerts AS ccpa ON (ccpa.vehicle_id = v.id_crear_vehiculo AND ccpa.date >= (current_timestamp - '00:00:30'::TIME)::TIMESTAMP)
             LEFT JOIN current_speeding_reports  as csr ON (csr.date = current_date AND csr.vehicle_id = v.id_crear_vehiculo AND csr.time > (current_time-TO_TIMESTAMP('00:00:20', 'HH24:MI:SS')::TIME) AND csr.time <= current_time)
-            WHERE (v.empresa != 21 OR r.id = $routeID OR dv_group.route_id = $routeID) ";
+            WHERE (v.empresa != 21 OR $routeID = 0 OR r.id = $routeID OR dv_group.route_id = $routeID) ";
         } elseif ($nivel == 1 or $nivel == 2 or $nivel == 4) {
             $companyId = $user->company->id;
             $mainQuery = "
@@ -177,7 +177,7 @@ class TrackMapService
               LIMIT 1)
             )
             LEFT JOIN current_dispatch_registers as cdr ON (cdr.plate = m.name)
-            LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo AND dv_group.route_id = $routeID)
+            LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo ".($routeID ? 'AND': 'OR')." dv_group.route_id = $routeID)
             LEFT JOIN dispatcher_vehicles AS dv ON (dv.vehicle_id = dv_group.vehicle_id AND dv.\"default\" is true)
             LEFT JOIN routes AS r ON (r.id = dv.route_id)
             LEFT JOIN current_off_roads as cof ON (cof.dispatch_register_id = cdr.dispatch_register_id AND cof.date >= (current_timestamp - '00:00:25'::TIME)::TIMESTAMP)
@@ -186,7 +186,7 @@ class TrackMapService
             LEFT JOIN current_parking_reports as cpr ON (cpr.vehicle_id = v.id_crear_vehiculo AND cpr.date >= (current_timestamp - '00:00:30'::TIME)::TIMESTAMP)
             LEFT JOIN current_control_point_alerts AS ccpa ON (ccpa.vehicle_id = v.id_crear_vehiculo AND ccpa.date >= (current_timestamp - '00:00:30'::TIME)::TIMESTAMP)	
             LEFT JOIN current_speeding_reports  as csr ON (csr.date = current_date AND csr.vehicle_id = v.id_crear_vehiculo AND csr.time > (current_time-TO_TIMESTAMP('00:00:20', 'HH24:MI:SS')::TIME) AND csr.time <= current_time)
-            WHERE (v.empresa != 21 OR r.id = $routeID OR dv_group.route_id = $routeID) ";
+            WHERE (v.empresa != 21 OR $routeID = 0  OR r.id = $routeID OR dv_group.route_id = $routeID) ";
         } elseif ($nivel == 3) {
             $companyId = $user->company->id;
             $mainQuery = "
@@ -261,7 +261,7 @@ class TrackMapService
             )
             INNER JOIN acceso ON (acceso.usuario = usuario_vehi.usuario)
             LEFT JOIN current_dispatch_registers as cdr ON (cdr.plate = m.name)
-            LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo AND dv_group.route_id = $routeID)
+            LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo ".($routeID ? 'AND': 'OR')." dv_group.route_id = $routeID)
             LEFT JOIN dispatcher_vehicles AS dv ON (dv.vehicle_id = dv_group.vehicle_id AND dv.\"default\" is true)
             LEFT JOIN routes AS r ON (r.id = dv.route_id)
             LEFT JOIN current_off_roads as cof ON (cof.dispatch_register_id = cdr.dispatch_register_id AND cof.date >= (current_timestamp - '00:00:25'::TIME)::TIMESTAMP)
@@ -270,7 +270,7 @@ class TrackMapService
             LEFT JOIN current_parking_reports as cpr ON (cpr.vehicle_id = v.id_crear_vehiculo AND cpr.date >= (current_timestamp - '00:00:30'::TIME)::TIMESTAMP)
             LEFT JOIN current_control_point_alerts AS ccpa ON (ccpa.vehicle_id = v.id_crear_vehiculo AND ccpa.date >= (current_timestamp - '00:00:30'::TIME)::TIMESTAMP)
             LEFT JOIN current_speeding_reports  as csr ON (csr.date = current_date AND csr.vehicle_id = v.id_crear_vehiculo AND csr.time > (current_time-TO_TIMESTAMP('00:00:20', 'HH24:MI:SS')::TIME) AND csr.time <= current_time)
-            WHERE " . " acceso.usuario =  '$user->username' and acceso.nivel = $nivel ";
+            WHERE " . " acceso.usuario =  '$user->username' and acceso.nivel = $nivel OR $routeID = 0 ";
         }
 
         $mainQuery .= ($companyId != 0) ? " AND (v.empresa = $companyId" . ($companyId == 12 ? " OR v.empresa = 25" : "") . ") " : "";
@@ -381,7 +381,7 @@ class TrackMapService
                 $row->lng = -76.52156849484516;
             }
 
-            $response[] = [
+            $response[] = (object)[
                 /* Info company */
                 'companyId' => $companyId,
 
