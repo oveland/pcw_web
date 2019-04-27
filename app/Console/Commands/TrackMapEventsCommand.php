@@ -57,9 +57,9 @@ class TrackMapEventsCommand extends Command
         );
 
         return new Pusher(
-            '16f9596b985e59db2b9a',
-            '98c90322e46cad4bf9b4',
-            '763941',
+            'de6631a2b7d51bd2446f',
+            '7fc305412582c72b04bd',
+            '771253',
             $options
         );
     }
@@ -71,7 +71,7 @@ class TrackMapEventsCommand extends Command
      */
     function sendTrackData($data, $routeId)
     {
-        $this->getPusher()->trigger("connection-" . $this->company->id, "track-route-$routeId", $data);
+        $this->getPusher()->trigger("track-route-$routeId", "gps", $data);
     }
 
     /**
