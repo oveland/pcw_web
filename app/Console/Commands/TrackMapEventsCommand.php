@@ -71,7 +71,6 @@ class TrackMapEventsCommand extends Command
      */
     function sendTrackData($data, $routeId)
     {
-        $this->logData("Send track data for route $routeId");
         $this->getPusher()->trigger("connection-" . $this->company->id, "track-route-$routeId", $data);
     }
 
@@ -86,7 +85,6 @@ class TrackMapEventsCommand extends Command
 
         if ($this->company) {
             foreach (range(1, 3) as $index) {
-                $this->logData("Check for events: $index");
                 $this->checkAndSendEvents();
                 sleep(15);
             }

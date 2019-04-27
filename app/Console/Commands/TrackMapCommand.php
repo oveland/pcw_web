@@ -71,7 +71,6 @@ class TrackMapCommand extends Command
      */
     function sendTrackData($data, $routeId)
     {
-        $this->logData("Send track data for route $routeId");
         $this->getPusher()->trigger("connection-" . $this->company->id, "track-route-$routeId", $data);
     }
 
@@ -86,6 +85,8 @@ class TrackMapCommand extends Command
 
         if ($this->company) {
             $routes = $this->company->activeRoutes;
+
+            $this->logData("Sending track data");
 
             foreach ($routes as $route) {
                 $trackData = collect($this->trackMapService->track($this->company->id, $route->id))->chunk(8);
