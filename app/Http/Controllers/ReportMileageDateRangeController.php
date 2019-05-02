@@ -69,7 +69,7 @@ class ReportMileageDateRangeController extends Controller
      */
     public function buildMileageReport(Company $company, $vehicleReport, $initialDateReport, $finalDateReport)
     {
-        $vehicles = $company->vehicles;
+        $vehicles = $company->activeVehicles;
         if ($vehicleReport != 'all') $vehicles = $vehicles->where('id', $vehicleReport);
 
         $reports = collect([]);
@@ -148,16 +148,17 @@ class ReportMileageDateRangeController extends Controller
         $reports = $mileageReport->reports;
         $dataExcel = collect([]);
         foreach ($reports as $report) {
+            $mileage = $report->mileage ? $report->mileage : 0;
             $dataExcel->push([
                 __('N°') => count($dataExcel) + 1,           # A CELL
                 __('Date') => $report->date,         # B CELL
                 __('Number') => $report->vehicleNumber,      # C CELL
                 __('Plate') => $report->vehiclePlate,        # D CELL
-                __('Mileage') . " (Km)" => "=$report->mileage/1000",   # E CELL
+                __('Mileage') . " (Km)" => "=$mileage/1000",   # E CELL
             ]);
         }
 
-        $vehicleNumber = __("for all");
+        $vehicleNumber = __("all");
         if ($mileageReport->vehicleReport != 'all' && $dataExcel->count()) {
             $vehicleNumber = __('Vehicle') . " " . $dataExcel->first()[__('Number')];
         }
