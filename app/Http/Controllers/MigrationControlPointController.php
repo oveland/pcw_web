@@ -19,10 +19,16 @@ class MigrationControlPointController extends Controller
         'control_points' => 'puntos_control_ruta'
     ];
 
-    public function getControlPoints()
+    public function getControlPoints(Request $request)
     {
+        $company = $request->get('company');
+
         if( Auth::user()->isAdmin() )$companies = Company::whereActive(true)->orderBy('short_name')->get();
-        else $companies = [Auth::user()->company];
+        else $companies = collect([Auth::user()->company]);
+
+        if( $company ) $companies = $companies->where('id', $company);
+
+
         return view('migrations.cp',compact('companies'));
     }
 

@@ -70,8 +70,7 @@
                                         </div>
                                         <div id="collapse-{{ $route->id }}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                                             <div class="panel-body">
-                                                <div class="widget widget-stat bg-inverse-light text-white p-b-30">
-                                                    <div class="widget-stat-btn"><a href="#" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
+                                                <div class="widget widget-stat bg-inverse-light text-white p-t-10 p-b-30 text-center">
                                                     <button class="btn btn-success" onclick="alert('Migrating...')" data-toggle="modal" data-target="#modal-migration">
                                                         <i class="fa fa-database"></i> @lang('Process migration')
                                                     </button>

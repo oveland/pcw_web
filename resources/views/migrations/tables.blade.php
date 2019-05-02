@@ -36,13 +36,12 @@
                         </div>
                         <div id="collapse-{{$loop->index}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                             <div class="panel-body">
-                                <div class="widget widget-stat bg-inverse-light text-white">
-                                    <div class="widget-stat-btn"><a href="#" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-large btn-lg btn-lime" onclick="$('.name-route').text('{{ $table->name }}');$('.container-migration').attr('src','{{ $table->route }}')" data-toggle="modal" data-target="#modal-migration">
+                                <div class="widget widget-stat bg-inverse-light text-white text-center">
+                                    <div class="btn-group p-t-10">
+                                        <button class="btn btn-sm btn-lg btn-lime" onclick="$('.name-route').text('{{ $table->name }}');$('.container-migration').attr('src','{{ $table->route }}')" data-toggle="modal" data-target="#modal-migration">
                                             <i class="fa fa-database"></i> @lang('Migrate')
                                         </button>
-                                        <button type="button" class="btn btn-large btn-lg btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button type="button" class="btn btn-sm btn-lg btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
