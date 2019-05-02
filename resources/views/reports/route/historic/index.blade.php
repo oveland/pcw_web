@@ -22,6 +22,12 @@
             background: #f57c1e;
         }
 
+        .btn-historic-info {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+            font-size: 0.8em !important;
+            margin-bottom: 5px !important;
+        }
     </style>
 @endsection
 
@@ -153,9 +159,9 @@
                         </span>
                     </small>
                     <small class="col-md-6 col-sm-6 col-xs-12 p-0 text-right">
-                        <span><i class="fa fa-clock-o"></i> <span class="time">0</span></span> |
-                        <span><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span> |
-                        <span class="btn btn-default btn-xs btn-circle status-vehicle m-b-5" style="padding-left: 10px !important; padding-right: 10px !important; font-size: 0.8em !important;"></span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info"><i class="fa fa-clock-o"></i> <span class="time"></span></span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle"><i class='fa fa-send'></i></span>
                     </small>
                 </p>
             </div>
@@ -225,11 +231,19 @@
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
                     reportContainer.slideUp(100);
+                    reportRouteHistoric.clearMap();
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (report) {
                             reportRouteHistoric.processHistoricReportData(report);
+
+                            $('#range_reports').data("ionRangeSlider").update({
+                                min: 0,
+                                max: report.total,
+                                from: report.total
+                            });
+
                             setTimeout(()=>{
                                 if( report.total > 0 )btnExport.fadeIn();
                                 btnExport.attr('href', report.exportLink);

@@ -20,8 +20,6 @@
         processHistoricReportData(report) {
             $('.map-report-historic').css('height', (window.innerHeight - 100));
 
-            this.clearMap();
-
             $.each(report.historic, (i, reportLocation) => {
                 let historicInfoWindow = this.createInfoWindow(reportLocation);
                 let marker = this.addHistoricMarker(reportLocation);
@@ -32,7 +30,7 @@
 
                 this.historicLocations.push({
                     marker: marker,
-                    shadowMarker: this.addShadowMarker(reportLocation),
+                    //shadowMarker: this.addShadowMarker(reportLocation),
                     infoWindow: historicInfoWindow,
                     reportLocation: reportLocation
                 });
@@ -47,35 +45,21 @@
                 map: this.map
             });
 
-            const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
-            if (kmzUrl) {
-                this.kmlLayer = new google.maps.KmlLayer({
-                    url: kmzUrl,
-                    map: this.map
-                });
-            }
-
             this.showInfo.find('.time-from').text(report.from);
             this.showInfo.find('.time-to').text(report.to);
             this.showInfo.find('.total').text(report.total);
 
-            $('#range_reports').data("ionRangeSlider").update({
-                min: 0,
-                max: report.total,
-                from: 0
-            });
-
             if (this.historicLocations.length) {
-                this.updateBusMarker(0);
-
+                this.updateBusMarker(report.total - 1);
                 setTimeout(() => {
-                    if (this.markerBus) {
-                        this.map.panTo(this.markerBus.getPosition());
+                    $("html, body").animate({scrollTop: $(".range-reports").offset().top - 40}, 1000);
+                    const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
+                    if (kmzUrl) {
+                        this.kmlLayer = new google.maps.KmlLayer({
+                            url: kmzUrl,
+                            map: this.map
+                        });
                     }
-                    setTimeout(() => {
-                        $("html, body").animate({scrollTop: $(".range-reports").offset().top - 40}, 1000);
-                    },100);
-
                 }, 1500);
             } else {
                 gwarning("@lang("No registers found")");
@@ -85,11 +69,19 @@
         addHistoricMarker(r) {
             let rotation = parseInt(r.orientation);
 
+            let fillColor = '#a1bf00';
+            let strokeColor = '#008a54';
+
+            if (r.speeding) {
+                fillColor = '#bf130d';
+                strokeColor = '#becc02';
+            }
+
             const icon = {
                 path: this.iconPathSVG,
                 fillOpacity: 0.9,
-                fillColor: '#a1bf00',
-                strokeColor: '#008a54',
+                fillColor: fillColor,
+                strokeColor: strokeColor,
                 scale: .02,
                 strokeWeight: 1,
                 anchor: new google.maps.Point(220, 250),
@@ -128,7 +120,7 @@
         clearMap() {
             this.historicLocations.forEach((historicLocation) => {
                 historicLocation.marker.setMap(null);
-                historicLocation.shadowMarker.setMap(null);
+                //historicLocation.shadowMarker.setMap(null);
             });
 
             this.historicLocations = [];
@@ -157,18 +149,18 @@
 
                 if (i <= index) {
                     historicLocation.marker.setMap(this.map);
-                    historicLocation.shadowMarker.setMap(null);
+                    //historicLocation.shadowMarker.setMap(null);
 
                     //if (!path.getAt(i))
                     path.insertAt(i, historicLocation.marker.position);
                 } else {
                     historicLocation.marker.setMap(null);
-                    historicLocation.shadowMarker.setMap(this.map);
+                    //historicLocation.shadowMarker.setMap(this.map);
                 }
             });
 
             path.forEach((p, i) => {
-                if( i > index ){
+                if (i > index) {
                     path.removeAt(i);
                 }
             });
@@ -186,11 +178,19 @@
 
             let rotation = parseInt(reportLocation.orientation);
 
+            let fillColor = '#04bf8a';
+            let strokeColor = '#0f678a';
+
+            if (reportLocation.speeding) {
+                fillColor = '#bf3200';
+                strokeColor = '#d4c905';
+            }
+
             const icon = {
                 path: this.iconPathSVG,
                 fillOpacity: 1,
-                fillColor: '#04bf8a',
-                strokeColor: '#0f678a',
+                fillColor: fillColor,
+                strokeColor: strokeColor,
                 scale: .045,
                 strokeWeight: 2,
                 anchor: new google.maps.Point(220, 250),
@@ -230,6 +230,11 @@
 
             this.showInfo.find('.time').text(reportLocation.time);
             this.showInfo.find('.speed').text(reportLocation.speed);
+            if(reportLocation.speeding){
+                this.showInfo.find('.speed').parent().addClass('btn-warning');
+            }else{
+                this.showInfo.find('.speed').parent().removeClass('btn-warning');
+            }
             this.showInfo.find('.status-vehicle').html(
                 "<small class='text-" + reportLocation.vehicleStatus.mainClass + "'>" +
                 "<i class='" + reportLocation.vehicleStatus.iconClass + "'></i> " + reportLocation.vehicleStatus.status +
