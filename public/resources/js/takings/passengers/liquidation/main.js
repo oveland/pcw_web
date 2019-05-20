@@ -5710,9 +5710,7 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("span", { staticClass: "pull-right col-md-4" }, [
-        _vm._v(
-          _vm._s(_vm._f("numberFormat")(_vm.liquidation.totalGrossBea, "$0,0"))
-        )
+        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.liquidation.totalBea, "$0,0")))
       ])
     ]),
     _vm._v(" "),
@@ -5793,7 +5791,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "text-bold" }, [
       _c("i", { staticClass: "fa fa-dollar" }),
-      _vm._v(" Total Gross BEA\n        ")
+      _vm._v(" Total BEA\n        ")
     ])
   },
   function() {
