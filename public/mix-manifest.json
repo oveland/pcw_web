@@ -1,5 +1,6 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/resources/js/takings/passengers/liquidation/main.js": "/resources/js/takings/passengers/liquidation/main.js"
+    "/resources/js/takings/passengers/liquidation/main.js": "/resources/js/takings/passengers/liquidation/main.js",
+    "/vendors~pdfjsWorker.js": "/vendors~pdfjsWorker.js"
 }

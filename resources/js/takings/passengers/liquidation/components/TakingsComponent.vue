@@ -90,13 +90,15 @@
                                     <table-component :marks="liquidationDetail.marks" :to-takings="true" :totals="liquidationDetail.totals"></table-component>
                                 </div>
                                 <div id="detail-liquidation" class="tab-pane fade">
-                                    <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10">
-                                        <a :href="urlExportLink" target="_blank" class="pull-left">
-                                            <i class="fa fa-download"></i> Export
+                                    <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10" v-if="!showPrintArea">
+                                        <a href="javascript:" target="_blank" class="pull-left header-preview" @click="exportLiquidation()">
+                                            <i class="fa fa-download"></i> Print
                                         </a>
-                                        <span class="pull-right">#{{ liquidationDetail.id }}</span>
-
-                                        <preview-component :liquidation="liquidationDetail.liquidation" :search="search" :only-details="true" ></preview-component>
+                                        <span class="pull-right header-preview">#{{ liquidationDetail.id }}</span>
+                                        <preview-component :liquidation="liquidationDetail.liquidation" :search="search" :view-takings="true" ></preview-component>
+                                    </div>
+                                    <div class="portlet light bordered phase-container col-md-8 col-md-offset-2 p-0 pdf-container" v-if="showPrintArea">
+                                        <vue-friendly-iframe :src="linkToPrintLiquidation"></vue-friendly-iframe>
                                     </div>
                                 </div>
                             </div>
@@ -114,6 +116,8 @@
 <script>
     import TableComponent from './TableComponent';
     import PreviewComponent from './PreviewComponent';
+    import VueFriendlyIframe from 'vue-friendly-iframe';
+
 
     export default {
         name: 'TakingsComponent',
@@ -126,6 +130,8 @@
         },
         data: function () {
             return {
+                showPrintArea: false,
+                linkToPrintLiquidation: false,
                 liquidations: [],
                 liquidationDetail: {
                     id: 0,
@@ -138,18 +144,19 @@
                 },
             };
         },
-        computed: {
-            urlExportLink: function(){
-                return this.urlExport + '?id=' + this.liquidationDetail.id;
-            }
-        },
         watch: {
             searchParams: function () {
                 console.log("Refresh Takings");
+                this.showPrintArea = false;
+                this.linkToPrintLiquidation = '';
                 this.searchLiquidationReport();
             }
         },
         methods: {
+            exportLiquidation(){
+                this.showPrintArea = true;
+                return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id;
+            },
             seeLiquidationDetail(liquidationId) {
                 this.liquidationDetail = _.find(this.liquidations, function(liquidation){
                     return liquidation.id === liquidationId
@@ -195,7 +202,18 @@
         },
         components: {
             TableComponent,
-            PreviewComponent
+            PreviewComponent,
+            VueFriendlyIframe
         }
     }
 </script>
+
+<style>
+    .pdf-container iframe{
+        width: 100%;
+        height: 600px;
+    }
+    .header-preview{
+        font-size: 1.2em !important;
+    }
+</style>
