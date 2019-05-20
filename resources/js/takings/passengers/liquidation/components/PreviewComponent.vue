@@ -11,9 +11,9 @@
         <hr class="hr">
         <h3 class="totals">
             <span class="text-bold">
-                <i class="fa fa-dollar"></i> Total Gross BEA
+                <i class="fa fa-dollar"></i> Total BEA
             </span>
-            <span class="pull-right col-md-4">{{ liquidation.totalGrossBea | numberFormat('$0,0') }}</span>
+            <span class="pull-right col-md-4">{{ liquidation.totalBea | numberFormat('$0,0') }}</span>
         </h3>
         <h3 class="totals">
             <span class="text-bold">

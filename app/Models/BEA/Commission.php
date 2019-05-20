@@ -31,6 +31,11 @@ class Commission extends Model
 {
     protected $table = 'bea_commissions';
 
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     /**
      * @return BelongsTo
      */

@@ -79,6 +79,19 @@ class Mark extends Model
 
     protected $dates = ['date'];
 
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
+    /**
+     * @return DateTime
+     */
+    function getDateAttribute()
+    {
+        return Carbon::createFromFormat(config('app.date_format'), $this->attributes['date']);
+    }
+
     /**
      * @return DateTime
      */
@@ -153,7 +166,7 @@ class Mark extends Model
     function getTotalGrossBeaAttribute(){
 
         $discountByMobilityAuxilio = $this->discounts->filter(function($d){
-            return $d->discountType->name == 'mobility_auxilio';
+            return $d->discountType->name == __('Mobility auxilio');
         })->first();
 
         return $discountByMobilityAuxilio ? $this->total_bea - $discountByMobilityAuxilio->value : $this->total_bea;

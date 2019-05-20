@@ -36,6 +36,11 @@ class Turn extends Model
 {
     protected $table = 'bea_turns';
 
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     /**
      * @return BelongsTo
      */

@@ -29,4 +29,9 @@ use Illuminate\Database\Eloquent\Model;
 class DiscountType extends Model
 {
     protected $table = 'bea_discount_types';
+
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
 }

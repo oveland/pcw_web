@@ -44,7 +44,7 @@ class DiscountTypesTableSeeder extends Seeder
         }
 
         DiscountType::create([
-            'name' => 'mobility_auxilio',
+            'name' => __('Mobility auxilio'),
             'icon' => 'fa fa-user text-warning',
             'description' => __('Discount by') .' '. __('Mobility auxilio'),
             'default' => random_int(2000, 5000)

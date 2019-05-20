@@ -25,4 +25,9 @@ use Illuminate\Database\Eloquent\Model;
 class Trajectory extends Model
 {
     protected $table = 'bea_trajectories';
+
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
 }
