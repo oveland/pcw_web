@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereDriverCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister query()
  */
 class CurrentDispatchRegister extends Model
 {

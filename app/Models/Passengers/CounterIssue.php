@@ -41,6 +41,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\CounterIssue whereVehicleId($value)
  * @mixin \Eloquent
  * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\CounterIssue newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\CounterIssue newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\CounterIssue query()
  */
 class CounterIssue extends Model
 {

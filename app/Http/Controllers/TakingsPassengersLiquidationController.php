@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BEA\Liquidation;
+use App\Models\BEA\Mark;
 use App\Services\Auth\PCWAuthService;
 use App\Services\BEA\BEAService;
+use Auth;
+use Carbon\Carbon;
+use DB;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use function MongoDB\BSON\toJSON;
+use PDF;
 
 class TakingsPassengersLiquidationController extends Controller
 {
@@ -26,31 +33,113 @@ class TakingsPassengersLiquidationController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function index(Request $request)
+    public function index()
     {
         //$accessProperties = $this->pcwAuthService->getAccessProperties();
         //$companies = $accessProperties->companies;
-        $vehicles = $this->beaService->getAllVehicles();
 
-        return view('takings.passengers.liquidation.index', compact('vehicles'));
+        return view('takings.passengers.liquidation.index');
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getParamsSearch()
+    {
+        return response()->json($this->beaService->repository->getAllVehicles());
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return JsonResponse
      * @throws Exception
      */
     public function search(Request $request)
     {
-        $vehicleReport = $request->get('vehicle-report');
+        $vehicleReport = $request->get('vehicle');
+        $dateReport = $request->get('date');
 
-        $beaMarks = $this->beaService->getBEAMarksFrom($vehicleReport);
+        $beaMarks = $this->beaService->getBEAMarks($vehicleReport, $dateReport);
 
-        return view('takings.passengers.liquidation.show', compact('beaMarks'));
+        return response()->json($beaMarks);
     }
 
+    public function exportLiquidation(Request $request)
+    {
+        $liquidation = Liquidation::find($request->get('id'));
+        $pdf = PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif'])
+            ->loadView('takings.passengers.liquidation.exports.liquidation',compact('liquidation'));
+        return $pdf->download('invoice.pdf');
+    }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function searchLiquidated(Request $request)
+    {
+        $vehicleReport = $request->get('vehicle');
+        $dateReport = $request->get('date');
+
+        $beaLiquidations = $this->beaService->getBEALiquidations($vehicleReport, $dateReport);
+
+        return response()->json($beaLiquidations);
+    }
+
+    /**
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function getAllParams()
+    {
+        return response()->json($this->beaService->getLiquidationParams());
+    }
+
+    /**
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function liquidate(Request $request)
+    {
+        $response = (object)[
+            'success' => true,
+            'message' => __('Liquidation processed successfully')
+        ];
+
+        DB::beginTransaction();
+        $user = Auth::user();
+        $liquidation = new Liquidation();
+        $liquidation->date = Carbon::now();
+        $liquidation->vehicle_id = $request->get('vehicle');
+        $liquidation->liquidation = collect($request->get('liquidation'))->toJson();
+        $liquidation->totals = collect($request->get('totals'))->toJson();
+        $liquidation->user_id = $user->id;
+
+        if ($liquidation->save()) {
+            foreach ($request->get('marks') as $markId) {
+                $mark = Mark::find($markId);
+                if ($mark) {
+                    $mark->liquidated = true;
+                    $mark->liquidation_id = $liquidation->id;
+                    if (!$mark->save()) {
+                        $response->success = false;
+                        $response->message = __('Error at associate liquidation with BEA Mark register');
+                        DB::rollBack();
+                        break;
+                    };
+                }
+            }
+        } else {
+            $response->success = false;
+            $response->message = __('Error at generate liquidation register');
+            DB::rollBack();
+        }
+
+        DB::commit();
+
+        return response()->json($response);
+    }
 }

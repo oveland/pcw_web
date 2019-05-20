@@ -289,9 +289,18 @@ Route::group(['middleware' => ['auth']], function () {
     /* Routes for operation pages */
     Route::prefix(__('takings'))->group(function () {
         Route::prefix(__('passengers'))->group(function () {
+            Route::get('/search', 'TakingsPassengersLiquidationController@searchLiquidated')->name('takings-passengers-search');
+
             Route::prefix(__('url-liquidation'))->group(function () {
                 Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');
                 Route::get('/search', 'TakingsPassengersLiquidationController@search')->name('takings-passengers-liquidation-search');
+                Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
+                Route::get('/export', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
+
+                Route::prefix(__('url-params'))->group(function () {
+                    Route::get('/', 'TakingsPassengersLiquidationController@getAllParams')->name('takings-passengers-liquidation-params');
+                    Route::get('/search', 'TakingsPassengersLiquidationController@getParamsSearch')->name('takings-passengers-liquidation-params-search');
+                });
             });
         });
     });

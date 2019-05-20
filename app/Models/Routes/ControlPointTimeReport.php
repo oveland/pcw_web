@@ -51,6 +51,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereTimep($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport query()
  */
 class ControlPointTimeReport extends Model
 {

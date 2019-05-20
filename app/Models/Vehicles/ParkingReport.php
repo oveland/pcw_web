@@ -57,6 +57,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Routes\ControlPoint|null $controlPoint
  * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
  * @property-read \App\Models\Vehicles\Vehicle $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ParkingReport newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ParkingReport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ParkingReport query()
  */
 class ParkingReport extends Model
 {

@@ -38,6 +38,9 @@ use Sofa\Eloquence\Mappable;
  * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicle
  * @property-read \App\Models\Vehicles\GpsVehicle $gpsVehicle
  * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicles
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle query()
  */
 class Vehicle extends Model
 {

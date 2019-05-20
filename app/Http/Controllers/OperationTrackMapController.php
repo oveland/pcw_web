@@ -33,8 +33,23 @@ class OperationTrackMapController extends Controller
         $companyId = $request->get('empresaShow');
         $routeID = $request->get('idRuta');
 
-        $trackData = collect($this->trackMapService->track($companyId, $routeID))->take(10)->chunk(8);
+        $trackData = collect($this->trackMapService->track($companyId, $routeID));
+        $hasEvents = $trackData->filter(function ($track) {
+            return ($track->speeding > 0 || $track->alertOffRoad || $track->alertParked);
+        })->count() > 0;
 
-        return response()->json();
+        if($hasEvents || true){
+            $trackDataByRoutes = $trackData->groupBy('dispatchRegisterRouteId');
+
+            foreach ($trackDataByRoutes as $routeId => $trackDataByRoute) {
+                $chunkedData = $trackDataByRoute->chunk(2);
+                foreach ($chunkedData as $track) {
+                    dump($track->values());
+                }
+            }
+        }
+        dd('');
+
+        return response()->json($trackData->chunk(8));
     }
 }

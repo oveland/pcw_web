@@ -24,6 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \App\Models\Vehicles\Vehicle $vehicle
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\MaintenanceVehicle whereObservations($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\MaintenanceVehicle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\MaintenanceVehicle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\MaintenanceVehicle query()
  */
 class MaintenanceVehicle extends Model
 {

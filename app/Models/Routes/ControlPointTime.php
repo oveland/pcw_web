@@ -28,6 +28,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \App\Models\Routes\Fringe|null $fringe
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime query()
  */
 class ControlPointTime extends Model
 {

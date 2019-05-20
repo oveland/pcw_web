@@ -32,6 +32,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\HistoryMarker whereKmGps($value)
  * @property string|null $frame
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\HistoryMarker whereFrame($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\HistoryMarker newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\HistoryMarker newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\HistoryMarker query()
  */
 class HistoryMarker extends Model
 {

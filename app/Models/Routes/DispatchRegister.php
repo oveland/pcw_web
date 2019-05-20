@@ -122,6 +122,9 @@ use Carbon\Carbon;
  * @property float|null $end_odometer
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereEndOdometer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereStartOdometer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
  */
 class DispatchRegister extends Model
 {

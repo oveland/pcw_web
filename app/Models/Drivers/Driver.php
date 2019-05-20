@@ -27,6 +27,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereSecondName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver withCode($code)
+ * @property-read mixed $full_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver active()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver query()
  */
 class Driver extends Model
 {

@@ -3,6 +3,15 @@
 @section('stylesheets')
     <!-- FUELUX - WIZARD -->
     <link href="{{ asset('assets/fuelux/css/fuelux.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        .nav.nav-pills>li>a {
+            color: #0b465a;
+            border: none !important;
+        }
+        .nav.nav-pills>li.active>a {
+            color:white !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -21,127 +30,66 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div class="row">
+    <div id="liquidation" class="row" url="{{ route('takings-passengers-liquidation-search') }}">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('takings-passengers-liquidation-search') }}">
-            <div class="panel panel-inverse">
-                <div class="panel-heading">
-                    <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
-                           data-click="panel-collapse" data-original-title="" title="@lang('Expand / Compress')">
-                            <i class="fa fa-minus"></i>
-                        </a>
-                    </div>
-                    <button type="submit" class="btn btn-success btn-sm btn-search-report">
-                        <i class="fa fa-search"></i> @lang('Search')
-                    </button>
-                </div>
-                <div class="panel-body p-b-15">
-                    <div class="form-input-flat">
-                        @if(false && Auth::user()->isAdmin())
-                            <div class="col-md-3 hide">
-                                <div class="form-group">
-                                    <label for="company-report" class="control-label field-required">@lang('Company')</label>
-                                    <div class="form-group">
-                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
-                                            <option value="null">@lang('Select an option')</option>
-                                            @foreach($companies as $company)
-                                                <option value="{{$company->id}}">{{ $company->short_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
-                                <div class="form-group">
-                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
-                                        @include('partials.selects.vehicles', compact('vehicles'))
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="date-report" class="control-label field-required">@lang('Date report')</label>
-                                <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <form class="col-md-12 form-search-report" @submit.prevent="">
+            <search-component url-params="{{ route('takings-passengers-liquidation-params-search') }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
         </form>
         <!-- end search form -->
         <hr class="hr">
         <!-- begin content report -->
-        <div class="report-container col-md-12"></div>
+        <div class="report-container col-md-12">
+            <div class="portlet light ">
+                <div class="portlet-title">
+                    <div class="">
+                        <div class="btn-group btn-group-devided width-full" data-toggle="buttons">
+                            <label class="btn btn-tab btn-transparent green-sharp btn-outline pull-left btn-circle uppercase active" data-toggle="tab" data-target="#table-liquidations"
+                                onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
+                                <i class="fa fa-file-text"></i> @lang('Liquidation')
+                            </label>
+                            <label class="btn btn-tab btn-transparent yellow-crusta btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings"
+                                onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
+                                <i class="fa fa-suitcase"></i> @lang('Takings')
+                            </label>
+                            <label class="btn blue-hoki btn-outline btn-circle pull-right uppercase" data-toggle="modal" data-target="#modal-params-manager">
+                                <i class="fa fa-cogs"></i> @lang('Admin')
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-content panel p-0">
+                        <div id="table-liquidations" class="tab-pane fade active in">
+                            <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks="marks" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
+                        </div>
+                        <div id="table-takings" class="tab-pane fade">
+                            <takings-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search') }}" url-takings="" url-export="{{ route('takings-passengers-liquidation-export') }}"></takings-component>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end content report -->
+
+        <div class="modal fade" id="modal-params-manager" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <admin-component url-params="{{  route('takings-passengers-liquidation-params') }}"></admin-component>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- end row -->
 @endsection
 
 
 @section('scripts')
+    <script src="{{ mix('resources/js/takings/passengers/liquidation/main.js') }}" type="application/ecmascript"></script>
 
-    <script type="application/javascript">
+    <script type="application/ecmascript">
         $('.menu-takings-passengers, .menu-takings-passengers-liquidation').addClass('active-animated');
-
-        const form = $('.form-search-report');
-        const reportContainer = $('.report-container');
-
-        $(document).ready(function () {
-            $('body').on('click', '.phases', function () {
-                const el = $(this);
-                $('.phases').removeClass('done active error warning');
-                el.addClass($(this).data('active'));
-            });
-
-            form.submit(function (e) {
-                e.preventDefault();
-                if (form.isValid()) {
-                    form.find('.btn-search-report').addClass(loadingClass);
-                    reportContainer.slideUp(100);
-                    $.ajax({
-                        url: form.attr('action'),
-                        data: form.serialize(),
-                        success: function (data) {
-                            reportContainer.empty().hide().html(data).fadeIn();
-                        },
-                        complete:function(){
-                            form.find('.btn-search-report').removeClass(loadingClass);
-                        }
-                    });
-                }
-            });
-
-            $('#company-report').change(function () {
-                loadSelectRouteReport($(this).val());
-                if (is_not_null($(this).val())) {
-                    reportContainer.submit();
-                }
-            });
-
-            $('#date-report, #vehicle-report').change(function () {
-                reportContainer.slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
-            });
-
-            @if(!Auth::user()->isAdmin())
-                loadSelectRouteReport(null);
-            @endif
-
-            $('#vehicle-report').change();
-        });
+        @if(!Auth::user()->isAdmin())
+            //$(document).ready(loadSelectRouteReport(null));
+        @endif
     </script>
 @endsection

@@ -35,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereUpdatedAt($value)
  * @property bool $reportable
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereReportable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint query()
  */
 class ControlPoint extends Model
 {

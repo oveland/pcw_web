@@ -8,9 +8,9 @@ window._ = require('lodash');
  */
 
 try {
-    window.$ = window.jQuery = require('jquery');
+    //window.$ = window.jQuery = require('jquery');
 
-    require('bootstrap-sass');
+    //require('bootstrap-sass');
 } catch (e) {}
 
 /**
@@ -23,6 +23,21 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+window.axios.interceptors.response.use(
+    (response) => {
+        setTimeout(() => {
+            $('.tooltips').tooltip();
+            setTimeout(() => {
+                $('.tooltips').tooltip();
+            }, 4000);
+        }, 1000);
+        return response;
+    },
+    function(){
+
+    },
+);
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

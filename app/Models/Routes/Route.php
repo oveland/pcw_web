@@ -38,6 +38,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Routes\Dispatch $dispatch
  * @property bool|null $as_group
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereAsGroup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route query()
  */
 class Route extends Model
 {

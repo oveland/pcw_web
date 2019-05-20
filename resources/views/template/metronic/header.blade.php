@@ -9,13 +9,15 @@
 <title>PCW | {{ __(ucfirst($current)) }}</title>
 
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
+
+<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 <link href="{{ asset('fonts/Google_Open_Sand.css') }}" rel="stylesheet" type="text/css"/>
 
 <link href="{{asset('assets/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/font-awesome/css/font-awesome-animation.min.css')}}" rel="stylesheet">
 
 <link href="{{asset('assets/global/plugins/simple-line-icons/simple-line-icons.min.css')}}" rel="stylesheet" type="text/css"/>
-<link href="{{asset('assets/global/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
 <link href="{{asset('assets/global/plugins/uniform/css/uniform.default.css')}}" rel="stylesheet" type="text/css"/>
 <link href="{{asset('assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css')}}" rel="stylesheet" type="text/css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
@@ -61,7 +63,7 @@
 <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
 
 <!-- Styles -->
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<link href="{{ asset('css/application.css') }}" rel="stylesheet">
 
 <!-- ================== BEGIN BASE JS ================== -->
 {{--<script src="{{asset('assets/plugins/pace/pace.min.js')}}"></script>--}}

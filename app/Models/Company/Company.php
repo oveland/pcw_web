@@ -45,6 +45,9 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereTimezone($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $activeRoutes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proprietaries\Proprietary[] $proprietaries
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company query()
  */
 class Company extends Model
 {
@@ -68,7 +71,7 @@ class Company extends Model
      */
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class);
+        return $this->hasMany(Vehicle::class)->orderBy('number');
     }
 
     /**
@@ -76,7 +79,7 @@ class Company extends Model
      */
     public function activeVehicles()
     {
-        return $this->vehicles()->where('active', true);
+        return $this->vehicles()->where('active', true)->orderBy('number');
     }
 
     /**
@@ -116,7 +119,7 @@ class Company extends Model
      */
     public function activeRoutes()
     {
-        return $this->routes()->where('active', true);
+        return $this->routes()->where('active', true)->orderBy('name');
     }
 
     /**
@@ -168,7 +171,7 @@ class Company extends Model
      */
     public function drivers()
     {
-        return $this->hasMany(Driver::class);
+        return $this->hasMany(Driver::class)->orderBy('first_name');
     }
 
     /**

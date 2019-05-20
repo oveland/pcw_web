@@ -4,146 +4,169 @@
 namespace App\Services\BEA;
 
 
+use App\Models\BEA\Commission;
+use App\Models\BEA\Discount;
+use App\Models\BEA\Liquidation;
+use App\Models\BEA\Mark;
+use App\Models\BEA\Penalty;
+use App\Models\BEA\Turn;
+use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
 
 class BEAService
 {
-    public function __construct()
-    {
+    /**
+     * @var DiscountService
+     */
+    private $discount;
+    /**
+     * @var BEARepository
+     */
+    public $repository;
+    /**
+     * @var CommissionService
+     */
+    private $commission;
+    /**
+     * @var PenaltyService
+     */
+    private $penalty;
 
+    /**
+     * BEAService constructor.
+     * @param BEARepository $repository
+     * @param DiscountService $discountService
+     * @param CommissionService $commissionService
+     * @param PenaltyService $penaltyService
+     */
+    public function __construct(BEARepository $repository, DiscountService $discountService, CommissionService $commissionService, PenaltyService $penaltyService)
+    {
+        $this->repository = $repository;
+        $this->discount = $discountService;
+        $this->commission = $commissionService;
+        $this->penalty = $penaltyService;
     }
 
     /**
-     * @param $vehicleReport
-     * @return Collection
+     * @return object
      * @throws Exception
      */
-    function getBEAMarksFrom($vehicleReport)
+    function getLiquidationParams()
     {
-        $allBEAMarks = $this->getAllBEAMarks();
+        $vehicles = $this->repository->getAllVehicles();
+        $routes = $this->repository->getAllRoutes();
 
-        return $allBEAMarks->filter(function ($beaMark) use ($vehicleReport) {
-            return $beaMark->turn->vehicle->id == $vehicleReport;
-        });
+        return (object)[
+            'vehicles' => $vehicles,
+            'routes' => $routes,
+            'discounts' => $this->discount->all(),
+            'commissions' => $this->commission->all(),
+            'penalties' => $this->penalty->all()
+        ];
     }
 
     /**
+     * @param $vehicleId
+     * @param $date
+     * @return Collection
+     */
+    function getBEALiquidations($vehicleId, $date)
+    {
+        $beaLiquidations = collect([]);
+        $liquidations = Liquidation::where('vehicle_id', $vehicleId)
+            ->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
+            ->with(['user', 'marks', 'vehicle', 'marks.turn.vehicle', 'marks.turn.route', 'marks.turn.driver', 'marks.trajectory'])
+            ->get();
+
+        foreach ($liquidations as $liquidation) {
+            $beaLiquidations->push((object)[
+                'id' => $liquidation->id,
+                'vehicle' => $liquidation->vehicle,
+                'date' => $liquidation->date->toDateTimeString(),
+                'liquidation' => $liquidation->liquidation,
+                'totals' => $liquidation->totals,
+                'user' => $liquidation->user,
+                'marks' => $this->processResponseMarks($liquidation->marks),
+            ]);
+        }
+
+        return $beaLiquidations;
+    }
+
+    /**
+     * @param $vehicleId
      * @return Collection
      * @throws Exception
      */
-    function getAllBEAMarks()
+    function getBEAMarks($vehicleId, $date)
+    {
+        $vehicleTurns = Turn::where('vehicle_id', $vehicleId)->get();
+        $marks = Mark::whereIn('turn_id', $vehicleTurns->pluck('id'))
+            ->where('liquidated', false)
+            ->where('taken', false)
+            ->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
+            ->with(['turn.vehicle', 'turn.route', 'turn.driver', 'trajectory'])
+            ->get();
+
+        return $this->processResponseMarks($marks);
+    }
+
+    /**
+     * @param $marks
+     * @return Collection
+     */
+    private function processResponseMarks($marks)
     {
         $beaMarks = collect([]);
 
-        $vehicles = $this->getAllVehicles();
-        $drivers = $this->getAllDrivers();
-        $routes = $this->getAllRoutes();
-        $travelRoutes = $this->getAllTravelRoutes();
+        $allDiscounts = $this->discount->all();
 
-        foreach ($vehicles as $vehicle) {
-            $date = $initialDate = Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d')." 06:00:00");
-            foreach (range(1, 8) as $index) {
-                $beaRoute = $routes->where('id', random_int(1, 9))->first();
-                $beaDriver = $drivers->where('id', random_int(1, 9))->first();
-                $beaRouteTravel = $travelRoutes->where('id', random_int(1, 2))->first();
+        $allCommissions = $this->commission->all();
+        $allPenalties = $this->penalty->all();
 
-                $beaTurn = (object)[
-                    'driver' => $beaDriver,
-                    'route' => $beaRoute,
-                    'vehicle' => $vehicle,
-                ];
+        foreach ($marks as $mark) {
+            $duration = $mark->initialTime->diff($mark->finalTime);
 
-                $initialDate = $date->copy();
-                $finalDate = $date->addMinutes(random_int(60,120))->copy();
-                $duration = $finalDate->diff($initialDate);
+            //---------------- RELATIONS FOR PENALTIES ---------------------
+            $penaltyByRoute = $allPenalties->where('route_id', $mark->turn->route->id)->first();
+            $penaltyValue = $mark->boarding * $penaltyByRoute->value;
+            $penalty = (object)[
+                'value' => $penaltyValue,
+                'type' => $penaltyByRoute->type,
+                'baseValue' => $penaltyByRoute->value,
+            ];
+            //------------------------------------------------------------------
 
-                $passengersUp = random_int(40, 50);
-                $passengersDown = random_int(40, 50);
-
-                $imBeaMax = $passengersUp + random_int(1, 10);
-                $imBeaMin = $passengersDown - random_int(1, 10);
-
-                $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 2500;
-
-                $beaMarks->push((object)[
-                    'id' => $index,
-                    'turn' => $beaTurn,
-                    'initialDate' => $initialDate,
-                    'finalDate' => $finalDate,
-                    'duration' => $duration->h."h ".$duration->i." m",
-                    'trajectory' => $beaRouteTravel,
-                    'passengersUp' => $passengersUp,
-                    'passengersDown' => $passengersDown,
-                    'imBeaMax' => $imBeaMax,
-                    'imBeaMin' => $imBeaMin,
-                    'totalBEA' => $totalBEA,
-                    'passengersBEA' => $passengersUp > $passengersDown ? $passengersUp : $passengersDown,
-                ]);
-            }
+            $beaMarks->push((object)[
+                'id' => $mark->id,
+                'turn' => $mark->turn,
+                'date' => $mark->date->toDateString(),
+                'initialTime' => $mark->initialTime->toTimeString(),
+                'finalTime' => $mark->finalTime->toTimeString(),
+                'duration' => $duration->h . "h " . $duration->i . " m",
+                'trajectory' => $mark->trajectory,
+                'passengersUp' => $mark->passengers_up,
+                'passengersDown' => $mark->passengers_down,
+                'locks' => $mark->locks,
+                'auxiliaries' => $mark->auxiliaries,
+                'boarded' => $mark->boarding,
+                'imBeaMax' => $mark->im_bea_max,
+                'imBeaMin' => $mark->im_bea_min,
+                'totalBEA' => $mark->total_bea,
+                'totalGrossBEA' => $mark->total_gross_bea,
+                'passengersBEA' => $mark->passengers_bea,
+                'discounts' => $mark->discounts->toArray(),
+                'commission' => $mark->commission,
+                'penalty' => $penalty,
+                'status' => $mark->status,
+                'liquidated' => $mark->liquidated,
+                'liquidation_id' => $mark->liquidation_id,
+                'taken' => $mark->taken,
+            ]);
         }
 
         return $beaMarks;
-    }
-
-    /**
-     * @return Collection
-     */
-    function getAllVehicles()
-    {
-        $vehicles = collect([]);
-        foreach (range(1, 9) as $vehicleId) {
-            $vehicles->push((object)[
-                'id' => $vehicleId,
-                'number' => "10$vehicleId",
-                'plate' => "BEA-10$vehicleId",
-            ]);
-        }
-
-        return $vehicles;
-    }
-
-    /**
-     * @return Collection
-     */
-    function getAllDrivers()
-    {
-        $drivers = collect([]);
-        foreach (range(1, 9) as $driverId) {
-            $drivers->push((object)[
-                'id' => $driverId,
-                'name' => __('Driver') . " $driverId",
-            ]);
-        }
-
-        return $drivers;
-    }
-
-    /**
-     * @return Collection
-     */
-    function getAllRoutes()
-    {
-        $routes = collect([]);
-        foreach (range(1, 9) as $routeId) {
-            $routes->push((object)[
-                'id' => $routeId,
-                'name' => __('Route') . " $routeId",
-            ]);
-        }
-
-        return $routes;
-    }
-
-    /**
-     * @return Collection
-     */
-    function getAllTravelRoutes()
-    {
-        $travelRoutes = collect([]);
-        $travelRoutes->push((object)['id' => 1, 'name' => 'IDA']);
-        $travelRoutes->push((object)['id' => 2, 'name' => 'REGRESO']);
-        return $travelRoutes;
     }
 }

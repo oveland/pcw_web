@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PeakAndPlate whereWeekDay($value)
  * @mixin \Eloquent
  * @property-read \App\Models\Vehicles\Vehicle $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PeakAndPlate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PeakAndPlate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PeakAndPlate query()
  */
 class PeakAndPlate extends Model
 {

@@ -57,6 +57,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereCurrentMileage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location witSpeeding()
  * @property-read \App\Models\Vehicles\AddressLocation $addressLocation
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location query()
  */
 class Location extends Model
 {

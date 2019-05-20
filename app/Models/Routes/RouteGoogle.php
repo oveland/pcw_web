@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle whereIdRuta($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle whereUrl($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle query()
  */
 class RouteGoogle extends Model
 {

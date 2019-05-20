@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $dispatch_register_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Speeding whereDispatchRegisterId($value)
  * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Speeding newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Speeding newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Speeding query()
  */
 class Speeding extends Model
 {

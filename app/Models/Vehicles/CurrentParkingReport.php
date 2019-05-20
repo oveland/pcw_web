@@ -53,6 +53,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentParkingReport whereVehicleId($value)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentParkingReport findByVehicleId($vehicle_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentParkingReport newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentParkingReport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentParkingReport query()
  */
 class CurrentParkingReport extends Model
 {

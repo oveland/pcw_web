@@ -36,6 +36,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereSurname($value)
  * @mixin \Eloquent
  * @property-read mixed $simple_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary query()
  */
 class Proprietary extends Model
 {

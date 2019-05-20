@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read mixed $date
  * @property-read \App\Models\Vehicles\GpsVehicle $gps
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS query()
  */
 class SimGPS extends Model
 {
