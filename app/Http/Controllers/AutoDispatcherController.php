@@ -36,7 +36,7 @@ class AutoDispatcherController extends Controller
         $routes = $company->activeRoutes;
         $dispatches = $company->dispatches;
 
-        $unassignedVehicles = $company->vehicles()
+        $unassignedVehicles = $company->activeVehicles()
             ->active()
             ->whereNotIn('id', DispatcherVehicle::active()->pluck('vehicle_id'))
             ->orderBy('number')

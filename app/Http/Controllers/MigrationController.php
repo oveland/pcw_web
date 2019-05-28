@@ -32,8 +32,10 @@ class MigrationController extends Controller
         'control_point_times' => 'tiempos_punto_control',
     ];
 
-    const ROUTES_FOR_MIGRATE = [124, 125, 126, 127, 128, 129, 135, 136, 137, 155, 156, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182, 183, 184];
-    const ROUTES_FOR_MIGRATE_CP = [124, 125, 126, 127, 128, 129, 155, 156, 135, 136, 137, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182, 183, 184];
+    const ROUTES_FOR_MIGRATE =
+        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 201, 189, 203];
+    const ROUTES_FOR_MIGRATE_CP =
+        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 201, 189, 203];
 
     /**
      * Create a new controller instance.
@@ -50,7 +52,7 @@ class MigrationController extends Controller
      */
     public function index()
     {
-        if( !Auth::user()->isAdmin() )dd('Acceso no autorizado temporalmente');
+        if (!Auth::user()->isAdmin()) abort(403);
         $tables = collect([
             (object)[
                 'name' => self::OLD_TABLES['companies'],
@@ -174,7 +176,7 @@ class MigrationController extends Controller
             $route->id = $routeOLD->id_rutas;
             $route->name = $routeOLD->nombre;
             $route->distance = $routeOLD->distancia;
-            $route->road_time = $routeOLD->tiempo_recorrido;
+            $route->min_route_time = $routeOLD->min_route_time;
             $route->company_id = $routeOLD->id_empresa;
             $route->dispatch_id = $routeOLD->id_despacho;
             $route->active = $routeOLD->estado == 0 ? true : false;
@@ -394,7 +396,7 @@ class MigrationController extends Controller
             $controlPoint->trajectory = $controlPointOLD->trayecto;
             $controlPoint->order = $controlPointOLD->orden;
             $controlPoint->type = $controlPointOLD->tipo;
-            if( $new ){ // Only when create new register because the logic calibration on GRAILS NE manage this values
+            if ($new) { // Only when create new register because the logic calibration on GRAILS NE manage this values
                 $controlPoint->distance_from_dispatch = $controlPointOLD->distancia_desde_despacho;
                 $controlPoint->distance_next_point = intval($controlPointOLD->distancia_punto_siguiente);
             }
@@ -447,11 +449,11 @@ class MigrationController extends Controller
                 $fringe = new Fringe();
                 $fringe->name = $fringeI;
                 $fringe->from = $fringeTime[0];
-                $fringe->to = $fringeTime[1]?"$fringeTime[1]:59":'00:00:00';
+                $fringe->to = $fringeTime[1] ? "$fringeTime[1]:59" : '00:00:00';
                 $fringe->sequence = $i;
                 $fringe->route_id = $fringeOLD->id_ruta;
                 $fringe->day_type_id = $fringeOLD->tipo_de_dia;
-                $fringe->style_color = "#".substr(md5(rand()), 0, 6);
+                $fringe->style_color = "#" . substr(md5(rand()), 0, 6);
 
                 try {
                     $fringe->save();
@@ -522,7 +524,7 @@ class MigrationController extends Controller
                 )
             )->groupBy('day_type');
 
-            foreach ($controlPointTimesByDays as $controlPointTimes){
+            foreach ($controlPointTimesByDays as $controlPointTimes) {
                 for ($i = 1; $i <= 15; $i++) {
                     $day_type = 0;
                     $last_time = "00:00:00";

@@ -4,10 +4,10 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-passengers-recorders-consolidated-daily-export') }}?date-report={{ $passengerReport->date }}&company-report={{ $passengerReport->companyId }}" class="btn btn-lime bg-lime-dark btn-sm">
-                    <i class="fa fa-file-excel-o"></i> @lang('Export excel')
+                <a href="{{ route('report-passengers-recorders-consolidated-daily-export') }}?date-report={{ $passengerReport->date }}&company-report={{ $passengerReport->companyId }}" class="btn btn-sm btn-circle green-meadow sbold uppercase tooltips" data-title="@lang('Export excel')">
+                    <i class="fa fa-file-excel-o"></i>
                 </a>
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-info " data-click="panel-expand" title="@lang('Expand / Compress')">
+                <a href="javascript:;" class="btn btn-sm btn-circle btn-default" data-click="panel-expand" title="@lang('Expand / Compress')">
                     <i class="fa fa-expand"></i>
                 </a>
             </div>
@@ -15,7 +15,6 @@
                 <span class="hides">
                     <i class="fa fa-users" aria-hidden="true"></i>
                     @lang('Consolidated per day')
-                    <hr class="text-inverse-light">
                 </span>
 
                 <ul class="nav nav-pills nav-pills-success hide">
@@ -70,6 +69,9 @@
                         <th class="text-center sensor">
                             <i class="fa fa-microchip" aria-hidden="true"></i> @lang('Sensor')
                         </th>
+                        <th class="text-center sensor">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i> @lang('Settlement receipt')
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -103,6 +105,13 @@
                                 </span>
                             </td>
                             <td class="sensor recorder">{{ $sensor }}</td>
+                            <td class="p-3">
+                                <a href="http://www.pcwserviciosgps.com/pcw_gps/php/despachoRutasBasico/pdf/crearrecibopdf.php?action=descargarReciboFinal&empresa={{ $vehicle->company->short_name }}&n_carro={{ $vehicle->number }}&placa={{ $vehicle->plate }}&fecha_sel={{ $passengerReport->date }}"
+                                   target="_blank" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase tooltips" data-html="true"
+                                   data-title="<i class='fa fa-download'></i> @lang('Settlement receipt')">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                </a>
+                            </td>
                         </tr>
                         <tr class="hide">
                             <td colspan="5">
@@ -120,6 +129,7 @@
                         <td class="text-center recorder">{{ $totalSensorRecorder->sum() }}</td>
                         <td class="text-center recorder">{{ $totalRecorder->sum() }}</td>
                         <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
+                        <td rowspan="2" class="text-center sensor"></td>
                     </tr>
                     <tr class="inverse bg-inverse text-white">
                         <td colspan="2" class="text-right">@lang('Average per vehicle')</td>

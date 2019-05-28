@@ -45,6 +45,7 @@ class SeatDistributionGualasService
                 'latitude' => $passenger->latitude,
                 'longitude' => $passenger->longitude
             ],
+            'date' => $passenger->date->toDateString(),
             'time' => $passenger->date->toTimeString(),
             'route' => $passenger->dispatchRegister->route ?? __('No Route'),
             'passengers' => $passenger->total,

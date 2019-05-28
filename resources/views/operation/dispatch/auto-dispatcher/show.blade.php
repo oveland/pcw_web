@@ -139,7 +139,7 @@
                                                 $vehicle = $dispatcherVehicle->vehicle;
                                                 $defaultDispatcherVehicle = $dispatcherVehicle->defaultDispatcherVehicle;
                                             @endphp
-                                            <div class="col-md-1 col-sm-4 col-xs-6 p-5 tooltips" data-title="{!! $vehicle->id !!} - {{ $defaultDispatcherVehicle ? ($defaultDispatcherVehicle->route->name): 'SIN RUTA POR DEFECTO' }}" data-placement="bottom">
+                                            <div class="col-md-1 col-sm-4 col-xs-6 p-5 tooltips" data-title="{!! $vehicle->id !!} - ({!! $vehicle->plate !!}): {{ $defaultDispatcherVehicle ? ($defaultDispatcherVehicle->route->name): 'SIN RUTA POR DEFECTO' }}" data-placement="bottom">
                                                 <button class="btn btn-sm btn-{{ $defaultDispatcherVehicle ? 'default' :'danger' }} col-md-12 col-sm-12 col-xs-12 btn-reassign-route vehicle-{{ $vehicle->number }}"
                                                         data-toggle="modal" data-target="#modal-reassign-route"
                                                         data-route-name="{{ $route->name }}" data-dispatch-name="{{ $dispatch->name }}"

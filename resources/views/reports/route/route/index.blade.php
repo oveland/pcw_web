@@ -201,7 +201,7 @@
             }, function () {
                 routeSelect.find('option[value=""]').remove();
                 routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
-                routeSelect.val('all').change();
+                routeSelect.val('all').trigger('change.select2');;
             });
         }
     </script>

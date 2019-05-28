@@ -1,4 +1,4 @@
-<div class="modal-header" style="width: 100%">
+<div class="modal-header p-0" style="width: 100%;overflow-x: auto">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
         <i class="fa fa-times"></i>
     </button>

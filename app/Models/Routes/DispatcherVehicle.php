@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Routes\DispatcherVehicle $defaultDispatcherVehicle
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle query()
  */
 class DispatcherVehicle extends Model
 {
@@ -60,6 +63,7 @@ class DispatcherVehicle extends Model
     public function defaultDispatcherVehicle()
     {
         return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')
+            //->where('dispatch_id', $this->dispatch_id)
             ->where('default', true)
             ->where('active', true);
     }

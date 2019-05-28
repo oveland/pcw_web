@@ -193,12 +193,16 @@
                 }
             });
 
-            @if(Auth::user()->isAdmin())
-            $('#company').change(function () {
+            $('#route-report').change(function () {
                 reportContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
+            });
+
+            @if(Auth::user()->isAdmin())
+            $('#company-report').change(function () {
+                loadSelectRouteReport($(this).val());
             }).change();
             @endif
         });

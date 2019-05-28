@@ -27,9 +27,9 @@ class ControlPointService
         $dispatchRegisters = DispatchRegister::active()
             ->where('date', '=', $dateReport)
             ->where('route_id', '=', $route->id)
-            ->orderBy('departure_time')->get();
+            ->orderByDesc('departure_time')->get();
 
-        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get()->sortBy(function (ControlPointTimeReport $report) {
+        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get()->sortByDesc(function (ControlPointTimeReport $report) {
             return $report->dispatchRegister->departure_time;
         });
         $reportsByDispatchRegister = $allReportsByControlPoints->groupBy('dispatch_register_id');

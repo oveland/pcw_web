@@ -553,5 +553,6 @@
   "Liquidate": "Liquidar",
   "Add other": "Añadir otro",
   "Select a driver": "Seleccione un conductor",
-  "No drivers found": "Sin conductores"
+  "No drivers found": "Sin conductores",
+  "Settlement receipt": "Recibo de liquidación"
 }
