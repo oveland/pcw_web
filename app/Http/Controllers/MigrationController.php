@@ -50,7 +50,7 @@ class MigrationController extends Controller
      */
     public function index()
     {
-        if( !Auth::user()->isAdmin() )abort(403);
+        if( !Auth::user()->isAdmin() )dd('Acceso no autorizado temporalmente');
         $tables = collect([
             (object)[
                 'name' => self::OLD_TABLES['companies'],

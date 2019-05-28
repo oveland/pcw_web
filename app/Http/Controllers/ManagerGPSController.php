@@ -167,6 +167,8 @@ class ManagerGPSController extends Controller
 
     public function sendSMS(Request $request)
     {
+        if(!Auth::user()->isSuperAdmin())abort(403);
+
         $simGPSList = $request->get('sim-gps');
 
         $simGPSNumbers = is_array($simGPSList) ? $simGPSList : explode(";", $simGPSList);
