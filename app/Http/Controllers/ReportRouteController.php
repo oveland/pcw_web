@@ -67,6 +67,8 @@ class ReportRouteController extends Controller
         else $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
         $dispatchRegisters = $dispatchRegisters
             ->active()
+            ->with(['route', 'vehicle', 'driver', 'user'])
+            ->withCount(['reports', 'locations'])
             ->orderBy('departure_time')
             ->get();
 

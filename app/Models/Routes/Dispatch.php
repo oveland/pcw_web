@@ -2,6 +2,7 @@
 
 namespace App\Models\Routes;
 
+use App\Models\Vehicles\Vehicle;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -32,6 +33,9 @@ class Dispatch extends Model
 {
     public function dispatcherVehicles()
     {
-        return $this->hasMany(DispatcherVehicle::class)->active();
+        return $this->hasMany(DispatcherVehicle::class)->where(function($query){
+            $vehicles = Vehicle::active()->get();
+            $query->whereIn('vehicle_id', $vehicles->pluck('id'));
+        })->active();
     }
 }

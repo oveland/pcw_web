@@ -18,6 +18,7 @@ use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 
 use App\Services\PCWExporterService;
+use Carbon\Carbon;
 
 class ConsolidatedService
 {
@@ -115,8 +116,8 @@ class ConsolidatedService
 
         $fileData = [
             'fileName' => __('Passengers report') . " $dateReport",
-            'title' => __('Passengers report') . " $dateReport",
-            'subTitle' => __('Consolidated per day'),
+            'title' => __('Passengers')."\n".__('Consolidated per day'),
+            'subTitle' => Carbon::createFromFormat('Y-m-d', $passengerReports->date)->format('d-m-Y'),
             'data' => $dataExcel,
             'type' => 'passengerReportTotalFooter'
         ];

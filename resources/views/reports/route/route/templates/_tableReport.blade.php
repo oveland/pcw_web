@@ -272,13 +272,17 @@
                    data-original-title="@lang('Graph report detail')">
                     <i class="fa fa-area-chart faa-pulse"></i>
                 </a>
-                @if( Auth::user()->isSuperAdmin() )
-                    @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                    @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                    <hr class="hr no-padding">
-                    <small>{!! $totalLocations !!} @lang('locations')</small><br>
-                    <small>{!! $totalReports !!} @lang('reports')</small>
+                @if( Auth::user()->isAdmin() )
+                    <a target="_blank" class="btn btn-xs btn-info faa-parent animated-hover tooltips"
+                       href="{{ route('link-report-route-chart-view',['dispatchRegister'=>$dispatchRegister->id, 'location' => 0]) }}"
+                       data-original-title="@lang('Graph report detail') - External Link">
+                        <i class="fa fa-external-link faa-pulse"></i>
+                    </a>
+                @endif
 
+                @if( Auth::user()->isSuperAdmin() )
+                    <hr class="hr no-padding">
+                    <small>{!! $dispatchRegister->reports_count !!} / {!! $dispatchRegister->locations_count !!}</small>
                 @endif
             </td>
         </tr>
