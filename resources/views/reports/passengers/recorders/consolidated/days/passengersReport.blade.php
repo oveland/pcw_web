@@ -106,11 +106,19 @@
                             </td>
                             <td class="sensor recorder">{{ $sensor }}</td>
                             <td class="p-3">
-                                <a href="http://www.pcwserviciosgps.com/pcw_gps/php/despachoRutasBasico/pdf/crearrecibopdf.php?action=descargarReciboFinal&empresa={{ $vehicle->company->short_name }}&n_carro={{ $vehicle->number }}&placa={{ $vehicle->plate }}&fecha_sel={{ $passengerReport->date }}"
-                                   target="_blank" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase tooltips" data-html="true"
-                                   data-title="<i class='fa fa-download'></i> @lang('Settlement receipt')">
-                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                </a>
+                                @if($recorderIssue)
+                                    <div class="tooltips" data-html="true" data-title="<i class='fa fa-exclamation-triangle'></i> @lang('Please fix the issues first')">
+                                        <a href="javascript:alert('@lang('Please fix the issues first')')" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase disabled">
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                @else
+                                    <a href="http://www.pcwserviciosgps.com/pcw_gps/php/despachoRutasBasico/pdf/crearrecibopdf.php?action=descargarReciboFinal&empresa={{ $vehicle->company->short_name }}&n_carro={{ $vehicle->number }}&placa={{ $vehicle->plate }}&fecha_sel={{ $passengerReport->date }}"
+                                       target="_blank" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase tooltips" data-html="true"
+                                       data-title="<i class='fa fa-download'></i> @lang('Settlement receipt')">
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                         <tr class="hide">

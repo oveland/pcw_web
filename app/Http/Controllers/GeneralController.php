@@ -104,6 +104,6 @@ class GeneralController extends Controller
 
     public static function getVehiclesFromCompany(Company $company = null)
     {
-        return ($company ? $company->activeVehicles->sortBy('number') : []);
+        return ($company ? $company->vehicles->sortBy('number') : []);
     }
 }

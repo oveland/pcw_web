@@ -186,20 +186,23 @@ trait CounterByRecorder
     {
         $issueField = null;
         $badStartRecorder = false;
-        if ($startRecorder <= 0) {
-            $issueField = __('Start Recorder');
-        } else if ($endRecorder <= 0) {
-            $issueField = __('End Recorder');
-        } else if ($passengersByRoundTrip > 1000) {
-            $issueField = __('A high count');
-        } else if ($passengersByRoundTrip < 0) {
-            $issueField = __('A negative count');
-        } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder) {
-            $issueField = __('A Start Recorder less than the last End Recorder') . ' ' . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
-            $badStartRecorder = true;
-        }/* else if ($passengersByRoundTrip < config('counter.recorder.threshold_low_count')) {
-            $issueField = __('Low count') . ' < ' . config('counter.recorder.threshold_low_count');
-        }*/
+        if($dispatchRegister->complete()){
+            if ($startRecorder <= 0) {
+                $issueField = __('Start Recorder');
+            } else if ($endRecorder <= 0) {
+                $issueField = __('End Recorder');
+            } else if ($passengersByRoundTrip > 1000) {
+                $issueField = __('A high count');
+            } else if ($passengersByRoundTrip < 0) {
+                $issueField = __('A negative count');
+            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder) {
+                $issueField = __('A Start Recorder less than the last End Recorder') . ' ' . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
+                $badStartRecorder = true;
+            }/* else if ($passengersByRoundTrip < config('counter.recorder.threshold_low_count')) {
+                $issueField = __('Low count') . ' < ' . config('counter.recorder.threshold_low_count');
+            }*/
+        }
+
 
         if ($issueField) {
             $issues->push((object)[
