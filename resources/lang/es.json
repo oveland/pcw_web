@@ -554,5 +554,8 @@
   "Add other": "Añadir otro",
   "Select a driver": "Seleccione un conductor",
   "No drivers found": "Sin conductores",
-  "Settlement receipt": "Recibo de liquidación"
+  "Settlement receipt": "Recibo de liquidación",
+  "Please fix the issues first": "Por favor revise y solucione las inconsistencias primero",
+  "Active": "Activo",
+  "Inactive": "Inactivo"
 }

@@ -38,7 +38,7 @@ class ReportMileageDateRangeController extends Controller
     {
         $accessProperties = $this->pcwAuthService->getAccessProperties();
         $companies = $accessProperties->companies;
-        $vehicles = $accessProperties->vehicles;
+        $vehicles = $accessProperties->allVehicles;
         return view('reports.vehicles.mileage.dates.index', compact(['companies', 'vehicles']));
     }
 
@@ -69,7 +69,7 @@ class ReportMileageDateRangeController extends Controller
      */
     public function buildMileageReport(Company $company, $vehicleReport, $initialDateReport, $finalDateReport)
     {
-        $vehicles = $company->activeVehicles;
+        $vehicles = $company->vehicles;
         if ($vehicleReport != 'all') $vehicles = $vehicles->where('id', $vehicleReport);
 
         $reports = collect([]);
@@ -84,13 +84,15 @@ class ReportMileageDateRangeController extends Controller
         foreach ($lastLocations as $lastLocation) {
             $vehicle = $lastLocation->vehicle;
             $date = $lastLocation->date->toDateString();
-            $key = "$vehicle->id $date";
+            $key = ($vehicle->active ? 'A' : 'B') . "$vehicle->id $date";
             $reports->put($key,
                 (object)[
                     'key' => $key,
                     'vehicleId' => $vehicle->id,
                     'vehiclePlate' => $vehicle->plate,
                     'vehicleNumber' => $vehicle->number,
+                    'vehicleIsActive' => $vehicle->active,
+                    'vehicleStatus' => $vehicle->active ? __('Active'):__('Inactive'),
                     'date' => $date,
                     'mileage' => $lastLocation ? $lastLocation->current_mileage : 0,
                     'hasReports' => !!$lastLocation,
@@ -106,16 +108,18 @@ class ReportMileageDateRangeController extends Controller
         foreach ($vehicles as $vehicle) {
             foreach ($dateRange as $date) {
                 $date = $date->toDateString();
-                $key = "$vehicle->id $date";
+                $key = ($vehicle->active ? 'A' : 'B') . "$vehicle->id $date";
                 $report = $reports->get($key);
 
-                if(!$report){
+                if (!$report) {
                     $reports->put($key,
                         (object)[
                             'key' => $key,
                             'vehicleId' => $vehicle->id,
                             'vehiclePlate' => $vehicle->plate,
                             'vehicleNumber' => $vehicle->number,
+                            'vehicleIsActive' => $vehicle->active,
+                            'vehicleStatus' => $vehicle->active ? __('Active'):__('Inactive'),
                             'date' => $date,
                             'mileage' => 0,
                             'hasReports' => false,
@@ -151,10 +155,11 @@ class ReportMileageDateRangeController extends Controller
             $mileage = $report->mileage ? $report->mileage : 0;
             $dataExcel->push([
                 __('N°') => count($dataExcel) + 1,           # A CELL
-                __('Date') => $report->date,         # B CELL
+                __('Date') => $report->date,                 # B CELL
                 __('Number') => $report->vehicleNumber,      # C CELL
                 __('Plate') => $report->vehiclePlate,        # D CELL
-                __('Mileage') . " (Km)" => "=$mileage/1000",   # E CELL
+                __('Status') => $report->vehicleStatus,      # E CELL
+                __('Mileage') . " (Km)" => "=$mileage/1000", # F CELL
             ]);
         }
 

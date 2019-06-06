@@ -30,7 +30,8 @@ class PCWAuthService
             'companies' => $user->isAdmin() ? Company::active()->get() : collect([]),
             'drivers' => $company->activeDrivers,
             'routes' => $company->routes,
-            'vehicles' => $user->assignedVehicles(null)
+            'vehicles' => $user->assignedVehicles(null),
+            'allVehicles' => $user->assignedVehicles(null, false)
         ];
     }
 

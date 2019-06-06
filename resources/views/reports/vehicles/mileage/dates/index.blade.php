@@ -41,6 +41,9 @@
             color: rgba(0, 0, 0, 0.14) !important;
             z-index: 1 !important;
         }
+        .badge{
+            padding: 3px 7px !important;
+        }
     </style>
 @endsection
 

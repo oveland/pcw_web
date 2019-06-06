@@ -284,15 +284,15 @@ class PCWExporterService
                 break;
 
             case 'reportMileageDateRange':
-                foreach (['E'] as $totalLetterPosition) {
+                foreach (['F'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 
                 $sheet->setColumnFormat(array(
-                    "E$config->startIndex:E$lastRow" => "0.00"
+                    "F$config->startIndex:F$lastRow" => "0.00"
                 ));
 
-                $sheet->setCellValue("D$lastRow", "TOTAL KM");
+                $sheet->setCellValue("E$lastRow", "TOTAL KM");
                 $sheet = self::styleFooter($sheet, $config);
                 break;
         }
