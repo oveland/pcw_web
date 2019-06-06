@@ -152,16 +152,18 @@
                 </div>
                 <input id="range_reports" type="text" />
                 <p class="help-block text-white show-info">
-                    <small class="col-md-6 col-sm-6 col-xs-6 p-0 text-left">
+                    <small class="col-md-4 col-sm-12 col-xs-12 p-0 text-left">
                         <span><i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')</span>
                         <span class="hidden-xs">
                             @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
                         </span>
                     </small>
-                    <small class="col-md-6 col-sm-6 col-xs-12 p-0 text-right">
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info"><i class="fa fa-clock-o"></i> <span class="time"></span></span>
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle"><i class='fa fa-send'></i></span>
+                    <small class="col-md-8 col-sm-12 col-xs-12 p-0 text-right">
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Time')"><i class="fa fa-clock-o"></i> <span class="time"></span></span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Speed')"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Mileage') @lang('in the day')"><i class='fa fa-road'></i> <span class="current-mileage">0</span> Km</span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle tooltips" title="@lang('Vehicle status')"><i class='fa fa-send'></i></span>
                     </small>
                 </p>
             </div>

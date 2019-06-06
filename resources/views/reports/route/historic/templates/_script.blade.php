@@ -73,8 +73,13 @@
             let strokeColor = '#008a54';
 
             if (r.speeding) {
-                fillColor = '#bf130d';
+                fillColor = '#bf7018';
                 strokeColor = '#becc02';
+            }
+
+            if (r.offRoad) {
+                fillColor = '#6a000e';
+                strokeColor = '#ba0046';
             }
 
             const icon = {
@@ -228,8 +233,23 @@
 
             this.currentLocation = historicLocation;
 
+            const routeLabel = this.showInfo.find('.route');
+            if(reportLocation.dispatchRegister){
+                const dr = reportLocation.dispatchRegister;
+                routeLabel.text(dr.id+" "+dr.route.name).parent().fadeIn();
+                this.showInfo.find('.mileage-route').text(reportLocation.routeDistance);
+                if(reportLocation.offRoad){
+                    routeLabel.parent().addClass('btn-danger').attr('title', '@lang('Off road vehicle')');
+                }else{
+                    routeLabel.parent().removeClass('btn-danger').attr('title', '@lang('In route')');
+                }
+            }else{
+                routeLabel.parent().hide();
+            }
+
             this.showInfo.find('.time').text(reportLocation.time);
             this.showInfo.find('.speed').text(reportLocation.speed);
+            this.showInfo.find('.current-mileage').text(reportLocation.currentMileage);
             if(reportLocation.speeding){
                 this.showInfo.find('.speed').parent().addClass('btn-warning');
             }else{
