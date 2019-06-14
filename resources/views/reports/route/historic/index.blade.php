@@ -160,7 +160,16 @@
                     </small>
                     <small class="col-md-8 col-sm-12 col-xs-12 p-0 text-right">
                         <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Time')"><i class="fa fa-clock-o"></i> <span class="time"></span></span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Time')">
+                            <i class="fa fa-clock-o"></i> <span class="time"></span>
+                        </span>
+
+                        @if(Auth::user()->isAdmin())
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Period') | @lang('Average') (s)">
+                            <i class="ion-android-stopwatch"></i> <span class="period"></span>s | <span class="average-period"></span>s
+                        </span>
+                        @endif
+
                         <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Speed')"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
                         <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Mileage') @lang('in the day')"><i class='fa fa-road'></i> <span class="current-mileage">0</span> Km</span>
                         <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle tooltips" title="@lang('Vehicle status')"><i class='fa fa-send'></i></span>

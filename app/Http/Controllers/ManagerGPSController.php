@@ -29,7 +29,7 @@ class ManagerGPSController extends Controller
         $routes = Route::where('company_id', 21)->get();
         return view('admin.gps.manage.index', compact(['companies', 'routes']));
     }
-  
+
     public function list(Request $request)
     {
         $companyReport = $request->get('company-report');
@@ -48,7 +48,7 @@ class ManagerGPSController extends Controller
 
             $simGPSList = ($gpsReport != 'all') ? $simGPSList->where('gps_type', $gpsReport)->get() : $simGPSList->get();
 
-            if( $isInLimbo ){
+            if ($isInLimbo) {
                 $gpsLimbo = collect(['7', '9', '10', '23', '24', '2000', '2038', '2066', '2070', '2182', '2342', '2346', '2347', '2349', '2406', '2420', '2427', '2430', '2448', '2477', '2484', '4402', '4455', '4456', '4466', '4483', '4484', '4486', '4492', '4516', '4559']);
                 $simGPSList = $simGPSList->filter(function ($simGPS) use ($gpsLimbo) {
                     return $gpsLimbo->contains($simGPS->vehicle->number);
@@ -72,7 +72,7 @@ class ManagerGPSController extends Controller
                 case 'all':
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
-                        if($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count()) $selection[] = $simGPS->vehicle->number;
+                        if ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count()) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 case 'no-report':
@@ -80,10 +80,10 @@ class ManagerGPSController extends Controller
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
                         $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
-                        if( $currentLocationGPS ){
-                            try{
+                        if ($currentLocationGPS) {
+                            try {
                                 $vehicleStatus = $currentLocationGPS->vehicleStatus;
-                            }catch (\Exception $exception){
+                            } catch (\Exception $exception) {
                                 dd($currentLocationGPS);
                             }
                             if ($vehicleStatus->id == VehicleStatus::NO_REPORT && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count())) $selection[] = $simGPS->vehicle->number;
@@ -94,7 +94,7 @@ class ManagerGPSController extends Controller
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
                         $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
-                        if( $currentLocationGPS ){
+                        if ($currentLocationGPS) {
                             $vehicleStatus = $currentLocationGPS->vehicleStatus;
                             if ($vehicleStatus->id != VehicleStatus::NO_REPORT) $selection[] = $simGPS->vehicle->number;
                         }
@@ -104,7 +104,7 @@ class ManagerGPSController extends Controller
                 case 'new':
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
-                        if( !$vehicle || !$vehicle->currentLocation && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count()) )$selection[] = $simGPS->vehicle->number;
+                        if (!$vehicle || !$vehicle->currentLocation && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count())) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
                 default:
@@ -124,6 +124,7 @@ class ManagerGPSController extends Controller
         $reportsStatus = collect([]);
         $totalOK = 0;
         $index = 1;
+        $totalFrequencyOK = 0;
 
         foreach ($simGPSList as $sim) {
             $simGPS = SimGPS::where('sim', $sim)->get()->first();
@@ -133,16 +134,21 @@ class ManagerGPSController extends Controller
             //dd($currentLocationGPS);
 
             $classStatus = null;
-            if($currentLocationGPS){
+            if ($currentLocationGPS) {
                 $vehicleStatus = $currentLocationGPS->vehicleStatus;
                 $timePeriod = $currentLocationGPS->getTimePeriod();
-
-                if ($vehicleStatus->id == VehicleStatus::OK || $vehicleStatus->id == VehicleStatus::PARKED || $vehicleStatus->id == VehicleStatus::POWER_OFF){
-                    $classStatus = "bg-lime p-2 text-white text-bold";
+                if ($vehicleStatus->id == VehicleStatus::OK || $vehicleStatus->id == VehicleStatus::PARKED || $vehicleStatus->id == VehicleStatus::POWER_OFF 
+|| $vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) {
+                    if($timePeriod >= '00:00:00' && $timePeriod <= "00:00:25"){
+                        $classStatus = "btn btn-xs btn-success p-2 text-white text-bold";
+                        $totalFrequencyOK++;
+                    }else{
+                        $classStatus = "btn btn-xs p-2";
+                    }
                     $totalOK++;
                 }
 
-                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date (<span class=''>$timePeriod</span>)</a><br><br>" : "********";
+                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date <span class='$classStatus'>$timePeriod</span></a><br><br>" : "********";
 
                 $reportsStatus->push((object)[
                     'statusId' => $vehicleStatus->id,
@@ -162,12 +168,12 @@ class ManagerGPSController extends Controller
             }
         }
 
-        return "<div class='text-center'>GPS OK $totalOK of " . count($simGPSList) . " in total<br>$headerReport</div> <hr class='m-t-5 m-b-5'>$statusList";
+        return "<div class='text-center'>GPS OK $totalOK of " . count($simGPSList) . " in total<br>$totalFrequencyOK frequency OK<br>$headerReport</div> <hr class='m-t-5 m-b-5'>$statusList";
     }
 
     public function sendSMS(Request $request)
     {
-        if(!Auth::user()->isSuperAdmin())dd('Por temas administrativos la acción requerida se ha deshabilitado temporalmente');
+        if (!Auth::user()->isSuperAdmin()) dd('Por temas administrativos la acción requerida se ha deshabilitado temporalmente');
 
         $simGPSList = $request->get('sim-gps');
 
@@ -185,9 +191,9 @@ class ManagerGPSController extends Controller
                     foreach ($gpsCommands as $gpsCommand) {
                         $gpsCommand = explode(";", $gpsCommand);
                         $simGPS = SimGPS::findBySim($sim);
-                        if($simGPS && $simGPS->gps){
-                            foreach ($gpsCommand as &$c){
-                                if( str_contains($c, "ID=") ){
+                        if ($simGPS && $simGPS->gps) {
+                            foreach ($gpsCommand as &$c) {
+                                if (str_contains($c, "ID=")) {
                                     $imei = $simGPS->gps->imei;
                                     $c = "ID=$imei";
                                 }
@@ -255,7 +261,7 @@ class ManagerGPSController extends Controller
                     $smsCommands = [];
                     foreach ($gpsCommands as $gpsCommand) {
                         $command = trim($gpsCommand);
-                        if( !starts_with($gpsCommand, ' ') ){
+                        if (!starts_with($gpsCommand, ' ')) {
                             $command = " $command";
                         }
                         $smsCommands[] = $command;
@@ -283,14 +289,14 @@ class ManagerGPSController extends Controller
 
     public function createSIMGPS(Request $request)
     {
-        $transaction = \DB::transaction(function () use ($request){
+        $transaction = \DB::transaction(function () use ($request) {
             $sim = $request->get('sim');
             $gpsType = $request->get('gps_type');
             $imei = $request->get('imei');
 
             $vehicle = Vehicle::find($request->get('vehicle_id'));
             $gpsVehicle = $vehicle->gpsVehicle;
-            if( !$gpsVehicle ){
+            if (!$gpsVehicle) {
                 $gpsVehicle = new GpsVehicle();
                 $gpsVehicle->vehicle_id = $vehicle->id;
             }
@@ -303,10 +309,10 @@ class ManagerGPSController extends Controller
 
                 if ($checkGPS) {
                     $companyVehicleCheck = $checkGPS->vehicle->company->short_name;
-                    $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE'])." ($companyVehicleCheck)";
+                    $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
                 } elseif ($checkImei) {
                     $companyVehicleCheck = $checkImei->vehicle->company->short_name;
-                    $message = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE'])." ($companyVehicleCheck)";
+                    $message = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
                 } else {
                     $gpsVehicle->imei = $imei;
 
@@ -403,7 +409,7 @@ class ManagerGPSController extends Controller
             $vehicle = $simGPS->vehicle;
             $gpsVehicle = $vehicle->gpsVehicle;
             $deleted = ($simGPS->delete() > 0);
-            if( $gpsVehicle ){
+            if ($gpsVehicle) {
                 $deleted = ($gpsVehicle->delete() > 0);
             }
             if ($deleted) $message = __('Register deleted successfully');

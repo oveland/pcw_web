@@ -248,6 +248,8 @@
             }
 
             this.showInfo.find('.time').text(reportLocation.time);
+            this.showInfo.find('.period').text(reportLocation.period);
+            this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
             this.showInfo.find('.speed').text(reportLocation.speed);
             this.showInfo.find('.current-mileage').text(reportLocation.currentMileage);
             if(reportLocation.speeding){

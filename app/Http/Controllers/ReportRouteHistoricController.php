@@ -9,6 +9,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ReportRouteHistoricController extends Controller
@@ -78,10 +79,22 @@ class ReportRouteHistoricController extends Controller
 
         $dataLocations = collect([]);
 
+        $lastLocation = $locations->first();
+
         foreach ($locations as $location) {
             $dispatchRegister = $location->dispatchRegister;
+
+            $period = '';
+            $averagePeriod = '';
+            if (Auth::user()->isAdmin()) {
+                $period = $location->date->diffInSeconds($lastLocation->date);
+                $averagePeriod = intval($dataLocations->average('period'));
+            }
+
             $dataLocations->push((object)[
                 'time' => $location->date->format('H:i:s'),
+                'period' => $period,
+                'averagePeriod' => $averagePeriod,
                 'date' => $location->date->format('Y-m-d'),
                 'currentMileage' => number_format(intval($location->current_mileage) / 1000, 2, '.', ''),
                 'latitude' => $location->latitude,
@@ -98,9 +111,10 @@ class ReportRouteHistoricController extends Controller
                     'iconClass' => $location->vehicleStatus->icon_class,
                     'mainClass' => $location->vehicleStatus->main_class,
                 ],
-                'dispatchRegister' => $location->dispatchRegister ? $location->dispatchRegister->getAPIFields() : null,
+                'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                 'vehicle' => $location->vehicle->getAPIFields()
             ]);
+            $lastLocation = $location;
         }
 
         $totalLocations = $dataLocations->count();

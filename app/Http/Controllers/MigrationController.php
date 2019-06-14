@@ -33,9 +33,9 @@ class MigrationController extends Controller
     ];
 
     const ROUTES_FOR_MIGRATE =
-        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 201, 189, 203];
+        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 201, 189, 203, 206, 207];
     const ROUTES_FOR_MIGRATE_CP =
-        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 201, 189, 203];
+        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 201, 189, 203, 206, 207];
 
     /**
      * Create a new controller instance.
@@ -162,6 +162,12 @@ class MigrationController extends Controller
             dd($deleted . ' registers has ben deleted!');;
         }
 
+        DB::statement("
+            UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER 
+            FROM control_points WHERE route_id = ruta.id_rutas 
+            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE 1 = 1
+        ");
+
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
@@ -175,7 +181,7 @@ class MigrationController extends Controller
             }
             $route->id = $routeOLD->id_rutas;
             $route->name = $routeOLD->nombre;
-            $route->distance = $routeOLD->distancia;
+            $route->distance = $routeOLD->distancia ?? 0;
             $route->min_route_time = $routeOLD->min_route_time;
             $route->company_id = $routeOLD->id_empresa;
             $route->dispatch_id = $routeOLD->id_despacho;

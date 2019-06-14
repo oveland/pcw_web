@@ -37,23 +37,9 @@ class CloseDispatchRegistersCommand extends Command
      */
     public function handle()
     {
-        $thresholdMinTotalReports = 80;
         $query = "
-            UPDATE registrodespacho SET cancelado = TRUE, h_reg_cancelado = current_time, observaciones = 'No terminó.<a class=\"masObservaciones\" data-toggle=\"popover\" title=\"\" data-placement=\"top\"  data-content=\"Falsa salida de despacho. DAD\"><i class=\"fa fa-search\"></i></a>'
-            WHERE id_registro IN (
-              SELECT dr.id
-              FROM (
-                         SELECT dr.id, count(rp) total_reports
-                         from dispatch_registers as dr
-                                     INNER JOIN reports as rp ON (rp.dispatch_register_id = dr.id)
-                                     INNER JOIN vehicles as vh ON (vh.id = dr.vehicle_id)
-                         where dr.date = (current_date - 1)
-                           and (vh.company_id = 21 or vh.company_id = 12)
-                           and (dr.status = 'Terminó' or dr.status = 'En camino')
-                         group by dr.id
-                  ) as dr
-              where dr.total_reports < $thresholdMinTotalReports
-            )
+            UPDATE registrodespacho SET cancelado = TRUE, h_reg_cancelado = '23:59:59', observaciones = 'No terminó. Finaliza jornada' 
+            WHERE observaciones like '%En camin%' AND id_empresa = 21 AND fecha = current_date - 1 
         ";
 
         \DB::statement($query);
