@@ -65,6 +65,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

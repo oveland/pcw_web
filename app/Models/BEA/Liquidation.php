@@ -4,6 +4,7 @@ namespace App\Models\BEA;
 
 use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
+use DateTime;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,6 +43,11 @@ class Liquidation extends Model
 {
     protected $table = 'bea_liquidations';
     protected $dates = ['date'];
+
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
 
     /**
      * @return Mark[] | null
