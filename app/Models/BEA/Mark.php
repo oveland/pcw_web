@@ -7,10 +7,8 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
-use PhpParser\Node\Expr\Cast\Object_;
-use test\Mockery\HasUnknownClassAsTypeHintOnMethod;
+use Illuminate\Support\Collection;
 
 /**
  * App\Models\BEA\Mark
@@ -18,7 +16,7 @@ use test\Mockery\HasUnknownClassAsTypeHintOnMethod;
  * @property int $id
  * @property int $turn_id
  * @property int $trajectory_id
- * @property string $date
+ * @property Carbon|string $date
  * @property string $initial_time
  * @property string $final_time
  * @property int $passengers_up
@@ -65,13 +63,17 @@ use test\Mockery\HasUnknownClassAsTypeHintOnMethod;
  * @method static Builder|Mark whereLiquidatedDate($value)
  * @property int|null $liquidation_id
  * @property bool $taken
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereLiquidationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereTaken($value)
+ * @method static Builder|Mark whereLiquidationId($value)
+ * @method static Builder|Mark whereTaken($value)
  * @property-read int $boarding
  * @property-read Object $commission
- * @property-read \Discount[] $discounts
+ * @property-read Discount[]|Collection $discounts
  * @property-read mixed $status
  * @property-read int $total_gross_bea
+ * @property-read mixed $duration
+ * @property-read Carbon initialTime
+ * @property-read Carbon finalTime
+ * @property-read Object $penalty
  */
 class Mark extends Model
 {
@@ -100,6 +102,9 @@ class Mark extends Model
         return Carbon::createFromFormat(config('app.simple_time_format'), $this->attributes['initial_time']);
     }
 
+    /**
+     * @return DateTime
+     */
     function getFinalTimeAttribute()
     {
         return Carbon::createFromFormat(config('app.simple_time_format'), $this->attributes['final_time']);
@@ -147,14 +152,15 @@ class Mark extends Model
     }
 
     /**
-     * @return Discount[]
+     * @return Discount[] | Collection
      */
-    function getDiscountsAttribute(){
+    function getDiscountsAttribute()
+    {
         $turn = $this->turn;
         $discounts = Discount::with(['vehicle', 'route', 'trajectory', 'discountType'])
             ->where('vehicle_id', $turn->vehicle->id)
             ->where('route_id', $turn->route->id)
-            ->where('trajectory_id', $this->trajectory->id)
+            ->where('trajectory_id', $this->trajectory ? $this->trajectory->id : null)
             ->get();
 
         return $discounts;
@@ -163,9 +169,10 @@ class Mark extends Model
     /**
      * @return int
      */
-    function getTotalGrossBeaAttribute(){
+    function getTotalGrossBeaAttribute()
+    {
 
-        $discountByMobilityAuxilio = $this->discounts->filter(function($d){
+        $discountByMobilityAuxilio = $this->discounts->filter(function ($d) {
             return $d->discountType->name == __('Mobility auxilio');
         })->first();
 
@@ -175,14 +182,15 @@ class Mark extends Model
     /**
      * @return Object
      */
-    function getCommissionAttribute(){
+    function getCommissionAttribute()
+    {
         $commissionsByRoute = Commission::with('route')->where('route_id', $this->turn->route->id)->limit(1)->get();
         $commissionValue = 0;
 
         $totalGrossBea = $this->total_gross_bea;
 
-        foreach ($commissionsByRoute as $commissionByRoute){
-            switch ($commissionByRoute->type){
+        foreach ($commissionsByRoute as $commissionByRoute) {
+            switch ($commissionByRoute->type) {
                 case 'fixed':
                     $commissionValue += $this->passengers_bea * $commissionByRoute->value;
                     break;
@@ -202,12 +210,53 @@ class Mark extends Model
         return $commission;
     }
 
-
-
     /**
-     * @return int
+     * @return Object
      */
-    function getBoardingAttribute(){
-        return $this->passengers_up > $this->passengers_down ? ($this->passengers_up - $this->passengers_down) : 0;
+    function getPenaltyAttribute()
+    {
+        $penaltyByRoute = Penalty::where('route_id', $this->turn->route->id)->get()->first();
+        $penaltyValue = $this->boarded * $penaltyByRoute->value;
+        return (object)[
+            'value' => $penaltyValue,
+            'type' => $penaltyByRoute->type,
+            'baseValue' => $penaltyByRoute->value,
+        ];
+    }
+
+    function getDurationAttribute()
+    {
+        $duration = $this->initialTime->diff($this->finalTime);
+        return $duration->h . "h " . $duration->i . " m";
+    }
+
+    function getAPIFields()
+    {
+        return (object)[
+            'id' => $this->id,
+            'turn' => $this->turn,
+            'date' => $this->date->toDateString(),
+            'initialTime' => $this->initialTime->toTimeString(),
+            'finalTime' => $this->finalTime->toTimeString(),
+            'duration' => $this->duration,
+            'trajectory' => $this->trajectory,
+            'passengersUp' => $this->passengers_up,
+            'passengersDown' => $this->passengers_down,
+            'locks' => $this->locks,
+            'auxiliaries' => $this->auxiliaries,
+            'boarded' => $this->boarded,
+            'imBeaMax' => $this->im_bea_max,
+            'imBeaMin' => $this->im_bea_min,
+            'totalBEA' => $this->total_bea,
+            'totalGrossBEA' => $this->total_gross_bea,
+            'passengersBEA' => $this->passengers_bea,
+            'discounts' => $this->discounts->toArray(),
+            'commission' => $this->commission,
+            'penalty' => $this->penalty,
+            'status' => $this->status,
+            'liquidated' => $this->liquidated,
+            'liquidation_id' => $this->liquidation_id,
+            'taken' => $this->taken,
+        ];
     }
 }

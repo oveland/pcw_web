@@ -1,5 +1,8 @@
 <?php
 
+use App\Providers\BEAServiceProvider;
+use App\Providers\ReportsServiceProvider;
+
 return [
 
     /*
@@ -188,7 +191,8 @@ return [
         /*
          * PCW Application Service Providers...
          */
-        \App\Providers\ReportsServiceProvider::class,
+        ReportsServiceProvider::class,
+        BEAServiceProvider::class,
     ],
 
     /*
@@ -240,6 +244,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+
+        'BEADB' => App\Facades\BEADB::class,
     ],
 
     /*

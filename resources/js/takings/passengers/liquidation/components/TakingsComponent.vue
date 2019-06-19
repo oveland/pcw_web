@@ -31,6 +31,9 @@
                                 <i class="fa fa-user text-muted"></i><br> Responsable
                             </th>
                             <th class="col-md-1">
+                                <i class="fa fa-calendar text-muted"></i><br> Liquidated on
+                            </th>
+                            <th class="col-md-1">
                                 <i class="fa fa-rocket text-muted"></i><br> Details
                             </th>
                         </tr>
@@ -51,6 +54,7 @@
                                 </pre>
                             </td>
                             <td class="text-center">{{ liquidation.user.name }}</td>
+                            <td class="text-center">{{ liquidation.dateLiquidation }}</td>
                             <td class="text-center">
                                 <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" title="Details" @click="seeLiquidationDetail(liquidation.id)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
                                     <i class="fa fa-eye"></i>

@@ -30,7 +30,7 @@
             <tr class="" v-for="mark in marks">
                 <td class="col-md-2 text-center">
                     <span>{{ mark.turn.route.name }}</span><br>
-                    <span class="label span-full" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
+                    <span class="label span-full" v-if="mark.trajectory" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
                         {{ mark.trajectory.name }}
                     </span>
                 </td>

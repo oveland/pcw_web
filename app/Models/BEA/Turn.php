@@ -44,29 +44,33 @@ class Turn extends Model
     /**
      * @return BelongsTo
      */
-    function route(){
-        return $this->belongsTo(Route::class);
+    function route()
+    {
+        return $this->belongsTo(Route::class, 'route_id', 'bea_id');
     }
 
     /**
      * @return BelongsTo
      */
-    function vehicle(){
-        return $this->belongsTo(Vehicle::class);
+    function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id', 'bea_id');
     }
 
     /**
      * @return BelongsTo
      */
-    function driver(){
-        return $this->belongsTo(Driver::class);
+    function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_id', 'bea_id');
     }
 
-    function getAPIAttribute(){
+    function getAPIAttribute()
+    {
         return collect([
-          'route' => $this->route->toArray(),
-          'vehicle' => $this->vehicle->toArray(),
-          'driver' => $this->driver->toArray(),
+            'route' => $this->route->toArray(),
+            'vehicle' => $this->vehicle->toArray(),
+            'driver' => $this->driver ? $this->driver->toArray() : [],
         ]);
     }
 }

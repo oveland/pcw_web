@@ -15,14 +15,14 @@ class CreateBeaTurnsTable extends Migration
     {
         Schema::create('bea_turns', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('vehicle_id');
-            $table->unsignedInteger('route_id');
-            $table->unsignedInteger('driver_id');
+            $table->unsignedBigInteger('vehicle_id');
+            $table->unsignedBigInteger('route_id');
+            $table->unsignedInteger('driver_id')->nullable(true);
             $table->timestamps();
 
             /* table relations */
-            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
-            $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
+            $table->foreign('vehicle_id')->references('bea_id')->on('vehicles')->onDelete('cascade');
+            $table->foreign('route_id')->references('bea_id')->on('routes')->onDelete('cascade');
             //$table->foreign('driver_id')->references('id')->on('drivers')->onDelete('cascade');
         });
     }

@@ -1,17 +1,12 @@
 <?php
 
-
 namespace App\Services\BEA;
 
-
-use App\Models\BEA\Commission;
-use App\Models\BEA\Discount;
 use App\Models\BEA\Liquidation;
 use App\Models\BEA\Mark;
-use App\Models\BEA\Penalty;
 use App\Models\BEA\Turn;
 use App\Models\Vehicles\Vehicle;
-use Carbon\Carbon;
+use BEADB;
 use Exception;
 use Illuminate\Support\Collection;
 
@@ -84,7 +79,8 @@ class BEAService
             $beaLiquidations->push((object)[
                 'id' => $liquidation->id,
                 'vehicle' => $liquidation->vehicle,
-                'date' => $liquidation->date->toDateTimeString(),
+                'date' => $liquidation->date->toDateString(),
+                'dateLiquidation' => $liquidation->created_at->toDateTimeString(),
                 'liquidation' => $liquidation->liquidation,
                 'totals' => $liquidation->totals,
                 'user' => $liquidation->user,
@@ -97,12 +93,13 @@ class BEAService
 
     /**
      * @param $vehicleId
+     * @param $date
      * @return Collection
-     * @throws Exception
      */
     function getBEAMarks($vehicleId, $date)
     {
-        $vehicleTurns = Turn::where('vehicle_id', $vehicleId)->get();
+        $vehicle = Vehicle::find($vehicleId);
+        $vehicleTurns = Turn::where('vehicle_id', $vehicle->bea_id)->get();
         $marks = Mark::whereIn('turn_id', $vehicleTurns->pluck('id'))
             ->where('liquidated', false)
             ->where('taken', false)
@@ -114,59 +111,13 @@ class BEAService
     }
 
     /**
-     * @param $marks
+     * @param Collection $marks
      * @return Collection
      */
     private function processResponseMarks($marks)
     {
-        $beaMarks = collect([]);
-
-        $allDiscounts = $this->discount->all();
-
-        $allCommissions = $this->commission->all();
-        $allPenalties = $this->penalty->all();
-
-        foreach ($marks as $mark) {
-            $duration = $mark->initialTime->diff($mark->finalTime);
-
-            //---------------- RELATIONS FOR PENALTIES ---------------------
-            $penaltyByRoute = $allPenalties->where('route_id', $mark->turn->route->id)->first();
-            $penaltyValue = $mark->boarding * $penaltyByRoute->value;
-            $penalty = (object)[
-                'value' => $penaltyValue,
-                'type' => $penaltyByRoute->type,
-                'baseValue' => $penaltyByRoute->value,
-            ];
-            //------------------------------------------------------------------
-
-            $beaMarks->push((object)[
-                'id' => $mark->id,
-                'turn' => $mark->turn,
-                'date' => $mark->date->toDateString(),
-                'initialTime' => $mark->initialTime->toTimeString(),
-                'finalTime' => $mark->finalTime->toTimeString(),
-                'duration' => $duration->h . "h " . $duration->i . " m",
-                'trajectory' => $mark->trajectory,
-                'passengersUp' => $mark->passengers_up,
-                'passengersDown' => $mark->passengers_down,
-                'locks' => $mark->locks,
-                'auxiliaries' => $mark->auxiliaries,
-                'boarded' => $mark->boarding,
-                'imBeaMax' => $mark->im_bea_max,
-                'imBeaMin' => $mark->im_bea_min,
-                'totalBEA' => $mark->total_bea,
-                'totalGrossBEA' => $mark->total_gross_bea,
-                'passengersBEA' => $mark->passengers_bea,
-                'discounts' => $mark->discounts->toArray(),
-                'commission' => $mark->commission,
-                'penalty' => $penalty,
-                'status' => $mark->status,
-                'liquidated' => $mark->liquidated,
-                'liquidation_id' => $mark->liquidation_id,
-                'taken' => $mark->taken,
-            ]);
-        }
-
-        return $beaMarks;
+        return $marks->map(function (Mark $mark) {
+            return $mark->getAPIFields();
+        });
     }
 }

@@ -23,6 +23,8 @@ class CreateRoutesTable extends Migration
             $table->integer('dispatch_id')->default(0);
             $table->boolean('active')->default(true);
             $table->boolean('as_group')->default(false);
+            $table->time('min_route_time')->default('01:00:00');
+            $table->unsignedBigInteger('bea_id')->nullable(true);
             $table->timestamps();
 
             /* table relations */

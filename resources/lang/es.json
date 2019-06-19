@@ -548,8 +548,11 @@
   "Tolls": "Peajes",
   "Washing": "Lavado",
   "Discounts": "Descuentos",
+  "discounts": "descuentos",
   "Commissions": "Comisiones",
+  "commissions": "comisiones",
   "Penalties": "Sanciones",
+  "penalties": "sanciones",
   "Liquidate": "Liquidar",
   "Add other": "Añadir otro",
   "Select a driver": "Seleccione un conductor",
@@ -566,6 +569,9 @@
   "url-params": "parmetros",
   "Mobility auxilio": "Auxilio de Movilidad",
   "Discount by": "Descuento por",
-  "of": "de"
-
+  "of": "de",
+  "TAKING RECEIPT": "COMPROBANTE DE REACUDO",
+  "Printed at": "Impreso en",
+  "Liquidated at": "Liquidado en",
+  "Total liquidation": "Total Liquidación"
 }

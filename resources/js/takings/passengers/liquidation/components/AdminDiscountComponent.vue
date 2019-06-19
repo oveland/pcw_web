@@ -46,7 +46,7 @@
                                     <tr class="" v-for="(discount, indexDiscount) in discountsFor(vehicle.id, route.id)">
                                         <td class="text-center">{{ indexDiscount + 1 }}</td>
                                         <td class="col-md-2 text-center">
-                                            <span class="label span-full" :class="discount.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
+                                            <span class="label span-full" v-if="discount.trajectory" :class="discount.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
                                                 {{ discount.trajectory.name }}
                                             </span>
                                         </td>

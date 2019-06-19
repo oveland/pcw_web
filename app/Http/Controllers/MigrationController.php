@@ -50,7 +50,7 @@ class MigrationController extends Controller
      */
     public function index()
     {
-        if( !Auth::user()->isAdmin() )abort(403);
+        if (!Auth::user()->isAdmin()) abort(403);
         $tables = collect([
             (object)[
                 'name' => self::OLD_TABLES['companies'],
@@ -195,10 +195,15 @@ class MigrationController extends Controller
             }
         }
 
+        $maxSequence = collect(\DB::select("SELECT max(id_rutas) max FROM ruta"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE routes_id_seq RESTART WITH $maxSequence");
+
         dd([
             'Total Created' => $totalCreated,
             'Total Updated' => $totalUpdated,
-            'Total Errors' => $totalErrors
+            'Total Errors' => $totalErrors,
+            '-------------------------------',
+            'routes_id_seq = ' . $maxSequence
         ]);
     }
 
@@ -358,6 +363,9 @@ class MigrationController extends Controller
             }
         }
 
+        $maxSequence = collect(\DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
+
         dd([
             'Total Created' => $totalCreated,
             'Total Updated' => $totalUpdated,
@@ -366,6 +374,8 @@ class MigrationController extends Controller
             'Gps Vehicle Total Created' => $gpsVehicleTotalCreated,
             'Gps Vehicle Total Updated' => $gpsVehicleTotalUpdated,
             'Gps Vehicle Total Errors' => $gpsVehicleTotalErrors,
+            '-------------------------------',
+            'vehicles_id_seq = ' . $maxSequence
         ]);
     }
 
@@ -394,7 +404,7 @@ class MigrationController extends Controller
             $controlPoint->trajectory = $controlPointOLD->trayecto;
             $controlPoint->order = $controlPointOLD->orden;
             $controlPoint->type = $controlPointOLD->tipo;
-            if( $new ){ // Only when create new register because the logic calibration on GRAILS NE manage this values
+            if ($new) { // Only when create new register because the logic calibration on GRAILS NE manage this values
                 $controlPoint->distance_from_dispatch = $controlPointOLD->distancia_desde_despacho;
                 $controlPoint->distance_next_point = intval($controlPointOLD->distancia_punto_siguiente);
             }
@@ -447,11 +457,11 @@ class MigrationController extends Controller
                 $fringe = new Fringe();
                 $fringe->name = $fringeI;
                 $fringe->from = $fringeTime[0];
-                $fringe->to = $fringeTime[1]?"$fringeTime[1]:59":'00:00:00';
+                $fringe->to = $fringeTime[1] ? "$fringeTime[1]:59" : '00:00:00';
                 $fringe->sequence = $i;
                 $fringe->route_id = $fringeOLD->id_ruta;
                 $fringe->day_type_id = $fringeOLD->tipo_de_dia;
-                $fringe->style_color = "#".substr(md5(rand()), 0, 6);
+                $fringe->style_color = "#" . substr(md5(rand()), 0, 6);
 
                 try {
                     $fringe->save();
@@ -522,7 +532,7 @@ class MigrationController extends Controller
                 )
             )->groupBy('day_type');
 
-            foreach ($controlPointTimesByDays as $controlPointTimes){
+            foreach ($controlPointTimesByDays as $controlPointTimes) {
                 for ($i = 1; $i <= 15; $i++) {
                     $day_type = 0;
                     $last_time = "00:00:00";

@@ -20,6 +20,7 @@ class CreateVehiclesTable extends Migration
             $table->bigInteger('company_id')->unsigned()->default(6);
             $table->boolean('active')->default(true);
             $table->boolean('in_repair')->default(true);
+            $table->unsignedBigInteger('bea_id')->nullable(true);
             $table->timestamps();
 
             /* table relations */

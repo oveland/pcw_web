@@ -51,11 +51,11 @@
             <td class="col-md-2 text-center">{{ mark.date }}</td>
             <td class="col-md-2 text-center">{{ mark.turn.route.name }}</td>
             <td class="text-center">
-                <span class="label span-full" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
+                <span class="label span-full" v-if="mark.trajectory" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
                     {{ mark.trajectory.name }}
                 </span>
             </td>
-            <td class="col-md-2 text-center">{{ mark.turn.driver.first_name + ' ' + mark.turn.driver.last_name }}</td>
+            <td class="col-md-2 text-center">{{ mark.turn.driver.first_name + (mark.turn.driver.last_name ? (' ' + mark.turn.driver.last_name):'') }}</td>
             <td class="text-center">{{ mark.initialTime }}</td>
             <td class="text-center">{{ mark.finalTime }}</td>
             <td class="text-center">{{ mark.duration }}</td>

@@ -11,32 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->dropTables([
-            'bea_marks',
-            'bea_takings',
-            'bea_liquidations',
-            'bea_commissions',
-            'bea_penalties',
-            'bea_discounts',
-            'bea_discount_types',
-            'bea_trajectories',
-        ]);
-
-        $this->call(TrajectoriesTableSeeder::class);
-        $this->call(DiscountTypesTableSeeder::class);
-        $this->call(DiscountsTableSeeder::class);
-        $this->call(PenaltiesTableSeeder::class);
-        $this->call(CommissionsTableSeeder::class);
-        $this->call(MarksTableSeeder::class);
-    }
-
-    /**
-     * @param $tables
-     */
-    function dropTables($tables)
-    {
-        foreach ($tables as $table) {
-            DB::statement("TRUNCATE $table CASCADE");
-        }
+        $this->call(BEADatabaseSeeder::class);
     }
 }

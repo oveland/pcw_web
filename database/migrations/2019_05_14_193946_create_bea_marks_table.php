@@ -17,7 +17,7 @@ class CreateBeaMarksTable extends Migration
             $table->bigIncrements('id');
 
             $table->unsignedBigInteger('turn_id');
-            $table->unsignedInteger('trajectory_id');
+            $table->unsignedInteger('trajectory_id')->nullable();
             $table->date('date');
             $table->time('initial_time');
             $table->time('final_time');

@@ -16,7 +16,7 @@ class BEARepository
 
     public function __construct()
     {
-        $this->company = Company::find(18);
+        $this->company = Company::find(Company::COODETRANS);
     }
 
     /**

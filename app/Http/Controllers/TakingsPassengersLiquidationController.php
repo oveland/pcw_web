@@ -69,9 +69,9 @@ class TakingsPassengersLiquidationController extends Controller
     public function exportLiquidation(Request $request)
     {
         $liquidation = Liquidation::find($request->get('id'));
-        $pdf = PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif'])->loadView('takings.passengers.liquidation.exports.liquidation',compact('liquidation'));
+        $pdf = PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif'])->loadView('takings.passengers.liquidation.exports.liquidation', compact('liquidation'));
 
-        $customPaper = array(0,0,360,360);
+        $customPaper = array(0, 0, 350, 340);
         $pdf->setPaper($customPaper);
 
         return $pdf->stream('invoice.pdf');
@@ -115,29 +115,38 @@ class TakingsPassengersLiquidationController extends Controller
         DB::beginTransaction();
         $user = Auth::user();
         $liquidation = new Liquidation();
-        $liquidation->date = Carbon::now();
+        $liquidation->date = $request->get('date');
         $liquidation->vehicle_id = $request->get('vehicle');
         $liquidation->liquidation = collect($request->get('liquidation'))->toJson();
         $liquidation->totals = collect($request->get('totals'))->toJson();
         $liquidation->user_id = $user->id;
 
-        if ($liquidation->save()) {
-            foreach ($request->get('marks') as $markId) {
-                $mark = Mark::find($markId);
-                if ($mark) {
-                    $mark->liquidated = true;
-                    $mark->liquidation_id = $liquidation->id;
-                    if (!$mark->save()) {
-                        $response->success = false;
-                        $response->message = __('Error at associate liquidation with BEA Mark register');
-                        DB::rollBack();
-                        break;
-                    };
+        $marksID = collect($request->get('marks'));
+
+        if ($marksID->count()) {
+            $liquidation->date = Mark::find($marksID->first())->date;
+            if ($liquidation->save()) {
+                foreach ($marksID as $markId) {
+                    $mark = Mark::find($markId);
+                    if ($mark) {
+                        $mark->liquidated = true;
+                        $mark->liquidation_id = $liquidation->id;
+                        if (!$mark->save()) {
+                            $response->success = false;
+                            $response->message = __('Error at associate liquidation with BEA Mark register');
+                            DB::rollBack();
+                            break;
+                        };
+                    }
                 }
+            } else {
+                $response->success = false;
+                $response->message = __('Error at generate liquidation register');
+                DB::rollBack();
             }
         } else {
             $response->success = false;
-            $response->message = __('Error at generate liquidation register');
+            $response->message = __('No there are registers for liquidation');
             DB::rollBack();
         }
 

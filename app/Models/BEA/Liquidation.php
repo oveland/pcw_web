@@ -8,6 +8,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -37,6 +38,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Liquidation whereVehicleId($value)
  * @property-read mixed $total
  * @property-read \App\Models\Vehicles\Vehicle $vehicle
+ * @property-read \Mark|null $first_mark
+ * @property-read \Mark|null $last_mark
  */
 class Liquidation extends Model
 {
@@ -44,11 +47,27 @@ class Liquidation extends Model
     protected $dates = ['date'];
 
     /**
-     * @return Mark[] | null
+     * @return Mark[]|null|HasMany
      */
     function marks()
     {
         return $this->hasMany(Mark::class);
+    }
+
+    /**
+     * @return Mark|null
+     */
+    function getFirstMarkAttribute()
+    {
+        return $this->marks->first();
+    }
+
+    /**
+     * @return Mark|null
+     */
+    function getLastMarkAttribute()
+    {
+        return $this->marks->last();
     }
 
 
@@ -58,7 +77,7 @@ class Liquidation extends Model
     function getLiquidationAttribute()
     {
         $l = $this->attributes['liquidation'];
-        return $l ? (object) json_decode($l, true) : (object)[];
+        return $l ? (object)json_decode($l, true) : (object)[];
     }
 
     /**
@@ -67,7 +86,7 @@ class Liquidation extends Model
     function getTotalsAttribute()
     {
         $t = $this->attributes['totals'];
-        return $t ? (object) json_decode($t, true) : (object)[];
+        return $t ? (object)json_decode($t, true) : (object)[];
     }
 
     /**
@@ -86,7 +105,8 @@ class Liquidation extends Model
         return $this->belongsTo(User::class);
     }
 
-    function getTotalAttribute(){
+    function getTotalAttribute()
+    {
         $liquidation = $this->liquidation;
         return $liquidation->totalBea - $liquidation->totalDiscounts - $liquidation->totalCommissions + $liquidation->totalPenalties;
     }

@@ -18,7 +18,10 @@ class CreateBeaTrajectoriesTable extends Migration
             $table->increments('id');
             $table->string('name', 50);
             $table->string('description',300)->nullable(true);
+            $table->unsignedBigInteger('route_id');
             $table->timestamps();
+
+            $table->foreign('route_id')->references('bea_id')->on('routes')->onDelete('cascade');
         });
     }
 
