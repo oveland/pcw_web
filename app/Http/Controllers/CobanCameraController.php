@@ -39,6 +39,7 @@ class CobanCameraController extends Controller
     public function searchParams(Request $request)
     {
         //$access = $this->pcwAuthService->getAccessProperties();
+        //$company = Company::find(21);
         $company = Company::find(26);
         return response()->json([
             'vehicles' => $company->vehicles,
@@ -80,7 +81,7 @@ class CobanCameraController extends Controller
                 $location = $photo->location;
                 $report->push([
                     'id' => $photo->id,
-                    'date' => $photo->created_at->toDateTimeString()." ....",
+                    'date' => $photo->created_at->toDateTimeString(),
                     'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                     'location' => $location ? $location->getAPIFields() : null
                 ]);
