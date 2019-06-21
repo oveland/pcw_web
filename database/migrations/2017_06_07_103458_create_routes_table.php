@@ -27,7 +27,7 @@ class CreateRoutesTable extends Migration
             $table->unsignedBigInteger('bea_id')->nullable(true);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             /*Indexes*/

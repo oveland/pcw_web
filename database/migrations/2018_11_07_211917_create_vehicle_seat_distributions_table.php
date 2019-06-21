@@ -20,7 +20,7 @@ class CreateVehicleSeatDistributionsTable extends Migration
             $table->string('json_distribution');
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             $table->foreign('vehicle_seat_topology_id')->references('id')->on('vehicle_seat_topologies')->onDelete('cascade');
 

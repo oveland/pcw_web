@@ -45,7 +45,7 @@ class CreateCurrentParkingReportsTable extends Migration
 
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             /*
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');

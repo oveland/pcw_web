@@ -25,7 +25,7 @@ class CreateFringesTable extends Migration
             $table->string('style_color')->nullable();
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
             $table->foreign('day_type_id')->references('id')->on('day_types');
 

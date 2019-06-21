@@ -20,7 +20,7 @@ class CreateBeaCommissionsTable extends Migration
             $table->integer('value')->default(0);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
 
             /*Indexes*/

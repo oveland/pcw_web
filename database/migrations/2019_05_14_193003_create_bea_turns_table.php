@@ -20,7 +20,7 @@ class CreateBeaTurnsTable extends Migration
             $table->unsignedInteger('driver_id')->nullable(true);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('bea_id')->on('vehicles')->onDelete('cascade');
             $table->foreign('route_id')->references('bea_id')->on('routes')->onDelete('cascade');
             //$table->foreign('driver_id')->references('id')->on('drivers')->onDelete('cascade');

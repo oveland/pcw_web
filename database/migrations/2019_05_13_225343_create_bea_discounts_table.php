@@ -22,7 +22,7 @@ class CreateBeaDiscountsTable extends Migration
             $table->integer('value')->default(0);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('discount_type_id')->references('id')->on('bea_discount_types')->onDelete('cascade');
             $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
             $table->foreign('trajectory_id')->references('id')->on('bea_trajectories')->onDelete('cascade');

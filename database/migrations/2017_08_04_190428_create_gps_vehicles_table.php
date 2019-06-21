@@ -20,7 +20,7 @@ class CreateGpsVehiclesTable extends Migration
             $table->integer('report_period')->default(120);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
 
             /*Indexes*/

@@ -14,7 +14,7 @@ class AddDispatchRelationOnRoutesTable extends Migration
     public function up()
     {
         Schema::table('routes', function (Blueprint $table) {
-            /* table relations */
+            /* Table relations */
             $table->foreign('dispatch_id')->references('id')->on('auto-dispatcher')->onDelete('cascade');
         });
     }

@@ -22,7 +22,7 @@ class CreateSimGpsTable extends Migration
             $table->boolean('active')->default(true);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
         });
     }

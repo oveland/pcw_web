@@ -28,7 +28,7 @@ class CreateCounterIssuesTable extends Migration
             $table->string('raspberry_check_counter_issue',255)->nullable();
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             //$table->foreign('dispatch_register_id')->references('id')->on('dispatch_registers')->onDelete('cascade');
         });

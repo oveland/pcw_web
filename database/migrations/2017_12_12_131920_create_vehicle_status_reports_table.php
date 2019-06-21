@@ -28,7 +28,7 @@ class CreateVehicleStatusReportsTable extends Migration
             $table->string('frame')->nullable();
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             //$table->foreign('dispatch_register_id')->references('id')->on('dispatch_registers')->onDelete('cascade');
         });

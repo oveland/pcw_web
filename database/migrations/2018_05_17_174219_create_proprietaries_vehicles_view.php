@@ -20,7 +20,7 @@ class CreateProprietariesVehiclesView extends Migration
             $table->boolean('active')->default(true);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             //$table->foreign('proprietary_id')->references('id')->on('proprietaries')->onDelete('cascade'); // TODO uncomment when proprietaries view is migrate to a table
 

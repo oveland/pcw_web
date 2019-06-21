@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBeaLiquidationsTable extends Migration
+class CreateCobanCurrentPhotosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateBeaLiquidationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bea_liquidations', function (Blueprint $table) {
+        Schema::create('coban_current_photos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamp('date');
             $table->unsignedBigInteger('vehicle_id');
-            $table->text('liquidation');
-            $table->text('totals');
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('photo_id');
             $table->timestamps();
 
             /* Table relations */
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
+            $table->foreign('photo_id')->references('id')->on('coban_photos')->onDelete('cascade');
         });
     }
 
@@ -34,6 +32,6 @@ class CreateBeaLiquidationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bea_liquidations');
+        Schema::dropIfExists('coban_current_photos');
     }
 }

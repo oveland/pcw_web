@@ -23,7 +23,7 @@ class CreateDispatchesTable extends Migration
             $table->integer('radio_geofence')->default(0);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             /*Indexes*/
