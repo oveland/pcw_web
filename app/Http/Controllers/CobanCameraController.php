@@ -39,7 +39,7 @@ class CobanCameraController extends Controller
     public function searchParams(Request $request)
     {
         //$access = $this->pcwAuthService->getAccessProperties();
-        $company = Company::find(21);
+        $company = Company::find(26);
         return response()->json([
             'vehicles' => $company->vehicles,
             'date' => Carbon::now()->toDateString(),
@@ -69,7 +69,7 @@ class CobanCameraController extends Controller
     {
         $report = collect([]);
         if($vehicle){
-            $photos = CobanPhoto::whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
+            $photos = CobanPhoto::whereBetween('created_at', ["$date 00:00:00", "$date 23:59:59"])
                 ->where('vehicle_id', $vehicle->id)
                 ->with(['vehicle', 'location', 'dispatchRegister'])
                 ->orderBy('date')
@@ -80,7 +80,7 @@ class CobanCameraController extends Controller
                 $location = $photo->location;
                 $report->push([
                     'id' => $photo->id,
-                    'date' => $photo->date->toDateTimeString(),
+                    'date' => $photo->created_at->toDateTimeString(),
                     'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                     'location' => $location ? $location->getAPIFields() : null
                 ]);
