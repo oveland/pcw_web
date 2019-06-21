@@ -715,6 +715,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                                     @lang('Seats')
                                                 </a>
                                             </li>
+                                            <li class="has-sub menu-passengers-sensors-cameras">
+                                                <a href="{{ route('report-passengers-sensors-cameras') }}" class="faa-parent animated-hover">
+                                                    <i class="fa fa-camera faa-vertical"></i>
+                                                    @lang('Cameras')
+                                                </a>
+                                            </li>
                                         </ul>
                                     </li>
                                 @endif

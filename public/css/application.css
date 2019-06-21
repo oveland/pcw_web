@@ -1671,3 +1671,11 @@ code[class*=language-],pre[class*=language-], code {
 .uppercase{
     text-transform: uppercase !important;
 }
+
+.nav.nav-pills>li>a {
+    color: #0b465a;
+    border: 2px solid #3b4b50 !important;
+}
+.nav.nav-pills>li.active>a {
+    color:white !important;
+}

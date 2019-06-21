@@ -247,6 +247,13 @@ Route::group(['middleware' => ['auth']], function () {
                     Route::get('/', 'SeatReportController@index')->name('report-passengers-sensors-seats');
                     Route::get('/play', 'SeatReportController@play')->name('report-passengers-sensors-seats-play');
                 });
+
+                Route::prefix(__('url-cameras'))->group(function () {
+                    Route::get('/', 'CobanCameraController@index')->name('report-passengers-sensors-cameras');
+                    Route::get('/search-params', 'CobanCameraController@searchParams')->name('report-passengers-sensors-cameras-search-params');
+                    Route::get('/show', 'CobanCameraController@show')->name('report-passengers-sensors-cameras-show');
+                    Route::get('/photo/{photo}', 'CobanCameraController@showPhoto')->name('report-passengers-sensors-cameras-photo');
+                });
             });
 
             Route::prefix(__('mixed'))->group(function () {

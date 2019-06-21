@@ -10,6 +10,7 @@ use App\Models\Vehicles\Location;
 use App\Mail\ConsolidatedReportMail;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
+use File;
 use Mail;
 use Illuminate\Http\Request;
 
@@ -38,217 +39,7 @@ class ToolsController extends Controller
 
     public function test(Request $request)
     {
-        $dates = "
-             1:42:06 AM 02/03/2019
-11:15:22 AM 01/03/2019
-11:41:38 AM 05/03/2019
- 2:01:53 AM 02/03/2019
-12:36:19 AM 02/03/2019
-11:35:46 AM 05/03/2019
- 1:02:54 AM 02/03/2019
-12:57:28 AM 02/03/2019
-10:32:49 PM 01/03/2019
-11:34:25 AM 05/03/2019
-11:46:04 AM 05/03/2019
- 1:29:03 AM 02/03/2019
-11:45:09 AM 05/03/2019
-10:50:38 AM 05/03/2019
- 1:38:35 AM 02/03/2019
-11:24:54 AM 05/03/2019
- 1:54:17 AM 02/03/2019
- 6:50:54 AM 03/03/2019
- 1:56:31 AM 02/03/2019
-12:44:19 AM 02/03/2019
- 1:35:22 AM 02/03/2019
-10:05:39 AM 12/01/2019
- 7:43:42 AM 22/01/2019
- 4:54:52 PM 12/02/2019
-11:45:40 AM 05/03/2019
- 3:47:04 AM 14/02/2019
-11:11:55 AM 05/03/2019
-12:48:03 AM 02/03/2019
- 1:15:42 AM 02/03/2019
- 1:14:50 AM 02/03/2019
-11:45:29 AM 05/03/2019
- 1:52:23 AM 02/03/2019
-12:42:44 AM 02/03/2019
-11:44:17 AM 05/03/2019
- 4:19:06 PM 09/11/2018
- 1:15:34 AM 02/03/2019
-10:52:27 PM 01/03/2019
-11:32:30 PM 02/03/2019
-11:45:04 AM 05/03/2019
- 5:50:17 PM 27/02/2019
- 8:54:15 AM 27/02/2019
-12:33:58 AM 02/03/2019
- 1:07:41 AM 02/03/2019
-10:55:48 AM 05/03/2019
- 1:14:18 AM 02/03/2019
-11:44:54 AM 05/03/2019
-10:42:10 AM 05/01/2019
- 2:15:14 PM 04/03/2019
-11:44:06 AM 05/03/2019
-11:30:53 PM 02/03/2019
-11:32:04 PM 02/03/2019
-10:33:08 AM 05/03/2019
- 1:06:49 AM 02/03/2019
- 5:13:56 PM 09/11/2018
- 2:41:04 PM 25/01/2019
-11:44:06 AM 05/03/2019
-11:22:33 PM 02/03/2019
-12:40:53 AM 02/03/2019
- 1:10:13 AM 02/03/2019
- 2:05:55 AM 05/03/2019
- 1:07:15 AM 02/03/2019
- 1:31:42 AM 02/03/2019
- 1:12:50 AM 02/03/2019
-11:32:32 PM 02/03/2019
- 8:18:07 PM 01/03/2019
-11:46:00 AM 05/03/2019
-11:32:40 PM 02/03/2019
-11:44:45 AM 05/03/2019
- 1:30:26 AM 02/03/2019
-11:05:26 PM 02/03/2019
- 1:55:43 AM 05/03/2019
- 3:49:38 PM 01/03/2019
-11:28:01 AM 05/03/2019
-12:45:53 AM 02/03/2019
- 3:43:53 PM 24/02/2019
-11:15:12 AM 28/01/2019
- 1:56:55 AM 05/03/2019
- 7:23:26 AM 03/03/2019
-11:04:42 AM 05/03/2019
-11:31:15 PM 02/03/2019
-11:45:42 AM 05/03/2019
-12:48:13 AM 02/03/2019
- 9:11:01 PM 01/03/2019
- 9:37:25 PM 02/03/2019
- 1:29:44 AM 02/03/2019
- 7:02:08 PM 01/03/2019
- 1:13:47 AM 02/03/2019
-11:45:34 AM 05/03/2019
- 9:44:41 AM 04/03/2019
- 1:25:04 AM 02/03/2019
- 6:10:45 PM 02/03/2019
-11:45:27 AM 05/03/2019
-11:45:58 AM 05/03/2019
- 7:28:53 PM 04/03/2019
-11:46:03 AM 05/03/2019
-11:45:52 AM 05/03/2019
-11:41:38 AM 05/03/2019
-11:32:44 PM 02/03/2019
- 1:15:22 AM 02/03/2019
-11:44:23 AM 05/03/2019
-11:16:49 PM 01/03/2019
-12:38:11 AM 02/03/2019
- 1:51:52 AM 05/03/2019
- 4:56:23 PM 07/12/2018
-11:30:56 PM 02/03/2019
- 7:42:22 PM 04/03/2019
- 1:27:51 AM 02/03/2019
-12:40:56 AM 02/03/2019
- 4:15:37 PM 29/11/2018
-11:45:54 AM 05/03/2019
-12:59:16 AM 02/03/2019
-11:32:46 PM 02/03/2019
- 1:29:32 AM 02/03/2019
-11:32:25 PM 02/03/2019
-11:43:03 AM 05/03/2019
-11:45:41 AM 05/03/2019
-12:52:26 AM 02/03/2019
- 1:00:16 AM 02/03/2019
-11:06:46 AM 05/03/2019
-11:44:55 AM 05/03/2019
-11:44:36 AM 05/03/2019
- 9:59:02 AM 05/03/2019
- 1:25:56 AM 02/03/2019
-11:43:38 AM 05/03/2019
-12:58:25 AM 02/03/2019
- 1:07:02 AM 02/03/2019
-12:34:00 AM 02/03/2019
-12:59:19 AM 02/03/2019
- 4:23:42 AM 05/03/2019
-12:35:36 AM 02/03/2019
- 1:07:52 AM 02/03/2019
-11:31:02 PM 02/03/2019
- 9:43:20 PM 01/03/2019
-11:34:39 PM 02/03/2019
-10:52:09 PM 02/03/2019
-11:30:12 PM 02/03/2019
-11:30:39 PM 02/03/2019
-11:29:59 PM 02/03/2019
-11:09:36 PM 02/03/2019
-10:55:58 PM 02/03/2019
-10:42:02 PM 02/03/2019
-10:58:20 PM 02/03/2019
-10:55:55 PM 02/03/2019
-10:37:32 PM 02/03/2019
-11:36:45 AM 05/03/2019
-10:42:40 PM 02/03/2019
-11:45:54 AM 05/03/2019
-10:43:06 PM 02/03/2019
- 3:25:07 AM 05/03/2019
-10:33:12 PM 02/03/2019
-11:43:11 AM 05/03/2019
-10:48:59 PM 02/03/2019
-11:04:04 PM 02/03/2019
-11:41:42 AM 05/03/2019
-11:43:26 AM 05/03/2019
-11:45:41 AM 05/03/2019
-11:14:00 PM 02/03/2019
-11:45:01 AM 05/03/2019
-11:26:50 PM 02/03/2019
- 4:21:38 PM 01/03/2019
- 6:31:11 PM 04/03/2019
-11:44:42 AM 05/03/2019
-11:43:08 AM 05/03/2019
-11:42:35 AM 05/03/2019
-11:42:01 AM 05/03/2019
-11:45:49 AM 05/03/2019
-12:21:19 PM 04/03/2019
- 5:40:07 PM 04/03/2019
-11:42:31 AM 05/03/2019
-        ";
 
-        $dates = explode("\n", $dates);
-
-        foreach ($dates as $date){
-            $date = trim($date);
-            if($date){
-                $dateArray = explode(" ", $date);
-                if(count($dateArray) >= 3){
-                    // $format = count($dateArray) == 3 ? "d/m/Y h:i:s A" : "d/m/Y  h:i:s A";
-                    $format = count($dateArray) == 3 ? "h:i:s A d/m/Y" : "h:i:s A d/m/Y";
-                    $dateFormat = Carbon::createFromFormat($format, $date);
-
-                    echo($dateFormat->toDateTimeString()."<br>");
-                }else{
-                    echo("----<br>");
-                }
-            }
-        }
-
-        dd();
-
-
-
-        /*$q = (object)[
-            "plate" => $request->get("plate"),
-            "date" => $request->get("date"),
-            "from" => $request->get("from"),
-            "to" => $request->get("to"),
-            "sort" => $request->get("sort"),
-        ];
-
-        $historic = \DB::select("SELECT * FROM markers_historial where id_gps = '$q->plate' AND fecha = '$q->date' and hora BETWEEN '$q->from' AND '$q->to' ORDER BY hora $q->sort");
-
-        foreach ($historic as $h){
-            echo "$h->hora > $h->frame";
-            echo "<br>";
-        }
-
-        echo "COMPLETE GPS DATA: <br>";
-        dd($historic);*/
     }
 
     /**
@@ -257,28 +48,6 @@ class ToolsController extends Controller
      */
     public function map(Request $request)
     {
-
-        /*$dr = DispatchRegister::find(328855);
-
-        dump("SEARCH ON $dr->departure_time, $dr->arrival_time");
-
-        $passengers = \DB::table('contador_eventos')
-            ->where('fecha', $dr->date)
-            ->where('id_gps', $dr->vehicle->plate)
-            ->whereBetween('hora', [$dr->departure_time, $dr->arrival_time])
-            ->orderBy('id_cont_eventos')->get();
-
-
-        $total = 0;
-        $index = 1;
-        foreach ($passengers as $passenger){
-            echo ("<br>$index $passenger->hora $passenger->total > $total".(($passenger->total < $total)?" XXXXXXXXXXXXXXXXXXXXXXXXXX":" OK"));
-            $total = $passenger->total;
-            $index++;
-        }
-
-        dd("TOTAL $total - ".$passengers->first()->total." = ".($passengers->last()->total - $passengers->first()->total) );*/
-
         return view('tools.map');
     }
 
@@ -401,8 +170,8 @@ class ToolsController extends Controller
     function showScript($gps, Request $request)
     {
         $fileName = "scripts/$gps.txt";
-        if (!\File::exists(public_path($fileName))) return view('errors.404');
-        $scriptText = \File::get(public_path($fileName));
+        if (!File::exists(public_path($fileName))) return view('errors.404');
+        $scriptText = File::get(public_path($fileName));
         $scriptText = trim($scriptText);
         return view('tools.scripts', compact(['scriptText', 'gps']));
     }
