@@ -57,6 +57,11 @@ class CobanPhoto extends Model
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
+    public function getCreatedAtAttribute($created)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $created)[0]);
+    }
+
     /**
      * @return Location | BelongsTo
      */
