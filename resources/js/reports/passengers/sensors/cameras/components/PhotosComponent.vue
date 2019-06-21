@@ -4,7 +4,7 @@
             <div class="thumbnail" data-toggle="modal" data-target="#modal-photo" @click="setPhotoDetail(photo)">
                 <img src="/thumbnail.jpeg">
                 <div class="caption">
-                    <h3><i class="fa fa-camera"></i> {{ photo.location.date }}</h3>
+                    <h3><i class="fa fa-camera"></i> {{ photo.date }}</h3>
                 </div>
             </div>
         </div>

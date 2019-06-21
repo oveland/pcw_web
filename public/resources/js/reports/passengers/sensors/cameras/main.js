@@ -1024,7 +1024,7 @@ var render = function() {
           _c("hr"),
           _vm._v(" "),
           _c("h2", { staticClass: "text-center" }, [
-            _vm._v("Created: " + _vm._s(_vm.photo.location.date))
+            _vm._v("Created: " + _vm._s(_vm.photo.date))
           ])
         ])
       : _vm._e()
@@ -1075,7 +1075,7 @@ var render = function() {
               _c("div", { staticClass: "caption" }, [
                 _c("h3", [
                   _c("i", { staticClass: "fa fa-camera" }),
-                  _vm._v(" " + _vm._s(photo.location.date))
+                  _vm._v(" " + _vm._s(photo.date))
                 ])
               ])
             ]

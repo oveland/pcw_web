@@ -3,7 +3,7 @@
         <div class="col-md-12" v-if="photo && photo.location">
             <img :src="urlPhoto + '/' + photo.id" width="100%">
             <hr>
-            <h2 class="text-center">Created: {{ photo.location.date }}</h2>
+            <h2 class="text-center">Created: {{ photo.date }}</h2>
         </div>
     </div>
 </template>
