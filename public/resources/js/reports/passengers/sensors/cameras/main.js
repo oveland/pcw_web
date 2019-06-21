@@ -162,6 +162,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     setPhotoDetail: function setPhotoDetail(photo) {
+      photo.f = new Date().getTime();
       this.$emit("detail", photo);
     }
   }
@@ -1018,7 +1019,10 @@ var render = function() {
     _vm.photo && _vm.photo.location
       ? _c("div", { staticClass: "col-md-12" }, [
           _c("img", {
-            attrs: { src: _vm.urlPhoto + "/" + _vm.photo.id, width: "100%" }
+            attrs: {
+              src: _vm.urlPhoto + "/" + _vm.photo.id + "?f=" + _vm.photo.f,
+              width: "100%"
+            }
           }),
           _vm._v(" "),
           _c("hr"),

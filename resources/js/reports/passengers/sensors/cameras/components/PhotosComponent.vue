@@ -37,6 +37,7 @@
         },
         methods: {
             setPhotoDetail: function (photo) {
+                photo.f = (new Date()).getTime();
                 this.$emit("detail", photo);
             }
         }

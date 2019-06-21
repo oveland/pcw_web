@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" v-if="photo && photo.location">
-            <img :src="urlPhoto + '/' + photo.id" width="100%">
+            <img :src="urlPhoto + '/' + photo.id+'?f='+photo.f" width="100%">
             <hr>
             <h2 class="text-center">Created: {{ photo.date }}</h2>
         </div>
