@@ -15,7 +15,7 @@ class BEAService
     /**
      * @var DiscountService
      */
-    private $discount;
+    public $discount;
     /**
      * @var BEARepository
      */
@@ -50,14 +50,13 @@ class BEAService
      */
     function getLiquidationParams()
     {
-        $vehicles = $this->repository->getAllVehicles();
-        $routes = $this->repository->getAllRoutes();
-
         return (object)[
-            'vehicles' => $vehicles,
-            'routes' => $routes,
-            'discounts' => $this->discount->all(),
+            'vehicles' => $this->repository->getAllVehicles(),
+            'routes' => $this->repository->getAllRoutes(),
+            //'discounts' => $this->discount->all(),
+            'discounts' => [],
             'commissions' => $this->commission->all(),
+            'trajectories' => $this->repository->getAllTrajectories(),
             'penalties' => $this->penalty->all()
         ];
     }

@@ -27,7 +27,7 @@
             <div class="portlet-body">
                 <div class="tab-content">
                     <div class="tab-pane active" id="discounts-params-tab">
-                        <admin-discount-component :vehicles="vehicles" :routes="routes" :discounts="discounts"></admin-discount-component>
+                        <admin-discount-component :vehicle="vehicle" :routes="routes" :trajectories="trajectories"></admin-discount-component>
                     </div>
                     <div class="tab-pane" id="commissions-params-tab">
                         <admin-commission-component :routes="routes" :commissions="commissions"></admin-commission-component>
@@ -49,7 +49,8 @@
     export default {
         name: "ParamsManagerComponent",
         props: {
-            urlParams: String
+            urlParams: String,
+            vehicle: Object,
         },
         data: function () {
             return {
@@ -60,11 +61,11 @@
             thereAreParams: function () {
                 return this.params.length > 0;
             },
-            vehicles: function () {
-                return this.params.vehicles;
-            },
             routes: function () {
                 return this.params.routes;
+            },
+            trajectories: function () {
+                return this.params.trajectories;
             },
             discounts: function () {
                 return this.params.discounts;

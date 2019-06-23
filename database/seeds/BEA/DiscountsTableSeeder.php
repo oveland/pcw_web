@@ -26,13 +26,13 @@ class DiscountsTableSeeder extends Seeder
     {
         $routes = $this->repository->getAllRoutes();
         $vehicles = $this->repository->getAllVehicles();
-        $travelRoutes = $this->repository->getAllTravelRoutes();
         $discountTypes = $this->repository->getAllDiscountTypes();
 
-        foreach ($discountTypes as $discountType) {
-            foreach ($vehicles as $vehicle) {
-                foreach ($routes as $route) {
-                    foreach ($travelRoutes as $travelRoute) {
+        foreach ($vehicles as $vehicle) {
+            foreach ($routes as $route) {
+                $travelRoutes = $this->repository->getTrajectoriesByRoute($route->bea_id);
+                foreach ($travelRoutes as $travelRoute) {
+                    foreach ($discountTypes as $discountType) {
                         Discount::create([
                             'discount_type_id' => $discountType->id,
                             'vehicle_id' => $vehicle->id,

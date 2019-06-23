@@ -303,11 +303,10 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/search', 'TakingsPassengersLiquidationController@search')->name('takings-passengers-liquidation-search');
                 Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
                 Route::get('/export', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
+            });
 
-                Route::prefix(__('url-params'))->group(function () {
-                    Route::get('/', 'TakingsPassengersLiquidationController@getAllParams')->name('takings-passengers-liquidation-params');
-                    Route::get('/search', 'TakingsPassengersLiquidationController@getParamsSearch')->name('takings-passengers-liquidation-params-search');
-                });
+            Route::prefix(__('url-params'))->group(function () {
+                Route::get('/{name}', 'TakingsPassengersLiquidationController@getParams')->name('takings-passengers-liquidation-params');
             });
         });
     });

@@ -33,7 +33,7 @@
     <div id="liquidation" class="row" url="{{ route('takings-passengers-liquidation-search') }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
-            <search-component url-params="{{ route('takings-passengers-liquidation-params-search') }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
+            <search-component url-params="{{ route('takings-passengers-liquidation-params',['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
         </form>
         <!-- end search form -->
         <hr class="hr">
@@ -74,7 +74,7 @@
         <div class="modal fade" id="modal-params-manager" tabindex="-1" role="basic" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <admin-component url-params="{{  route('takings-passengers-liquidation-params') }}"></admin-component>
+                    <admin-component url-params="{{  route('takings-passengers-liquidation-params',['name' => __('all')]) }}" :vehicle="search.vehicle"></admin-component>
                 </div>
             </div>
         </div>

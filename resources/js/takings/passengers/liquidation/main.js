@@ -76,6 +76,7 @@ let liquidationView = new Vue({
     },
     methods: {
         searchReport: function () {
+            App.blockUI({target: '.report-container', animate: true});
             this.flag = !this.searchParams.flag;
             const form = $('.form-search-report');
             form.find('.btn-search-report').addClass(loadingClass);
@@ -87,6 +88,7 @@ let liquidationView = new Vue({
             }).then(function () {
                 $('.report-container').hide().fadeIn();
                 form.find('.btn-search-report').removeClass(loadingClass);
+                App.unblockUI('.report-container');
             });
         },
         updateVehicles: function (params) {

@@ -26,8 +26,8 @@ class CreateBeaMarksTable extends Migration
             $table->integer('locks');
             $table->integer('auxiliaries');
             $table->integer('boarded');
-            $table->integer('im_bea_max');
-            $table->integer('im_bea_min');
+            $table->double('im_bea_max');
+            $table->double('im_bea_min');
             $table->integer('total_bea');
             $table->integer('passengers_bea');
 

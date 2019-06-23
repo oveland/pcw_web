@@ -28,9 +28,18 @@ class BEARepository
     }
 
     /**
+     * @param $routeId
      * @return Trajectory[]
      */
-    function getAllTravelRoutes()
+    function getTrajectoriesByRoute($routeId)
+    {
+        return Trajectory::where('route_id', $routeId)->get();
+    }
+
+    /**
+     * @return Trajectory[]
+     */
+    function getAllTrajectories()
     {
         return Trajectory::all();
     }

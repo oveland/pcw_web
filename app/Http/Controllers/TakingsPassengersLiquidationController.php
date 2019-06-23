@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BEA\Liquidation;
 use App\Models\BEA\Mark;
+use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\BEA\BEAService;
 use Auth;
@@ -41,14 +42,6 @@ class TakingsPassengersLiquidationController extends Controller
         //$companies = $accessProperties->companies;
 
         return view('takings.passengers.liquidation.index');
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function getParamsSearch()
-    {
-        return response()->json($this->beaService->repository->getAllVehicles());
     }
 
     /**
@@ -93,12 +86,27 @@ class TakingsPassengersLiquidationController extends Controller
     }
 
     /**
+     * @param $name
+     * @param Request $request
      * @return JsonResponse
      * @throws Exception
      */
-    public function getAllParams()
+    public function getParams($name, Request $request)
     {
-        return response()->json($this->beaService->getLiquidationParams());
+        switch ($name) {
+            case __('search'):
+                return response()->json($this->beaService->repository->getAllVehicles());
+                break;
+            case __('discounts'):
+                $vehicle = $request->get('vehicle');
+                $route = $request->get('route');
+                $trajectory = $request->get('trajectory');
+                return response()->json($this->beaService->discount->byVehicleAndRouteAndTrajectory($vehicle, $route, $trajectory));
+                break;
+            default:
+                return response()->json($this->beaService->getLiquidationParams());
+                break;
+        }
     }
 
     /**

@@ -55,7 +55,11 @@
                     {{ mark.trajectory.name }}
                 </span>
             </td>
-            <td class="col-md-2 text-center">{{ mark.turn.driver.first_name + (mark.turn.driver.last_name ? (' ' + mark.turn.driver.last_name):'') }}</td>
+            <td class="col-md-2 text-center">
+                <span v-if="mark.turn.driver">
+                    {{ mark.turn.driver.first_name + (mark.turn.driver.last_name ? (' ' + mark.turn.driver.last_name):'') }}
+                </span>
+            </td>
             <td class="text-center">{{ mark.initialTime }}</td>
             <td class="text-center">{{ mark.finalTime }}</td>
             <td class="text-center">{{ mark.duration }}</td>

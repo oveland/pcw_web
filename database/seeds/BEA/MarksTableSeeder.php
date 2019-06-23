@@ -61,7 +61,7 @@ class MarksTableSeeder extends Seeder
         $mark->boarded = $passengersBoarding;
         $mark->im_bea_max = $imBeaMax;
         $mark->im_bea_min = $imBeaMin;
-        $mark->total_bea = $totalBEA;
+        $mark->total_bea = ceil($totalBEA);
         $mark->passengers_bea = $passengersBEA;
 
         return $mark;

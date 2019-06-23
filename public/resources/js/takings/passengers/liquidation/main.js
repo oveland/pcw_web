@@ -229,7 +229,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ParamsManagerComponent",
   props: {
-    urlParams: String
+    urlParams: String,
+    vehicle: Object
   },
   data: function data() {
     return {
@@ -240,11 +241,11 @@ __webpack_require__.r(__webpack_exports__);
     thereAreParams: function thereAreParams() {
       return this.params.length > 0;
     },
-    vehicles: function vehicles() {
-      return this.params.vehicles;
-    },
     routes: function routes() {
       return this.params.routes;
+    },
+    trajectories: function trajectories() {
+      return this.params.trajectories;
     },
     discounts: function discounts() {
       return this.params.discounts;
@@ -366,15 +367,68 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminDiscountComponent",
   props: {
-    vehicles: Array,
+    vehicle: Object,
     routes: Array,
-    discounts: Array
+    trajectories: Array
   },
-  computed: {},
+  data: function data() {
+    return {
+      discounts: Array
+    };
+  },
+  computed: {
+    trajectoriesByRoute: function trajectoriesByRoute() {
+      return _.groupBy(this.trajectories, 'route_id');
+    }
+  },
   methods: {
+    loadDiscounts: function loadDiscounts(vehicleId, routeId, trajectoryId) {
+      var _this = this;
+
+      App.blockUI({
+        target: '.discounts',
+        animate: true
+      });
+      axios.get('parametros/descuentos', {
+        params: {
+          vehicle: vehicleId,
+          route: routeId,
+          trajectory: trajectoryId
+        }
+      }).then(function (r) {
+        _this.discounts = r.data;
+      })["catch"](function (error) {
+        console.log(error);
+      }).then(function () {
+        App.unblockUI('.discounts');
+      });
+    },
     discountsFor: function discountsFor(vehicleId, routeId) {
       return _.filter(this.discounts, {
         'vehicle_id': vehicleId,
@@ -995,6 +1049,10 @@ __webpack_require__.r(__webpack_exports__);
     liquidate: function liquidate() {
       var _this = this;
 
+      App.blockUI({
+        target: '.preview',
+        animate: true
+      });
       axios.post(this.urlLiquidate, {
         vehicle: this.search.vehicle.id,
         liquidation: this.liquidation,
@@ -1005,17 +1063,20 @@ __webpack_require__.r(__webpack_exports__);
 
         if (data.success) {
           gsuccess(data.message);
+          setTimeout(function () {
+            _this.$emit('refresh-report');
 
-          _this.$emit('refresh-report');
-
-          $('#modal-generate-liquidation').modal('hide');
+            $('#modal-generate-liquidation').modal('hide');
+          }, 500);
         } else {
           gerror(data.message);
         }
       })["catch"](function (error) {
         gerror('Error in liquidation process!');
         console.log(error);
-      }).then(function () {});
+      }).then(function () {
+        App.unblockUI('.preview');
+      });
     }
   }
 });
@@ -1312,6 +1373,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -4343,9 +4408,9 @@ var render = function() {
             [
               _c("admin-discount-component", {
                 attrs: {
-                  vehicles: _vm.vehicles,
+                  vehicle: _vm.vehicle,
                   routes: _vm.routes,
-                  discounts: _vm.discounts
+                  trajectories: _vm.trajectories
                 }
               })
             ],
@@ -4457,201 +4522,337 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-md-3 col-sm-3 col-xs-3" }, [
-      _c(
-        "ul",
-        { staticClass: "nav nav-tabs tabs-left" },
-        _vm._l(_vm.vehicles, function(vehicle, indexVehicle) {
-          return _c("li", { class: indexVehicle === 0 ? "active" : "" }, [
+  return _vm.vehicle
+    ? _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-3 col-sm-3 col-xs-3" }, [
+          _c("ul", { staticClass: "nav nav-tabs tabs-left" }, [
+            _c("li", { staticClass: "active" }, [
+              _c(
+                "a",
+                {
+                  attrs: {
+                    href: "#vehicle-" + _vm.vehicle.id,
+                    "data-toggle": "tab"
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-car" }),
+                  _vm._v(
+                    " " + _vm._s(_vm.vehicle.number) + "\n                "
+                  )
+                ]
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-9 col-sm-9 col-xs-9" }, [
+          _c("div", { staticClass: "tab-content" }, [
             _c(
-              "a",
+              "div",
               {
-                attrs: { href: "#vehicle-" + vehicle.id, "data-toggle": "tab" }
+                staticClass: "tab-pane fade active in",
+                attrs: { id: "vehicle-" + _vm.vehicle.id }
               },
               [
-                _c("i", { staticClass: "fa fa-car" }),
-                _vm._v(" " + _vm._s(vehicle.number) + "\n                ")
-              ]
-            )
-          ])
-        }),
-        0
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-md-9 col-sm-9 col-xs-9" }, [
-      _c(
-        "div",
-        { staticClass: "tab-content" },
-        _vm._l(_vm.vehicles, function(vehicle, indexVehicle) {
-          return _c(
-            "div",
-            {
-              staticClass: "tab-pane fade",
-              class: indexVehicle === 0 ? "active in" : "",
-              attrs: { id: "vehicle-" + vehicle.id }
-            },
-            [
-              _c("div", {}, [
-                _c(
-                  "ul",
-                  { staticClass: "nav nav-pills" },
-                  _vm._l(_vm.routes, function(route, indexRoute) {
-                    return _c(
-                      "li",
-                      { class: indexRoute === 0 ? "active" : "" },
-                      [
-                        _c(
-                          "a",
-                          {
-                            attrs: {
-                              href: "#tab-" + vehicle.id + "-" + route.id,
-                              "data-toggle": "tab",
-                              "aria-expanded": "true"
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fa fa-flag" }),
-                            _vm._v(
-                              " " +
-                                _vm._s(route.name) +
-                                "\n                            "
-                            )
-                          ]
-                        )
-                      ]
-                    )
-                  }),
-                  0
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "tab-content" },
-                  _vm._l(_vm.routes, function(route, indexRoute) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "tab-pane fade",
-                        class: indexRoute === 0 ? "active in" : "",
-                        attrs: { id: "tab-" + vehicle.id + "-" + route.id }
-                      },
-                      [
-                        _c(
-                          "table",
-                          {
-                            staticClass:
-                              "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
-                          },
-                          [
-                            _vm._m(0, true),
-                            _vm._v(" "),
-                            _c(
-                              "tbody",
-                              [
-                                _vm._l(
-                                  _vm.discountsFor(vehicle.id, route.id),
-                                  function(discount, indexDiscount) {
-                                    return _c("tr", {}, [
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(_vm._s(indexDiscount + 1))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "td",
-                                        { staticClass: "col-md-2 text-center" },
-                                        [
-                                          discount.trajectory
-                                            ? _c(
-                                                "span",
+                _c("div", {}, [
+                  _c(
+                    "ul",
+                    { staticClass: "nav nav-pills" },
+                    _vm._l(_vm.routes, function(route, indexRoute) {
+                      return _c(
+                        "li",
+                        { class: indexRoute === 0 ? "active" : "" },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: "#tab-" + _vm.vehicle.id + "-" + route.id,
+                                "data-toggle": "tab",
+                                "aria-expanded": "true"
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-flag" }),
+                              _vm._v(
+                                " " +
+                                  _vm._s(route.name) +
+                                  "\n                            "
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "tab-content" },
+                    _vm._l(_vm.routes, function(route, indexRoute) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass: "tab-pane fade",
+                          class: indexRoute === 0 ? "active in" : "",
+                          attrs: {
+                            id: "tab-" + _vm.vehicle.id + "-" + route.id
+                          }
+                        },
+                        [
+                          _c(
+                            "table",
+                            {
+                              staticClass:
+                                "table table-bordered table-condensed table-report"
+                            },
+                            [
+                              _vm._m(0, true),
+                              _vm._v(" "),
+                              _c("tbody", [
+                                _c("tr", [
+                                  _c("td", { staticClass: "text-center" }, [
+                                    _c(
+                                      "ul",
+                                      { staticClass: "nav nav-tabs tabs-left" },
+                                      _vm._l(
+                                        _vm.trajectoriesByRoute[route.bea_id],
+                                        function(trajectory, indexTrajectory) {
+                                          return _c(
+                                            "li",
+                                            {
+                                              class:
+                                                indexTrajectory === 0
+                                                  ? "active"
+                                                  : "",
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.loadDiscounts(
+                                                    _vm.vehicle.id,
+                                                    route.id,
+                                                    trajectory.id
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "a",
                                                 {
-                                                  staticClass:
-                                                    "label span-full",
-                                                  class:
-                                                    discount.trajectory.name ==
-                                                    "IDA"
-                                                      ? "label-success"
-                                                      : "label-warning"
+                                                  attrs: {
+                                                    href:
+                                                      "#trajectory-" +
+                                                      trajectory.id,
+                                                    "data-toggle": "tab"
+                                                  }
                                                 },
                                                 [
                                                   _vm._v(
-                                                    "\n                                            " +
-                                                      _vm._s(
-                                                        discount.trajectory.name
-                                                      ) +
-                                                      "\n                                        "
+                                                    "\n                                                    " +
+                                                      _vm._s(trajectory.name) +
+                                                      "\n                                                "
                                                   )
                                                 ]
                                               )
-                                            : _vm._e()
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _c("i", {
-                                          class: discount.discount_type.icon
-                                        }),
-                                        _vm._v(
-                                          " " +
-                                            _vm._s(
-                                              _vm._f("capitalize")(
-                                                discount.discount_type.name
-                                              )
-                                            ) +
-                                            "\n                                    "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(
-                                          _vm._s(
-                                            discount.discount_type.description
+                                            ]
                                           )
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(
-                                          "\n                                        " +
-                                            _vm._s(
-                                              _vm._f("numberFormat")(
-                                                discount.value,
-                                                "$0,0"
-                                              )
-                                            ) +
-                                            "\n                                    "
-                                        )
-                                      ])
-                                    ])
-                                  }
-                                ),
-                                _vm._v(" "),
-                                _vm._m(1, true)
-                              ],
-                              2
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("hr", { staticClass: "hr" }),
-                        _vm._v(" "),
-                        _vm._m(2, true)
-                      ]
-                    )
-                  }),
-                  0
-                )
-              ])
-            ]
-          )
-        }),
-        0
-      )
-    ])
-  ])
+                                        }
+                                      ),
+                                      0
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    { staticClass: "discounts text-center" },
+                                    [
+                                      _c(
+                                        "div",
+                                        { staticClass: "tab-content" },
+                                        _vm._l(_vm.trajectories, function(
+                                          trajectory,
+                                          indexTrajectory
+                                        ) {
+                                          return _c(
+                                            "div",
+                                            {
+                                              staticClass: "tab-pane fade",
+                                              class:
+                                                indexTrajectory === 0
+                                                  ? "active in"
+                                                  : "",
+                                              attrs: {
+                                                id:
+                                                  "trajectory-" + trajectory.id
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "table",
+                                                {
+                                                  staticClass:
+                                                    "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+                                                },
+                                                [
+                                                  _vm._m(1, true),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "tbody",
+                                                    [
+                                                      _vm._l(
+                                                        _vm.discountsFor(
+                                                          _vm.vehicle.id,
+                                                          route.id
+                                                        ),
+                                                        function(
+                                                          discount,
+                                                          indexDiscount
+                                                        ) {
+                                                          return _c("tr", {}, [
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    indexDiscount +
+                                                                      1
+                                                                  )
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _c("i", {
+                                                                  class:
+                                                                    discount
+                                                                      .discount_type
+                                                                      .icon
+                                                                }),
+                                                                _vm._v(
+                                                                  " " +
+                                                                    _vm._s(
+                                                                      _vm._f(
+                                                                        "capitalize"
+                                                                      )(
+                                                                        discount
+                                                                          .discount_type
+                                                                          .name
+                                                                      )
+                                                                    ) +
+                                                                    "\n                                                        "
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    discount
+                                                                      .discount_type
+                                                                      .description
+                                                                  )
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  "\n                                                            " +
+                                                                    _vm._s(
+                                                                      _vm._f(
+                                                                        "numberFormat"
+                                                                      )(
+                                                                        discount.value,
+                                                                        "$0,0"
+                                                                      )
+                                                                    ) +
+                                                                    "\n                                                        "
+                                                                )
+                                                              ]
+                                                            )
+                                                          ])
+                                                        }
+                                                      ),
+                                                      _vm._v(" "),
+                                                      _vm._m(2, true)
+                                                    ],
+                                                    2
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c("hr", { staticClass: "hr" }),
+                                              _vm._v(" "),
+                                              _vm._m(3, true)
+                                            ]
+                                          )
+                                        }),
+                                        0
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ])
+                            ]
+                          )
+                        ]
+                      )
+                    }),
+                    0
+                  )
+                ])
+              ]
+            )
+          ])
+        ])
+      ])
+    : _vm._e()
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "inverse" }, [
+        _c("th", { staticClass: "col-md-2" }, [
+          _c("i", { staticClass: "fa fa-flag text-muted" }),
+          _c("br"),
+          _vm._v(" Trajectory\n                                    ")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-2" }, [
+          _c("i", { staticClass: "icon-tag text-muted" }),
+          _c("br"),
+          _vm._v(" Discounts\n                                    ")
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -4663,28 +4864,28 @@ var staticRenderFns = [
           _c("br")
         ]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-3" }, [
-          _c("i", { staticClass: "fa fa-flag text-muted" }),
+        _c("th", { staticClass: "col-md-2" }, [
+          _c("i", { staticClass: "icon-tag text-muted" }),
           _c("br"),
-          _vm._v(" Trajectory\n                                    ")
+          _vm._v(
+            " Name\n                                                        "
+          )
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-2" }, [
           _c("i", { staticClass: "icon-tag text-muted" }),
           _c("br"),
-          _vm._v(" Name\n                                    ")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticClass: "col-md-2" }, [
-          _c("i", { staticClass: "icon-tag text-muted" }),
-          _c("br"),
-          _vm._v(" Description\n                                    ")
+          _vm._v(
+            " Description\n                                                        "
+          )
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-2" }, [
           _c("i", { staticClass: "fa fa-dollar text-muted" }),
           _c("br"),
-          _vm._v(" Value\n                                    ")
+          _vm._v(
+            " Value\n                                                        "
+          )
         ])
       ])
     ])
@@ -4718,7 +4919,7 @@ var staticRenderFns = [
       },
       [
         _c("i", { staticClass: "fa fa-edit" }),
-        _vm._v(" Edit\n                            ")
+        _vm._v(" Edit\n                                                ")
       ]
     )
   }
@@ -6299,7 +6500,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "form form-horizontal" }, [
+  return _c("div", { staticClass: "form form-horizontal preview" }, [
     _c("h3", { staticClass: "search p-b-15" }, [
       _c("span", { staticClass: "text-bold" }, [
         _c("i", { staticClass: "fa fa-bus" }),
@@ -6627,14 +6828,20 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("td", { staticClass: "col-md-2 text-center" }, [
-                _vm._v(
-                  _vm._s(
-                    mark.turn.driver.first_name +
-                      (mark.turn.driver.last_name
-                        ? " " + mark.turn.driver.last_name
-                        : "")
-                  )
-                )
+                mark.turn.driver
+                  ? _c("span", [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(
+                            mark.turn.driver.first_name +
+                              (mark.turn.driver.last_name
+                                ? " " + mark.turn.driver.last_name
+                                : "")
+                          ) +
+                          "\n            "
+                      )
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("td", { staticClass: "text-center" }, [
@@ -8462,6 +8669,10 @@ var liquidationView = new Vue({
     searchReport: function searchReport() {
       var _this = this;
 
+      App.blockUI({
+        target: '.report-container',
+        animate: true
+      });
       this.flag = !this.searchParams.flag;
       var form = $('.form-search-report');
       form.find('.btn-search-report').addClass(loadingClass);
@@ -8474,6 +8685,7 @@ var liquidationView = new Vue({
       }).then(function () {
         $('.report-container').hide().fadeIn();
         form.find('.btn-search-report').removeClass(loadingClass);
+        App.unblockUI('.report-container');
       });
     },
     updateVehicles: function updateVehicles(params) {

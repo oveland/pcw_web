@@ -153,6 +153,7 @@
         },
         methods: {
             liquidate: function () {
+                App.blockUI({target: '.preview', animate: true});
                 axios.post(this.urlLiquidate, {
                     vehicle: this.search.vehicle.id,
                     liquidation: this.liquidation,
@@ -162,8 +163,10 @@
                     const data = response.data;
                     if( data.success ){
                         gsuccess(data.message);
-                        this.$emit('refresh-report');
-                        $('#modal-generate-liquidation').modal('hide');
+                        setTimeout(()=>{
+                            this.$emit('refresh-report');
+                            $('#modal-generate-liquidation').modal('hide');
+                        },500);
                     }else{
                         gerror(data.message);
                     }
@@ -171,7 +174,7 @@
                     gerror('Error in liquidation process!');
                     console.log(error);
                 }).then(function () {
-
+                    App.unblockUI('.preview');
                 });
             }
         }

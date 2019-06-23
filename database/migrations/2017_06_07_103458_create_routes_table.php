@@ -15,6 +15,7 @@ class CreateRoutesTable extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('bea_id')->unique();
             $table->string('name');
             $table->integer('distance')->default(0)->comment('Distance in meters');
             $table->integer('road_time')->default(0)->comment('Road time in minutes');

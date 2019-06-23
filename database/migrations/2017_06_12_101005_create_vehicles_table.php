@@ -15,6 +15,7 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('bea_id')->unique();
             $table->string('plate')->unique();
             $table->string('number');
             $table->bigInteger('company_id')->unsigned()->default(6);

@@ -167,6 +167,15 @@ class Mark extends Model
     }
 
     /**
+     * @param $data
+     * @return int
+     */
+    /*public function getTotalBeaAttribute($data)
+    {
+        return $this->total_bea;
+    }*/
+
+    /**
      * @return int
      */
     function getTotalGrossBeaAttribute()
