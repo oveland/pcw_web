@@ -81,7 +81,7 @@ class CobanCameraController extends Controller
                 $location = $photo->location;
                 $report->push([
                     'id' => $photo->id,
-                    'date' => $photo->created_at->toDateTimeString(),
+                    'date' => ($report->count() + 1)." ⮞ ".$photo->date->toDateTimeString(),
                     'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                     'location' => $location ? $location->getAPIFields() : null
                 ]);
