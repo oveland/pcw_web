@@ -38,6 +38,7 @@ class ToolsController extends Controller
 
     public function test(Request $request)
     {
+        phpinfo();dd('');
         $dates = "
              1:42:06 AM 02/03/2019
 11:15:22 AM 01/03/2019

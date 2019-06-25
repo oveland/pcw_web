@@ -151,6 +151,8 @@ class ReportRouteController extends Controller
      */
     public function exportByVehicle($vehiclesDispatchRegisters, $dateReport)
     {
+        set_time_limit(900);
+        ini_set('max_execution_time', 900);
         Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
