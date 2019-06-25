@@ -91,7 +91,7 @@ class Mark extends Model
      */
     function getDateAttribute()
     {
-        return Carbon::createFromFormat(config('app.date_format'), $this->attributes['date']);
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), $this->attributes['date']);
     }
 
     /**

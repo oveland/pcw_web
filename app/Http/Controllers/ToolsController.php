@@ -39,7 +39,7 @@ class ToolsController extends Controller
 
     public function test(Request $request)
     {
-
+        phpinfo();
     }
 
     /**

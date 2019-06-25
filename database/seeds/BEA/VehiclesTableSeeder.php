@@ -15,6 +15,9 @@ class VehiclesTableSeeder extends Seeder
      */
     public function run()
     {
+        $maxSequence = collect(\DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
+
         $vehicles = BEADB::select("SELECT * FROM C_AUTOBUS");
 
         foreach ($vehicles as $vehicleBEA) {

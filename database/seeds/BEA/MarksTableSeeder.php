@@ -2,6 +2,7 @@
 
 use App\Facades\BEADB;
 use App\Models\BEA\Mark;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class MarksTableSeeder extends Seeder
@@ -32,6 +33,7 @@ class MarksTableSeeder extends Seeder
     function processMark($markBEA)
     {
         $mark = Mark::find($markBEA->AMR_IDMARCA);
+        
         if (!$mark) $mark = new Mark();
 
         $passengersUp = $markBEA->AMR_SUBIDAS;
@@ -51,9 +53,9 @@ class MarksTableSeeder extends Seeder
         $mark->id = $markBEA->AMR_IDMARCA;
         $mark->turn_id = $markBEA->AMR_IDTURNO;
         $mark->trajectory_id = $markBEA->AMR_IDDERROTERO;
-        $mark->date = $markBEA->AMR_FHINICIO;
-        $mark->initial_time = $markBEA->AMR_FHINICIO;
-        $mark->final_time = $markBEA->AMR_FHFINAL;
+        $mark->date = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO);
+        $mark->initial_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO);
+        $mark->final_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHFINAL);
         $mark->passengers_up = $passengersUp;
         $mark->passengers_down = $passengersDown;
         $mark->locks = $locks;

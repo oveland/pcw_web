@@ -16,7 +16,8 @@ class BEADatabaseRefreshSeeder extends Seeder
             $this->call(RoutesTableSeeder::class);
             $this->call(VehiclesTableSeeder::class);
             $this->call(DriversTableSeeder::class);
-
+        });
+        DB::transaction(function () {
             $this->call(TrajectoriesTableSeeder::class);
             $this->call(TurnsTableSeeder::class);
             $this->call(MarksTableSeeder::class);
