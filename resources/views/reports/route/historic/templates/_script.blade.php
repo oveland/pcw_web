@@ -146,25 +146,25 @@
             }
         }
 
-        paintHistoricPathTo(index) {
+        async paintHistoricPathTo(index) {
             let path = this.historicPath.getPath();
 
-            this.historicLocations.forEach((historicLocation, i) => {
+            this.historicLocations.forEach(async (historicLocation, i) => {
                 path.removeAt(i);
+                if (i <= index){
+                    await path.insertAt(i, historicLocation.marker.position);
+                }
 
-                if (i <= index) {
+                if (i >= (index - 50) && i <= index) {
                     historicLocation.marker.setMap(this.map);
                     //historicLocation.shadowMarker.setMap(null);
-
-                    //if (!path.getAt(i))
-                    path.insertAt(i, historicLocation.marker.position);
                 } else {
                     historicLocation.marker.setMap(null);
                     //historicLocation.shadowMarker.setMap(this.map);
                 }
             });
 
-            path.forEach((p, i) => {
+            await path.forEach((p, i) => {
                 if (i > index) {
                     path.removeAt(i);
                 }
@@ -211,7 +211,7 @@
                     map: this.map,
                     position: marker.getPosition(),
                     icon: icon,
-                    duration: 800,
+                    duration: 200,
                     easing: "swing",
                     title: marker.getTitle(),
                     shadow: ""
@@ -222,9 +222,9 @@
                 this.currentLocation.infoWindow.close();
                 infoWindow.open(this.map, this.markerBus);
             } else {
-                /*this.markerBus.addListener('click', () => {
-                    infoWindow.open(this.map, this.markerBus);
-                });*/
+                //this.markerBus.addListener('click', () => {
+                //    infoWindow.open(this.map, this.markerBus);
+                //});
             }
 
             if (!map.getBounds().contains(this.markerBus.getPosition())) {
@@ -234,16 +234,16 @@
             this.currentLocation = historicLocation;
 
             const routeLabel = this.showInfo.find('.route');
-            if(reportLocation.dispatchRegister){
+            if (reportLocation.dispatchRegister) {
                 const dr = reportLocation.dispatchRegister;
-                routeLabel.text(dr.id+" "+dr.route.name).parent().fadeIn();
+                routeLabel.text(dr.id + " " + dr.route.name).parent().fadeIn();
                 this.showInfo.find('.mileage-route').text(reportLocation.routeDistance);
-                if(reportLocation.offRoad){
+                if (reportLocation.offRoad) {
                     routeLabel.parent().addClass('btn-danger').attr('title', '@lang('Off road vehicle')');
-                }else{
+                } else {
                     routeLabel.parent().removeClass('btn-danger').attr('title', '@lang('In route')');
                 }
-            }else{
+            } else {
                 routeLabel.parent().hide();
             }
 
@@ -252,9 +252,9 @@
             this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
             this.showInfo.find('.speed').text(reportLocation.speed);
             this.showInfo.find('.current-mileage').text(reportLocation.currentMileage);
-            if(reportLocation.speeding){
+            if (reportLocation.speeding) {
                 this.showInfo.find('.speed').parent().addClass('btn-warning');
-            }else{
+            } else {
                 this.showInfo.find('.speed').parent().removeClass('btn-warning');
             }
             this.showInfo.find('.status-vehicle').html(

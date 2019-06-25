@@ -29,6 +29,8 @@ class ReportRouteHistoricController extends Controller
      */
     public function index()
     {
+        abort(403);
+
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;

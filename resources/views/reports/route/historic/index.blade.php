@@ -1,6 +1,5 @@
 @extends(Auth::user()->isProprietary() ? 'layouts.blank' : 'layout')
 
-
 @section('stylesheets')
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link href="{{ asset('assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.css') }}" rel="stylesheet" type="text/css" />
@@ -320,7 +319,12 @@
                     reportRouteHistoric.updateBusMarker(slide.from);
                 },
                 onFinish: function(slide){
-
+                    setTimeout(()=>{
+                        reportRouteHistoric.updateBusMarker(slide.from);
+                        setTimeout(()=>{
+                            reportRouteHistoric.updateBusMarker(slide.from);
+                        },500);
+                    },100);
                 }
             });
         });
