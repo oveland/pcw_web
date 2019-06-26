@@ -16,11 +16,11 @@
     }
 
     .seat-top-guala {
-        width: 45px !important;
+        width: 35px !important;
         height: 20px !important;
         border: none !important;
-        border-radius: 0 !important;
-        margin: 2px 1px 2px 1px !important;
+        border-radius: 3px !important;
+        margin: 2px 0px 2px 1px !important;
     }
     .seat-driver{
         width: 20px !important;
