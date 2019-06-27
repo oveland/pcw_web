@@ -155,7 +155,15 @@
                     await path.insertAt(i, historicLocation.marker.position);
                 }
 
-                if (i >= (index - 50) && i <= index) {
+                /*if (i >= (index - 50) && i <= index) {
+                    historicLocation.marker.setMap(this.map);
+                    //historicLocation.shadowMarker.setMap(null);
+                } else {
+                    historicLocation.marker.setMap(null);
+                    //historicLocation.shadowMarker.setMap(this.map);
+                }*/
+
+                if (i <= index) {
                     historicLocation.marker.setMap(this.map);
                     //historicLocation.shadowMarker.setMap(null);
                 } else {
