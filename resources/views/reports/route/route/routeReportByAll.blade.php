@@ -13,7 +13,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading p-b-40">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id ?? $route }}&type-report=vehicle&export=true" class="btn btn-sm btn-lime bg-lime-dark btn-rounded pull-left hide">
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $routeReport }}&type-report=vehicle&export=true" class="btn btn-sm btn-lime bg-lime-dark btn-rounded pull-left hide">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
                 <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime pull-left" data-click="panel-expand" title="@lang('Expand / Compress')">
@@ -25,7 +25,7 @@
         <div class="tab-content panel p-0">
             <div id="report-tab" class="table-responsive tab-pane fade active in">
                 <!-- begin table -->
-                @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport'))
+                @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company'))
                 <!-- end table -->
             </div>
         </div>

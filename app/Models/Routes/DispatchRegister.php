@@ -3,6 +3,7 @@
 namespace App\Models\Routes;
 
 use App\Http\Controllers\Utils\StrTime;
+use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Users\User;
@@ -122,13 +123,16 @@ use Carbon\Carbon;
  * @property float|null $end_odometer
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereEndOdometer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereStartOdometer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
  */
 class DispatchRegister extends Model
 {
     const IN_PROGRESS = "En camino";
     const COMPLETE = "Terminó";
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }
@@ -161,7 +165,7 @@ class DispatchRegister extends Model
      */
     public function offRoads()
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->where('off_road',true)->orderBy('date', 'asc');
+        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->where('off_road', true)->orderBy('date', 'asc');
     }
 
     /**
@@ -309,33 +313,17 @@ class DispatchRegister extends Model
             'id' => $this->id,
             'date' => $this->getParsedDate()->toDateString(),
             'turn' => $this->turn,
-
             'round_trip' => $this->round_trip,
-            'roundTrip' => $this->round_trip,
-
             'departure_time' => $this->departure_time,
-            'departureTime' => $this->departure_time,
-
             'arrival_time_scheduled' => $this->arrival_time_scheduled,
-            'arrivalTimeScheduled' => $this->arrival_time_scheduled,
-
             'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
-            'arrivalTime' => $this->complete() ? $this->arrival_time : '--:--:--',
-
             'difference_time' => $this->arrival_time_difference,
-            'differenceTime' => $this->arrival_time_difference,
-
             'route_time' => $this->getRouteTime(),
-            'routeTime' => $this->getRouteTime(),
-
             'route' => $this->route->getAPIFields(),
             'vehicle' => $this->vehicle->getAPIFields(),
             'status' => $this->status,
-
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
-            'driverName' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
-
-            'dispatcherName' => $this->user ? $this->user->name: __('Unassigned'),
+            'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
         ];
     }
 
@@ -371,6 +359,11 @@ class DispatchRegister extends Model
     public function hasObservationCounter()
     {
         return $this->vehicle->plate == 'VCK-531';
+    }
+
+    public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
+    {
+        $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
     }
 
     const CREATED_AT = 'date_created';

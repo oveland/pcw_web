@@ -1,0 +1,8 @@
+.bg-warning {
+    background-color: #cba528
+}
+
+a.bg-warning:hover,
+a.bg-warning:focus {
+    background-color: #cb840c
+}
