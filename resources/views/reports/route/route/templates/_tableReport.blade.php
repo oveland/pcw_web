@@ -2,7 +2,7 @@
 <table id="table-report" class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
     <tr class="inverse">
-        <th class="{{ $routeReport != 'all'?'hide':'' }}">
+        <th class="">
             <i class="fa fa-flag text-muted"></i><br>
             @lang('Route')
         </th>
@@ -14,7 +14,7 @@
             <i class="fa fa-list-ol text-muted"></i><br>
             @lang('Turn')
         </th>
-        <th class="{{ $typeReport == 'group-vehicles'?'hide':'' }}">
+        <th class="">
             <i class="fa fa-car text-muted"></i><br>
             @lang('Vehicle')
         </th>
@@ -104,7 +104,7 @@
             $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0)?true:false;
         @endphp
         <tr>
-            <th width="10%" class="{{ $routeReport != 'all'?'hide':'' }} bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+            <th width="10%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                 {{ $route->name }}
             </th>
             <th width="5%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
@@ -112,11 +112,13 @@
                 <small>{{ $dispatchRegister->status }}</small>
             </th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
-            <th width="5%" class="bg-inverse text-white text-center {{ $typeReport == 'group-vehicles'?'hide':'' }}">{{ $vehicle->number }}</th>
+            <th width="5%" class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
             @if( $company->hasDriverRegisters() )
             <td width="25%" class="text-uppercase">
                 @if( Auth::user()->isAdmin() )
-                    @php( $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code )
+                    @php
+                        $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code;
+                    @endphp
                     <div class="tooltips box-edit" data-title="@lang('Driver')">
                         <span class="box-info">
                             <span class="{{ !$driverInfo?'text-danger text-bold':'' }} text-capitalize">
@@ -146,8 +148,10 @@
                     {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
                 </small>
                 @if( isset($lastArrivalTime[$vehicle->id]) && $lastArrivalTime[$vehicle->id] )
-                    @php($deadTime = $strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime[$vehicle->id]))
-                    @php($totalDeadTime[$vehicle->id] = $strTime->addStrTime($totalDeadTime[$vehicle->id], $deadTime))
+                    @php
+                        $deadTime = $strTime->subStrTime($dispatchRegister->departure_time, $lastArrivalTime[$vehicle->id]);
+                        $totalDeadTime[$vehicle->id] = $strTime->addStrTime($totalDeadTime[$vehicle->id], $deadTime);
+                    @endphp
                     <br>
                     <small class="tooltips text-primary" data-title="@lang('Dead time')" data-placement="bottom">
                         <i class="ion-android-stopwatch text-muted"></i> {{ $deadTime }}
@@ -157,7 +161,9 @@
                         <i class="ion-android-stopwatch text-muted"></i> {{ $totalDeadTime[$vehicle->id] }}
                     </small>
                 @else
-                    @php($totalDeadTime[$vehicle->id] = '00:00:00')
+                    @php
+                        $totalDeadTime[$vehicle->id] = '00:00:00';
+                    @endphp
                 @endif
             </td>
             <td width="10%" class="text-center">
@@ -272,21 +278,20 @@
                    data-original-title="@lang('Graph report detail')">
                     <i class="fa fa-area-chart faa-pulse"></i>
                 </a>
-                @if( Auth::user()->isAdmin() )
-                    <a target="_blank" class="btn btn-xs btn-info faa-parent animated-hover tooltips"
-                       href="{{ route('link-report-route-chart-view',['dispatchRegister'=>$dispatchRegister->id, 'location' => 0]) }}"
-                       data-original-title="@lang('Graph report detail') - External Link">
-                        <i class="fa fa-external-link faa-pulse"></i>
-                    </a>
-                @endif
-
                 @if( Auth::user()->isSuperAdmin() )
+                    @php
+                        $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                        $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                    @endphp
                     <hr class="hr no-padding">
-                    <small>{!! $dispatchRegister->reports_count !!} / {!! $dispatchRegister->locations_count !!}</small>
+                    <small>{!! $totalLocations !!} @lang('locations')</small><br>
+                    <small>{!! $totalReports !!} @lang('reports')</small>
                 @endif
             </td>
         </tr>
-        @php( $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time )
+        @php
+            $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time;
+        @endphp
     @endforeach
     </tbody>
 </table>

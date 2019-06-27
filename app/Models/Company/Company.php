@@ -45,6 +45,9 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereTimezone($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $activeRoutes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proprietaries\Proprietary[] $proprietaries
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company query()
  */
 class Company extends Model
 {
@@ -54,11 +57,12 @@ class Company extends Model
     const MONTEBELLO = 21;
     const TUPAL = 28;
     const YUMBENOS = 17;
+    const COODETRANS = 30;
 
     /**
      * @return mixed|string
      */
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }
@@ -68,7 +72,7 @@ class Company extends Model
      */
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class);
+        return $this->hasMany(Vehicle::class)->orderBy('number');
     }
 
     /**
@@ -76,7 +80,7 @@ class Company extends Model
      */
     public function activeVehicles()
     {
-        return $this->vehicles()->where('active', true);
+        return $this->vehicles()->where('active', true)->orderBy('number');
     }
 
     /**
@@ -87,9 +91,12 @@ class Company extends Model
     {
         $user = Auth::user();
         $vehicles = $user->assignedVehicles($this);
-        if( $routeId && $routeId != 'all' ){
-            $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::where('route_id', $routeId)->get()->pluck('vehicle_id');
-            $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+        if ($routeId && $routeId != 'all') {
+            $route = Route::find($routeId);
+            if ($route) {
+                $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::whereIn('route_id', $route->subRoutes->pluck('id'))->get()->pluck('vehicle_id');
+                $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+            }
         }
 
         return $vehicles;
@@ -116,7 +123,7 @@ class Company extends Model
      */
     public function activeRoutes()
     {
-        return $this->routes()->where('active', true);
+        return $this->routes()->where('active', true)->orderBy('name');
     }
 
     /**
@@ -141,7 +148,7 @@ class Company extends Model
     */
     public function hasRecorderCounter()
     {
-        return collect([self::ALAMEDA]) . contains($this->id);
+        return collect([self::ALAMEDA])->contains($this->id);
     }
 
     /**
@@ -149,7 +156,7 @@ class Company extends Model
      */
     public function hasDriverRegisters()
     {
-        return collect([self::ALAMEDA]) . contains($this->id);
+        return collect([self::ALAMEDA])->contains($this->id);
     }
 
     /*
@@ -160,7 +167,7 @@ class Company extends Model
     */
     public function hasSeatSensorCounter()
     {
-        return collect([self::COOTRANSOL]) . contains($this->id);
+        return collect([self::COOTRANSOL])->contains($this->id);
     }
 
     /**
@@ -168,7 +175,7 @@ class Company extends Model
      */
     public function drivers()
     {
-        return $this->hasMany(Driver::class);
+        return $this->hasMany(Driver::class)->orderBy('first_name');
     }
 
     /**

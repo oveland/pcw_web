@@ -10,13 +10,16 @@ use App\Http\Controllers\Utils\StrTime;
 use App\Models\Routes\Report;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Location;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\RouteService;
 use App\Traits\CounterByRecorder;
 use App\Models\Vehicles\Vehicle;
 use GuzzleHttp\Client;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportRouteController extends Controller
@@ -25,50 +28,47 @@ class ReportRouteController extends Controller
      * @var RouteService
      */
     private $routeService;
+    /**
+     * @var PCWAuthService
+     */
+    private $authService;
 
     /**
      * ReportRouteController constructor.
+     * @param PCWAuthService $authService
      * @param RouteService $routeService
      */
-    public function __construct(RouteService $routeService)
+    public function __construct(PCWAuthService $authService, RouteService $routeService)
     {
 
         $this->routeService = $routeService;
+        $this->authService = $authService;
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->get();
-        }
+        $accessProperties = $this->authService->getAccessProperties();
+        $companies = $accessProperties->companies;
         return view('reports.route.route.index', compact('companies'));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function show(Request $request)
     {
-        $companyReport = $request->get('company-report');
-        $routeReport = $request->get('route-report');
+        $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
+        $routeReport = $request->get('route-report');
 
-        $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
-        $route = $routeReport == "all" ? $routeReport : Route::find($routeReport);
-        if ($routeReport != "all" && (!$route || !$route->belongsToCompany($company))) abort(404);
-
-        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
-        if ($routeReport != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
-        else $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
-        $dispatchRegisters = $dispatchRegisters
+        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
+            ->whereCompanyAndRouteId($company, $routeReport)
             ->active()
-            ->with(['route', 'vehicle', 'driver', 'user'])
-            ->withCount(['reports', 'locations'])
             ->orderBy('departure_time')
             ->get();
 
@@ -86,7 +86,7 @@ class ReportRouteController extends Controller
 
                 if ($request->get('export')) $this->exportByVehicle($dispatchRegistersByVehicles, $dateReport);
 
-                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
+                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'typeReport']));
                 break;
             default:
                 $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
@@ -95,7 +95,7 @@ class ReportRouteController extends Controller
                     $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
                 }
 
-                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
+                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'typeReport']));
                 break;
 
         }
@@ -128,7 +128,7 @@ class ReportRouteController extends Controller
      * Gets table logs for calculated reports
      *
      * @param DispatchRegister $dispatchRegister
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function getReportLog(DispatchRegister $dispatchRegister)
     {
@@ -151,8 +151,6 @@ class ReportRouteController extends Controller
      */
     public function exportByVehicle($vehiclesDispatchRegisters, $dateReport)
     {
-        set_time_limit(900);
-        ini_set('max_execution_time', 900);
         Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
@@ -219,7 +217,7 @@ class ReportRouteController extends Controller
     /**
      * @param DispatchRegister $dispatchRegister
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public
     function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
@@ -369,7 +367,7 @@ class ReportRouteController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Factory|View|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public
