@@ -69,7 +69,7 @@
                         ----
                     @endif
                 </td>
-                <td>
+                <td class="text-center">
                     @if($counterIssue)
                         <button class="btn btn-sm btn-danger btn-show-counter-issue" data-action="{{ route('report-passengers-sensors-counter-issue',['counterIssue' => $counterIssue->id]) }}">
                             <i class="fa fa-exclamation-triangle"></i>
@@ -103,6 +103,9 @@
                     <button class="btn btn-copy btn-sm btn-default pull-right tooltips" data-title="@lang('Copy frame')" data-clipboard-text="{{ $currentFrame }}">
                         <i class="fa fa-copy"></i>
                     </button>
+                    <div class="seating-template text-center">
+                        {!! \App\Services\Reports\Passengers\SeatDistributionGualasService::makeHtmlTemplate($passenger) !!}
+                    </div>
                 </td>
             </tr>
         @endforeach
