@@ -15,10 +15,9 @@ class CreateBeaMarksTable extends Migration
     {
         Schema::create('bea_marks', function (Blueprint $table) {
             $table->bigIncrements('id');
-
             $table->unsignedBigInteger('turn_id');
             $table->unsignedInteger('trajectory_id')->nullable();
-            $table->date('date');
+            $table->timestamp('date')->useCurrent();
             $table->time('initial_time');
             $table->time('final_time');
             $table->integer('passengers_up');

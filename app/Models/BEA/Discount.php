@@ -39,6 +39,8 @@ class Discount extends Model
 {
     protected $table = 'bea_discounts';
 
+    protected $fillable = ['value'];
+
     function getDateFormat()
     {
         return config('app.simple_date_time_format');

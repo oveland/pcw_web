@@ -15,13 +15,12 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('bea_id')->unique();
+            $table->unsignedBigInteger('bea_id')->unique()->nullable(true);
             $table->string('plate')->unique();
             $table->string('number');
             $table->bigInteger('company_id')->unsigned()->default(6);
             $table->boolean('active')->default(true);
             $table->boolean('in_repair')->default(true);
-            $table->unsignedBigInteger('bea_id')->nullable(true);
             $table->timestamps();
 
             /* Table relations */

@@ -390,6 +390,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminDiscountComponent",
   props: {
@@ -399,40 +414,71 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      discounts: Array
+      trajectoriesByRoute: Array,
+      discounts: Array,
+      editing: false
     };
   },
-  computed: {
-    trajectoriesByRoute: function trajectoriesByRoute() {
-      return _.groupBy(this.trajectories, 'route_id');
-    }
-  },
+  computed: {},
   methods: {
-    loadDiscounts: function loadDiscounts(vehicleId, routeId, trajectoryId) {
+    loadTrajectories: function loadTrajectories(route) {
+      this.trajectoriesByRoute = _.filter(this.trajectories, function (t) {
+        return t.route_id === route.id;
+      });
+    },
+    loadDiscounts: function loadDiscounts(vehicle, trajectory) {
       var _this = this;
 
+      this.discounts = [];
       App.blockUI({
-        target: '.discounts',
+        target: '#discounts-params-tab',
         animate: true
       });
       axios.get('parametros/descuentos', {
         params: {
-          vehicle: vehicleId,
-          route: routeId,
-          trajectory: trajectoryId
+          vehicle: vehicle.id,
+          route: trajectory.route_id,
+          trajectory: trajectory.id
         }
       }).then(function (r) {
-        _this.discounts = r.data;
+        _this.discounts = _.sortBy(r.data, function (d) {
+          return d.discount_type.name;
+        });
       })["catch"](function (error) {
         console.log(error);
       }).then(function () {
-        App.unblockUI('.discounts');
+        App.unblockUI('#discounts-params-tab');
       });
     },
-    discountsFor: function discountsFor(vehicleId, routeId) {
-      return _.filter(this.discounts, {
-        'vehicle_id': vehicleId,
-        'route_id': routeId
+    editDiscounts: function editDiscounts() {
+      this.editing = true;
+    },
+    saveDiscounts: function saveDiscounts() {
+      var _this2 = this;
+
+      App.blockUI({
+        target: '#discounts-params-tab',
+        animate: true
+      });
+      axios.get('parametros/descuentos/guardar', {
+        params: {
+          discounts: this.discounts
+        }
+      }).then(function (r) {
+        _this2.editing = false;
+
+        if (r.data.error) {
+          gerror(r.data.message);
+        } else {
+          gsuccess(r.data.message);
+
+          _this2.$emit('refresh-report');
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        gerror("An error occurred in the process. Please contact your admin");
+      }).then(function () {
+        App.unblockUI('#discounts-params-tab');
       });
     }
   }
@@ -4411,6 +4457,11 @@ var render = function() {
                   vehicle: _vm.vehicle,
                   routes: _vm.routes,
                   trajectories: _vm.trajectories
+                },
+                on: {
+                  "refresh-report": function($event) {
+                    return _vm.$emit("refresh-report")
+                  }
                 }
               })
             ],
@@ -4524,7 +4575,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.vehicle
     ? _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-3 col-sm-3 col-xs-3" }, [
+        _c("div", { staticClass: "col-md-2 col-sm-3 col-xs-3" }, [
           _c("ul", { staticClass: "nav nav-tabs tabs-left" }, [
             _c("li", { staticClass: "active" }, [
               _c(
@@ -4546,7 +4597,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-9 col-sm-9 col-xs-9" }, [
+        _c("div", { staticClass: "col-md-10 col-sm-9 col-xs-9" }, [
           _c("div", { staticClass: "tab-content" }, [
             _c(
               "div",
@@ -4562,15 +4613,27 @@ var render = function() {
                     _vm._l(_vm.routes, function(route, indexRoute) {
                       return _c(
                         "li",
-                        { class: indexRoute === 0 ? "active" : "" },
+                        {
+                          class: indexRoute === 0 ? "active" : "",
+                          on: {
+                            click: function($event) {
+                              return _vm.loadTrajectories(route)
+                            }
+                          }
+                        },
                         [
                           _c(
                             "a",
                             {
                               attrs: {
-                                href: "#tab-" + _vm.vehicle.id + "-" + route.id,
+                                href: "#tab-" + _vm.vehicle.id,
                                 "data-toggle": "tab",
                                 "aria-expanded": "true"
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.discounts = []
+                                }
                               }
                             },
                             [
@@ -4588,129 +4651,105 @@ var render = function() {
                     0
                   ),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "tab-content" },
-                    _vm._l(_vm.routes, function(route, indexRoute) {
-                      return _c(
-                        "div",
-                        {
-                          staticClass: "tab-pane fade",
-                          class: indexRoute === 0 ? "active in" : "",
-                          attrs: {
-                            id: "tab-" + _vm.vehicle.id + "-" + route.id
-                          }
-                        },
-                        [
-                          _c(
-                            "table",
-                            {
-                              staticClass:
-                                "table table-bordered table-condensed table-report"
-                            },
-                            [
-                              _vm._m(0, true),
-                              _vm._v(" "),
-                              _c("tbody", [
-                                _c("tr", [
-                                  _c("td", { staticClass: "text-center" }, [
-                                    _c(
-                                      "ul",
-                                      { staticClass: "nav nav-tabs tabs-left" },
-                                      _vm._l(
-                                        _vm.trajectoriesByRoute[route.bea_id],
-                                        function(trajectory, indexTrajectory) {
-                                          return _c(
-                                            "li",
+                  _c("div", { staticClass: "tab-content" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "tab-pane fade active in",
+                        attrs: { id: "tab-" + _vm.vehicle.id }
+                      },
+                      [
+                        _c(
+                          "table",
+                          {
+                            staticClass:
+                              "table table-bordered table-condensed table-report"
+                          },
+                          [
+                            _vm._m(0),
+                            _vm._v(" "),
+                            _c("tbody", [
+                              _c("tr", [
+                                _c("td", { staticClass: "text-center" }, [
+                                  _c(
+                                    "ul",
+                                    { staticClass: "nav nav-tabs tabs-left" },
+                                    _vm._l(_vm.trajectoriesByRoute, function(
+                                      trajectory,
+                                      indexTrajectory
+                                    ) {
+                                      return _c(
+                                        "li",
+                                        {
+                                          class:
+                                            indexTrajectory === 0
+                                              ? "active trajectory-0"
+                                              : "",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.loadDiscounts(
+                                                _vm.vehicle,
+                                                trajectory
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "a",
                                             {
-                                              class:
-                                                indexTrajectory === 0
-                                                  ? "active"
-                                                  : "",
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.loadDiscounts(
-                                                    _vm.vehicle.id,
-                                                    route.id,
-                                                    trajectory.id
-                                                  )
-                                                }
+                                              attrs: {
+                                                href: ".tab-discounts",
+                                                "data-toggle": "tab"
                                               }
                                             },
                                             [
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "#trajectory-" +
-                                                      trajectory.id,
-                                                    "data-toggle": "tab"
-                                                  }
-                                                },
-                                                [
-                                                  _vm._v(
-                                                    "\n                                                    " +
-                                                      _vm._s(trajectory.name) +
-                                                      "\n                                                "
-                                                  )
-                                                ]
+                                              _vm._v(
+                                                "\n                                                    " +
+                                                  _vm._s(trajectory.name) +
+                                                  "\n                                                "
                                               )
                                             ]
                                           )
-                                        }
-                                      ),
-                                      0
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "td",
-                                    { staticClass: "discounts text-center" },
-                                    [
+                                        ]
+                                      )
+                                    }),
+                                    0
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  { staticClass: "discounts text-center" },
+                                  [
+                                    _c("div", { staticClass: "tab-content" }, [
                                       _c(
                                         "div",
-                                        { staticClass: "tab-content" },
-                                        _vm._l(_vm.trajectories, function(
-                                          trajectory,
-                                          indexTrajectory
-                                        ) {
-                                          return _c(
-                                            "div",
+                                        {
+                                          staticClass:
+                                            "tab-discounts tab-pane fade active in"
+                                        },
+                                        [
+                                          _c(
+                                            "table",
                                             {
-                                              staticClass: "tab-pane fade",
-                                              class:
-                                                indexTrajectory === 0
-                                                  ? "active in"
-                                                  : "",
-                                              attrs: {
-                                                id:
-                                                  "trajectory-" + trajectory.id
-                                              }
+                                              staticClass:
+                                                "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
                                             },
                                             [
+                                              _vm._m(1),
+                                              _vm._v(" "),
                                               _c(
-                                                "table",
-                                                {
-                                                  staticClass:
-                                                    "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
-                                                },
+                                                "tbody",
                                                 [
-                                                  _vm._m(1, true),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "tbody",
-                                                    [
-                                                      _vm._l(
-                                                        _vm.discountsFor(
-                                                          _vm.vehicle.id,
-                                                          route.id
-                                                        ),
-                                                        function(
-                                                          discount,
-                                                          indexDiscount
-                                                        ) {
-                                                          return _c("tr", {}, [
+                                                  _vm._l(
+                                                    _vm.discounts,
+                                                    function(
+                                                      discount,
+                                                      indexDiscount
+                                                    ) {
+                                                      return !_vm.editing
+                                                        ? _c("tr", [
                                                             _c(
                                                               "td",
                                                               {
@@ -4795,35 +4834,218 @@ var render = function() {
                                                               ]
                                                             )
                                                           ])
+                                                        : _vm._e()
+                                                    }
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _vm._l(
+                                                    _vm.discounts,
+                                                    function(
+                                                      discount,
+                                                      indexDiscount
+                                                    ) {
+                                                      return _vm.editing
+                                                        ? _c("tr", [
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    indexDiscount +
+                                                                      1
+                                                                  )
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _c("i", {
+                                                                  class:
+                                                                    discount
+                                                                      .discount_type
+                                                                      .icon
+                                                                }),
+                                                                _vm._v(
+                                                                  " " +
+                                                                    _vm._s(
+                                                                      _vm._f(
+                                                                        "capitalize"
+                                                                      )(
+                                                                        discount
+                                                                          .discount_type
+                                                                          .name
+                                                                      )
+                                                                    ) +
+                                                                    "\n                                                        "
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    discount
+                                                                      .discount_type
+                                                                      .description
+                                                                  )
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "td",
+                                                              {
+                                                                staticClass:
+                                                                  "text-center"
+                                                              },
+                                                              [
+                                                                _c("input", {
+                                                                  directives: [
+                                                                    {
+                                                                      name:
+                                                                        "model",
+                                                                      rawName:
+                                                                        "v-model",
+                                                                      value:
+                                                                        discount.value,
+                                                                      expression:
+                                                                        "discount.value"
+                                                                    }
+                                                                  ],
+                                                                  staticClass:
+                                                                    "form-control input-sm",
+                                                                  attrs: {
+                                                                    type:
+                                                                      "number"
+                                                                  },
+                                                                  domProps: {
+                                                                    value:
+                                                                      discount.value
+                                                                  },
+                                                                  on: {
+                                                                    input: function(
+                                                                      $event
+                                                                    ) {
+                                                                      if (
+                                                                        $event
+                                                                          .target
+                                                                          .composing
+                                                                      ) {
+                                                                        return
+                                                                      }
+                                                                      _vm.$set(
+                                                                        discount,
+                                                                        "value",
+                                                                        $event
+                                                                          .target
+                                                                          .value
+                                                                      )
+                                                                    }
+                                                                  }
+                                                                })
+                                                              ]
+                                                            )
+                                                          ])
+                                                        : _vm._e()
+                                                    }
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _vm._m(2)
+                                                ],
+                                                2
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c("hr", { staticClass: "hr" }),
+                                          _vm._v(" "),
+                                          _c(
+                                            "div",
+                                            { staticClass: "text-center" },
+                                            [
+                                              !_vm.editing
+                                                ? _c(
+                                                    "button",
+                                                    {
+                                                      staticClass:
+                                                        "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                                                      attrs: { title: "Edit" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.editDiscounts()
                                                         }
-                                                      ),
-                                                      _vm._v(" "),
-                                                      _vm._m(2, true)
-                                                    ],
-                                                    2
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "fa fa-edit"
+                                                      }),
+                                                      _vm._v(
+                                                        " Edit\n                                                    "
+                                                      )
+                                                    ]
                                                   )
-                                                ]
-                                              ),
+                                                : _vm._e(),
                                               _vm._v(" "),
-                                              _c("hr", { staticClass: "hr" }),
-                                              _vm._v(" "),
-                                              _vm._m(3, true)
+                                              _vm.editing
+                                                ? _c(
+                                                    "button",
+                                                    {
+                                                      staticClass:
+                                                        "btn btn-sm green-haze btn-outline sbold uppercase btn-circle tooltips",
+                                                      attrs: { title: "Save" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.saveDiscounts()
+                                                        }
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "fa fa-edit"
+                                                      }),
+                                                      _vm._v(
+                                                        " Save\n                                                    "
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e()
                                             ]
                                           )
-                                        }),
-                                        0
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    ])
+                                  ]
+                                )
                               ])
-                            ]
-                          )
-                        ]
-                      )
-                    }),
-                    0
-                  )
+                            ])
+                          ]
+                        )
+                      ]
+                    )
+                  ])
                 ])
               ]
             )
@@ -4905,23 +5127,6 @@ var staticRenderFns = [
         attrs: { colspan: "11" }
       })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass:
-          "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips pull-right",
-        attrs: { title: "Editar", onclick: "ginfo('Feature on development')" }
-      },
-      [
-        _c("i", { staticClass: "fa fa-edit" }),
-        _vm._v(" Edit\n                                                ")
-      ]
-    )
   }
 ]
 render._withStripped = true

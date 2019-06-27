@@ -41,6 +41,6 @@ class Trajectory extends Model
      */
     public function route()
     {
-        return $this->belongsTo(Route::class, 'route_id', 'bea_id');
+        return $this->belongsTo(Route::class);
     }
 }

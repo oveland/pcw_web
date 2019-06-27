@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BEA\Discount;
 use App\Models\BEA\Liquidation;
 use App\Models\BEA\Mark;
 use App\Models\Vehicles\Vehicle;
@@ -101,10 +102,49 @@ class TakingsPassengersLiquidationController extends Controller
                 $vehicle = $request->get('vehicle');
                 $route = $request->get('route');
                 $trajectory = $request->get('trajectory');
+
                 return response()->json($this->beaService->discount->byVehicleAndRouteAndTrajectory($vehicle, $route, $trajectory));
                 break;
             default:
                 return response()->json($this->beaService->getLiquidationParams());
+                break;
+        }
+    }
+
+    /**
+     * @param $name
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function setParams($name, Request $request)
+    {
+        switch ($name) {
+            case __('discounts'):
+                $response = (object)[
+                    'error' => false,
+                    'message' => __('Discounts edited successfully'),
+                ];
+
+                foreach ($request->get('discounts') as $discountJSON) {
+                    $newValues = (object)json_decode($discountJSON, true);
+                    $discount = Discount::find($newValues->id);
+                    if($discount){
+                        $discount->value = $newValues->value;
+                        if(!$discount->save()){
+                            $response->error = true;
+                            $response->message .= "<br> - ".__("Discount :name unable to update", ['name' => $newValues->discount_type->name]);
+                        }
+                    }else{
+                        $response->error = true;
+                        $response->message .= "<br> - ".__("Discount :name doesn't exists in the system", ['name' => $newValues->discount_type->name]);
+                    }
+                }
+
+                return response()->json($response);
+                break;
+            default:
+                return response()->json([]);
                 break;
         }
     }

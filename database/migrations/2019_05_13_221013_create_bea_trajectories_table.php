@@ -21,7 +21,7 @@ class CreateBeaTrajectoriesTable extends Migration
             $table->unsignedBigInteger('route_id');
             $table->timestamps();
 
-            $table->foreign('route_id')->references('bea_id')->on('routes')->onDelete('cascade');
+            $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
         });
     }
 

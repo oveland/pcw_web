@@ -3,6 +3,7 @@
   "Create": "Crear",
   "Update": "Actualizar",
   "Save": "Guardar",
+  "save": "guardar",
   "Delete": "Eliminar",
   "Cancel": "Cancelar",
   "Close": "Cerrar",
@@ -578,5 +579,7 @@
   "TAKING RECEIPT": "COMPROBANTE DE REACUDO",
   "Printed at": "Impreso en",
   "Liquidated at": "Liquidado en",
-  "Total liquidation": "Total Liquidación"
+  "Total liquidation": "Total Liquidación",
+  "Discount :name unable to update": "El descuento :name no fue actualizado",
+  "Discount :name doesn't exists in the system": "El descuento :name no existe en el sistema"
 }

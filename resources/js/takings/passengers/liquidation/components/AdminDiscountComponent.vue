@@ -1,6 +1,6 @@
 <template>
     <div class="row" v-if="vehicle">
-        <div class="col-md-3 col-sm-3 col-xs-3">
+        <div class="col-md-2 col-sm-3 col-xs-3">
             <ul class="nav nav-tabs tabs-left">
                 <li class="active">
                     <a :href="'#vehicle-'+vehicle.id" data-toggle="tab">
@@ -9,19 +9,19 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-9 col-sm-9 col-xs-9">
+        <div class="col-md-10 col-sm-9 col-xs-9">
             <div class="tab-content">
                 <div class="tab-pane fade active in" :id="'vehicle-'+vehicle.id">
                     <div class="">
                         <ul class="nav nav-pills">
-                            <li v-for="(route, indexRoute) in routes" :class="indexRoute === 0 ? 'active' : ''">
-                                <a :href="'#tab-' + vehicle.id + '-' + route.id" data-toggle="tab" aria-expanded="true">
+                            <li v-for="(route, indexRoute) in routes" :class="indexRoute === 0 ? 'active' : ''" @click="loadTrajectories(route)">
+                                <a :href="'#tab-' + vehicle.id" data-toggle="tab" aria-expanded="true" @click="discounts = []">
                                     <i class="fa fa-flag"></i> {{ route.name }}
                                 </a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div v-for="(route, indexRoute) in routes" class="tab-pane fade" :class="indexRoute === 0 ? 'active in' : ''" :id="'tab-' + vehicle.id + '-' + route.id">
+                            <div class="tab-pane fade active in" :id="'tab-' + vehicle.id">
                                 <table class="table table-bordered table-condensed table-report">
                                     <thead>
                                     <tr class="inverse">
@@ -37,8 +37,8 @@
                                     <tr>
                                         <td class="text-center">
                                             <ul class="nav nav-tabs tabs-left">
-                                                <li v-for="(trajectory, indexTrajectory) in trajectoriesByRoute[route.bea_id]" :class="indexTrajectory === 0 ? 'active' : ''" @click="loadDiscounts(vehicle.id, route.id, trajectory.id)">
-                                                    <a :href="'#trajectory-'+trajectory.id" data-toggle="tab">
+                                                <li v-for="(trajectory, indexTrajectory) in trajectoriesByRoute" :class="indexTrajectory === 0 ? 'active trajectory-0' : ''" @click="loadDiscounts(vehicle, trajectory)">
+                                                    <a href=".tab-discounts" data-toggle="tab">
                                                         {{ trajectory.name }}
                                                     </a>
                                                 </li>
@@ -46,7 +46,7 @@
                                         </td>
                                         <td class="discounts text-center">
                                             <div class="tab-content">
-                                                <div v-for="(trajectory, indexTrajectory) in trajectories" class="tab-pane fade" :id="'trajectory-'+trajectory.id" :class="indexTrajectory === 0 ? 'active in' : ''">
+                                                <div class="tab-discounts tab-pane fade active in">
                                                     <table class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">
                                                         <thead>
                                                         <tr class="inverse">
@@ -65,7 +65,7 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        <tr class="" v-for="(discount, indexDiscount) in discountsFor(vehicle.id, route.id)">
+                                                        <tr v-if="!editing" v-for="(discount, indexDiscount) in discounts">
                                                             <td class="text-center">{{ indexDiscount + 1 }}</td>
                                                             <td class="text-center">
                                                                 <i :class="discount.discount_type.icon"></i> {{ discount.discount_type.name | capitalize }}
@@ -75,15 +75,30 @@
                                                                 {{ discount.value | numberFormat('$0,0') }}
                                                             </td>
                                                         </tr>
+                                                        <tr v-if="editing" v-for="(discount, indexDiscount) in discounts">
+                                                            <td class="text-center">{{ indexDiscount + 1 }}</td>
+                                                            <td class="text-center">
+                                                                <i :class="discount.discount_type.icon"></i> {{ discount.discount_type.name | capitalize }}
+                                                            </td>
+                                                            <td class="text-center">{{ discount.discount_type.description }}</td>
+                                                            <td class="text-center">
+                                                                <input type="number" class="form-control input-sm" v-model="discount.value">
+                                                            </td>
+                                                        </tr>
                                                         <tr>
                                                             <td colspan="11" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
                                                     <hr class="hr">
-                                                    <button class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips pull-right" title="Editar" onclick="ginfo('Feature on development')">
-                                                        <i class="fa fa-edit"></i> Edit
-                                                    </button>
+                                                    <div class="text-center">
+                                                        <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Edit" @click="editDiscounts()">
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </button>
+                                                        <button v-if="editing" class="btn btn-sm green-haze btn-outline sbold uppercase btn-circle tooltips" title="Save" @click="saveDiscounts()">
+                                                            <i class="fa fa-edit"></i> Save
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -109,36 +124,62 @@
         },
         data: function(){
           return {
+              trajectoriesByRoute: Array,
               discounts: Array,
+              editing: false,
           }
         },
         computed:{
-            trajectoriesByRoute: function(){
-                return _.groupBy(this.trajectories, 'route_id');
-            }
+
         },
         methods: {
-            loadDiscounts: function (vehicleId, routeId, trajectoryId) {
-                App.blockUI({target: '.discounts', animate: true});
+            loadTrajectories: function(route){
+                this.trajectoriesByRoute = _.filter(this.trajectories, function(t){
+                    return t.route_id === route.id;
+                });
+            },
+            loadDiscounts: function (vehicle, trajectory) {
+                this.discounts = [];
+                App.blockUI({target: '#discounts-params-tab', animate: true});
 
                 axios.get('parametros/descuentos', {
                     params: {
-                        vehicle: vehicleId,
-                        route: routeId,
-                        trajectory: trajectoryId,
+                        vehicle: vehicle.id,
+                        route: trajectory.route_id,
+                        trajectory: trajectory.id,
                     }
                 }).then(r => {
-                    this.discounts = r.data;
+                    this.discounts = _.sortBy(r.data, function(d){
+                        return d.discount_type.name;
+                    });
                 }).catch(function (error) {
                     console.log(error);
                 }).then(function () {
-                    App.unblockUI('.discounts');
+                    App.unblockUI('#discounts-params-tab');
                 });
             },
-            discountsFor(vehicleId, routeId) {
-                return _.filter(this.discounts, {
-                    'vehicle_id': vehicleId,
-                    'route_id': routeId,
+            editDiscounts: function(){
+              this.editing = true;
+            },
+            saveDiscounts: function(){
+                App.blockUI({target: '#discounts-params-tab', animate: true});
+                axios.get('parametros/descuentos/guardar', {
+                    params: {
+                        discounts: this.discounts
+                    }
+                }).then(r => {
+                    this.editing = false;
+                    if(r.data.error){
+                        gerror(r.data.message);
+                    }else{
+                        gsuccess(r.data.message);
+                        this.$emit('refresh-report');
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                    gerror("An error occurred in the process. Please contact your admin");
+                }).then(function () {
+                    App.unblockUI('#discounts-params-tab');
                 });
             }
         }

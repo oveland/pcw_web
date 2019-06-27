@@ -11,6 +11,12 @@ class BEADatabaseRefreshSeeder extends Seeder
      */
     public function run()
     {
+        /*$this->dropTables([
+            'bea_marks',
+            'bea_turns',
+            'bea_trajectories'
+        ]);*/
+
         /* Table from BEA */
         DB::transaction(function () {
             $this->call(RoutesTableSeeder::class);

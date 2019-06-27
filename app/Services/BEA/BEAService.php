@@ -98,7 +98,8 @@ class BEAService
     function getBEAMarks($vehicleId, $date)
     {
         $vehicle = Vehicle::find($vehicleId);
-        $vehicleTurns = Turn::where('vehicle_id', $vehicle->bea_id)->get();
+        if(!$vehicle)return collect([]);
+        $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();
         $marks = Mark::whereIn('turn_id', $vehicleTurns->pluck('id'))
             ->where('liquidated', false)
             ->where('taken', false)

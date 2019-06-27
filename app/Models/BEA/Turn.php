@@ -46,7 +46,7 @@ class Turn extends Model
      */
     function route()
     {
-        return $this->belongsTo(Route::class, 'route_id', 'bea_id');
+        return $this->belongsTo(Route::class);
     }
 
     /**
@@ -54,7 +54,7 @@ class Turn extends Model
      */
     function vehicle()
     {
-        return $this->belongsTo(Vehicle::class, 'vehicle_id', 'bea_id');
+        return $this->belongsTo(Vehicle::class);
     }
 
     /**
@@ -62,7 +62,7 @@ class Turn extends Model
      */
     function driver()
     {
-        return $this->belongsTo(Driver::class, 'driver_id', 'bea_id');
+        return $this->belongsTo(Driver::class);
     }
 
     function getAPIAttribute()

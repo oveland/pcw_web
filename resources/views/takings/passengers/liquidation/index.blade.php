@@ -74,7 +74,7 @@
         <div class="modal fade" id="modal-params-manager" tabindex="-1" role="basic" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <admin-component url-params="{{  route('takings-passengers-liquidation-params',['name' => __('all')]) }}" :vehicle="search.vehicle"></admin-component>
+                    <admin-component url-params="{{  route('takings-passengers-liquidation-params',['name' => __('all')]) }}" v-on:refresh-report="searchReport($event)" :vehicle="search.vehicle"></admin-component>
                 </div>
             </div>
         </div>

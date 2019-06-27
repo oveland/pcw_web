@@ -27,7 +27,7 @@
             <div class="portlet-body">
                 <div class="tab-content">
                     <div class="tab-pane active" id="discounts-params-tab">
-                        <admin-discount-component :vehicle="vehicle" :routes="routes" :trajectories="trajectories"></admin-discount-component>
+                        <admin-discount-component :vehicle="vehicle" :routes="routes" :trajectories="trajectories" v-on:refresh-report="$emit('refresh-report')"></admin-discount-component>
                     </div>
                     <div class="tab-pane" id="commissions-params-tab">
                         <admin-commission-component :routes="routes" :commissions="commissions"></admin-commission-component>

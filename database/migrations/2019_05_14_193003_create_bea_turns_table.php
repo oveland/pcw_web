@@ -21,8 +21,8 @@ class CreateBeaTurnsTable extends Migration
             $table->timestamps();
 
             /* Table relations */
-            $table->foreign('vehicle_id')->references('bea_id')->on('vehicles')->onDelete('cascade');
-            $table->foreign('route_id')->references('bea_id')->on('routes')->onDelete('cascade');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
+            $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
             //$table->foreign('driver_id')->references('id')->on('drivers')->onDelete('cascade');
         });
     }
