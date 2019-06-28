@@ -185,7 +185,9 @@ class Mark extends Model
             return $d->discountType->name == __('Mobility auxilio');
         })->first();
 
-        return $discountByMobilityAuxilio ? $this->total_bea - $discountByMobilityAuxilio->value : $this->total_bea;
+        $totalBEA = (($this->im_bea_max  + $this->im_bea_min)/2)*1000;
+
+        return $discountByMobilityAuxilio ? $totalBEA - $discountByMobilityAuxilio->value : $totalBEA;
     }
 
     /**
@@ -225,7 +227,7 @@ class Mark extends Model
     function getPenaltyAttribute()
     {
         $penaltyByRoute = Penalty::where('route_id', $this->turn->route->id)->get()->first();
-        $penaltyValue = $this->boarded * $penaltyByRoute->value;
+        $penaltyValue = $this->boarded > 5 ? $this->boarded * $penaltyByRoute->value : 0;
         return (object)[
             'value' => $penaltyValue,
             'type' => $penaltyByRoute->type,
@@ -241,6 +243,7 @@ class Mark extends Model
 
     function getAPIFields()
     {
+        $totalBEA = (($this->im_bea_max  + $this->im_bea_min)/2)*1000;
         return (object)[
             'id' => $this->id,
             'turn' => $this->turn,
@@ -256,7 +259,7 @@ class Mark extends Model
             'boarded' => $this->boarded,
             'imBeaMax' => $this->im_bea_max,
             'imBeaMin' => $this->im_bea_min,
-            'totalBEA' => $this->total_bea,
+            'totalBEA' => $totalBEA,
             'totalGrossBEA' => $this->total_gross_bea,
             'passengersBEA' => $this->passengers_bea,
             'discounts' => $this->discounts->toArray(),

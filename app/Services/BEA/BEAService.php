@@ -105,7 +105,10 @@ class BEAService
             ->where('taken', false)
             ->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
             ->with(['turn.vehicle', 'turn.route', 'turn.driver', 'trajectory'])
+            ->orderBy('initial_time')
             ->get();
+
+        $marks = $marks->where('trajectory_id', '<>', null);
 
         return $this->processResponseMarks($marks);
     }
