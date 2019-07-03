@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\ReportVehicleStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -68,5 +69,25 @@ class LastLocation extends Model
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    public function reportVehicleStatus()
+    {
+        return $this->hasMany(ReportVehicleStatus::class, 'vehicle_id', 'vehicle_id')->where('date', $this->date->toDateString());
+    }
+
+    public function getReportVehicleStatus()
+    {
+        $report = collect([]);
+        $reportVehicleStatusAll = $this->reportVehicleStatus;
+
+        foreach ($reportVehicleStatusAll as $reportVehicleStatus ){
+            $report->push((object)[
+                'status' => $reportVehicleStatus->status,
+                'updated_by' => $reportVehicleStatus->updated_by,
+            ]);
+        }
+
+        return $report->count() ? $report : null;
     }
 }

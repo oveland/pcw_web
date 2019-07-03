@@ -77,8 +77,21 @@
                                     <td class="text-center">{{ $report->vehicleNumber }} </td>
                                     <td class="text-center">{{ $report->vehiclePlate }} </td>
                                     <td class="text-center">
-                                        <span class="badge badge-{{ $report->vehicleIsActive ? 'success' : 'warning' }}" style="text-transform:none">
+                                        @php
+                                            $infoReportVehicleStatus = "";
+                                        @endphp
+                                        @if($report->reportVehicleStatus)
+                                            @php
+                                                foreach ($report->reportVehicleStatus as $r){
+                                                    $infoReportVehicleStatus .= "$r->status ".__('by')." $r->updated_by <br>";
+                                                }
+                                            @endphp
+                                        @endif
+                                        <span class="badge badge-{{ $report->vehicleIsActive ? 'success' : 'warning' }} tooltips" data-html="true" title="{{ $infoReportVehicleStatus }}" style="text-transform:none">
                                             {{ $report->vehicleStatus }}
+                                            @if($infoReportVehicleStatus)
+                                                <i class="fa fa-exclamation-circle"></i>
+                                            @endif
                                         </span>
                                     </td>
                                     <td class="text-center {{ $report->hasReports ? '':'text-warning tooltips' }}"
