@@ -174,4 +174,9 @@ class SimGPS extends Model
 
         return "<img src=\"$urlImage\" width=\"$width\">";
     }
+
+    public function type()
+    {
+        return $this->belongsTo(GPSType::class);
+    }
 }
