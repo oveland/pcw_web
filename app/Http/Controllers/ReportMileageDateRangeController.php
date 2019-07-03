@@ -38,7 +38,7 @@ class ReportMileageDateRangeController extends Controller
     {
         $accessProperties = $this->pcwAuthService->getAccessProperties();
         $companies = $accessProperties->companies;
-        $vehicles = $accessProperties->allVehicles;
+        $vehicles = $accessProperties->vehicles;
         return view('reports.vehicles.mileage.dates.index', compact(['companies', 'vehicles']));
     }
 
