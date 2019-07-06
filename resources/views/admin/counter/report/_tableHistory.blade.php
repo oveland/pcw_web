@@ -104,7 +104,7 @@
                         <i class="fa fa-copy"></i>
                     </button>
                     <div class="seating-template text-center">
-                        {!! \App\Services\Reports\Passengers\SeatDistributionGualasService::makeHtmlTemplate($passenger) !!}
+                        {!! $vehicle->seatTopology()->makeHtmlTemplate($passenger) !!}
                     </div>
                 </td>
             </tr>

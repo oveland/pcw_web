@@ -17,7 +17,7 @@
             <div class="">
                 <div class="col-md-3 p-20 p-b-0" style="border-radius: 10px;border: 1px solid #cdcdcd;-webkit-box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);-moz-box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);">
                     <div class="seating-template text-center">
-                        {!! \App\Services\Reports\Passengers\SeatDistributionGualasService::makeHtmlTemplate($passengers->first()) !!}
+                        {!! $topology->makeHtmlTemplate($initialPassengerCount) !!}
                     </div>
 
                     <hr class="m-0 m-t-10 m-b-10">
@@ -71,7 +71,7 @@
     <script type="application/javascript">
         @php( $seatingStatusReport = collect([]) )
         @foreach($passengers as $passenger)
-            @php( $seatingStatusReport->push(\App\Services\Reports\Passengers\SeatDistributionGualasService::getSeatingStatus($passenger)) )
+            @php( $seatingStatusReport->push($topology->getSeatingStatus($passenger)) )
         @endforeach
         let seatingStatusReport = JSON.parse('{!! $seatingStatusReport->toJson() !!}');
 

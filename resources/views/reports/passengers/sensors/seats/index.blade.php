@@ -2,6 +2,14 @@
 
 @section('stylesheets')
     <link href="{{ asset('assets/plugins/bootstrap-slider/bootstrap-slider.min.css') }}" rel="stylesheet">
+    <style>
+        .slider{
+            top: -15px;
+        }
+        .slider-track, .slider-selection{
+            background: transparent !important;
+        }
+    </style>
 @endsection
 
 @section('content')

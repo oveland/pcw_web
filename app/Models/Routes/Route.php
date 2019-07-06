@@ -46,6 +46,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $min_route_time
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereBeaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereMinRouteTime($value)
+ * @property int|null $route_id Almacena la ruta padre. Ruta padre: Deber? ser entonces categorizada como grupo, esto es as_group = true
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $subRoutes
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereRouteId($value)
  */
 class Route extends Model
 {

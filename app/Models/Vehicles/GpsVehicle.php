@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle query()
+ * @property-read \App\Models\Vehicles\GPSType|null $type
  */
 class GpsVehicle extends Model
 {

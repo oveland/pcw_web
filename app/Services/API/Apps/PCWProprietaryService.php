@@ -13,7 +13,7 @@ use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Proprietaries\Proprietary;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
-use App\Services\Reports\Passengers\SeatDistributionGualasService;
+use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Models\Vehicles\Vehicle;
@@ -100,7 +100,9 @@ class PCWProprietaryService implements APIAppsInterface
         $currentLocation = CurrentLocation::whereVehicle($vehicle);
 
         /* ONLY FOR VEHICLES WITH SEATING SENSOR COUNTER */
-        $seatingStatus = SeatDistributionGualasService::getSeatingStatusFromHex($currentSensor->seating, $vehicle);
+
+        $topology = $vehicle->seatTopology();
+        $seatingStatus = $topology->getSeatingStatusFromHex($currentSensor->seating);
 
         if ($completedDispatchRegisters->isNotEmpty()) {
             $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);

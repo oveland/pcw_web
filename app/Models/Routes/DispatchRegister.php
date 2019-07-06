@@ -126,6 +126,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndRouteId(\App\Models\Company\Company $company, $routeId = null)
  */
 class DispatchRegister extends Model
 {
@@ -363,7 +364,9 @@ class DispatchRegister extends Model
 
     public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
     {
-        $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+        $query->where(function($query) use ($company, $routeId){
+            return $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'))->orWhere('route_id', $routeId);
+        });
     }
 
     const CREATED_AT = 'date_created';

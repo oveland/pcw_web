@@ -50,10 +50,12 @@ class SeatReportController extends Controller
                 $lastPassengerCount = $allPassengers->get()->last();
                 $passengers = $allPassengers->paginate(1000)->appends($request->all());
 
+                $topology = $vehicle->seatTopology();
 
                 return view('reports.passengers.sensors.seats.listHistory', compact('passengers'))->with([
                     'initialPassengerCount' => $initialPassengerCount,
                     'lastPassengerCount' => $lastPassengerCount,
+                    'topology' => $topology,
                 ]);
                 break;
             case 'route':

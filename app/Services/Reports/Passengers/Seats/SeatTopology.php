@@ -1,45 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 15/04/2018
- * Time: 11:34 PM
- */
 
-namespace App\Services\Reports\Passengers;
+
+namespace App\Services\Reports\Passengers\Seats;
 
 
 use App\Models\Passengers\Passenger;
-use App\Models\Vehicles\Vehicle;
-use App\Models\Vehicles\VehicleSeatDistribution;
 
-class SeatDistributionGualasService
+abstract class SeatTopology
 {
-    /**
-     * @param Vehicle $vehicle
-     * @return mixed|null
-     */
-    static function getDistribution(Vehicle $vehicle)
-    {
-        $vehicleSeatDistribution = VehicleSeatDistribution::where('vehicle_id', $vehicle->id)->get()->first();
+    private $distribution;
 
-        if ($vehicleSeatDistribution) {
-            return json_decode($vehicleSeatDistribution->json_distribution, true);
-        }
-        return null;
+    public function __construct($distribution)
+    {
+        $this->distribution = $distribution;
     }
 
-    static function makeHtmlTemplate(Passenger $passenger)
+    function makeHtmlTemplate(Passenger $passenger)
     {
         $hexSeating = $passenger->hexSeats;
-        $seatingStatus = self::getSeatingStatusFromHex($hexSeating, $passenger->vehicle);
+        $seatingStatus = self::getSeatingStatusFromHex($hexSeating);
         return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus', 'hexSeating'));
     }
 
-    static function getSeatingStatus(Passenger $passenger)
+    function getSeatingStatus(Passenger $passenger)
     {
         return [
-            'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats, $passenger->vehicle),
+            'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats),
             'hexSeating' => $passenger->hexSeats,
             'location' => [
                 'latitude' => $passenger->latitude,
@@ -57,21 +43,19 @@ class SeatDistributionGualasService
     }
 
     /**
-     * @param $seatingStatusHexadecimal
-     * @param $vehicle
+     * @param $channelStatusHexadecimal
      * @return object
      */
-    static function getSeatingStatusFromHex($seatingStatusHexadecimal, Vehicle $vehicle)
+    function getSeatingStatusFromHex($channelStatusHexadecimal)
     {
         $seatingStatusFromHex = collect([]);
-        $distribution = self::getDistribution($vehicle);
+        
+        if (!$this->distribution || strlen($channelStatusHexadecimal) < 6) return null;
 
-        if (!$distribution || strlen($seatingStatusHexadecimal) < 6) return null;
+        $seatingStatusBinary = self::decodeChannelStatusFromHex($channelStatusHexadecimal);
 
-        $seatingStatusBinary = self::decodeSeatingStatusFromHex($seatingStatusHexadecimal);
-
-        foreach ($distribution as $row => $distributionSeating) {
-            if( is_array($distributionSeating) )$seatingStatusFromHex->put($row, self::makeDistribution($distributionSeating, $seatingStatusBinary));
+        foreach ($this->distribution as $row => $distributionSeating) {
+            if( is_array($distributionSeating) )$seatingStatusFromHex->put($row, self::decodeSeatingStatus($distributionSeating, $seatingStatusBinary));
         }
 
         return $seatingStatusFromHex;
@@ -80,15 +64,15 @@ class SeatDistributionGualasService
     /**
      * Make distribution for seating rows with current status
      *
-     * @param $distribution
+     * @param $distributionSeating
      * @param $seatingStatusBinary
      * @return object
      */
-    static function makeDistribution($distribution, $seatingStatusBinary)
+    function decodeSeatingStatus($distributionSeating, $seatingStatusBinary)
     {
         $seatingStatus = array();
-        
-        foreach ($distribution as $seat => $sensors) {
+
+        foreach ($distributionSeating as $seat => $sensors) {
             $seatingStatus[$seat] = 0;
 
             if( is_array($sensors) ){
@@ -112,7 +96,7 @@ class SeatDistributionGualasService
      * @param $seatingStatusHexadecimal
      * @return array
      */
-    static function decodeSeatingStatusFromHex($seatingStatusHexadecimal)
+    function decodeChannelStatusFromHex($seatingStatusHexadecimal)
     {
         $seatingStatusBinary = array();
         if ($seatingStatusHexadecimal && $seatingStatusHexadecimal != "") {
