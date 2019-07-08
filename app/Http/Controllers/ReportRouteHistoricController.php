@@ -70,12 +70,11 @@ class ReportRouteHistoricController extends Controller
         $vehicle = Vehicle::find($vehicleReport);
 
         $locations = Location::whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
-            ->with('vehicle')
-            ->with('dispatchRegister')
-            ->with('vehicleStatus')
             ->where('vehicle_id', $vehicleReport)
+            ->with(['vehicle', 'dispatchRegister', 'vehicleStatus'])
             ->orderBy('date')
             ->get();
+
 
         $dataLocations = collect([]);
 
@@ -88,7 +87,8 @@ class ReportRouteHistoricController extends Controller
             $averagePeriod = '';
             if (Auth::user()->isAdmin()) {
                 $period = $location->date->diffInSeconds($lastLocation->date);
-                $averagePeriod = intval($dataLocations->average('period'));
+                //$averagePeriod = intval($dataLocations->average('period')); // CAUTION this line take some long time!
+                $averagePeriod = "--";
             }
 
             $dataLocations->push((object)[

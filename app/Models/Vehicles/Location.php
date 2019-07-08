@@ -177,7 +177,7 @@ class Location extends Model
     public function getAddress($refresh = false)
     {
         $addressLocation = $this->addressLocation;
-        $address = "";
+        return "";
 
         if ($refresh && !$addressLocation) {
             $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude);
