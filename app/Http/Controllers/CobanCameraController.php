@@ -39,8 +39,8 @@ class CobanCameraController extends Controller
     public function searchParams(Request $request)
     {
         //$access = $this->pcwAuthService->getAccessProperties();
+        $company = Company::find(26);
         //$company = Company::find(21);
-        $company = Company::find(21);
         return response()->json([
             'vehicles' => $company->vehicles,
             'date' => Carbon::now()->toDateString(),
