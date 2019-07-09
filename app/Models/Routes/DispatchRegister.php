@@ -365,7 +365,7 @@ class DispatchRegister extends Model
     public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
     {
         $query->where(function($query) use ($company, $routeId){
-            return $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'))->orWhere('route_id', $routeId);
+            return $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'))->orWhere('route_id', intval($routeId));
         });
     }
 
