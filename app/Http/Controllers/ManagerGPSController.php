@@ -107,6 +107,88 @@ class ManagerGPSController extends Controller
                         if (!$vehicle || !$vehicle->currentLocation && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count())) $selection[] = $simGPS->vehicle->number;
                     }
                     break;
+                case 'pending-to-20-s':
+                    $allPending = "
+                    7
+                    10
+                    1146
+                    2000
+                    2009
+                    2020
+                    2038
+                    2063
+                    2066
+                    2070
+                    2182
+                    2356
+                    2406
+                    2427
+                    2428
+                    2439
+                    2442
+                    2442
+                    2444
+                    2445
+                    2457
+                    2484
+                    4088
+                    4090
+                    4091
+                    4210
+                    4402
+                    4455
+                    4466
+                    4483
+                    4485
+                    4486
+                    4491
+                    4492
+                    4512
+                    4514
+                    4526
+                    4528
+                    4534
+                    4538
+                    4561
+                    4562
+                    7007
+                    1
+                    2
+                    17
+                    19
+                    20
+                    23
+                    24
+                    27
+                    2014
+                    2062
+                    2174
+                    2337
+                    2434
+                    2437
+                    4404
+                    4544
+                    2049
+                    4477
+                    7014
+                    7015
+                    2473
+                    2387
+                    ";
+
+                    $allPendingArray = explode(",", str_replace("\n", ",", str_replace(" ", "", trim($allPending))));
+
+                    $simGPSList = $simGPSList->filter(function($sg) use ($allPendingArray){
+                        return in_array($sg->vehicle->number, $allPendingArray);
+                    });
+
+                    foreach ($simGPSList as $simGPS) {
+                        $vehicle = $simGPS->vehicle;
+                        if ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count()) {
+                            $selection[] = $simGPS->vehicle->number;
+                        }
+                    }
+                    break;
                 default:
                     $selection = [];
                     break;
@@ -137,12 +219,12 @@ class ManagerGPSController extends Controller
             if ($currentLocationGPS) {
                 $vehicleStatus = $currentLocationGPS->vehicleStatus;
                 $timePeriod = $currentLocationGPS->getTimePeriod();
-                if ($vehicleStatus->id == VehicleStatus::OK || $vehicleStatus->id == VehicleStatus::PARKED || $vehicleStatus->id == VehicleStatus::POWER_OFF 
-|| $vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) {
-                    if($timePeriod >= '00:00:00' && $timePeriod <= "00:00:25"){
+                if ($vehicleStatus->id == VehicleStatus::OK || $vehicleStatus->id == VehicleStatus::PARKED || $vehicleStatus->id == VehicleStatus::POWER_OFF
+                    || $vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) {
+                    if ($timePeriod >= '00:00:00' && $timePeriod <= "00:00:25") {
                         $classStatus = "btn btn-xs btn-success p-2 text-white text-bold";
                         $totalFrequencyOK++;
-                    }else{
+                    } else {
                         $classStatus = "btn btn-xs p-2";
                     }
                     $totalOK++;
