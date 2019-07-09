@@ -165,7 +165,7 @@ class MigrationController extends Controller
         DB::statement("
             UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER 
             FROM control_points WHERE route_id = ruta.id_rutas 
-            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE 1 = 1
+            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE id_rutas IN (".implode(',',self::ROUTES_FOR_MIGRATE).")
         ");
 
         $totalCreated = 0;
