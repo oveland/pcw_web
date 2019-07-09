@@ -311,7 +311,7 @@ class ManagerGPSController extends Controller
                     $companyVehicleCheck = $checkGPS->vehicle->company->short_name;
                     $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
                 } elseif ($checkImei) {
-                    $companyVehicleCheck = $checkImei->vehicle->company->short_name;
+                    $companyVehicleCheck = $checkImei->vehicle ? $checkImei->vehicle->company->short_name : "";
                     $message = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
                 } else {
                     $gpsVehicle->imei = $imei;
