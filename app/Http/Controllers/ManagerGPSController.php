@@ -255,6 +255,7 @@ class ManagerGPSController extends Controller
 
     public function sendSMS(Request $request)
     {
+        $gpsType = $request->get('gps-type');
         if (!Auth::user()->isSuperAdmin() && Auth::user()->id != 999459) dd('Por temas administrativos la acción requerida se ha deshabilitado temporalmente');
 
         $simGPSList = $request->get('sim-gps');
@@ -266,7 +267,7 @@ class ManagerGPSController extends Controller
             $commands = $request->get('command-gps');
             $gpsCommands = explode("\n", $commands);
 
-            switch ($request->get('gps-type')) {
+            switch ($gpsType) {
                 case SimGPS::SKYPATROL_OLD:
                     $smsCommands = [];
 

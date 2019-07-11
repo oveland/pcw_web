@@ -98,7 +98,7 @@
 <div class='btn btn-default car-top-taxcentral md-skip'>
     {{--START ROW 1--}}
     <div class='col-md-12 no-padding'>
-        <div class='col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-1' style='border-right: 1px solid grey;'>
+        <div class='data-row1 col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-1' style='border-right: 1px solid grey;'>
             @foreach ($seatingStatus['row1'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-icon seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-taxcentral div-back-seat-1 tooltips' data-title='{{ $seat }}'></span>
             @endforeach
@@ -113,7 +113,7 @@
     {{-- END ROW 1 --}}
     {{-- START ROW 2 --}}
     <div class='col-md-12 no-padding'>
-        <div class='col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-2' style='border-right: 1px solid grey'>
+        <div class='data-row2 col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-2' style='border-right: 1px solid grey'>
             @foreach ($seatingStatus['row2'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-icon seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-taxcentral div-back-seat-2 tooltips' data-title='{{ $seat }}'></span>
             @endforeach
@@ -136,7 +136,7 @@
 
     {{-- START ROW 3 --}}
     <div class='col-md-12 no-padding'>
-        <div class='col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-3' style='border-right: 1px solid grey'>
+        <div class='data-row3 col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-3' style='border-right: 1px solid grey'>
             @foreach ($seatingStatus['row3'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-icon seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-taxcentral div-back-seat-3 tooltips' data-title='{{ $seat }}'></span>
             @endforeach
@@ -149,13 +149,13 @@
 
     {{-- START ROW 4 --}}
     <div class='col-md-12 no-padding'>
-        <div class='col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-4' style='border-right: 1px solid grey'>
+        <div class='data-row4 col-md-10 col-sm-10 col-xs-10 no-padding text-left div-seat-top-taxcentral div-back-seat-4' style='border-right: 1px solid grey'>
             @foreach ($seatingStatus['row4'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-icon seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-taxcentral div-back-seat-4 tooltips' data-title='{{ $seat }}'></span>
             @endforeach
         </div>
 
-        <div class='col-md-2 col-sm-2 col-xs-2 no-padding'>
+        <div class='data-window col-md-2 col-sm-2 col-xs-2 no-padding'>
             @foreach ($seatingStatus['window'] as $seat => $status)
                 <span id="seat-{{ $seat }}" class='btn btn-xs seat-icon-window seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-taxcentral tooltips' data-title='{{ $seat }}'></span>
             @endforeach
