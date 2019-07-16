@@ -73,7 +73,7 @@ class CobanCameraController extends Controller
             $photos = CobanPhoto::whereBetween('created_at', ["$date 00:00:00", "$date 23:59:59"])
                 ->where('vehicle_id', $vehicle->id)
                 ->with(['vehicle', 'location', 'dispatchRegister'])
-                ->orderBy('date')
+                ->orderByDesc('date')
                 ->get();
 
             foreach ($photos as $photo) {
