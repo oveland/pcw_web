@@ -307,7 +307,7 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::prefix(__('url-params'))->group(function () {
                 Route::get('/{name}', 'TakingsPassengersLiquidationController@getParams')->name('takings-passengers-liquidation-params');
-                Route::get('/{name}/'.__('save'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-set');
+                Route::any('/{name}/'.__('save'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-set');
             });
         });
     });

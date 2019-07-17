@@ -3,6 +3,7 @@
 @section('stylesheets')
     <!-- FUELUX - WIZARD -->
     <link href="{{ asset('assets/fuelux/css/fuelux.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/global/plugins/icheck/skins/all.css')  }}" rel="stylesheet" type="text/css" />
     <style>
         .nav.nav-pills>li>a {
             color: #0b465a;
@@ -71,8 +72,8 @@
         </div>
         <!-- end content report -->
 
-        <div class="modal fade" id="modal-params-manager" tabindex="-1" role="basic" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+        <div class="modal fade" id="modal-params-manager" tabindex="-1" role="basic" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-lg" style="width: 80%">
                 <div class="modal-content">
                     <admin-component url-params="{{  route('takings-passengers-liquidation-params',['name' => __('all')]) }}" v-on:refresh-report="searchReport($event)" :vehicle="search.vehicle"></admin-component>
                 </div>
@@ -85,6 +86,7 @@
 
 @section('scripts')
     <script src="{{ mix('resources/js/takings/passengers/liquidation/main.js') }}" type="application/ecmascript"></script>
+    <script src="{{ asset('assets/global/plugins/icheck/icheck.min.js') }}" type="text/javascript"></script>
 
     <script type="application/ecmascript">
         $('.menu-takings-passengers, .menu-takings-passengers-liquidation').addClass('active-animated');

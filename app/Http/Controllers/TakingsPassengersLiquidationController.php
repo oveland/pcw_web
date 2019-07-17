@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BEA\Commission;
 use App\Models\BEA\Discount;
 use App\Models\BEA\Liquidation;
 use App\Models\BEA\Mark;
+use App\Models\BEA\Penalty;
+use App\Models\BEA\Trajectory;
+use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\BEA\BEAService;
 use Auth;
-use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use function MongoDB\BSON\toJSON;
 use PDF;
 
 class TakingsPassengersLiquidationController extends Controller
@@ -100,15 +102,65 @@ class TakingsPassengersLiquidationController extends Controller
                 break;
             case __('discounts'):
                 $vehicle = $request->get('vehicle');
-                $route = $request->get('route');
                 $trajectory = $request->get('trajectory');
 
-                return response()->json($this->beaService->discount->byVehicleAndRouteAndTrajectory($vehicle, $route, $trajectory));
+                return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle, $trajectory));
                 break;
             default:
                 return response()->json($this->beaService->getLiquidationParams());
                 break;
         }
+    }
+
+    /**
+     * @param Discount $discount
+     * @param $options
+     * @return object
+     */
+    function processSaveOptionsDiscount(Discount $discount, $options)
+    {
+        $options = json_decode(json_encode($options), FALSE);;
+
+        $default = $options->for->vehicles == 'default' && $options->for->trajectories == 'default';
+
+        $vehicles = collect([]);
+        switch ($options->for->vehicles) {
+            case 'all':
+                $vehicles = $discount->vehicle->company->activeVehicles;
+                break;
+            case 'custom':
+                foreach ($options->vehicles as $vehicleId) {
+                    $vehicle = Vehicle::find($vehicleId);
+                    if ($vehicle) $vehicles->push($vehicle);
+                }
+                break;
+            default:
+                $vehicles->push($discount->vehicle);
+                break;
+        }
+
+        $trajectories = collect([]);
+        switch ($options->for->trajectories) {
+            case 'all':
+                $routes = $discount->vehicle->company->activeRoutes;
+                $trajectories = Trajectory::whereIn('route_id', $routes->pluck('id'))->get();
+                break;
+            case 'custom':
+                foreach ($options->trajectories as $trajectoriesId) {
+                    $trajectory = Trajectory::find($trajectoriesId);
+                    if ($trajectory) $trajectories->push($trajectory);
+                }
+                break;
+            default:
+                $trajectories->push($discount->trajectory);
+                break;
+        }
+
+        return (object)[
+            'default' => $default,
+            'vehicles' => $vehicles,
+            'trajectories' => $trajectories,
+        ];
     }
 
     /**
@@ -123,22 +175,95 @@ class TakingsPassengersLiquidationController extends Controller
             case __('discounts'):
                 $response = (object)[
                     'error' => false,
-                    'message' => __('Discounts edited successfully'),
+                    'message' => __('Discount edited successfully'),
                 ];
 
-                foreach ($request->get('discounts') as $discountJSON) {
-                    $newValues = (object)json_decode($discountJSON, true);
-                    $discount = Discount::find($newValues->id);
-                    if($discount){
-                        $discount->value = $newValues->value;
-                        if(!$discount->save()){
+                $discountToEdit = (object)$request->get('discount');
+                $discount = Discount::find($discountToEdit->id);
+                if ($discount) {
+                    $options = $this->processSaveOptionsDiscount($discount, $request->get('options'));
+
+                    if ($options->default) {
+                        $discount->value = $discountToEdit->value;
+                        if (!$discount->save()) {
                             $response->error = true;
-                            $response->message .= "<br> - ".__("Discount :name unable to update", ['name' => $newValues->discount_type->name]);
+                            $response->message .= "<br> - " . __("Discount :name unable to update", ['name' => $discountToEdit->discount_type->name]);
                         }
-                    }else{
-                        $response->error = true;
-                        $response->message .= "<br> - ".__("Discount :name doesn't exists in the system", ['name' => $newValues->discount_type->name]);
+                    } else {
+                        foreach ($options->vehicles as $vehicle) {
+                            foreach ($options->trajectories as $trajectory) {
+                                $discountFromCustom = Discount::with(['vehicle', 'route', 'trajectory', 'discountType'])
+                                    ->where('vehicle_id', $vehicle->id)
+                                    ->where('trajectory_id', $trajectory->id)
+                                    ->where('discount_type_id', $discountToEdit->discount_type_id)
+                                    ->get()->first();;
+
+                                if ($discountFromCustom) {
+                                    $discountFromCustom->value = $discountToEdit->value;
+
+                                    if (!$discountFromCustom->save()) {
+                                        $response->error = true;
+                                        $response->message .= "<br> - " . __("Discount :name unable to update for vehicle :vehicle on trajectory :trajectory", [
+                                                'name' => $discountToEdit->discount_type->name,
+                                                'vehicle' => $vehicle->number,
+                                                'trajectory' => $trajectory->name,
+                                            ]);
+                                    }
+                                }
+                            }
+                        }
                     }
+                } else {
+                    $response->error = true;
+                    $response->message .= "<br> - " . __("Discount :name doesn't exists in the system", ['name' => $discountToEdit->discount_type->name]);
+                }
+
+                return response()->json($response);
+                break;
+            case __('commissions'):
+                $response = (object)[
+                    'error' => false,
+                    'message' => __('Commission edited successfully'),
+                ];
+
+                $commissionToEdit = (object)$request->get('commission');
+                $commission = Commission::find($commissionToEdit->id);
+
+                if($commission){
+                    $commission->type = $commissionToEdit->type;
+                    $commission->value = $commissionToEdit->value;
+
+                    if(!$commission->save()){
+                        $response->error = true;
+                        $response->message .= "<br> - " . __("Commission unable to update");
+                    }
+                }else{
+                    $response->error = true;
+                    $response->message .= "<br> - " . __("Commission register doesn't exists in the system");
+                }
+
+                return response()->json($response);
+                break;
+            case __('penalties'):
+                $response = (object)[
+                    'error' => false,
+                    'message' => __('Penalties edited successfully'),
+                ];
+
+                $penaltyToEdit = (object)$request->get('penalty');
+                $penalty = Penalty::find($penaltyToEdit->id);
+
+                if($penalty){
+                    $penalty->type = $penaltyToEdit->type;
+                    $penalty->value = $penaltyToEdit->value;
+
+                    if(!$penalty->save()){
+                        $response->error = true;
+                        $response->message .= "<br> - " . __("Penalty unable to update");
+                    }
+                }else{
+                    $response->error = true;
+                    $response->message .= "<br> - " . __("Penalty register doesn't exists in the system");
                 }
 
                 return response()->json($response);
@@ -150,8 +275,8 @@ class TakingsPassengersLiquidationController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
-     * @throws Exception
      */
     public function liquidate(Request $request)
     {

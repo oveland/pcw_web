@@ -1679,3 +1679,6 @@ code[class*=language-],pre[class*=language-], code {
 .nav.nav-pills>li.active>a {
     color:white !important;
 }
+.multiselect__tags, .multiselect{
+    height: auto !important;
+}

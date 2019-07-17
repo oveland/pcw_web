@@ -41,7 +41,20 @@ class BEARepository
      */
     function getAllTrajectories()
     {
-        return Trajectory::all();
+        $trajectories = collect([]);
+        $trajectoriesDB = Trajectory::with('route')->get();
+        foreach ($trajectoriesDB as $trajectory){
+            $trajectories->push([
+                'id' => $trajectory->id,
+                'name' => $trajectory->name,
+                'routeName' => $trajectory->route->name,
+                'nameAndRoute' => $trajectory->route->name." | ".$trajectory->name,
+                'description' => $trajectory->description,
+                'route_id' => $trajectory->route_id,
+            ]);
+        }
+
+        return $trajectories;
     }
 
     /**

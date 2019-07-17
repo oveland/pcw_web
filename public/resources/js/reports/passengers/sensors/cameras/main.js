@@ -1718,7 +1718,7 @@ var camerasReportView = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Oscar\Documents\PCW\1.Movilidad\pcw_mov_server_web\resources\js\reports\passengers\sensors\cameras\main.js */"./resources/js/reports/passengers/sensors/cameras/main.js");
+module.exports = __webpack_require__(/*! E:\pcw_mov_server_web_beta\resources\js\reports\passengers\sensors\cameras\main.js */"./resources/js/reports/passengers/sensors/cameras/main.js");
 
 
 /***/ })

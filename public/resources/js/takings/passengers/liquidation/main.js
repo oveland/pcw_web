@@ -95,6 +95,8 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -150,19 +152,112 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminCommissionComponent",
   props: {
     routes: Array,
     commissions: Array
   },
+  data: function data() {
+    return {
+      commissionTypes: Array,
+      editingCommission: Object,
+      editing: false
+    };
+  },
+  mounted: function mounted() {
+    this.commissionTypes = ['percent', 'fixed'];
+  },
   computed: {},
   methods: {
+    editCommission: function editCommission(commission) {
+      this.editingCommission = commission;
+    },
     commissionsFor: function commissionsFor(routeId) {
       return _.filter(this.commissions, {
         'route_id': routeId
       });
+    },
+    saveCommission: function saveCommission() {
+      var _this = this;
+
+      App.blockUI({
+        target: '#commissions-params-tab',
+        animate: true
+      });
+      axios.post('parametros/comisiones/guardar', {
+        commission: this.editingCommission
+      }).then(function (r) {
+        _this.editing = false;
+
+        if (r.data.error) {
+          gerror(r.data.message);
+        } else {
+          gsuccess(r.data.message);
+
+          _this.$emit('refresh-report');
+
+          $('#modal-admin-commission-edit').modal('hide');
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        gerror("An error occurred in the process. Please contact your admin");
+      }).then(function () {
+        App.unblockUI('#commissions-params-tab');
+      });
     }
+  },
+  components: {
+    Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
   }
 });
 
@@ -180,6 +275,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AdminDiscountComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AdminDiscountComponent */ "./resources/js/takings/passengers/liquidation/components/AdminDiscountComponent.vue");
 /* harmony import */ var _AdminCommissionComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdminCommissionComponent */ "./resources/js/takings/passengers/liquidation/components/AdminCommissionComponent.vue");
 /* harmony import */ var _AdminPenaltyComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AdminPenaltyComponent */ "./resources/js/takings/passengers/liquidation/components/AdminPenaltyComponent.vue");
+//
+//
+//
+//
+//
 //
 //
 //
@@ -241,6 +341,9 @@ __webpack_require__.r(__webpack_exports__);
     thereAreParams: function thereAreParams() {
       return this.params.length > 0;
     },
+    vehicles: function vehicles() {
+      return this.params.vehicles;
+    },
     routes: function routes() {
       return this.params.routes;
     },
@@ -289,6 +392,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -405,30 +510,174 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminDiscountComponent",
   props: {
-    vehicle: Object,
+    vehicles: Array,
     routes: Array,
     trajectories: Array
   },
   data: function data() {
     return {
+      vehicle: Object,
+      selectedRoute: Object,
+      selectedTrajectory: Object,
+      editingDiscount: Object,
+      options: {
+        "for": {
+          vehicles: String,
+          trajectories: String
+        },
+        vehicles: Array,
+        trajectories: Array
+      },
       trajectoriesByRoute: Array,
       discounts: Array,
       editing: false
     };
   },
-  computed: {},
+  mounted: function mounted() {
+    this.editingDiscount = null;
+    this.selectedRoute = null;
+    this.selectedTrajectory = null;
+    this.options["for"].vehicles = 'default';
+    this.options["for"].trajectories = 'default';
+  },
+  watch: {
+    vehicle: function vehicle() {
+      this.setParamToEdit('vehicle', this.vehicle);
+
+      if (this.selectedRoute) {
+        this.loadTrajectories(this.selectedRoute);
+      } else {
+        this.loadTrajectories(_.head(this.routes));
+      }
+
+      console.log(this.allTrajectoriesByRoutes);
+    }
+  },
+  computed: {
+    trajectoriesForMultiselect: function trajectoriesForMultiselect() {
+      var allTrajectoriesByRoutes = [];
+
+      _.forEach(_.groupBy(this.trajectories, 'routeName'), function (routeTrajectories, routeName) {
+        allTrajectoriesByRoutes.push({
+          route: routeName,
+          trajectories: routeTrajectories
+        });
+      });
+
+      return allTrajectoriesByRoutes;
+    }
+  },
   methods: {
     loadTrajectories: function loadTrajectories(route) {
+      if (!route) return false;
+      this.selectedRoute = route;
       this.trajectoriesByRoute = _.filter(this.trajectories, function (t) {
         return t.route_id === route.id;
       });
+      this.loadDiscounts(this.vehicle, _.head(this.trajectoriesByRoute));
     },
     loadDiscounts: function loadDiscounts(vehicle, trajectory) {
       var _this = this;
 
+      if (!trajectory) return false;
+      this.selectedTrajectory = trajectory;
+      this.setParamToEdit('trajectory', trajectory);
       this.discounts = [];
       App.blockUI({
         target: '#discounts-params-tab',
@@ -437,7 +686,6 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('parametros/descuentos', {
         params: {
           vehicle: vehicle.id,
-          route: trajectory.route_id,
           trajectory: trajectory.id
         }
       }).then(function (r) {
@@ -450,19 +698,38 @@ __webpack_require__.r(__webpack_exports__);
         App.unblockUI('#discounts-params-tab');
       });
     },
-    editDiscounts: function editDiscounts() {
-      this.editing = true;
+    setParamToEdit: function setParamToEdit(param, data) {
+      switch (param) {
+        case 'vehicle':
+          this.options.vehicles = [data];
+          this.options.trajectories = [];
+          break;
+
+        case 'trajectory':
+          this.options.trajectories = [data];
+          break;
+      }
     },
-    saveDiscounts: function saveDiscounts() {
+    editDiscount: function editDiscount(discount) {
+      this.editingDiscount = discount;
+    },
+    saveDiscount: function saveDiscount() {
       var _this2 = this;
 
       App.blockUI({
         target: '#discounts-params-tab',
         animate: true
       });
-      axios.get('parametros/descuentos/guardar', {
-        params: {
-          discounts: this.discounts
+      App.blockUI({
+        target: '#modal-admin-discount-edit .modal-content',
+        animate: true
+      });
+      axios.post('parametros/descuentos/guardar', {
+        discount: this.editingDiscount,
+        options: {
+          "for": this.options["for"],
+          vehicles: _.map(this.options.vehicles, 'id'),
+          trajectories: _.map(this.options.trajectories, 'id')
         }
       }).then(function (r) {
         _this2.editing = false;
@@ -479,8 +746,13 @@ __webpack_require__.r(__webpack_exports__);
         gerror("An error occurred in the process. Please contact your admin");
       }).then(function () {
         App.unblockUI('#discounts-params-tab');
+        App.unblockUI('#modal-admin-discount-edit .modal-content');
+        $("#modal-admin-discount-edit").modal('hide');
       });
     }
+  },
+  components: {
+    Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
   }
 });
 
@@ -495,6 +767,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -550,19 +824,112 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminPenaltyComponent",
   props: {
     routes: Array,
     penalties: Array
   },
+  data: function data() {
+    return {
+      penaltyTypes: Array,
+      editingPenalty: Object,
+      editing: false
+    };
+  },
+  mounted: function mounted() {
+    this.penaltyTypes = ['boarding'];
+  },
   computed: {},
   methods: {
+    editPenalty: function editPenalty(penalty) {
+      this.editingPenalty = penalty;
+    },
     penaltiesFor: function penaltiesFor(routeId) {
       return _.filter(this.penalties, {
         'route_id': routeId
       });
+    },
+    savePenalty: function savePenalty() {
+      var _this = this;
+
+      App.blockUI({
+        target: '#penalties-params-tab',
+        animate: true
+      });
+      axios.post('parametros/sanciones/guardar', {
+        penalty: this.editingPenalty
+      }).then(function (r) {
+        _this.editing = false;
+
+        if (r.data.error) {
+          gerror(r.data.message);
+        } else {
+          gsuccess(r.data.message);
+
+          _this.$emit('refresh-report');
+
+          $('#modal-admin-penalty-edit').modal('hide');
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        gerror("An error occurred in the process. Please contact your admin");
+      }).then(function () {
+        App.unblockUI('#penalties-params-tab');
+      });
     }
+  },
+  components: {
+    Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
   }
 });
 
@@ -4333,6 +4700,32 @@ var render = function() {
                                       ) +
                                       "\n                                    "
                                   )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-center" }, [
+                                  !_vm.editing
+                                    ? _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                                          attrs: {
+                                            title: "Edit",
+                                            "data-toggle": "modal",
+                                            "data-target":
+                                              "#modal-admin-commission-edit"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.editCommission(
+                                                commission
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [_c("i", { staticClass: "fa fa-edit" })]
+                                      )
+                                    : _vm._e()
                                 ])
                               ])
                             }),
@@ -4355,7 +4748,173 @@ var render = function() {
           ])
         ])
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "modal-admin-commission-edit",
+          tabindex: "1",
+          "data-backdrop": "static"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c(
+            "form",
+            {
+              staticClass: "modal-content row p-40",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.saveCommission()
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.editingCommission
+                  ? _c(
+                      "div",
+                      { staticClass: "col-md-12 text-left no-padding" },
+                      [
+                        _c("div", { staticClass: "col-md-6" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-group form-md-line-input has-success"
+                            },
+                            [
+                              _c("div", { staticClass: "input-icon" }, [
+                                _c(
+                                  "select",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.editingCommission.type,
+                                        expression: "editingCommission.type"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      id: "edit-commission-type",
+                                      readonly: "",
+                                      type: "text"
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$selectedVal = Array.prototype.filter
+                                          .call($event.target.options, function(
+                                            o
+                                          ) {
+                                            return o.selected
+                                          })
+                                          .map(function(o) {
+                                            var val =
+                                              "_value" in o ? o._value : o.value
+                                            return val
+                                          })
+                                        _vm.$set(
+                                          _vm.editingCommission,
+                                          "type",
+                                          $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        )
+                                      }
+                                    }
+                                  },
+                                  _vm._l(_vm.commissionTypes, function(type) {
+                                    return _c(
+                                      "option",
+                                      { domProps: { value: type } },
+                                      [_vm._v(_vm._s(type))]
+                                    )
+                                  }),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  { attrs: { for: "edit-commission-type" } },
+                                  [_vm._v("Commission type")]
+                                ),
+                                _vm._v(" "),
+                                _c("i", { staticClass: "fa fa-tag" })
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-6" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-group form-md-line-input has-success"
+                            },
+                            [
+                              _c("div", { staticClass: "input-icon" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.editingCommission.value,
+                                      expression: "editingCommission.value"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "edit-commission-value",
+                                    type: "text",
+                                    placeholder: "Value",
+                                    autofocus: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.editingCommission.value
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.editingCommission,
+                                        "value",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  { attrs: { for: "edit-commission-value" } },
+                                  [_vm._v("Value")]
+                                ),
+                                _vm._v(" "),
+                                _c("i", { staticClass: "fa fa-dollar" })
+                              ])
+                            ]
+                          )
+                        ])
+                      ]
+                    )
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _vm._m(3)
+            ]
+          )
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -4380,6 +4939,12 @@ var staticRenderFns = [
           _c("i", { staticClass: "fa fa-dollar text-muted" }),
           _c("br"),
           _vm._v(" Value\n                                    ")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-2" }, [
+          _c("i", { staticClass: "fa fa-rocket text-muted" }),
+          _c("br"),
+          _vm._v(" Options\n                                    ")
         ])
       ])
     ])
@@ -4416,6 +4981,36 @@ var staticRenderFns = [
         _vm._v(" Edit\n                            ")
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer col-md-12 text-center" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+          attrs: {
+            type: "button",
+            title: "Cancel",
+            onclick: "$('#modal-admin-commission-edit').modal('hide')"
+          }
+        },
+        [_c("i", { staticClass: "fa fa-times" })]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "btn btn-success btn-outline sbold uppercase btn-circle tooltips",
+          attrs: { title: "Save" }
+        },
+        [_c("i", { staticClass: "fa fa-save" })]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -4454,7 +5049,7 @@ var render = function() {
             [
               _c("admin-discount-component", {
                 attrs: {
-                  vehicle: _vm.vehicle,
+                  vehicles: _vm.vehicles,
                   routes: _vm.routes,
                   trajectories: _vm.trajectories
                 },
@@ -4503,6 +5098,25 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "portlet-title tabbable-line" }, [
+      _c(
+        "div",
+        {
+          staticClass: "text-center col-md-12",
+          staticStyle: { position: "absolute" }
+        },
+        [
+          _c(
+            "button",
+            {
+              staticClass:
+                "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+              attrs: { type: "button", title: "Close", "data-dismiss": "modal" }
+            },
+            [_c("i", { staticClass: "fa fa-times" })]
+          )
+        ]
+      ),
+      _vm._v(" "),
       _c("div", { staticClass: "caption" }, [
         _c("i", { staticClass: "fa fa-cogs" }),
         _vm._v(" "),
@@ -4573,31 +5187,36 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.vehicle
-    ? _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-2 col-sm-3 col-xs-3" }, [
-          _c("ul", { staticClass: "nav nav-tabs tabs-left" }, [
-            _c("li", { staticClass: "active" }, [
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "#vehicle-" + _vm.vehicle.id,
-                    "data-toggle": "tab"
-                  }
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-3 col-sm-4 col-xs-12" }, [
+      _vm.vehicles
+        ? _c(
+            "div",
+            { staticClass: "col-md-12" },
+            [
+              _c("multiselect", {
+                attrs: {
+                  placeholder: "Select vehicle",
+                  label: "number",
+                  "track-by": "id",
+                  options: _vm.vehicles
                 },
-                [
-                  _c("i", { staticClass: "fa fa-car" }),
-                  _vm._v(
-                    " " + _vm._s(_vm.vehicle.number) + "\n                "
-                  )
-                ]
-              )
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-10 col-sm-9 col-xs-9" }, [
+                model: {
+                  value: _vm.vehicle,
+                  callback: function($$v) {
+                    _vm.vehicle = $$v
+                  },
+                  expression: "vehicle"
+                }
+              })
+            ],
+            1
+          )
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _vm.vehicle
+      ? _c("div", { staticClass: "col-md-9 col-sm-8 col-xs-12" }, [
           _c("div", { staticClass: "tab-content" }, [
             _c(
               "div",
@@ -4670,57 +5289,65 @@ var render = function() {
                             _vm._v(" "),
                             _c("tbody", [
                               _c("tr", [
-                                _c("td", { staticClass: "text-center" }, [
-                                  _c(
-                                    "ul",
-                                    { staticClass: "nav nav-tabs tabs-left" },
-                                    _vm._l(_vm.trajectoriesByRoute, function(
-                                      trajectory,
-                                      indexTrajectory
-                                    ) {
-                                      return _c(
-                                        "li",
-                                        {
-                                          class:
-                                            indexTrajectory === 0
-                                              ? "active trajectory-0"
-                                              : "",
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.loadDiscounts(
-                                                _vm.vehicle,
-                                                trajectory
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "a",
-                                            {
-                                              attrs: {
-                                                href: ".tab-discounts",
-                                                "data-toggle": "tab"
+                                _c(
+                                  "td",
+                                  { staticClass: "text-center col-md-4" },
+                                  [
+                                    _c(
+                                      "ul",
+                                      { staticClass: "nav nav-tabs tabs-left" },
+                                      _vm._l(_vm.trajectoriesByRoute, function(
+                                        trajectory,
+                                        indexTrajectory
+                                      ) {
+                                        return _c(
+                                          "li",
+                                          {
+                                            class:
+                                              trajectory.id ===
+                                              _vm.selectedTrajectory.id
+                                                ? "active"
+                                                : "",
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.loadDiscounts(
+                                                  _vm.vehicle,
+                                                  trajectory
+                                                )
                                               }
-                                            },
-                                            [
-                                              _vm._v(
-                                                "\n                                                    " +
-                                                  _vm._s(trajectory.name) +
-                                                  "\n                                                "
-                                              )
-                                            ]
-                                          )
-                                        ]
-                                      )
-                                    }),
-                                    0
-                                  )
-                                ]),
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "a",
+                                              {
+                                                attrs: {
+                                                  href: ".tab-discounts",
+                                                  "data-toggle": "tab"
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                                                    " +
+                                                    _vm._s(trajectory.name) +
+                                                    "\n                                                "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      }),
+                                      0
+                                    )
+                                  ]
+                                ),
                                 _vm._v(" "),
                                 _c(
                                   "td",
-                                  { staticClass: "discounts text-center" },
+                                  {
+                                    staticClass:
+                                      "discounts text-center col-md-8"
+                                  },
                                   [
                                     _c("div", { staticClass: "tab-content" }, [
                                       _c(
@@ -4748,221 +5375,133 @@ var render = function() {
                                                       discount,
                                                       indexDiscount
                                                     ) {
-                                                      return !_vm.editing
-                                                        ? _c("tr", [
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    indexDiscount +
-                                                                      1
-                                                                  )
-                                                                )
-                                                              ]
-                                                            ),
-                                                            _vm._v(" "),
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _c("i", {
-                                                                  class:
-                                                                    discount
-                                                                      .discount_type
-                                                                      .icon
-                                                                }),
-                                                                _vm._v(
-                                                                  " " +
-                                                                    _vm._s(
-                                                                      _vm._f(
-                                                                        "capitalize"
-                                                                      )(
-                                                                        discount
-                                                                          .discount_type
-                                                                          .name
-                                                                      )
-                                                                    ) +
-                                                                    "\n                                                        "
-                                                                )
-                                                              ]
-                                                            ),
-                                                            _vm._v(" "),
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    discount
-                                                                      .discount_type
-                                                                      .description
-                                                                  )
-                                                                )
-                                                              ]
-                                                            ),
-                                                            _vm._v(" "),
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _vm._v(
-                                                                  "\n                                                            " +
-                                                                    _vm._s(
-                                                                      _vm._f(
-                                                                        "numberFormat"
-                                                                      )(
-                                                                        discount.value,
-                                                                        "$0,0"
-                                                                      )
-                                                                    ) +
-                                                                    "\n                                                        "
-                                                                )
-                                                              ]
+                                                      return _c("tr", [
+                                                        _c(
+                                                          "td",
+                                                          {
+                                                            staticClass:
+                                                              "text-center"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                indexDiscount +
+                                                                  1
+                                                              )
                                                             )
-                                                          ])
-                                                        : _vm._e()
-                                                    }
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _vm._l(
-                                                    _vm.discounts,
-                                                    function(
-                                                      discount,
-                                                      indexDiscount
-                                                    ) {
-                                                      return _vm.editing
-                                                        ? _c("tr", [
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    indexDiscount +
-                                                                      1
-                                                                  )
-                                                                )
-                                                              ]
-                                                            ),
-                                                            _vm._v(" "),
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _c("i", {
-                                                                  class:
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "td",
+                                                          {
+                                                            staticClass:
+                                                              "text-center"
+                                                          },
+                                                          [
+                                                            _c("i", {
+                                                              class:
+                                                                discount
+                                                                  .discount_type
+                                                                  .icon
+                                                            }),
+                                                            _vm._v(
+                                                              " " +
+                                                                _vm._s(
+                                                                  _vm._f(
+                                                                    "capitalize"
+                                                                  )(
                                                                     discount
                                                                       .discount_type
-                                                                      .icon
-                                                                }),
-                                                                _vm._v(
-                                                                  " " +
-                                                                    _vm._s(
-                                                                      _vm._f(
-                                                                        "capitalize"
-                                                                      )(
-                                                                        discount
-                                                                          .discount_type
-                                                                          .name
-                                                                      )
-                                                                    ) +
-                                                                    "\n                                                        "
-                                                                )
-                                                              ]
-                                                            ),
-                                                            _vm._v(" "),
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    discount
-                                                                      .discount_type
-                                                                      .description
+                                                                      .name
                                                                   )
-                                                                )
-                                                              ]
-                                                            ),
-                                                            _vm._v(" "),
-                                                            _c(
-                                                              "td",
-                                                              {
-                                                                staticClass:
-                                                                  "text-center"
-                                                              },
-                                                              [
-                                                                _c("input", {
-                                                                  directives: [
-                                                                    {
-                                                                      name:
-                                                                        "model",
-                                                                      rawName:
-                                                                        "v-model",
-                                                                      value:
-                                                                        discount.value,
-                                                                      expression:
-                                                                        "discount.value"
-                                                                    }
-                                                                  ],
-                                                                  staticClass:
-                                                                    "form-control input-sm",
-                                                                  attrs: {
-                                                                    type:
-                                                                      "number"
-                                                                  },
-                                                                  domProps: {
-                                                                    value:
-                                                                      discount.value
-                                                                  },
-                                                                  on: {
-                                                                    input: function(
-                                                                      $event
-                                                                    ) {
-                                                                      if (
+                                                                ) +
+                                                                "\n                                                        "
+                                                            )
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "td",
+                                                          {
+                                                            staticClass:
+                                                              "text-center"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                discount
+                                                                  .discount_type
+                                                                  .description
+                                                              )
+                                                            )
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "td",
+                                                          {
+                                                            staticClass:
+                                                              "text-center"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              "\n                                                            " +
+                                                                _vm._s(
+                                                                  _vm._f(
+                                                                    "numberFormat"
+                                                                  )(
+                                                                    discount.value,
+                                                                    "$0,0"
+                                                                  )
+                                                                ) +
+                                                                "\n                                                        "
+                                                            )
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "td",
+                                                          {
+                                                            staticClass:
+                                                              "text-center"
+                                                          },
+                                                          [
+                                                            !_vm.editing
+                                                              ? _c(
+                                                                  "button",
+                                                                  {
+                                                                    staticClass:
+                                                                      "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                                                                    attrs: {
+                                                                      title:
+                                                                        "Edit",
+                                                                      "data-toggle":
+                                                                        "modal",
+                                                                      "data-target":
+                                                                        "#modal-admin-discount-edit"
+                                                                    },
+                                                                    on: {
+                                                                      click: function(
                                                                         $event
-                                                                          .target
-                                                                          .composing
                                                                       ) {
-                                                                        return
+                                                                        return _vm.editDiscount(
+                                                                          discount
+                                                                        )
                                                                       }
-                                                                      _vm.$set(
-                                                                        discount,
-                                                                        "value",
-                                                                        $event
-                                                                          .target
-                                                                          .value
-                                                                      )
                                                                     }
-                                                                  }
-                                                                })
-                                                              ]
-                                                            )
-                                                          ])
-                                                        : _vm._e()
+                                                                  },
+                                                                  [
+                                                                    _c("i", {
+                                                                      staticClass:
+                                                                        "fa fa-edit"
+                                                                    })
+                                                                  ]
+                                                                )
+                                                              : _vm._e()
+                                                          ]
+                                                        )
+                                                      ])
                                                     }
                                                   ),
                                                   _vm._v(" "),
@@ -4970,68 +5509,6 @@ var render = function() {
                                                 ],
                                                 2
                                               )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c("hr", { staticClass: "hr" }),
-                                          _vm._v(" "),
-                                          _c(
-                                            "div",
-                                            { staticClass: "text-center" },
-                                            [
-                                              !_vm.editing
-                                                ? _c(
-                                                    "button",
-                                                    {
-                                                      staticClass:
-                                                        "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
-                                                      attrs: { title: "Edit" },
-                                                      on: {
-                                                        click: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.editDiscounts()
-                                                        }
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "fa fa-edit"
-                                                      }),
-                                                      _vm._v(
-                                                        " Edit\n                                                    "
-                                                      )
-                                                    ]
-                                                  )
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              _vm.editing
-                                                ? _c(
-                                                    "button",
-                                                    {
-                                                      staticClass:
-                                                        "btn btn-sm green-haze btn-outline sbold uppercase btn-circle tooltips",
-                                                      attrs: { title: "Save" },
-                                                      on: {
-                                                        click: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.saveDiscounts()
-                                                        }
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "fa fa-edit"
-                                                      }),
-                                                      _vm._v(
-                                                        " Save\n                                                    "
-                                                      )
-                                                    ]
-                                                  )
-                                                : _vm._e()
                                             ]
                                           )
                                         ]
@@ -5051,8 +5528,538 @@ var render = function() {
             )
           ])
         ])
-      ])
-    : _vm._e()
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "modal-admin-discount-edit",
+          tabindex: "1",
+          "data-backdrop": "static"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c(
+            "form",
+            {
+              staticClass: "modal-content row p-40",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.saveDiscount()
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.editingDiscount && _vm.editingDiscount.discount_type
+                  ? _c(
+                      "div",
+                      { staticClass: "col-md-12 text-left no-padding" },
+                      [
+                        _c("div", { staticClass: "col-md-6" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-group form-md-line-input has-success"
+                            },
+                            [
+                              _c("div", { staticClass: "input-icon" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.editingDiscount.discount_type.name,
+                                      expression:
+                                        "editingDiscount.discount_type.name"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "edit-discount-name",
+                                    readonly: "",
+                                    type: "text",
+                                    placeholder: "Name"
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.editingDiscount.discount_type.name
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.editingDiscount.discount_type,
+                                        "name",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  { attrs: { for: "edit-discount-name" } },
+                                  [_vm._v("Name")]
+                                ),
+                                _vm._v(" "),
+                                _c("i", {
+                                  class: _vm.editingDiscount.discount_type.icon
+                                })
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-6" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-group form-md-line-input has-success"
+                            },
+                            [
+                              _c("div", { staticClass: "input-icon" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.editingDiscount.value,
+                                      expression: "editingDiscount.value"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "edit-discount-value",
+                                    type: "text",
+                                    placeholder: "Value",
+                                    autofocus: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.editingDiscount.value
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.editingDiscount,
+                                        "value",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  { attrs: { for: "edit-discount-value" } },
+                                  [_vm._v("Value")]
+                                ),
+                                _vm._v(" "),
+                                _c("i", { staticClass: "fa fa-dollar" })
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-12" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-group form-md-line-input has-success"
+                            },
+                            [
+                              _c("div", { staticClass: "input-icon" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.editingDiscount.discount_type
+                                          .description,
+                                      expression:
+                                        "editingDiscount.discount_type.description"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "edit-discount-description",
+                                    readonly: "",
+                                    type: "text",
+                                    placeholder: "Description"
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.editingDiscount.discount_type
+                                        .description
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.editingDiscount.discount_type,
+                                        "description",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  {
+                                    attrs: { for: "edit-discount-description" }
+                                  },
+                                  [_vm._v("Description")]
+                                ),
+                                _vm._v(" "),
+                                _c("i", {
+                                  class: _vm.editingDiscount.discount_type.icon
+                                })
+                              ])
+                            ]
+                          )
+                        ])
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("hr", { staticClass: "col-md-12" }),
+                _vm._v(" "),
+                _vm._m(3),
+                _vm._v(" "),
+                _vm.vehicles
+                  ? _c(
+                      "div",
+                      { staticClass: "col-md-12 text-left no-padding" },
+                      [
+                        _c("div", { staticClass: "col-md-12 no-padding" }, [
+                          _vm._m(4),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "col-md-3 text-center" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.options.for.vehicles,
+                                  expression: "options.for.vehicles"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "default-vehicles",
+                                value: "default",
+                                name: "for-vehicles"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.options.for.vehicles,
+                                  "default"
+                                )
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.options.for,
+                                    "vehicles",
+                                    "default"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              { attrs: { for: "default-vehicles" } },
+                              [_vm._v("Default")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "col-md-3 text-center" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.options.for.vehicles,
+                                  expression: "options.for.vehicles"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "all-vehicles",
+                                value: "all",
+                                name: "for-vehicles"
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.options.for.vehicles, "all")
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.options.for,
+                                    "vehicles",
+                                    "all"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "all-vehicles" } }, [
+                              _vm._v("All")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "col-md-3 text-center" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.options.for.vehicles,
+                                  expression: "options.for.vehicles"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "custom-vehicles",
+                                value: "custom",
+                                name: "for-vehicles"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.options.for.vehicles,
+                                  "custom"
+                                )
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.options.for,
+                                    "vehicles",
+                                    "custom"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "custom-vehicles" } }, [
+                              _vm._v("Custom")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _vm.options.for.vehicles === "custom"
+                            ? _c(
+                                "div",
+                                { staticClass: "col-md-12" },
+                                [
+                                  _c("multiselect", {
+                                    attrs: {
+                                      placeholder: "Select vehicles",
+                                      label: "number",
+                                      "track-by": "id",
+                                      options: _vm.vehicles,
+                                      multiple: true
+                                    },
+                                    model: {
+                                      value: _vm.options.vehicles,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.options, "vehicles", $$v)
+                                      },
+                                      expression: "options.vehicles"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("hr", { staticClass: "col-md-12 no-padding" }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-12 no-padding" }, [
+                          _vm._m(5),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "col-md-3 text-center" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.options.for.trajectories,
+                                  expression: "options.for.trajectories"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "default-trajectories",
+                                value: "default",
+                                name: "for-trajectories"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.options.for.trajectories,
+                                  "default"
+                                )
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.options.for,
+                                    "trajectories",
+                                    "default"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              { attrs: { for: "default-trajectories" } },
+                              [_vm._v("Default")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "col-md-3 text-center" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.options.for.trajectories,
+                                  expression: "options.for.trajectories"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "all-trajectories",
+                                value: "all",
+                                name: "for-trajectories"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.options.for.trajectories,
+                                  "all"
+                                )
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.options.for,
+                                    "trajectories",
+                                    "all"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              { attrs: { for: "all-trajectories" } },
+                              [_vm._v("All")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "col-md-3 text-center" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.options.for.trajectories,
+                                  expression: "options.for.trajectories"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "custom-trajectories",
+                                value: "custom",
+                                name: "for-trajectories"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.options.for.trajectories,
+                                  "custom"
+                                )
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.options.for,
+                                    "trajectories",
+                                    "custom"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              { attrs: { for: "custom-trajectories" } },
+                              [_vm._v("Custom")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _vm.options.for.trajectories === "custom"
+                            ? _c(
+                                "div",
+                                { staticClass: "col-md-12" },
+                                [
+                                  _c("multiselect", {
+                                    attrs: {
+                                      options: _vm.trajectoriesForMultiselect,
+                                      placeholder: "Select trajectories",
+                                      "group-values": "trajectories",
+                                      "group-label": "route",
+                                      label: "name",
+                                      "track-by": "id",
+                                      multiple: true
+                                    },
+                                    model: {
+                                      value: _vm.options.trajectories,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.options,
+                                          "trajectories",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "options.trajectories"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            : _vm._e()
+                        ])
+                      ]
+                    )
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _vm._m(6)
+            ]
+          )
+        ])
+      ]
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -5061,13 +6068,13 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", { staticClass: "inverse" }, [
-        _c("th", { staticClass: "col-md-2" }, [
+        _c("th", { staticClass: "col-md-4" }, [
           _c("i", { staticClass: "fa fa-flag text-muted" }),
           _c("br"),
           _vm._v(" Trajectory\n                                    ")
         ]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-2" }, [
+        _c("th", { staticClass: "col-md-8" }, [
           _c("i", { staticClass: "icon-tag text-muted" }),
           _c("br"),
           _vm._v(" Discounts\n                                    ")
@@ -5108,6 +6115,14 @@ var staticRenderFns = [
           _vm._v(
             " Value\n                                                        "
           )
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-2" }, [
+          _c("i", { staticClass: "fa fa-rocket text-muted" }),
+          _c("br"),
+          _vm._v(
+            " Options\n                                                        "
+          )
         ])
       ])
     ])
@@ -5126,6 +6141,69 @@ var staticRenderFns = [
         },
         attrs: { colspan: "11" }
       })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-12 text-center" }, [
+      _c("h2", { staticClass: "text-muted" }, [
+        _c("i", { staticClass: "fa fa-save" }),
+        _vm._v(" Save options\n                        ")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "col-md-3" }, [
+      _c("label", { staticClass: "typo__label" }, [
+        _c("i", { staticClass: "fa fa-car" }),
+        _vm._v(" Vehicles\n                                ")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "col-md-3" }, [
+      _c("label", { staticClass: "typo__label" }, [
+        _c("i", { staticClass: "fa fa-retweet" }),
+        _vm._v(" Trajectory\n                                ")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer col-md-12 text-center" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+          attrs: {
+            type: "button",
+            title: "Cancel",
+            onclick: "$('#modal-admin-discount-edit').modal('hide')"
+          }
+        },
+        [_c("i", { staticClass: "fa fa-times" })]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "btn btn-success btn-outline sbold uppercase btn-circle tooltips",
+          attrs: { title: "Save" }
+        },
+        [_c("i", { staticClass: "fa fa-save" })]
+      )
     ])
   }
 ]
@@ -5233,6 +6311,30 @@ var render = function() {
                                       ) +
                                       "\n                                    "
                                   )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-center" }, [
+                                  !_vm.editing
+                                    ? _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                                          attrs: {
+                                            title: "Edit",
+                                            "data-toggle": "modal",
+                                            "data-target":
+                                              "#modal-admin-penalty-edit"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.editPenalty(penalty)
+                                            }
+                                          }
+                                        },
+                                        [_c("i", { staticClass: "fa fa-edit" })]
+                                      )
+                                    : _vm._e()
                                 ])
                               ])
                             }),
@@ -5255,7 +6357,171 @@ var render = function() {
           ])
         ])
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "modal-admin-penalty-edit",
+          tabindex: "1",
+          "data-backdrop": "static"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c(
+            "form",
+            {
+              staticClass: "modal-content row p-40",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.savePenalty()
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.editingPenalty
+                  ? _c(
+                      "div",
+                      { staticClass: "col-md-12 text-left no-padding" },
+                      [
+                        _c("div", { staticClass: "col-md-6" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-group form-md-line-input has-success"
+                            },
+                            [
+                              _c("div", { staticClass: "input-icon" }, [
+                                _c(
+                                  "select",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.editingPenalty.type,
+                                        expression: "editingPenalty.type"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      id: "edit-penalty-type",
+                                      readonly: "",
+                                      type: "text"
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$selectedVal = Array.prototype.filter
+                                          .call($event.target.options, function(
+                                            o
+                                          ) {
+                                            return o.selected
+                                          })
+                                          .map(function(o) {
+                                            var val =
+                                              "_value" in o ? o._value : o.value
+                                            return val
+                                          })
+                                        _vm.$set(
+                                          _vm.editingPenalty,
+                                          "type",
+                                          $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        )
+                                      }
+                                    }
+                                  },
+                                  _vm._l(_vm.penaltyTypes, function(type) {
+                                    return _c(
+                                      "option",
+                                      { domProps: { value: type } },
+                                      [_vm._v(_vm._s(type))]
+                                    )
+                                  }),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  { attrs: { for: "edit-penalty-type" } },
+                                  [_vm._v("Penalty type")]
+                                ),
+                                _vm._v(" "),
+                                _c("i", { staticClass: "fa fa-tag" })
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-6" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-group form-md-line-input has-success"
+                            },
+                            [
+                              _c("div", { staticClass: "input-icon" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.editingPenalty.value,
+                                      expression: "editingPenalty.value"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "edit-penalty-value",
+                                    type: "text",
+                                    placeholder: "Value",
+                                    autofocus: ""
+                                  },
+                                  domProps: { value: _vm.editingPenalty.value },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.editingPenalty,
+                                        "value",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  { attrs: { for: "edit-penalty-value" } },
+                                  [_vm._v("Value")]
+                                ),
+                                _vm._v(" "),
+                                _c("i", { staticClass: "fa fa-dollar" })
+                              ])
+                            ]
+                          )
+                        ])
+                      ]
+                    )
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _vm._m(3)
+            ]
+          )
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -5280,6 +6546,12 @@ var staticRenderFns = [
           _c("i", { staticClass: "fa fa-dollar text-muted" }),
           _c("br"),
           _vm._v(" Value\n                                    ")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-2" }, [
+          _c("i", { staticClass: "fa fa-rocket text-muted" }),
+          _c("br"),
+          _vm._v(" Options\n                                    ")
         ])
       ])
     ])
@@ -5316,6 +6588,36 @@ var staticRenderFns = [
         _vm._v(" Edit\n                            ")
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer col-md-12 text-center" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+          attrs: {
+            type: "button",
+            title: "Cancel",
+            onclick: "$('#modal-admin-penalty-edit').modal('hide')"
+          }
+        },
+        [_c("i", { staticClass: "fa fa-times" })]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "btn btn-success btn-outline sbold uppercase btn-circle tooltips",
+          attrs: { title: "Save" }
+        },
+        [_c("i", { staticClass: "fa fa-save" })]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -5661,7 +6963,7 @@ var render = function() {
                           _c(
                             "span",
                             {
-                              staticClass: "tooltips",
+                              staticClass: "tooltipss",
                               attrs: {
                                 title: discount.discount_type.description
                               }
@@ -8918,7 +10220,7 @@ $(document).ready(function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Oscar\Documents\PCW\1.Movilidad\pcw_mov_server_web\resources\js\takings\passengers\liquidation\main.js */"./resources/js/takings/passengers/liquidation/main.js");
+module.exports = __webpack_require__(/*! E:\pcw_mov_server_web_beta\resources\js\takings\passengers\liquidation\main.js */"./resources/js/takings/passengers/liquidation/main.js");
 
 
 /***/ })

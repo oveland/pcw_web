@@ -39,7 +39,7 @@ class Discount extends Model
 {
     protected $table = 'bea_discounts';
 
-    protected $fillable = ['value'];
+    protected $fillable = ['vehicle_id', 'route_id', 'trajectory_id', 'discount_type_id', 'value'];
 
     function getDateFormat()
     {

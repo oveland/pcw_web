@@ -2,6 +2,11 @@
     <div class="">
         <div class="portlet light bordered">
             <div class="portlet-title tabbable-line">
+                <div class="text-center col-md-12" style="position: absolute">
+                    <button type="button" class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Close" data-dismiss="modal">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
                 <div class="caption">
                     <i class="fa fa-cogs"></i>
                     <span class="caption-subject font-dark bold uppercase">Params Manager</span>
@@ -27,7 +32,7 @@
             <div class="portlet-body">
                 <div class="tab-content">
                     <div class="tab-pane active" id="discounts-params-tab">
-                        <admin-discount-component :vehicle="vehicle" :routes="routes" :trajectories="trajectories" v-on:refresh-report="$emit('refresh-report')"></admin-discount-component>
+                        <admin-discount-component :vehicles="vehicles" :routes="routes" :trajectories="trajectories" v-on:refresh-report="$emit('refresh-report')"></admin-discount-component>
                     </div>
                     <div class="tab-pane" id="commissions-params-tab">
                         <admin-commission-component :routes="routes" :commissions="commissions"></admin-commission-component>
@@ -60,6 +65,9 @@
         computed: {
             thereAreParams: function () {
                 return this.params.length > 0;
+            },
+            vehicles: function () {
+                return this.params.vehicles;
             },
             routes: function () {
                 return this.params.routes;

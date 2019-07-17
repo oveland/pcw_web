@@ -31,16 +31,29 @@ class DiscountService
 
     /**
      * @param $vehicleId
-     * @param $routeId
      * @param $trajectoryId
      * @return Discount[]
      */
-    function byVehicleAndRouteAndTrajectory($vehicleId, $routeId, $trajectoryId)
+    function byVehicleAndTrajectory($vehicleId, $trajectoryId)
+    {
+        return Discount::with(['vehicle', 'route', 'trajectory', 'discountType'])
+            ->where('vehicle_id', $vehicleId)
+            ->where('trajectory_id', $trajectoryId)
+            ->get();
+    }
+
+    /**
+     * @param $vehicleId
+     * @param $routeId
+     * @param $discountTypeId
+     * @return Discount
+     */
+    function byVehicleAndRouteAndType($vehicleId, $routeId, $discountTypeId)
     {
         return Discount::with(['vehicle', 'route', 'trajectory', 'discountType'])
             ->where('vehicle_id', $vehicleId)
             ->where('route_id', $routeId)
-            ->where('trajectory_id', $trajectoryId)
-            ->get();
+            ->where('discount_type_id', $discountTypeId)
+            ->get()->first();
     }
 }

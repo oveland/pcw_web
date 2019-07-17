@@ -45,7 +45,7 @@
                 <td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center col-md-3">
                     <div v-for="discount in mark.discounts" v-if="discount">
-                        <span :title="discount.discount_type.description" class="tooltips">
+                        <span :title="discount.discount_type.description" class="tooltipss">
                             <i :class="discount.discount_type.icon"></i> {{ discount.value | numberFormat('$0,0') }}
                         </span><br>
                     </div>
