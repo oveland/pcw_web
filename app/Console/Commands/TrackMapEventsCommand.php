@@ -86,7 +86,7 @@ class TrackMapEventsCommand extends Command
         if ($this->company) {
             foreach (range(1, 3) as $index) {
                 $this->checkAndSendEvents();
-                sleep(15);
+                sleep(20);
             }
         } else {
             $this->logData("Company does'nt exists in DB!");
