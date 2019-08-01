@@ -46,7 +46,10 @@
                             <td class="text-center">{{ liquidation.liquidation.totalDiscounts | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.liquidation.totalCommissions | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.liquidation.totalPenalties | numberFormat('$0,0') }}</td>
-                            <td class="text-center text-bold">{{ liquidation.liquidation.total | numberFormat('$0,0') }}</td>
+                            <td class="text-center text-bold">
+                                {{ liquidation.liquidation.total | numberFormat('$0,0') }} <br>
+                                <small>{{ liquidation.marks.length }} turns</small>
+                            </td>
 
                             <td class="text-center hide">
                                 <pre class="language-json">
@@ -91,18 +94,94 @@
                         <div class="portlet-body">
                             <div class="tab-content row">
                                 <div id="detail-marks" class="tab-pane fade active in">
-                                    <table-component :marks="liquidationDetail.marks" :to-takings="true" :totals="liquidationDetail.totals"></table-component>
+                                    <table-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals"></table-component>
                                 </div>
                                 <div id="detail-liquidation" class="tab-pane fade">
-                                    <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10" v-if="!showPrintArea">
-                                        <a href="javascript:" target="_blank" class="pull-left header-preview" @click="exportLiquidation()">
-                                            <i class="fa fa-download"></i> Print
-                                        </a>
-                                        <span class="pull-right header-preview">#{{ liquidationDetail.id }}</span>
-                                        <preview-component :liquidation="liquidationDetail.liquidation" :search="search" :view-takings="true" ></preview-component>
-                                    </div>
-                                    <div class="portlet light bordered phase-container col-md-8 col-md-offset-2 p-0 pdf-container" v-if="showPrintArea">
-                                        <vue-friendly-iframe :src="linkToPrintLiquidation"></vue-friendly-iframe>
+                                    <div class="portlet light portlet-fit bordered">
+                                        <div class="portlet-title hide">
+                                            <div class="caption">
+                                                <i class="fa fa-dollar font-green"></i>
+                                                <span class="caption-subject font-green bold uppercase">
+                                                    Liquidation details
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div class="mt-element-step">
+                                                <div class="row step-line">
+                                                    <div class="phases col-md-3 mt-step-col first phase-inventory warning"
+                                                         data-toggle="tab" href="#step-discounts-detail" data-active="warning">
+                                                        <div class="mt-step-number bg-white">
+                                                            <i class="icon-tag"></i>
+                                                        </div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">Discounts</div>
+                                                        <div class="mt-step-content font-grey-cascade hide"></div>
+                                                    </div>
+                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
+                                                         href="#step-commissions-detail" data-active="active">
+                                                        <div class="mt-step-number bg-white">
+                                                            <i class=" icon-user-follow"></i>
+                                                        </div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">Commissions</div>
+                                                        <div class="mt-step-content font-grey-cascade hide"></div>
+                                                    </div>
+                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
+                                                         href="#step-penalties-detail" data-active="error">
+                                                        <div class="mt-step-number bg-white">
+                                                            <i class="icon-shield"></i>
+                                                        </div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">Penalties</div>
+                                                        <div class="mt-step-content font-grey-cascade hide"></div>
+                                                    </div>
+                                                    <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
+                                                         href="#step-liquidate-detail" data-active="done">
+                                                        <div class="mt-step-number bg-white">
+                                                            <i class="icon-calculator"></i>
+                                                        </div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">Liquidation</div>
+                                                        <div class="mt-step-content font-grey-cascade"></div>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="tab-content">
+                                                        <div id="step-discounts-detail" class="tab-pane fade in active">
+                                                            <div class="portlet light bordered phase-container col-md-12 m-t-10">
+                                                                <discount-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
+                                                            </div>
+                                                        </div>
+                                                        <div id="step-commissions-detail" class="tab-pane fade">
+                                                            <div class="portlet light bordered phase-container col-md-12 m-t-10">
+                                                                <commission-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
+                                                            </div>
+                                                        </div>
+                                                        <div id="step-penalties-detail" class="tab-pane fade">
+                                                            <div class="portlet light bordered phase-container col-md-12 m-t-10">
+                                                                <penalty-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></penalty-component>
+                                                            </div>
+                                                        </div>
+                                                        <div id="step-liquidate-detail" class="tab-pane fade">
+                                                            <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10 text-center">
+                                                                <a href="javascript:" target="_blank" class="pull-left header-preview" @click="exportLiquidation()">
+                                                                    <i class="fa fa-download"></i> Print basic
+                                                                </a>
+
+                                                                <a href="javascript:" target="_blank" class="pull-right header-preview" @click="exportLiquidation(true)">
+                                                                    <i class="fa fa-download"></i> Print detailed
+                                                                </a>
+                                                                <span class="header-preview">#{{ liquidationDetail.id }}</span>
+                                                                <preview-component v-if="!showPrintArea" :liquidation="liquidationDetail.liquidation" :search="search" :readonly="true"></preview-component>
+                                                            </div>
+                                                            <div class="portlet light bordered phase-container col-md-8 col-md-offset-2 p-0 pdf-container" v-if="showPrintArea">
+                                                                <vue-friendly-iframe :src="linkToPrintLiquidation"></vue-friendly-iframe>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -118,9 +197,12 @@
 </template>
 
 <script>
-    import TableComponent from './TableComponent';
+    import DiscountComponent from './DiscountComponent.vue';
+    import CommissionComponent from './CommissionComponent';
+    import PenaltyComponent from './PenaltyComponent';
     import PreviewComponent from './PreviewComponent';
     import VueFriendlyIframe from 'vue-friendly-iframe';
+    import TableComponent from "./TableComponent";
 
 
     export default {
@@ -157,9 +239,9 @@
             }
         },
         methods: {
-            exportLiquidation(){
+            exportLiquidation(all){
                 this.showPrintArea = true;
-                return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id;
+                return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id + (all ? '&all=true' : '');
             },
             seeLiquidationDetail(liquidationId) {
                 this.liquidationDetail = _.find(this.liquidations, function(liquidation){
@@ -206,6 +288,9 @@
         },
         components: {
             TableComponent,
+            DiscountComponent,
+            CommissionComponent,
+            PenaltyComponent,
             PreviewComponent,
             VueFriendlyIframe
         }

@@ -65,9 +65,28 @@ class TakingsPassengersLiquidationController extends Controller
     public function exportLiquidation(Request $request)
     {
         $liquidation = Liquidation::find($request->get('id'));
-        $pdf = PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif'])->loadView('takings.passengers.liquidation.exports.liquidation', compact('liquidation'));
 
-        $customPaper = array(0, 0, 350, 340);
+        //dd($liquidation->marks->first()->getAPIFields());
+
+        $options = (object)[
+            'w' => 350,
+            'h' => 340,
+            'dpi' => 150,
+        ];
+        $template = 'takings.passengers.liquidation.exports.liquidation';
+
+        if($request->get('all')){
+            $template = 'takings.passengers.liquidation.exports.liquidationAll';
+            $options = (object)[
+                'w' => 350,
+                'h' => 1440,
+                'dpi' => 150,
+            ];
+        }
+
+        $pdf = PDF::setOptions(['dpi' => $options->dpi, 'defaultFont' => 'sans-serif'])->loadView($template, compact('liquidation'));
+
+        $customPaper = array(0, 0, $options->w, $options->h);
         $pdf->setPaper($customPaper);
 
         return $pdf->stream('invoice.pdf');

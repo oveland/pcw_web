@@ -74,7 +74,7 @@
         </tr>
         <tr>
             <td rowspan="2" colspan="5" class="text-center">
-                <button v-if="!toTakings" class="btn btn-sm green-haze btn-outline sbold uppercase m-t-5" data-toggle="modal" data-target="#modal-generate-liquidation">
+                <button v-if="!readonly" class="btn btn-sm green-haze btn-outline sbold uppercase m-t-5" data-toggle="modal" data-target="#modal-generate-liquidation">
                     <i class="fa fa-dollar"></i> Generate liquidation
                 </button>
             </td>
@@ -105,7 +105,7 @@
     export default {
         name: 'TableComponent',
         props: {
-            toTakings: Boolean,
+            readonly: Boolean,
             marks: Array,
             totals: Object
         },

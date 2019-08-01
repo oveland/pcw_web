@@ -1209,6 +1209,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "DiscountComponent",
   props: {
     marks: Array,
+    readonly: Boolean,
     liquidation: Object
   },
   methods: {
@@ -1682,7 +1683,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     search: Object,
     liquidation: Object,
-    viewTakings: Boolean
+    readonly: Boolean
   },
   computed: {
     totalToLiquidate: function totalToLiquidate() {
@@ -1892,7 +1893,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
   props: {
-    toTakings: Boolean,
+    readonly: Boolean,
     marks: Array,
     totals: Object
   },
@@ -1910,10 +1911,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _TableComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TableComponent */ "./resources/js/takings/passengers/liquidation/components/TableComponent.vue");
-/* harmony import */ var _PreviewComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PreviewComponent */ "./resources/js/takings/passengers/liquidation/components/PreviewComponent.vue");
-/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-friendly-iframe */ "./node_modules/vue-friendly-iframe/dist/vue-friendly-iframe.js");
-/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _DiscountComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DiscountComponent.vue */ "./resources/js/takings/passengers/liquidation/components/DiscountComponent.vue");
+/* harmony import */ var _CommissionComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommissionComponent */ "./resources/js/takings/passengers/liquidation/components/CommissionComponent.vue");
+/* harmony import */ var _PenaltyComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PenaltyComponent */ "./resources/js/takings/passengers/liquidation/components/PenaltyComponent.vue");
+/* harmony import */ var _PreviewComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PreviewComponent */ "./resources/js/takings/passengers/liquidation/components/PreviewComponent.vue");
+/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-friendly-iframe */ "./node_modules/vue-friendly-iframe/dist/vue-friendly-iframe.js");
+/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _TableComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TableComponent */ "./resources/js/takings/passengers/liquidation/components/TableComponent.vue");
 //
 //
 //
@@ -2033,6 +2037,88 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
 
 
 
@@ -2070,9 +2156,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    exportLiquidation: function exportLiquidation() {
+    exportLiquidation: function exportLiquidation(all) {
       this.showPrintArea = true;
-      return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id;
+      return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id + (all ? '&all=true' : '');
     },
     seeLiquidationDetail: function seeLiquidationDetail(liquidationId) {
       this.liquidationDetail = _.find(this.liquidations, function (liquidation) {
@@ -2123,9 +2209,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   components: {
-    TableComponent: _TableComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
-    PreviewComponent: _PreviewComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
-    VueFriendlyIframe: vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_2___default.a
+    TableComponent: _TableComponent__WEBPACK_IMPORTED_MODULE_5__["default"],
+    DiscountComponent: _DiscountComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    CommissionComponent: _CommissionComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
+    PenaltyComponent: _PenaltyComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
+    PreviewComponent: _PreviewComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
+    VueFriendlyIframe: vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4___default.a
   }
 });
 
@@ -7098,22 +7187,26 @@ var render = function() {
                       "span",
                       { staticClass: "text-bold col-md-6 pull-right" },
                       [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-danger btn-sm",
-                            staticStyle: {
-                              position: "absolute",
-                              left: "-15px"
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.removeOtherDiscount(otherDiscount.id)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-trash" })]
-                        ),
+                        !_vm.readonly
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                staticStyle: {
+                                  position: "absolute",
+                                  left: "-15px"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.removeOtherDiscount(
+                                      otherDiscount.id
+                                    )
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash" })]
+                            )
+                          : _vm._e(),
                         _vm._v(" "),
                         _c("div", { staticClass: "input-icon" }, [
                           _c("i", { staticClass: "icon-tag font-green" }),
@@ -7129,7 +7222,12 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control input-sm",
-                            attrs: { type: "text", placeholder: "Description" },
+                            attrs: {
+                              type: "text",
+                              readonly: _vm.readonly,
+                              disabled: _vm.readonly,
+                              placeholder: "Description"
+                            },
                             domProps: { value: otherDiscount.name },
                             on: {
                               input: function($event) {
@@ -7168,7 +7266,12 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control input-sm",
-                      attrs: { type: "text", placeholder: "Discount" },
+                      attrs: {
+                        type: "text",
+                        readonly: _vm.readonly,
+                        disabled: _vm.readonly,
+                        placeholder: "Discount"
+                      },
                       domProps: { value: otherDiscount.value },
                       on: {
                         input: function($event) {
@@ -7191,25 +7294,31 @@ var render = function() {
               ])
             }),
             _vm._v(" "),
-            _c("tr", {}, [
-              _c("td", { staticClass: "text-right", attrs: { colspan: "8" } }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm btn-outline btn-white",
-                    on: {
-                      click: function($event) {
-                        return _vm.addOtherDiscount()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-plus" }),
-                    _vm._v(" Add\n                ")
-                  ]
-                )
-              ])
-            ])
+            !_vm.readonly
+              ? _c("tr", {}, [
+                  _c(
+                    "td",
+                    { staticClass: "text-right", attrs: { colspan: "8" } },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm btn-outline btn-white",
+                          on: {
+                            click: function($event) {
+                              return _vm.addOtherDiscount()
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-plus" }),
+                          _vm._v(" Add\n                ")
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              : _vm._e()
           ],
           2
         )
@@ -8084,7 +8193,7 @@ var render = function() {
     _vm._v(" "),
     _c("hr", { staticClass: "hr" }),
     _vm._v(" "),
-    !_vm.viewTakings
+    !_vm.readonly
       ? _c("div", { staticClass: "text-center" }, [
           _c(
             "button",
@@ -8395,7 +8504,7 @@ var render = function() {
                 attrs: { rowspan: "2", colspan: "5" }
               },
               [
-                !_vm.toTakings
+                !_vm.readonly
                   ? _c(
                       "button",
                       {
@@ -8705,13 +8814,20 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", { staticClass: "text-center text-bold" }, [
                       _vm._v(
-                        _vm._s(
-                          _vm._f("numberFormat")(
-                            liquidation.liquidation.total,
-                            "$0,0"
-                          )
-                        )
-                      )
+                        "\n                            " +
+                          _vm._s(
+                            _vm._f("numberFormat")(
+                              liquidation.liquidation.total,
+                              "$0,0"
+                            )
+                          ) +
+                          " "
+                      ),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("small", [
+                        _vm._v(_vm._s(liquidation.marks.length) + " turns")
+                      ])
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-center hide" }, [
@@ -8790,8 +8906,8 @@ var render = function() {
                     [
                       _c("table-component", {
                         attrs: {
+                          readonly: true,
                           marks: _vm.liquidationDetail.marks,
-                          "to-takings": true,
                           totals: _vm.liquidationDetail.totals
                         }
                       })
@@ -8806,77 +8922,239 @@ var render = function() {
                       attrs: { id: "detail-liquidation" }
                     },
                     [
-                      !_vm.showPrintArea
-                        ? _c(
-                            "div",
-                            {
-                              staticClass:
-                                "portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10"
-                            },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "pull-left header-preview",
-                                  attrs: {
-                                    href: "javascript:",
-                                    target: "_blank"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.exportLiquidation()
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", { staticClass: "fa fa-download" }),
-                                  _vm._v(
-                                    " Print\n                                    "
+                      _c(
+                        "div",
+                        { staticClass: "portlet light portlet-fit bordered" },
+                        [
+                          _vm._m(3),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "portlet-body" }, [
+                            _vm._m(4),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-md-12" }, [
+                                _c("div", { staticClass: "tab-content" }, [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "tab-pane fade in active",
+                                      attrs: { id: "step-discounts-detail" }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "portlet light bordered phase-container col-md-12 m-t-10"
+                                        },
+                                        [
+                                          _c("discount-component", {
+                                            attrs: {
+                                              readonly: true,
+                                              marks:
+                                                _vm.liquidationDetail.marks,
+                                              totals:
+                                                _vm.liquidationDetail.totals,
+                                              liquidation:
+                                                _vm.liquidationDetail
+                                                  .liquidation
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "tab-pane fade",
+                                      attrs: { id: "step-commissions-detail" }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "portlet light bordered phase-container col-md-12 m-t-10"
+                                        },
+                                        [
+                                          _c("commission-component", {
+                                            attrs: {
+                                              marks:
+                                                _vm.liquidationDetail.marks,
+                                              totals:
+                                                _vm.liquidationDetail.totals,
+                                              liquidation:
+                                                _vm.liquidationDetail
+                                                  .liquidation
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "tab-pane fade",
+                                      attrs: { id: "step-penalties-detail" }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "portlet light bordered phase-container col-md-12 m-t-10"
+                                        },
+                                        [
+                                          _c("penalty-component", {
+                                            attrs: {
+                                              marks:
+                                                _vm.liquidationDetail.marks,
+                                              totals:
+                                                _vm.liquidationDetail.totals,
+                                              liquidation:
+                                                _vm.liquidationDetail
+                                                  .liquidation
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "tab-pane fade",
+                                      attrs: { id: "step-liquidate-detail" }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10 text-center"
+                                        },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              staticClass:
+                                                "pull-left header-preview",
+                                              attrs: {
+                                                href: "javascript:",
+                                                target: "_blank"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.exportLiquidation()
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("i", {
+                                                staticClass: "fa fa-download"
+                                              }),
+                                              _vm._v(
+                                                " Print basic\n                                                            "
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "a",
+                                            {
+                                              staticClass:
+                                                "pull-right header-preview",
+                                              attrs: {
+                                                href: "javascript:",
+                                                target: "_blank"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.exportLiquidation(
+                                                    true
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("i", {
+                                                staticClass: "fa fa-download"
+                                              }),
+                                              _vm._v(
+                                                " Print detailed\n                                                            "
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "span",
+                                            { staticClass: "header-preview" },
+                                            [
+                                              _vm._v(
+                                                "#" +
+                                                  _vm._s(
+                                                    _vm.liquidationDetail.id
+                                                  )
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          !_vm.showPrintArea
+                                            ? _c("preview-component", {
+                                                attrs: {
+                                                  liquidation:
+                                                    _vm.liquidationDetail
+                                                      .liquidation,
+                                                  search: _vm.search,
+                                                  readonly: true
+                                                }
+                                              })
+                                            : _vm._e()
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _vm.showPrintArea
+                                        ? _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "portlet light bordered phase-container col-md-8 col-md-offset-2 p-0 pdf-container"
+                                            },
+                                            [
+                                              _c("vue-friendly-iframe", {
+                                                attrs: {
+                                                  src:
+                                                    _vm.linkToPrintLiquidation
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        : _vm._e()
+                                    ]
                                   )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                { staticClass: "pull-right header-preview" },
-                                [_vm._v("#" + _vm._s(_vm.liquidationDetail.id))]
-                              ),
-                              _vm._v(" "),
-                              _c("preview-component", {
-                                attrs: {
-                                  liquidation:
-                                    _vm.liquidationDetail.liquidation,
-                                  search: _vm.search,
-                                  "view-takings": true
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.showPrintArea
-                        ? _c(
-                            "div",
-                            {
-                              staticClass:
-                                "portlet light bordered phase-container col-md-8 col-md-offset-2 p-0 pdf-container"
-                            },
-                            [
-                              _c("vue-friendly-iframe", {
-                                attrs: { src: _vm.linkToPrintLiquidation }
-                              })
-                            ],
-                            1
-                          )
-                        : _vm._e()
+                                ])
+                              ])
+                            ])
+                          ])
+                        ]
+                      )
                     ]
                   )
                 ])
               ])
             ]),
             _vm._v(" "),
-            _vm._m(3)
+            _vm._m(5)
           ])
         ])
       ]
@@ -8996,6 +9274,137 @@ var staticRenderFns = [
           )
         ])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "portlet-title hide" }, [
+      _c("div", { staticClass: "caption" }, [
+        _c("i", { staticClass: "fa fa-dollar font-green" }),
+        _vm._v(" "),
+        _c(
+          "span",
+          { staticClass: "caption-subject font-green bold uppercase" },
+          [
+            _vm._v(
+              "\n                                                Liquidation details\n                                            "
+            )
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-element-step" }, [
+      _c("div", { staticClass: "row step-line" }, [
+        _c(
+          "div",
+          {
+            staticClass:
+              "phases col-md-3 mt-step-col first phase-inventory warning",
+            attrs: {
+              "data-toggle": "tab",
+              href: "#step-discounts-detail",
+              "data-active": "warning"
+            }
+          },
+          [
+            _c("div", { staticClass: "mt-step-number bg-white" }, [
+              _c("i", { staticClass: "icon-tag" })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "mt-step-title uppercase font-grey-cascade" },
+              [_vm._v("Discounts")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "mt-step-content font-grey-cascade hide" })
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "phases col-md-3 mt-step-col phase-inventory",
+            attrs: {
+              "data-toggle": "tab",
+              href: "#step-commissions-detail",
+              "data-active": "active"
+            }
+          },
+          [
+            _c("div", { staticClass: "mt-step-number bg-white" }, [
+              _c("i", { staticClass: " icon-user-follow" })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "mt-step-title uppercase font-grey-cascade" },
+              [_vm._v("Commissions")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "mt-step-content font-grey-cascade hide" })
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "phases col-md-3 mt-step-col phase-inventory",
+            attrs: {
+              "data-toggle": "tab",
+              href: "#step-penalties-detail",
+              "data-active": "error"
+            }
+          },
+          [
+            _c("div", { staticClass: "mt-step-number bg-white" }, [
+              _c("i", { staticClass: "icon-shield" })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "mt-step-title uppercase font-grey-cascade" },
+              [_vm._v("Penalties")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "mt-step-content font-grey-cascade hide" })
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "phases col-md-3 mt-step-col last phase-inventory",
+            attrs: {
+              "data-toggle": "tab",
+              href: "#step-liquidate-detail",
+              "data-active": "done"
+            }
+          },
+          [
+            _c("div", { staticClass: "mt-step-number bg-white" }, [
+              _c("i", { staticClass: "icon-calculator" })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "mt-step-title uppercase font-grey-cascade" },
+              [_vm._v("Liquidation")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "mt-step-content font-grey-cascade" })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("hr")
     ])
   },
   function() {

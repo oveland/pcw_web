@@ -88,22 +88,22 @@
             <tr class="" v-for="otherDiscount in liquidation.otherDiscounts">
                 <td colspan="7" class="text-right">
                 <span class="text-bold col-md-6 pull-right">
-                    <button class="btn btn-danger btn-sm" style="position: absolute;left: -15px;" @click="removeOtherDiscount(otherDiscount.id)">
+                    <button v-if="!readonly" class="btn btn-danger btn-sm" style="position: absolute;left: -15px;" @click="removeOtherDiscount(otherDiscount.id)">
                         <i class="fa fa-trash"></i>
                     </button>
                     <div class="input-icon">
-                        <i class="icon-tag font-green"></i> <input type="text" class="form-control input-sm" placeholder="Description" v-model.number="otherDiscount.name">
+                        <i class="icon-tag font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" placeholder="Description" v-model.number="otherDiscount.name">
                     </div>
                 </span>
                 </td>
                 <td class="text-center">
                     <div class="input-icon">
-                        <i class="fa fa-dollar font-green"></i> <input type="text" class="form-control input-sm" placeholder="Discount" v-model.number="otherDiscount.value">
+                        <i class="fa fa-dollar font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" placeholder="Discount" v-model.number="otherDiscount.value">
                     </div>
                 </td>
             </tr>
 
-            <tr class="">
+            <tr v-if="!readonly" class="">
                 <td colspan="8" class="text-right">
                     <button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount()">
                         <i class="fa fa-plus"></i> Add
@@ -135,6 +135,7 @@
         name: "DiscountComponent",
         props: {
             marks: Array,
+            readonly: Boolean,
             liquidation: Object,
         },
         methods: {

@@ -552,6 +552,7 @@
   "Duration": "Duración",
   "Generate liquidation": "Generar liquidación",
   "Tolls": "Peajes",
+  "Fuel": "Combustible",
   "Washing": "Lavado",
   "Discounts": "Descuentos",
   "discounts": "descuentos",
@@ -576,7 +577,7 @@
   "Mobility auxilio": "Auxilio de Movilidad",
   "Discount by": "Descuento por",
   "of": "de",
-  "TAKING RECEIPT": "COMPROBANTE DE REACUDO",
+  "TAKING RECEIPT": "COMPROBANTE DE RECAUDO",
   "Printed at": "Impreso en",
   "Liquidated at": "Liquidado en",
   "Total liquidation": "Total Liquidación",
@@ -587,5 +588,10 @@
   "Commission edited successfully": "El valor de comisión ha sido actualizado correctamente",
   "Penalties edited successfully": "El varlor de penalización ha sido actualizado exitósamente",
   "Commission unable to update": "No ha sido posible actualizar los valores de la comisión",
-  "Penalty unable to update": "No ha sido posible actualizar los valores de penalización"
+  "Penalty unable to update": "No ha sido posible actualizar los valores de penalización",
+  "Other discounts": "Otros decuentos",
+  "Total Gross BEA": "Total BEA bruto",
+  "Gross BEA": "BEA bruto",
+  "Percent": "Porcentaje",
+  "Boarding": "Abordados"
 }

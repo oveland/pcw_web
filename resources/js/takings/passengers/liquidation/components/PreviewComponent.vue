@@ -40,7 +40,7 @@
             <span class="pull-right text-bold">{{ totalToLiquidate | numberFormat('$0,0') }}</span>
         </h3>
         <hr class="hr">
-        <div class="text-center" v-if="!viewTakings">
+        <div class="text-center" v-if="!readonly">
             <button class="btn btn-circle red btn-outline f-s-13" @click="$emit('liquidate')" :disabled="liquidation.totalBea === 0">
                 LIQUIDATE <i class="icon-check"></i>
             </button>
@@ -54,7 +54,7 @@
         props: {
             search:Object,
             liquidation: Object,
-            viewTakings: Boolean
+            readonly: Boolean
         },
         computed: {
             totalToLiquidate: function () {
