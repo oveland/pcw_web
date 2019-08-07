@@ -33,7 +33,7 @@
             @foreach($controlPointTimeReportsByRoundTrip as $roundTrip => $controlPointTimeReportByRoundTrip)
                 <div id="report-tab-{{ $roundTrip }}" class="tab-pane fade report-tab-cp {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
-                        <div class="table-responsive col-md-12" style="padding-bottom: 90px">
+                        <div class="table-responsive col-md-12" style="padding-bottom: 90px;height: 1000px">
                             @php
                                 $controlPoints =  $route->controlPoints;
                                 $reportsByVehicles = $controlPointTimeReportByRoundTrip->groupBy('vehicle_id')

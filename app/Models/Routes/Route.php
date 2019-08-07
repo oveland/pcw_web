@@ -116,7 +116,7 @@ class Route extends Model
             return $this->hasMany(Route::class)->active();
         }
         else{
-            return $this->hasMany(Route::class, 'id', 'id');
+            return $this->hasMany(Route::class)->where('id', $this->id);
         }
     }
 }

@@ -23,7 +23,7 @@
         <div class="tab-content panel p-0">
             <div id="report-tab" class="tab-pane fade active in report-tab-cp">
                 <div class="">
-                    <div class="table-responsive col-md-12 p-0" style="padding-bottom: 90px">
+                    <div class="table-responsive col-md-12 p-0" style="padding-bottom: 90px;height: 1000px">
                         <table class="table table-bordered table-condensed table-hover table-valign-middle table-report-control-point data-table-report">
                             <thead>
                             <tr class="">

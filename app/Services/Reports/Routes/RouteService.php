@@ -84,6 +84,7 @@ class RouteService
                             'value' => $report->status_in_minutes,
                             'latitude' => $location->latitude,
                             'longitude' => $location->longitude,
+                            'orientation' => $location->orientation,
                             'trajectoryOfReturn' => $report->distancem >= $distanceOfReturn,
                             'speed' => number_format($location->speed, 1, ',', '.'),
                             'averageSpeed' => ($reportData->count() > 0) ? $totalSpeed / $reportData->count() : 0,
