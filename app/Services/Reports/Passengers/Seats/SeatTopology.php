@@ -22,11 +22,27 @@ abstract class SeatTopology
         return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus', 'hexSeating'));
     }
 
+    function getHexSeatFromFrameCounter($frameCounter){
+        $frameFields = explode(" ", $frameCounter);
+        $hexSeatFromFrameCounter = null;
+        foreach ($frameFields as $frameField){
+            if(strlen($frameField) == 6){
+                $hexSeatFromFrameCounter = $frameField;
+                break;
+            }
+        }
+
+        return $hexSeatFromFrameCounter;
+    }
+
     function getSeatingStatus(Passenger $passenger)
     {
+        $hexSeatingRT = $this->getHexSeatFromFrameCounter($passenger->frame);
         return [
             'seatingStatus' => self::getSeatingStatusFromHex($passenger->hexSeats),
-            'hexSeating' => $passenger->hexSeats,
+            'seatingStatusRT' => self::getSeatingStatusFromHex($hexSeatingRT),
+            'hexSeating' => $passenger->hexSeats.($passenger->vehicle_id == 1086 ? " | $hexSeatingRT" : ''),
+            'hexSeatingRT' => $hexSeatingRT,
             'location' => [
                 'latitude' => $passenger->latitude,
                 'longitude' => $passenger->longitude

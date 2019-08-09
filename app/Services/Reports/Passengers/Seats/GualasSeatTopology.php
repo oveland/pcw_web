@@ -20,7 +20,10 @@ class GualasSeatTopology extends SeatTopology
     function makeHtmlTemplate(Passenger $passenger)
     {
         $hexSeating = $passenger->hexSeats;
+        $hexSeatFromFrameCounter = $this->getHexSeatFromFrameCounter($passenger->frame);
         $seatingStatus = self::getSeatingStatusFromHex($hexSeating);
-        return view('reports.passengers.sensors.seats.topologies.gualas', compact('seatingStatus', 'hexSeating'));
+        $seatingStatusRT = self::getSeatingStatusFromHex($hexSeatFromFrameCounter); // Seating status on real time (Only for counter of vehicle 15 cootransol)
+        //dd($seatingStatusRT);
+        return view('reports.passengers.sensors.seats.topologies.gualas', compact(['seatingStatus', 'seatingStatusRT', 'hexSeating']));
     }
 }

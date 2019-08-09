@@ -15,6 +15,14 @@
         background: #003661  !important;
     }
 
+    .seat-active-2 {
+        background: rgba(0, 107, 112, 0.68) !important;
+    }
+
+    .seat-active-2:hover {
+        background: #316a73 !important;
+    }
+
     .seat-top-guala {
         width: 35px !important;
         height: 20px !important;
@@ -52,7 +60,10 @@
     <div class='col-md-12 no-padding'>
         <div class='col-md-11 col-sm-11 col-xs-11 data-row1 no-padding' style='border-right: 1px solid grey;'>
             @foreach ($seatingStatus['row1'] as $seat => $status)
-                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala tooltips' data-title='{{ $seat }}'>
+                @php
+                    $class =  $status == 1 ? 'active':( $seatingStatusRT && $seatingStatusRT['row1']->$seat == 1 ? 'active-2':'inactive')
+                @endphp
+                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $class }} seat-top-guala tooltips' data-title='{{ $seat }}'>
                     &nbsp;&nbsp;
                 </span>
             @endforeach
@@ -75,7 +86,10 @@
         </div>
         <div class='col-md-1 col-sm-1 col-xs-1 no-padding data-center'>
             @foreach ($seatingStatus['center'] as $seat => $status)
-                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
+                @php
+                    $class =  $status == 1 ? 'active':( $seatingStatusRT && $seatingStatusRT['center']->$seat == 1 ? 'active-2':'inactive')
+                @endphp
+                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $class }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
                     &nbsp;
                 </span>
             @endforeach
@@ -87,7 +101,10 @@
     <div class='col-md-12 no-padding'>
         <div class='col-md-11 col-sm-11 col-xs-11 data-row2 no-padding' style='border-right: 1px solid grey'>
             @foreach ($seatingStatus['row2'] as $seat => $status)
-                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala tooltips' data-title='{{ $seat }}'>
+                @php
+                    $class =  $status == 1 ? 'active':( $seatingStatusRT && $seatingStatusRT['row2']->$seat == 1 ? 'active-2':'inactive')
+                @endphp
+                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $class }} seat-top-guala tooltips' data-title='{{ $seat }}'>
                     &nbsp;
                 </span>
             @endforeach
@@ -95,7 +112,10 @@
 
         <div class='col-md-1 col-sm-1 col-xs-1 no-padding data-window'>
             @foreach ($seatingStatus['window'] as $seat => $status)
-                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $status == 1 ? 'active':'inactive' }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
+                @php
+                    $class =  $status == 1 ? 'active':( $seatingStatusRT && $seatingStatusRT['window']->$seat == 1 ? 'active-2':'inactive')
+                @endphp
+                <span id="seat-{{ $seat }}" class='btn btn-xs seat-{{ $class }} seat-top-guala seat-driver tooltips' data-title='{{ $seat }}'>&nbsp;
                     &nbsp;
                 </span>
             @endforeach

@@ -118,7 +118,9 @@ class Passenger extends Model
         foreach ($arrayFrame as $a){
             if( strlen($a) == 6 ){
                 $hexFromFrame = $a;
-                break;
+                if($this->vehicle_id != 1086){
+                    break;
+                }
             }
         }
 

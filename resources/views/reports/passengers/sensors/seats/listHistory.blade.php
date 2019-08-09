@@ -84,10 +84,15 @@
 
             $('.hex-seating').html(report.hexSeating);
             $.each(report.seatingStatus, function (container, seating) {
+                const seatingRT = report.seatingStatusRT[container];
                 $.each(seating, function (seat, status) {
+                    const statusRT = seatingRT[seat];
                     let seatView = $('.data-'+container).find('#seat-'+seat);
-                    seatView.removeClass('seat-active').removeClass('seat-inactive');
-                    seatView.addClass( status === 1 ? 'seat-active':'seat-inactive' );
+                    seatView.removeClass('seat-active').removeClass('seat-active-2').removeClass('seat-inactive');
+
+                    let seatClass = status === 1 ? 'seat-active':'seat-inactive';
+                    seatClass = statusRT === 1 ? 'seat-active-2':seatClass;
+                    seatView.addClass( seatClass );
                 });
             });
 
