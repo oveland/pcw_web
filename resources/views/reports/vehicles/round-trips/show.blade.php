@@ -9,7 +9,7 @@
                 <a class="btn btn-info btn-sm bg-info-dark btn-rounded see-details">
                     <i class="fa fa-list-alt" aria-hidden="true"></i> @lang('See details')
                 </a>
-                <a href="{{ route('report-vehicle-round-trips-show') }}?company={{ $roundTripsReport->company->id }}&date-report={{ $roundTripsReport->dateReport }}&export=true"
+                <a href="{{ route('report-vehicle-round-trips-show') }}?company={{ $roundTripsReport->company->id }}&date-report={{ $roundTripsReport->dateReport }}&route-report={{ $roundTripsReport->routeReport }}&export=true"
                    class="btn btn-lime btn-sm bg-lime-dark btn-rounded tooltips" data-title="@lang('Export excel')">
                     <i class="fa fa-file-excel-o"></i>
                 </a>

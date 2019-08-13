@@ -38,11 +38,11 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="company" class="control-label field-required">@lang('Company')</label>
+                                    <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
-                                        <select name="company" id="company" class="default-select2 form-control col-md-12">
+                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                             @endforeach
@@ -51,7 +51,18 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <div class="form-group">
+                                    <select name="route-report" id="route-report"
+                                            class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="date-report"
                                        class="control-label field-required">@lang('Date report')</label>
@@ -101,7 +112,7 @@
                 }
             });
 
-            $('#company, #date-report').change(function () {
+            $('#route-report, #date-report').change(function () {
                 let form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {
@@ -110,8 +121,25 @@
             });
 
             @if(Auth::user()->isAdmin())
-                $('#company').change();
+                $('#company-report').change(function () {
+                    loadRouteReport($(this).val());
+                }).change();
+            @else
+                loadRouteReport(null);
             @endif
         });
+
+        function loadRouteReport(company) {
+            let routeSelect = $('#route-report');
+            routeSelect.html($('#select-loading').html()).trigger('change.select2');
+            routeSelect.load('{{ route('route-ajax-action') }}', {
+                option: 'loadRoutes',
+                company: company
+            }, function () {
+                routeSelect.find('option[value=""]').remove();
+                routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
+                routeSelect.val('all').change();
+            });
+        }
     </script>
 @endsection
