@@ -91,7 +91,7 @@
                     seatView.removeClass('seat-active').removeClass('seat-active-2').removeClass('seat-inactive');
 
                     let seatClass = status === 1 ? 'seat-active':'seat-inactive';
-                    seatClass = statusRT === 1 ? 'seat-active-2':seatClass;
+                    seatClass = statusRT === 1 && status === 0  ? 'seat-active-2':seatClass;
                     seatView.addClass( seatClass );
                 });
             });
