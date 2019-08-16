@@ -37,6 +37,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @mixin \Eloquent
  * @property int $role_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User query()
  */
 class User extends Authenticatable
 {
@@ -61,6 +64,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

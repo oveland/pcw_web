@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $url
  * @property int $company_id
  * @property int $dispatch_id
+ * @property int $bea_id
  * @property bool $active
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
@@ -38,12 +39,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Routes\Dispatch $dispatch
  * @property bool|null $as_group
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereAsGroup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route query()
+ * @property string|null $min_route_time
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereBeaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereMinRouteTime($value)
  */
 class Route extends Model
 {
     protected $hidden = ['created_at', 'updated_at'];
     
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

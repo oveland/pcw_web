@@ -2,13 +2,14 @@
 
 namespace App\Models\Passengers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class CurrentSensorPassengers
  * @package App
  *
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\CurrentSensorPassengers whereVehicle($vehicle)
+ * @method static Builder|CurrentSensorPassengers whereVehicle($vehicle)
  */
 class CurrentSensorPassengers extends Model
 {

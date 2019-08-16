@@ -32,7 +32,7 @@ class CreateBearingPlansTable extends Migration
 
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
             $table->foreign('day_type_id')->references('id')->on('day_types')->onDelete('cascade');

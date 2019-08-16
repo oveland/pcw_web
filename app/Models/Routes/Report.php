@@ -47,10 +47,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereControlPointId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereFringeId($value)
  * @property-read \App\Models\Routes\ControlPoint|null $controlPoint
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report query()
  */
 class Report extends Model
 {
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

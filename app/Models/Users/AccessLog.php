@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\AccessLog whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\AccessLog whereUserId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\AccessLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\AccessLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\AccessLog query()
  */
 class AccessLog extends Model
 {

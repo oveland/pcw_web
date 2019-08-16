@@ -44,6 +44,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\HistorySeat whereSeat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\HistorySeat whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\HistorySeat whereVehicleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\HistorySeat newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\HistorySeat newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\HistorySeat query()
  */
 class HistorySeat extends Model
 {
@@ -51,7 +54,7 @@ class HistorySeat extends Model
       'date','time','active_time','inactive_time','busy_time'
     ];*/
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

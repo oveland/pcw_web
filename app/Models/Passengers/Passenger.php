@@ -57,6 +57,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalSensorRecorder($value)
  * @property int|null $fringe_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereFringeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger query()
  */
 class Passenger extends Model
 {

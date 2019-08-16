@@ -52,6 +52,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog whereUltimaActividad($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog whereUsuario($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog query()
  */
 class UserLog extends Model
 {

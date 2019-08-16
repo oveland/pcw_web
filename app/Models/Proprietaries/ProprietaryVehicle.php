@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\ProprietaryVehicle whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\ProprietaryVehicle whereVehicleId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\ProprietaryVehicle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\ProprietaryVehicle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\ProprietaryVehicle query()
  */
 class ProprietaryVehicle extends Model
 {

@@ -1,5 +1,7 @@
-@php( $unAssignedVehicles = $maintenanceVehiclesReports->where('hasMaintenanceReports',false) )
-@php( $assignedVehicles = $maintenanceVehiclesReports->where('hasMaintenanceReports',true) )
+@php
+    $unAssignedVehicles = $maintenanceVehiclesReports->where('hasMaintenanceReports',false);
+    $assignedVehicles = $maintenanceVehiclesReports->where('hasMaintenanceReports',true);
+@endphp
 <!-- begin fullcalendar -->
 <div class="fullcalendar vertical-box m-b-20">
     <!-- begin fullcalendar-event -->

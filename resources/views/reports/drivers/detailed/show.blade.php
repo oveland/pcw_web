@@ -10,7 +10,9 @@
                 <div class="col-md-12 p-0 m-b-10">
                     <ul class="nav nav-pills nav-pills-success nav-vehicles">
                         @foreach($driverReport as $driverCode => $report)
-                            @php( $driver = \App\Models\Drivers\Driver::withCode($driverCode) )
+                            @php
+                                $driver = \App\Models\Drivers\Driver::withCode($driverCode);
+                            @endphp
                             <li class="{{$loop->first?'active':''}}" onclick="$('.driver-name').hide().text('{{ $driver->fullName() }}').slideDown()">
                                 <a  href="#report-tab-{{ $driverCode }}" data-toggle="tab" aria-expanded="true" class="text-center"
                                    data-original-title="{{ $driver->fullName() }}">
@@ -42,10 +44,11 @@
 
         <div class="tab-content panel p-0">
             @foreach($driverReport as $driverCode => $report)
-                @php($dispatchRegistersByDriver = $report->dispatchRegisters)
-                @php( $driver = \App\Models\Drivers\Driver::withCode($driverCode) )
+                @php
+                    $dispatchRegistersByDriver = $report->dispatchRegisters;
+                    $driver = \App\Models\Drivers\Driver::withCode($driverCode);
+                @endphp
                 <div id="report-tab-{{ $driverCode }}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}}">
-
                     <!-- begin table -->
                     <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
                         <thead>

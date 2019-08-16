@@ -14,6 +14,7 @@ use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
+use Illuminate\Support\Collection;
 
 class SpeedingService
 {
@@ -22,27 +23,36 @@ class SpeedingService
      *
      * @param Company $company
      * @param $dateReport
-     * @return \Illuminate\Support\Collection
+     * @param $typeReport
+     * @param null $routeReport
+     * @return object
      */
-    function speedingByVehiclesReport(Company $company, $dateReport)
+    function buildSpeedingReport(Company $company, $dateReport, $typeReport, $routeReport = null)
     {
-        $speedingByVehiclesReport = collect([]);
-        $speedingByVehicles = $this->speedingByVehicles($this->allSpeeding($company, $dateReport));
+        $speedingByVehicles = $this->speedingByVehicles($this->allSpeeding($company, $dateReport, $routeReport));
 
-        foreach ($speedingByVehicles as $vehicleId => $speedingByVehicle) {
-            $speedingByVehicleByRoute = self::groupByFirstSpeedingEventByRoute($speedingByVehicle);
-            $speedingByVehiclesReport->put($vehicleId, [
-                'vehicle' => Vehicle::find($vehicleId),
-                'speedingByVehicle' => $speedingByVehicle,
-                'totalSpeeding' => $speedingByVehicle->count(),
-                'speedingByRoutes' => (object)[
-                    'speedingByRoute' => $speedingByVehicleByRoute,
-                    'totalSpeedingByRoutes' => $speedingByVehicleByRoute->sum(function ($route) { return count($route); })
-                ]
-            ]);
-        }
+        $report = $speedingByVehicles;
+        // TODO: Uncomment a write some code when type report is used on the view report
+        /*switch ($typeReport) {
+            case 'group':
+                foreach ($speedingByVehicles as $speedingByVehicle){
+                    $speedingByVehicleByRoute = self::groupByFirstSpeedingEventByRoute($speedingByVehicle);
+                    $report = $speedingByVehicleByRoute;
+                }
+                break;
+            default:
+                break;
+        }*/
 
-        return $speedingByVehiclesReport;
+        return (object)[
+            'company' => $company,
+            'companyReport' => $company->id,
+            'routeReport' => $routeReport,
+            'dateReport' => $dateReport,
+            'typeReport' => $typeReport,
+            'report' => $report,
+            'total' => $report->count()
+        ];
     }
 
     /**
@@ -51,7 +61,7 @@ class SpeedingService
      * @param Company $company
      * @param $dateReport
      * @param null $routeReport
-     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
      */
     function allSpeeding(Company $company, $dateReport, $routeReport = null)
     {
@@ -60,6 +70,7 @@ class SpeedingService
         return Location::witSpeeding()
             ->whereBetween('date', [$dateReport, "$dateReport 23:59:59"])
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->with('vehicle')
             ->get();
     }
 
@@ -67,7 +78,7 @@ class SpeedingService
      * Get all speeding of a dispatch register
      *
      * @param DispatchRegister $dispatchRegister
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     function speedingByDispatchRegister(DispatchRegister $dispatchRegister)
     {
@@ -83,7 +94,7 @@ class SpeedingService
      * Groups all speeding by vehicle and first event
      *
      * @param \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Location[] $allSpeeding
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     function speedingByVehicles($allSpeeding)
     {
@@ -103,7 +114,7 @@ class SpeedingService
      * Extract first event of the all speeding and group it by route
      *
      * @param $speedingByVehicle
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     static function groupByFirstSpeedingEventByRoute($speedingByVehicle)
     {
@@ -124,7 +135,7 @@ class SpeedingService
      * Extract first event of the all speeding
      *
      * @param $speedingByVehicle
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function groupByFirstSpeedingEvent($speedingByVehicle)
     {

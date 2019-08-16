@@ -14,7 +14,9 @@
 <td width="20%">
     <select name="company" id="company" title="" class="default-select2 form-control col-md-12" multiple disabled>
         @foreach($assignedVehicles as $assignation)
-            @php( $vehicle = $assignation->vehicle )
+            @php
+                $vehicle = $assignation->vehicle;
+            @endphp
             <option value="{{ $vehicle->id }}" selected>{{ $vehicle->numberAndPlate() }}</option>
         @endforeach
     </select>

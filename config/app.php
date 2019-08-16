@@ -1,5 +1,8 @@
 <?php
 
+use App\Providers\BEAServiceProvider;
+use App\Providers\ReportsServiceProvider;
+
 return [
 
     /*
@@ -120,11 +123,11 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    //'log' => env('APP_LOG', 'single'),
 
-    'log_max_files' => 10,
+    //'log_max_files' => 10,
 
-    'log_level' => env('APP_LOG_LEVEL', 'debug'),
+    //'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
     /*
     |--------------------------------------------------------------------------
@@ -164,7 +167,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Sofa\Eloquence\ServiceProvider::class,
+        // Sofa\Eloquence\BaseServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -179,16 +182,17 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
+        // Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        //Intervention\Image\ImageServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * PCW Application Service Providers...
          */
-        \App\Providers\ReportsServiceProvider::class,
+        ReportsServiceProvider::class,
+        BEAServiceProvider::class,
     ],
 
     /*
@@ -240,6 +244,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+
+        'BEADB' => App\Facades\BEADB::class,
     ],
 
     /*

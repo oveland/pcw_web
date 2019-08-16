@@ -16,7 +16,7 @@ class AddCompanyToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('company_id')->unsigned()->nullable();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('company_id')->references('id')->on('companies');
         });
     }

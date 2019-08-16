@@ -39,12 +39,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
  * @property int|null $dispatch_register_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatusReport whereDispatchRegisterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatusReport newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatusReport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatusReport query()
  */
 class VehicleStatusReport extends Model
 {
     protected $dates = ['date'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }

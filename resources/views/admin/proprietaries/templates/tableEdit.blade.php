@@ -18,7 +18,9 @@
 <td width="20%">
     <select name="company" id="company" title="" class="default-select2 form-control col-md-12" multiple>
         @foreach($vehicles as $vehicle)
-            @php( $selected = in_array($vehicle->id,$assignedIdVehicles)?'selected':'' )
+            @php
+                $selected = in_array($vehicle->id,$assignedIdVehicles)?'selected':'';
+            @endphp
             <option value="{{ $vehicle->id }}" {{ $selected }}>{{ $vehicle->numberAndPlate() }}</option>
         @endforeach
     </select>

@@ -20,7 +20,7 @@ class CreateAddressLocationsTable extends Migration
             $table->integer('status')->default(0);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
 
             /*Indexes*/

@@ -50,12 +50,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereVersion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereYesterdayOdometer($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation query()
  */
 class LastLocation extends Model
 {
     protected $dates = ['date'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

@@ -37,7 +37,8 @@ class ReportMileageController extends Controller
         $accessProperties = $this->pcwAuthService->getAccessProperties();
         $companies = $accessProperties->companies;
         $vehicles = $accessProperties->vehicles;
-        return view('reports.vehicles.mileage.daily.index', compact(['companies', 'vehicles']));
+        $routes = $accessProperties->routes;
+        return view('reports.vehicles.mileage.daily.index', compact(['companies', 'vehicles', 'routes']));
     }
 
     /**
@@ -53,7 +54,7 @@ class ReportMileageController extends Controller
 
         $mileageReport = $this->buildMileageReport($company, $dateReport, $routeReport);
 
-        if ($request->get('export')) $this->export($mileageReport);
+        if ($request->get('export')) return $this->export($mileageReport);
 
         return view('reports.vehicles.mileage.daily.show', compact(['mileageReport', 'stringParams']));
     }

@@ -1,12 +1,16 @@
-@php($badge=[
-    'Inicial' => 'success',
-    'Final' => 'warning',
-    'Normal' => 'primary'
-])
+@php
+    $badge=[
+        'Inicial' => 'success',
+        'Final' => 'warning',
+        'Normal' => 'primary'
+    ];
+@endphp
 <div class="col-sm-12 col-xs-12 col-md-12">
     <ul class="list-group">
         @foreach($route->controlPoints->sortBy('order') as $controlPoint)
-            @php($controlPointTimes = \App\Models\Routes\ControlPointTime::whereControlPointId($controlPoint->id)->orderBy('day_type_id')->get())
+            @php
+                $controlPointTimes = \App\Models\Routes\ControlPointTime::whereControlPointId($controlPoint->id)->orderBy('day_type_id')->get();
+            @endphp
             <li class="list-group-item text-muted text-left bg-{{$loop->first && $controlPoint->type !='Inicial'?'danger':''}} bg-{{$loop->last && $controlPoint->type !='Normal'?'danger':''}}"
                 data-toggle="collapse" data-target="#control-point-{{ $controlPoint->id }}">
                 <div class="row">
@@ -42,7 +46,9 @@
                             @endphp
 
                             @foreach($controlPointTimesByDay as $dayTypeId => $controlPointTimes)
-                                @php($dayType = \App\Models\Routes\DayType::find($dayTypeId))
+                                @php
+                                    $dayType = \App\Models\Routes\DayType::find($dayTypeId);
+                                @endphp
                                 <div class="m-t-3 tab-pane fade {{ $loop->first ? 'active in':'' }} day-type-{{ $dayTypeId }}-{{ $route->id }}" title="@lang('Time from dispatch') - {{ $dayType->description ?? 'None' }}">
                                     @php
                                         $controlPointTimes = $controlPointTimes->sortBy(function($controlPointTime){
@@ -50,11 +56,13 @@
                                         });
                                     @endphp
                                     @foreach($controlPointTimes as $controlPointTime)
-                                        @php($fringe = $controlPointTime->fringe)
-                                            <span data-title="<i class='fa fa-clock-o fa-spin text-warning'></i> {{ $controlPointTime->time }} <br> @lang('From') {{ $fringe->from }} @lang('to') {{ $fringe->to }}" data-placement="bottom" data-html="true"
-                                                  class="badge badge-warning m-t-1 m-b-1 tooltips">
-                                                {{ $controlPointTime->time_from_dispatch ?? 'None' }}
-                                            </span>
+                                        @php
+                                            $fringe = $controlPointTime->fringe;
+                                        @endphp
+                                        <span data-title="<i class='fa fa-clock-o fa-spin text-warning'></i> {{ $controlPointTime->time }} <br> @lang('From') {{ $fringe->from }} @lang('to') {{ $fringe->to }}" data-placement="bottom" data-html="true"
+                                              class="badge badge-warning m-t-1 m-b-1 tooltips">
+                                            {{ $controlPointTime->time_from_dispatch ?? 'None' }}
+                                        </span>
                                     @endforeach
                                 </div>
                             @endforeach

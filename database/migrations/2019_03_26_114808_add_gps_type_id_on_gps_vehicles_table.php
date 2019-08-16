@@ -16,7 +16,7 @@ class AddGpsTypeIdOnGpsVehiclesTable extends Migration
         Schema::table('gps_vehicles', function (Blueprint $table) {
             $table->integer('gps_type_id')->nullable();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('gps_type_id')->references('id')->on('gps_types')->onDelete('cascade');
         });
     }

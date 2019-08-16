@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Routes\DispatcherVehicle $defaultDispatcherVehicle
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle whereDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatcherVehicle query()
  */
 class DispatcherVehicle extends Model
 {

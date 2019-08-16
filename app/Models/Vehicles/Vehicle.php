@@ -17,6 +17,7 @@ use Sofa\Eloquence\Mappable;
  * @property int $company_id
  * @property bool $active
  * @property bool $in_repair
+ * @property int $bea_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\Models\Company\Company $company
@@ -38,6 +39,10 @@ use Sofa\Eloquence\Mappable;
  * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicle
  * @property-read \App\Models\Vehicles\GpsVehicle $gpsVehicle
  * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicles
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereBeaId($value)
  */
 class Vehicle extends Model
 {

@@ -1,5 +1,7 @@
 @if(count($dispatchUsersReport->reports))
-    @php($reports = $dispatchUsersReport->reports)
+    @php
+        $reports = $dispatchUsersReport->reports;
+    @endphp
 
     <div class="col-md-12 alert alert-info p-t-5 container-alert-new-values" style="display: none">
         <strong>
@@ -22,7 +24,9 @@
                 <div class="col-md-11">
                     <ul class="nav nav-pills nav-pills-success nav-vehicles">
                         @foreach($reports as $userId => $report)
-                            @php( $user = $report->user )
+                            @php
+                                $user = $report->user;
+                            @endphp
                             <li class="{{ $loop->first?'active':'' }}">
                                 <a href="#report-tab-{{ $userId }}" data-toggle="tab" aria-expanded="true" class="text-center">
                                     <span class="icon-report f-s-8">{{ $loop->iteration }}</span>
@@ -169,7 +173,9 @@
                                                     </thead>
                                                     <tbody>
                                                     @foreach($dispatchRegistersByVehicle as $dispatchRegister)
-                                                        @php( $dispatchRegisterCounter = $counterByRecorderByVehicle->history[$dispatchRegister->id] )
+                                                        @php
+                                                            $dispatchRegisterCounter = $counterByRecorderByVehicle->history[$dispatchRegister->id];
+                                                        @endphp
                                                         <tr>
                                                             <th width="20%" class="bg-inverse text-white text-center">
                                                                 {{ $dispatchRegister->route->name }}

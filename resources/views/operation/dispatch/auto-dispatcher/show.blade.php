@@ -113,16 +113,23 @@
         <div class="dispatches tab-content panel row" style="background: rgba(0,34,47,0.09)">
             @foreach($dispatches as $dispatch)
                 <div id="dispatch-{{ $dispatch->id }}" class="tab-pane fade {{ $loop->first ? 'active in' : '' }}">
-                    @php( $dispatcherVehicles = $dispatch->dispatcherVehicles)
+                    @php
+                        $dispatcherVehicles = $dispatch->dispatcherVehicles;
+                    @endphp
                     @if( $dispatcherVehicles->isNotEmpty() )
-                        @php($dispatcherVehiclesByRoutes = $dispatcherVehicles->sortBy(function($dispatcherVehicle){
-                            return $dispatcherVehicle->route->name;
-                        })->groupBy('route_id'))
+                        @php
+                            $dispatcherVehiclesByRoutes = $dispatcherVehicles->sortBy(function($dispatcherVehicle){
+                                return $dispatcherVehicle->route->name;
+                            })->groupBy('route_id');
+                        @endphp
                         @foreach($dispatcherVehiclesByRoutes as $routeId => $dispatcherVehicles)
-                            @php( $dispatcherVehicles = $dispatcherVehicles->sortBy(function($dispatcherVehicle){
-                                return $dispatcherVehicle->vehicle->number;
-                            }) )
-                            @php($route = $dispatcherVehicles->first()->route)
+                            @php
+                                $dispatcherVehicles = $dispatcherVehicles->sortBy(function($dispatcherVehicle){
+                                    return $dispatcherVehicle->vehicle->number;
+                                });
+
+                                $route = $dispatcherVehicles->first()->route;
+                            @endphp
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="widget">
                                     <div class="widget-header bg-inverse">

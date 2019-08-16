@@ -33,12 +33,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereSequence($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\ControlPointTime[] $controlPointTimes
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereStyleColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe query()
  */
 class Fringe extends Model
 {
     protected $hidden = ['created_at','updated_at'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

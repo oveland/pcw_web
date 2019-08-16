@@ -93,6 +93,13 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
+
+        'beadb' => [
+            'driver' => 'firebird',
+            'path' => env('BEADB_PATH', 'C:\Sistema BEA\Vueltas 50\BD\BEABD_50.MDB'),
+            'username' => env('BEADB_USERNAME', 'BEADMIN'),
+            'password' => env('BEADB_PASSWORD', 'bea00001')
+        ],
     ],
 
     /*

@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int $vehicle_seat_topology_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatDistribution whereVehicleSeatTopologyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatDistribution newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatDistribution newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatDistribution query()
  */
 class VehicleSeatDistribution extends Model
 {

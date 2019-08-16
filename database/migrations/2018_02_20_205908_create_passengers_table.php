@@ -33,7 +33,7 @@ class CreatePassengersTable extends Migration
             $table->string('frame',512);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             $table->foreign('counter_issue_id')->references('id')->on('counter_issues')->onDelete('cascade');
             $table->foreign('fringe_id')->references('id')->on('fringes')->onDelete('cascade');

@@ -1,8 +1,11 @@
+@php
+    $speedingReportByVehicles = $speedingReport->report;
+@endphp
 @if(count($speedingReportByVehicles))
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-vehicle-speeding-search-report') }}?{{ $stringParams }}&export=true" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
+                <a href="{{ route('report-vehicle-speeding-search-report') }}?company={{ $speedingReport->companyReport }}&date-report={{ $speedingReport->dateReport }}&route-report={{ $speedingReport->routeReport }}&type-report={{ $speedingReport->typeReport }}&export=true" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
                    title="@lang('Export excel')" data-placement="bottom">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
@@ -30,7 +33,9 @@
                         <div data-scrollbar="true" data-height="400px" data-distance="0px">
                             <ul class="widget-todolist">
                                 @foreach($speedingReportByVehicles as $vehicleId => $speedingReport)
-                                    @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
+                                    @php
+                                        $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                                    @endphp
                                     <li id="vehicle-list-{{ $vehicle->number }}" class="vehicle-list accordion-toggle accordion-toggle-styled {{ $loop->first ? 'collapsed':'' }} accordion-vehicles" data-toggle="collapse" data-parent="#accordion-vehicles" data-target="#vehicle-{{ $vehicleId }}" {{ $loop->first ? 'aria-expanded=true':'' }}>
                                         <div class="checkbox">
                                             <label>
@@ -51,7 +56,9 @@
                 </div>
                 <div id="accordion-vehicles" class="col-md-6 col-lg-8 col-sm-12 col-sm-12">
                     @foreach($speedingReportByVehicles as $vehicleId => $speedingReport)
-                        @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
+                        @php
+                            $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                        @endphp
                         <div id="vehicle-{{ $vehicleId }}" class="panel-collapse collapse {{ $loop->first ? 'in':'' }}" aria-expanded="false">
                             <div class="panel panel-white panel-with-tabs">
                                 <div class="panel-heading">

@@ -89,6 +89,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/reassign-route', 'AutoDispatcherController@reassignRoute')->name('operation-dispatch-auto-dispatcher-reassign-route');
             });
         });
+
+        Route::prefix(__('track'))->group(function () {
+            Route::prefix(__('map'))->group(function () {
+                Route::get('/', 'OperationTrackMapController@index')->name('operation-track-map');
+                Route::get('/get', 'OperationTrackMapController@get')->name('operation-track-map-get');
+            });
+        });
     });
 
     /* Routes for route report */
@@ -240,6 +247,13 @@ Route::group(['middleware' => ['auth']], function () {
                     Route::get('/', 'SeatReportController@index')->name('report-passengers-sensors-seats');
                     Route::get('/play', 'SeatReportController@play')->name('report-passengers-sensors-seats-play');
                 });
+
+                Route::prefix(__('url-cameras'))->group(function () {
+                    Route::get('/', 'CobanCameraController@index')->name('report-passengers-sensors-cameras');
+                    Route::get('/search-params', 'CobanCameraController@searchParams')->name('report-passengers-sensors-cameras-search-params');
+                    Route::get('/show', 'CobanCameraController@show')->name('report-passengers-sensors-cameras-show');
+                    Route::get('/photo/{photo}', 'CobanCameraController@showPhoto')->name('report-passengers-sensors-cameras-photo');
+                });
             });
 
             Route::prefix(__('mixed'))->group(function () {
@@ -282,9 +296,18 @@ Route::group(['middleware' => ['auth']], function () {
     /* Routes for operation pages */
     Route::prefix(__('takings'))->group(function () {
         Route::prefix(__('passengers'))->group(function () {
+            Route::get('/search', 'TakingsPassengersLiquidationController@searchLiquidated')->name('takings-passengers-search');
+
             Route::prefix(__('url-liquidation'))->group(function () {
                 Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');
                 Route::get('/search', 'TakingsPassengersLiquidationController@search')->name('takings-passengers-liquidation-search');
+                Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
+                Route::get('/export', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
+            });
+
+            Route::prefix(__('url-params'))->group(function () {
+                Route::get('/{name}', 'TakingsPassengersLiquidationController@getParams')->name('takings-passengers-liquidation-params');
+                Route::any('/{name}/'.__('save'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-set');
             });
         });
     });

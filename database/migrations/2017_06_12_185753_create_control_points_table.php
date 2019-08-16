@@ -26,7 +26,7 @@ class CreateControlPointsTable extends Migration
             $table->bigInteger('route_id')->unsigned();
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
 
             /*Indexes*/

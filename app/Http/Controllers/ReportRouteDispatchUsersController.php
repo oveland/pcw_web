@@ -46,7 +46,7 @@ class ReportRouteDispatchUsersController extends Controller
         $dispatchUsersReport = $this->buildDispatchUsersReport($company, $dateReport);
         //dd($dispatchUsersReport);
 
-        if ($request->get('export')) $this->export($dispatchUsersReport);
+        if ($request->get('export')) return $this->export($dispatchUsersReport);
 
         return view('reports.route.dispatch-users.show', compact(['dispatchUsersReport']));
     }

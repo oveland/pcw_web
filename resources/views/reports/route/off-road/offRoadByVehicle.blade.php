@@ -32,9 +32,10 @@
                         <div data-scrollbar="true" data-height="400px" data-distance="0px">
                             <ul class="widget-todolist">
                                 @foreach($offRoadsByVehicles as $vehicleId => $offRoadReport)
-                                    @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
-                                    @php( $totalOffRoads = $offRoadReport->sum(function ($route) { return count($route); }) )
-
+                                    @php
+                                        $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                                        $totalOffRoads = $offRoadReport->sum(function ($route) { return count($route); });
+                                    @endphp
                                     <li id="vehicle-list-{{ $vehicle->number }}" class="vehicle-list accordion-toggle accordion-toggle-styled {{ $loop->first ? 'collapsed':'' }} accordion-vehicles" data-toggle="collapse" data-parent="#accordion-vehicles" data-target="#vehicle-{{ $vehicleId }}" {{ $loop->first ? 'aria-expanded=true':'' }}>
                                         <div class="checkbox">
                                             <label class="icon-vehicle-list">
@@ -61,14 +62,18 @@
                 </div>
                 <div id="accordion-vehicles" class="col-md-6 col-lg-8 col-sm-12 col-sm-12">
                     @foreach($offRoadsByVehicles as $vehicleId => $offRoadReports)
-                        @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
+                        @php
+                            $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                        @endphp
                         <div id="vehicle-{{ $vehicleId }}" class="panel-collapse collapse {{ $loop->first ? 'in':'' }}" aria-expanded="false">
                             <!-- begin panel -->
                             <div class="panel panel-white panel-with-tabs">
                                 <div class="panel-heading">
                                     <ul id="panel-tab" class="nav nav-tabs nav-tabs-warning pull-right">
                                         @foreach($offRoadReports as $routeId => $offRoadReport)
-                                            @php($route = \App\Models\Routes\Route::find($routeId))
+                                            @php
+                                                $route = \App\Models\Routes\Route::find($routeId);
+                                            @endphp
                                             <li class="{{ $loop->first ? 'active':'' }}">
                                                 <a href="#panel-tab-{{ $vehicleId }}-{{ $route->id }}" data-toggle="tab">
                                                     <span class="badge badge-danger m-b-5">{{ count($offRoadReport) }}</span>
@@ -83,7 +88,9 @@
                                 </div>
                                 <div id="panel-tab-content" class="tab-content">
                                     @foreach($offRoadReports as $routeId => $offRoadReport)
-                                        @php($route = \App\Models\Routes\Route::find($routeId))
+                                        @php
+                                            $route = \App\Models\Routes\Route::find($routeId);
+                                        @endphp
                                         <div id="panel-tab-{{ $vehicleId }}-{{ $routeId }}" class="tab-pane fade in {{ $loop->first ? 'active':'' }}">
                                             <div class="table-responsive">
                                                 <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
@@ -112,11 +119,15 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @php($dispatchRegister = null)
-                                                        @php($offRoadReport = $offRoadReport->sortBy('date'))
+                                                        @php
+                                                            $dispatchRegister = null;
+                                                            $offRoadReport = $offRoadReport->sortBy('date');
+                                                        @endphp
                                                         @foreach($offRoadReport as $offRoad)
-                                                            @php($dispatchRegister = $offRoad->dispatchRegister)
-                                                            @php($driver = $dispatchRegister->driver)
+                                                            @php
+                                                                $dispatchRegister = $offRoad->dispatchRegister;
+                                                                $driver = $dispatchRegister->driver;
+                                                            @endphp
                                                             <tr>
                                                                 <td>{{ $dispatchRegister->turn }}</td>
                                                                 <td>{{ $dispatchRegister->round_trip }}</td>
@@ -144,8 +155,10 @@
                                                                     </a>
 
                                                                     @if( Auth::user()->isSuperAdmin() )
-                                                                        @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                                                                        @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                                                        @php
+                                                                            $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                                                            $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                                                                        @endphp
                                                                         <hr class="hr no-padding">
                                                                         <small>{!! $totalLocations !!} @lang('locations')</small><br>
                                                                         <small>{!! $totalReports !!} @lang('reports')</small>

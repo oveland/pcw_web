@@ -69,9 +69,13 @@
     </div>
 
     <script type="application/javascript">
-        @php( $seatingStatusReport = collect([]) )
+        @php
+            $seatingStatusReport = collect([]);
+        @endphp
         @foreach($passengers as $passenger)
-            @php( $seatingStatusReport->push(\App\Services\Reports\Passengers\SeatDistributionGualasService::getSeatingStatus($passenger)) )
+            @php
+                $seatingStatusReport->push(\App\Services\Reports\Passengers\SeatDistributionGualasService::getSeatingStatus($passenger));
+            @endphp
         @endforeach
         let seatingStatusReport = JSON.parse('{!! $seatingStatusReport->toJson() !!}');
 

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company\Company;
-use App\Models\Routes\Route;
+use App\Exports\HistoricRouteExport;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
-use Auth;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ReportRouteHistoricController extends Controller
 {
@@ -17,14 +18,19 @@ class ReportRouteHistoricController extends Controller
      * @var PCWAuthService
      */
     private $pcwAuthService;
+    /**
+     * @var PCWExporterService
+     */
+    private $exporterService;
 
-    public function __construct(PCWAuthService $pcwAuthService)
+    public function __construct(PCWAuthService $pcwAuthService, PCWExporterService $exporterService)
     {
         $this->pcwAuthService = $pcwAuthService;
+        $this->exporterService = $exporterService;
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -38,8 +44,8 @@ class ReportRouteHistoricController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return Factory|View|HistoricRouteExport
+     * @throws Exception
      */
     public function show(Request $request)
     {
@@ -50,7 +56,7 @@ class ReportRouteHistoricController extends Controller
 
         $report = $this->buildHistoric($dateReport, $vehicleReport, $initialTime, $finalTime, $forExport);
 
-        if ($forExport) $this->export($report);
+        if ($forExport) return $this->exporterService->exportHistoricRoute($report);
         $report->exportLink = $request->getRequestUri() . "&export=true";
 
         return response()->json($report);
@@ -96,7 +102,7 @@ class ReportRouteHistoricController extends Controller
                     'iconClass' => $location->vehicleStatus->icon_class,
                     'mainClass' => $location->vehicleStatus->main_class,
                 ],
-                'dispatchRegister' => $location->dispatchRegister ? $location->dispatchRegister->getAPIFields() : null,
+                'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                 'vehicle' => $location->vehicle->getAPIFields()
             ]);
         }
@@ -115,59 +121,5 @@ class ReportRouteHistoricController extends Controller
         ];
 
         return $report;
-    }
-
-    /**
-     * @param $report
-     * @throws \Exception
-     */
-    public function export($report)
-    {
-        $dataExcel = array();
-        foreach ($report->historic as $location) {
-            $infoRoute = $this->getInfoRoute($location);
-
-            $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                                                  # A CELL
-                __('Time') => $location->time,                                                                      # B CELL
-                __('Mileage') => $location->currentMileage,                                                         # C CELL
-                __('Speed') => number_format($location->speed, 2, ',', ''),         # D CELL
-                __('Exc.') => $location->speeding ? __('YES') : __('NO'),                        # E CELL
-                __('Vehicle status') => $location->vehicleStatus ? $location->vehicleStatus->status : '...',                                           # F CELL
-                __('Address') => $location->address,                                                                # G CELL
-                __('Info route') => $infoRoute                                                                      # H CELL
-            ];
-        }
-
-        $fileData = (object)[
-            'fileName' => __('Historic') . " " . $report->vehicle->number . " $report->dateReport",
-            'title' => __('Historic') . " $report->dateReport - #" . $report->vehicle->number,
-            'subTitle' => __('Time') . " $report->initialTime - $report->finalTime ",
-            'sheetTitle' => __('Historic') . " " . $report->vehicle->number,
-            'data' => $dataExcel,
-            'type' => 'historicRouteReport'
-        ];
-        //foreach ()
-        /* SHEETS */
-
-        PCWExporterService::excel($fileData);
-
-    }
-
-    /**
-     * @param $reportLocation
-     * @return string
-     */
-    public function getInfoRoute($reportLocation)
-    {
-        $infoDispatchRegister = "";
-        $dispatchRegister = $reportLocation->dispatchRegister;
-
-        if ($dispatchRegister) {
-            $route = $dispatchRegister->route;
-            $infoDispatchRegister = "$route->name \n " . __('Round trip') . " $dispatchRegister->round_trip \n " . __('Turn') . " $dispatchRegister->turn \n " . __('Dispatched') . " $dispatchRegister->departure_time \n " . __('Driver') . " $dispatchRegister->driver_name";
-        }
-
-        return $infoDispatchRegister;
     }
 }

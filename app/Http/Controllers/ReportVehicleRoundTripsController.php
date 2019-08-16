@@ -2,49 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RouteRoundTripsExport;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Route;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
-use Auth;
 use Illuminate\Http\Request;
 
 class ReportVehicleRoundTripsController extends Controller
 {
 
     /**
-     * @var GeneralController
+     * @var PCWAuthService
      */
-    private $generalController;
+    private $authService;
+    /**
+     * @var PCWExporterService
+     */
+    private $exporterService;
 
-    public function __construct(GeneralController $generalController)
+    public function __construct(PCWAuthService $authService, PCWExporterService $exporterService)
     {
-        $this->generalController = $generalController;
+
+        $this->authService = $authService;
+        $this->exporterService = $exporterService;
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name', 'asc')->get();
-        }
+        $access = $this->authService->getAccessProperties();
+        $companies = $access->companies;
         return view('reports.vehicles.round-trips.index', compact('companies'));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View | RouteRoundTripsExport
      */
     public function show(Request $request)
     {
-        $company = $this->generalController->getCompany($request);
+        $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
 
         $roundTripsReport = $this->buildRoundTripsReport($company, $dateReport);
 
-        if ($request->get('export')) $this->export($roundTripsReport);
+        if ($request->get('export')) return $this->exporterService->exportRouteRoundTrips($roundTripsReport);
 
         return view('reports.vehicles.round-trips.show', compact(['roundTripsReport']));
     }
@@ -104,33 +110,5 @@ class ReportVehicleRoundTripsController extends Controller
         ];
 
         return $roundTripsReport;
-    }
-
-    /**
-     * @param $roundTripsReport
-     */
-    public function export($roundTripsReport)
-    {
-        $dateReport = $roundTripsReport->dateReport;
-        $reports = $roundTripsReport->reports;
-
-        $dataExcel = array();
-        foreach ($reports as $report) {
-            $vehicle = $report->vehicle;
-            $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                      # A CELL
-                __('Vehicle') => intval($vehicle->number),                              # B CELL
-                __('Plate') => $vehicle->plate,                                         # C CELL
-                __('Round trips') => intval($report->totalRoundTrips),                  # D CELL
-            ];;
-        }
-
-        PCWExporterService::excel([
-            'fileName' => __('Round trip report') . " $dateReport",
-            'title' => __('Round trip report'),
-            'subTitle' => $dateReport,
-            'data' => $dataExcel,
-            'type' => 'roundTripsVehicleReport'
-        ]);
     }
 }

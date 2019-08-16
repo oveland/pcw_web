@@ -2,37 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MileageDateRangeExport;
 use App\LastLocation;
 use App\Models\Company\Company;
-use App\Models\Routes\DispatchRegister;
-use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
-use App\Models\Vehicles\Vehicle;
 use App\Services\PCWTime;
 use Carbon\Carbon;
-use Excel;
 use Illuminate\Http\Request;
 
 class ReportMileageDateRangeController extends Controller
 {
     /**
-     * @var GeneralController
-     */
-    private $generalController;
-    /**
      * @var PCWAuthService
      */
     private $pcwAuthService;
+    /**
+     * @var PCWExporterService
+     */
+    private $pcwExporterService;
 
-    public function __construct(PCWAuthService $pcwAuthService, GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService, PCWExporterService $pcwExporterService)
     {
-        $this->generalController = $generalController;
         $this->pcwAuthService = $pcwAuthService;
+        $this->pcwExporterService = $pcwExporterService;
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
     public function index()
     {
@@ -44,18 +41,18 @@ class ReportMileageDateRangeController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View | MileageDateRangeExport
      */
     public function show(Request $request)
     {
-        $company = $this->generalController->getCompany($request);
+        $company = $this->pcwAuthService->getCompanyFromRequest($request);
         $initialDateReport = $request->get('initial-date-report');
         $finalDateReport = $request->get('final-date-report');
         $vehicleReport = $request->get('vehicle-report');
 
         $mileageReport = $this->buildMileageReport($company, $vehicleReport, $initialDateReport, $finalDateReport);
 
-        if ($request->get('export')) $this->export($mileageReport);
+        if ($request->get('export')) return $this->pcwExporterService->exportMileageDateRange($mileageReport);
 
         return view('reports.vehicles.mileage.dates.show', compact(['mileageReport']));
     }
@@ -137,48 +134,5 @@ class ReportMileageDateRangeController extends Controller
         ];
 
         return $mileageReport;
-    }
-
-    /**
-     * @param $mileageReport
-     */
-    public function export($mileageReport)
-    {
-
-        $reports = $mileageReport->reports;
-        $dataExcel = collect([]);
-        foreach ($reports as $report) {
-            $dataExcel->push([
-                __('N°') => count($dataExcel) + 1,           # A CELL
-                __('Date') => $report->date,         # B CELL
-                __('Number') => $report->vehicleNumber,      # C CELL
-                __('Plate') => $report->vehiclePlate,        # D CELL
-                __('Mileage') . " (Km)" => "=$report->mileage/1000",   # E CELL
-            ]);
-        }
-
-        $vehicleNumber = __("for all");
-        if ($mileageReport->vehicleReport != 'all' && $dataExcel->count()) {
-            $vehicleNumber = __('Vehicle') . " " . $dataExcel->first()[__('Number')];
-        }
-
-        $fileData = [
-            'fileName' => __('Mileage') . " $mileageReport->initialDateReport $mileageReport->finalDateReport",
-            'title' => __('Mileage') . " $mileageReport->initialDateReport $mileageReport->finalDateReport",
-            'subTitle' => __('Mileage') . " $vehicleNumber",
-            'data' => $dataExcel->toArray(),
-            'type' => 'reportMileageDateRange'
-        ];
-
-        PCWExporterService::excel($fileData);
-    }
-
-    private static function calculateMileageFromGroup($locationReport)
-    {
-        $firstLocation = $locationReport->first();
-        $lastLocation = $locationReport->last();
-        $totalKm = ($lastLocation->odometer - $firstLocation->odometer) / 1000;
-
-        return $totalKm;
     }
 }

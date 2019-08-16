@@ -15,6 +15,7 @@ class CreateRoutesTable extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('bea_id')->unique()->nullable(true);
             $table->string('name');
             $table->integer('distance')->default(0)->comment('Distance in meters');
             $table->integer('road_time')->default(0)->comment('Road time in minutes');
@@ -23,9 +24,11 @@ class CreateRoutesTable extends Migration
             $table->integer('dispatch_id')->default(0);
             $table->boolean('active')->default(true);
             $table->boolean('as_group')->default(false);
+            $table->time('min_route_time')->default('01:00:00');
+            $table->unsignedBigInteger('route_id')->nullable(true);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             /*Indexes*/

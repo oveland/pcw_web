@@ -29,7 +29,7 @@ class CreateCurrentOffRoadsTable extends Migration
             $table->boolean('alert_off_road')->default(false);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
             $table->foreign('dispatch_register_id')->references('id_registro')->on('registrodespacho')->onDelete('cascade');
             $table->foreign('reference_location_id')->references('id')->on('locations')->onDelete('cascade');

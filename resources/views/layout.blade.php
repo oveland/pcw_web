@@ -1,4 +1,6 @@
-@php( $current = request()->segment(count(request()->segments())) )
+@php
+    $current = request()->segment(count(request()->segments()));
+@endphp
         <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <!--
@@ -713,6 +715,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                                     @lang('Seats')
                                                 </a>
                                             </li>
+                                            <li class="has-sub menu-passengers-sensors-cameras">
+                                                <a href="{{ route('report-passengers-sensors-cameras') }}" class="faa-parent animated-hover">
+                                                    <i class="fa fa-camera faa-vertical"></i>
+                                                    @lang('Cameras')
+                                                </a>
+                                            </li>
                                         </ul>
                                     </li>
                                 @endif
@@ -801,19 +809,10 @@ License: You must have a valid license purchased only from themeforest(the above
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item menu-takings-passengers">
-                            <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
+                            <a href="{{ route('takings-passengers-liquidation')  }}" class="faa-parent animated-hover nav-link nav-toggle">
                                 <i class="fa fa-users faa-vertical"></i>
                                 @lang('Passengers')
-                                <span class="arrow"></span>
                             </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item menu-takings-passengers-liquidation">
-                                    <a href="{{ route('takings-passengers-liquidation')  }}" class="faa-parent animated-hover nav-link">
-                                        <i class="fa fa-file-text faa-vertical" aria-hidden="true"></i>
-                                        @lang('Liquidation')
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                 </li>

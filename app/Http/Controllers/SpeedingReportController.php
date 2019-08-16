@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SpeedingExport;
 use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\SpeedingService;
-use App\Models\Vehicles\Speeding;
-use App\Models\Vehicles\Vehicle;
-use Excel;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
-use Auth;
-use Route;
+use Illuminate\View\View;
 
 class SpeedingReportController extends Controller
 {
@@ -27,27 +25,27 @@ class SpeedingReportController extends Controller
      */
     private $speedingService;
     /**
-     * @var GeneralController
+     * @var PCWExporterService
      */
-    private $generalController;
+    private $pcwExporterService;
 
     /**
      * SpeedingReportController constructor.
      *
      * @param PCWAuthService $pcwAuthService
      * @param SpeedingService $speedingService
-     * @param GeneralController $generalController
+     * @param PCWExporterService $pcwExporterService
      */
-    public function __construct(PCWAuthService $pcwAuthService, SpeedingService $speedingService, GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService, SpeedingService $speedingService, PCWExporterService $pcwExporterService)
     {
         $this->speedingService = $speedingService;
         $this->pcwAuthService = $pcwAuthService;
-        $this->generalController = $generalController;
+        $this->pcwExporterService = $pcwExporterService;
     }
 
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -60,103 +58,21 @@ class SpeedingReportController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return View|SpeedingExport
+     * @throws Exception
      */
     public function show(Request $request)
     {
-        $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
-        $company = $this->generalController->getCompany($request);
+        $company = $this->pcwAuthService->getCompanyFromRequest($request);
         $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
+        $typeReport = $request->get('type-report');
 
-        $allSpeeding =$this->speedingService->allSpeeding($company, $dateReport, $routeReport);
-        $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding);
+        $speedingReport = $this->speedingService->buildSpeedingReport($company, $dateReport, $typeReport, $routeReport);
 
-        if( $request->get('export') )$this->export($speedingReportByVehicles,$dateReport, $request->get('type-report'));
+        if ($request->get('export')) return $this->pcwExporterService->exportSpeeding($speedingReport);
 
-        return view('reports.vehicles.speeding.show', compact(['speedingReportByVehicles', 'stringParams']));
-    }
-
-
-    /**
-     * @param $speedingReportByVehicle
-     * @param $dateReport
-     * @param $typeReport
-     * @throws \Exception
-     */
-    public function export($speedingReportByVehicle, $dateReport, $typeReport)
-    {
-        if( $typeReport == 'group' ){
-            Excel::create(__('Speeding') . " $dateReport", function ($excel) use ($speedingReportByVehicle, $dateReport) {
-                foreach ($speedingReportByVehicle as $speedingReport) {
-                    $vehicle = $speedingReport->first()->vehicle;
-                    $dataExcel = array();
-
-                    foreach ($speedingReport as $speeding) {
-                        $speed = $speeding->speed;
-                        if( $speed > 200 ){
-                            $speed = 100 + (random_int(-10,10));
-                        }
-
-                        $dataExcel[] = [
-                            __('N°') => count($dataExcel) + 1,                             # A CELL
-                            __('Time') => $speeding->time->toTimeString(),                                 # B CELL
-                            __('Vehicle') => intval($vehicle->number),                     # C CELL
-                            __('Plate') => $vehicle->plate,                                # D CELL
-                            __('Speed') => number_format($speed,2, ',', ''),# E CELL
-                            __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
-                        ];
-                    }
-
-                    $dataExport = (object)[
-                        'fileName' => __('Speeding') . " $dateReport",
-                        'title' => __('Speeding') . " $dateReport",
-                        'subTitle' => count($speedingReport)." ".__('Speeding'),
-                        'sheetTitle' => "$vehicle->number",
-                        'data' => $dataExcel
-                    ];
-                    //foreach ()
-                    /* SHEETS */
-                    $excel = PCWExporterService::createHeaders($excel, $dataExport);
-                    $excel = PCWExporterService::createSheet($excel, $dataExport);
-                }
-            })->
-            export('xlsx');
-        }else{
-            $speedingReport = $speedingReportByVehicle->collapse();
-
-            $dataExcel = array();
-
-            foreach ($speedingReport as $speeding) {
-                $vehicle = $speeding->vehicle;
-                $speed = $speeding->speed;
-                if( $speed > 200 ){
-                    $speed = 100 + (random_int(-10,10));
-                }
-
-                $dataExcel[] = [
-                    __('N°') => count($dataExcel) + 1,                             # A CELL
-                    __('Time') => $speeding->time->toTimeString(),                 # C CELL
-                    __('Vehicle') => $vehicle->number,                             # B CELL
-                    __('Plate') => $vehicle->plate,                                # D CELL
-                    __('Speed') => number_format($speed,2, ',', ''),# E CELL
-                    __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
-                ];
-            }
-
-            $fileData = (object)[
-                'fileName' => __('Speeding') . " $dateReport",
-                'title' => " $dateReport",
-                'subTitle' => count($speedingReport)." ".__('Speeding'),
-                'sheetTitle' => __('Speeding') . " $dateReport",
-                'data' => $dataExcel
-            ];
-            //foreach ()
-            /* SHEETS */
-
-            PCWExporterService::excel($fileData);
-        }
+        return view('reports.vehicles.speeding.show', compact(['speedingReport']));
     }
 
     /**

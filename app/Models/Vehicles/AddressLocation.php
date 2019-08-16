@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\AddressLocation whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\AddressLocation whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\AddressLocation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\AddressLocation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\AddressLocation query()
  */
 class AddressLocation extends Model
 {

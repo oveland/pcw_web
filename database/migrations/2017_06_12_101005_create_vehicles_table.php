@@ -15,6 +15,7 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('bea_id')->unique()->nullable(true);
             $table->string('plate')->unique();
             $table->string('number');
             $table->bigInteger('company_id')->unsigned()->default(6);
@@ -22,7 +23,7 @@ class CreateVehiclesTable extends Migration
             $table->boolean('in_repair')->default(true);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             /*Indexes*/

@@ -54,12 +54,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereYesterdayOdometer($value)
  * @property bool|null $speeding
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereSpeeding($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation query()
  */
 class CurrentLocation extends Model
 {
     protected $dates = ['date'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }

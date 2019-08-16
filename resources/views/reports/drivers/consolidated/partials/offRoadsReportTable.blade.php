@@ -1,5 +1,7 @@
 <div class="col-md-8 col-md-offset-2 col-sm-12 col-xs-12 m-t-10">
-    @php( $offRoadReport = \App\Services\Reports\Routes\OffRoadService::groupByFirstOffRoadByRoute($dispatchRegister->offRoads)->first() )
+    @php
+        $offRoadReport = \App\Services\Reports\Routes\OffRoadService::groupByFirstOffRoadByRoute($dispatchRegister->offRoads)->first();
+    @endphp
     @if( $offRoadReport && $offRoadReport->isNotEmpty() )
         <script>$('.badge-off-road-{{ $dispatchRegister->id }}').html('{{ count($offRoadReport) }}').removeClass('hide')</script>
         <div class="table-responsive">

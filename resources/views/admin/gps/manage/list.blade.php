@@ -290,8 +290,10 @@
                                     </thead>
                                     <tbody>
                                     @foreach($simGPSList as $simGPS)
-                                        @php( $vehicle = $simGPS->vehicle )
-                                        @php( $gpsVehicle = $vehicle->gpsVehicle )
+                                        @php
+                                            $vehicle = $simGPS->vehicle;
+                                            $gpsVehicle = $vehicle->gpsVehicle;
+                                        @endphp
                                         <tr id="detail-{{ $simGPS->id }}" class="vehicle-list" data-vehicle-number="{{ $vehicle->number ?? '' }}">
                                             @include('admin.gps.manage.gpsVehicleDetail')
                                         </tr>

@@ -1,4 +1,6 @@
-@php($routeReports = $passengerReport->reports)
+@php
+    $routeReports = $passengerReport->reports;
+@endphp
 
 @if(count($routeReports))
     <div class="panel panel-inverse">
@@ -22,7 +24,9 @@
 
             <ul class="nav nav-pills nav-pills-success">
                 @foreach($routeReports as $route_id => $routeReport)
-                    @php( $route = \App\Models\Routes\Route::find($route_id) )
+                    @php
+                        $route = \App\Models\Routes\Route::find($route_id);
+                    @endphp
                     <li class="{{ $loop->first ? 'active':'' }}">
                         <a href="#route-report-tab-{{ $route_id }}" data-toggle="tab" aria-expanded="true">
                             <i class="fa fa-bus" aria-hidden="true"></i> {{ $route->name }}
@@ -50,7 +54,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @php( $totalPassengers = collect([]) )
+                        @php
+                            $totalPassengers = collect([]);
+                        @endphp
                         @foreach($report as $date => $dateReport)
                             @php
                                 $issuesByVehicles = $dateReport->issues;

@@ -180,7 +180,9 @@
         var data = [];
 
         @forEach($mergedDataValues as $mergedDataValue)
-            @php( $vehicle = $mergedDataValue->vehicle )
+            @php
+                $vehicle = $mergedDataValue->vehicle;
+            @endphp
             data.push({
                 type: 'line',
                 label: '{{ $vehicle->number }}',

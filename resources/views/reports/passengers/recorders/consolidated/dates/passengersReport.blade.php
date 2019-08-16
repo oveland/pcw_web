@@ -1,4 +1,6 @@
-@php($reports = $passengerReport->reports)
+@php
+    $reports = $passengerReport->reports;
+@endphp
 @if(count($reports))
     <div class="panel panel-inverse">
         <div class="panel-heading">

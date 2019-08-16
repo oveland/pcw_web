@@ -23,14 +23,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $report_period
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereGpsTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereReportPeriod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle query()
  */
 class GpsVehicle extends Model
 {
     protected $fillable = ['imei'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
-        return config('app.date_time_format');
+        return config('app.simple_date_time_format');
     }
 
     public function hasValidImei()

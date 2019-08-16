@@ -6,7 +6,11 @@ use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Vehicles\Location
@@ -14,10 +18,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $version
  * @property string|null $date
- * @property \Carbon\Carbon $date_created
+ * @property Carbon $date_created
  * @property int|null $dispatch_register_id
  * @property float|null $distance
- * @property \Carbon\Carbon $last_updated
+ * @property Carbon $last_updated
  * @property string|null $latitude
  * @property string|null $longitude
  * @property float|null $odometer
@@ -26,37 +30,40 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $status
  * @property int|null $vehicle_id
  * @property bool|null $off_road
- * @property-read \App\Models\Routes\Report $report
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereDateCreated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereDispatchRegisterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereDistance($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereLastUpdated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereLatitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereLongitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereOdometer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereOffRoad($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereOrientation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereSpeed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereVehicleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereVersion($value)
- * @mixin \Eloquent
+ * @property-read Report $report
+ * @method static Builder|Location whereDate($value)
+ * @method static Builder|Location whereDateCreated($value)
+ * @method static Builder|Location whereDispatchRegisterId($value)
+ * @method static Builder|Location whereDistance($value)
+ * @method static Builder|Location whereId($value)
+ * @method static Builder|Location whereLastUpdated($value)
+ * @method static Builder|Location whereLatitude($value)
+ * @method static Builder|Location whereLongitude($value)
+ * @method static Builder|Location whereOdometer($value)
+ * @method static Builder|Location whereOffRoad($value)
+ * @method static Builder|Location whereOrientation($value)
+ * @method static Builder|Location whereSpeed($value)
+ * @method static Builder|Location whereStatus($value)
+ * @method static Builder|Location whereVehicleId($value)
+ * @method static Builder|Location whereVersion($value)
+ * @mixin Eloquent
  * @property int|null $vehicle_status_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereVehicleStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister witOffRoads()
+ * @method static Builder|Location whereVehicleStatusId($value)
+ * @method static Builder|DispatchRegister witOffRoads()
  * @property bool|null $speeding
- * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location validCoordinates()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereSpeeding($value)
+ * @property-read DispatchRegister|null $dispatchRegister
+ * @method static Builder|Location validCoordinates()
+ * @method static Builder|Location whereSpeeding($value)
  * @property float|null $current_mileage
  * @property-read mixed $time
- * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
- * @property-read \App\Models\Vehicles\VehicleStatus|null $vehicleStatus
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereCurrentMileage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location witSpeeding()
- * @property-read \App\Models\Vehicles\AddressLocation $addressLocation
+ * @property-read Vehicle|null $vehicle
+ * @property-read VehicleStatus|null $vehicleStatus
+ * @method static Builder|Location whereCurrentMileage($value)
+ * @method static Builder|Location witSpeeding()
+ * @property-read AddressLocation $addressLocation
+ * @method static Builder|Location newModelQuery()
+ * @method static Builder|Location newQuery()
+ * @method static Builder|Location query()
  */
 class Location extends Model
 {
@@ -65,7 +72,7 @@ class Location extends Model
 
     protected $fillable = ['vehicle_id', 'date', 'latitude', 'longitude', 'orientation', 'odometer', 'status', 'speed', 'speeding', 'vehicle_status_id', 'distance', 'dispatch_register_id', 'off_road'];
 
-    protected function getDateFormat()
+    function getDateFormat()
     {
         return config('app.date_time_format');
     }
@@ -81,7 +88,7 @@ class Location extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function report()
     {
@@ -89,7 +96,7 @@ class Location extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function dispatchRegister()
     {
@@ -167,7 +174,7 @@ class Location extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function addressLocation()
     {
@@ -185,8 +192,25 @@ class Location extends Model
                 'address' => $address,
                 'status' => 0,
             ]);
+            sleep(0.1);
         }
 
         return $addressLocation ? $addressLocation->address : $address;
+    }
+
+    public function getAPIFields()
+    {
+        return (object)[
+            'id' => $this->id,
+            'date' => $this->date->toDateTimeString(),
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'orientation' => $this->orientation,
+            'speed' => $this->speed,
+            'odometer' => $this->odometer,
+            'offRoad' => $this->off_road,
+            'speeding' => $this->speeding,
+            'vehicleStatus' => $this->vehicleStatus,
+        ];
     }
 }

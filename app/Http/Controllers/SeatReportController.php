@@ -7,6 +7,7 @@ use App\Models\Passengers\CounterIssue;
 use App\Models\Passengers\Passenger;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use App\Services\Auth\PCWAuthService;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -15,24 +16,23 @@ class SeatReportController extends Controller
     /**
      * @var GeneralController
      */
-    private $generalController;
+    private $pcwAuthService;
 
-    public function __construct(GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService)
     {
-        $this->generalController = $generalController;
+        $this->pcwAuthService = $pcwAuthService;
     }
 
     public function index(Request $request)
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name')->get();
-        }
+        $access = $this->pcwAuthService->getAccessProperties();
+        $companies = $access->companies;
         return view('reports.passengers.sensors.seats.index', compact('companies'));
     }
 
     public function play(Request $request)
     {
-        $company = $this->generalController->getCompany($request);
+        $company = $this->pcwAuthService->getCompanyFromRequest($request);
         $vehicleReport = $request->get('vehicle-report');
         $typeReport = $request->get('type-report');
         $vehicle = Vehicle::find($vehicleReport);

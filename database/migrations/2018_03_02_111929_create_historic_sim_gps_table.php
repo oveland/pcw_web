@@ -15,6 +15,7 @@ class CreateHistoricSimGpsTable extends Migration
     {
         Schema::create('historic_sim_gps', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->timestamp('date')->useCurrent();
             $table->string('sim');
             $table->string('operator');
             $table->string('gps_type');
@@ -22,7 +23,7 @@ class CreateHistoricSimGpsTable extends Migration
             $table->boolean('active')->default(true);
             $table->timestamps();
 
-            /* table relations */
+            /* Table relations */
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
         });
 

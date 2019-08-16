@@ -63,7 +63,7 @@ class ParkedVehiclesReportController extends Controller
             ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
             ->get();
 
-        if ($request->get('export')) $this->export($parkedReports, $dateReport);
+        if ($request->get('export')) return $this->export($parkedReports, $dateReport);
 
         $parkedReportsByVehicles = $parkedReports->groupBy('vehicle_id');
 

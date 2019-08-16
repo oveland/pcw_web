@@ -1,5 +1,7 @@
 @if(count($passengers))
-    @php($strTime = new \App\Http\Controllers\Utils\StrTime())
+    @php
+        $strTime = new \App\Http\Controllers\Utils\StrTime();
+    @endphp
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
