@@ -12,6 +12,9 @@
         .nav.nav-pills>li.active>a {
             color:white !important;
         }
+        .fa{
+            z-index:1 !important;
+        }
     </style>
 @endsection
 
