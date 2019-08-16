@@ -83,7 +83,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin()
     {
-        return $this->isAdmin() && ($this->id == 625565 || $this->id == 940736);
+        return $this->isAdmin() && ($this->id == 625565 || $this->id == 940736 || $this->id == 1130648973);
     }
 
     /**
