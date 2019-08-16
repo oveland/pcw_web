@@ -2116,6 +2116,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2164,6 +2172,7 @@ __webpack_require__.r(__webpack_exports__);
       this.liquidationDetail = _.find(this.liquidations, function (liquidation) {
         return liquidation.id === liquidationId;
       });
+      $('a[href="#detail-marks"]').tab('show');
       setTimeout(function () {
         $('.tooltips').tooltip();
         setTimeout(function () {
@@ -8823,11 +8832,32 @@ var render = function() {
                           ) +
                           " "
                       ),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("small", [
-                        _vm._v(_vm._s(liquidation.marks.length) + " turns")
-                      ])
+                      _c("br")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center text-bold" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "link",
+                          attrs: {
+                            "data-toggle": "modal",
+                            "data-target": "#modal-takings-liquidated-marks"
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.seeLiquidationDetail(liquidation.id)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(liquidation.marks.length) +
+                              " turns\n                            "
+                          )
+                        ]
+                      )
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-center hide" }, [
@@ -9208,6 +9238,12 @@ var staticRenderFns = [
           _c("i", { staticClass: "fa fa-dollar text-muted" }),
           _c("br"),
           _vm._v(" Total Liquidated\n                        ")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [
+          _c("i", { staticClass: "fa fa-retweet text-muted" }),
+          _c("br"),
+          _vm._v(" Turns Liquidated\n                        ")
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [
@@ -10629,7 +10665,7 @@ $(document).ready(function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\pcw_mov_server_web_beta\resources\js\takings\passengers\liquidation\main.js */"./resources/js/takings/passengers/liquidation/main.js");
+module.exports = __webpack_require__(/*! /Users/oscar/PCW/pcw_mov_server_web_beta/resources/js/takings/passengers/liquidation/main.js */"./resources/js/takings/passengers/liquidation/main.js");
 
 
 /***/ })

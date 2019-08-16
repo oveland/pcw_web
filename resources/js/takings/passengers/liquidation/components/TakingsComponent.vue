@@ -28,6 +28,9 @@
                                 <i class="fa fa-dollar text-muted"></i><br> Total Liquidated
                             </th>
                             <th class="col-md-1">
+                                <i class="fa fa-retweet text-muted"></i><br> Turns Liquidated
+                            </th>
+                            <th class="col-md-1">
                                 <i class="fa fa-user text-muted"></i><br> Responsable
                             </th>
                             <th class="col-md-1">
@@ -46,9 +49,14 @@
                             <td class="text-center">{{ liquidation.liquidation.totalDiscounts | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.liquidation.totalCommissions | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.liquidation.totalPenalties | numberFormat('$0,0') }}</td>
+
                             <td class="text-center text-bold">
                                 {{ liquidation.liquidation.total | numberFormat('$0,0') }} <br>
-                                <small>{{ liquidation.marks.length }} turns</small>
+                           </td>
+                            <td class="text-center text-bold">
+                                <a class="link" @click="seeLiquidationDetail(liquidation.id)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
+                                    {{ liquidation.marks.length }} turns
+                                </a>
                             </td>
 
                             <td class="text-center hide">
@@ -248,6 +256,7 @@
                     return liquidation.id === liquidationId
                 });
 
+                $('a[href="#detail-marks"]').tab('show');
                 setTimeout(() => {
                     $('.tooltips').tooltip();
                     setTimeout(() => {
