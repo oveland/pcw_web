@@ -39,7 +39,7 @@
                 @endphp
                 <div id="report-tab-{{ $vehicleId }}" class="tab-pane report-tab-cp fade {{ $loop->first ? 'active in':'' }}">
                     <div class="row">
-                        <div class="table-responsive col-md-12" style="padding-bottom: 90px">
+                        <div class="table-responsive col-md-12" style="padding-bottom: 90px;height: 1000px">
                             @php
                                 $controlPoints =  $route->controlPoints;
                                 $reportsByRoundTrip = $controlPointTimeReportByVehicle->groupBy(function ($controlPointTimeReport) {

@@ -91,9 +91,12 @@ class Company extends Model
     {
         $user = Auth::user();
         $vehicles = $user->assignedVehicles($this);
-        if( $routeId && $routeId != 'all' ){
-            $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::where('route_id', $routeId)->get()->pluck('vehicle_id');
-            $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+        if ($routeId && $routeId != 'all') {
+            $route = Route::find($routeId);
+            if ($route) {
+                $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::whereIn('route_id', $route->subRoutes->pluck('id'))->get()->pluck('vehicle_id');
+                $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+            }
         }
 
         return $vehicles;

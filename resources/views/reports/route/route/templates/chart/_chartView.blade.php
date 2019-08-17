@@ -1,5 +1,5 @@
-<div class="modal-header" style="width: 100%">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+<div class="modal-header p-0" style="width: 100%;overflow-x: auto">
+    <button type="button" class="btn btn-success btn-xs pull-right" data-dismiss="modal" aria-hidden="true">
         <i class="fa fa-times"></i>
     </button>
     <div class="">

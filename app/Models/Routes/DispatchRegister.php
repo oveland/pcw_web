@@ -3,6 +3,7 @@
 namespace App\Models\Routes;
 
 use App\Http\Controllers\Utils\StrTime;
+use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Users\User;
@@ -125,6 +126,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndRouteId(\App\Models\Company\Company $company, $routeId = null)
  */
 class DispatchRegister extends Model
 {
@@ -164,7 +166,7 @@ class DispatchRegister extends Model
      */
     public function offRoads()
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->where('off_road',true)->orderBy('date', 'asc');
+        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->where('off_road', true)->orderBy('date', 'asc');
     }
 
     /**
@@ -322,7 +324,7 @@ class DispatchRegister extends Model
             'vehicle' => $this->vehicle->getAPIFields(),
             'status' => $this->status,
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
-            'dispatcherName' => $this->user ? $this->user->name: __('Unassigned'),
+            'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
         ];
     }
 
@@ -358,6 +360,13 @@ class DispatchRegister extends Model
     public function hasObservationCounter()
     {
         return $this->vehicle->plate == 'VCK-531';
+    }
+
+    public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
+    {
+        $query->where(function($query) use ($company, $routeId){
+            return $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'))->orWhere('route_id', intval($routeId));
+        });
     }
 
     const CREATED_AT = 'date_created';

@@ -2,6 +2,18 @@
 
 @section('stylesheets')
     <style>
+        .nav.nav-pills>li>a {
+            color: #9ca4aa !important;
+            border: 2px solid #3b4b50 !important;
+        }
+        .bg-warning {
+            background-color: #cba528
+        }
+
+        a.bg-warning:hover,
+        a.bg-warning:focus {
+            background-color: #cb840c
+        }
     </style>
 @endsection
 
@@ -175,7 +187,7 @@
                 loadRouteReport($(this).val());
             }).change();
 
-            $('#route-report, #date-report, #type-report').change(function () {
+            $('#date-report, #type-report').change(function () {
                 let form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {

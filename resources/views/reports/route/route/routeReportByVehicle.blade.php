@@ -12,7 +12,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $route->id ?? $route }}&type-report=group-vehicles&export=true" class="btn btn-sm btn-lime bg-lime-dark btn-rounded pull-left">
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $routeReport }}&type-report=group-vehicles&export=true" class="btn btn-sm btn-lime bg-lime-dark btn-rounded pull-left">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
                 <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime pull-left" data-click="panel-expand" title="@lang('Expand / Compress')">
@@ -43,7 +43,7 @@
             @foreach($dispatchRegistersByVehicles as $vehicleId => $dispatchRegisters)
                 <div id="report-tab-{{ $vehicleId }}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}}">
                     <!-- begin table -->
-                @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport'))
+                @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company'))
                 <!-- end table -->
                 </div>
             @endforeach

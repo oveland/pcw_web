@@ -18,6 +18,7 @@ use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class PCWPassengersService implements APIWebInterface
 {
@@ -31,7 +32,8 @@ class PCWPassengersService implements APIWebInterface
         switch ($service) {
             case 'report':
                 $company = Company::find($request->get('company'));
-                $dateReport = Carbon::now()->toDateString();
+                $dateReport = $request->get('date');
+                $dateReport = $dateReport ? $dateReport : Carbon::now()->toDateString();
 
                 return response()->json([
                     'error' => false,
@@ -75,12 +77,14 @@ class PCWPassengersService implements APIWebInterface
             $vehicle = Vehicle::find($vehicleId);
 
             $recorder = isset($passengerByRecorder->report["$vehicleId"]) ? $passengerByRecorder->report["$vehicleId"] : null;
-            $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
+            $recorderHistory = $recorder ? $this->getRecorderHistory($recorder->history) : [];
 
+            $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
             $reports[] = (object)[
                 'vehicle_id' => $vehicleId,
                 'passengers' => (object)[
                     'recorder' => $recorder ? $recorder->passengersByRecorder : 0,
+                    'recorderHistory' => $recorderHistory,
                     'sensor' => $sensor->passengersBySensor,
                     'sensorRecorder' => $sensor->passengersBySensorRecorder,
                     'timeRecorder' => $recorder->timeRecorder,
@@ -100,4 +104,25 @@ class PCWPassengersService implements APIWebInterface
         return $passengerReport;
     }
 
+    /**
+     * @param $history
+     * @return Collection
+     */
+    function getRecorderHistory($history){
+        $recorderHistory = collect([]);
+        foreach ($history as $item){
+            $recorderHistory->push([
+                'routeId' => $item->routeId,
+                'routeName' => $item->routeName,
+                'roundTrip' => $item->roundTrip,
+                'turn' => $item->turn,
+                'passengersByRoundTrip' => $item->passengersByRoundTrip,
+                'startRecorder' => $item->startRecorder,
+                'endRecorder' => $item->endRecorder,
+                'driverCode' => $item->dispatchRegister ? $item->dispatchRegister->driver_code : '',
+            ]);
+        }
+
+        return $recorderHistory;
+    }
 }

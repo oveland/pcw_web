@@ -1,6 +1,5 @@
 @extends(Auth::user()->isProprietary() ? 'layouts.blank' : 'layout')
 
-
 @section('stylesheets')
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link href="{{ asset('assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.css') }}" rel="stylesheet" type="text/css" />
@@ -22,6 +21,12 @@
             background: #f57c1e;
         }
 
+        .btn-historic-info {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+            font-size: 0.8em !important;
+            margin-bottom: 5px !important;
+        }
     </style>
 @endsection
 
@@ -146,16 +151,27 @@
                 </div>
                 <input id="range_reports" type="text" />
                 <p class="help-block text-white show-info">
-                    <small class="col-md-6 col-sm-6 col-xs-6 p-0 text-left">
+                    <small class="col-md-4 col-sm-12 col-xs-12 p-0 text-left">
                         <span><i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')</span>
                         <span class="hidden-xs">
                             @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
                         </span>
                     </small>
-                    <small class="col-md-6 col-sm-6 col-xs-12 p-0 text-right">
-                        <span><i class="fa fa-clock-o"></i> <span class="time">0</span></span> |
-                        <span><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span> |
-                        <span class="btn btn-default btn-xs btn-circle status-vehicle m-b-5" style="padding-left: 10px !important; padding-right: 10px !important; font-size: 0.8em !important;"></span>
+                    <small class="col-md-8 col-sm-12 col-xs-12 p-0 text-right">
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Time')">
+                            <i class="fa fa-clock-o"></i> <span class="time"></span>
+                        </span>
+
+                        @if(Auth::user()->isAdmin())
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Period') | @lang('Average') (s)">
+                            <i class="ion-android-stopwatch"></i> <span class="period"></span>s | <span class="average-period"></span>s
+                        </span>
+                        @endif
+
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Speed')"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Mileage') @lang('in the day')"><i class='fa fa-road'></i> <span class="current-mileage">0</span> Km</span>
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle tooltips" title="@lang('Vehicle status')"><i class='fa fa-send'></i></span>
                     </small>
                 </p>
             </div>
@@ -225,11 +241,19 @@
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
                     reportContainer.slideUp(100);
+                    reportRouteHistoric.clearMap();
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (report) {
                             reportRouteHistoric.processHistoricReportData(report);
+
+                            $('#range_reports').data("ionRangeSlider").update({
+                                min: 0,
+                                max: report.total,
+                                from: report.total
+                            });
+
                             setTimeout(()=>{
                                 if( report.total > 0 )btnExport.fadeIn();
                                 btnExport.attr('href', report.exportLink);
@@ -295,7 +319,12 @@
                     reportRouteHistoric.updateBusMarker(slide.from);
                 },
                 onFinish: function(slide){
-
+                    setTimeout(()=>{
+                        reportRouteHistoric.updateBusMarker(slide.from);
+                        setTimeout(()=>{
+                            reportRouteHistoric.updateBusMarker(slide.from);
+                        },500);
+                    },100);
                 }
             });
         });

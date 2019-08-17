@@ -89,7 +89,7 @@
                             </td>
                             <td colspan="3">
                                 <div class="col-md-4">
-                                    <div class="widget widget-stat bg-info text-white">
+                                    <div class="widget widget-stat bg-info p-20">
                                         <div class="widget-stat-btn">
                                             <a href="javascript:void(0)" class="tooltips" data-title="{{ $dispatchRegister->status }}">
                                                 <i class="fa fa-eye"></i>
@@ -120,7 +120,7 @@
                                 </div>
                                 @if($parking->report_id)
                                     <div class="col-md-4">
-                                        <div class="widget widget-stat bg-success text-white">
+                                        <div class="widget widget-stat bg-success p-20">
                                         <div class="widget-stat-btn">
                                             <a href="javascript:void(0)" class="tooltips" data-title="@lang('Near of') {{ $parking->controlPoint->name }}">
                                                 <i class="fa fa-map-marker"></i>

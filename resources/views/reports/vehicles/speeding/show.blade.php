@@ -97,17 +97,27 @@
                                                     {{ number_format($speeding->speed,2, ',', '') }}
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $speeding->id }}" data-title="@lang('Location')">
+                                                    <button class="btn btn-xs btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $speeding->id }}" data-title="@lang('Location')">
                                                         <i class="fa fa-map-marker"></i>
                                                         <span>@lang('Location')</span>
                                                     </button>
                                                     <span id="address-{{ $speeding->id }}" class="tooltips" data-title="@lang('Address')"></span>
-                                                    <button class="btn btn-sm btn-info btn-show-address" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
+                                                    <button class="btn btn-xs btn-info btn-show-address" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
                                                             data-url="{{ route('report-vehicle-speeding-geolocation-address',['speeding'=>$speeding->id]) }}"
                                                             data-target="#address-{{ $speeding->id }}">
                                                         <i class="fa fa-refresh faa-spin animated-hover hide"></i>
                                                         <span>@lang('Address')</span>
                                                     </button>
+                                                    @if($speeding->dispatch_register_id)
+                                                        <a href="#modal-route-report"
+                                                           class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
+                                                           data-toggle="modal"
+                                                           data-url="{{ route('report-route-chart',['dispatchRegister'=>$speeding->dispatch_register_id]) }}?centerOnLocation={{ $speeding->id }}"
+                                                           data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$speeding->dispatch_register_id]) }}"
+                                                           data-original-title="@lang('Graph report detail')">
+                                                            <i class="fa fa-area-chart faa-pulse"></i>
+                                                        </a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             <tr id="image-{{ $speeding->id }}" class="collapse fade collapse-speeding-location-image" data-url="{{ route('report-vehicle-speeding-geolocation-image',['speeding'=>$speeding->id]) }}">

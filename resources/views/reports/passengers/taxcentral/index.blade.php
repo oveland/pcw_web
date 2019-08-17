@@ -250,7 +250,7 @@
             });
 
             $('#company-report').change(function () {
-                loadRouteReport($(this).val());
+                loadSelectRouteReport($(this).val());
             });
 
             $('#date-report, #route-report').change(function () {

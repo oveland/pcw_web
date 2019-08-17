@@ -48,38 +48,46 @@
                             <!-- begin panel-group -->
                             <div class="panel-group" id="accordion-{{$company->id}}">
                             @if($company->routes)
-                            @foreach($company->routes->sortBy('name') as $route)
+                            @foreach($company->routes->where('as_group', false)->sortBy('name') as $route)
                                 <!-- begin panel -->
                                     <div class="panel panel-inverse overflow-hidden">
                                         <div class="panel-heading">
                                             <h3 class="panel-title" aria-expanded="false">
-                                                <span class="accordion-toggle accordion-toggle-styled collapsed">
-                                                    <i class="fa fa-road"></i>
-                                                    <a data-toggle="collapse" data-parent="#accordion-{{$company->id}}" href="#collapse-{{$route->id}}" class="text-white">
-                                                        ({{$route->id}}) <b class="text-uppercase">{{ $route->name }}</b>
-                                                    </a>
-                                                    <i class="fa fa-plus-circle pull-right"></i>
-                                                    <a href="{{ $route->url }}" class="pull-right m-r-20 text-white">
-                                                        <i class="fa fa-download"></i> @lang('Download KMZ')
-                                                    </a>
-                                                    <a href="{{ route('export-coordinates',['route'=>$route->id]) }}" class="pull-right m-r-20 text-white">
-                                                        <i class="fa fa-map-marker"></i> @lang('Export Coordinates')
-                                                    </a>
-                                                </span>
+                                                <div class="accordion-toggle accordion-toggle-styled collapsed row">
+                                                    <div class="col-md-4">
+                                                        <i class="fa fa-road"></i>
+                                                        <a data-toggle="collapse" data-parent="#accordion-{{$company->id}}" href="#collapse-{{$route->id}}" class="text-white">
+                                                            ({{$route->id}}) <b class="text-uppercase">{{ $route->name }}</b>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-4 text-center">
+                                                        <samp class="{{ $route->controlPoints->count() ? 'text-white text-bold' : 'text-muted' }}">
+                                                            {{ $route->controlPoints->count() }} @lang('Control Points')
+                                                        </samp>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <a href="{{ $route->url }}" class="pull-right m-r-20 text-white">
+                                                            <i class="fa fa-download"></i> @lang('Download KMZ')
+                                                        </a>
+                                                        <a href="{{ route('export-coordinates',['route'=>$route->id]) }}" class="pull-right m-r-20 text-white">
+                                                            <i class="fa fa-map-marker"></i> @lang('Export Coordinates')
+                                                        </a>
+                                                        <i class="fa fa-plus-circle pull-right"></i>
+                                                    </div>
+                                                </div>
                                             </h3>
                                         </div>
                                         <div id="collapse-{{ $route->id }}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                                             <div class="panel-body">
-                                                <div class="widget widget-stat bg-inverse-light text-white p-b-30">
-                                                    <div class="widget-stat-btn"><a href="#" data-click="widget-reload"><i class="fa fa-repeat"></i></a></div>
-                                                    <button class="btn btn-success" onclick="alert('Migrating...')" data-toggle="modal" data-target="#modal-migration">
-                                                        <i class="fa fa-database"></i> @lang('Process migration')
-                                                    </button>
-                                                    <button class="btn btn-default" onclick="$('.compare-{{$route->id}}').load('{{ route('migrate-cp-compare',['route'=>$route->id]) }}')">
-                                                        <i class="fa fa-angle-double-left"></i> <i class="fa fa-angle-double-right"></i> @lang('Compare')
-                                                    </button>
-                                                    <div class="widget-stat-number">
-                                                        {{ $route->controlPoints->count() }} @lang('Control Points')
+                                                <div class="widget widget-stat bg-inverse-light text-white p-t-10 p-b-30 text-center">
+                                                    <div class="col-md-12">
+                                                        <button class="btn btn-success" onclick="alert('Migrating...')" data-toggle="modal" data-target="#modal-migration">
+                                                            <i class="fa fa-database"></i> @lang('Process migration')
+                                                        </button>
+                                                        <button class="btn btn-default" onclick="$('.compare-{{$route->id}}').load('{{ route('migrate-cp-compare',['route'=>$route->id]) }}')">
+                                                            <i class="fa fa-angle-double-left"></i> <i class="fa fa-angle-double-right"></i> @lang('Compare')
+                                                        </button>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <div class="panel">

@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Passengers\Passenger;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
 use App\Mail\ConsolidatedReportMail;
+use App\Models\Vehicles\SimGPS;
 use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleStatus;
+use App\Services\Auth\PCWAuthService;
 use Carbon\Carbon;
 use File;
 use Mail;
@@ -16,8 +20,15 @@ use Illuminate\Http\Request;
 
 class ToolsController extends Controller
 {
+    protected $auth;
 
-    public function checkGPSLimbo(Request $request){
+    public function __construct(PCWAuthService $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    public function checkGPSLimbo(Request $request)
+    {
         $on = $request->get('on');
         $on = $on ? $on : "04-marzo";
 
@@ -39,7 +50,84 @@ class ToolsController extends Controller
 
     public function test(Request $request)
     {
-        phpinfo();
+        $date = $request->get('date');
+        $from = $request->get('from');
+        $to = $request->get('to');
+
+        $company = $this->auth->getCompanyFromRequest($request);
+        $vehicles = $company->vehicles()->active()
+            ->with(['simGPS', 'simGPS.gps'])
+            ->get()
+            ->filter(function (Vehicle $v) {
+                return ($v->simGPS ? $v->simGPS->gps_type == SimGPS::COBAN : false);
+            })->sortBy(function($v){
+                return intval($v->number);
+            });
+
+
+        $measures = collect([]);
+        //$vehicles = $vehicles->where('number', '1146');
+
+        foreach ($vehicles as $vehicle) {
+            $locations = Location::whereBetween('date', ["$date $from", "$date $to"])
+                ->where('vehicle_id', $vehicle->id)
+                ->orderBy('date')
+                ->get();
+
+            $lastLOK = $locations->where('vehicle_status_id', VehicleStatus::OK)->first();
+            $next = true;
+            $periods = collect([]);
+            if ($lastLOK) {
+                foreach ($locations as $location) {
+                    $vehicleStatus = $location->vehicleStatus->des_status;
+                    $interval = "($vehicleStatus) $lastLOK->date TO ($vehicleStatus) $location->date";
+                    $totalSeconds = '--';
+                    if ($location->vehicle_status_id == VehicleStatus::OK) {
+                        if ($next) {
+                            $totalSeconds = $location->date->diffInSeconds($lastLOK->date);
+                            $periods->push([
+                                'period' => $totalSeconds,
+                                'from' => $lastLOK->date,
+                                'to' => $location->date,
+                            ]);
+                        }
+                        $lastLOK = $location;
+                        $next = true;
+                    } else {
+                        $next = false;
+                    }
+
+                    //dump("$interval >> Diff: $totalSeconds > average ".intval($periods->average('period')));
+                }
+            }
+            $averagePeriod = intval($periods->average('period'));
+
+            $bgStatus = "";
+            $status = "PENDIENTE";
+            if($locations->count() < 100){
+                $bgStatus = 'bg-danger';
+                $status = "NR";
+            }elseif($averagePeriod > 0 && $averagePeriod < 30){
+                $bgStatus = 'bg-success';
+                $status = "OK";
+            }elseif($averagePeriod == 0){
+                $bgStatus = 'bg-warning';
+                $status = "SIN ACTIVIDAD";
+            }
+
+            $dispatcherVehicle = $vehicle->dispatcherVehicle;
+
+            $measures->push((object)[
+                'vehicle' => $vehicle,
+                'route' => $dispatcherVehicle ? $dispatcherVehicle->route : null,
+                'totalLocations' => $locations->count(),
+                'averagePeriod' => $averagePeriod,
+                'bgStatus' =>   $bgStatus,
+                'status' =>   $status,
+            ]);
+        }
+
+        return view('tools.tablePeriods', compact('measures'));
     }
 
     /**
@@ -183,10 +271,7 @@ class ToolsController extends Controller
             case 'routes':
 
                 $dates = [
-                    '2019-04-09',
-                    '2019-04-10',
-                    '2019-04-11',
-                    '2019-04-12',
+
                 ];
 
                 foreach ($dates as $date) {
@@ -204,10 +289,26 @@ class ToolsController extends Controller
             case 'passengers':
 
                 $dates = [
-                    '2019-04-09',
-                    '2019-04-10',
-                    '2019-04-11',
-                    '2019-04-12',
+                    '2019-07-24',
+                    '2019-07-25',
+                    '2019-07-26',
+                    '2019-07-27',
+                    '2019-07-28',
+                    '2019-07-29',
+                    '2019-07-30',
+                    '2019-07-31',
+                    '2019-08-01',
+                    '2019-08-02',
+                    '2019-08-03',
+                    '2019-08-04',
+                    '2019-08-05',
+                    '2019-08-06',
+                    '2019-08-07',
+                    '2019-08-08',
+                    '2019-08-09',
+                    '2019-08-10',
+                    '2019-08-11',
+                    '2019-08-12',
                 ];
 
                 foreach ($dates as $date) {

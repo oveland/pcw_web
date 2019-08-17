@@ -593,5 +593,11 @@
   "Total Gross BEA": "Total BEA bruto",
   "Gross BEA": "BEA bruto",
   "Percent": "Porcentaje",
-  "Boarding": "Abordados"
+  "Boarding": "Abordados",
+  "Settlement receipt": "Recibo de liquidación",
+  "Please fix the issues first": "Por favor revise y solucione las inconsistencias primero",
+  "Active": "Activo",
+  "Inactive": "Inactivo",
+  "Unregistered": "No calculado",
+  "The report is available only for dates before the current one": "El reporte está disponible solo para fechas anteriores al actual"
 }

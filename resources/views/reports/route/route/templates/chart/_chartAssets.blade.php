@@ -19,7 +19,7 @@
 
     <script type="application/javascript">
         let busMarker = null;
-        let iconbus = '{{ asset('img/bus.png') }}';
+        let iconBus = '{{ asset('img/bus.png') }}';
 
         let controlPointIcon = [
             '{{ asset('img/control-point-0.png') }}',
@@ -34,12 +34,40 @@
             '{{ asset('img/point-map-off-road.png') }}'
         ];
 
+        const iconPathSVG = 'M511.2,256c0-8.6-5.2-16.3-13.1-19.7L30.5,40.2c-8.7-3.7-18.9-1.1-24.8,6.3c-6,7.4-6.4,17.8-1,25.6l127.4,184L4.7,440 c-5.4,7.8-5,18.2,1,25.6c0.5,0.6,1,1.1,1.5,1.6c6.1,6.1,15.3,8,23.4,4.6l467.6-196.1C506,272.3,511.2,264.6,511.2,256z';
+
+
+        function loadScript(url, callback)
+        {
+            // Adding the script tag to the head as suggested before
+            var head = document.head;
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+
+            // Then bind the event to the callback function.
+            // There are several events for cross browser compatibility.
+            script.onreadystatechange = callback;
+            script.onload = callback;
+
+            // Fire the loading
+            head.appendChild(script);
+        }
+
         $(document).ready(function () {
+            initializeMap(() => {
+                loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
+                    loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
+                        loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
+                            SlidingMarker.initializeGlobally();
+                            //$('.map-report-historic').css('height', (window.innerHeight - 150));
+                        });
+                    });
+                });
+            });
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
-            });
-
-            $('#modal-route-report').on('hidden.bs.modal', function () {
+            }).on('hidden.bs.modal', function () {
                 busMarker = null;
             });
 
@@ -129,8 +157,10 @@
                             let completedPercent = [];
                             let latitudes = [];
                             let longitudes = [];
+                            let orientations = [];
                             let offRoads = [];
                             let speeding = [];
+                            let speedingLabel = [];
                             let speed = [];
                             let averageSpeed = [];
 
@@ -144,12 +174,45 @@
                                 completedPercent[i] = percent;
                                 latitudes[i] = report.latitude;
                                 longitudes[i] = report.longitude;
+                                orientations[i] = report.orientation;
                                 offRoads[i] = report.offRoad ? '' : 'hide';
                                 speed[i] = report.speed;
                                 averageSpeed[i] = report.averageSpeed;
-                                speeding[i] = report.speeding ? 'label-danger' : '';
+                                speeding[i] = report.speeding ? 'speeding':'none';
+                                speedingLabel[i] = report.speeding ? 'label-danger' : '';
 
-                                icon = pointMap[report.offRoad ? 2 : (report.trajectoryOfReturn ? 1 : 0)];
+                                //icon = pointMap[report.offRoad ? 2 : (report.trajectoryOfReturn ? 1 : 0)];
+
+                                let rotation = parseInt(report.orientation);
+
+                                let fillColor = '#a1bf00';
+                                let strokeColor = '#008a54';
+
+                                if (report.trajectoryOfReturn) {
+                                    fillColor = '#bfa017';
+                                    strokeColor = '#008a54';
+                                }
+
+                                if (report.speeding) {
+                                    fillColor = '#bf6f00';
+                                    strokeColor = '#ccc000';
+                                }
+
+                                if (report.offRoad) {
+                                    fillColor = '#85000e';
+                                    strokeColor = '#ba0033';
+                                }
+
+                                const icon = {
+                                    path: iconPathSVG,
+                                    fillOpacity: 0.9,
+                                    fillColor: fillColor,
+                                    strokeColor: strokeColor,
+                                    scale: .026,
+                                    strokeWeight: 1,
+                                    anchor: new google.maps.Point(220, 250),
+                                    rotation: rotation > 0 ? rotation - 90 : (this.markerBus ? this.markerBus.getIcon().rotation : rotation)
+                                };
 
                                 new google.maps.Marker({
                                     title: report.controlPointName + " | " + report.time + "("+report.timeReport+") | " + routeDistance + " m. | " + "  " + percent + "%",
@@ -213,9 +276,12 @@
                                         "<b>'.__('Time').':</b> {{offset:times}} <br>"+
                                         "<b>'.__('Traveled').':</b> {{offset:distance}} m <br>"+
                                         "<b>'.__('Completed').':</b> <span class=\'route-percent\'>{{offset:percent}}</span>%<br>"+
-                                        "<span class=\'label p-0 {{offset:speed}} speed\' data-speed=\'{{offset:speed}}\' data-average=\'{{offset:averageSpeed}}\'><b>'.__('Speed').':</b> {{offset:speed}} Km/h <br></span>"+
+                                        "<span class=\'label p-0 {{offset:speedingLabel}} speed\' data-speed=\'{{offset:speed}}\' data-average=\'{{offset:averageSpeed}}\'><b>'.__('Speed').':</b> {{offset:speed}} Km/h <br></span>"+
                                         "<span class=\'hide latitude\'>{{offset:latitude}}</span><br>"+
                                         "<span class=\'hide longitude\'>{{offset:longitude}}</span>"+
+                                        "<span class=\'hide orientation\'>{{offset:orientation}}</span>"+
+                                        "<span class=\'hide speeding\'>{{offset:speeding}}</span>"+
+                                        "<span class=\'hide off-road\'>{{offset:offRoads}}</span>"+
                                     "</div>'?>",
                                 tooltipValueLookups: {
                                     'offRoads': offRoads,
@@ -225,9 +291,11 @@
                                     'speed': speed,
                                     'averageSpeed': averageSpeed,
                                     'speeding': speeding,
+                                    'speedingLabel': speedingLabel,
                                     'percent': completedPercent,
                                     'latitude': latitudes,
-                                    'longitude': longitudes
+                                    'longitude': longitudes,
+                                    'orientation': orientations,
                                 }
                             }).slideDown();
 
@@ -237,18 +305,50 @@
                                     let t = $('.info-route-report');
                                     let latitude = t.find('.latitude').html();
                                     let longitude = t.find('.longitude').html();
+                                    let orientation = t.find('.orientation').html();
                                     let speed = t.find('.speed').data('speed');
+                                    let speeding = t.find('.speeding').text() === 'speeding';
+                                    let offRoad = t.find('.off-road').text() === '';
                                     let averageSpeed = t.find('.speed').data('average');
                                     let routePercent = t.find('.route-percent').html();
+
+                                    if(latitude === undefined || longitude === undefined)return false;
+
+                                    let rotation = parseInt(orientation);
+
+                                    let fillColor = '#04bf8a';
+                                    let strokeColor = '#0f678a';
+
+                                    if (speeding) {
+                                        fillColor = '#bf6f00';
+                                        strokeColor = '#ccc000';
+                                    }
+
+                                    if (offRoad) {
+                                        fillColor = '#85000e';
+                                        strokeColor = '#ba0033';
+                                    }
+
+                                    const icon = {
+                                        path: iconPathSVG,
+                                        fillOpacity: 1,
+                                        fillColor: fillColor,
+                                        strokeColor: strokeColor,
+                                        scale: .045,
+                                        strokeWeight: 2,
+                                        anchor: new google.maps.Point(220, 250),
+                                        rotation: rotation > 0 ? rotation - 90 : (busMarker ? busMarker.getIcon().rotation : rotation)
+                                    };
 
                                     if (!busMarker) {
                                         busMarker = new google.maps.Marker({
                                             map: map,
-                                            icon: iconbus,
-                                            animation: google.maps.Animation.DROP
+                                            icon: icon,
+                                            duration: 150,
                                         });
                                     }
                                     busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)});
+                                    busMarker.setIcon(icon);
 
                                     if( !map.getBounds().contains(busMarker.getPosition()) ){
                                         //map.setCenter(busMarker.getPosition());

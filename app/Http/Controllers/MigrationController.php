@@ -32,8 +32,10 @@ class MigrationController extends Controller
         'control_point_times' => 'tiempos_punto_control',
     ];
 
-    const ROUTES_FOR_MIGRATE = [124, 125, 126, 127, 128, 129, 135, 136, 137, 155, 156, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182, 183, 184];
-    const ROUTES_FOR_MIGRATE_CP = [124, 125, 126, 127, 128, 129, 155, 156, 135, 136, 137, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 158, 159, 180, 181, 182, 183, 184];
+    const ROUTES_FOR_MIGRATE =
+        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 192, 198, 201, 203, 206, 207, 210, 213, 214, 215, 216, 218, 219, 221, 222];
+    const ROUTES_FOR_MIGRATE_CP = self::ROUTES_FOR_MIGRATE;
+        //[124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 189, 201, 203, 206, 207, 210];
 
     /**
      * Create a new controller instance.
@@ -160,6 +162,12 @@ class MigrationController extends Controller
             dd($deleted . ' registers has ben deleted!');;
         }
 
+        DB::statement("
+            UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER 
+            FROM control_points WHERE route_id = ruta.id_rutas 
+            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE id_rutas IN (".implode(',',self::ROUTES_FOR_MIGRATE).")
+        ");
+
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
@@ -173,8 +181,8 @@ class MigrationController extends Controller
             }
             $route->id = $routeOLD->id_rutas;
             $route->name = $routeOLD->nombre;
-            $route->distance = $routeOLD->distancia;
-            $route->road_time = $routeOLD->tiempo_recorrido;
+            $route->distance = $routeOLD->distancia ?? 0;
+            $route->min_route_time = $routeOLD->min_route_time;
             $route->company_id = $routeOLD->id_empresa;
             $route->dispatch_id = $routeOLD->id_despacho;
             $route->active = $routeOLD->estado == 0 ? true : false;

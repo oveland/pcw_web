@@ -4,7 +4,12 @@ namespace App\Models\Routes;
 
 use App\Models\Company\Company;
 use App\Models\Vehicles\CurrentLocation;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Routes\Route
@@ -18,38 +23,41 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $dispatch_id
  * @property int $bea_id
  * @property bool $active
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Company\Company $company
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\ControlPoint[] $controlPoints
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereDispatchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereDistance($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereRoadTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereUrl($value)
- * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route active()
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Fringe[] $fringes
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\CurrentDispatchRegister[] $currentDispatchRegisters
- * @property-read \App\Models\Routes\Dispatch $dispatch
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Company $company
+ * @property-read Collection|ControlPoint[] $controlPoints
+ * @method static Builder|Route whereActive($value)
+ * @method static Builder|Route whereCompanyId($value)
+ * @method static Builder|Route whereCreatedAt($value)
+ * @method static Builder|Route whereDispatchId($value)
+ * @method static Builder|Route whereDistance($value)
+ * @method static Builder|Route whereId($value)
+ * @method static Builder|Route whereName($value)
+ * @method static Builder|Route whereRoadTime($value)
+ * @method static Builder|Route whereUpdatedAt($value)
+ * @method static Builder|Route whereUrl($value)
+ * @mixin Eloquent
+ * @method static Builder|Route active()
+ * @property-read Collection|Fringe[] $fringes
+ * @property-read Collection|CurrentDispatchRegister[] $currentDispatchRegisters
+ * @property-read Dispatch $dispatch
  * @property bool|null $as_group
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereAsGroup($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route query()
+ * @method static Builder|Route whereAsGroup($value)
+ * @method static Builder|Route newModelQuery()
+ * @method static Builder|Route newQuery()
+ * @method static Builder|Route query()
  * @property string|null $min_route_time
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereBeaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereMinRouteTime($value)
+ * @method static Builder|Route whereBeaId($value)
+ * @method static Builder|Route whereMinRouteTime($value)
+ * @property int|null $route_id
+ * @property-read Collection|Route[] $subRoutes
+ * @method static Builder|Route whereRouteId($value)
  */
 class Route extends Model
 {
     protected $hidden = ['created_at', 'updated_at'];
-    
+
     function getDateFormat()
     {
         return config('app.simple_date_time_format');
@@ -100,6 +108,19 @@ class Route extends Model
     {
         $dataAPI = $this->toArray();
         $dataAPI['company'] = $this->company->toArray();
-        return (object) $dataAPI;
+        return (object)$dataAPI;
+    }
+
+    /**
+     * @return Route[]|HasMany
+     */
+    function subRoutes()
+    {
+        if( $this->as_group ){
+            return $this->hasMany(Route::class)->active();
+        }
+        else{
+            return $this->hasMany(Route::class)->where('id', $this->id);
+        }
     }
 }

@@ -12,6 +12,10 @@
                     @lang('Date')
                 </th>
                 <th>
+                    <i class="fa fa-list-o text-muted"></i><br>
+                    @lang('Hexadecimal')
+                </th>
+                <th>
                     <i class="fa fa-users text-muted"></i><br>
                     @lang('Passengers')
                 </th>
@@ -42,6 +46,7 @@
             <tr>
                 <td class="text-center" width="5%">{{ $loop->index + $passengers->firstItem() }}</td>
                 <td class="text-center">{{ $passenger->date }}</td>
+                <td class="text-center">{{ $passenger->hexSeats }}</td>
                 <td class="text-center">{{ ($passenger->total - $initialPassengerCount->total ) }}</td>
                 <td class="text-center">{{ $passenger->total }}</td>
                 <td class="text-center">
@@ -73,7 +78,7 @@
                         ----
                     @endif
                 </td>
-                <td>
+                <td class="text-center">
                     @if($counterIssue)
                         <button class="btn btn-sm btn-danger btn-show-counter-issue" data-action="{{ route('report-passengers-sensors-counter-issue',['counterIssue' => $counterIssue->id]) }}">
                             <i class="fa fa-exclamation-triangle"></i>
@@ -107,6 +112,9 @@
                     <button class="btn btn-copy btn-sm btn-default pull-right tooltips" data-title="@lang('Copy frame')" data-clipboard-text="{{ $currentFrame }}">
                         <i class="fa fa-copy"></i>
                     </button>
+                    <div class="seating-template text-center">
+                        {!! $vehicle->seatTopology()->makeHtmlTemplate($passenger) !!}
+                    </div>
                 </td>
             </tr>
         @endforeach

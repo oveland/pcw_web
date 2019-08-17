@@ -61,19 +61,13 @@ class ReportRouteController extends Controller
      */
     public function show(Request $request)
     {
-        $companyReport = $request->get('company-report');
-        $routeReport = $request->get('route-report');
+        $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
+        $routeReport = $request->get('route-report');
 
-        $company = Auth::user()->isAdmin() ? Company::find($companyReport) : Auth::user()->company;
-        $route = $routeReport == "all" ? $routeReport : Route::find($routeReport);
-        if ($routeReport != "all" && (!$route || !$route->belongsToCompany($company))) abort(404);
-
-        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport);
-        if ($routeReport != "all") $dispatchRegisters = $dispatchRegisters->where('route_id', '=', $route->id);
-        else $dispatchRegisters = $dispatchRegisters->whereIn('route_id', $company->routes->pluck('id'));
-        $dispatchRegisters = $dispatchRegisters
+        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
+            ->whereCompanyAndRouteId($company, $routeReport)
             ->active()
             ->orderBy('departure_time')
             ->get();
@@ -92,7 +86,7 @@ class ReportRouteController extends Controller
 
                 if ($request->get('export')) $this->exportByVehicle($dispatchRegistersByVehicles, $dateReport);
 
-                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
+                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'typeReport']));
                 break;
             default:
                 $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
@@ -101,7 +95,7 @@ class ReportRouteController extends Controller
                     $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
                 }
 
-                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'route', 'dateReport', 'routeReport', 'typeReport']));
+                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'typeReport']));
                 break;
 
         }

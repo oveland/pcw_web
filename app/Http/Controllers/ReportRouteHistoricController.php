@@ -9,6 +9,7 @@ use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Exception;
 use Illuminate\Contracts\View\Factory;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -75,19 +76,31 @@ class ReportRouteHistoricController extends Controller
         $vehicle = Vehicle::find($vehicleReport);
 
         $locations = Location::whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
-            ->with('vehicle')
-            ->with('dispatchRegister')
-            ->with('vehicleStatus')
             ->where('vehicle_id', $vehicleReport)
+            ->with(['vehicle', 'dispatchRegister', 'vehicleStatus'])
             ->orderBy('date')
             ->get();
 
+
         $dataLocations = collect([]);
+
+        $lastLocation = $locations->first();
 
         foreach ($locations as $location) {
             $dispatchRegister = $location->dispatchRegister;
+
+            $period = '';
+            $averagePeriod = '';
+            if (Auth::user()->isAdmin()) {
+                $period = $location->date->diffInSeconds($lastLocation->date);
+                //$averagePeriod = intval($dataLocations->average('period')); // CAUTION this line take some long time!
+                $averagePeriod = "--";
+            }
+
             $dataLocations->push((object)[
                 'time' => $location->date->format('H:i:s'),
+                'period' => $period,
+                'averagePeriod' => $averagePeriod,
                 'date' => $location->date->format('Y-m-d'),
                 'currentMileage' => number_format(intval($location->current_mileage) / 1000, 2, '.', ''),
                 'latitude' => $location->latitude,
@@ -97,6 +110,8 @@ class ReportRouteHistoricController extends Controller
                 'orientation' => $location->orientation,
                 'speed' => $location->speed,
                 'speeding' => $location->speeding,
+                'offRoad' => $location->off_road,
+                'routeDistance' => number_format(intval($location->distance) / 1000, 2, '.', ''),
                 'vehicleStatus' => (object)[
                     'status' => $location->vehicleStatus->des_status,
                     'iconClass' => $location->vehicleStatus->icon_class,
@@ -105,6 +120,7 @@ class ReportRouteHistoricController extends Controller
                 'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                 'vehicle' => $location->vehicle->getAPIFields()
             ]);
+            $lastLocation = $location;
         }
 
         $totalLocations = $dataLocations->count();

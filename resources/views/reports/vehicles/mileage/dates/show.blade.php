@@ -44,26 +44,30 @@
 
             <div id="report-tab-{{ 0 }}" class="tab-pane fade {{ true ? 'active in' : '' }}">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
+                    <table class="table table-bordered table-striped table-hover table-valign-middle table-repodrt">
                         <thead>
                             <tr class="inverse">
-                                <th>
+                                <th class="text-center">
                                     <i class="fa fa-list-o"></i><br>
                                     @lang('#')
                                 </th>
-                                <th>
+                                <th class="text-center">
                                     <i class="fa fa-calendar-o"></i><br>
                                     @lang('Date')
                                 </th>
-                                <th>
+                                <th class="text-center">
                                     <i class="fa fa-car"></i><br>
                                     @lang('Number')
                                 </th>
-                                <th>
+                                <th class="text-center">
                                     <i class="fa fa-credit-card"></i><br>
                                     @lang('Plate')
                                 </th>
-                                <th>
+                                <th class="text-center">
+                                    <i class="fa fa-car"></i><br>
+                                    @lang('Status')
+                                </th>
+                                <th class="text-center">
                                     <i class="fa fa-road"></i><br>
                                     @lang('Mileage') (km)
                                 </th>
@@ -76,6 +80,24 @@
                                     <td class="text-center">{{ $report->date }} </td>
                                     <td class="text-center">{{ $report->vehicleNumber }} </td>
                                     <td class="text-center">{{ $report->vehiclePlate }} </td>
+                                    <td class="text-center">
+                                        @php
+                                            $infoReportVehicleStatus = "";
+                                        @endphp
+                                        @if($report->reportVehicleStatus)
+                                            @php
+                                                foreach ($report->reportVehicleStatus as $r){
+                                                    $infoReportVehicleStatus .= "$r->status ".__('by')." $r->updated_by <br>";
+                                                }
+                                            @endphp
+                                        @endif
+                                        <span class="badge badge-{{ $report->vehicleIsActive ? 'success' : 'warning' }} tooltips" data-html="true" title="{{ $infoReportVehicleStatus }}" style="text-transform:none">
+                                            {{ $report->vehicleStatus }}
+                                            @if($infoReportVehicleStatus)
+                                                <i class="fa fa-exclamation-circle"></i>
+                                            @endif
+                                        </span>
+                                    </td>
                                     <td class="text-center {{ $report->hasReports ? '':'text-warning tooltips' }}"
                                         data-title="{{ $report->hasReports ? '':__('No GPS reports found') }}">
                                         {{ number_format($report->mileage/1000,2, ',', '.') }} </td>
@@ -83,7 +105,7 @@
                             @endforeach
 
                             <tr class="bg-inverse text-white">
-                                <td class="text-right" colspan="4">@lang('TOTAL')</td>
+                                <td class="text-right" colspan="5">@lang('TOTAL')</td>
                                 <td class="text-center">{{ number_format($mileageReport->mileageByFleet/1000,2, ',', '.') }} Km</td>
                             </tr>
                         </tbody>

@@ -2,7 +2,7 @@
 <table id="table-report" class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
     <tr class="inverse">
-        <th class="{{ $routeReport != 'all'?'hide':'' }}">
+        <th class="">
             <i class="fa fa-flag text-muted"></i><br>
             @lang('Route')
         </th>
@@ -14,7 +14,7 @@
             <i class="fa fa-list-ol text-muted"></i><br>
             @lang('Turn')
         </th>
-        <th class="{{ $typeReport == 'group-vehicles'?'hide':'' }}">
+        <th class="">
             <i class="fa fa-car text-muted"></i><br>
             @lang('Vehicle')
         </th>
@@ -104,7 +104,7 @@
             $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0)?true:false;
         @endphp
         <tr>
-            <th width="10%" class="{{ $routeReport != 'all'?'hide':'' }} bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+            <th width="10%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                 {{ $route->name }}
             </th>
             <th width="5%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
@@ -112,7 +112,7 @@
                 <small>{{ $dispatchRegister->status }}</small>
             </th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
-            <th width="5%" class="bg-inverse text-white text-center {{ $typeReport == 'group-vehicles'?'hide':'' }}">{{ $vehicle->number }}</th>
+            <th width="5%" class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
             @if( $company->hasDriverRegisters() )
             <td width="25%" class="text-uppercase">
                 @if( Auth::user()->isAdmin() )

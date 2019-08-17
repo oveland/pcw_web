@@ -52,6 +52,11 @@ class ControlPointsReportController extends Controller
         $company = $this->generalController->getCompany($request);
         $dateReport = $request->get('date-report');
         $route = Route::find($request->get('route-report'));
+
+        if($route->as_group){
+            return view('partials.alerts.unableRouteControlPoint');
+        }
+
         $typeReport = $request->get('type-report');
 
         $query = (object)[

@@ -41,6 +41,9 @@
             color: rgba(0, 0, 0, 0.14) !important;
             z-index: 1 !important;
         }
+        .badge{
+            padding: 3px 7px !important;
+        }
     </style>
 @endsection
 
@@ -63,6 +66,7 @@
     <div class="row">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" action="{{ route('report-vehicle-mileage-show-date-range') }}">
+            <input type="hidden" name="export" class="export" value="false">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -71,8 +75,11 @@
                             <i class="fa fa-minus"></i>
                         </a>
                     </div>
-                    <button type="submit" class="btn btn-success btn-sm btn-search-report">
+                    <button type="submit" class="btn btn-success btn-sm btn-search-report" onclick="$('.export').val(false);$('.form-search-report').attr('target', '_self')">
                         <i class="fa fa-search"></i> @lang('Search')
+                    </button>
+                    <button type="submit" class="btn btn-lime btn-sm btn-search-report" onclick="$('.export').val(true);$('.form-search-report').attr('target', '_blank')">
+                        <i class="fa fa-file-excel-o"></i> @lang('Export')
                     </button>
                 </div>
                 <div class="panel-body p-b-15">
@@ -107,7 +114,7 @@
                             <div class="form-group">
                                 <label for="initial-date-report" class="control-label field-required">@lang('Initial date')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="initial-date-report" id="initial-date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="initial-date-report" id="initial-date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ \Carbon\Carbon::now()->subDays(1)->toDateString() }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -118,7 +125,7 @@
                             <div class="form-group">
                                 <label for="final-date-report" class="control-label field-required">@lang('Final date')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="final-date-report" id="final-date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="final-date-report" id="final-date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ \Carbon\Carbon::now()->subDays(1)->toDateString() }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -149,7 +156,10 @@
         const reportContainer = $('.report-container');
         $(document).ready(function () {
             form.submit(function (e) {
-                e.preventDefault();
+                if( $('.export').val() === "false" ){
+                    e.preventDefault();
+                }
+
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
                     reportContainer.slideUp(100);
@@ -157,7 +167,10 @@
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            reportContainer.empty().hide().html(data).fadeIn();
+                            if( $('.export').val() === "false" ) {
+                                reportContainer.empty().hide().html(data);
+                            }
+                            reportContainer.fadeIn();
                         },
                         complete:function(){
                             form.find('.btn-search-report').removeClass(loadingClass);

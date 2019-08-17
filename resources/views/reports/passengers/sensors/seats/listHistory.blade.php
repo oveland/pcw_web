@@ -14,10 +14,10 @@
             </h5>
         </div>
         <div class="tab-content panel">
-            <div class="row">
+            <div class="">
                 <div class="col-md-3 p-20 p-b-0" style="border-radius: 10px;border: 1px solid #cdcdcd;-webkit-box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);-moz-box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);box-shadow: 3px 0 23px -9px rgba(0,0,0,0.75);">
                     <div class="seating-template text-center">
-                        {!! \App\Services\Reports\Passengers\SeatDistributionGualasService::makeHtmlTemplate($passengers->first()) !!}
+                        {!! $topology->makeHtmlTemplate($initialPassengerCount) !!}
                     </div>
 
                     <hr class="m-0 m-t-10 m-b-10">
@@ -74,7 +74,7 @@
         @endphp
         @foreach($passengers as $passenger)
             @php
-                $seatingStatusReport->push(\App\Services\Reports\Passengers\SeatDistributionGualasService::getSeatingStatus($passenger));
+                $seatingStatusReport->push($topology->getSeatingStatus($passenger))
             @endphp
         @endforeach
         let seatingStatusReport = JSON.parse('{!! $seatingStatusReport->toJson() !!}');
@@ -86,17 +86,18 @@
         function render(){
             let report = seatingStatusReport[currentIndex];
 
-            console.log(report.hexSeating);
             $('.hex-seating').html(report.hexSeating);
             $.each(report.seatingStatus, function (container, seating) {
-                console.log(container,seating);
-
+                const seatingRT = report.seatingStatusRT[container];
                 $.each(seating, function (seat, status) {
+                    const statusRT = seatingRT[seat];
                     let seatView = $('.data-'+container).find('#seat-'+seat);
-                    seatView.removeClass('seat-active').removeClass('seat-inactive');
-                    seatView.addClass( status === 1 ? 'seat-active':'seat-inactive' );
-                });
+                    seatView.removeClass('seat-active').removeClass('seat-active-2').removeClass('seat-inactive');
 
+                    let seatClass = status === 1 ? 'seat-active':'seat-inactive';
+                    seatClass = statusRT === 1 && status === 0  ? 'seat-active-2':seatClass;
+                    seatView.addClass( seatClass );
+                });
             });
 
             /* Track events on google maps */
@@ -243,6 +244,7 @@
 
         function makeContentMarkerMain(report){
             let time = report.time;
+            let date = report.date;
             let route = report.route;
             let passengers = report.passengers;
             let passengersPlatform = report.passengersPlatform;
@@ -251,6 +253,7 @@
             let vehicleStatusMainClass = report.vehicleStatusMainClass;
 
             return "<div class='p-5'>"+
+                    "<strong><i class='fa fa-calendar'></i> @lang('Date'):</strong> " + date + "<br>" +
                     "<strong><i class='fa fa-clock-o'></i> @lang('Time'):</strong> " + time + "<br>" +
                     "<strong><i class='fa fa-flag'></i> @lang('Route'):</strong> " + route + "<br>"+
                     "<strong><i class='fa fa-users'></i> @lang('Passengers'):</strong> " + passengers + "<br>"+
@@ -260,6 +263,8 @@
         }
 
         hideSideBar();
+
+        $('.slider-horizontal').addClass('m-0 m-t-2');
     </script>
 @else
     <div class="alert alert-warning alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">

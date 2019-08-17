@@ -111,7 +111,11 @@ class ConsolidatedReportMailCommand extends Command
                 }
                 break;
             default:
-                $mailTo = ['oiva.pcw@gmail.com'];
+                if ($production) {
+                    $mailTo = ['oiva.pcw@gmail.com'];
+                } else {
+                    $mailTo = ['oiva.fz@gmail.com'];
+                }
                 break;
         }
 

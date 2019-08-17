@@ -50,6 +50,10 @@ class ReportMileageDateRangeController extends Controller
         $finalDateReport = $request->get('final-date-report');
         $vehicleReport = $request->get('vehicle-report');
 
+        if( $initialDateReport >= Carbon::now()->toDateString() || $finalDateReport >= Carbon::now()->toDateString() ){
+            return view('partials.dates.dateOnlyBackToCurrent');
+        }
+
         $mileageReport = $this->buildMileageReport($company, $vehicleReport, $initialDateReport, $finalDateReport);
 
         if ($request->get('export')) return $this->pcwExporterService->exportMileageDateRange($mileageReport);
@@ -71,29 +75,12 @@ class ReportMileageDateRangeController extends Controller
 
         $reports = collect([]);
         $lastLocations = LastLocation::whereBetween('date', ["$initialDateReport 00:00:00", "$finalDateReport 23:59:59"])
-            ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->get();
+            //->with('reportVehicleStatus')
+            ->whereIn('vehicle_id', $vehicles->pluck('id'))->get();
 
-        /*$lastLocations = $lastLocations->sortBy(function($lastLocation){
-            return $lastLocation->date->toDateString()." ".intval($lastLocation->vehicle->number);
-        });*/
-
-        foreach ($lastLocations as $lastLocation) {
-            $vehicle = $lastLocation->vehicle;
-            $date = $lastLocation->date->toDateString();
-            $key = "$vehicle->id $date";
-            $reports->put($key,
-                (object)[
-                    'key' => $key,
-                    'vehicleId' => $vehicle->id,
-                    'vehiclePlate' => $vehicle->plate,
-                    'vehicleNumber' => $vehicle->number,
-                    'date' => $date,
-                    'mileage' => $lastLocation ? $lastLocation->current_mileage : 0,
-                    'hasReports' => !!$lastLocation,
-                ]
-            );
-        }
+        $lastLocationsByVehicles = $lastLocations->groupBy(function($ll){
+            return $ll->vehicle_id;
+        });
 
         $initialDate = Carbon::createFromFormat('Y-m-d', $initialDateReport);
         $finalDate = Carbon::createFromFormat('Y-m-d', $finalDateReport);
@@ -103,22 +90,26 @@ class ReportMileageDateRangeController extends Controller
         foreach ($vehicles as $vehicle) {
             foreach ($dateRange as $date) {
                 $date = $date->toDateString();
-                $key = "$vehicle->id $date";
-                $report = $reports->get($key);
+                $key = ($vehicle->active ? 'A' : 'B') . "$vehicle->id $date";
 
-                if(!$report){
-                    $reports->put($key,
-                        (object)[
-                            'key' => $key,
-                            'vehicleId' => $vehicle->id,
-                            'vehiclePlate' => $vehicle->plate,
-                            'vehicleNumber' => $vehicle->number,
-                            'date' => $date,
-                            'mileage' => 0,
-                            'hasReports' => false,
-                        ]
-                    );
-                }
+                $lastLocation = isset($lastLocationsByVehicles[$vehicle->id]) ? $lastLocationsByVehicles[$vehicle->id]->filter(function ($ll) use ($date, $vehicle) {
+                    return $ll->date->toDateString() == $date;
+                })->first() : null;
+
+                $reports->put($key,
+                    (object)[
+                        'key' => $key,
+                        'vehicleId' => $vehicle->id,
+                        'vehiclePlate' => $vehicle->plate,
+                        'vehicleNumber' => $vehicle->number,
+                        'vehicleIsActive' => $lastLocation ? $lastLocation->vehicle_active : false,
+                        'vehicleStatus' => $lastLocation ? ($lastLocation->vehicle_active ? __('Active'):__('Inactive')) : __('No GPS reports found'),
+                        'reportVehicleStatus' => $lastLocation ? $lastLocation->reportVehicleStatus : null,
+                        'date' => $date,
+                        'mileage' => $lastLocation ? $lastLocation->current_mileage : 0,
+                        'hasReports' => !!$lastLocation,
+                    ]
+                );
             }
         }
 

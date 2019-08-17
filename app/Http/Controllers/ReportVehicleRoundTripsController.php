@@ -47,8 +47,9 @@ class ReportVehicleRoundTripsController extends Controller
     {
         $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
+        $routeReport = $request->get('route-report');
 
-        $roundTripsReport = $this->buildRoundTripsReport($company, $dateReport);
+        $roundTripsReport = $this->buildRoundTripsReport($company, $dateReport, $routeReport);
 
         if ($request->get('export')) return $this->exporterService->exportRouteRoundTrips($roundTripsReport);
 
@@ -58,16 +59,22 @@ class ReportVehicleRoundTripsController extends Controller
     /**
      * @param Company|null $company
      * @param $dateReport
+     * @param string $routeReport
      * @return object
      */
-    public function buildRoundTripsReport(Company $company = null, $dateReport)
+    public function buildRoundTripsReport(Company $company = null, $dateReport, $routeReport = 'all')
     {
         $vehicles = $company->vehicles;
 
         $dispatchRegistersByVehicles = DispatchRegister::completed()
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->where('date', $dateReport)
-            ->orderBy('id')
+            ->where('date', $dateReport);
+
+        if ($routeReport != 'all') {
+            $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->where('route_id', $routeReport);
+        }
+
+        $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->orderBy('id')
             ->get()
             ->groupBy('vehicle_id');
 
@@ -105,6 +112,7 @@ class ReportVehicleRoundTripsController extends Controller
         $roundTripsReport = (object)[
             'company' => $company,
             'dateReport' => $dateReport,
+            'routeReport' => $routeReport,
             'reports' => $reports->sortBy('totalRoundTrips'),
             'totalRoundTripsByFleet' => $reports->sum('totalRoundTrips')
         ];

@@ -136,6 +136,11 @@
                                             <i class="fa fa-tag faa-tada"></i>
                                             <input type="radio" name="option-selection" value="new" autocomplete="off">
                                         </label>
+
+                                        <label class="btn btn-warning tooltips" data-title="@lang('Pending to 20s')">
+                                            <i class="fa fa-sliders faa-tada"></i>
+                                            <input type="radio" name="option-selection" value="pending-to-20-s" autocomplete="off">
+                                        </label>
                                     </div>
 
                                 </div>

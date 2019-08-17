@@ -6,13 +6,14 @@ use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleStatus;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\Passengers\Passenger
  *
  * @property int $id
- * @property \Carbon\Carbon $date
+ * @property Carbon $date
  * @property int $total
  * @property int $total_prev
  * @property int $vehicle_id
@@ -22,44 +23,45 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $latitude
  * @property float $longitude
  * @property string $frame
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int|null $total_platform
  * @property int|null $vehicle_status_id
- * @property-read \App\Models\Passengers\CounterIssue|null $counterIssue
- * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
+ * @property-read CounterIssue|null $counterIssue
+ * @property-read DispatchRegister|null $dispatchRegister
  * @property-read mixed $hex_seats
- * @property-read \App\Models\Vehicles\Vehicle $vehicle
- * @property-read \App\Models\Vehicles\VehicleStatus|null $vehicleStatus
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger findAllByDateRange($vehicleId, $initialDate, $finalDate)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger findAllByRoundTrip($vehicleId, $routeId, $roundTrip, $date)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereCounterIssueId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereDispatchRegisterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereFrame($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereLatitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereLongitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalPlatform($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalPrev($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereVehicleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereVehicleStatusId($value)
+ * @property-read Vehicle $vehicle
+ * @property-read VehicleStatus|null $vehicleStatus
+ * @method static Builder|Passenger findAllByDateRange($vehicleId, $initialDate, $finalDate)
+ * @method static Builder|Passenger findAllByRoundTrip($vehicleId, $routeId, $roundTrip, $date)
+ * @method static Builder|Passenger whereCounterIssueId($value)
+ * @method static Builder|Passenger whereCreatedAt($value)
+ * @method static Builder|Passenger whereDate($value)
+ * @method static Builder|Passenger whereDispatchRegisterId($value)
+ * @method static Builder|Passenger whereFrame($value)
+ * @method static Builder|Passenger whereId($value)
+ * @method static Builder|Passenger whereLatitude($value)
+ * @method static Builder|Passenger whereLocationId($value)
+ * @method static Builder|Passenger whereLongitude($value)
+ * @method static Builder|Passenger whereTotal($value)
+ * @method static Builder|Passenger whereTotalPlatform($value)
+ * @method static Builder|Passenger whereTotalPrev($value)
+ * @method static Builder|Passenger whereUpdatedAt($value)
+ * @method static Builder|Passenger whereVehicleId($value)
+ * @method static Builder|Passenger whereVehicleStatusId($value)
  * @mixin \Eloquent
  * @property int|null $total_sensor_recorder
  * @property int|null $total_front_sensor
  * @property int|null $total_back_sensor
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalBackSensor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalFrontSensor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalSensorRecorder($value)
+ * @method static Builder|Passenger whereTotalBackSensor($value)
+ * @method static Builder|Passenger whereTotalFrontSensor($value)
+ * @method static Builder|Passenger whereTotalSensorRecorder($value)
  * @property int|null $fringe_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereFringeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger query()
+ * @property mixed hexSeats
  */
 class Passenger extends Model
 {
@@ -94,6 +96,11 @@ class Passenger extends Model
             ->whereBetween('passengers.date', ["$date 00:00:00", "$date 23:59:59"]);
     }
 
+    /**
+     * @param $query
+     * @param $date
+     * @return mixed
+     */
     public function scopeWhereDate($query, $date)
     {
         return $query->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"]);
@@ -114,7 +121,9 @@ class Passenger extends Model
         foreach ($arrayFrame as $a){
             if( strlen($a) == 6 ){
                 $hexFromFrame = $a;
-                break;
+                if($this->vehicle_id != 1086){
+                    break;
+                }
             }
         }
 

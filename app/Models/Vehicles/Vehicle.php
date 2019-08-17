@@ -4,7 +4,10 @@ namespace App\Models\Vehicles;
 
 use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
+use App\Services\Reports\Passengers\SeatDistributionService;
+use App\Services\Reports\Passengers\Seats\SeatTopology;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Sofa\Eloquence\Eloquence;
 use Sofa\Eloquence\Mappable;
 
@@ -43,6 +46,7 @@ use Sofa\Eloquence\Mappable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereBeaId($value)
+ * @property-read \App\Models\Vehicles\VehicleSeatDistribution $seatDistribution
  */
 class Vehicle extends Model
 {
@@ -143,5 +147,22 @@ class Vehicle extends Model
     public function currentLocation()
     {
         return $this->hasOne(CurrentLocation::class);
+    }
+
+    /**
+     * @return VehicleSeatDistribution | HasOne
+     */
+    public function seatDistribution()
+    {
+        return $this->hasOne(VehicleSeatDistribution::class)->with('topology');
+    }
+
+    /**
+     * @return SeatTopology
+     */
+    public function seatTopology()
+    {
+        $seatDistribution = new SeatDistributionService($this->seatDistribution);
+        return $seatDistribution->getTopology();
     }
 }
