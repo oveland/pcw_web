@@ -54,6 +54,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereYesterdayOdometer($value)
  * @property bool|null $speeding
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereSpeeding($value)
+ * @property int|null $location_id
+ * @property string|null $ard_off_road
+ * @property int|null $jumps
+ * @property int|null $total_locations
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereArdOffRoad($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereJumps($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereTotalLocations($value)
  */
 class CurrentLocation extends Model
 {

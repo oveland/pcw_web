@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company\Company;
-use App\Models\Routes\Route;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Auth;
-use Carbon\Carbon;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ReportRouteHistoricController extends Controller
 {
@@ -25,22 +25,28 @@ class ReportRouteHistoricController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
-    public function index()
+    public function index(Request $request)
     {
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;
         $vehicles = $access->vehicles;
 
-        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles']));
+        $dateReport = $request->get('d');
+        $vehicleReport = $request->get('v');
+        $companyReport = $request->get('c');
+        $initialTime = $request->get('i');
+        $finalTime = $request->get('f');
+
+        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles', 'dateReport', 'vehicleReport', 'companyReport', 'initialTime', 'finalTime']));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return Factory|View
+     * @throws Exception
      */
     public function show(Request $request)
     {
@@ -135,7 +141,7 @@ class ReportRouteHistoricController extends Controller
 
     /**
      * @param $report
-     * @throws \Exception
+     * @throws Exception
      */
     public function export($report)
     {

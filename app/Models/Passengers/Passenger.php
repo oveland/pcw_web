@@ -59,6 +59,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $fringe_id
  * @property mixed hexSeats
  * @method static Builder|Passenger whereFringeId($value)
+ * @property int|null $history_seat_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereHistorySeatId($value)
  */
 class Passenger extends Model
 {

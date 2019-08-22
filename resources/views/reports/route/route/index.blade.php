@@ -79,14 +79,13 @@
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report"
-                                            class="default-select2 form-control col-md-12">
+                                    <select name="route-report" id="route-report" data-with-all="true" data-with-none="true" class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select a company')</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 options with-route">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
@@ -97,6 +96,15 @@
                                             </label>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 options without-route" style="display: none">
+                            <div class="form-group">
+                                <label for="threshold-km" class="control-label">@lang('Threshold km')</label>
+                                <div class="form-group">
+                                    <input id="threshold-km" class="form-control input-sm" name="threshold-km" type="number" value="5" min="5" max="500" step="1">
                                 </div>
                             </div>
                         </div>
@@ -162,18 +170,20 @@
     <script type="application/javascript">
         $('.menu-routes, .menu-route-report').addClass('active-animated');
 
+        let form = $('.form-search-report');
+        let reportContainer = $('.report-container');
+
         $(document).ready(function () {
-            $('.form-search-report').submit(function (e) {
-                let form = $(this);
+            form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    $('.report-container').slideUp(100);
+                    reportContainer.slideUp(100);
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            $('.report-container').empty().hide().html(data).fadeIn();
+                            reportContainer.empty().hide().html(data).fadeIn();
                             hideSideBar();
                         },
                         complete:function(){
@@ -183,38 +193,33 @@
                 }
             });
 
-            $('#company-report').change(function () {
-                loadRouteReport($(this).val());
-            }).change();
-
             $('#date-report, #type-report').change(function () {
-                let form = $('.form-search-report');
                 $('.report-container').slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
             });
 
-            @if(!Auth::user()->isAdmin())
-                loadRouteReport(null);
+            $('#route-report').change(function () {
+                $('.options').hide();
+                if ($(this).val() === 'none') {
+                    $('.without-route').fadeIn();
+                }else{
+                    $('.with-route').fadeIn();
+                }
+            });
+
+            @if(Auth::user()->isAdmin())
+                $('#company-report').change(function () {
+                    loadSelectRouteReport($(this).val());
+                }).change();
+            @else
+                loadSelectRouteReport(null);
             @endif
 
             setTimeout(function(){
                 $('.btn-show-off-road-report').click();
             },500);
         });
-
-        function loadRouteReport(company) {
-            let routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('route-ajax-action') }}', {
-                option: 'loadRoutes',
-                company: company
-            }, function () {
-                routeSelect.find('option[value=""]').remove();
-                routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
-                routeSelect.val('all').change();
-            });
-        }
     </script>
 @endsection

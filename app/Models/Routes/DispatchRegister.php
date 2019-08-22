@@ -154,11 +154,12 @@ class DispatchRegister extends Model
     }
 
     /**
+     * @param string $order
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function locations()
+    public function locations($order = 'asc')
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', $order);
     }
 
     /**
@@ -367,6 +368,36 @@ class DispatchRegister extends Model
         $query->where(function($query) use ($company, $routeId){
             return $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'))->orWhere('route_id', intval($routeId));
         });
+    }
+
+    public function getOffRoadPercent()
+    {
+        $totalLocations = $this->locations()->count();
+        $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
+
+        return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1,'.', '') : 0;
+    }
+
+    public function getRouteDistance($withFormat = false)
+    {
+        if($this->inProgress())return 0;
+
+        $routeDistance = $this->end_odometer - $this->start_odometer;
+        $routeDistance = $routeDistance > 0 && $routeDistance < 500000 ? $routeDistance : 0;
+
+        if($withFormat)return number_format($routeDistance/1000, 2, ',', '');
+
+        return $routeDistance;
+    }
+
+    public function getTotalOffRoad()
+    {
+        if($this->inProgress() || $this->getRouteDistance() < 5000)return 0;
+
+
+        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
+
+        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
     const CREATED_AT = 'date_created';

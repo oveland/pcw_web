@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LastLocation;
 use App\Models\Company\Company;
 use App\Models\Routes\ControlPoint;
 use App\Models\Routes\DispatchRegister;
@@ -66,6 +67,8 @@ class ReportRouteController extends Controller
         $typeReport = $request->get('type-report');
         $routeReport = $request->get('route-report');
 
+        if($routeReport == 'none')return $this->showReportWithOutRoute($request);
+
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
             ->whereCompanyAndRouteId($company, $routeReport)
             ->active()
@@ -99,6 +102,36 @@ class ReportRouteController extends Controller
                 break;
 
         }
+    }
+
+    public function showReportWithOutRoute(Request $request)
+    {
+        $company = $this->authService->getCompanyFromRequest($request);
+        $dateReport = $request->get('date-report');
+        $thresholdKm = $request->get('threshold-km');
+        $typeReport = $request->get('type-report');
+
+
+        $vehicles = $company->activeVehicles;
+
+        $lastLocations = LastLocation::with('vehicle')
+            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+            ->whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->where('current_mileage', '>', $thresholdKm * 1000)
+            ->where('current_mileage', '<', 700 * 1000)
+            ->get()->filter(function($ll){
+                return $ll->gpsIsOK();
+            });
+
+        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
+            ->whereIn('vehicle_id', $lastLocations->pluck('vehicle_id'))
+            ->active()
+            ->orderBy('departure_time')
+            ->get();
+
+        $lasLocationsOut = $lastLocations->whereNotIn('vehicle_id', $dispatchRegisters->pluck('vehicle_id'));
+
+        return view('reports.route.route.withOutRoute', compact(['lasLocationsOut','company', 'dateReport']));
     }
 
     /**

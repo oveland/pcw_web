@@ -51,9 +51,22 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereVersion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereYesterdayOdometer($value)
  * @mixin \Eloquent
+ * @property bool|null $vehicle_active
+ * @property bool|null $vehicle_in_repair
+ * @property int|null $jumps
+ * @property int|null $total_locations
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\ReportVehicleStatus[] $reportVehicleStatus
+ * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereJumps($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereTotalLocations($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereVehicleActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereVehicleInRepair($value)
  */
 class LastLocation extends Model
 {
+    const JUMPS_PERCENT_WITH_ISSUES = 40;
+    const MINIMUM_LOCATIONS_FOR_ANALYZE_JUMPS = 100;
+
     protected $dates = ['date'];
 
     protected function getDateFormat()
@@ -89,5 +102,15 @@ class LastLocation extends Model
         }
 
         return $report->count() ? $report : null;
+    }
+
+    public function gpsHasIssues()
+    {
+        return $this->total_locations > self::MINIMUM_LOCATIONS_FOR_ANALYZE_JUMPS && (100 * $this->jumps / $this->total_locations) > self::JUMPS_PERCENT_WITH_ISSUES;
+    }
+
+    public function gpsIsOK()
+    {
+        return !$this->gpsHasIssues();
     }
 }

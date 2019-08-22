@@ -57,6 +57,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereCurrentMileage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location witSpeeding()
  * @property-read \App\Models\Vehicles\AddressLocation $addressLocation
+ * @property string|null $ard_off_road
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereArdOffRoad($value)
  */
 class Location extends Model
 {
@@ -189,4 +191,14 @@ class Location extends Model
 
         return $addressLocation ? $addressLocation->address : $address;
     }
+
+    public function getTotalOffRoad($routeId)
+    {
+        $routeId = $routeId ? $routeId : ($this->dispatch_register_id ? $this->dispatchRegister->route->id : 'empty');
+        
+        $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
+
+        return isset($ardOffRoad[$routeId]) ? $ardOffRoad[$routeId]['tt'] : 0;
+    }
+
 }

@@ -19,11 +19,12 @@ class GeneralController extends Controller
         $vehicle = Vehicle::find($request->get('vehicle'));
         $date = $request->get('date');
         $withAll = $request->get('withAll');
+        $withNone = $request->get('withNone');
 
         if ($company) $routes = self::getRoutesFromCompany($company);
         else if ($vehicle && $date) $routes = self::getRoutesFromVehicleAndDate($vehicle, $date);
 
-        return view('partials.selects.routes', compact(['routes', 'withAll']));
+        return view('partials.selects.routes', compact(['routes', 'withAll', 'withNone']));
     }
 
     public function loadSelectDrivers(Request $request)

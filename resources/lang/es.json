@@ -94,6 +94,7 @@
   "Date": "Fecha",
   "All Routes": "Todas las rutas",
   "All routes": "Todas las rutas",
+  "Without route": "Sin ruta asignada",
   "Chart": "Gráfica",
   "url-chart": "grafico",
   "Passenger report detail": "Ver reporte de pasajeros",
@@ -559,5 +560,8 @@
   "Active": "Activo",
   "Inactive": "Inactivo",
   "Unregistered": "No calculado",
-  "The report is available only for dates before the current one": "El reporte está disponible solo para fechas anteriores al actual"
+  "The report is available only for dates before the current one": "El reporte está disponible solo para fechas anteriores al actual",
+  "Percent in off road": "Porcentaje por fuera de ruta",
+  "See historic report": "Ver Histórico Recorrido",
+  "Threshold km": "Con Km mayor a"
 }
