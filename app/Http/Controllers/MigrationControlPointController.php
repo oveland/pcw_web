@@ -41,7 +41,7 @@ class MigrationControlPointController extends Controller
         $route = Route::find($request->get('route'));
         if (!$route) dd("Route selected doesn't exists");
 
-        $fileName = $route->id . '_' . str_replace(' ', '', explode('.', $request->get('name'))[0]) . '.bor';
+        $fileName = $route->id . '_' . str_replace(' ', '', explode('.', $request->get('name'))[0]) . '.kmz';
 
         Storage::disk('google')->put($fileName, $request->file('kmz'));
 
