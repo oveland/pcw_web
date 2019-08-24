@@ -43,7 +43,7 @@ class MigrationControlPointController extends Controller
 
         $fileName = $route->id . '_' . str_replace(' ', '', explode('.', $request->get('name'))[0]) . '.kmz';
 
-        Storage::disk('google')->put($fileName, $request->file('kmz'));
+        Storage::disk('google')->putFileAs('', $request->file('kmz'), $fileName);
 
         $routeGoogle = $route->routeGoogle;
         $routeGoogle->url = Storage::disk('google')->url($fileName);
