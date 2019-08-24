@@ -563,5 +563,9 @@
   "The report is available only for dates before the current one": "El reporte está disponible solo para fechas anteriores al actual",
   "Percent in off road": "Porcentaje por fuera de ruta",
   "See historic report": "Ver Histórico Recorrido",
-  "Threshold km": "Con Km mayor a"
+  "Threshold km": "Con Km mayor a",
+  "Upload": "Cargar",
+  "Name without spaces": "Nombre sin espacios",
+  "Kmz file": "Archivo KMZ",
+  "File name": "Nombre"
 }

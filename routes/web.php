@@ -307,6 +307,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('cp'))->group(function () {
             Route::get('/', 'MigrationControlPointController@getControlPoints')->name('migrate-cp');
             Route::get('/compare/{route}', 'MigrationControlPointController@compare')->name('migrate-cp-compare');
+            Route::post('/upload-kmz', 'MigrationControlPointController@uploadKmz')->name('migrate-cp-upload-kmz');
+            Route::get('/download-kmz/{route}', 'MigrationControlPointController@downloadKmz')->name('migrate-cp-download-kmz');
+            Route::get('/calibrate/{route}/{apply}', 'MigrationControlPointController@calibrateRoute')->name('migrate-cp-calibrate-route');
         });
     });
 

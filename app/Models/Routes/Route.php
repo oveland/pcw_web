@@ -49,6 +49,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $route_id Almacena la ruta padre. Ruta padre: Deber? ser entonces categorizada como grupo, esto es as_group = true
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $subRoutes
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereRouteId($value)
+ * @property-read \App\Models\Routes\RouteGoogle $routeGoogle
  */
 class Route extends Model
 {
@@ -105,6 +106,11 @@ class Route extends Model
         $dataAPI = $this->toArray();
         $dataAPI['company'] = $this->company->toArray();
         return (object)$dataAPI;
+    }
+
+    public function routeGoogle()
+    {
+        return $this->hasOne(RouteGoogle::class, 'id_ruta', 'id');
     }
 
     /**

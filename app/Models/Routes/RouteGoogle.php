@@ -20,6 +20,8 @@ class RouteGoogle extends Model
 {
     use Mapping;
 
+    protected $fillable = ['url'];
+
     protected $table = 'rutas_google_v3';
     protected $primaryKey = 'id_ruta';
 
