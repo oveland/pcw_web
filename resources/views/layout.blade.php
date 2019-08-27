@@ -1556,6 +1556,12 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
 
+<template id="animated-loading">
+    <div class="col-md-12 text-center">
+        <img class="" alt="@lang('Loading')..." src="{{ asset('img/loading.gif') }}">
+    </div>
+</template>
+
 <div class="page-footer">
     <div class="page-footer-inner col-md-12 text-center"> <b>2019</b> &copy; PCW Ditech Integradores Tecnológicos:
         <a href="http://pcwtecnologia.com" title="PCW Tecnología" target="_blank">pcwtecnologia.com</a>

@@ -174,11 +174,13 @@
         let reportContainer = $('.report-container');
 
         $(document).ready(function () {
+            reportContainer.show().empty().html($('#animated-loading').html());
             form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    reportContainer.slideUp(100);
+                    reportContainer.show();
+                    reportContainer.empty().html($('#animated-loading').html());
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
@@ -193,11 +195,8 @@
                 }
             });
 
-            $('#date-report, #type-report').change(function () {
+            $('#date-report, #route-report, #company-report, #type-report').change(function () {
                 $('.report-container').slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
             });
 
             $('#route-report').change(function () {

@@ -164,6 +164,16 @@
                             let speed = [];
                             let averageSpeed = [];
 
+                            let historicPath = new google.maps.Polyline({
+                                path: [],
+                                geodesic: true,
+                                strokeColor: 'rgba(118,0,255,0.58)',
+                                strokeOpacity: 0.9,
+                                strokeWeight: 5,
+                                map: map
+                            });
+                            let path = historicPath.getPath();
+
                             data.reports.forEach(function (report, i) {
                                 let percent = report.completedPercent;
                                 let routeDistance = report.distance;
@@ -214,12 +224,14 @@
                                     rotation: rotation > 0 ? rotation - 90 : (this.markerBus ? this.markerBus.getIcon().rotation : rotation)
                                 };
 
-                                new google.maps.Marker({
+                                let marker = new google.maps.Marker({
                                     title: report.controlPointName + " | " + report.time + "("+report.timeReport+") | " + routeDistance + " m. | " + "  " + percent + "%",
                                     map: map,
                                     icon: icon,
                                     position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}
                                 });
+
+                                path.insertAt(i, marker.position);
                             });
 
                             if( data.center ){
