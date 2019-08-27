@@ -224,7 +224,7 @@
         }
 
         const autoLoad = function(){
-            const vehicleReport = $('#vehicle-report').val();
+            //const vehicleReport = $('#vehicle-report').val();
             setTimeout(()=>{
                 if (vehicleReport) form.submit();
             },1400);

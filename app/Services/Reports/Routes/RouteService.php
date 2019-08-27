@@ -74,25 +74,32 @@ class RouteService
                     $completedPercent = $routeDistance > 0 ? ($report ? $report->distancem : 0 / $routeDistance) * 100 : 0;
                     if ($completedPercent > 100) $completedPercent = 100;
 
-                    if (true || $report->controlPoint) {
-                        $reportData->push((object)[
-                            'locationId' => $location->id,
-                            'time' => $report ? $report->date->toTimeString() : $location->date->toTimeString(),
-                            'timeReport' => $report ? $report->timed : '00:00:00',
-                            'distance' => $report ? $report->distancem : 0,
-                            'controlPointName' => $report ? $report->controlPoint->name : "---",
-                            'completedPercent' => number_format($completedPercent, 1, ',', '.'),
-                            'value' => $report ? $report->status_in_minutes : 0,
-                            'latitude' => $location->latitude,
-                            'longitude' => $location->longitude,
-                            'orientation' => $location->orientation,
-                            'trajectoryOfReturn' => $report ? $report->distancem >= $distanceOfReturn : false,
-                            'speed' => number_format($location->speed, 1, ',', '.'),
-                            'averageSpeed' => ($reportData->count() > 0) ? $totalSpeed / $reportData->count() : 0,
-                            'speeding' => $location->speeding,
-                            'offRoad' => $offRoad
-                        ]);
-                    }
+                    $dispatchRegister = $location->dispatchRegister;
+
+                    $reportData->push((object)[
+                        'locationId' => $location->id,
+                        'time' => $report ? $report->date->toTimeString() : $location->date->toTimeString(),
+                        'timeReport' => $report ? $report->timed : '00:00:00',
+                        'distance' => $report ? $report->distancem : 0,
+                        'controlPointName' => $report ? $report->controlPoint->name : "---",
+                        'completedPercent' => number_format($completedPercent, 1, ',', '.'),
+                        'value' => $report ? $report->status_in_minutes : 0,
+                        'latitude' => $location->latitude,
+                        'longitude' => $location->longitude,
+                        'orientation' => $location->orientation,
+                        'trajectoryOfReturn' => $report ? $report->distancem >= $distanceOfReturn : false,
+                        'speed' => number_format($location->speed, 1, ',', '.'),
+                        'averageSpeed' => ($reportData->count() > 0) ? $totalSpeed / $reportData->count() : 0,
+                        'speeding' => $location->speeding,
+                        'offRoad' => $offRoad,
+                        'vehicleStatus' => (object)[
+                            'id' => $location->vehicleStatus->id,
+                            'status' => $location->vehicleStatus->des_status,
+                            'iconClass' => $location->vehicleStatus->icon_class,
+                            'mainClass' => $location->vehicleStatus->main_class,
+                        ],
+                        'dispatchRegister' => $dispatchRegister ? true : null,
+                    ]);
 
                     $lastReport = $report;
                     $lastSpeed = $location->speed;

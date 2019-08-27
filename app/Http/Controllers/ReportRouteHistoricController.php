@@ -113,6 +113,7 @@ class ReportRouteHistoricController extends Controller
                 'offRoad' => $location->off_road,
                 'routeDistance' => number_format(intval($location->distance) / 1000, 2, '.', ''),
                 'vehicleStatus' => (object)[
+                    'id' => $location->vehicleStatus->id,
                     'status' => $location->vehicleStatus->des_status,
                     'iconClass' => $location->vehicleStatus->icon_class,
                     'mainClass' => $location->vehicleStatus->main_class,
