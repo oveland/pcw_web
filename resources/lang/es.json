@@ -565,5 +565,9 @@
   "See historic report": "Ver Histórico Recorrido",
   "Threshold km": "Con Km mayor a",
   "Only allows reports for dates before the current": "Sólo permite reportes para fechas anteriores a la actual",
-  "Invalid date": "Fecha de consulta no válida"
+  "Invalid date": "Fecha de consulta no válida",
+  "Upload": "Cargar",
+  "Name without spaces": "Nombre sin espacios",
+  "Kmz file": "Archivo KMZ",
+  "File name": "Nombre"
 }

@@ -33,7 +33,7 @@ class MigrationController extends Controller
     ];
 
     const ROUTES_FOR_MIGRATE =
-        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 192, 198, 201, 203, 206, 207, 210, 213, 214, 215, 216, 218, 219, 221, 222];
+        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 144, 145, 146, 151, 154, 155, 156, 158, 159, 161, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 192, 193, 198, 201, 202, 203, 206, 207, 210, 213, 214, 215, 216, 218, 219, 221, 222, 223];
     const ROUTES_FOR_MIGRATE_CP = self::ROUTES_FOR_MIGRATE;
         //[124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 189, 201, 203, 206, 207, 210];
 
@@ -50,7 +50,7 @@ class MigrationController extends Controller
      * Show the application dashboard.
      *
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()->isAdmin()) abort(403);
         $tables = collect([
@@ -379,6 +379,16 @@ class MigrationController extends Controller
 
     public function migrateControlPoints(Request $request = null)
     {
+        DB::statement("ALTER TABLE control_point_time_reports DISABLE TRIGGER ALL");
+
+        DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
+        DB::delete("TRUNCATE control_point_times CASCADE");
+
+        //DB::statement("ALTER TABLE fringes DISABLE TRIGGER ALL");
+        //DB::statement("TRUNCATE fringes");
+
+        //$deleted = DB::delete('TRUNCATE control_points CASCADE');
+
         if ($request && $request->get('delete')) {
             $deleted = DB::delete('DELETE FROM control_points');
             dd($deleted . ' registers has ben deleted!');
@@ -420,6 +430,10 @@ class MigrationController extends Controller
             }
         }
 
+        DB::statement("ALTER TABLE control_point_times ENABLE TRIGGER ALL");
+        //DB::statement("ALTER TABLE fringes ENABLE TRIGGER ALL");
+        DB::statement("ALTER TABLE control_point_time_reports ENABLE TRIGGER ALL");
+
         dd([
             'Total Created' => $totalCreated,
             'Total Updated' => $totalUpdated,
@@ -431,10 +445,10 @@ class MigrationController extends Controller
     {
         $new = true;
         DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
-        DB::statement("TRUNCATE control_point_times");
+        DB::statement("TRUNCATE control_point_times CASCADE");
 
         DB::statement("ALTER TABLE fringes DISABLE TRIGGER ALL");
-        DB::statement("DELETE FROM fringes");
+        DB::statement("TRUNCATE fringes CASCADE");
         DB::statement("SELECT pg_catalog.setval('fringes_id_seq', 1, false)");
 
         $totalCreated = 0;
@@ -488,7 +502,7 @@ class MigrationController extends Controller
     {
         $new = true;
         DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
-        DB::statement("TRUNCATE control_point_times");
+        DB::statement("TRUNCATE control_point_times CASCADE");
         DB::statement("SELECT pg_catalog.setval('control_point_times_id_seq', 1, false)");
         DB::statement("UPDATE tiempos_punto_control SET tiempo1 = '00:00' WHERE tiempo1 = ''");
         $totalCreated = 0;
