@@ -174,7 +174,6 @@
         let reportContainer = $('.report-container');
 
         $(document).ready(function () {
-            reportContainer.show().empty().html($('#animated-loading').html());
             form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
