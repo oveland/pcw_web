@@ -64,32 +64,28 @@ class ReportRouteOffRoadController extends Controller
     {
         $company = $this->generalController->getCompany($request);
         $routeReport = $request->get('route-report');
+        $vehicleReport = $request->get('vehicle-report');
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
+        list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
         $query = (object)[
             'company' => $company,
             'dateReport' => $dateReport,
+            'routeReport' => $routeReport,
+            'vehicleReport' => $vehicleReport,
+            'initialTime' => $initialTime,
+            'finalTime' => $finalTime,
             'typeReport' => $typeReport,
         ];
 
-        $allOffRoads = $this->offRoadService->allOffRoads($company, $dateReport, $routeReport);
+        $allOffRoads = $this->offRoadService->allOffRoads($company, "$dateReport $initialTime:00", "$dateReport $finalTime:59", $routeReport, $vehicleReport);
 
-        switch ($typeReport) {
-            case 'vehicle':
-                $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
+        $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
 
-                if( $request->get('export') )$this->exportByVehicles($offRoadsByVehicles, $query);
+        if( $request->get('export') )$this->exportByVehicles($offRoadsByVehicles, $query);
 
-                return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','query']));
-                break;
-            case 'route':
-                //$offRoadsByVehicle = $allOffRoads->groupBy('dispatch_register_id');
-                return view('reports.route.off-road.offRoadByRoute', compact('offRoadsByVehicles'));
-                break;
-        }
-
-        return redirect(route('report-route-off-road-index'));
+        return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','query']));
     }
 
     /**

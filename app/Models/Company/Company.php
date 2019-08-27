@@ -91,7 +91,7 @@ class Company extends Model
     {
         $user = Auth::user();
         $vehicles = $user->assignedVehicles($this);
-        if ($routeId && $routeId != 'all') {
+        if ($this->hasADD() && $routeId && $routeId != 'all') {
             $route = Route::find($routeId);
             if ($route) {
                 $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::whereIn('route_id', $route->subRoutes->pluck('id'))->get()->pluck('vehicle_id');
@@ -200,5 +200,15 @@ class Company extends Model
     public function proprietaries()
     {
         return $this->hasMany(Proprietary::class);
+    }
+
+    /**
+     * Checks if company has active the Automatic Dispatch Detection (ADD)
+     *
+     * @return bool
+     */
+    public function hasADD()
+    {
+        return collect([self::MONTEBELLO])->contains($this->id);
     }
 }

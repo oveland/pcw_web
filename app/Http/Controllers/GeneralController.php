@@ -50,13 +50,15 @@ class GeneralController extends Controller
     public function loadSelectVehicles(Request $request)
     {
         $vehicles = self::getVehiclesFromCompany($this->getCompany($request));
-        return view('partials.selects.vehicles', compact('vehicles'));
+        $withAll = $request->get('withAll');
+        return view('partials.selects.vehicles', compact(['vehicles', 'withAll']));
     }
 
     public function loadSelectVehiclesFromRoute(Request $request)
     {
         $routeId = $request->get('route');
         $route = $routeId == 'all' ? null : Route::find($routeId);
+        $withAll = $request->get('withAll');
 
         $user = Auth::user();
         if ($route) {
@@ -68,7 +70,7 @@ class GeneralController extends Controller
             $vehicles = $user->assignedVehicles(null);
         }
 
-        return view('partials.selects.vehicles', compact('vehicles'));
+        return view('partials.selects.vehicles', compact(['vehicles', 'withAll']));
     }
 
     /**

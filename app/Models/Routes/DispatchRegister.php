@@ -127,6 +127,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndRouteId(\App\Models\Company\Company $company, $routeId = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(\App\Models\Company\Company $company, $date, $routeId = null, $vehicleId = null)
  */
 class DispatchRegister extends Model
 {
@@ -367,6 +368,25 @@ class DispatchRegister extends Model
     {
         $query->where(function($query) use ($company, $routeId){
             return $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'))->orWhere('route_id', intval($routeId));
+        });
+    }
+
+    public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
+    {
+        $query->where('date', explode(' ',$date)[0])->where(function($query) use ($company, $routeId, $vehicleId){
+            if( $vehicleId == 'all' ){
+                $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+            }else if($vehicleId){
+                $query = $query->where('vehicle_id', $vehicleId);
+            }
+
+            if($company->hasADD()){
+                $query = $query->orWhere('route_id', intval($routeId));
+            }else if($routeId != 'all'){
+                $query = $query->where('route_id', intval($routeId));
+            }
+
+            return $query;
         });
     }
 

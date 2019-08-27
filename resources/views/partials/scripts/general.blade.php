@@ -51,10 +51,9 @@
         let vehicleSelect = $('#vehicle-report');
         vehicleSelect.html($('#select-loading').html()).trigger('change.select2');
         vehicleSelect.load('{{ route('general-load-select-vehicles-from-route') }}', {
-            route: route
+            route: route,
+            withAll: vehicleSelect.data('with-all')
         }, function () {
-            vehicleSelect.prepend('<option value="" selected>@lang('Select an vehicle')</option>');
-
             if(defaultValue)vehicleSelect.val(defaultValue);
 
             vehicleSelect.trigger('change.select2');
