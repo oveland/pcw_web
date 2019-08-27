@@ -47,10 +47,11 @@ class RouteService
      */
     public function buildRouteLocationsReport(DispatchRegister $dispatchRegister, Location $centerOnLocation = null)
     {
-        $reports = $dispatchRegister->reports()->with('location')->get();
-        $locationsReports = (object)['empty' => $reports->isEmpty(), 'notEmpty' => $reports->isNotEmpty()];
+        //$reports = $dispatchRegister->reports()->with('location')->get();
+        $locations = $dispatchRegister->locations()->with('report')->get();
+        $locationsReports = (object)['empty' => $locations->isEmpty(), 'notEmpty' => $locations->isNotEmpty()];
 
-        if ($reports->isNotEmpty()) {
+        if ($locations->isNotEmpty()) {
             $vehicle = $dispatchRegister->vehicle;
             $route = $dispatchRegister->route;
             $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
@@ -61,31 +62,31 @@ class RouteService
             $distanceOfReturn = $controlPointOfReturn ? $controlPointOfReturn->distance_from_dispatch : $routeDistance;
 
             $reportData = collect([]);
-            $lastReport = $reports->first();
+            $lastReport = $locations->first();
             $lastSpeed = 0;
             $totalSpeed = 0;
 
-            foreach ($reports as $report) {
-                $location = $report->location;
-                if ($report && $location->isValid()) {
+            foreach ($locations as $location) {
+                $report = $location->report;
+                if ($location->isValid()) {
                     $offRoad = $location->off_road == 't' ? true : false;
 
-                    $completedPercent = $routeDistance > 0 ? ($report->distancem / $routeDistance) * 100 : 0;
+                    $completedPercent = $routeDistance > 0 ? ($report ? $report->distancem : 0 / $routeDistance) * 100 : 0;
                     if ($completedPercent > 100) $completedPercent = 100;
 
-                    if ($report->controlPoint) {
+                    if (true || $report->controlPoint) {
                         $reportData->push((object)[
                             'locationId' => $location->id,
-                            'time' => $report->date->toTimeString(),
-                            'timeReport' => $report->timed,
-                            'distance' => $report->distancem,
-                            'controlPointName' => $report->controlPoint->name,
+                            'time' => $report ? $report->date->toTimeString() : $location->date->toTimeString(),
+                            'timeReport' => $report ? $report->timed : '00:00:00',
+                            'distance' => $report ? $report->distancem : 0,
+                            'controlPointName' => $report ? $report->controlPoint->name : "---",
                             'completedPercent' => number_format($completedPercent, 1, ',', '.'),
-                            'value' => $report->status_in_minutes,
+                            'value' => $report ? $report->status_in_minutes : 0,
                             'latitude' => $location->latitude,
                             'longitude' => $location->longitude,
                             'orientation' => $location->orientation,
-                            'trajectoryOfReturn' => $report->distancem >= $distanceOfReturn,
+                            'trajectoryOfReturn' => $report ? $report->distancem >= $distanceOfReturn : false,
                             'speed' => number_format($location->speed, 1, ',', '.'),
                             'averageSpeed' => ($reportData->count() > 0) ? $totalSpeed / $reportData->count() : 0,
                             'speeding' => $location->speeding,
@@ -109,12 +110,12 @@ class RouteService
                 ];
             }
 
-            $offRoadLocations = $reports->pluck('location')->where('off_road',true);
+            $offRoadLocations = $locations->where('off_road',true);
             $offRoadReport = $this->offRoadService->groupByFirstOffRoad($offRoadLocations);
 
             $locationsReports = (object)[
-                'empty' => $reports->isEmpty(),
-                'notEmpty' => $reports->isNotEmpty(),
+                'empty' => $locations->isEmpty(),
+                'notEmpty' => $locations->isNotEmpty(),
                 'date' => $dispatchRegister->date,
                 'vehicle' => $vehicle->number,
                 'plate' => $vehicle->plate,
