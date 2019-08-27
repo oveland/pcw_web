@@ -61,17 +61,14 @@ class OffRoadService
      */
     function allOffRoads(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
-        $dispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+        $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
 
         $allOffRoads = Location::whereBetween('date', [$initialDate, $finalDate])
             ->where('off_road', true)
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
             ->orderBy('date')->get();
 
-        return $allOffRoads->filter(function ($location) {
-            $dispatchRegister = $location->dispatchRegister;
-            return ($dispatchRegister && $dispatchRegister->complete() && $dispatchRegister->reports()->count() >= 0);
-        });
+        return $allOffRoads;
     }
 
     /**
