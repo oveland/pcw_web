@@ -16,6 +16,7 @@ use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\RouteService;
 use App\Traits\CounterByRecorder;
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -111,6 +112,7 @@ class ReportRouteController extends Controller
         $thresholdKm = $request->get('threshold-km');
         $typeReport = $request->get('type-report');
 
+        if( $dateReport >= Carbon::now()->toDateString() )return view('partials.alerts.onlyPreviousDate');
 
         $vehicles = $company->activeVehicles;
 

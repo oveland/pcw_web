@@ -1,18 +1,14 @@
 <script type="application/javascript">
     function loadSelectRouteReport(company) {
         let routeSelect = $('#route-report');
-        if (is_not_null(company)) {
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('general-load-select-routes') }}', {
-                company: company,
-                withAll: routeSelect.data('with-all'),
-                withNone: routeSelect.data('with-none'),
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        } else {
-            routeSelect.html('<option value="null">@lang('Select an option')</option>').trigger('change.select2');
-        }
+        routeSelect.html($('#select-loading').html()).trigger('change.select2');
+        routeSelect.load('{{ route('general-load-select-routes') }}', {
+            company: company,
+            withAll: routeSelect.data('with-all'),
+            withNone: routeSelect.data('with-none'),
+        }, function () {
+            routeSelect.trigger('change.select2');
+        });
     }
 
     function loadSelectDriverReport(company) {
