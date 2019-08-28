@@ -267,7 +267,7 @@
 
                                 const svg = processSVGIcon(report);
 
-                                if (report.trajectoryOfReturn) {
+                                if (report.trajectoryOfReturn && report.vehicleStatus.id === 0) {
                                     svg.fillColor = '#bfa017';
                                     svg.strokeColor = '#008a54';
                                 }
