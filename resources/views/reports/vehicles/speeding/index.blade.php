@@ -160,7 +160,7 @@
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
     <script type="application/javascript">
-        $('.menu-routes, .menu-report-vehicles-speeding').addClass('active-animated');
+        $('.menu-report-vehicles, .menu-report-vehicles-speeding').addClass('active-animated');
         let form = $('.form-search-report');
         let mainContainer = $('.report-container');
 
