@@ -55,7 +55,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
  * @property-read \App\Models\Vehicles\VehicleStatus|null $vehicleStatus
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereCurrentMileage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location witSpeeding()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location withSpeeding()
  * @property-read \App\Models\Vehicles\AddressLocation $addressLocation
  * @property string|null $ard_off_road
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location whereArdOffRoad($value)
@@ -130,7 +130,7 @@ class Location extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWitSpeeding($query)
+    public function scopeWithSpeeding($query)
     {
         return $query->where('speeding', true);
     }

@@ -124,6 +124,7 @@ class Geolocation
             $client = new Client();
             $response = $client->get($url)->getBody()->getContents();
             $data = (object)json_decode($response, true);
+            dd($data);
             $result = (object) collect($data->results)->first();
             $address = explode(',', $result->formatted_address)[0];
         } catch (\Exception $e) {

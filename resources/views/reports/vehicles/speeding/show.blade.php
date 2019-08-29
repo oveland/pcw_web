@@ -2,151 +2,138 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-vehicle-speeding-search-report') }}?{{ $stringParams }}&export=true" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
-                   title="@lang('Export excel')" data-placement="bottom">
+                <a href="{{ route('report-vehicle-speeding-search-report') }}?{{ $query->stringParams }}&export=true" class="btn btn-lime bg-lime-dark btn-sm btn-rounded tooltips" data-title="@lang('Export excel')">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
-
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand"
-                   title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
-                </a>
             </div>
-
-            <h5 class="text-white label-vehicles">{{ count($speedingReportByVehicles) }} @lang('Vehicles') @lang('with') @lang('Speeding')</h5>
-        </div>
-        <div class="tab-content panel">
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    <div class="widge p-t-0 report-by-vehicle-container">
-                        <div class="widget-header bg-inverse m-0 row">
-                            <div class="col-md-8 p-0">
-                                <input type="number" class="form-control input-sm col-md-4 search-vehicle-list" placeholder="@lang('Vehicle')"/>
-                            </div>
-                            <div class="col-md-1">
-                                <i class="fa fa-times btn-clear-search btn btn-default btn-xs" onclick="$(this).parents('.label-vehicles').find('input').val('').keyup()"></i>
-                            </div>
-                        </div>
-                        <div data-scrollbar="true" data-height="400px" data-distance="0px">
-                            <ul class="widget-todolist">
-                                @foreach($speedingReportByVehicles as $vehicleId => $speedingReport)
-                                    @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
-                                    <li id="vehicle-list-{{ $vehicle->number }}" class="vehicle-list accordion-toggle accordion-toggle-styled {{ $loop->first ? 'collapsed':'' }} accordion-vehicles" data-toggle="collapse" data-parent="#accordion-vehicles" data-target="#vehicle-{{ $vehicleId }}" {{ $loop->first ? 'aria-expanded=true':'' }}>
-                                        <div class="checkbox">
-                                            <label>
-                                                <i class="fa fa-car text-muted"></i>
-                                            </label>
-                                        </div>
-                                        <div class="info info-vehicle-list">
-                                            <h4>{{ $vehicle->number  }} | {{ $vehicle->plate  }}</h4>
-                                            <p class="f-s-10 text-bold">
-                                                {{ count($speedingReport) }} @lang('Speeding')
-                                            </p>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
+                <div class="col-md-11">
+                    <ul class="nav nav-pills nav-pills-success nav-vehicles">
+                        @foreach($speedingReportByVehicles as $vehicleId => $speedingReport)
+                            @php
+                                $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                            @endphp
+                            <li class="{{$loop->first?'active':''}}">
+                                <a href="#report-tab-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
+                                   data-original-title="{{ $vehicle->plate }}">
+                                    <i class="fa fa-car f-s-8 icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
+                                    <strong>{{ $vehicle->number }}</strong>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content panel p-0">
+            @foreach($speedingReportByVehicles as $vehicleId => $speedingReports)
+                @php
+                    $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                @endphp
+                <div id="report-tab-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first ? 'active in' : '' }}">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
+                            <thead>
+                            <tr class="inverse">
+                                <th>
+                                    <i class="fa fa-list"></i>
+                                </th>
+                                <th>
+                                    <i class="fa fa-clock-o"></i><br>
+                                    @lang('Time')
+                                </th>
+                                <th>
+                                    <i class="fa fa-tachometer"></i><br>
+                                    @lang('Speed') Km/h
+                                </th>
+                                <th>
+                                    <i class="fa fa-flag"></i><br>
+                                    @lang('Route')
+                                </th>
+                                <th>
+                                    <i class="fa fa-rocket text-muted"></i><br>
+                                    @lang('Actions')
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @php
+                                $dispatchRegister = null;
+                                $speedingReports = $speedingReports->sortBy('date')
+                            @endphp
+                            @foreach($speedingReports as $speeding)
+                                @php
+                                    $dispatchRegister = $speeding->dispatchRegister;
+                                @endphp
+                                <tr>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $speeding->date->toTimeString() }}</td>
+                                    <td class="text-center text-{{ $speeding->isTruncated()? 'muted':'' }}">
+                                        {{ number_format($speeding->speed,2, ',', '') }}
+                                    </td>
+                                    <td class="text-uppercase" width="40%">
+                                        @if($dispatchRegister)
+                                            @php
+                                                $route = $dispatchRegister->route;
+                                                $driver = $dispatchRegister->driver;
+                                            @endphp
+                                            <div class="col-md-12">
+                                                <span class="tooltips" data-title="@lang('Route')"><i class="fa fa-flag"></i> {{ $route->name }}</span>
+                                                <span class="tooltips" data-title="@lang('Round trip')"><i class="fa fa-retweet text-muted"></i> {{ $dispatchRegister->round_trip }}</span>
+                                                <span class="tooltips" data-title="@lang('Turn')"><i class="fa fa-list-ol text-muted"></i> {{ $dispatchRegister->turn }}</span>
+                                                @if($driver || $dispatchRegister->driver_code)
+                                                    <br><span class="tooltips" data-title="@lang('Driver')"><i class="fa fa-user text-muted"></i> {{ $driver ? $driver->fullName() : $dispatchRegister->driver_code }}</span>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-xs btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $speeding->id }}" data-title="@lang('Location')">
+                                            <i class="fa fa-map-marker"></i>
+                                            <span>@lang('Location')</span>
+                                        </button>
+                                        <span id="address-{{ $speeding->id }}" class="tooltips" data-title="@lang('Address')"></span>
+                                        <button class="btn btn-xs btn-info btn-show-address" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
+                                                data-url="{{ route('report-vehicle-speeding-geolocation-address',['speeding'=>$speeding->id]) }}"
+                                                data-target="#address-{{ $speeding->id }}">
+                                            <i class="fa fa-refresh faa-spin animated-hover hide"></i>
+                                            <span>@lang('Address')</span>
+                                        </button>
+                                        @if($speeding->dispatch_register_id)
+                                            <a href="#modal-route-report"
+                                               class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
+                                               data-toggle="modal"
+                                               data-url="{{ route('report-route-chart',['dispatchRegister'=>$speeding->dispatch_register_id]) }}?centerOnLocation={{ $speeding->id }}"
+                                               data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$speeding->dispatch_register_id]) }}"
+                                               data-original-title="@lang('Graph report detail')">
+                                                <i class="fa fa-area-chart faa-pulse"></i>
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr id="image-{{ $speeding->id }}" class="collapse fade collapse-speeding-location-image" data-url="{{ route('report-vehicle-speeding-geolocation-image',['speeding'=>$speeding->id]) }}">
+                                    <td colspan="4" class="text-center">
+                                        <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                            <tfoot class="hide">
+                            <tr>
+                                <td colspan="4" class="text-right">
+
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
-                <div id="accordion-vehicles" class="col-md-6 col-lg-8 col-sm-12 col-sm-12">
-                    @foreach($speedingReportByVehicles as $vehicleId => $speedingReport)
-                        @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
-                        <div id="vehicle-{{ $vehicleId }}" class="panel-collapse collapse {{ $loop->first ? 'in':'' }}" aria-expanded="false">
-                            <div class="panel panel-white panel-with-tabs">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">{{ $vehicle->number  }} | {{ $vehicle->plate  }}</h4>
-                                    <p class="f-s-10 text-bold">
-                                        {{ count($speedingReport) }} @lang('Speeding')
-                                    </p>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
-                                        <thead>
-                                        <tr class="inverse">
-                                            <th>
-                                                <i class="fa fa-list"></i>
-                                            </th>
-                                            <th>
-                                                <i class="fa fa-clock-o"></i><br>
-                                                @lang('Time')
-                                            </th>
-                                            <th>
-                                                <i class="fa fa-tachometer"></i><br>
-                                                @lang('Speed') Km/h
-                                            </th>
-                                            <th>
-                                                <i class="fa fa-rocket"></i><br>
-                                                @lang('Actions')
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($speedingReport as $speeding)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{!! $speeding->time->toTimeString() ?? '' !!}</td>
-                                                <td class="text-{{ $speeding->isTruncated()? 'muted':'' }}">
-                                                    {{ number_format($speeding->speed,2, ',', '') }}
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-xs btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $speeding->id }}" data-title="@lang('Location')">
-                                                        <i class="fa fa-map-marker"></i>
-                                                        <span>@lang('Location')</span>
-                                                    </button>
-                                                    <span id="address-{{ $speeding->id }}" class="tooltips" data-title="@lang('Address')"></span>
-                                                    <button class="btn btn-xs btn-info btn-show-address" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
-                                                            data-url="{{ route('report-vehicle-speeding-geolocation-address',['speeding'=>$speeding->id]) }}"
-                                                            data-target="#address-{{ $speeding->id }}">
-                                                        <i class="fa fa-refresh faa-spin animated-hover hide"></i>
-                                                        <span>@lang('Address')</span>
-                                                    </button>
-                                                    @if($speeding->dispatch_register_id)
-                                                        <a href="#modal-route-report"
-                                                           class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
-                                                           data-toggle="modal"
-                                                           data-url="{{ route('report-route-chart',['dispatchRegister'=>$speeding->dispatch_register_id]) }}?centerOnLocation={{ $speeding->id }}"
-                                                           data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$speeding->dispatch_register_id]) }}"
-                                                           data-original-title="@lang('Graph report detail')">
-                                                            <i class="fa fa-area-chart faa-pulse"></i>
-                                                        </a>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            <tr id="image-{{ $speeding->id }}" class="collapse fade collapse-speeding-location-image" data-url="{{ route('report-vehicle-speeding-geolocation-image',['speeding'=>$speeding->id]) }}">
-                                                <td colspan="4" class="text-center">
-                                                    <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
-    <script type="application/javascript">
-        //handleSlimScroll();
-        $('.report-by-vehicle-container div[data-scrollbar="true"]').slimScroll({
-            width: 'auto',
-            height: '350px',
-            size: '3px',
-            position: 'right',
-            color: '#0e7685',
-            alwaysVisible: false,
-            distance: '0px',
-            railVisible: true,
-            railColor: '#b1d3d6',
-            railOpacity: 0.3,
-            wheelStep: 10,
-            allowPageScroll: true,
-            disableFadeOut: false
-        });
 
+    <script type="application/javascript">
         $('.collapse-speeding-location-image').on('show.bs.collapse',function(){
             var img = $('<img>').attr('src',$(this).data('url'));
             $(this).find('td').empty().append( img );
@@ -161,7 +148,7 @@
             <span class="close pull-right" data-dismiss="alert">×</span>
             <h4><strong>@lang('Hey!')</strong></h4>
             <hr class="hr">
-            @lang('The date haven´t a speeding report')
+            @lang('The date haven´t speeding list')
         </div>
     </div>
 @endif

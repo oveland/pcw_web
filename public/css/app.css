@@ -1578,3 +1578,8 @@ span.icon-report{
 .mt-element-step .warning .mt-step-content,.mt-element-step .warning .mt-step-title {
     color: #d26a23!important
 }
+
+.table-valign-middle th,
+.table-valign-middle td {
+    vertical-align: middle !important;
+}

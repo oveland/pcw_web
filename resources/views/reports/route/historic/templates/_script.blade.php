@@ -68,8 +68,8 @@
                 y = 280;
             }
             else if (reportLocation.speeding) {
-                fillColor = '#bf1308';
-                strokeColor = '#d4c905';
+                fillColor = '#ffe415';
+                strokeColor = '#d44200';
                 zIndex = 100;
             }
 

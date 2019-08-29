@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\SpeedingService;
-use App\Models\Vehicles\Speeding;
-use App\Models\Vehicles\Vehicle;
 use Excel;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
 use Auth;
+use Illuminate\View\View;
 use Route;
 
 class SpeedingReportController extends Controller
@@ -26,28 +26,22 @@ class SpeedingReportController extends Controller
      * @var SpeedingService
      */
     private $speedingService;
-    /**
-     * @var GeneralController
-     */
-    private $generalController;
 
     /**
      * SpeedingReportController constructor.
      *
      * @param PCWAuthService $pcwAuthService
      * @param SpeedingService $speedingService
-     * @param GeneralController $generalController
      */
-    public function __construct(PCWAuthService $pcwAuthService, SpeedingService $speedingService, GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService, SpeedingService $speedingService)
     {
         $this->speedingService = $speedingService;
         $this->pcwAuthService = $pcwAuthService;
-        $this->generalController = $generalController;
     }
 
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -60,33 +54,43 @@ class SpeedingReportController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @return Factory|View
+     * @throws Exception
      */
     public function show(Request $request)
     {
-        $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
-        $company = $this->generalController->getCompany($request);
-        $routeReport = $request->get('route-report');
-        $dateReport = $request->get('date-report');
+        list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
-        $allSpeeding =$this->speedingService->allSpeeding($company, $dateReport, $routeReport);
+        $query = (object)[
+            'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
+            'company' => $this->pcwAuthService->getCompanyFromRequest($request),
+            'dateReport' => $request->get('date-report'),
+            'routeReport' => $request->get('route-report'),
+            'vehicleReport' => $request->get('vehicle-report'),
+            'initialTime' => $initialTime,
+            'finalTime' => $finalTime,
+            'typeReport' => $request->get('type-report'),
+        ];
+
+        $allSpeeding =$this->speedingService->allSpeeding($query->company, "$query->dateReport $query->initialTime:00", "$query->dateReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
         $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding);
 
-        if( $request->get('export') )$this->export($speedingReportByVehicles,$dateReport, $request->get('type-report'));
+        if( $request->get('export') )$this->export($speedingReportByVehicles, $query);
 
-        return view('reports.vehicles.speeding.show', compact(['speedingReportByVehicles', 'stringParams']));
+        return view('reports.vehicles.speeding.show', compact(['speedingReportByVehicles', 'query']));
     }
 
 
     /**
      * @param $speedingReportByVehicle
-     * @param $dateReport
-     * @param $typeReport
-     * @throws \Exception
+     * @param $query
+     * @throws Exception
      */
-    public function export($speedingReportByVehicle, $dateReport, $typeReport)
+    public function export($speedingReportByVehicle, $query)
     {
+        $dateReport = $query->dateReport;
+        $typeReport = $query->typeReport;
+
         if( $typeReport == 'group' ){
             Excel::create(__('Speeding') . " $dateReport", function ($excel) use ($speedingReportByVehicle, $dateReport) {
                 foreach ($speedingReportByVehicle as $speedingReport) {

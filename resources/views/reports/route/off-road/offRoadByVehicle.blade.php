@@ -2,7 +2,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-off-road-search') }}?export=true&date-report={{ $query->dateReport }}&company={{ $query->company->id }}&route-report={{ $query->routeReport }}&vehicle-report={{ $query->vehicleReport }}&time-range-report={{ "$query->initialTime;$query->finalTime" }}" class="btn btn-lime bg-lime-dark btn-sm btn-rounded tooltips"
+                <a href="{{ route('report-route-off-road-search') }}?{{ $query->stringParams }}&export=true" class="btn btn-lime bg-lime-dark btn-sm btn-rounded tooltips"
                 data-title="@lang('Export excel')">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
@@ -13,7 +13,7 @@
             </div>
 
             <h5 class="text-white m-t-10 text-uppercase">
-                <i class="fa fa-random"></i> @lang('Off road report by Vehicle') <br> <i class="fa fa-calendar-o"></i> {{ $query->dateReport }} <i class="fa fa-clock-o"></i> {{ $query->initialTime }} - {{ $query->finalTime }}
+                <i class="fa fa-random"></i> @lang('Off road report by Vehicle') <br> <i class="fa fa-clock-o"></i> {{ $query->initialTime }} - {{ $query->finalTime }}
             </h5>
         </div>
         <div class="tab-content panel">

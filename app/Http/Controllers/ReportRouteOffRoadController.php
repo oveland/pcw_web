@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
-use App\Models\Routes\Route;
-use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
-use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\OffRoadService;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Excel;
+use Illuminate\View\View;
 
 class ReportRouteOffRoadController extends Controller
 {
@@ -25,27 +22,21 @@ class ReportRouteOffRoadController extends Controller
      * @var OffRoadService
      */
     private $offRoadService;
-    /**
-     * @var GeneralController
-     */
-    private $generalController;
 
     /**
      * ReportRouteOffRoadController constructor.
      * @param PCWAuthService $pcwAuthService
      * @param OffRoadService $offRoadService
-     * @param GeneralController $generalController
      */
-    public function __construct(PCWAuthService $pcwAuthService, OffRoadService $offRoadService, GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService, OffRoadService $offRoadService)
     {
         $this->pcwAuthService = $pcwAuthService;
         $this->offRoadService = $offRoadService;
-        $this->generalController = $generalController;
     }
 
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -58,29 +49,24 @@ class ReportRouteOffRoadController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function searchReport(Request $request)
     {
-        $company = $this->generalController->getCompany($request);
-        $routeReport = $request->get('route-report');
-        $vehicleReport = $request->get('vehicle-report');
-        $dateReport = $request->get('date-report');
-        $typeReport = $request->get('type-report');
         list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
         $query = (object)[
-            'company' => $company,
-            'dateReport' => $dateReport,
-            'routeReport' => $routeReport,
-            'vehicleReport' => $vehicleReport,
+            'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
+            'company' => $this->pcwAuthService->getCompanyFromRequest($request),
+            'dateReport' => $request->get('date-report'),
+            'routeReport' => $request->get('route-report'),
+            'vehicleReport' => $request->get('vehicle-report'),
             'initialTime' => $initialTime,
             'finalTime' => $finalTime,
-            'typeReport' => $typeReport,
+            'typeReport' => $request->get('type-report'),
         ];
 
-        $allOffRoads = $this->offRoadService->allOffRoads($company, "$dateReport $initialTime:00", "$dateReport $finalTime:59", $routeReport, $vehicleReport);
-
+        $allOffRoads = $this->offRoadService->allOffRoads($query->company, "$query->dateReport $query->initialTime:00", "$query->dateReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
         $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
 
         if( $request->get('export') )$this->exportByVehicles($offRoadsByVehicles, $query);
