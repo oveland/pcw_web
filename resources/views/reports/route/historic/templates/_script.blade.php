@@ -110,7 +110,7 @@
                 path: [],
                 geodesic: true,
                 strokeColor: 'rgba(118,0,255,0.58)',
-                strokeOpacity: 0.9,
+                strokeOpacity: 0.8,
                 strokeWeight: 5,
                 map: this.map
             });
@@ -141,7 +141,7 @@
 
             const icon = {
                 path: svg.path,
-                fillOpacity: 0.9,
+                fillOpacity: 1,
                 fillColor: svg.fillColor,
                 strokeColor: svg.strokeColor,
                 scale: svg.scale,

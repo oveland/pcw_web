@@ -69,6 +69,11 @@
             let x = 220;
             let y = 250;
 
+            if (reportLocation.trajectoryOfReturn) {
+                fillColor = '#bfa017';
+                strokeColor = '#008a54';
+            }
+
             if (reportLocation.offRoad) {
                 fillColor = '#6a000e';
                 strokeColor = '#ba0046';
@@ -241,7 +246,7 @@
                                 path: [],
                                 geodesic: true,
                                 strokeColor: 'rgba(118,0,255,0.58)',
-                                strokeOpacity: 0.9,
+                                strokeOpacity: 0.8,
                                 strokeWeight: 5,
                                 map: map
                             });
@@ -267,14 +272,9 @@
 
                                 const svg = processSVGIcon(report);
 
-                                if (report.trajectoryOfReturn && report.vehicleStatus.id === 0) {
-                                    svg.fillColor = '#bfa017';
-                                    svg.strokeColor = '#008a54';
-                                }
-
                                 const icon = {
                                     path: svg.path,
-                                    fillOpacity: 0.9,
+                                    fillOpacity: 1,
                                     fillColor: svg.fillColor,
                                     strokeColor: svg.strokeColor,
                                     scale: svg.scale,
