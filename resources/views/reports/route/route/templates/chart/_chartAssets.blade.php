@@ -79,7 +79,9 @@
                 strokeColor = '#ba0046';
             }
 
-            if(reportLocation.vehicleStatus.id === 6){ //&& !reportLocation.dispatchRegister){
+            const dr = reportLocation.dispatchRegister;
+
+            if(reportLocation.vehicleStatus.id === 6 && !dr){
                 rotation = 0;
                 pathSVG = iconPowerOffSVG;
                 fillColor = '#bf1308';
@@ -89,8 +91,6 @@
                 x = 250;
                 y = 280;
             }
-
-            //if(reportLocation.vehicleStatus.id === 6 && reportLocation.dispatchRegister)reportLocation.vehicleStatus.id = 3;
 
             if(reportLocation.vehicleStatus.id === 3){
                 rotation = 0;
@@ -395,7 +395,8 @@
                                         speeding: speeding,
                                         vehicleStatus: {
                                             id: parseInt(vehicleStatusId)
-                                        }
+                                        },
+                                        dispatchRegister: true
                                     });
 
                                     const icon = {

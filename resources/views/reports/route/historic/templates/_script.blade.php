@@ -38,7 +38,9 @@
                 strokeColor = '#ba0046';
             }
 
-            if(reportLocation.vehicleStatus.id === 6){
+            const dr = reportLocation.dispatchRegister;
+
+            if(reportLocation.vehicleStatus.id === 6 && !dr){
                 rotation = 0;
                 pathSVG = this.iconPowerOffSVG;
                 fillColor = '#bf1308';

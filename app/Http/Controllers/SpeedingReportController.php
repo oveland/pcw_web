@@ -48,8 +48,9 @@ class SpeedingReportController extends Controller
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;
+        $vehicles = $access->vehicles;
 
-        return view('reports.vehicles.speeding.index', compact(['companies', 'routes']));
+        return view('reports.vehicles.speeding.index', compact(['companies', 'routes', 'vehicles']));
     }
 
     /**

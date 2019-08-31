@@ -60,7 +60,7 @@ class SpeedingService
     {
         $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
 
-        if($routeReport == 'all'){
+        if($routeReport == 'all' || !$routeReport){
             $vehicles = $company->vehicles();
             if($vehicleReport != 'all'){
                 $vehicles = $vehicles->where('id', $vehicleReport);
