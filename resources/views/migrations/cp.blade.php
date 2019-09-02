@@ -17,7 +17,7 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div class="col-md-12 p-0">
+    <div class="container-migration col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 p-0">
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -48,11 +48,13 @@
                                     @foreach($company->routes->where('as_group', false)->sortBy('name') as $route)
                                         @include('migrations._routes')
                                     @endforeach
-
-                                    @if($company->routes->where('as_group', true))
+                                    @php
+                                        $groups = $company->routes->where('as_group', true);
+                                    @endphp
+                                    @if(count($groups))
                                         <hr class="hr">
                                         <h2>@lang('GROUPS'):</h2>
-                                        @foreach($company->routes->where('as_group', true)->sortBy('name') as $route)
+                                        @foreach($groups->sortBy('name') as $route)
                                             @include('migrations._routes')
                                         @endforeach
                                     @endif
@@ -73,12 +75,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">@lang('Process migration for Control Points'): <b class="route-name text-uppercase"></b></h4>
+                    <h1 class="text-uppercase">
+                        <i class="fa fa-rocket"></i> @lang('Migration interface')
+                    </h1>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <iframe class="container-migration col-md-12" src="{{ route('migrate') }}" style="height: 800px"></iframe>
+                            <iframe class="container-migration col-md-12" src="" style="height: 450px;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -161,4 +165,15 @@
             </div>
         </form>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $('#modal-migration, #modal-upload-kmz, #modal-calibration').on('hidden.bs.modal', function () {
+                //$('.container-migration').empty().html($('#animated-loading').html());
+                //location.reload();
+            });
+        });
+    </script>
 @endsection

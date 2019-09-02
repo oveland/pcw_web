@@ -89,7 +89,7 @@
                             </div>
                         @endif
 
-                        @if(Auth::user()->canSelectRouteReport())
+                        @if(true || Auth::user()->canSelectRouteReport())
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="route-report" class="control-label field-required">@lang('Route')</label>
@@ -107,7 +107,7 @@
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
                                     <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12" data-with-all="true">
-                                        @include('partials.selects.vehicles', compact('vehicles'))
+                                        @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
                                     </select>
                                 </div>
                             </div>

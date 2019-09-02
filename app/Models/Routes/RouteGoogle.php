@@ -15,6 +15,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle whereIdRuta($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle whereUrl($value)
  * @mixin \Eloquent
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property string|null $file_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\RouteGoogle whereUpdatedAt($value)
  */
 class RouteGoogle extends Model
 {

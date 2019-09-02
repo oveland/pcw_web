@@ -26,6 +26,7 @@ class MigrationControlPointController extends Controller
     public function getControlPoints(Request $request)
     {
         $company = $request->get('company');
+        $route = $request->get('route');
 
         if (Auth::user()->isAdmin()) $companies = Company::whereActive(true)->orderBy('short_name')->get();
         else abort(403);
@@ -33,7 +34,7 @@ class MigrationControlPointController extends Controller
         if ($company) $companies = $companies->where('id', $company);
         $companyRequest = $company;
 
-        return view('migrations.cp', compact(['companies', 'companyRequest']));
+        return view('migrations.cp', compact(['companies', 'companyRequest', 'route']));
     }
 
     public function uploadKmz(Request $request)

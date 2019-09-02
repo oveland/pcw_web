@@ -569,5 +569,7 @@
   "Upload": "Cargar",
   "Name without spaces": "Nombre sin espacios",
   "Kmz file": "Archivo KMZ",
-  "File name": "Nombre"
+  "File name": "Nombre",
+  "Migrated": "Migrados",
+  "Migration interface": "Interfaz de Migración"
 }

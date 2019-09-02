@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereSequence($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\ControlPointTime[] $controlPointTimes
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereStyleColor($value)
+ * @property string|null $uid
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereUid($value)
  */
 class Fringe extends Model
 {

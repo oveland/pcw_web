@@ -61,14 +61,31 @@ class OffRoadService
      */
     function allOffRoads(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
-        $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+        /*$dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
 
         $allOffRoads = Location::whereBetween('date', [$initialDate, $finalDate])
             ->where('off_road', true)
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-            ->orderBy('date')->get();
+            ->orderBy('date')->get();*/
 
-        return $allOffRoads;
+
+        $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->where('off_road', true);
+
+        if($routeReport == 'all' || !$routeReport){
+            $vehicles = $company->vehicles();
+            if($vehicleReport != 'all'){
+                $vehicles = $vehicles->where('id', $vehicleReport);
+            }
+
+            $allSpeeding = $allSpeeding->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
+        }else{
+            $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+            $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
+        }
+
+        $allSpeeding = $allSpeeding->orderBy('date')->get();
+
+        return $allSpeeding;
     }
 
     /**

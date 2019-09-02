@@ -48,6 +48,10 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company query()
+ * @property int|null $speeding_threshold
+ * @property int|null $max_speeding_threshold
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereMaxSpeedingThreshold($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereSpeedingThreshold($value)
  */
 class Company extends Model
 {

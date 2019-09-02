@@ -1,5 +1,19 @@
 @extends('layouts.blank')
 
+@section('stylesheets')
+    <style>
+        body{
+            background-color: transparent !important;
+        }
+        .page-footer{
+            text-align: center !important;
+        }
+        .page-footer-inner{
+            float: none !important;
+        }
+    </style>
+@endsection
+
 @section('content')
 
     <!-- begin breadcrumb -->
@@ -10,13 +24,21 @@
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
-    <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Migrations')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Tables')</small>
+    <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i>
+        @if($route)
+            @php
+                $routeModel = \App\Models\Routes\Route::find($route)
+            @endphp
+            <strong>{{ $routeModel->name }}</strong>
+        @else
+            <strong>@lang('All routes')</strong>
+        @endif
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Migrations')</small>
     </h1>
 
     <!-- end page-header -->
 
-    <div class="container">
+    <div class="container container-migration">
         <!-- begin row -->
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
@@ -24,38 +46,24 @@
                 <div class="panel-group" id="accordion">
                 @foreach($tables as $table)
                     <!-- begin panel -->
-                        <div class="panel panel-inverse overflow-hidden">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">
-                                    <a  class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{$loop->index}}" aria-expanded="false">
-                                        <i class="fa fa-plus-circle pull-right"></i>
-                                        @lang('Table') <b class="text-uppercase">{{ $table->name }}</b>
-                                        @php($news = $table->total - $table->total_migrated)
-                                        <button class="btn btn-xs pull-right btn-warning {{$news<=0?'hide':'active'}}">{{ $news }} @lang('News')</button>
-                                    </a>
-                                </h3>
-                            </div>
-                            <div id="collapse-{{$loop->index}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-                                <div class="panel-body">
-                                    <div class="widget widget-stat bg-inverse-light text-white text-center">
-                                        <div class="btn-group p-t-10">
-                                            <button class="btn btn-sm btn-lg btn-lime" onclick="$('.name-route').text('{{ $table->name }}');$('.container-migration').attr('src','{{ $table->route }}')" data-toggle="modal" data-target="#modal-migration">
-                                                <i class="fa fa-database"></i> @lang('Migrate')
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-lg btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="text-danger" onclick="$('.name-route').text('{{ $table->name }}. Deleting...');$('.container-migration').attr('src','{{ $table->route }}?delete=true')" data-toggle="modal" data-target="#modal-migration">
-                                                        <i class="fa fa-exclamation-circle"></i> @lang('Delete all registers')
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="widget-stat-number">{{ $table->total }} @lang('Registers')</div>
-                                        <div class="widget-stat-number">{{ $table->total_migrated }} @lang('Migrated')</div>
-                                    </div>
+                        <div class="panel panel-default overflow-hidden">
+                            <div class="panel-heading row">
+                                <div class="panel-title col-md-12">
+                                    <span class="pull-left">
+                                        <i class="fa fa-database"></i> @lang('Table') <b class="text-uppercase">{{ $table->name }}</b>
+                                        <br>
+                                        <span>{{ $table->total }} @lang('Registers') / {{ $table->total_migrated }} @lang('Migrated')</span>
+                                    </span>
+                                    @php($news = $table->total - $table->total_migrated)
+                                    <span class="pull-right">
+                                        <button class="btn btn-sm disabled btn-warning btn-circle {{$news <=0 ? 'hide':'active'}}">{{ $news }} @lang('News')</button>
+                                        <button class="btn btn-sm btn-circle disabled btn-danger {{$news < 0 ? 'active':'hide'}}">
+                                            <i class="fa fa-exclamation-triangle"></i> {{ abs($news) }} @lang('overloaded')
+                                        </button>
+                                        <button class="btn btn-sm btn-info btn-circle" onclick="$('.name-route').text('{{ $table->name }}');$('.container-migration').attr('src','{{ "$table->route?route=$route" }}')" data-toggle="modal" data-target="#modal-migration">
+                                            <i class="fa fa-cogs"></i> @lang('Migrate')
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +84,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <iframe class="container-migration col-md-12" src="{{ route('migrate') }}" style="height: 450px"></iframe>
+                                <iframe class="container-migration col-md-12" src="" style="height: 450px"></iframe>
                             </div>
                         </div>
                     </div>
@@ -93,6 +101,7 @@
     <script>
         $(document).ready(function () {
             $('#modal-migration').on('hidden.bs.modal', function () {
+                $('.container-migration').empty().html($('#animated-loading').html());
                 location.reload();
             });
         });

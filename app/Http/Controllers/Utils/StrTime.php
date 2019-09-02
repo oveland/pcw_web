@@ -11,11 +11,20 @@ namespace App\Http\Controllers\Utils;
 
 class StrTime
 {
+    static function intervalToTime($interval){
+        return self::segToStrTime(self::toSeg($interval));
+    }
+
     static function toSeg($strTime)
     {
         if( $strTime == '--:--:--' )return 0;
         $strTimeArray = explode(":", $strTime);
+
+        if(count($strTimeArray) == 2){
+            return $strTimeArray[0] * 60 + $strTimeArray[1];
+        }
         return $strTimeArray[0] * 3600 + $strTimeArray[1] * 60 + $strTimeArray[2];
+
     }
 
     static function segToStrTime($seconds)

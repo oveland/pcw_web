@@ -6,7 +6,7 @@
                 <div class="col-md-4">
                     <i class="fa fa-road"></i>
                     <a data-toggle="collapse" data-parent="#accordion-{{$company->id}}" href="#collapse-{{$route->id}}" class="text-white">
-                        ({{$route->id}}) <b class="text-uppercase">{{ $route->name }}</b>
+                        ({{$route->id}}) <b class="text-uppercase">{{ $route->name }}</b> | {{ $route->distance }} km
                     </a>
                 </div>
                 <div class="col-md-4 text-center {{ $route->as_group ? 'hide' : '' }}">
@@ -21,17 +21,32 @@
         <div class="panel-body p-t-0">
             <div class="row widget widget-stat bg-inverse-light text-white p-10 text-center">
                 <div class="btn-group btn-group-circle btn-group-solid">
-                    <a href="#modal-upload-kmz" onclick="$('#kmz-route-id').val({{ $route->id }});$('#kmz-route-name-id').text('{{ $route->id."_" }}')" class="btn btn-warning" data-toggle="modal">
-                        <i class="fa fa-upload"></i> @lang('Upload KMZ')
-                    </a>
-                    <a href="{{ $route->url }}" class="btn btn-info tooltips" title="{{ $route->url }}" data-placement="bottom" data-html="true">
-                        <i class="fa fa-download"></i> @lang('Download KMZ')
-                    </a>
-                    <a href="{{ route('export-coordinates',['route'=>$route->id]) }}" class="btn btn-primary">
-                        <i class="fa fa-map-marker"></i> @lang('Export KMZ Coordinates')
-                    </a>
+                    <div class="btn-group btn-group-solid">
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-map-o"></i> @lang('Process KMZ')
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#modal-upload-kmz" onclick="$('#kmz-route-id').val({{ $route->id }});$('#kmz-route-name-id').text('{{ $route->id."_" }}')" data-toggle="modal">
+                                    <i class="fa fa-upload"></i> @lang('Upload KMZ')
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ $route->url }}" class="tooltips" title="{{ $route->url }}" data-placement="bottom" data-html="true">
+                                    <i class="fa fa-download"></i> @lang('Download KMZ')
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('export-coordinates',['route'=>$route->id]) }}">
+                                    <i class="fa fa-map-marker"></i> @lang('Export KMZ Coordinates')
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                     @if(!$route->as_group)
-                        <a href="#modal-migration" class="btn btn-success" data-toggle="modal">
+                        <a href="#modal-migration" onclick="$('.container-migration').attr('src','{{ route('migrate')."?route=$route->id" }}')" class="btn btn-success" data-toggle="modal">
                             <i class="fa fa-database"></i> @lang('Process migration')
                         </a>
 

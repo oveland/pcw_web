@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\StrTime;
 use App\Models\Routes\Dispatch;
 use Auth;
 use App\CobanVehicle;
@@ -10,7 +11,6 @@ use App\Models\Routes\ControlPoint;
 use App\Models\Routes\ControlPointTime;
 use App\Models\Routes\Fringe;
 use App\Models\Vehicles\GpsVehicle;
-use App\Http\Controllers\Utils\Database;
 use App\Models\Routes\Route;
 use App\Models\Routes\RouteGoogle;
 use App\Models\Users\User;
@@ -32,10 +32,7 @@ class MigrationController extends Controller
         'control_point_times' => 'tiempos_punto_control',
     ];
 
-    const ROUTES_FOR_MIGRATE =
-        [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 144, 145, 146, 151, 154, 155, 156, 158, 159, 161, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 192, 193, 198, 199, 201, 202, 203, 206, 207, 210, 213, 214, 215, 216, 218, 219, 221, 222, 223];
-    const ROUTES_FOR_MIGRATE_CP = self::ROUTES_FOR_MIGRATE;
-        //[124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 145, 155, 156, 158, 159, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 189, 201, 203, 206, 207, 210];
+    const ROUTES_FOR_MIGRATE = [124, 125, 126, 127, 128, 129, 135, 136, 137, 141, 144, 145, 146, 151, 154, 155, 156, 158, 159, 161, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 192, 193, 198, 199, 201, 202, 203, 206, 207, 210, 213, 214, 215, 216, 218, 219, 221, 222, 223];
 
     /**
      * Create a new controller instance.
@@ -46,6 +43,19 @@ class MigrationController extends Controller
         $this->middleware('auth');
     }
 
+    public function getRoutesForMigrate(Request $request)
+    {
+        $routesForMigrate = collect(self::ROUTES_FOR_MIGRATE);
+        $routeFromRequest = $request->get('route');
+        if ($routeFromRequest) {
+            $routesForMigrate = $routesForMigrate->filter(function ($value, $key) use ($routeFromRequest) {
+                return intval($value) === intval($routeFromRequest);
+            });
+        }
+
+        return $routesForMigrate->toArray();
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -53,59 +63,70 @@ class MigrationController extends Controller
     public function index(Request $request)
     {
         if (!Auth::user()->isAdmin()) abort(403);
-        $tables = collect([
-            (object)[
+
+        $route = $request->get('route');
+
+        $tables = collect([]);
+
+        if(!$route){
+            $tables->push((object)[
                 'name' => self::OLD_TABLES['companies'],
                 'route' => route('migrate-companies'),
                 'total' => DB::table(self::OLD_TABLES['companies'])->count(),
                 'total_migrated' => Company::count()
-            ],
-            (object)[
-                'name' => self::OLD_TABLES['routes'],
-                'route' => route('migrate-routes'),
-                'total' => DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', self::ROUTES_FOR_MIGRATE_CP)->count(),
-                'total_migrated' => Route::count()
-            ],
-            (object)[
-                'name' => self::OLD_TABLES['dispatches'],
-                'route' => route('migrate-dispatches'),
-                'total' => DB::table(self::OLD_TABLES['dispatches'])->count(),
-                'total_migrated' => Dispatch::count()
-            ],
-            (object)[
+            ]);
+
+            $tables->push((object)[
                 'name' => self::OLD_TABLES['users'],
                 'route' => route('migrate-users'),
                 'total' => DB::table(self::OLD_TABLES['users'])->count(),
                 'total_migrated' => User::count()
-            ],
-            (object)[
+            ]);
+
+            $tables->push((object)[
                 'name' => self::OLD_TABLES['vehicles'],
                 'route' => route('migrate-vehicles'),
                 'total' => DB::table(self::OLD_TABLES['vehicles'])->count(),
                 'total_migrated' => Vehicle::count()
-            ],
-            (object)[
-                'name' => self::OLD_TABLES['control_points'],
-                'route' => route('migrate-control-points'),
-                'total' => DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE_CP)->count(),
-                'total_migrated' => ControlPoint::count()
-            ],
+            ]);
+        }
 
-            (object)[
-                'name' => self::OLD_TABLES['fringes'],
-                'route' => route('migrate-fringes'),
-                'total' => DB::table(self::OLD_TABLES['fringes'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->count(),
-                'total_migrated' => Fringe::count()
-            ],
-            (object)[
-                'name' => self::OLD_TABLES['control_point_times'],
-                'route' => route('migrate-control-point-times'),
-                'total' => DB::table(self::OLD_TABLES['control_point_times'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)->count(),
-                'total_migrated' => ControlPointTime::count()
-            ],
+        $tables->push((object)[
+            'name' => self::OLD_TABLES['dispatches'],
+            'route' => route('migrate-dispatches'),
+            'total' => DB::table(self::OLD_TABLES['dispatches'])->count(),
+            'total_migrated' => Dispatch::count()
         ]);
 
-        return view('migrations.tables', compact('tables'));
+        $tables->push((object)[
+            'name' => self::OLD_TABLES['routes'],
+            'route' => route('migrate-routes'),
+            'total' => DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', $this->getRoutesForMigrate($request))->count(),
+            'total_migrated' => Route::whereIn('id', $this->getRoutesForMigrate($request))->count()
+        ]);
+
+        $tables->push((object)[
+            'name' => self::OLD_TABLES['control_points'],
+            'route' => route('migrate-control-points'),
+            'total' => DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', $this->getRoutesForMigrate($request))->count(),
+            'total_migrated' => ControlPoint::whereIn('route_id', $this->getRoutesForMigrate($request))->count()
+        ]);
+
+        $tables->push((object)[
+            'name' => self::OLD_TABLES['fringes'],
+            'route' => route('migrate-fringes'),
+            'total' => DB::table(self::OLD_TABLES['fringes'])->whereIn('id_ruta', $this->getRoutesForMigrate($request))->count(),
+            'total_migrated' => Fringe::whereIn('route_id', $this->getRoutesForMigrate($request))->count()
+        ]);
+
+        $tables->push((object)[
+            'name' => self::OLD_TABLES['control_point_times'],
+            'route' => route('migrate-control-point-times'),
+            'total' => DB::table(self::OLD_TABLES['control_point_times'])->whereIn('id_ruta', $this->getRoutesForMigrate($request))->count(),
+            'total_migrated' => ControlPointTime::whereIn( 'control_point_id', ControlPoint::whereIn('route_id', $this->getRoutesForMigrate($request))->get()->pluck('id') )->count()
+        ]);
+
+        return view('migrations.tables', compact(['tables', 'route']));
     }
 
 
@@ -165,13 +186,13 @@ class MigrationController extends Controller
         DB::statement("
             UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER 
             FROM control_points WHERE route_id = ruta.id_rutas 
-            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE id_rutas IN (".implode(',',self::ROUTES_FOR_MIGRATE).")
+            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE id_rutas IN (" . implode(',', $this->getRoutesForMigrate($request)) .")
         ");
 
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
-        $routes = DB::table(self::OLD_TABLES['routes'])->get();
+        $routes = DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', $this->getRoutesForMigrate($request))->get();
         foreach ($routes as $routeOLD) {
             $new = false;
             $route = Route::find($routeOLD->id_rutas);
@@ -380,24 +401,12 @@ class MigrationController extends Controller
     public function migrateControlPoints(Request $request = null)
     {
         DB::statement("ALTER TABLE control_point_time_reports DISABLE TRIGGER ALL");
-
         DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
-        DB::delete("TRUNCATE control_point_times CASCADE");
-
-        //DB::statement("ALTER TABLE fringes DISABLE TRIGGER ALL");
-        //DB::statement("TRUNCATE fringes");
-
-        //$deleted = DB::delete('TRUNCATE control_points CASCADE');
-
-        if ($request && $request->get('delete')) {
-            $deleted = DB::delete('DELETE FROM control_points');
-            dd($deleted . ' registers has ben deleted!');
-        }
 
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
-        $controlPoints = DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE_CP)->get();
+        $controlPoints = DB::table(self::OLD_TABLES['control_points'])->whereIn('id_ruta', $this->getRoutesForMigrate($request))->get();
         foreach ($controlPoints as $controlPointOLD) {
             $new = false;
             $controlPoint = ControlPoint::find($controlPointOLD->secpuntos_control_ruta);
@@ -443,20 +452,15 @@ class MigrationController extends Controller
 
     public function migrateFringes(Request $request)
     {
-        $new = true;
         DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
-        DB::statement("TRUNCATE control_point_times CASCADE");
-
         DB::statement("ALTER TABLE fringes DISABLE TRIGGER ALL");
-        DB::statement("TRUNCATE fringes CASCADE");
-        DB::statement("SELECT pg_catalog.setval('fringes_id_seq', 1, false)");
 
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
 
         $fringes = DB::table(self::OLD_TABLES['fringes'])
-            ->whereIn('id_ruta', self::ROUTES_FOR_MIGRATE)
+            ->whereIn('id_ruta', $this->getRoutesForMigrate($request))
             ->get();
 
         foreach ($fringes as $fringeOLD) {
@@ -465,8 +469,15 @@ class MigrationController extends Controller
                 if ($fringeI == "") break;
 
                 $fringeTime = explode(" a ", $fringeI);
+                $uid = "$fringeOLD->id_ruta-$fringeOLD->tipo_de_dia-$i";
 
-                $fringe = new Fringe();
+                $new = false;
+                $fringe = Fringe::where('uid', $uid)->get()->first();
+                if(!$fringe){
+                    $fringe = new Fringe();
+                    $new = true;
+                }
+
                 $fringe->name = $fringeI;
                 $fringe->from = $fringeTime[0];
                 $fringe->to = $fringeTime[1] ? "$fringeTime[1]:59" : '00:00:00';
@@ -474,6 +485,7 @@ class MigrationController extends Controller
                 $fringe->route_id = $fringeOLD->id_ruta;
                 $fringe->day_type_id = $fringeOLD->tipo_de_dia;
                 $fringe->style_color = "#" . substr(md5(rand()), 0, 6);
+                $fringe->uid = $uid;
 
                 try {
                     $fringe->save();
@@ -500,17 +512,17 @@ class MigrationController extends Controller
 
     public function migrateControlPointTimes(Request $request)
     {
-        $new = true;
         DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
-        DB::statement("TRUNCATE control_point_times CASCADE");
-        DB::statement("SELECT pg_catalog.setval('control_point_times_id_seq', 1, false)");
+        DB::statement("ALTER TABLE tiempos_punto_control DISABLE TRIGGER ALL");
+
+        //DB::statement("SELECT pg_catalog.setval('control_point_times_id_seq', 1, false)");
+
         DB::statement("UPDATE tiempos_punto_control SET tiempo1 = '00:00' WHERE tiempo1 = ''");
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
-        //$controlPointTimes = DB::table(self::OLD_TABLES['control_point_times'])->where('id_ruta','=',126)->get();
 
-        foreach (self::ROUTES_FOR_MIGRATE as $route) {
+        foreach ($this->getRoutesForMigrate($request) as $route) {
             $controlPointTimesByDays = collect(
                 DB::select("
                     SELECT 
@@ -557,19 +569,27 @@ class MigrationController extends Controller
 
                         $timeFringeI = $controlPointTimesOLD->{"time$i"};
 
-                        $fringe = Fringe::where('route_id', $route)
-                            ->where('day_type_id', $day_type)
-                            ->where('sequence', $i)
-                            ->get()->first();
+                        $fringe = Fringe::where('uid', "$route-$day_type-$i")->get()->first();
 
                         if ($fringe && $timeFringeI != "") {
-                            $controlPointTime = new ControlPointTime();
-                            $controlPointTime->time = Database::parseIntervalToTime($timeFringeI);
-                            $controlPointTime->time_next_point = Database::parseIntervalToTime(($index == (count($controlPointTimes) - 1)) ? $controlPointTime->time : $controlPointTimes[$index + 1]->{"time$i"});
-                            $controlPointTime->time_from_dispatch = Database::parseIntervalToTime(date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00")));
+
+                            $new = false;
+                            $uid = "$controlPointTimesOLD->control_point_id-$fringe->id";
+
+                            $controlPointTime = ControlPointTime::where('uid', $uid)->get()->first();
+
+                            if(!$controlPointTime){
+                                $controlPointTime = new ControlPointTime();
+                                $new = true;
+                            }
+
+                            $controlPointTime->time = StrTime::intervalToTime($timeFringeI);
+                            $controlPointTime->time_next_point = StrTime::intervalToTime((($index == (count($controlPointTimes) - 1)) ? $controlPointTime->time : $controlPointTimes[$index + 1]->{"time$i"}));
+                            $controlPointTime->time_from_dispatch = StrTime::intervalToTime(date("H:i:s", strtotime($last_time) + strtotime($controlPointTime->time) - strtotime("00:00:00")));
                             $controlPointTime->day_type_id = $day_type;
                             $controlPointTime->control_point_id = $controlPointTimesOLD->control_point_id;
                             $controlPointTime->fringe_id = $fringe->id;
+                            $controlPointTime->uid = $uid;
 
                             $last_time = $controlPointTime->time_from_dispatch;
 
@@ -590,6 +610,7 @@ class MigrationController extends Controller
         }
 
         DB::statement("ALTER TABLE control_point_times ENABLE TRIGGER ALL");
+        DB::statement("ALTER TABLE tiempos_punto_control ENABLE TRIGGER ALL");
 
         dd([
             'Total Created' => $totalCreated,

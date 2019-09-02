@@ -1583,3 +1583,24 @@ span.icon-report{
 .table-valign-middle td {
     vertical-align: middle !important;
 }
+
+.bg-warning {
+    background-color: #cba528
+}
+
+a.bg-warning:hover,
+a.bg-warning:focus {
+    background-color: #cb840c
+}
+iframe{
+    border: solid 1px lightgray !important;
+    border-radius: 5px;
+}
+.panel-heading a:hover {
+    text-decoration: none;
+    color: rgb(255, 245, 143) !important;
+}
+.panel-heading a:focus {
+    font-weight: bold !important;
+    color: #face00 !important;
+}

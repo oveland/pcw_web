@@ -43,8 +43,9 @@ class ReportRouteOffRoadController extends Controller
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;
+        $vehicles = $access->vehicles;
 
-        return view('reports.route.off-road.index', compact(['companies', 'routes']));
+        return view('reports.route.off-road.index', compact(['companies', 'routes', 'vehicles']));
     }
 
     /**

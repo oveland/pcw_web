@@ -28,10 +28,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \App\Models\Routes\Fringe|null $fringe
+ * @property string|null $uid
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereUid($value)
  */
 class ControlPointTime extends Model
 {
     protected $hidden = ['created_at','updated_at'];
+
+    protected $fillable = ['time', 'time_next_point', 'time_from_dispatch', 'day_type_id', 'control_point_id', 'fringe_id', 'uid'];
 
     protected function getDateFormat()
     {
