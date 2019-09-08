@@ -291,7 +291,7 @@ class ManagerGPSController extends Controller
                     $totalCMD = "";
                     $smsCommands = [];
 
-                    if ($commands != 'AT&W' && $commands != 'AT$RESET') {
+                    if ($commands != 'AT&W' && $commands != 'AT&F' && $commands != 'AT$RESET') {
                         $flagStartCMD = true;
                         foreach ($gpsCommands as $gpsCommand) {
                             $individualCommand = trim(explode("'", $gpsCommand)[0]);
@@ -304,8 +304,15 @@ class ManagerGPSController extends Controller
                                     if ($simGPS) {
                                         if ($request->get('auto-set-plate')) {
                                             $vehicle = $simGPS->vehicle;
-                                            $individualCommand = '$TTDEVID="' . $vehicle->plate . '"';
-                                            dump(" - Auto set plate for: $vehicle->plate");
+                                            $gpsVehicle = GpsVehicle::findByVehicleId($vehicle->id);
+
+                                            $gpsId = $vehicle->plate;
+                                            if($gpsVehicle){
+                                                $gpsId = $gpsVehicle->imei;
+                                            }
+
+                                            $individualCommand = '$TTDEVID="' . $gpsId . '"';
+                                            dump(" - Auto set GPS Id as: $gpsId");
                                         }
                                     } else {
                                         dd("Error: Está intentando establecer una placa que no existe en la configuración de SIM-GPS: $individualCommand");
@@ -315,6 +322,7 @@ class ManagerGPSController extends Controller
                                         dd("Error: No es posible establecer la misma placa para varios vehículos. Seleccione la opción 'Auto setear placa'");
                                     }
                                 }
+
                                 if ($individualCommand) {
                                     if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
                                         $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;

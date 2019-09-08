@@ -17,7 +17,7 @@
                 </li>
                 @endif
             </ul>
-            <div class="tab-content m-b-0">
+            <div class="tab-content m-b-0 p-40">
                 <div class="tab-pane fade active in" id="tab-1">
                     <form class="form form-send-message" action="{{ route('admin-gps-manage-send-sms') }}">
                         <div class="row">
@@ -56,7 +56,7 @@
                                     @if( $simGPSList )
                                         <div class="col-md-12">
                                             @if( $gpsReport != 'all' )
-                                            <button type="button" class="btn btn-inverse m-b-5 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
+                                            <button type="button" class="btn btn-warning m-b-10 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
                                                 <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
                                             </button>
                                             @else

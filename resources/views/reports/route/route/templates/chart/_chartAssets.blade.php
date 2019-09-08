@@ -133,14 +133,14 @@
 
         $(document).ready(function () {
             initializeMap(() => {
-                loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
+                /*loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
                     loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
                         loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
                             SlidingMarker.initializeGlobally();
                             //$('.map-report-historic').css('height', (window.innerHeight - 150));
                         });
                     });
-                });
+                });*/
             });
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();

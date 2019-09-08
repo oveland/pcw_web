@@ -163,7 +163,7 @@ class SimGPS extends Model
     public function getUrlImageOperator()
     {
         if ($this->operator == self::MOVISTAR) {
-            $urlImage = "https://cdn.iconverticons.com/files/png/1a712eaf7266f623_256x256.png";
+            $urlImage = "https://i.pinimg.com/originals/1f/5c/b8/1f5cb8156f3c521fb861967cbcb5fa0c.png";
             $width = "15px";
         } else if ($this->operator == self::AVANTEL) {
             $urlImage = "https://static-s.aa-cdn.net/img/gp/20600003166342/9dHdvx-VIURI3nv_XqIiGitDqIOCZ0ZlvFcISfYSF7EnoqM1VjC78aujcafZwocwgA=w300";
