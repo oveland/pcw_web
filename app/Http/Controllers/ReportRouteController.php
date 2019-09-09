@@ -114,7 +114,7 @@ class ReportRouteController extends Controller
 
         if ($dateReport >= Carbon::now()->toDateString()) return view('partials.alerts.onlyPreviousDate');
 
-        if($vehicleReport) $vehiclesId = [$vehicleReport];
+        if($vehicleReport && $vehicleReport != 'all') $vehiclesId = [$vehicleReport];
         else $vehiclesId = $company->activeVehicles->pluck('id');
 
         $lastLocations = LastLocation::with('vehicle')

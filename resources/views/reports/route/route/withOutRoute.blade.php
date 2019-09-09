@@ -41,6 +41,9 @@
                         <th class="text-center">
                             <i class="fa fa-car" aria-hidden="true"></i> @lang('Vehicle')
                         </th>
+                        <th class="text-center">
+                            <i class="fa fa-flag" aria-hidden="true"></i> @lang('Route') (Predefinida)
+                        </th>
                         <th class="text-center sensor">
                             <i class="fa fa-road" aria-hidden="true"></i> @lang('Mileage') (km)
                         </th>
@@ -57,6 +60,7 @@
                         <tr class="text-center">
                             <td >{{ $loop->iteration }}</td>
                             <td >{{ $vehicle->number }}</td>
+                            <td >{{ $vehicle->dispatcherVehicle && $vehicle->dispatcherVehicle->route ? $vehicle->dispatcherVehicle->route->name : '' }}</td>
                             <td >{{ intval($lasLocation->current_mileage/1000) }}</td>
 
                             <td class="p-3">
