@@ -21,13 +21,13 @@
     <!-- begin breadcrumb -->
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
-        <li><a href="javascript:;">@lang('Routes')</a></li>
-        <li class="active">@lang('Route times')</li>
+        <li><a href="javascript:;">@lang('Route')</a></li>
+        <li class="active">@lang('Dispatch')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header">@lang('Route report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Route times')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Dispatch')</small>
     </h1>
 
     <!-- end page-header -->

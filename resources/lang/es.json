@@ -576,5 +576,6 @@
   "Completed turns": "Turnos completos",
   "Total round trips": "Total vueltas",
   "Export grouped report":"Exportar reporte agrupado",
-  "Export ungrouped report": "Exportar reporte desagrupado"
+  "Export ungrouped report": "Exportar reporte desagrupado",
+  "Route dispatches": "Despachos de ruta"
 }

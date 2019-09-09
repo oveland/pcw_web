@@ -542,8 +542,8 @@ License: You must have a valid license purchased only from themeforest(the above
                             <ul class="sub-menu">
                                 <li class="nav-item menu-route-report">
                                     <a href="{{ route('report-route')  }}" class="faa-parent animated-hover nav-link">
-                                        <i class="fa fa-line-chart faa-vertical" aria-hidden="true"></i>
-                                        @lang('Route report')
+                                        <i class="fa fa-paper-plane faa-vertical" aria-hidden="true"></i>
+                                        @lang('Dispatch')
                                     </a>
                                 </li>
                                 <li class="nav-item menu-report-route-historic">
