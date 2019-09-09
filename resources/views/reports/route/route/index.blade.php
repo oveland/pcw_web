@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
@@ -85,6 +85,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
+                                <div class="form-group">
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                        @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-3 options with-route">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
@@ -93,6 +105,9 @@
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
                                                 <input id="type-report" name="type-report" type="checkbox" value="group-vehicles" checked> @lang('Group')
+                                            </label>
+                                            <label class="text-bold">
+                                                <input id="completed-turns" name="completed-turns" type="checkbox" value="completed-turns"> @lang('Completed turns')
                                             </label>
                                         </div>
                                     </div>
@@ -194,22 +209,20 @@
                 }
             });
 
-            $('#date-report, #route-report, #company-report, #type-report').change(function () {
+            $('#date-report, #route-report, #vehicle-report, #company-report, #type-report, #completed-turns').change(function () {
                 $('.report-container').slideUp();
             });
 
             $('#route-report').change(function () {
-                $('.options').hide();
-                if ($(this).val() === 'none') {
-                    $('.without-route').fadeIn();
-                }else{
-                    $('.with-route').fadeIn();
-                }
+                loadSelectVehicleReportFromRoute($(this).val());
+                reportContainer.slideUp(100);
             });
 
             @if(Auth::user()->isAdmin())
                 $('#company-report').change(function () {
+                    loadSelectVehicleReport($(this).val(), true);
                     loadSelectRouteReport($(this).val());
+                    reportContainer.slideUp(100);
                 }).change();
             @else
                 loadSelectRouteReport(null);

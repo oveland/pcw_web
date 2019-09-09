@@ -203,12 +203,15 @@ class DispatchRegister extends Model
         return $query->where('status', $this::COMPLETE);
     }
 
-    public function scopeActive($query)
+    public function scopeActive($query, $completedTurns = null)
     {
+        if ($completedTurns) {
+            return $query->completed();
+        }
+
         return $query->where(function ($query) {
             $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
         });
-        //return $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
     }
 
     public function complete()
@@ -366,12 +369,12 @@ class DispatchRegister extends Model
 
     public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
     {
-        $query->where(function($query) use ($company, $routeId){
+        $query->where(function ($query) use ($company, $routeId) {
             $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
 
-            if($company->hasADD()){
+            if ($company->hasADD()) {
                 $query = $query->orWhere('route_id', intval($routeId));
-            }else if($routeId != 'all'){
+            } else if ($routeId != 'all') {
                 $query = $query->where('route_id', intval($routeId));
             }
 
@@ -381,16 +384,16 @@ class DispatchRegister extends Model
 
     public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
     {
-        $query->where('date', explode(' ',$date)[0])->where(function($query) use ($company, $routeId, $vehicleId){
-            if( $vehicleId == 'all' ){
+        $query->where('date', explode(' ', $date)[0])->where(function ($query) use ($company, $routeId, $vehicleId) {
+            if ($vehicleId == 'all') {
                 $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
-            }else if($vehicleId){
+            } else if ($vehicleId) {
                 $query = $query->where('vehicle_id', $vehicleId);
             }
 
-            if($company->hasADD()){
+            if ($company->hasADD()) {
                 $query = $query->orWhere('route_id', intval($routeId));
-            }else if($routeId != 'all'){
+            } else if ($routeId != 'all') {
                 $query = $query->where('route_id', intval($routeId));
             }
 
@@ -403,24 +406,24 @@ class DispatchRegister extends Model
         $totalLocations = $this->locations()->count();
         $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
 
-        return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1,'.', '') : 0;
+        return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0;
     }
 
     public function getRouteDistance($withFormat = false)
     {
-        if($this->inProgress())return 0;
+        if ($this->inProgress()) return 0;
 
         $routeDistance = $this->end_odometer - $this->start_odometer;
         $routeDistance = $routeDistance > 0 && $routeDistance < 500000 ? $routeDistance : 0;
 
-        if($withFormat)return number_format($routeDistance/1000, 2, ',', '');
+        if ($withFormat) return number_format($routeDistance / 1000, 2, ',', '');
 
         return $routeDistance;
     }
 
     public function getTotalOffRoad()
     {
-        if($this->inProgress() || $this->getRouteDistance() < 5000)return 0;
+        if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
 
 
         $lastLocation = $this->locations('desc')->limit(1)->get()->first();

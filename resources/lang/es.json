@@ -571,5 +571,10 @@
   "Kmz file": "Archivo KMZ",
   "File name": "Nombre",
   "Migrated": "Migrados",
-  "Migration interface": "Interfaz de Migración"
+  "Migration interface": "Interfaz de Migración",
+  "Total vehicles": "Total vehículos",
+  "Completed turns": "Turnos completos",
+  "Total round trips": "Total vueltas",
+  "Export grouped report":"Exportar reporte agrupado",
+  "Export ungrouped report": "Exportar reporte desagrupado"
 }

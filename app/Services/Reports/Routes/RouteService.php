@@ -58,7 +58,7 @@ class RouteService
             $controlPoints = $route->controlPoints;
             $controlPointOfReturn = $controlPoints->where('type', ControlPoint::RETURN)->first();
 
-            $routeDistance = $controlPoints->last()->distance_from_dispatch;
+            $routeDistance = $controlPoints->count() ? $controlPoints->last()->distance_from_dispatch : $route->distance * 1000;
             $distanceOfReturn = $controlPointOfReturn ? $controlPointOfReturn->distance_from_dispatch : $routeDistance;
 
             $reportData = collect([]);

@@ -57,7 +57,7 @@ class GeneralController extends Controller
     public function loadSelectVehiclesFromRoute(Request $request)
     {
         $routeId = $request->get('route');
-        $route = $routeId == 'all' ? null : Route::find($routeId);
+        $route = $routeId == 'all' || $routeId == 'none' ? null : Route::find($routeId);
         $withAll = $request->get('withAll');
 
         $user = Auth::user();
