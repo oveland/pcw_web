@@ -1247,16 +1247,6 @@ span.icon-report{
     -webkit-animation: color-change 2s;
 }
 
-.nav.nav-pills>li>a {
-    color: #aab3ba;
-    background: 0 0;
-    border: 2px solid #aab3ba;
-    padding: 8px 13px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-}
-
 .scroll-to-top>i {
     display: inline-block;
     color: #9bdc37;

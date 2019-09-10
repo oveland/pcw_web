@@ -71,7 +71,7 @@ class RouteService
                 if ($location->isValid()) {
                     $offRoad = $location->off_road == 't' ? true : false;
 
-                    $completedPercent = $routeDistance > 0 ? ($report ? $report->distancem : 0 / $routeDistance) * 100 : 0;
+                    $completedPercent = $routeDistance > 0 ? (($report ? $report->distancem : 0) / $routeDistance) * 100 : 0;
                     if ($completedPercent > 100) $completedPercent = 100;
 
                     $dispatchRegister = $location->dispatchRegister;

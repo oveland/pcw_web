@@ -36,6 +36,8 @@ class ManagerGPSController extends Controller
         $gpsReport = $request->get('gps-report');
         $optionSelection = $request->get('option-selection');
         $routeReport = $request->get('route-report');
+        $activeVehicles = $request->get('active-vehicles');
+        $excludeInRepair = $request->get('exclude-in-repair');
         $isInLimbo = $request->get('limbo') == "si" ? true : false;
 
         $dispatcherVehicle = $routeReport != 'all' ? DispatcherVehicle::where('route_id', $routeReport)->get() : collect([]);
@@ -43,7 +45,12 @@ class ManagerGPSController extends Controller
         $simGPSList = null;
         if ($companyReport != 'any') {
             $company = (Auth::user()->isAdmin()) ? Company::find($companyReport) : Auth::user()->company;
-            $vehiclesCompany = $company->vehicles;
+
+            if ($activeVehicles) $vehiclesCompany = $company->activeVehicles;
+            else $vehiclesCompany = $company->vehicles;
+
+            if($excludeInRepair)$vehiclesCompany = $vehiclesCompany->where('in_repair', false);
+
             $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'));
 
             $simGPSList = ($gpsReport != 'all') ? $simGPSList->where('gps_type', $gpsReport)->get() : $simGPSList->get();
@@ -100,7 +107,51 @@ class ManagerGPSController extends Controller
                         }
                     }
                     break;
+                case 'power-off':
 
+                    foreach ($simGPSList as $simGPS) {
+                        $vehicle = $simGPS->vehicle;
+                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
+                        if ($currentLocationGPS) {
+                            try {
+                                $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                            } catch (\Exception $exception) {
+                                dd($currentLocationGPS);
+                            }
+                            if ($vehicleStatus->id == VehicleStatus::POWER_OFF && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count())) $selection[] = $simGPS->vehicle->number;
+                        }
+                    }
+                    break;
+                case 'parked':
+
+                    foreach ($simGPSList as $simGPS) {
+                        $vehicle = $simGPS->vehicle;
+                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
+                        if ($currentLocationGPS) {
+                            try {
+                                $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                            } catch (\Exception $exception) {
+                                dd($currentLocationGPS);
+                            }
+                            if ($vehicleStatus->id == VehicleStatus::PARKED && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count())) $selection[] = $simGPS->vehicle->number;
+                        }
+                    }
+                    break;
+                  case 'parked':
+
+                    foreach ($simGPSList as $simGPS) {
+                        $vehicle = $simGPS->vehicle;
+                        $currentLocationGPS = CurrentLocationsGPS::findByVehicleId($vehicle->id)->get()->first();
+                        if ($currentLocationGPS) {
+                            try {
+                                $vehicleStatus = $currentLocationGPS->vehicleStatus;
+                            } catch (\Exception $exception) {
+                                dd($currentLocationGPS);
+                            }
+                            if ($vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL && ($routeReport == 'all' || $dispatcherVehicle->where('vehicle_id', $vehicle->id)->count())) $selection[] = $simGPS->vehicle->number;
+                        }
+                    }
+                    break;
                 case 'new':
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
