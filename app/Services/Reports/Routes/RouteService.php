@@ -52,6 +52,7 @@ class RouteService
         $locationsReports = (object)['empty' => $locations->isEmpty(), 'notEmpty' => $locations->isNotEmpty()];
 
         if ($locations->isNotEmpty()) {
+            $locations = $locations->sortBy('date');
             $vehicle = $dispatchRegister->vehicle;
             $route = $dispatchRegister->route;
             $routeCoordinates = Geolocation::getRouteCoordinates($route->url);

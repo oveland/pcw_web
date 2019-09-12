@@ -266,14 +266,12 @@
             @endif
 
             <td width="15%" class="text-center">
-                @if( Auth::user()->belongsToCootransol() )
-                <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover tooltips"
-                        data-original-title="@lang('Execute DAR')">
-                    <i class="fa fa-cogs faa-pulse"></i>
-                </button>
-                @endif
-
                 @if( Auth::user()->isSuperAdmin() )
+                    <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover tooltips"
+                            data-original-title="@lang('Execute DAR')">
+                        <i class="fa fa-cogs faa-pulse"></i>
+                    </button>
+
                     <a href="#modal-report-log"
                        data-toggle="modal"
                        onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"

@@ -453,7 +453,7 @@ class MigrationController extends Controller
     public function migrateFringes(Request $request)
     {
         DB::statement("ALTER TABLE control_point_times DISABLE TRIGGER ALL");
-        DB::statement("ALTER TABLE fringes DISABLE TRIGGER ALL");
+        //DB::statement("ALTER TABLE fringes DISABLE TRIGGER ALL");
 
         $totalCreated = 0;
         $totalUpdated = 0;
@@ -482,6 +482,7 @@ class MigrationController extends Controller
                 $fringe->from = $fringeTime[0];
                 $fringe->to = $fringeTime[1] ? "$fringeTime[1]:59" : '00:00:00';
                 $fringe->sequence = $i;
+                $fringe->active = false;
                 $fringe->route_id = $fringeOLD->id_ruta;
                 $fringe->day_type_id = $fringeOLD->tipo_de_dia;
                 $fringe->style_color = "#" . substr(md5(rand()), 0, 6);
@@ -501,7 +502,7 @@ class MigrationController extends Controller
         }
 
         DB::statement("ALTER TABLE control_point_times ENABLE TRIGGER ALL");
-        DB::statement("ALTER TABLE fringes ENABLE TRIGGER ALL");
+        //DB::statement("ALTER TABLE fringes ENABLE TRIGGER ALL");
 
         dd([
             'Total Created' => $totalCreated,
