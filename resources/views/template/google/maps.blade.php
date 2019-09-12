@@ -9,7 +9,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('road.google_api_token') }}" async defer></script>
 
 <script type="text/javascript">
-    let map;
+    let map = null;
     let routeLayerKML;
     let trafficLayer;
     let mapLightDreamStyles = [
@@ -48,10 +48,19 @@
         }
     ];
 
+    function destroyMap(){
+        if(map && google){
+            google.maps.event.clearInstanceListeners(window);
+            google.maps.event.clearInstanceListeners(document);
+        }
+    }
+
     function initializeMap(callback) {
+        destroyMap();
+
         let windowHeight = window.innerHeight - 40;
         $('#modal-route-report .modal-dialog').css('height', windowHeight+"px");
-        $('#google-map-light-dream').css('height', ((windowHeight - 30 - $('#modal-route-report .modal-header').height())+"px"));
+        $('#google-map-light-dream').html('').empty().css('height', ((windowHeight - 30 - $('#modal-route-report .modal-header').height())+"px"));
 
         setTimeout(function(){
             let mapOptions = {

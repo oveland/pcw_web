@@ -170,7 +170,14 @@
                 //map.clearAllMarkers();
                 $('.btn-show-off-road-report').attr('href', $(this).data('url-off-road-report'));
                 let chartRouteReport = $("#chart-route-report");
-                chartRouteReport.html(loading);
+
+                try{
+                    chartRouteReport.sparkline('destroy')
+                }catch(e){
+                    console.log('error destroy sparkline');
+                }
+
+                chartRouteReport.empty().html(loading);
                 $('.report-info').html(loading);
 
                 let panelOffRoad = $('.panel-off-road').slideUp();
@@ -204,7 +211,7 @@
 
                             data.controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
-                                    title: cp.name+" > "+cp.distance_from_dispatch+" m.",
+                                    title: cp.name+" > "+cp.distance_from_dispatch+" m",
                                     map: map,
                                     icon: controlPointIcon[cp.trajectory],
                                     animation: google.maps.Animation.DROP,
@@ -212,15 +219,16 @@
                                 });
                             });
 
+                            @if(Auth::user()->isAdmin())
                             data.routeCoordinates.forEach(function (rc, i) {
                                 new google.maps.Marker({
-                                    title: rc.index + ": distance " + rc.distance + " m. (" + rc.latitude + ", " + rc.longitude + ")",
+                                    title: rc.index + " > " + rc.distance + " m",
                                     map: map,
                                     icon: routeCoordinateIcon,
-                                    //animation: google.maps.Animation.DROP,
                                     position: {lat: parseFloat(rc.latitude), lng: parseFloat(rc.longitude)}
                                 });
                             });
+                            @endif
 
                             new google.maps.KmlLayer({
                                 url: data.urlLayerMap,
@@ -242,15 +250,19 @@
                             let speed = [];
                             let averageSpeed = [];
 
-                            let historicPath = new google.maps.Polyline({
-                                path: [],
-                                geodesic: true,
-                                strokeColor: 'rgba(118,0,255,0.58)',
-                                strokeOpacity: 0.8,
-                                strokeWeight: 5,
-                                map: map
-                            });
-                            let path = historicPath.getPath();
+                            @if(!Auth::user()->isSuperAdmin2())
+                                let historicPath = new google.maps.Polyline({
+                                    path: [],
+                                    geodesic: true,
+                                    strokeColor: 'rgba(118,0,255,0.58)',
+                                    strokeOpacity: 0.8,
+                                    strokeWeight: 5,
+                                    map: map
+                                });
+
+                                let path = historicPath.getPath();
+                            @endif
+
 
                             data.reports.forEach(function (report, i) {
                                 let percent = report.completedPercent;
@@ -290,8 +302,9 @@
                                     zIndex: svg.zIndex,
                                     position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}
                                 });
-
-                                path.insertAt(i, marker.position);
+                                @if(!Auth::user()->isSuperAdmin2())
+                                    path.insertAt(i, marker.position);
+                                @endif
                             });
 
                             if( data.center ){
