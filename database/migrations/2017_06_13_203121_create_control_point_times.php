@@ -21,6 +21,7 @@ class CreateControlPointTimes extends Migration
             $table->integer('day_type_id')->unsigned();
             $table->bigInteger('control_point_id')->unsigned();
             $table->bigInteger('fringe_id')->unsigned()->nullable(true);
+            $table->string('uid', 50)->unique(true);
             $table->timestamps();
             /* table relations */
             $table->foreign('day_type_id')->references('id')->on('day_types');
