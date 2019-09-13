@@ -70,6 +70,7 @@
                             @foreach( $reportsByControlPoints as $reportsByControlPoint )
                                 @php
                                     $dispatchRegister = $reportsByControlPoint->dispatchRegister;
+                                    $offRoadPercent = $dispatchRegister->getOffRoadPercent();
                                     $vehicle = $reportsByControlPoint->vehicle;
                                     $driver = $reportsByControlPoint->driver;
                                 @endphp
@@ -77,6 +78,13 @@
                                     <th class="text-capitalize text-muted bg-{{ $dispatchRegister->inProgress() ? 'warning':'inverse' }}">
                                         {{ $dispatchRegister->round_trip }}<br>
                                         <small class="status-html">{!! $dispatchRegister->status !!}</small>
+                                        @if($offRoadPercent)
+                                            <div class="m-t-1">
+                                                <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
+                                                    {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated" style="font-size: inherit !important;"></i>
+                                                </label>
+                                            </div>
+                                        @endif
                                     </th>
                                     <th class="text-capitalize text-muted bg-inverse">
                                         {{ $dispatchRegister->turn }}

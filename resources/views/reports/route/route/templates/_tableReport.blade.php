@@ -110,7 +110,7 @@
                 {{ $route->name }}
                 @if($offRoadPercent)
                     <div class="m-t-10">
-                        <label class="label label-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} tooltips" data-placement="bottom" style="font-size: 1em !important" title="@lang('Percent in off road')">
+                        <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
                             {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
                         </label>
                     </div>

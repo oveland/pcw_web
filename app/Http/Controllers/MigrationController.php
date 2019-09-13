@@ -482,7 +482,7 @@ class MigrationController extends Controller
                 $fringe->from = $fringeTime[0];
                 $fringe->to = $fringeTime[1] ? "$fringeTime[1]:59" : '00:00:00';
                 $fringe->sequence = $i;
-                $fringe->active = false;
+                $fringe->active = true;
                 $fringe->route_id = $fringeOLD->id_ruta;
                 $fringe->day_type_id = $fringeOLD->tipo_de_dia;
                 $fringe->style_color = "#" . substr(md5(rand()), 0, 6);
