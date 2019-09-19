@@ -64,6 +64,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Location newModelQuery()
  * @method static Builder|Location newQuery()
  * @method static Builder|Location query()
+ * @property string|null $ard_off_road
+ * @method static Builder|Location whereArdOffRoad($value)
  */
 class Location extends Model
 {
@@ -135,7 +137,7 @@ class Location extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWitSpeeding($query)
+    public function scopeWithSpeeding($query)
     {
         return $query->where('speeding', true);
     }
@@ -212,5 +214,14 @@ class Location extends Model
             'speeding' => $this->speeding,
             'vehicleStatus' => $this->vehicleStatus,
         ];
+    }
+
+    public function getTotalOffRoad($routeId)
+    {
+        $routeId = $routeId ? $routeId : ($this->dispatch_register_id ? $this->dispatchRegister->route->id : 'empty');
+        
+        $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
+
+        return isset($ardOffRoad[$routeId]) ? $ardOffRoad[$routeId]['tt'] : 0;
     }
 }

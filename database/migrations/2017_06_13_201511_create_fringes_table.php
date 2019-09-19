@@ -23,6 +23,7 @@ class CreateFringesTable extends Migration
             $table->bigInteger('route_id')->unsigned();
             $table->integer('day_type_id')->unsigned();
             $table->string('style_color')->nullable();
+            $table->string('uid', 50)->unique(true);
             $table->timestamps();
 
             /* Table relations */
@@ -103,6 +104,27 @@ class CreateFringesTable extends Migration
             $$
             ;
         ");
+
+        DB::statement("
+            CREATE OR REPLACE FUNCTION fringes_function() RETURNS TRIGGER
+                LANGUAGE plpgsql
+            AS $$
+            DECLARE
+            BEGIN
+                IF (TG_OP = 'UPDATE' OR TG_OP = 'INSERT' ) THEN
+                    NEW.time_from = NEW.\"from\";
+                    NEW.time_to = NEW.\"to\";
+                END IF;
+                RETURN NEW;
+            END;
+            $$;
+        ");
+
+        DB::statement("
+            CREATE TRIGGER fringes_trigger BEFORE INSERT OR UPDATE
+                ON fringes FOR EACH ROW
+            EXECUTE PROCEDURE fringes_function()
+        ");
     }
 
     /**
@@ -112,6 +134,8 @@ class CreateFringesTable extends Migration
      */
     public function down()
     {
+        DB::statement("DROP FUNCTION IF EXISTS fringes_function()");
+        DB::statement("DROP TRIGGER IF EXISTS fringes_trigger ON fringes");
         DB::statement("DROP FUNCTION IF EXISTS get_fringe_from_dispatch_time(bigint)");
         DB::statement("DROP FUNCTION IF EXISTS get_fringe_from_dispatch_time(bigint, character varying)");
         DB::statement("DROP FUNCTION IF EXISTS get_fringe_from_dispatch_time(time without time zone, bigint, integer)");

@@ -127,6 +127,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndRouteId(\App\Models\Company\Company $company, $routeId = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(\App\Models\Company\Company $company, $date, $routeId = null, $vehicleId = null)
  */
 class DispatchRegister extends Model
 {
@@ -154,11 +155,12 @@ class DispatchRegister extends Model
     }
 
     /**
+     * @param string $order
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function locations()
+    public function locations($order = 'asc')
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', $order);
     }
 
     /**
@@ -201,12 +203,15 @@ class DispatchRegister extends Model
         return $query->where('status', $this::COMPLETE);
     }
 
-    public function scopeActive($query)
+    public function scopeActive($query, $completedTurns = null)
     {
+        if ($completedTurns) {
+            return $query->completed();
+        }
+
         return $query->where(function ($query) {
             $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
         });
-        //return $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
     }
 
     public function complete()
@@ -364,9 +369,66 @@ class DispatchRegister extends Model
 
     public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
     {
-        $query->where(function($query) use ($company, $routeId){
-            return $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'))->orWhere('route_id', intval($routeId));
+        $query->where(function ($query) use ($company, $routeId) {
+            $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+
+            if ($company->hasADD()) {
+                $query = $query->orWhere('route_id', intval($routeId));
+            } else if ($routeId != 'all') {
+                $query = $query->where('route_id', intval($routeId));
+            }
+
+            return $query;
         });
+    }
+
+    public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
+    {
+        $query->where('date', explode(' ', $date)[0])->where(function ($query) use ($company, $routeId, $vehicleId) {
+            if ($vehicleId == 'all') {
+                $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+            } else if ($vehicleId) {
+                $query = $query->where('vehicle_id', $vehicleId);
+            }
+
+            if ($company->hasADD()) {
+                $query = $query->orWhere('route_id', intval($routeId));
+            } else if ($routeId != 'all') {
+                $query = $query->where('route_id', intval($routeId));
+            }
+
+            return $query;
+        });
+    }
+
+    public function getOffRoadPercent()
+    {
+        $totalLocations = $this->locations()->count();
+        $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
+
+        return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0;
+    }
+
+    public function getRouteDistance($withFormat = false)
+    {
+        if ($this->inProgress()) return 0;
+
+        $routeDistance = $this->end_odometer - $this->start_odometer;
+        $routeDistance = $routeDistance > 0 && $routeDistance < 500000 ? $routeDistance : 0;
+
+        if ($withFormat) return number_format($routeDistance / 1000, 2, ',', '');
+
+        return $routeDistance;
+    }
+
+    public function getTotalOffRoad()
+    {
+        if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
+
+
+        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
+
+        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
     const CREATED_AT = 'date_created';

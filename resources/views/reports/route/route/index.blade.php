@@ -21,13 +21,13 @@
     <!-- begin breadcrumb -->
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
-        <li><a href="javascript:;">@lang('Routes')</a></li>
-        <li class="active">@lang('Route times')</li>
+        <li><a href="javascript:;">@lang('Route')</a></li>
+        <li class="active">@lang('Dispatch')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header">@lang('Route report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Route times')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Dispatch')</small>
     </h1>
 
     <!-- end page-header -->
@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
@@ -75,18 +75,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report"
-                                            class="default-select2 form-control col-md-12">
+                                    <select name="route-report" id="route-report" data-with-all="true" data-with-none="true" class="default-select2 form-control col-md-12">
                                         <option value="null">@lang('Select a company')</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
+                                <div class="form-group">
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                        @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 options with-route">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
@@ -95,8 +106,20 @@
                                             <label class="text-bold">
                                                 <input id="type-report" name="type-report" type="checkbox" value="group-vehicles" checked> @lang('Group')
                                             </label>
+                                            <label class="text-bold">
+                                                <input id="completed-turns" name="completed-turns" type="checkbox" value="completed-turns"> @lang('Completed turns')
+                                            </label>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 options without-route" style="display: none">
+                            <div class="form-group">
+                                <label for="threshold-km" class="control-label">@lang('Threshold km')</label>
+                                <div class="form-group">
+                                    <input id="threshold-km" class="form-control input-sm" name="threshold-km" type="number" value="5" min="5" max="500" step="1">
                                 </div>
                             </div>
                         </div>
@@ -162,18 +185,21 @@
     <script type="application/javascript">
         $('.menu-routes, .menu-route-report').addClass('active-animated');
 
+        let form = $('.form-search-report');
+        let reportContainer = $('.report-container');
+
         $(document).ready(function () {
-            $('.form-search-report').submit(function (e) {
-                let form = $(this);
+            form.submit(function (e) {
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    $('.report-container').slideUp(100);
+                    reportContainer.show();
+                    reportContainer.empty().html($('#animated-loading').html());
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            $('.report-container').empty().hide().html(data).fadeIn();
+                            reportContainer.empty().hide().html(data).fadeIn();
                             hideSideBar();
                         },
                         complete:function(){
@@ -183,38 +209,28 @@
                 }
             });
 
-            $('#company-report').change(function () {
-                loadRouteReport($(this).val());
-            }).change();
-
-            $('#date-report, #type-report').change(function () {
-                let form = $('.form-search-report');
+            $('#date-report, #route-report, #vehicle-report, #company-report, #type-report, #completed-turns').change(function () {
                 $('.report-container').slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
             });
 
-            @if(!Auth::user()->isAdmin())
-                loadRouteReport(null);
+            $('#route-report').change(function () {
+                loadSelectVehicleReportFromRoute($(this).val());
+                reportContainer.slideUp(100);
+            });
+
+            @if(Auth::user()->isAdmin())
+                $('#company-report').change(function () {
+                    loadSelectVehicleReport($(this).val(), true);
+                    loadSelectRouteReport($(this).val());
+                    reportContainer.slideUp(100);
+                }).change();
+            @else
+                loadSelectRouteReport(null);
             @endif
 
             setTimeout(function(){
                 $('.btn-show-off-road-report').click();
             },500);
         });
-
-        function loadRouteReport(company) {
-            let routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('route-ajax-action') }}', {
-                option: 'loadRoutes',
-                company: company
-            }, function () {
-                routeSelect.find('option[value=""]').remove();
-                routeSelect.prepend("<option value='all'>@lang('All Routes')</option>");
-                routeSelect.val('all').change();
-            });
-        }
     </script>
 @endsection

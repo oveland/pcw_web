@@ -7532,6 +7532,14 @@ button.close {
   border-bottom-color: #000;
 }
 
+.scroll-to-top>i {
+    display: inline-block;
+    color: #9bdc37;
+    font-size: 30px;
+    opacity: 1;
+    filter: alpha(opacity=60);
+}
+
 .tooltip.bottom-left .tooltip-arrow {
   top: 0;
   right: 5px;
@@ -8273,3 +8281,32 @@ button.close {
   vertical-align: middle !important;
 }
 
+.mt-element-step .warning .mt-step-content,.mt-element-step .warning .mt-step-title {
+    color: #d26a23!important
+}
+
+.table-valign-middle th,
+.table-valign-middle td {
+    vertical-align: middle !important;
+}
+
+.bg-warning {
+    background-color: #cba528
+}
+
+a.bg-warning:hover,
+a.bg-warning:focus {
+    background-color: #cb840c
+}
+iframe{
+    border: solid 1px lightgray !important;
+    border-radius: 5px;
+}
+.panel-heading a:hover {
+    text-decoration: none;
+    color: rgb(255, 245, 143) !important;
+}
+.panel-heading a:focus {
+    font-weight: bold !important;
+    color: #face00 !important;
+}

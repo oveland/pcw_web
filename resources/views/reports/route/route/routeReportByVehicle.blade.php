@@ -12,11 +12,8 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $routeReport }}&type-report=group-vehicles&export=true" class="btn btn-sm btn-lime bg-lime-dark btn-rounded pull-left">
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=group-vehicles&export=true" class="btn btn-sm btn-primary btn-rounded pull-left tooltips" data-title="@lang('Export grouped report')">
                     <i class="fa fa-file-excel-o"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime pull-left" data-click="panel-expand" title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
                 </a>
             </div>
             <div class="row">
@@ -29,7 +26,7 @@
                             <li class="{{$loop->first?'active':''}}">
                                 <a href="#report-tab-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
                                    data-original-title="{{ $vehicle->plate }}">
-                                    <i class="fa fa-car f-s-8 icon-report"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
+                                    <i class="fa fa-car f-s-8 icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
                                     <strong>{{ $vehicle->number }}</strong>
                                 </a>
                             </li>

@@ -5,6 +5,9 @@ namespace App;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\ReportVehicleStatus;
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -30,34 +33,48 @@ use Illuminate\Database\Eloquent\Model;
  * @property float|null $yesterday_odometer
  * @property float|null $current_mileage
  * @property bool|null $speeding
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereCurrentMileage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereDateCreated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereDispatchRegisterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereDistance($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereLastUpdated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereLatitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereLongitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereOdometer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereOffRoad($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereOrientation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereReferenceLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereSpeed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereSpeeding($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereVehicleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereVehicleStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereVersion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation whereYesterdayOdometer($value)
- * @mixin \Eloquent
- * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\LastLocation query()
+ * @method static Builder|\App\LastLocation whereCurrentMileage($value)
+ * @method static Builder|\App\LastLocation whereDate($value)
+ * @method static Builder|\App\LastLocation whereDateCreated($value)
+ * @method static Builder|\App\LastLocation whereDispatchRegisterId($value)
+ * @method static Builder|\App\LastLocation whereDistance($value)
+ * @method static Builder|\App\LastLocation whereId($value)
+ * @method static Builder|\App\LastLocation whereLastUpdated($value)
+ * @method static Builder|\App\LastLocation whereLatitude($value)
+ * @method static Builder|\App\LastLocation whereLongitude($value)
+ * @method static Builder|\App\LastLocation whereOdometer($value)
+ * @method static Builder|\App\LastLocation whereOffRoad($value)
+ * @method static Builder|\App\LastLocation whereOrientation($value)
+ * @method static Builder|\App\LastLocation whereReferenceLocationId($value)
+ * @method static Builder|\App\LastLocation whereSpeed($value)
+ * @method static Builder|\App\LastLocation whereSpeeding($value)
+ * @method static Builder|\App\LastLocation whereStatus($value)
+ * @method static Builder|\App\LastLocation whereVehicleId($value)
+ * @method static Builder|\App\LastLocation whereVehicleStatusId($value)
+ * @method static Builder|\App\LastLocation whereVersion($value)
+ * @method static Builder|\App\LastLocation whereYesterdayOdometer($value)
+ * @mixin Eloquent
+ * @property-read Vehicle|null $vehicle
+ * @method static Builder|\App\LastLocation newModelQuery()
+ * @method static Builder|\App\LastLocation newQuery()
+ * @method static Builder|\App\LastLocation query()
+
+ * @property bool|null $vehicle_active
+ * @property bool|null $vehicle_in_repair
+ * @property int|null $jumps
+ * @property int|null $total_locations
+ * @property-read Collection|ReportVehicleStatus[] $reportVehicleStatus
+ * @method static Builder|\App\LastLocation whereJumps($value)
+ * @method static Builder|\App\LastLocation whereTotalLocations($value)
+ * @method static Builder|\App\LastLocation whereVehicleActive($value)
+ * @method static Builder|\App\LastLocation whereVehicleInRepair($value)
+
  */
 class LastLocation extends Model
 {
+    const JUMPS_PERCENT_WITH_ISSUES = 40;
+    const MINIMUM_LOCATIONS_FOR_ANALYZE_JUMPS = 100;
+
     protected $dates = ['date'];
 
     function getDateFormat()
@@ -93,5 +110,15 @@ class LastLocation extends Model
         }
 
         return $report->count() ? $report : null;
+    }
+
+    public function gpsHasIssues()
+    {
+        return $this->total_locations > self::MINIMUM_LOCATIONS_FOR_ANALYZE_JUMPS && (100 * $this->jumps / $this->total_locations) > self::JUMPS_PERCENT_WITH_ISSUES;
+    }
+
+    public function gpsIsOK()
+    {
+        return !$this->gpsHasIssues();
     }
 }

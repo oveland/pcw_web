@@ -102,14 +102,25 @@
             $totalPassengersBySensorRecorder +=$dispatchRegister->passengersBySensorRecorder;
 
             $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0)?true:false;
+
+            $offRoadPercent = $dispatchRegister->getOffRoadPercent();
         @endphp
         <tr>
-            <th width="10%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                 {{ $route->name }}
+                @if($offRoadPercent)
+                    <div class="m-t-10">
+                        <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
+                            {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
+                        </label>
+                    </div>
+                @endif
             </th>
             <th width="5%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                 {{ $dispatchRegister->round_trip }}<br>
                 <small>{{ $dispatchRegister->status }}</small>
+                <br>
+                <small>{{ $dispatchRegister->getRouteDistance(true) }} Km</small>
             </th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
@@ -255,14 +266,12 @@
             @endif
 
             <td width="15%" class="text-center">
-                @if( Auth::user()->belongsToCootransol() )
-                <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover tooltips"
-                        data-original-title="@lang('Execute DAR')">
-                    <i class="fa fa-cogs faa-pulse"></i>
-                </button>
-                @endif
-
                 @if( Auth::user()->isSuperAdmin() )
+                    <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover tooltips"
+                            data-original-title="@lang('Execute DAR')">
+                        <i class="fa fa-cogs faa-pulse"></i>
+                    </button>
+
                     <a href="#modal-report-log"
                        data-toggle="modal"
                        onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
@@ -292,6 +301,12 @@
         @php
             $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time;
         @endphp
+
+        @if($offRoadPercent)
+            <script>
+                $('.icon-car-{{$vehicle->id}}').removeClass('f-s-8').addClass('text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-passing animated');
+            </script>
+        @endif
     @endforeach
     </tbody>
 </table>

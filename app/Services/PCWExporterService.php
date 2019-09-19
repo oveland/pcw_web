@@ -242,9 +242,16 @@ class PCWExporterService
             case 'routeReportByVehicle':
                 // Set general formulas
                 for ($i = $starData; $i < $lastRow; $i++) {
-                    $sheet->setCellValue("M$i", "=L$i-K$i");
-                    $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
+                    $sheet->setCellValue("L$i", "=K$i-J$i");
+                    $sheet->setCellValue("M$i", "=L$i+" . (($i > $starData) ? ("M" . ($i - 1)) : "0"));
                 }
+                break;
+
+            case 'routeReportUngrouped':
+                $sheet->cells("A$config->startIndex:" . $config->lastLetter . $lastRow, function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
                 break;
 
             case 'passengersReportByRoute':

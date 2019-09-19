@@ -57,11 +57,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Passenger whereTotalFrontSensor($value)
  * @method static Builder|Passenger whereTotalSensorRecorder($value)
  * @property int|null $fringe_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereFringeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger query()
+ * @method static Builder|Passenger whereFringeId($value)
+ * @method static Builder|Passenger newModelQuery()
+ * @method static Builder|Passenger newQuery()
+ * @method static Builder|Passenger query()
  * @property mixed hexSeats
+ * @property int|null $history_seat_id
+ * @method static Builder|Passenger whereHistorySeatId($value)
  */
 class Passenger extends Model
 {

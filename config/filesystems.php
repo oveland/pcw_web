@@ -47,7 +47,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
         ],
-
+        'google' => [
+            'driver' => 'local',
+            'root' => env('GOOGLE_KMZ_PATH'),
+            'url' => env('GOOGLE_KMZ_URL')
+        ],
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

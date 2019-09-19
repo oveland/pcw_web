@@ -16,6 +16,8 @@ use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use App\Services\PCWExporterService;
 use Excel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 use App\Models\Routes\Route;
 
@@ -25,13 +27,14 @@ class OffRoadService
      * Generate detailed off road report for all vehicles of a company in a date
      *
      * @param Company $company
-     * @param $dateReport
+     * @param $initialDate
+     * @param $finalDate
      * @return \Illuminate\Support\Collection
      */
-    function offRoadByVehiclesReport(Company $company, $dateReport)
+    function offRoadByVehiclesReport(Company $company, $initialDate, $finalDate)
     {
         $offRoadByVehiclesReport = collect([]);
-        $offRoadsByVehiclesByRoutes = $this->offRoadsByVehicles($this->allOffRoads($company, $dateReport));
+        $offRoadsByVehiclesByRoutes = $this->offRoadsByVehicles($this->allOffRoads($company, $initialDate, $finalDate));
 
         foreach ($offRoadsByVehiclesByRoutes as $vehicleId => $offRoadsByRoutes) {
             $offRoadByVehiclesReport->put($vehicleId, [
@@ -50,24 +53,39 @@ class OffRoadService
      * Get all offRoads of a company and date
      *
      * @param Company $company
-     * @param $dateReport
+     * @param $initialDate
+     * @param $finalDate
      * @param null $routeReport
-     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @param null $vehicleReport
+     * @return Location[]|Builder[]|Collection|\Illuminate\Support\Collection
      */
-    function allOffRoads(Company $company, $dateReport, $routeReport = null)
+    function allOffRoads(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
-        $vehicles = $company->userVehicles($routeReport);
+        /*$dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
 
-        $allOffRoads = Location::whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
+        $allOffRoads = Location::whereBetween('date', [$initialDate, $finalDate])
             ->where('off_road', true)
-            ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->orderBy('date')
-            ->get();
+            ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
+            ->orderBy('date')->get();*/
 
-        return $allOffRoads->filter(function ($location) {
-            $dispatchRegister = $location->dispatchRegister;
-            return ($dispatchRegister && $dispatchRegister->complete() && $dispatchRegister->reports()->count() > 100);
-        });
+
+        $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->where('off_road', true);
+
+        if($routeReport == 'all' || !$routeReport){
+            $vehicles = $company->vehicles();
+            if($vehicleReport != 'all'){
+                $vehicles = $vehicles->where('id', $vehicleReport);
+            }
+
+            $allSpeeding = $allSpeeding->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
+        }else{
+            $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+            $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
+        }
+
+        $allSpeeding = $allSpeeding->orderBy('date')->get();
+
+        return $allSpeeding;
     }
 
     /**
@@ -75,7 +93,7 @@ class OffRoadService
      *
      * @param Vehicle $vehicle
      * @param $dateReport
-     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return Location[]|Builder[]|Collection|\Illuminate\Support\Collection
      */
     function offRoadsByVehicle(Vehicle $vehicle, $dateReport)
     {
@@ -90,7 +108,7 @@ class OffRoadService
      * Get all offRoads of a dispatch register
      *
      * @param DispatchRegister $dispatchRegister
-     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return Location[]|Builder[]|Collection|\Illuminate\Support\Collection
      */
     function offRoadsByDispatchRegister(DispatchRegister $dispatchRegister)
     {

@@ -4,6 +4,7 @@ namespace App\Models\Vehicles;
 
 use Carbon\Carbon;
 use Eloquent;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|GpsVehicle newModelQuery()
  * @method static Builder|GpsVehicle newQuery()
  * @method static Builder|GpsVehicle query()
+ * @method static Builder|GpsVehicle findBySim($sim)
  * @property-read GPSType|null $type
  */
 class GpsVehicle extends Model
@@ -53,5 +55,10 @@ class GpsVehicle extends Model
     public function type()
     {
         return $this->belongsTo(GPSType::class, 'gps_type_id', 'id');
+    }
+
+    public function scopeFindByVehicleId($query, $vehicle_id)
+    {
+        return $query->where('vehicle_id', $vehicle_id)->get()->first();
     }
 }

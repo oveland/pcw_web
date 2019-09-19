@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
-use App\Models\Routes\Route;
-use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
-use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\OffRoadService;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Excel;
+use Illuminate\View\View;
 
 class ReportRouteOffRoadController extends Controller
 {
@@ -25,71 +22,57 @@ class ReportRouteOffRoadController extends Controller
      * @var OffRoadService
      */
     private $offRoadService;
-    /**
-     * @var GeneralController
-     */
-    private $generalController;
 
     /**
      * ReportRouteOffRoadController constructor.
      * @param PCWAuthService $pcwAuthService
      * @param OffRoadService $offRoadService
-     * @param GeneralController $generalController
      */
-    public function __construct(PCWAuthService $pcwAuthService, OffRoadService $offRoadService, GeneralController $generalController)
+    public function __construct(PCWAuthService $pcwAuthService, OffRoadService $offRoadService)
     {
         $this->pcwAuthService = $pcwAuthService;
         $this->offRoadService = $offRoadService;
-        $this->generalController = $generalController;
     }
 
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;
+        $vehicles = $access->vehicles;
 
-        return view('reports.route.off-road.index', compact(['companies', 'routes']));
+        return view('reports.route.off-road.index', compact(['companies', 'routes', 'vehicles']));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function searchReport(Request $request)
     {
-        $company = $this->generalController->getCompany($request);
-        $routeReport = $request->get('route-report');
-        $dateReport = $request->get('date-report');
-        $typeReport = $request->get('type-report');
+        list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
         $query = (object)[
-            'company' => $company,
-            'dateReport' => $dateReport,
-            'typeReport' => $typeReport,
+            'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
+            'company' => $this->pcwAuthService->getCompanyFromRequest($request),
+            'dateReport' => $request->get('date-report'),
+            'routeReport' => $request->get('route-report'),
+            'vehicleReport' => $request->get('vehicle-report'),
+            'initialTime' => $initialTime,
+            'finalTime' => $finalTime,
+            'typeReport' => $request->get('type-report'),
         ];
 
-        $allOffRoads = $this->offRoadService->allOffRoads($company, $dateReport, $routeReport);
+        $allOffRoads = $this->offRoadService->allOffRoads($query->company, "$query->dateReport $query->initialTime:00", "$query->dateReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
+        $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
 
-        switch ($typeReport) {
-            case 'vehicle':
-                $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
+        if( $request->get('export') )$this->exportByVehicles($offRoadsByVehicles, $query);
 
-                if( $request->get('export') )$this->exportByVehicles($offRoadsByVehicles, $query);
-
-                return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','query']));
-                break;
-            case 'route':
-                //$offRoadsByVehicle = $allOffRoads->groupBy('dispatch_register_id');
-                return view('reports.route.off-road.offRoadByRoute', compact('offRoadsByVehicles'));
-                break;
-        }
-
-        return redirect(route('report-route-off-road-index'));
+        return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','query']));
     }
 
     /**

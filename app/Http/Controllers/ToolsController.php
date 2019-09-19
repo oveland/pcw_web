@@ -50,6 +50,11 @@ class ToolsController extends Controller
 
     public function test(Request $request)
     {
+        if (!extension_loaded('gd2')) { echo 'zipless'; }else{ dump('gd OK');}
+
+        phpinfo();
+        dd('');
+
         $date = $request->get('date');
         $from = $request->get('from');
         $to = $request->get('to');

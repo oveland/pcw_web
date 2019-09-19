@@ -53,6 +53,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $route_id
  * @property-read Collection|Route[] $subRoutes
  * @method static Builder|Route whereRouteId($value)
+ * @property-read RouteGoogle $routeGoogle
  */
 class Route extends Model
 {
@@ -109,6 +110,11 @@ class Route extends Model
         $dataAPI = $this->toArray();
         $dataAPI['company'] = $this->company->toArray();
         return (object)$dataAPI;
+    }
+
+    public function routeGoogle()
+    {
+        return $this->hasOne(RouteGoogle::class, 'id_ruta', 'id');
     }
 
     /**

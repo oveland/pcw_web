@@ -2,6 +2,9 @@
 
 namespace App\Models\Routes;
 
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,29 +17,33 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $day_type_id
  * @property int $control_point_id
  * @property int|null $fringe_id
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Routes\ControlPoint $controlPoint
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereControlPointId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereDayTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereFringeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereTimeFromDispatch($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereTimeNextPoint($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property-read \App\Models\Routes\Fringe|null $fringe
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTime query()
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read ControlPoint $controlPoint
+ * @method static Builder|ControlPointTime whereControlPointId($value)
+ * @method static Builder|ControlPointTime whereCreatedAt($value)
+ * @method static Builder|ControlPointTime whereDayTypeId($value)
+ * @method static Builder|ControlPointTime whereFringeId($value)
+ * @method static Builder|ControlPointTime whereId($value)
+ * @method static Builder|ControlPointTime whereTime($value)
+ * @method static Builder|ControlPointTime whereTimeFromDispatch($value)
+ * @method static Builder|ControlPointTime whereTimeNextPoint($value)
+ * @method static Builder|ControlPointTime whereUpdatedAt($value)
+ * @mixin Eloquent
+ * @property-read Fringe|null $fringe
+ * @method static Builder|ControlPointTime newModelQuery()
+ * @method static Builder|ControlPointTime newQuery()
+ * @method static Builder|ControlPointTime query()
+ * @property string|null $uid
+ * @method static Builder|ControlPointTime whereUid($value)
  */
 class ControlPointTime extends Model
 {
     protected $hidden = ['created_at','updated_at'];
 
-    function getDateFormat()
+    protected $fillable = ['time', 'time_next_point', 'time_from_dispatch', 'day_type_id', 'control_point_id', 'fringe_id', 'uid'];
+
+    protected function getDateFormat()
     {
         return config('app.date_time_format');
     }

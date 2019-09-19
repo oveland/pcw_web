@@ -74,7 +74,7 @@
                                     <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                     <div class="form-group">
                                         <select name="route-report" id="route-report" class="default-select2 form-control col-md-12" data-with-all="true">
-                                            @include('partials.selects.routes', compact('routes'), ['withAll' => true])
+                                            @include('partials.selects.routes', compact('routes'), ['withAll' => "true"])
                                         </select>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ $dateReport ? $dateReport : date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -202,6 +202,10 @@
         let reportContainer = $('.report-container');
         $('.menu-routes, .menu-report-route-historic').addClass('active-animated');
 
+        const vehicleReport = '{{ $vehicleReport }}';
+        const companyReport = '{{ $companyReport }}';
+        let form = $('.form-search-report');
+
         function loadScript(url, callback)
         {
             // Adding the script tag to the head as suggested before
@@ -219,6 +223,13 @@
             head.appendChild(script);
         }
 
+        const autoLoad = function(){
+            //const vehicleReport = $('#vehicle-report').val();
+            setTimeout(()=>{
+                if (vehicleReport) form.submit();
+            },1400);
+        };
+
         $(document).ready(function () {
             initializeMap(() => {
                 reportRouteHistoric = new ReportRouteHistoric(map);
@@ -232,10 +243,7 @@
                 });
             });
 
-            $('#company-report').val(14).change();
-
-            $('.form-search-report').submit(function (e) {
-                let form = $(this);
+            form.submit(function (e) {
                 let btnExport = $('.btn-export').fadeOut();
                 e.preventDefault();
                 if (form.isValid()) {
@@ -269,16 +277,17 @@
             });
 
             $('#route-report').change(function () {
-                loadSelectVehicleReportFromRoute($(this).val());
+                loadSelectVehicleReportFromRoute($(this).val(), vehicleReport, autoLoad);
                 reportContainer.slideUp(100);
             });
 
             @if(Auth::user()->isAdmin())
                 $('#company-report').change(function () {
-                    loadSelectVehicleReport($(this).val(), false);
+                    loadSelectVehicleReport($(this).val(), false, vehicleReport, autoLoad);
                     loadSelectRouteReport($(this).val());
-                    //reportContainer.slideUp(100);
-                }).change();
+                }).val(companyReport ? companyReport : 14).change();
+            @else
+                $('#route-report').change();
             @endif
 
             let time = moment('00:00', 'HH:mm');
@@ -289,10 +298,13 @@
             }
             timeRange.push(time.subtract(1, 'minutes').format('HH:mm'));
 
+            const initialTime = parseInt('{{ $initialTime ? $initialTime : 60 }}');
+            const finalTime = parseInt('{{ $finalTime ? $finalTime : 144 }}');
+
             $("#time-range-report").ionRangeSlider({
                 type: "double",
-                from: 60,
-                to: 144,
+                from: initialTime,
+                to: finalTime,
                 values: timeRange,
                 drag_interval: true,
                 //max_interval: 48,

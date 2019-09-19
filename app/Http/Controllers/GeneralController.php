@@ -19,11 +19,12 @@ class GeneralController extends Controller
         $vehicle = Vehicle::find($request->get('vehicle'));
         $date = $request->get('date');
         $withAll = $request->get('withAll');
+        $withNone = $request->get('withNone');
 
         if ($company) $routes = self::getRoutesFromCompany($company);
         else if ($vehicle && $date) $routes = self::getRoutesFromVehicleAndDate($vehicle, $date);
 
-        return view('partials.selects.routes', compact(['routes', 'withAll']));
+        return view('partials.selects.routes', compact(['routes', 'withAll', 'withNone']));
     }
 
     public function loadSelectDrivers(Request $request)
@@ -49,13 +50,15 @@ class GeneralController extends Controller
     public function loadSelectVehicles(Request $request)
     {
         $vehicles = self::getVehiclesFromCompany($this->getCompany($request));
-        return view('partials.selects.vehicles', compact('vehicles'));
+        $withAll = $request->get('withAll');
+        return view('partials.selects.vehicles', compact(['vehicles', 'withAll']));
     }
 
     public function loadSelectVehiclesFromRoute(Request $request)
     {
         $routeId = $request->get('route');
-        $route = $routeId == 'all' ? null : Route::find($routeId);
+        $route = $routeId == 'all' || $routeId == 'none' ? null : Route::find($routeId);
+        $withAll = $request->get('withAll');
 
         $user = Auth::user();
         if ($route) {
@@ -67,7 +70,7 @@ class GeneralController extends Controller
             $vehicles = $user->assignedVehicles(null);
         }
 
-        return view('partials.selects.vehicles', compact('vehicles'));
+        return view('partials.selects.vehicles', compact(['vehicles', 'withAll']));
     }
 
     /**

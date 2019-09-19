@@ -1,17 +1,14 @@
 <script type="application/javascript">
     function loadSelectRouteReport(company) {
         let routeSelect = $('#route-report');
-        if (is_not_null(company)) {
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('general-load-select-routes') }}', {
-                company: company,
-                withAll: routeSelect.data('with-all')
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        } else {
-            routeSelect.html('<option value="null">@lang('Select an option')</option>').trigger('change.select2');
-        }
+        routeSelect.html($('#select-loading').html()).trigger('change.select2');
+        routeSelect.load('{{ route('general-load-select-routes') }}', {
+            company: company,
+            withAll: routeSelect.data('with-all'),
+            withNone: routeSelect.data('with-none'),
+        }, function () {
+            routeSelect.trigger('change.select2');
+        });
     }
 
     function loadSelectDriverReport(company) {
@@ -50,18 +47,22 @@
         }
     }
 
-    function loadSelectVehicleReportFromRoute(route) {
+    function loadSelectVehicleReportFromRoute(route, defaultValue, callback) {
         let vehicleSelect = $('#vehicle-report');
         vehicleSelect.html($('#select-loading').html()).trigger('change.select2');
         vehicleSelect.load('{{ route('general-load-select-vehicles-from-route') }}', {
-            route: route
+            route: route,
+            withAll: vehicleSelect.data('with-all')
         }, function () {
-            vehicleSelect.prepend('<option value="" selected>@lang('Select an vehicle')</option>');
+            if(defaultValue)vehicleSelect.val(defaultValue);
+
             vehicleSelect.trigger('change.select2');
+
+            if (callback) callback();
         });
     }
 
-    function loadSelectVehicleReport(company, all) {
+    function loadSelectVehicleReport(company, all, defaultValue, callback) {
         let vehicleSelect = $('#vehicle-report');
         if (is_not_null(company)) {
             vehicleSelect.html($('#select-loading').html()).trigger('change.select2');
@@ -73,7 +74,12 @@
                 } else {
                     vehicleSelect.prepend('<option value="" selected>@lang('Select an option')</option>');
                 }
+
+                if(defaultValue)vehicleSelect.val(defaultValue);
+
                 vehicleSelect.trigger('change.select2');
+
+                if (callback) callback();
             });
         } else {
             vehicleSelect.html('<option value="null">@lang('Select an option')</option>').trigger('change.select2');

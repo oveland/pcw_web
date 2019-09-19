@@ -11,7 +11,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
+use Auth;
 use Illuminate\View\View;
+use Route;
 
 class SpeedingReportController extends Controller
 {
@@ -24,6 +26,7 @@ class SpeedingReportController extends Controller
      * @var SpeedingService
      */
     private $speedingService;
+
     /**
      * @var PCWExporterService
      */
@@ -52,27 +55,38 @@ class SpeedingReportController extends Controller
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;
+        $vehicles = $access->vehicles;
 
-        return view('reports.vehicles.speeding.index', compact(['companies', 'routes']));
+        return view('reports.vehicles.speeding.index', compact(['companies', 'routes', 'vehicles']));
     }
 
     /**
      * @param Request $request
-     * @return View|SpeedingExport
+     * @return Factory|View
      * @throws Exception
      */
     public function show(Request $request)
     {
-        $company = $this->pcwAuthService->getCompanyFromRequest($request);
-        $routeReport = $request->get('route-report');
-        $dateReport = $request->get('date-report');
-        $typeReport = $request->get('type-report');
+        list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
-        $speedingReport = $this->speedingService->buildSpeedingReport($company, $dateReport, $typeReport, $routeReport);
+        $query = (object)[
+            'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
+            'company' => $this->pcwAuthService->getCompanyFromRequest($request),
+            'dateReport' => $request->get('date-report'),
+            'routeReport' => $request->get('route-report'),
+            'vehicleReport' => $request->get('vehicle-report'),
+            'initialTime' => $initialTime,
+            'finalTime' => $finalTime,
+            'typeReport' => $request->get('type-report'),
+        ];
 
-        if ($request->get('export')) return $this->pcwExporterService->exportSpeeding($speedingReport);
+        $allSpeeding =$this->speedingService->allSpeeding($query->company, "$query->dateReport $query->initialTime:00", "$query->dateReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
+        $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding);
 
-        return view('reports.vehicles.speeding.show', compact(['speedingReport']));
+        if ($request->get('export')) return $this->pcwExporterService->exportSpeeding($speedingReportByVehicles);
+
+        return view('reports.vehicles.speeding.show', compact(['speedingReportByVehicles', 'query']));
+
     }
 
     /**

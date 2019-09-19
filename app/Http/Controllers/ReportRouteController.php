@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LastLocation;
 use App\Models\Company\Company;
 use App\Models\Routes\ControlPoint;
 use App\Models\Routes\DispatchRegister;
@@ -15,6 +16,7 @@ use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\RouteService;
 use App\Traits\CounterByRecorder;
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -52,7 +54,8 @@ class ReportRouteController extends Controller
     {
         $accessProperties = $this->authService->getAccessProperties();
         $companies = $accessProperties->companies;
-        return view('reports.route.route.index', compact('companies'));
+        $vehicles = $accessProperties->vehicles;
+        return view('reports.route.route.index', compact(['companies', 'vehicles']));
     }
 
     /**
@@ -65,40 +68,73 @@ class ReportRouteController extends Controller
         $dateReport = $request->get('date-report');
         $typeReport = $request->get('type-report');
         $routeReport = $request->get('route-report');
+        $vehicleReport = $request->get('vehicle-report');
+        $completedTurns = $request->get('completed-turns');
 
-        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
-            ->whereCompanyAndRouteId($company, $routeReport)
-            ->active()
+        if ($routeReport == 'none') return $this->showReportWithOutRoute($request);
+
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $routeReport, $vehicleReport)
+            ->active($completedTurns)
             ->orderBy('departure_time')
             ->get();
 
+        $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id')
+            ->sortBy(function ($reports, $vehicleID) {
+                return $reports->first()->vehicle->number;
+            });
+
+        $reportsByVehicle = collect([]);
+        foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
+            $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
+        }
+
         switch ($typeReport) {
             case 'group-vehicles':
-                $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id')
-                    ->sortBy(function ($reports, $vehicleID) {
-                        return $reports->first()->vehicle->number;
-                    });
-
-                $reportsByVehicle = collect([]);
-                foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
-                    $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
-                }
-
                 if ($request->get('export')) $this->exportByVehicle($dispatchRegistersByVehicles, $dateReport);
-
-                return view('reports.route.route.routeReportByVehicle', compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'typeReport']));
+                $view = 'reports.route.route.routeReportByVehicle';
                 break;
             default:
-                $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
-                $reportsByVehicle = collect([]);
-                foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
-                    $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
-                }
-
-                return view('reports.route.route.routeReportByAll', compact(['dispatchRegisters', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'typeReport']));
+                if ($request->get('export')) $this->exportUngrouped($dispatchRegistersByVehicles, $dateReport);
+                $view = 'reports.route.route.routeReportByAll';
                 break;
 
         }
+
+        return view($view, compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'vehicleReport', 'typeReport', 'completedTurns']));
+    }
+
+    public function showReportWithOutRoute(Request $request)
+    {
+        $company = $this->authService->getCompanyFromRequest($request);
+        $dateReport = $request->get('date-report');
+        $thresholdKm = $request->get('threshold-km');
+        $typeReport = $request->get('type-report');
+        $vehicleReport = $request->get('vehicle-report');
+        $completedTurns = $request->get('completed-turns');
+
+        if ($dateReport >= Carbon::now()->toDateString()) return view('partials.alerts.onlyPreviousDate');
+
+        if($vehicleReport && $vehicleReport != 'all') $vehiclesId = [$vehicleReport];
+        else $vehiclesId = $company->activeVehicles->pluck('id');
+
+        $lastLocations = LastLocation::with('vehicle')
+            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+            ->whereIn('vehicle_id', $vehiclesId)
+            ->where('current_mileage', '>', $thresholdKm * 1000)
+            ->where('current_mileage', '<', 700 * 1000)
+            ->get()->filter(function ($ll) {
+                return $ll->gpsIsOK();
+            });
+
+        $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
+            ->whereIn('vehicle_id', $lastLocations->pluck('vehicle_id'))
+            ->active($completedTurns)
+            ->orderBy('departure_time')
+            ->get();
+
+        $lasLocationsOut = $lastLocations->whereNotIn('vehicle_id', $dispatchRegisters->pluck('vehicle_id'));
+
+        return view('reports.route.route.withOutRoute', compact(['lasLocationsOut', 'company', 'dateReport']));
     }
 
     /**
@@ -175,23 +211,22 @@ class ReportRouteController extends Controller
                     $dataExcel[] = [
                         __('Route') => $route->name,                                                                    # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
-                        __('Turn') => $dispatchRegister->turn,                                                          # C CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # D CELL
-                        __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # E CELL
-                        __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # F CELL
-                        __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # G CELL
-                        __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # H CELL
+                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # C CELL
+                        __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
+                        __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # E CELL
+                        __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # F CELL
+                        __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # G CELL
                         __('Route Time') =>
                             $dispatchRegister->complete() ?
                                 StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) :
-                                '',                                                                                         # I CELL
-                        __('Status') => $dispatchRegister->status,                                                     # J CELL
-                        __('Start Rec.') => intval($startRecorder),                                                    # K CELL
-                        __('End Rec.') => intval($endRecorder),                                                        # L CELL
-                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # M CELL
-                        __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # N CELL
-                        __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # O CELL
-                        __('Dead time') => $deadTime,                 # P CELL
+                                '',                                                                                         # H CELL
+                        __('Status') => $dispatchRegister->status,                                                     # I CELL
+                        __('Start Rec.') => intval($startRecorder),                                                    # J CELL
+                        __('End Rec.') => intval($endRecorder),                                                        # K CELL
+                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # L CELL
+                        __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # M CELL
+                        __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # N CELL
+                        __('Dead time') => $deadTime,                 # O CELL
                     ];
 
                     $totalDeadTime = $deadTime ? StrTime::addStrTime($totalDeadTime, $deadTime) : $totalDeadTime;
@@ -215,153 +250,96 @@ class ReportRouteController extends Controller
     }
 
     /**
-     * @param DispatchRegister $dispatchRegister
-     * @param Request $request
-     * @return Factory|View
-     */
-    public
-    function offRoadReport(DispatchRegister $dispatchRegister, Request $request)
-    {
-        $reports = $dispatchRegister->reports()->with('location')->get();
-        $off_road_report_list = array();
-        if ($reports->isNotEmpty()) {
-            $reportData = array();
-            foreach ($reports as $report) {
-                $location = $report->location;
-                if ($report && $location->isValid()) {
-                    $offRoad = $location->off_road == 't' ? true : false;
-                    $reportData[] = (object)[
-                        'date' => $report->date,
-                        'time' => $report->timed,
-                        'distance' => $report->distancem,
-                        'value' => $report->status_in_minutes,
-                        'latitude' => $location->latitude,
-                        'longitude' => $location->longitude,
-                        'offRoad' => $offRoad
-                    ];
-                }
-            }
-
-            $offRoad = false;
-            $export = $request->get('export');
-
-            foreach ($reportData as $report) {
-                if ((!$offRoad) ? $report->offRoad : false) $off_road_report_list[] = $report;
-                $offRoad = $report->offRoad;
-            }
-
-            if ($export) $this->exportOffRoads($dispatchRegister, $off_road_report_list);
-        }
-
-        return view('reports.route.route.offRoadReport', compact('off_road_report_list', 'dispatchRegister'));
-    }
-
-    /**
-     * Export report to excel file
+     * Export excel by Vehicle option
      *
-     * @param $dispatchRegister
-     * @param $off_road_report_list
+     * @param $vehiclesDispatchRegisters
+     * @param $dateReport
+     * @internal param $roundTripDispatchRegisters
      */
-    public
-    function exportOffRoads($dispatchRegister, $off_road_report_list)
+    public function exportUngrouped($vehiclesDispatchRegisters, $dateReport)
     {
-        $route = $dispatchRegister->route;
-        $driver = $dispatchRegister->driver;
-        $company = $route->company;
-        $dateReport = $dispatchRegister->date;
-        $data = [];
-        $number = 1;
-        foreach ($off_road_report_list as $off_road_report) {
-            if ($off_road_report->latitude != 0 && $off_road_report->longitude != 0) {
-                $data[] = [
-                    'N°' => $number++,
-                    __('Date') => $off_road_report->date,
-                    __('Status') => $off_road_report->time,
-                    __('Latitude') => $off_road_report->latitude,
-                    __('Longitude') => $off_road_report->longitude,
-                    __('Address') => Geolocation::getAddressFromCoordinates($off_road_report->latitude, $off_road_report->longitude),
-                ];
+        Excel::create(__('Dispatch report') . " UG " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
+            $dataExcel = collect([]);
+
+            foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
+                $dispatchRegisters = $dispatchRegisters->sortBy('departure_time');
+
+                $vehicle = Vehicle::find($vehicleId);
+                $company = $vehicle->company;
+                $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegisters);
+                $lastArrivalTime = null;
+
+                $totalDeadTime = '00:00:00';
+
+                foreach ($dispatchRegisters as $dispatchRegister) {
+                    $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
+                    $route = $dispatchRegister->route;
+                    $driver = $dispatchRegister->driver;
+
+                    $endRecorder = $historyCounter->endRecorder;
+                    $startRecorder = $historyCounter->startRecorder;
+                    $totalRoundTrip = $historyCounter->passengersByRoundTrip;
+                    $totalPassengersByRoute = $historyCounter->totalPassengersByRoute;
+
+                    $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
+
+                    $data = collect([
+                        __('Vehicle') => $vehicle->number,                                                                    # A CELL
+                        __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # E CELL
+                        __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # F CELL
+                        __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # G CELL
+                        __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # H CELL
+                        __('Route Time') =>
+                            $dispatchRegister->complete() ?
+                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) :
+                                '',                                                                                         # I CELL
+                        __('Route') => $route->name,                                                                    # A CELL
+                        __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
+                        __('Status') => $dispatchRegister->status,                                                     # J CELL
+                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # D CELL
+                    ]);
+
+                    if ($company->hasRecorderCounter()) {
+                        $data->put(__('Start Rec.'), intval($startRecorder));
+                        $data->put(__('End Rec.'), intval($endRecorder));
+                        $data->put(__('Pass.') . " " . __('Round Trip'), intval($totalRoundTrip));
+                        $data->put(__('Pass.') . " " . __('Day'), intval($totalPassengersByRoute));
+                        $data->put(__('Vehicles without route'), intval($dispatchRegister->available_vehicles));
+                        $data->put(__('Dead time'), $deadTime);
+                    }
+
+                    $dataExcel->push($data->toArray());
+
+                    $totalDeadTime = $deadTime ? StrTime::addStrTime($totalDeadTime, $deadTime) : $totalDeadTime;
+
+                    $lastArrivalTime = $dispatchRegister->arrival_time;
+                }
+
+                $data = collect([
+                    __('Vehicle') => '----------',
+                    __('Departure time') => '----------',
+                    __('Arrival Time Scheduled') => '----------',
+                    __('Arrival Time') => '----------',
+                    __('Arrival Time Difference') => '----------',
+                    __('Route Time') => '----------',
+                    __('Route') => strtoupper(__('Total round trips')),
+                    __('Dead time') => number_format($dispatchRegisters->count() / 2, '1', '.', '')
+                ]);
+
+                $dataExcel->push($data->toArray());
             }
-        }
 
-        $dataExport = (object)[
-            'fileName' => __('Off_Road_Report_') . str_replace(' ', '_', $company->name) . '.' . str_replace('-', '', $dateReport),
-            'header' => [strtoupper(__('Off road report')) . ' ' . $company->name . '. ' . __('Vehicle') . ' ' . $dispatchRegister->vehicle->number . ' ➜ ' . $dispatchRegister->vehicle->plate],
-            'infoRoute' => [
-                $route->name . ': ' . __('Round Trip') . ' ' . ($dispatchRegister->round_trip == 0 ? '0' : $dispatchRegister->round_trip) . ', ' . __('Turn') . ' ' . $dispatchRegister->turn . '. ' . __('Driver') . ': ' . ($driver ? $driver->fullName() : __('Not assigned')),
-            ],
-            'data' => $data,
-        ];
-
-        Excel::create($dataExport->fileName, function ($excel) use ($dataExport) {
-            /* INFO DOCUMENT */
-            $excel->setTitle(__('Off road report'));
-            $excel->setCreator(__('PCW Ditech Integradores Tecnológicos'))->setCompany(__('PCW Ditech Integradores Tecnológicos'));
-            $excel->setDescription(__('Report vehicle off road'));
-
-            /* FIRST SHEET */
-            $excel->sheet(__('Off road report'), function ($sheet) use ($dataExport) {
-                $totalRows = count($dataExport->data) + 3;
-
-                $sheet->fromArray($dataExport->data);
-                $sheet->prependRow($dataExport->infoRoute);
-                $sheet->prependRow($dataExport->header);
-
-                /* GENEREAL STYLE */
-                $sheet->setOrientation('landscape');
-                $sheet->setFontFamily('Segoe UI Light');
-                $sheet->setBorder('A1:F' . $totalRows, 'thin');
-                $sheet->cells('A1:F' . $totalRows, function ($cells) {
-                    $cells->setFontFamily('Segoe UI Light');
-                });
-
-                /* SORTABLE COLUMN HEADERS */
-                $sheet->setAutoFilter('A3:F' . ($totalRows));
-
-                /*  MAIN HEADER */
-                $sheet->setHeight(1, 50);
-                $sheet->mergeCells('A1:F1');
-                $sheet->cells('A1:F1', function ($cells) {
-                    $cells->setValignment('center');
-                    $cells->setAlignment('center');
-                    $cells->setBackground('#0e6d62');
-                    $cells->setFontColor('#eeeeee');
-                    $cells->setFont(array(
-                        'family' => 'Segoe UI Light',
-                        'size' => '14',
-                        'bold' => true
-                    ));
-                });
-
-                /* INFO HEADER */
-                $sheet->setHeight(2, 25);
-                $sheet->mergeCells('A2:F2');
-                $sheet->cells('A2:F2', function ($cells) {
-                    $cells->setValignment('center');
-                    $cells->setAlignment('center');
-                    $cells->setBackground('#0d4841');
-                    $cells->setFontColor('#eeeeee');
-                    $cells->setFont(array(
-                        'family' => 'Segoe UI Light',
-                        'size' => '12',
-                        'bold' => true
-                    ));
-                });
-
-                /* HEADER COLUMNS */
-                $sheet->setHeight(3, 40);
-                $sheet->cells('A3:F3', function ($cells) {
-                    $cells->setValignment('center');
-                    $cells->setAlignment('center');
-                    $cells->setBackground('#0d4841');
-                    $cells->setFontColor('#eeeeee');
-                    $cells->setFont(array(
-                        'family' => 'Segoe UI Light',
-                        'size' => '12',
-                        'bold' => true
-                    ));
-                });
-            });
+            $dataExport = (object)[
+                'fileName' => __('Dispatch report') . " $dateReport",
+                'title' => __('Dispatch report') . " | $dateReport",
+                'subTitle' => __('Total vehicles') . ": " . $vehiclesDispatchRegisters->count(),
+                'sheetTitle' => __('Dispatch report'),
+                'data' => $dataExcel->toArray(),
+                'type' => 'routeReportUngrouped'
+            ];
+            /* SHEETS */
+            $excel = PCWExporterService::createHeaders($excel, $dataExport);
+            $excel = PCWExporterService::createSheet($excel, $dataExport);
         })->export('xlsx');
     }
 

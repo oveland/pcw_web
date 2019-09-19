@@ -125,12 +125,14 @@ class ControlPointService
                 $difference = StrTime::difference($measuredControlPointTime, $scheduledControlPointTime);
             }
 
+            $departureFringe = $dispatchRegister->departureFringe;
+
             $reportsByControlPoint->put($controlPoint->id, (object)[
                 'first' => $first,
                 'last' => $last,
                 'controlPointId' => $controlPoint->id,
                 'dispatchRegisterId' => $dispatchRegister->id,
-                'fringeName' => $dispatchRegister->departureFringe->name,
+                'fringeName' => $departureFringe ? $departureFringe->name : "--:--",
                 'controlPoint' => $controlPoint,
                 'hasReport' => $hasReport,
                 'statusColor' => $statusColor,

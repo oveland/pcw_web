@@ -104,13 +104,26 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('routes'))->group(function () {
             /* Route report */
             Route::prefix(__('route-report'))->group(function () {
-                Route::get('/', 'ReportRouteController@index')->name('report-route');
+                Route::get('/', function(){
+                    return redirect(route('report-dispatch'));
+                })->name('report-route');
                 Route::get('/show', 'ReportRouteController@show')->name('report-route-search');
                 Route::any(__('url-chart') . '/{dispatchRegister}', 'ReportRouteController@chart')->name('report-route-chart');
                 Route::any(__('url-chart') . '/{dispatchRegister}/{location}', 'ReportRouteController@chartView')->name('report-route-chart-view');
                 Route::any('/off_road/{dispatchRegister}', 'ReportRouteController@offRoadReport')->name('report-route-off-road');
                 Route::any('/get-log/{dispatchRegister}', 'ReportRouteController@getReportLog')->name('report-route-get-log');
                 Route::any('/ajax', 'ReportRouteController@ajax')->name('route-ajax-action');
+            });
+
+            /* Route report */
+            Route::prefix(__('dispatch'))->group(function () {
+                Route::get('/', 'ReportRouteController@index')->name('report-dispatch');
+                Route::get('/show', 'ReportRouteController@show')->name('report-dispatch-search');
+                Route::any(__('url-chart') . '/{dispatchRegister}', 'ReportRouteController@chart')->name('report-dispatch-chart');
+                Route::any(__('url-chart') . '/{dispatchRegister}/{location}', 'ReportRouteController@chartView')->name('report-dispatch-chart-view');
+                Route::any('/off_road/{dispatchRegister}', 'ReportRouteController@offRoadReport')->name('report-dispatch-off-road');
+                Route::any('/get-log/{dispatchRegister}', 'ReportRouteController@getReportLog')->name('report-dispatch-get-log');
+                Route::any('/ajax', 'ReportRouteController@ajax')->name('report-dispatch-action');
             });
 
             Route::prefix(__('url-historic'))->group(function () {
@@ -330,6 +343,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('cp'))->group(function () {
             Route::get('/', 'MigrationControlPointController@getControlPoints')->name('migrate-cp');
             Route::get('/compare/{route}', 'MigrationControlPointController@compare')->name('migrate-cp-compare');
+            Route::post('/upload-kmz', 'MigrationControlPointController@uploadKmz')->name('migrate-cp-upload-kmz');
+            Route::get('/download-kmz/{route}', 'MigrationControlPointController@downloadKmz')->name('migrate-cp-download-kmz');
+            Route::get('/calibrate/{route}/{apply}', 'MigrationControlPointController@calibrateRoute')->name('migrate-cp-calibrate-route');
         });
     });
 

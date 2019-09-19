@@ -2,6 +2,10 @@
 
 namespace App\Models\Routes;
 
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,27 +19,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $route_id
  * @property int $day_type_id
  * @property string $style_color
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Routes\DayType $dayType
- * @property-read \App\Models\Routes\Route $route
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereDayTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereFrom($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereRouteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereTo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read DayType $dayType
+ * @property-read Route $route
+ * @method static Builder|Fringe whereActive($value)
+ * @method static Builder|Fringe whereCreatedAt($value)
+ * @method static Builder|Fringe whereDayTypeId($value)
+ * @method static Builder|Fringe whereFrom($value)
+ * @method static Builder|Fringe whereId($value)
+ * @method static Builder|Fringe whereName($value)
+ * @method static Builder|Fringe whereRouteId($value)
+ * @method static Builder|Fringe whereTo($value)
+ * @method static Builder|Fringe whereUpdatedAt($value)
+ * @mixin Eloquent
  * @property int $sequence
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereSequence($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\ControlPointTime[] $controlPointTimes
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereStyleColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe query()
+ * @method static Builder|Fringe whereSequence($value)
+ * @property-read Collection|ControlPointTime[] $controlPointTimes
+ * @method static Builder|Fringe whereStyleColor($value)
+ * @method static Builder|Fringe newModelQuery()
+ * @method static Builder|Fringe newQuery()
+ * @method static Builder|Fringe query()
+ * @property string|null $uid
+ * @method static Builder|Fringe whereUid($value)
  */
 class Fringe extends Model
 {

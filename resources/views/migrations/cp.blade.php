@@ -17,13 +17,10 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div class="col-md-12 p-0">
+    <div class="container-migration col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 p-0">
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <div class="panel-heading-btn">
-                    @include('layouts.panels.expand')
-                </div>
                 <div class="row">
                     <div class="col-md-11">
                         <ul class="nav nav-tabs nav-tabs-info nav-justified">
@@ -47,72 +44,20 @@
                         <div class="col-md-12">
                             <!-- begin panel-group -->
                             <div class="panel-group" id="accordion-{{$company->id}}">
-                            @if($company->routes)
-                            @foreach($company->routes->where('as_group', false)->sortBy('name') as $route)
-                                <!-- begin panel -->
-                                    <div class="panel panel-inverse overflow-hidden">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title" aria-expanded="false">
-                                                <div class="accordion-toggle accordion-toggle-styled collapsed row">
-                                                    <div class="col-md-4">
-                                                        <i class="fa fa-road"></i>
-                                                        <a data-toggle="collapse" data-parent="#accordion-{{$company->id}}" href="#collapse-{{$route->id}}" class="text-white">
-                                                            ({{$route->id}}) <b class="text-uppercase">{{ $route->name }}</b>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-md-4 text-center">
-                                                        <samp class="{{ $route->controlPoints->count() ? 'text-white text-bold' : 'text-muted' }}">
-                                                            {{ $route->controlPoints->count() }} @lang('Control Points')
-                                                        </samp>
-                                                    </div>
-
-                                                    <div class="col-md-4">
-                                                        <a href="{{ $route->url }}" class="pull-right m-r-20 text-white">
-                                                            <i class="fa fa-download"></i> @lang('Download KMZ')
-                                                        </a>
-                                                        <a href="{{ route('export-coordinates',['route'=>$route->id]) }}" class="pull-right m-r-20 text-white">
-                                                            <i class="fa fa-map-marker"></i> @lang('Export Coordinates')
-                                                        </a>
-                                                        <i class="fa fa-plus-circle pull-right"></i>
-                                                    </div>
-                                                </div>
-                                            </h3>
-                                        </div>
-                                        <div id="collapse-{{ $route->id }}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-                                            <div class="panel-body">
-                                                <div class="widget widget-stat bg-inverse-light text-white p-t-10 p-b-30 text-center">
-                                                    <div class="col-md-12">
-                                                        <button class="btn btn-success" onclick="alert('Migrating...')" data-toggle="modal" data-target="#modal-migration">
-                                                            <i class="fa fa-database"></i> @lang('Process migration')
-                                                        </button>
-                                                        <button class="btn btn-default" onclick="$('.compare-{{$route->id}}').load('{{ route('migrate-cp-compare',['route'=>$route->id]) }}')">
-                                                            <i class="fa fa-angle-double-left"></i> <i class="fa fa-angle-double-right"></i> @lang('Compare')
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="panel">
-                                                            <ul class="nav nav-tabs nav-tabs-primary nav-justified">
-                                                                @foreach(\App\Models\Routes\DayType::all()->sortBy('id') as $dayType)
-                                                                    <li class="{{ $loop->first ? 'active': '' }}">
-                                                                        <a href=".day-type-{{ $dayType->id }}-{{ $route->id }}" data-toggle="tab">
-                                                                            <i class="fa fa-calendar-check-o text-info" aria-hidden="true"></i>
-                                                                            {{ $dayType->description }}
-                                                                        </a>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    @if($route->controlPoints)
-                                                        @include('migrations._controlPoints')
-                                                    @endif
-                                                    <div class="compare-{{$route->id}} text-left"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end panel -->
-                                @endforeach
+                                @if($company->routes)
+                                    @foreach($company->routes->where('as_group', false)->sortBy('name') as $route)
+                                        @include('migrations._routes')
+                                    @endforeach
+                                    @php
+                                        $groups = $company->routes->where('as_group', true);
+                                    @endphp
+                                    @if(count($groups))
+                                        <hr class="hr">
+                                        <h2>@lang('GROUPS'):</h2>
+                                        @foreach($groups->sortBy('name') as $route)
+                                            @include('migrations._routes')
+                                        @endforeach
+                                    @endif
                                 @else
                                     @lang('Without routes!')
                                 @endif
@@ -130,12 +75,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">@lang('Process migration for Control Points'): <b class="route-name text-uppercase"></b></h4>
+                    <h1 class="text-uppercase">
+                        <i class="fa fa-rocket"></i> @lang('Migration interface')
+                    </h1>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <iframe class="container-migration col-md-12" style="height: 450px"></iframe>
+                            <iframe class="container-migration col-md-12" src="" style="height: 450px;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -145,4 +92,88 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-calibration">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">@lang('Calibration for Control Points'): <b class="route-name text-uppercase"></b></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 pre">
+                            <pre class="response-calibration"></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn width-100 btn-default" data-dismiss="modal">@lang('Close')</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-upload-kmz">
+        <form id="form-create-sim-gps" action="{{ route('migrate-cp-upload-kmz') }}" method="POST" class="form-create-sim-gps" enctype="multipart/form-data">
+            <input type="hidden" name="company" value="{{ $companyRequest }}">
+            <input type="hidden" name="route" id="kmz-route-id" value="">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">
+                            <i class="fa fa-upload"></i> @lang('Upload KMZ')
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ csrf_field() }}
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="form-group">
+                                    <div class="input-group input-icon right">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-file-zip-o font-blue-chambray"></i> @lang('File')
+                                        </span>
+                                        <input type="file" name="kmz" id="kmz-file" class="form-control" required="true">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group input-icon right">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-tag"></i> @lang('File name'): <span id="kmz-route-name-id"></span>
+                                        </span>
+                                        <input type="text" size="50" name="name" id="kmz-name" class="form-control input-sm" placeholder="@lang('Name without spaces')" required="true">
+                                        <span class="input-group-addon">
+                                            .kmz
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn width-100 btn-default btn-rounded btn-sm" data-dismiss="modal">
+                            <i class="fa fa-undo"></i> @lang('Close')
+                        </button>
+                        <button type="submit" class="btn width-100 btn-lime btn-rounded btn-sm">
+                            <i class="fa fa-cloud-upload"></i> @lang('Upload')
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $('#modal-migration, #modal-upload-kmz, #modal-calibration').on('hidden.bs.modal', function () {
+                //$('.container-migration').empty().html($('#animated-loading').html());
+                //location.reload();
+            });
+        });
+    </script>
 @endsection

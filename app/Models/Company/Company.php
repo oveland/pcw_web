@@ -48,6 +48,10 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company query()
+ * @property int|null $speeding_threshold
+ * @property int|null $max_speeding_threshold
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereMaxSpeedingThreshold($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereSpeedingThreshold($value)
  */
 class Company extends Model
 {
@@ -91,7 +95,7 @@ class Company extends Model
     {
         $user = Auth::user();
         $vehicles = $user->assignedVehicles($this);
-        if ($routeId && $routeId != 'all') {
+        if ($this->hasADD() && $routeId && $routeId != 'all') {
             $route = Route::find($routeId);
             if ($route) {
                 $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::whereIn('route_id', $route->subRoutes->pluck('id'))->get()->pluck('vehicle_id');
@@ -200,5 +204,15 @@ class Company extends Model
     public function proprietaries()
     {
         return $this->hasMany(Proprietary::class);
+    }
+
+    /**
+     * Checks if company has active the Automatic Dispatch Detection (ADD)
+     *
+     * @return bool
+     */
+    public function hasADD()
+    {
+        return collect([self::MONTEBELLO])->contains($this->id);
     }
 }

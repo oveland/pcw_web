@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="panel">
-            <ul class="nav nav-tabs nav-tabs-primary nav-justified tab-report">
+            <ul class="nav nav-pills nav-pills-danger tab-report">
                 <li class="active" onclick="if(editedSIM)$('.form-search-report').submit()">
                     <a href="#tab-1" data-toggle="tab">
                         <i class="fa fa-paper-plane"></i>
@@ -17,7 +17,7 @@
                 </li>
                 @endif
             </ul>
-            <div class="tab-content m-b-0">
+            <div class="tab-content m-b-0 p-40">
                 <div class="tab-pane fade active in" id="tab-1">
                     <form class="form form-send-message" action="{{ route('admin-gps-manage-send-sms') }}">
                         <div class="row">
@@ -56,7 +56,7 @@
                                     @if( $simGPSList )
                                         <div class="col-md-12">
                                             @if( $gpsReport != 'all' )
-                                            <button type="button" class="btn btn-inverse m-b-5 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
+                                            <button type="button" class="btn btn-warning m-b-10 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
                                                 <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
                                             </button>
                                             @else
@@ -133,9 +133,10 @@
                                                                             <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script plate Skypatrol')
                                                                         </a>
                                                                     </li>
+                                                                    <li class="divider"></li>
                                                                     <li>
                                                                         <a href="javascript:getScript('new-skypatrol')">
-                                                                            <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('NEW Script Skypatrol')
+                                                                            <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Instrucciones generales')
                                                                         </a>
                                                                     </li>
                                                                     <li class="divider"></li>
@@ -196,9 +197,9 @@
                                                                 padding-left: 20px;
                                                             ">
                                                                 <div class="checkbox">
-                                                                    <label>
-                                                                        <input name="auto-set-plate" type="checkbox" value="true" checked>
-                                                                        @lang('Auto set plate')
+                                                                    <label title="Establece el Id del dispositivo por defecto como el campo Imei configurado en plataforma">
+                                                                        <input name="auto-set-plate" type="checkbox" value="true" checked style="margin-left: -15px;">
+                                                                        @lang('Auto set GPS ID')
                                                                     </label>
                                                                 </div>
                                                             </div>

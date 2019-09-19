@@ -34,9 +34,6 @@
             '{{ asset('img/point-map-off-road.png') }}'
         ];
 
-        const iconPathSVG = 'M511.2,256c0-8.6-5.2-16.3-13.1-19.7L30.5,40.2c-8.7-3.7-18.9-1.1-24.8,6.3c-6,7.4-6.4,17.8-1,25.6l127.4,184L4.7,440 c-5.4,7.8-5,18.2,1,25.6c0.5,0.6,1,1.1,1.5,1.6c6.1,6.1,15.3,8,23.4,4.6l467.6-196.1C506,272.3,511.2,264.6,511.2,256z';
-
-
         function loadScript(url, callback)
         {
             // Adding the script tag to the head as suggested before
@@ -54,16 +51,96 @@
             head.appendChild(script);
         }
 
+        const iconPathSVG = 'M511.2,256c0-8.6-5.2-16.3-13.1-19.7L30.5,40.2c-8.7-3.7-18.9-1.1-24.8,6.3c-6,7.4-6.4,17.8-1,25.6l127.4,184L4.7,440 c-5.4,7.8-5,18.2,1,25.6c0.5,0.6,1,1.1,1.5,1.6c6.1,6.1,15.3,8,23.4,4.6l467.6-196.1C506,272.3,511.2,264.6,511.2,256z';
+        const iconPowerOffSVG = 'M400 54.1c63 45 104 118.6 104 201.9 0 136.8-110.8 247.7-247.5 248C120 504.3 8.2 393 8 256.4 7.9 173.1 48.9 99.3 111.8 54.2c11.7-8.3 28-4.8 35 7.7L162.6 90c5.9 10.5 3.1 23.8-6.6 31-41.5 30.8-68 79.6-68 134.9-.1 92.3 74.5 168.1 168 168.1 91.6 0 168.6-74.2 168-169.1-.3-51.8-24.7-101.8-68.1-134-9.7-7.2-12.4-20.5-6.5-30.9l15.8-28.1c7-12.4 23.2-16.1 34.8-7.8zM296 264V24c0-13.3-10.7-24-24-24h-32c-13.3 0-24 10.7-24 24v240c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24z';
+        const iconParkedOffSVG = 'M326.3 218.8c0 20.5-16.7 37.2-37.2 37.2h-70.3v-74.4h70.3c20.5 0 37.2 16.7 37.2 37.2zM504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-128.1-37.2c0-47.9-38.9-86.8-86.8-86.8H169.2v248h49.6v-74.4h70.3c47.9 0 86.8-38.9 86.8-86.8z';
+        const iconWithOutGPSSVG = 'M216 288h-48c-8.84 0-16 7.16-16 16v192c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V304c0-8.84-7.16-16-16-16zM88 384H40c-8.84 0-16 7.16-16 16v96c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16v-96c0-8.84-7.16-16-16-16zm256-192h-48c-8.84 0-16 7.16-16 16v288c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V208c0-8.84-7.16-16-16-16zm128-96h-48c-8.84 0-16 7.16-16 16v384c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V112c0-8.84-7.16-16-16-16zM600 0h-48c-8.84 0-16 7.16-16 16v480c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V16c0-8.84-7.16-16-16-16z';
+
+
+        function processSVGIcon(reportLocation){
+            let rotation = parseInt(reportLocation.orientation);
+            rotation = rotation > 0 ? rotation - 90 : (this.markerBus ? this.markerBus.getIcon().rotation : rotation);
+
+            let scale = .02;
+            let zIndex = 10;
+            let pathSVG = iconPathSVG;
+            let fillColor = '#04bf8a';
+            let strokeColor = '#0f678a';
+            let x = 220;
+            let y = 250;
+
+            if (reportLocation.trajectoryOfReturn) {
+                fillColor = '#bfa017';
+                strokeColor = '#008a54';
+            }
+
+            if (reportLocation.offRoad) {
+                fillColor = '#6a000e';
+                strokeColor = '#ba0046';
+            }
+
+            const dr = reportLocation.dispatchRegister;
+
+            if(reportLocation.vehicleStatus.id === 6 && !dr){
+                rotation = 0;
+                pathSVG = iconPowerOffSVG;
+                fillColor = '#bf1308';
+                strokeColor = '#c2c2c2';
+                scale = .035;
+                zIndex = 100;
+                x = 250;
+                y = 280;
+            }
+
+            if(reportLocation.vehicleStatus.id === 3){
+                rotation = 0;
+                pathSVG = iconParkedOffSVG;
+                fillColor = '#1300ce';
+                strokeColor = 'rgb(181,181,181)';
+                scale = .038;
+                zIndex = 100;
+                x = 250;
+                y = 280;
+            }else if(reportLocation.vehicleStatus.id === 5){
+                rotation = 0;
+                pathSVG = iconWithOutGPSSVG;
+                fillColor = '#fffd06';
+                strokeColor = '#d4760a';
+                scale = .03;
+                zIndex = 100;
+                x = 250;
+                y = 280;
+            }
+            else if (reportLocation.speeding) {
+                fillColor = '#ffe415';
+                strokeColor = '#d44200';
+                zIndex = 100;
+            }
+
+            return {
+                path: pathSVG,
+                rotation: rotation,
+                fillColor : fillColor,
+                strokeColor : strokeColor,
+                scale: scale,
+                zIndex: zIndex,
+                anchor:{
+                    x: x,
+                    y: y,
+                }
+            };
+        }
+
         $(document).ready(function () {
             initializeMap(() => {
-                loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
+                /*loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
                     loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
                         loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
                             SlidingMarker.initializeGlobally();
                             //$('.map-report-historic').css('height', (window.innerHeight - 150));
                         });
                     });
-                });
+                });*/
             });
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
@@ -93,7 +170,14 @@
                 //map.clearAllMarkers();
                 $('.btn-show-off-road-report').attr('href', $(this).data('url-off-road-report'));
                 let chartRouteReport = $("#chart-route-report");
-                chartRouteReport.html(loading);
+
+                try{
+                    chartRouteReport.sparkline('destroy')
+                }catch(e){
+                    console.log('error destroy sparkline');
+                }
+
+                chartRouteReport.empty().html(loading);
                 $('.report-info').html(loading);
 
                 let panelOffRoad = $('.panel-off-road').slideUp();
@@ -127,7 +211,7 @@
 
                             data.controlPoints.forEach(function (cp, i) {
                                 new google.maps.Marker({
-                                    title: cp.name+" > "+cp.distance_from_dispatch+" m.",
+                                    title: cp.name+" > "+cp.distance_from_dispatch+" m",
                                     map: map,
                                     icon: controlPointIcon[cp.trajectory],
                                     animation: google.maps.Animation.DROP,
@@ -135,15 +219,16 @@
                                 });
                             });
 
+                            @if(Auth::user()->isAdmin())
                             data.routeCoordinates.forEach(function (rc, i) {
                                 new google.maps.Marker({
-                                    title: rc.index + ": distance " + rc.distance + " m. (" + rc.latitude + ", " + rc.longitude + ")",
+                                    title: rc.index + " > " + rc.distance + " m",
                                     map: map,
                                     icon: routeCoordinateIcon,
-                                    //animation: google.maps.Animation.DROP,
                                     position: {lat: parseFloat(rc.latitude), lng: parseFloat(rc.longitude)}
                                 });
                             });
+                            @endif
 
                             new google.maps.KmlLayer({
                                 url: data.urlLayerMap,
@@ -158,11 +243,26 @@
                             let latitudes = [];
                             let longitudes = [];
                             let orientations = [];
+                            let vehicleStatusId = [];
                             let offRoads = [];
                             let speeding = [];
                             let speedingLabel = [];
                             let speed = [];
                             let averageSpeed = [];
+
+                            @if(!Auth::user()->isSuperAdmin2())
+                                let historicPath = new google.maps.Polyline({
+                                    path: [],
+                                    geodesic: true,
+                                    strokeColor: 'rgba(118,0,255,0.58)',
+                                    strokeOpacity: 0.8,
+                                    strokeWeight: 5,
+                                    map: map
+                                });
+
+                                let path = historicPath.getPath();
+                            @endif
+
 
                             data.reports.forEach(function (report, i) {
                                 let percent = report.completedPercent;
@@ -175,51 +275,36 @@
                                 latitudes[i] = report.latitude;
                                 longitudes[i] = report.longitude;
                                 orientations[i] = report.orientation;
+                                vehicleStatusId[i] = '0'+report.vehicleStatus.id;
                                 offRoads[i] = report.offRoad ? '' : 'hide';
                                 speed[i] = report.speed;
                                 averageSpeed[i] = report.averageSpeed;
                                 speeding[i] = report.speeding ? 'speeding':'none';
                                 speedingLabel[i] = report.speeding ? 'label-danger' : '';
 
-                                //icon = pointMap[report.offRoad ? 2 : (report.trajectoryOfReturn ? 1 : 0)];
-
-                                let rotation = parseInt(report.orientation);
-
-                                let fillColor = '#a1bf00';
-                                let strokeColor = '#008a54';
-
-                                if (report.trajectoryOfReturn) {
-                                    fillColor = '#bfa017';
-                                    strokeColor = '#008a54';
-                                }
-
-                                if (report.speeding) {
-                                    fillColor = '#bf6f00';
-                                    strokeColor = '#ccc000';
-                                }
-
-                                if (report.offRoad) {
-                                    fillColor = '#85000e';
-                                    strokeColor = '#ba0033';
-                                }
+                                const svg = processSVGIcon(report);
 
                                 const icon = {
-                                    path: iconPathSVG,
-                                    fillOpacity: 0.9,
-                                    fillColor: fillColor,
-                                    strokeColor: strokeColor,
-                                    scale: .026,
+                                    path: svg.path,
+                                    fillOpacity: 1,
+                                    fillColor: svg.fillColor,
+                                    strokeColor: svg.strokeColor,
+                                    scale: svg.scale,
                                     strokeWeight: 1,
-                                    anchor: new google.maps.Point(220, 250),
-                                    rotation: rotation > 0 ? rotation - 90 : (this.markerBus ? this.markerBus.getIcon().rotation : rotation)
+                                    anchor: new google.maps.Point(svg.anchor.x, svg.anchor.y),
+                                    rotation: svg.rotation
                                 };
 
-                                new google.maps.Marker({
+                                let marker = new google.maps.Marker({
                                     title: report.controlPointName + " | " + report.time + "("+report.timeReport+") | " + routeDistance + " m. | " + "  " + percent + "%",
                                     map: map,
                                     icon: icon,
+                                    zIndex: svg.zIndex,
                                     position: {lat: parseFloat(report.latitude), lng: parseFloat(report.longitude)}
                                 });
+                                @if(!Auth::user()->isSuperAdmin2())
+                                    path.insertAt(i, marker.position);
+                                @endif
                             });
 
                             if( data.center ){
@@ -282,6 +367,7 @@
                                         "<span class=\'hide orientation\'>{{offset:orientation}}</span>"+
                                         "<span class=\'hide speeding\'>{{offset:speeding}}</span>"+
                                         "<span class=\'hide off-road\'>{{offset:offRoads}}</span>"+
+                                        "<span class=\'hide vehicle-status-id\'>{{offset:vehicleStatusId}}</span>"+
                                     "</div>'?>",
                                 tooltipValueLookups: {
                                     'offRoads': offRoads,
@@ -296,6 +382,7 @@
                                     'latitude': latitudes,
                                     'longitude': longitudes,
                                     'orientation': orientations,
+                                    'vehicleStatusId': vehicleStatusId,
                                 }
                             }).slideDown();
 
@@ -311,33 +398,29 @@
                                     let offRoad = t.find('.off-road').text() === '';
                                     let averageSpeed = t.find('.speed').data('average');
                                     let routePercent = t.find('.route-percent').html();
+                                    let vehicleStatusId = t.find('.vehicle-status-id').html();
 
                                     if(latitude === undefined || longitude === undefined)return false;
 
-                                    let rotation = parseInt(orientation);
-
-                                    let fillColor = '#04bf8a';
-                                    let strokeColor = '#0f678a';
-
-                                    if (speeding) {
-                                        fillColor = '#bf6f00';
-                                        strokeColor = '#ccc000';
-                                    }
-
-                                    if (offRoad) {
-                                        fillColor = '#85000e';
-                                        strokeColor = '#ba0033';
-                                    }
+                                    const svg = processSVGIcon({
+                                        orientation: parseInt(orientation),
+                                        offRoad: offRoad,
+                                        speeding: speeding,
+                                        vehicleStatus: {
+                                            id: parseInt(vehicleStatusId)
+                                        },
+                                        dispatchRegister: true
+                                    });
 
                                     const icon = {
-                                        path: iconPathSVG,
+                                        path: svg.path,
                                         fillOpacity: 1,
-                                        fillColor: fillColor,
-                                        strokeColor: strokeColor,
+                                        fillColor: svg.fillColor,
+                                        strokeColor: svg.strokeColor,
                                         scale: .045,
                                         strokeWeight: 2,
-                                        anchor: new google.maps.Point(220, 250),
-                                        rotation: rotation > 0 ? rotation - 90 : (busMarker ? busMarker.getIcon().rotation : rotation)
+                                        anchor: new google.maps.Point(svg.anchor.y, svg.anchor.y),
+                                        rotation: svg.rotation
                                     };
 
                                     if (!busMarker) {
@@ -345,6 +428,7 @@
                                             map: map,
                                             icon: icon,
                                             duration: 150,
+                                            zIndex: 200,
                                         });
                                     }
                                     busMarker.setPosition({lat: parseFloat(latitude), lng: parseFloat(longitude)});

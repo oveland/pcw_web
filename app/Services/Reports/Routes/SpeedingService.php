@@ -10,10 +10,10 @@ namespace App\Services\Reports\Routes;
 
 
 use App\Models\Company\Company;
-use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class SpeedingService
@@ -23,55 +23,58 @@ class SpeedingService
      *
      * @param Company $company
      * @param $dateReport
-     * @param $typeReport
-     * @param null $routeReport
-     * @return object
+     * @return Collection
      */
-    function buildSpeedingReport(Company $company, $dateReport, $typeReport, $routeReport = null)
+    function speedingByVehiclesReport(Company $company, $dateReport)
     {
-        $speedingByVehicles = $this->speedingByVehicles($this->allSpeeding($company, $dateReport, $routeReport));
+        $speedingByVehiclesReport = collect([]);
+        $speedingByVehicles = $this->speedingByVehicles($this->allSpeeding($company, $dateReport));
 
-        $report = $speedingByVehicles;
-        // TODO: Uncomment a write some code when type report is used on the view report
-        /*switch ($typeReport) {
-            case 'group':
-                foreach ($speedingByVehicles as $speedingByVehicle){
-                    $speedingByVehicleByRoute = self::groupByFirstSpeedingEventByRoute($speedingByVehicle);
-                    $report = $speedingByVehicleByRoute;
-                }
-                break;
-            default:
-                break;
-        }*/
+        foreach ($speedingByVehicles as $vehicleId => $speedingByVehicle) {
+            $speedingByVehicleByRoute = self::groupByFirstSpeedingEventByRoute($speedingByVehicle);
+            $speedingByVehiclesReport->put($vehicleId, [
+                'vehicle' => Vehicle::find($vehicleId),
+                'speedingByVehicle' => $speedingByVehicle,
+                'totalSpeeding' => $speedingByVehicle->count(),
+                'speedingByRoutes' => (object)[
+                    'speedingByRoute' => $speedingByVehicleByRoute,
+                    'totalSpeedingByRoutes' => $speedingByVehicleByRoute->sum(function ($route) { return count($route); })
+                ]
+            ]);
+        }
 
-        return (object)[
-            'company' => $company,
-            'companyReport' => $company->id,
-            'routeReport' => $routeReport,
-            'dateReport' => $dateReport,
-            'typeReport' => $typeReport,
-            'report' => $report,
-            'total' => $report->count()
-        ];
+        return $speedingByVehiclesReport;
     }
 
     /**
-     * Get all Speeding of a company and date
+     * Get all Speeding of a company, date, route (optional) and vehicle (optional)
      *
      * @param Company $company
-     * @param $dateReport
+     * @param $initialDate
+     * @param $finalDate
      * @param null $routeReport
-     * @return Location[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
+     * @param null $vehicleReport
+     * @return Location[]|Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
      */
-    function allSpeeding(Company $company, $dateReport, $routeReport = null)
+    function allSpeeding(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
-        $vehicles = $company->userVehicles($routeReport);
+        $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
 
-        return Location::witSpeeding()
-            ->whereBetween('date', [$dateReport, "$dateReport 23:59:59"])
-            ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->with('vehicle')
-            ->get();
+        if($routeReport == 'all' || !$routeReport){
+            $vehicles = $company->vehicles();
+            if($vehicleReport != 'all'){
+                $vehicles = $vehicles->where('id', $vehicleReport);
+            }
+
+            $allSpeeding = $allSpeeding->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
+        }else{
+            $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+            $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
+        }
+
+        $allSpeeding = $allSpeeding->orderBy('date')->get();
+
+        return $allSpeeding;
     }
 
     /**
@@ -82,7 +85,7 @@ class SpeedingService
      */
     function speedingByDispatchRegister(DispatchRegister $dispatchRegister)
     {
-        $allSpeedingByDispatchRegister = Location::witSpeeding()
+        $allSpeedingByDispatchRegister = Location::withSpeeding()
             ->where('dispatch_register_id', $dispatchRegister->id)
             ->orderBy('date')
             ->get();

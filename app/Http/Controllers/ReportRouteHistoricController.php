@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Exports\HistoricRouteExport;
+
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
@@ -33,18 +35,25 @@ class ReportRouteHistoricController extends Controller
     /**
      * @return Factory|View
      */
-    public function index()
+    public function index(Request $request)
     {
         $access = $this->pcwAuthService->getAccessProperties();
         $companies = $access->companies;
         $routes = $access->routes;
         $vehicles = $access->vehicles;
 
-        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles']));
+        $dateReport = $request->get('d');
+        $vehicleReport = $request->get('v');
+        $companyReport = $request->get('c');
+        $initialTime = $request->get('i');
+        $finalTime = $request->get('f');
+
+        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles', 'dateReport', 'vehicleReport', 'companyReport', 'initialTime', 'finalTime']));
     }
 
     /**
      * @param Request $request
+
      * @return Factory|View|HistoricRouteExport
      * @throws Exception
      */
@@ -113,6 +122,7 @@ class ReportRouteHistoricController extends Controller
                 'offRoad' => $location->off_road,
                 'routeDistance' => number_format(intval($location->distance) / 1000, 2, '.', ''),
                 'vehicleStatus' => (object)[
+                    'id' => $location->vehicleStatus->id,
                     'status' => $location->vehicleStatus->des_status,
                     'iconClass' => $location->vehicleStatus->icon_class,
                     'mainClass' => $location->vehicleStatus->main_class,
