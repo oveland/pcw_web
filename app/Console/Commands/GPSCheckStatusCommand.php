@@ -51,8 +51,8 @@ class GPSCheckStatusCommand extends Command
 
         $sql = "
           UPDATE markers
-          SET status = 1, period = 0 
-          WHERE ( fecha < '$dateNow'::DATE OR (fecha = '$dateNow'::DATE AND hora < ('$timeNow'::TIME - '$gpsTimeForNOReportPowerOn'::TIME) ) ) 
+          SET status = 1, period = 0, update_from_check = TRUE 
+          WHERE (current_timestamp - updated_at)::interval > '$gpsTimeForNOReportPowerOn'::interval 
           AND status <> 6
         ";
         DB::update($sql);
@@ -60,8 +60,8 @@ class GPSCheckStatusCommand extends Command
 
         $sql = "
           UPDATE markers 
-          SET status = 1, period = 0 
-          WHERE ( fecha < '$dateNow'::DATE OR ('$dateNow'::DATE = current_date AND hora < ('$timeNow'::TIME - '$gpsTimeForNOReportPowerOff'::TIME) ) ) 
+          SET status = 1, period = 0, update_from_check = TRUE
+          WHERE (current_timestamp - updated_at)::interval > '$gpsTimeForNOReportPowerOff'::interval 
           AND status = 6
         ";
         DB::update($sql);

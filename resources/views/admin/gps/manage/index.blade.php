@@ -70,7 +70,7 @@
                     </div>
 
                     @if(Auth::user()->isAdmin())
-                        <div class="col-md-2">
+                        <div class="col-md-2 col-sm-4 col-xs-12">
                             <div class="form-group">
                                 <label for="company-report" class="control-label field-required text-bold">@lang('Company')</label>
                                 <div class="form-group">
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 col-sm-4 col-xs-12">
                             <div class="form-group">
                                 <label for="route-report" class="control-label">@lang('Route')</label>
                                 <div class="form-group">
@@ -98,7 +98,7 @@
                         <input type="hidden" name="route-report" id="route-report" value="all"/>
                     @endif
 
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-sm-4 col-xs-12">
                         <div class="form-group">
                             <label for="type-report" class="control-label">@lang('Vehicle options')</label>
                             <div class="form-group">
