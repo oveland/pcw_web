@@ -13,6 +13,7 @@ use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
 use Excel;
+use Illuminate\Support\Collection;
 
 class ConsolidatedService
 {
@@ -45,9 +46,9 @@ class ConsolidatedService
     /**
      * @param Company $company
      * @param $dateReport
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    function buildDailyReport(Company $company, $dateReport)
+    function buildDailyEventsReport(Company $company, $dateReport)
     {
 
         $consolidatedReports = collect([]);
@@ -101,24 +102,27 @@ class ConsolidatedService
 
     /**
      * @param $consolidatedReports
-     * @return \Illuminate\Support\Collection
+     * @param $dateReport
+     * @return Collection
      */
-    function buildDailyReportFiles($consolidatedReports)
+    function buildDailyEventsReportFiles($consolidatedReports, $dateReport)
     {
         $pathsToConsolidatesReportFiles = collect([]);
-        foreach ($consolidatedReports as $consolidatedReport) {
-            $route = $consolidatedReport->route;
-            $date = $consolidatedReport->date;
 
-            if( $consolidatedReport->totalReports ){
-                $reportVehicleByRoute = $consolidatedReport->reportVehicleByRoute;
+        $fileName = str_replace([' ', '-'], '_', __('Events report')."_".$dateReport);
+        $fileExtension = 'xlsx';
 
-                $fileNameSheet = __('Consolidated') . " $route->name" . " $date";
-                $fileName = str_replace([' ', '-'], '_', $fileNameSheet);
-                $fileExtension = 'xlsx';
+        $excel = Excel::create($fileName, function ($excel) use ($consolidatedReports, $fileName, $fileExtension) {
 
+            foreach ($consolidatedReports as $consolidatedReport) {
+                $route = $consolidatedReport->route;
+                $date = $consolidatedReport->date;
 
-                $excel = Excel::create($fileName, function ($excel) use ($fileNameSheet, $reportVehicleByRoute, $route, $date) {
+                $fileNameSheet = __('Events report') . " $route->name" . " $date";
+
+                if ($consolidatedReport->totalReports) {
+                    $reportVehicleByRoute = $consolidatedReport->reportVehicleByRoute;
+
 
                     $dataExcel = array();
                     foreach ($reportVehicleByRoute as $reportByVehicle) {
@@ -146,10 +150,10 @@ class ConsolidatedService
                         ];
                     }
 
-                    if($dataExcel){
+                    if (count($dataExcel)) {
                         $dataExport = (object)[
                             'fileName' => $fileNameSheet,
-                            'title' => __('Consolidated') . " $route->name",
+                            'title' => __('Events report') . " $route->name",
                             'subTitle' => "$date",
                             'sheetTitle' => "$route->name",
                             'data' => $dataExcel,
@@ -160,13 +164,15 @@ class ConsolidatedService
                         $excel = PCWExporterService::createHeaders($excel, $dataExport);
                         $excel = PCWExporterService::createSheet($excel, $dataExport);
                     }
-                })->store($fileExtension);
 
-                $pathsToConsolidatesReportFiles->push("$excel->storagePath/$fileName.$fileExtension");
-            }else{
-                dump("No reports found for $route->name on date $date");
+
+                } else {
+                    dump("No reports found for $route->name on date $date");
+                }
             }
-        }
+        })->store($fileExtension);
+
+        $pathsToConsolidatesReportFiles->push("$excel->storagePath/$fileName.$fileExtension");
 
         return $pathsToConsolidatesReportFiles;
     }

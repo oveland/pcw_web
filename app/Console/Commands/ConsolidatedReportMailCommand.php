@@ -56,7 +56,7 @@ class ConsolidatedReportMailCommand extends Command
                 $mail->setProduction($this->option('prod'));
                 $mailTo = $this->getMailToFromCompany($company, $this->option('prod'));
 
-                Mail::to($mailTo, $company->name)->send($mail);
+                $rta = Mail::to($mailTo, $company->name)->send($mail);
 
                 foreach ($mailTo as $to) {
                     $this->logData("   >> To: $to");
@@ -72,7 +72,7 @@ class ConsolidatedReportMailCommand extends Command
     public function logData($message, $level = 'info')
     {
         $message = "CONSOLIDATED ROUTE > $message";
-
+        $this->info($message);
         switch ($level) {
             case 'warning':
                 \Log::warning($message);
@@ -98,9 +98,11 @@ class ConsolidatedReportMailCommand extends Command
         switch ($company->id) {
             case 14:
                 if ($production) {
-                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com', 'olatorre22@hotmail.com'];
+                    //$mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com', 'olatorre22@hotmail.com'];
+                    $mailTo = ['oscarivelan@gmail.com'];
                 } else {
-                    $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
+                    //$mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
+                    $mailTo = ['oiva.pcw@gmail.com'];
                 }
                 break;
             case 28:

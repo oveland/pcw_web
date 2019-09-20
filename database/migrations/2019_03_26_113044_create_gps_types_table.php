@@ -17,6 +17,7 @@ class CreateGpsTypesTable extends Migration
             $table->increments('id');
             $table->string('name', 50);
             $table->string('description', 100)->nullable();
+            $table->string('tags', 256)->nullable();
             $table->string('server_ip', 20)->default('53.38.73.219');
             $table->string('server_port', 5)->default('1000');
             $table->string('reset_command', 100)->nullable();

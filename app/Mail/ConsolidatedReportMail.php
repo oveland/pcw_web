@@ -7,6 +7,7 @@ use App\Services\Reports\Routes\RouteService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
 class ConsolidatedReportMail extends Mailable
 {
@@ -46,17 +47,17 @@ class ConsolidatedReportMail extends Mailable
 
     public function buildReport()
     {
-        $this->consolidatedReports = $this->routeService->consolidated->buildDailyReport($this->company, $this->dateReport);
+        $this->consolidatedReports = $this->routeService->consolidated->buildDailyEventsReport($this->company, $this->dateReport);
 
         return $this->consolidatedReports->sum('totalReports') > 0;
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function makeFiles()
     {
-        return $this->routeService->consolidated->buildDailyReportFiles($this->consolidatedReports);
+        return $this->routeService->consolidated->buildDailyEventsReportFiles($this->consolidatedReports, $this->dateReport);
     }
 
     /**
@@ -68,7 +69,7 @@ class ConsolidatedReportMail extends Mailable
     {
         $pathToConsolidatesReportFiles = $this->makeFiles();
 
-        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " | " . __('Consolidated report daily') . " | $this->dateReport ".($this->production ? '* Revisado':'> Para revisar'));
+        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " | " . __('Report events daily') . " | $this->dateReport ".($this->production ? '* Revisado':'> Para revisar'));
         if ($pathToConsolidatesReportFiles->isNotEmpty()) {
             foreach ($pathToConsolidatesReportFiles as $pathToConsolidatesReportFile) {
                 $email->attach($pathToConsolidatesReportFile);
