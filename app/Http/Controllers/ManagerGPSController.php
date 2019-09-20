@@ -417,10 +417,11 @@ class ManagerGPSController extends Controller
             foreach ($gpsCommands as $smsCommand) {
                 $totalSent++;
                 $responseSMS = SMS::sendCommand($smsCommand, $sim);
+
                 $length = strlen($smsCommand);
 
                 $dump .= ("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")") . "\n\n";
-                sleep(0.5);
+                sleep(3);
             }
             $dump .= "-------------- TOTAL SMS SENT: $totalSent --------------\n";
             dump($dump);
@@ -508,7 +509,7 @@ class ManagerGPSController extends Controller
                 $checkImei = GpsVehicle::where('id', '<>', $gpsVehicle->id)->where('imei', $imei)->get()->first();
 
                 if ($checkGPS) {
-                    $companyVehicleCheck = $checkGPS->vehicle->company->short_name;
+                    $companyVehicleCheck = $checkGPS->vehicle ? $checkGPS->vehicle->company->short_name : "SimGPS with ID $checkGPS->id";
                     $error = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
                 } elseif ($checkImei) {
                     $companyVehicleCheck = $checkImei->vehicle->company->short_name;
