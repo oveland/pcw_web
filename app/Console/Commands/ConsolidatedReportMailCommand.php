@@ -109,7 +109,7 @@ class ConsolidatedReportMailCommand extends Command
                 if ($production) {
                     $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com'];
                 } else {
-                    $mailTo = ['oiva.fz@gmail.com'];
+                    $mailTo = ['oiva.pcw@gmail.com'];
                 }
                 break;
             default:

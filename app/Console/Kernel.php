@@ -58,7 +58,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('gps:check-status')->everyMinute();
 
         /* Route report for TUPAL (CompanyId = 28) */
-        $schedule->command('send-mail:consolidated --company=28 --prod=true')->dailyAt('04:00');
+        //$schedule->command('send-mail:consolidated --company=28 --prod=true')->dailyAt('04:00');
 
         /* Reports for ALAMEDA */
         $schedule->command('send-mail:consolidated --company=14 --prod=true')->dailyAt('08:00');
