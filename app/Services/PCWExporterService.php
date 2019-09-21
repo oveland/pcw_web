@@ -159,12 +159,16 @@ class PCWExporterService
                 $sheet->setCellValue("A$lastRow", "TOTAL");
                 $sheet = self::styleFooter($sheet, $config);
 
-                $sheet->cells("A$config->startIndex:C$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("E$config->startIndex:H$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("A$config->startIndex:C$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("E$config->startIndex:H$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
                 break;
 
             case 'passengerReportByRangeTotalFooter':
-                foreach (['C','D','E'] as $totalLetterPosition) {
+                foreach (['C', 'D', 'E'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 
@@ -225,7 +229,7 @@ class PCWExporterService
             case 'offRoadReport':
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);
-                foreach ($rows as $row){
+                foreach ($rows as $row) {
                     $cell = $sheet->getCell("H$row");
                     $cellLink = $cell->getValue();
 
@@ -251,7 +255,51 @@ class PCWExporterService
             case 'consolidatedRouteReport':
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);
-                foreach ($rows as $row){
+                foreach ($rows as $row) {
+                    $cell = $sheet->getCell("I$row");
+                    $cellLink = $cell->getValue();
+
+                    $cell->getHyperlink()->setUrl($cellLink);
+                    $cell->setValueExplicit(__('Chart'));
+                }
+
+                $sheet->cells("I$startIndex:I$config->totalRows", function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                    $cells->setBackground('#0a0a15');
+                    $cells->setFontColor(self::$fontColorInverse);
+                    $cells->setFont(array(
+                        'family' => 'Calibri',
+                        'size' => '13',
+                        'bold' => true,
+                        'italic' => true,
+                        'underline' => \PHPExcel_Style_Font::UNDERLINE_SINGLE
+                    ));
+                });
+
+                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("B$config->startIndex:B$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("C$config->startIndex:C$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->cells("G$config->startIndex:G$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+
+                break;
+
+            case 'consolidatedRouteReportWithControlPoint':
+                $startIndex = $config->startIndex + 1;
+                $rows = range($config->startIndex + 1, $config->totalRows, 1);
+                foreach ($rows as $row) {
                     $cell = $sheet->getCell("K$row");
                     $cellLink = $cell->getValue();
 
@@ -273,17 +321,27 @@ class PCWExporterService
                     ));
                 });
 
-                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("B$config->startIndex:B$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("C$config->startIndex:C$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("B$config->startIndex:B$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("C$config->startIndex:C$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
 
-                $sheet->cells("G$config->startIndex:G$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
-                $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) { $cells->setAlignment('center'); });
+                $sheet->cells("G$config->startIndex:G$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) {
+                    $cells->setAlignment('center');
+                });
 
                 break;
 
             case 'historicRouteReport':
-                $sheet->cells("A$config->startIndex:E". $lastRow, function ($cells) {
+                $sheet->cells("A$config->startIndex:E" . $lastRow, function ($cells) {
                     $cells->setValignment('center');
                     $cells->setAlignment('center');
                 });

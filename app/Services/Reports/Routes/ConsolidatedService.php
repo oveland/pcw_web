@@ -109,13 +109,14 @@ class ConsolidatedService
     {
         $pathsToConsolidatesReportFiles = collect([]);
 
-        $fileName = str_replace([' ', '-'], '_', __('Events report')."_".$dateReport);
+        $fileName = str_replace([' ', '-'], '_', __('Events report') . "_" . $dateReport);
         $fileExtension = 'xlsx';
 
         $excel = Excel::create($fileName, function ($excel) use ($consolidatedReports, $fileName, $fileExtension) {
 
             foreach ($consolidatedReports as $consolidatedReport) {
                 $route = $consolidatedReport->route;
+                $company = $route->company;
                 $date = $consolidatedReport->date;
 
                 $fileNameSheet = __('Events report') . " $route->name" . " $date";
@@ -125,6 +126,8 @@ class ConsolidatedService
 
 
                     $dataExcel = array();
+                    $typeReport = 'consolidatedRouteReport';
+
                     foreach ($reportVehicleByRoute as $reportByVehicle) {
                         $vehicle = $reportByVehicle->vehicle;
                         $dispatchRegister = $reportByVehicle->dispatchRegister;
@@ -135,19 +138,27 @@ class ConsolidatedService
                         $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => 0]);
 
 
-                        $dataExcel[] = [
-                            __('Turn') => $dispatchRegister->turn,                                                     # A CELL
-                            __('Round Trip') => $dispatchRegister->round_trip,                                         # B CELL
-                            __('Vehicle') => $vehicle->number,                                                         # C CELL
-                            __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                   # D CELL
-                            __('Off Roads') => $reportByVehicle->totalOffRoads,                                        # E CELL
-                            __('Off roads details') => "$details->offRoadReportString",                                # F CELL
-                            __('Speeding') => $reportByVehicle->totalSpeeding,                                         # G CELL
-                            __('Speeding details') => $details->speedingReportString,                                  # H CELL
-                            __('Delay control points') => $reportByVehicle->controlPointReportTotal,                   # I CELL
-                            __('Control points details') => $details->delayControlPointsReportString,                  # J CELL
-                            __('Details') => $link,                                                                    # K CELLs
-                        ];
+                        $dataExcelColumns = collect([
+                            __('Turn') => $dispatchRegister->turn,                                                          # A CELL
+                            __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
+                            __('Vehicle') => $vehicle->number,                                                              # C CELL
+                            __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # D CELL
+                            __('Off Roads') => $reportByVehicle->totalOffRoads,                                             # E CELL
+                            __('Off roads details') => "$details->offRoadReportString",                                     # F CELL
+                            __('Speeding') => $reportByVehicle->totalSpeeding,                                              # G CELL
+                            __('Speeding details') => $details->speedingReportString,                                       # H CELL
+                        ]);
+
+                        if ($company->hasControlPointEventsActive()) {
+                            $dataExcelColumns->put(__('Delay control points'), $reportByVehicle->controlPointReportTotal);  # I CELL
+                            $dataExcelColumns->put(__('Control points details'), $details->delayControlPointsReportString); # J CELL
+                            $typeReport = 'consolidatedRouteReportWithControlPoint';
+                        }
+
+
+                        $dataExcelColumns->put(__('Details'), $link);                                                       # I/K CELL
+
+                        $dataExcel[] = $dataExcelColumns->toArray();
                     }
 
                     if (count($dataExcel)) {
@@ -157,7 +168,7 @@ class ConsolidatedService
                             'subTitle' => "$date",
                             'sheetTitle' => "$route->name",
                             'data' => $dataExcel,
-                            'type' => 'consolidatedRouteReport'
+                            'type' => $typeReport
                         ];
 
                         /* SHEETS */

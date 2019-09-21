@@ -8,18 +8,23 @@ use App\Models\Routes\Dispatch;
 use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Auth;
 
 /**
  * App\Models\Company\Company
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Vehicle[] $activeVehicles
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Vehicle[] $vehicles
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Drivers\Drivers[] $drivers
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Drivers\Drivers[] $activeDrivers
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Dispatch[] $dispatches
- * @mixin \Eloquent
+ * @property-read Collection|Vehicle[] $activeVehicles
+ * @property-read Collection|Vehicle[] $vehicles
+ * @property-read Collection|Driver[] $drivers
+ * @property-read Collection|Driver[] $activeDrivers
+ * @property-read Collection|Dispatch[] $dispatches
+ * @mixin Eloquent
  * @property int $id
  * @property string $name
  * @property string $short_name
@@ -27,31 +32,31 @@ use Illuminate\Support\Facades\Auth;
  * @property string|null $address
  * @property string $link
  * @property bool $active
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $routes
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereNit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereShortName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company active()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company findAllActive()
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Collection|Route[] $routes
+ * @method static Builder|Company whereActive($value)
+ * @method static Builder|Company whereAddress($value)
+ * @method static Builder|Company whereCreatedAt($value)
+ * @method static Builder|Company whereId($value)
+ * @method static Builder|Company whereLink($value)
+ * @method static Builder|Company whereName($value)
+ * @method static Builder|Company whereNit($value)
+ * @method static Builder|Company whereShortName($value)
+ * @method static Builder|Company whereUpdatedAt($value)
+ * @method static Builder|Company active()
+ * @method static Builder|Company findAllActive()
  * @property string|null $timezone
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereTimezone($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $activeRoutes
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proprietaries\Proprietary[] $proprietaries
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company query()
+ * @method static Builder|Company whereTimezone($value)
+ * @property-read Collection|Route[] $activeRoutes
+ * @property-read Collection|Proprietary[] $proprietaries
+ * @method static Builder|Company newModelQuery()
+ * @method static Builder|Company newQuery()
+ * @method static Builder|Company query()
  * @property int|null $speeding_threshold
  * @property int|null $max_speeding_threshold
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereMaxSpeedingThreshold($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereSpeedingThreshold($value)
+ * @method static Builder|Company whereMaxSpeedingThreshold($value)
+ * @method static Builder|Company whereSpeedingThreshold($value)
  */
 class Company extends Model
 {
@@ -72,7 +77,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function vehicles()
     {
@@ -80,7 +85,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activeVehicles()
     {
@@ -107,7 +112,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function routes()
     {
@@ -123,7 +128,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activeRoutes()
     {
@@ -155,6 +160,17 @@ class Company extends Model
         return collect([self::ALAMEDA])->contains($this->id);
     }
 
+    /*
+     * What companies that have Control Point Events Active for send mail report events daily
+     *
+     * Alameda
+     *
+    */
+    public function hasControlPointEventsActive()
+    {
+        return collect([self::ALAMEDA])->contains($this->id);
+    }
+
     /**
      * @return bool
      */
@@ -175,7 +191,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function drivers()
     {
@@ -183,7 +199,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activeDrivers()
     {
@@ -191,7 +207,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function dispatches()
     {
@@ -199,7 +215,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function proprietaries()
     {
