@@ -73,7 +73,7 @@ class ConsolidatedService
                 $totalOffRoads = $offRoadReport->count();
                 $totalSpeeding = $speedingReport->count();
                 $controlPointReportTotal = $controlPointReport->count();
-                $hasEvent = ($totalOffRoads > 0 || $totalSpeeding > 0 || $controlPointReportTotal > 0);
+                $hasEvent = ($totalOffRoads > 0 || $totalSpeeding > 0 || ($company->hasControlPointEventsActive() && ($controlPointReportTotal > 0)));
 
                 if ($hasEvent) {
                     $reportVehicleByRoute->put($dispatchRegister->id, (object)[

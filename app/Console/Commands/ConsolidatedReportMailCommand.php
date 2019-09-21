@@ -49,7 +49,7 @@ class ConsolidatedReportMailCommand extends Command
             if ($this->option('date')) $dateReport = $this->option('date');
             else $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
-            $this->logData("CONSOLIDATED ROUTES: $company->name > $dateReport");
+            $this->logData("CONSOLIDATED EVENTS DAILY: $company->name > $dateReport");
 
             $mail = new ConsolidatedReportMail($company, $dateReport);
             if ($mail->buildReport()) {
@@ -71,7 +71,7 @@ class ConsolidatedReportMailCommand extends Command
 
     public function logData($message, $level = 'info')
     {
-        $message = "CONSOLIDATED ROUTE > $message";
+        $message = "EVENTS ROUTE > $message";
         $this->info($message);
         switch ($level) {
             case 'warning':
@@ -96,18 +96,23 @@ class ConsolidatedReportMailCommand extends Command
         $this->logData("Making mail route report for '" . ($production ? 'production' : 'development') . "' case...");
 
         switch ($company->id) {
-            case 14:
+            case Company::ALAMEDA:
                 if ($production) {
-                    //$mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com', 'olatorre22@hotmail.com'];
-                    $mailTo = ['oscarivelan@gmail.com'];
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'olatorre22@hotmail.com'];
                 } else {
-                    //$mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
+                    $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
+                }
+                break;
+            case Company::TUPAL:
+                if ($production) {
+                    $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com'];
+                } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
                 break;
-            case 28:
+            case Company::MONTEBELLO:
                 if ($production) {
-                    $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com'];
+                    $mailTo = ['oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
