@@ -2,28 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
-use App\Models\Passengers\Passenger;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
-use App\Mail\ConsolidatedReportMail;
 use App\Models\Vehicles\SimGPS;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleStatus;
 use App\Services\Auth\PCWAuthService;
+use App\Services\Reports\Routes\RouteService;
 use Carbon\Carbon;
-use Mail;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ToolsController extends Controller
 {
     protected $auth;
+    /**
+     * @var RouteService
+     */
+    private $routeService;
 
-    public function __construct(PCWAuthService $auth)
+    public function __construct(PCWAuthService $auth, RouteService $routeService)
     {
         $this->auth = $auth;
+        $this->routeService = $routeService;
     }
 
     public function checkGPSLimbo(Request $request)
@@ -47,13 +51,20 @@ class ToolsController extends Controller
         return view('tools.gpsLimbo', compact('simGPSLimbo'));
     }
 
-    public function test(Request $request)
+    public function test(Request $request){
+        $company = Company::find(21);
+        $dateReport = '2019-09-24';
+        $routeReport = 'all';
+        $vehicleReport = 'all';
+        $completedTurns = true;
+
+        $managementReport = $this->routeService->dispatch->buildCurrentVehicleStatusReport($company, $routeReport, $vehicleReport, true);
+
+        $this->routeService->export->exportCurrentVehicleStatusReport($managementReport);
+    }
+
+    public function showGPSWithBadFrequency(Request $request)
     {
-        if (!extension_loaded('gd2')) { echo 'zipless'; }else{ dump('gd OK');}
-
-        phpinfo();
-        dd('');
-
         $date = $request->get('date');
         $from = $request->get('from');
         $to = $request->get('to');
@@ -136,31 +147,10 @@ class ToolsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function map(Request $request)
     {
-
-        /*$dr = DispatchRegister::find(328855);
-
-        dump("SEARCH ON $dr->departure_time, $dr->arrival_time");
-
-        $passengers = \DB::table('contador_eventos')
-            ->where('fecha', $dr->date)
-            ->where('id_gps', $dr->vehicle->plate)
-            ->whereBetween('hora', [$dr->departure_time, $dr->arrival_time])
-            ->orderBy('id_cont_eventos')->get();
-
-
-        $total = 0;
-        $index = 1;
-        foreach ($passengers as $passenger){
-            echo ("<br>$index $passenger->hora $passenger->total > $total".(($passenger->total < $total)?" XXXXXXXXXXXXXXXXXXXXXXXXXX":" OK"));
-            $total = $passenger->total;
-            $index++;
-        }
-
-        dd("TOTAL $total - ".$passengers->first()->total." = ".($passengers->last()->total - $passengers->first()->total) );*/
 
         return view('tools.map');
     }
@@ -301,7 +291,7 @@ class ToolsController extends Controller
                 ];
 
                 foreach ($dates as $date) {
-                    $exitCode = \Artisan::call('send-mail:consolidated', [
+                    $exitCode = \Artisan::call('mail-routes:events', [
                         '--date' => $date,
                         '--prod' => true
                     ]);
@@ -357,7 +347,7 @@ class ToolsController extends Controller
                 ];
 
                 foreach ($dates as $date) {
-                    $exitCode = \Artisan::call('send-mail:consolidated-passengers', [
+                    $exitCode = \Artisan::call('mail-passengers:consolidated', [
                         '--date' => $date,
                         '--prod' => true
                     ]);

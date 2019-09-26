@@ -584,5 +584,12 @@
   "Vehicle no report": "No reporta",
   "Historic report": "Reporte histórico",
   "Report events daily": "Reporte diario de eventos",
-  "Events report": "Reporte eventos"
+  "Events report": "Reporte eventos",
+  "Dispatch daily report": "Reporte diario de despachos",
+  "Total route time":"Tiempo total en ruta",
+  "Management report": "Reporte gerencial",
+  "Turns": "Turnos",
+  "Max speed": "Velocidad máxima",
+  "Max speed time": "Hora vel. máx",
+  "In repair": "En el taller"
 }

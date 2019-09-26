@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
-class ConsolidatedReportMail extends Mailable
+class EventsReportMail extends Mailable
 {
     use Queueable, SerializesModels;
     /**
@@ -23,7 +23,7 @@ class ConsolidatedReportMail extends Mailable
     public $company;
 
     public $dateReport;
-    public $consolidatedReports;
+    public $eventsReports;
     public $production;
 
 
@@ -47,9 +47,9 @@ class ConsolidatedReportMail extends Mailable
 
     public function buildReport()
     {
-        $this->consolidatedReports = $this->routeService->consolidated->buildDailyEventsReport($this->company, $this->dateReport);
+        $this->eventsReports = $this->routeService->dispatch->buildDailyEventsReport($this->company, $this->dateReport);
 
-        return $this->consolidatedReports->sum('totalReports') > 0;
+        return $this->eventsReports->sum('totalReports') > 0;
     }
 
     /**
@@ -57,7 +57,7 @@ class ConsolidatedReportMail extends Mailable
      */
     public function makeFiles()
     {
-        return $this->routeService->consolidated->buildDailyEventsReportFiles($this->consolidatedReports, $this->dateReport);
+        return $this->routeService->export->eventsRouteReport($this->eventsReports, $this->dateReport, true);
     }
 
     /**

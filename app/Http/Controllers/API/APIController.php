@@ -8,6 +8,7 @@ use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
 use App\Services\API\Web\Reports\APIReportService;
 use App\Services\API\Web\PCWPassengersService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -33,7 +34,7 @@ class APIController extends Controller
      *
      * @param $appName
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function app($appName, Request $request)
     {
@@ -61,7 +62,7 @@ class APIController extends Controller
      * @param $api
      * @param $service
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse | string
      */
     public function web($api, $service, Request $request)
     {

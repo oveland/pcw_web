@@ -110,7 +110,7 @@ class OffRoadService
      * @param DispatchRegister $dispatchRegister
      * @return Location[]|Builder[]|Collection|\Illuminate\Support\Collection
      */
-    function offRoadsByDispatchRegister(DispatchRegister $dispatchRegister)
+    function byDispatchRegister(DispatchRegister $dispatchRegister)
     {
         $allOffRoadsByDispatchRegister = Location::witOffRoads()
             ->where('dispatch_register_id', $dispatchRegister->id)
@@ -171,11 +171,12 @@ class OffRoadService
     /**
      * Extract first event of the all off roads
      *
-     * @param $offRoadsByVehicle
+     * @param Collection $offRoadsByVehicle
      * @return \Illuminate\Support\Collection
      */
     static function groupByFirstOffRoadEvent($offRoadsByVehicle)
     {
+        $offRoadsByVehicle = $offRoadsByVehicle->where('off_road', true);
         $offRoadsEvents = collect([]);
         if (!count($offRoadsByVehicle)) return $offRoadsEvents;
 

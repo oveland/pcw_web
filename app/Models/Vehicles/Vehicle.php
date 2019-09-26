@@ -2,14 +2,16 @@
 
 namespace App\Models\Vehicles;
 
+use App\LastLocation;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Services\Reports\Passengers\Seats\SeatTopology;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Sofa\Eloquence\Eloquence;
-use Sofa\Eloquence\Mappable;
 
 /**
  * App\Models\Vehicles\Vehicle
@@ -20,30 +22,31 @@ use Sofa\Eloquence\Mappable;
  * @property int $company_id
  * @property bool $active
  * @property bool $in_repair
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Company\Company $company
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle active()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereInRepair($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle wherePlate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereUpdatedAt($value)
+ * @property string $observations
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Company $company
+ * @method static Builder|Vehicle active()
+ * @method static Builder|Vehicle whereActive($value)
+ * @method static Builder|Vehicle whereCompanyId($value)
+ * @method static Builder|Vehicle whereCreatedAt($value)
+ * @method static Builder|Vehicle whereId($value)
+ * @method static Builder|Vehicle whereInRepair($value)
+ * @method static Builder|Vehicle whereNumber($value)
+ * @method static Builder|Vehicle wherePlate($value)
+ * @method static Builder|Vehicle whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \App\Models\Vehicles\SimGPS $simGPS
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\MaintenanceVehicle[] $maintenance
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\PeakAndPlate[] $peakAndPlate
+ * @property-read SimGPS $simGPS
+ * @property-read Collection|MaintenanceVehicle[] $maintenance
+ * @property-read Collection|PeakAndPlate[] $peakAndPlate
  * @property-read mixed $number_and_plate
- * @property-read \App\Models\Vehicles\CurrentLocation $currentLocation
- * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicle
- * @property-read \App\Models\Vehicles\GpsVehicle $gpsVehicle
- * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicles
+ * @property-read CurrentLocation $currentLocation
+ * @property-read DispatcherVehicle $dispatcherVehicle
+ * @property-read GpsVehicle $gpsVehicle
+ * @property-read DispatcherVehicle $dispatcherVehicles
  * @property int|null $bea_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereBeaId($value)
- * @property-read \App\Models\Vehicles\VehicleSeatDistribution $seatDistribution
+ * @method static Builder|Vehicle whereBeaId($value)
+ * @property-read VehicleSeatDistribution $seatDistribution
  */
 class Vehicle extends Model
 {
@@ -161,5 +164,18 @@ class Vehicle extends Model
     {
         $seatDistribution = new SeatDistributionService($this->seatDistribution);
         return $seatDistribution->getTopology();
+    }
+
+
+    /**
+     * @param string $date
+     * @return LastLocation|CurrentLocation|Model|null
+     */
+    public function lasLocation($date = null)
+    {
+        if ($date == Carbon::now()->toDateString()) {
+            return CurrentLocation::where('vehicle_id', $this->id)->first();
+        }
+        return LastLocation::where('date', $date)->where('vehicle_id', $this->id)->first();
     }
 }

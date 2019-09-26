@@ -83,7 +83,7 @@ class SpeedingService
      * @param DispatchRegister $dispatchRegister
      * @return Collection
      */
-    function speedingByDispatchRegister(DispatchRegister $dispatchRegister)
+    function byDispatchRegister(DispatchRegister $dispatchRegister)
     {
         $allSpeedingByDispatchRegister = Location::withSpeeding()
             ->where('dispatch_register_id', $dispatchRegister->id)

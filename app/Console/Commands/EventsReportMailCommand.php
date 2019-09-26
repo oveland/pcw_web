@@ -3,26 +3,26 @@
 namespace App\Console\Commands;
 
 use App\Models\Company\Company;
-use App\Mail\ConsolidatedPassengersReportMail;
+use App\Mail\EventsReportMail;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Mail;
 
-class ConsolidatedPassengerReportMailCommand extends Command
+class EventsReportMailCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mail-passengers:consolidated {--company=14} {--prev-days=1} {--date=} {--prod=}';
+    protected $signature = 'mail-routes:events {--company=14} {--prev-days=1} {--date=} {--prod=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Sends consolidated passenger report mail';
+    protected $description = 'Sends events route report mail';
 
     /**
      * Create a new command instance.
@@ -49,30 +49,30 @@ class ConsolidatedPassengerReportMailCommand extends Command
             if ($this->option('date')) $dateReport = $this->option('date');
             else $dateReport = Carbon::now()->subDay($prevDays)->toDateString();
 
-            $this->logData("CONSOLIDATED PASSENGERS: $company->name > $dateReport");
+            $this->logData("EVENTS ROUTE DAILY: $company->name > $dateReport");
 
-            $mail = new ConsolidatedPassengersReportMail($company, $dateReport);
+            $mail = new EventsReportMail($company, $dateReport);
             if ($mail->buildReport()) {
                 $mail->setProduction($this->option('prod'));
                 $mailTo = $this->getMailToFromCompany($company, $this->option('prod'));
 
-                Mail::to($mailTo)->send($mail);
+                $rta = Mail::to($mailTo, $company->name)->send($mail);
 
                 foreach ($mailTo as $to) {
                     $this->logData("   >> To: $to");
                 }
             } else {
-                $this->logData("No consolidated passengers reports found for date $dateReport");
+                $this->logData("No reports found for date $dateReport", 'error');
             }
         } else {
-            $this->logData("No company found for id " . $this->option('company'));
+            $this->logData("No company found for id " . $this->option('company'), 'error');
         }
     }
 
     public function logData($message, $level = 'info')
     {
-        $message = "CONSOLIDATED PASSENGERS > $message";
-
+        $message = "EVENTS ROUTE > $message";
+        $this->info($message);
         switch ($level) {
             case 'warning':
                 \Log::warning($message);
@@ -93,18 +93,36 @@ class ConsolidatedPassengerReportMailCommand extends Command
      */
     public function getMailToFromCompany(Company $company, $production = false)
     {
-        $this->logData("Making mail passenger report for '" . ($production ? 'production' : 'development') . "' case...");
+        $this->logData("Making mail route report for '" . ($production ? 'production' : 'development') . "' case...");
 
         switch ($company->id) {
-            case 14:
+            case Company::ALAMEDA:
                 if ($production) {
-                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'oiva.pcw@gmail.com'];
+                    $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'olatorre22@hotmail.com'];
                 } else {
                     $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
                 }
                 break;
+            case Company::TUPAL:
+                if ($production) {
+                    $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com'];
+                } else {
+                    $mailTo = ['oiva.pcw@gmail.com'];
+                }
+                break;
+            case Company::MONTEBELLO:
+                if ($production) {
+                    $mailTo = ['oscarivelan@gmail.com'];
+                } else {
+                    $mailTo = ['oiva.pcw@gmail.com'];
+                }
+                break;
             default:
-                $mailTo = ['oiva.pcw@gmail.com'];
+                if ($production) {
+                    $mailTo = ['oiva.pcw@gmail.com'];
+                } else {
+                    $mailTo = ['oiva.fz@gmail.com'];
+                }
                 break;
         }
 

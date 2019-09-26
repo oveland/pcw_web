@@ -2,17 +2,17 @@
 
 namespace App\Providers;
 
+use App\Services\Exports\Routes\RouteExportService;
 use App\Services\Reports\Passengers\PassengersService;
 use App\Services\Reports\Passengers\DetailedService;
 use App\Services\Reports\Passengers\ConsolidatedService as ConsolidatedPassengersReports;
 
 
+use App\Services\Reports\Routes\DispatchRouteService;
 use App\Services\Reports\Routes\RouteService;
 use App\Services\Reports\Routes\OffRoadService;
 use App\Services\Reports\Routes\SpeedingService;
 use App\Services\Reports\Routes\ControlPointService;
-use App\Services\Reports\Routes\ConsolidatedService as ConsolidatedRoutesReports;
-
 
 use Illuminate\Support\ServiceProvider;
 
@@ -40,7 +40,9 @@ class ReportsServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(RouteService::class, function () {
-            return new RouteService(new OffRoadService(), new ConsolidatedRoutesReports(new OffRoadService(), new SpeedingService(), new ControlPointService()));
+            $dispatchService = new DispatchRouteService(new OffRoadService(), new SpeedingService(), new ControlPointService());
+
+            return new RouteService($dispatchService, new RouteExportService());
         });
     }
 }

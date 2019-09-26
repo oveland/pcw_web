@@ -296,6 +296,37 @@ class PCWExporterService
 
                 break;
 
+            case 'managementReport':
+                $startIndex = $config->startIndex + 1;
+                $rows = range($config->startIndex + 1, $config->totalRows, 1);
+
+                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->cells("C$config->startIndex:J$config->totalRows", function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
+
+                break;
+
+            case 'currentVehicleStatusReport':
+                $startIndex = $config->startIndex + 1;
+                $rows = range($config->startIndex + 1, $config->totalRows, 1);
+
+                $sheet->cells("A$config->startIndex:F$config->totalRows", function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->setColumnFormat(array(
+                    "F$config->startIndex:F$lastRow" => "0.00"
+                ));
+
+                break;
+
             case 'consolidatedRouteReportWithControlPoint':
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);

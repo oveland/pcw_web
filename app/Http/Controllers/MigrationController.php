@@ -355,6 +355,7 @@ class MigrationController extends Controller
             $vehicle->company_id = $vehicleOLD->empresa;
             $vehicle->active = $vehicleOLD->estado == 1 ? true : false;
             $vehicle->in_repair = $vehicleOLD->en_taller == 1 ? true : false;
+            $vehicle->observations = $vehicleOLD->observaciones;
 
             try {
                 $vehicle->save();

@@ -14,13 +14,14 @@ use App\Models\Routes\ControlPointTimeReport;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Routes\Route;
+use Illuminate\Support\Collection;
 
 class ControlPointService
 {
     /**
      * @param Route $route
      * @param $dateReport
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     function buildReportsByControlPoints(Route $route, $dateReport)
     {
@@ -46,7 +47,7 @@ class ControlPointService
 
     /**
      * @param DispatchRegister $dispatchRegister
-     * @param \Illuminate\Support\Collection $reportByDispatchRegister
+     * @param Collection $reportByDispatchRegister
      * @return object
      */
     public function buildControlPointReportsByDispatchRegister(DispatchRegister $dispatchRegister, $reportByDispatchRegister)
@@ -159,9 +160,9 @@ class ControlPointService
      * Gets control point time with delay criterion
      *
      * @param DispatchRegister $dispatchRegister
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    function controlPointReportWithDelay(DispatchRegister $dispatchRegister)
+    function reportWithDelay(DispatchRegister $dispatchRegister)
     {
         $controlPointReportWithDelay = collect([]);
         $route = $dispatchRegister->route;

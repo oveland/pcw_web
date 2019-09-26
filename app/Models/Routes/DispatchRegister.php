@@ -11,8 +11,13 @@ use App\Models\Vehicles\Location;
 use App\Models\Vehicles\ParkingReport;
 use App\Models\Vehicles\Speeding;
 use App\Models\Vehicles\Vehicle;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Routes\DispatchRegister
@@ -36,48 +41,48 @@ use Carbon\Carbon;
  * @property int|null $start_recorder
  * @property int|null $end_recorder
  * @property int|null $user_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Location[] $locations
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Location[] $offRoads
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Report[] $reports
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route|null $route
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Vehicle|null $vehicle
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereArrivalTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereArrivalTimeDifference($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereArrivalTimeScheduled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCanceled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDepartureTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDispatchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereEndRecorder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereRoundTrip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereRouteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereStartRecorder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereTimeCanceled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereTurn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereTypeOfDay($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereVehicleId($value)
- * @mixin \Eloquent
+ * @property-read Collection|Location[] $locations
+ * @property-read Collection|Location[] $offRoads
+ * @property-read Collection|Report[] $reports
+ * @property-read Collection|Route|null $route
+ * @property-read Collection|Vehicle|null $vehicle
+ * @property-read Collection|User|null $user
+ * @method static Builder|DispatchRegister whereArrivalTime($value)
+ * @method static Builder|DispatchRegister whereArrivalTimeDifference($value)
+ * @method static Builder|DispatchRegister whereArrivalTimeScheduled($value)
+ * @method static Builder|DispatchRegister whereCanceled($value)
+ * @method static Builder|DispatchRegister whereDate($value)
+ * @method static Builder|DispatchRegister whereDepartureTime($value)
+ * @method static Builder|DispatchRegister whereDispatchId($value)
+ * @method static Builder|DispatchRegister whereEndRecorder($value)
+ * @method static Builder|DispatchRegister whereId($value)
+ * @method static Builder|DispatchRegister whereRoundTrip($value)
+ * @method static Builder|DispatchRegister whereRouteId($value)
+ * @method static Builder|DispatchRegister whereStartRecorder($value)
+ * @method static Builder|DispatchRegister whereStatus($value)
+ * @method static Builder|DispatchRegister whereTime($value)
+ * @method static Builder|DispatchRegister whereTimeCanceled($value)
+ * @method static Builder|DispatchRegister whereTurn($value)
+ * @method static Builder|DispatchRegister whereTypeOfDay($value)
+ * @method static Builder|DispatchRegister whereVehicleId($value)
+ * @mixin Eloquent
  * @property string|null $driver_code
  * @property mixed $departure_fringe
  * @property mixed $arrival_fringe
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister active()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDriverCode($value)
+ * @method static Builder|DispatchRegister active($completedTurns)
+ * @method static Builder|DispatchRegister whereDriverCode($value)
  * @property-read mixed $passengers
- * @property-read \App\Models\Drivers\Driver|null $driver
+ * @property-read Driver|null $driver
  * @property int|null $departure_fringe_id
  * @property int|null $arrival_fringe_id
- * @property-read \App\Models\Routes\Fringe|null $arrivalFringe
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\ControlPointTimeReport[] $controlPointTimeReports
- * @property-read \App\Models\Routes\Fringe|null $departureFringe
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\ParkingReport[] $parkingReport
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Speeding[] $speedingReport
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereArrivalFringeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDepartureFringeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister completed()
+ * @property-read Fringe|null $arrivalFringe
+ * @property-read Collection|ControlPointTimeReport[] $controlPointTimeReports
+ * @property-read Fringe|null $departureFringe
+ * @property-read Collection|ParkingReport[] $parkingReport
+ * @property-read Collection|Speeding[] $speedingReport
+ * @method static Builder|DispatchRegister whereArrivalFringeId($value)
+ * @method static Builder|DispatchRegister whereDepartureFringeId($value)
+ * @method static Builder|DispatchRegister completed()
  * @property int|null $available_vehicles
  * @property int|null $initial_sensor_counter
  * @property string|null $initial_frame_sensor_counter
@@ -92,14 +97,14 @@ use Carbon\Carbon;
  * @property int|null calculateErrorPercent
  * @property string|null displayInitialObservationsCounter
  * @property string|null displayFinalObservationsCounter
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereAvailableVehicles($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalFrameSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalSensorRecorder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialFrameSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialSensorRecorder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereUserId($value)
+ * @method static Builder|DispatchRegister whereAvailableVehicles($value)
+ * @method static Builder|DispatchRegister whereFinalFrameSensorCounter($value)
+ * @method static Builder|DispatchRegister whereFinalSensorCounter($value)
+ * @method static Builder|DispatchRegister whereFinalSensorRecorder($value)
+ * @method static Builder|DispatchRegister whereInitialFrameSensorCounter($value)
+ * @method static Builder|DispatchRegister whereInitialSensorCounter($value)
+ * @method static Builder|DispatchRegister whereInitialSensorRecorder($value)
+ * @method static Builder|DispatchRegister whereUserId($value)
  * @property string|null $initial_time_sensor_counter
  * @property string|null $final_time_sensor_counter
  * @property int|null $initial_front_sensor_counter
@@ -108,26 +113,26 @@ use Carbon\Carbon;
  * @property int|null $final_back_sensor_counter
  * @property-read mixed $passengers_by_sensor
  * @property-read mixed $passengers_by_sensor_recorder
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalBackSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalFrontSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalTimeSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialBackSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialFrontSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialTimeSensorCounter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId)
+ * @method static Builder|DispatchRegister whereFinalBackSensorCounter($value)
+ * @method static Builder|DispatchRegister whereFinalFrontSensorCounter($value)
+ * @method static Builder|DispatchRegister whereFinalTimeSensorCounter($value)
+ * @method static Builder|DispatchRegister whereInitialBackSensorCounter($value)
+ * @method static Builder|DispatchRegister whereInitialFrontSensorCounter($value)
+ * @method static Builder|DispatchRegister whereInitialTimeSensorCounter($value)
+ * @method static Builder|DispatchRegister findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId)
  * @property-read mixed $final_passengers_by_sensor_recorder
  * @property-read mixed $initial_passengers_by_sensor_recorder
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereFinalCounterObs($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereInitialCounterObs($value)
+ * @method static Builder|DispatchRegister whereFinalCounterObs($value)
+ * @method static Builder|DispatchRegister whereInitialCounterObs($value)
  * @property float|null $start_odometer
  * @property float|null $end_odometer
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereEndOdometer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereStartOdometer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndRouteId(\App\Models\Company\Company $company, $routeId = null)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(\App\Models\Company\Company $company, $date, $routeId = null, $vehicleId = null)
+ * @method static Builder|DispatchRegister whereEndOdometer($value)
+ * @method static Builder|DispatchRegister whereStartOdometer($value)
+ * @method static Builder|DispatchRegister newModelQuery()
+ * @method static Builder|DispatchRegister newQuery()
+ * @method static Builder|DispatchRegister query()
+ * @method static Builder|DispatchRegister whereCompanyAndRouteId(Company $company, $routeId = null)
+ * @method static Builder|DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(Company $company, $date, $routeId = null, $vehicleId = null)
  */
 class DispatchRegister extends Model
 {
@@ -156,7 +161,7 @@ class DispatchRegister extends Model
 
     /**
      * @param string $order
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function locations($order = 'asc')
     {
@@ -164,7 +169,7 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function offRoads()
     {
@@ -172,7 +177,7 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function route()
     {
@@ -180,7 +185,7 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function vehicle()
     {
@@ -198,11 +203,20 @@ class DispatchRegister extends Model
         return $this->belongsTo(Driver::class, 'driver_code', 'code');
     }
 
+    /**
+     * @param DispatchRegister $query
+     * @return mixed
+     */
     public function scopeCompleted($query)
     {
         return $query->where('status', $this::COMPLETE);
     }
 
+    /**
+     * @param DispatchRegister $query
+     * @param null $completedTurns
+     * @return mixed
+     */
     public function scopeActive($query, $completedTurns = null)
     {
         if ($completedTurns) {
@@ -239,9 +253,14 @@ class DispatchRegister extends Model
         return $this->hasMany(ControlPointTimeReport::class)->orderBy('date', 'asc');
     }
 
-    public function getRouteTime()
+    public function getRouteTime($withZero = false)
     {
-        return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : '--:--:--';
+        return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : ($withZero ? '00:00:00' : '--:--:--');
+    }
+
+    public function getRouteTimeAttribute()
+    {
+        return $this->getRouteTime(true);
     }
 
     public function departureFringe()
@@ -303,6 +322,14 @@ class DispatchRegister extends Model
         return number_format((100 - $value * 100 / $reference), 1, '.', '');
     }
 
+
+    /**
+     * @param DispatchRegister $query
+     * @param $date
+     * @param $vehicleId
+     * @param $routeId
+     * @return mixed
+     */
     public function scopeFindAllByDateAndVehicleAndRoute($query, $date, $vehicleId, $routeId)
     {
         return $query->completed()
@@ -367,6 +394,12 @@ class DispatchRegister extends Model
         return $this->vehicle->plate == 'VCK-531';
     }
 
+
+    /**
+     * @param DispatchRegister $query
+     * @param Company $company
+     * @param null $routeId
+     */
     public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
     {
         $query->where(function ($query) use ($company, $routeId) {
@@ -382,6 +415,13 @@ class DispatchRegister extends Model
         });
     }
 
+    /**
+     * @param DispatchRegister $query
+     * @param Company $company
+     * @param $date
+     * @param null $routeId
+     * @param null $vehicleId
+     */
     public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
     {
         $query->where('date', explode(' ', $date)[0])->where(function ($query) use ($company, $routeId, $vehicleId) {
@@ -429,6 +469,10 @@ class DispatchRegister extends Model
         $lastLocation = $this->locations('desc')->limit(1)->get()->first();
 
         return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
+    }
+
+    public function getTotalOffRoadAttribute(){
+        return $this->getTotalOffRoad();
     }
 
     const CREATED_AT = 'date_created';

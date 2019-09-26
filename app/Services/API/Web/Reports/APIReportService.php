@@ -13,30 +13,39 @@ use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Routes\DispatchRegister;
 use App\Services\API\Web\Contracts\APIWebInterface;
 use App\Services\Reports\Routes\ControlPointService;
+use App\Services\Reports\Routes\RouteService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class APIReportService implements APIWebInterface
 {
     public $controlPointService;
     /**
+     * @var RouteService
+     */
+    private $routeService;
+
+    /**
      * APIReportService constructor.
      * @param ControlPointService $controlPointService
+     * @param RouteService $routeService
      */
-    public function __construct(ControlPointService $controlPointService)
+    public function __construct(ControlPointService $controlPointService, RouteService $routeService)
     {
         $this->controlPointService = $controlPointService;
+        $this->routeService = $routeService;
     }
 
 
     /**
      * @param $service
      * @param Request $request
-     * @return JsonResponse
+     * @return JsonResponse | string
      */
     public function serve($service, Request $request): JsonResponse
     {
@@ -47,7 +56,7 @@ class APIReportService implements APIWebInterface
                 if( $dispatchRegister ){
                     $response = [
                         'error' => false,
-                        'report' => $this->build($dispatchRegister)
+                        'report' => $this->buildControlPointReport($dispatchRegister)
                     ];
                 }else{
                     $response = [
@@ -60,6 +69,29 @@ class APIReportService implements APIWebInterface
                 return response()->json($response);
 
                 break;
+
+            case 'current-vehicle-status':
+                $company = Company::find($request->get('company'));
+
+
+                if(!$company){
+                    $response = [
+                        'error' => true,
+                        'message' => "Company doesn't exists"
+                    ];
+
+                    return response()->json($response);
+                }else{
+                    $routeReport = 'all';
+                    $vehicleReport = 'all';
+                    $onlyActive = true;
+
+                    $managementReport = $this->routeService->dispatch->buildCurrentVehicleStatusReport($company, $routeReport, $vehicleReport, $onlyActive);
+
+                    $this->routeService->export->exportCurrentVehicleStatusReport($managementReport);
+                }
+                break;
+
             default:
                 return response()->json([
                     'error' => true,
@@ -76,7 +108,7 @@ class APIReportService implements APIWebInterface
      * @param $dispatchRegister
      * @return object
      */
-    public function build(DispatchRegister $dispatchRegister)
+    public function buildControlPointReport(DispatchRegister $dispatchRegister)
     {
         $controlPointReportsByDispatchRegister = $this->controlPointService->buildControlPointReportsByDispatchRegister($dispatchRegister, $dispatchRegister->controlPointTimeReports);
 

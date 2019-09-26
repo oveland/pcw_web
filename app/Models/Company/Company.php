@@ -154,7 +154,20 @@ class Company extends Model
      *
      * Alameda
      *
-    */
+     * @return bool
+     */
+    public function isIntermunicipal()
+    {
+        return collect([self::MONTEBELLO])->contains($this->id);
+    }
+
+    /*
+     * What companies that have seat sensor counter
+     *
+     * Alameda
+     *
+     * @return bool
+     */
     public function hasRecorderCounter()
     {
         return collect([self::ALAMEDA])->contains($this->id);
