@@ -374,6 +374,8 @@ class ManagerGPSController extends Controller
                                     }
                                 }
 
+                                if(str_contains($individualCommand, "TTSTOCMD=12"))$individualCommand = 'AT$TTSTOCMD=12,AT$RESET';
+
                                 if ($individualCommand) {
                                     if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
                                         $totalCMD .= ($flagStartCMD ? "" : ";") . $individualCommand;
@@ -421,7 +423,7 @@ class ManagerGPSController extends Controller
                 $length = strlen($smsCommand);
 
                 $dump .= ("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")") . "\n\n";
-                sleep(3);
+                sleep(1);
             }
             $dump .= "-------------- TOTAL SMS SENT: $totalSent --------------\n";
             dump($dump);
