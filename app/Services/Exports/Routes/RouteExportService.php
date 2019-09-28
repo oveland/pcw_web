@@ -359,7 +359,7 @@ class RouteExportService
                     $ln = $index > 0 ? "\n" : "";
                     $route = $dispatchRoute->route;
                     $roundTrips = $dispatchRoute->dispatchRegisters->max('round_trip');
-                    $dispatchRoutesTurns .= "$ln$route->name | $roundTrips ".__('round trips');
+                    $dispatchRoutesTurns .= "$ln$route->name | $roundTrips ".($company->isIntermunicipal() ? __('turns') : __('round trips'));
                     $index++;
                 }
 

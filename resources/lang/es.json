@@ -591,5 +591,7 @@
   "Turns": "Turnos",
   "Max speed": "Velocidad máxima",
   "Max speed time": "Hora vel. máx",
-  "In repair": "En el taller"
+  "In repair": "En el taller",
+  "Total off roads": "Total salidas de ruta",
+  "Total speeding": "Total excesos de velocidad"
 }
