@@ -56,7 +56,7 @@ class EventsReportMailCommand extends Command
                 $mail->setProduction($this->option('prod'));
                 $mailTo = $this->getMailToFromCompany($company, $this->option('prod'));
 
-                $rta = Mail::to($mailTo, $company->name)->send($mail);
+                $rta = Mail::to($mailTo)->send($mail);
 
                 foreach ($mailTo as $to) {
                     $this->logData("   >> To: $to");
@@ -103,25 +103,25 @@ class EventsReportMailCommand extends Command
                     $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
                 }
                 break;
-            case Company::TUPAL:
+            /*case Company::TUPAL:
                 if ($production) {
-                    $mailTo = ['Migui_213@hotmail.com', 'olatorre22@hotmail.com'];
+                    $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
                 break;
             case Company::MONTEBELLO:
                 if ($production) {
-                    $mailTo = ['oscarivelan@gmail.com'];
+                    $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
-                break;
+                break;*/
             default:
                 if ($production) {
-                    $mailTo = ['oiva.pcw@gmail.com'];
+                    $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
-                    $mailTo = ['oiva.fz@gmail.com'];
+                    $mailTo = ['oiva.pcw@gmail.com'];
                 }
                 break;
         }

@@ -339,9 +339,8 @@ class DispatchRouteService
         $managementReport = collect([]);
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
             $vehicle = Vehicle::find($vehicleId);
-
             $lastLocation = $vehicle->lasLocation($dateReport);
-
+            
             $consolidatedDispatches = $this->getConsolidatedDataDispatches($dispatchRegistersByVehicle, $company);
             $consolidatedWithMaxSpeed = $consolidatedDispatches->sortByDesc('maxSpeed')->first();
 

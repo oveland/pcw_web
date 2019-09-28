@@ -74,7 +74,7 @@ class DispatchReportMail extends Mailable
      */
     public function build()
     {
-        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " | " . __('Dispatch daily report') . " | $this->dateReport ");
+        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') ."  | " . __('Dispatch daily report') ." ".$this->company->name." ". " | $this->dateReport ");
         $email->attach($this->makeFile());
         return $email;
     }
