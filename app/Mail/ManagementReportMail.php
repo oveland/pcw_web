@@ -74,7 +74,7 @@ class ManagementReportMail extends Mailable
      */
     public function build()
     {
-        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " | " . __('Management report') . " | $this->dateReport ");
+        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " | " . __('Management report') . " ".$this->company->name." ". " | $this->dateReport ");
         $email->attach($this->makeFile());
         return $email;
     }

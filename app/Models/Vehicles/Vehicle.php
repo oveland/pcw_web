@@ -176,6 +176,6 @@ class Vehicle extends Model
         if ($date == Carbon::now()->toDateString()) {
             return CurrentLocation::where('vehicle_id', $this->id)->first();
         }
-        return LastLocation::where('date', $date)->where('vehicle_id', $this->id)->first();
+        return LastLocation::whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])->where('vehicle_id', $this->id)->first();
     }
 }

@@ -53,14 +53,14 @@ class ToolsController extends Controller
 
     public function test(Request $request){
         $company = Company::find(21);
-        $dateReport = '2019-09-24';
+        $dateReport = '2019-09-25';
         $routeReport = 'all';
         $vehicleReport = 'all';
         $completedTurns = true;
 
-        $managementReport = $this->routeService->dispatch->buildCurrentVehicleStatusReport($company, $routeReport, $vehicleReport, true);
+        $managementReport = $this->routeService->dispatch->buildManagementReport($company, $dateReport, $vehicleReport, $vehicleReport, $completedTurns);
 
-        $this->routeService->export->exportCurrentVehicleStatusReport($managementReport);
+        $this->routeService->export->exportManagementReport($managementReport, $dateReport);
     }
 
     public function showGPSWithBadFrequency(Request $request)

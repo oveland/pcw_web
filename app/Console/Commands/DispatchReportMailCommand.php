@@ -110,24 +110,24 @@ class DispatchReportMailCommand extends Command
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
-                break;
+                break;*/
             case Company::TUPAL:
                 if ($production) {
-                    $mailTo = ['oiva.pcw@gmail.com'];
+                    $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
                 break;
             case Company::MONTEBELLO:
                 if ($production) {
-                    $mailTo = ['oiva.pcw@gmail.com'];
+                    $mailTo = ['Diegomanrique1970@gmail.com', 'vivianarodriguez@transmontebello.com', 'jenniferordonez@transmontebello.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
-                break;*/
+                break;
             default:
                 if ($production) {
-                    $mailTo = ['oscarivelan@gmail.com'];
+                    $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
