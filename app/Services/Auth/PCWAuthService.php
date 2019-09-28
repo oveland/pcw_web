@@ -43,7 +43,7 @@ class PCWAuthService
             'company' => $company,
             'companies' => $user->isAdmin() ? Company::active()->get() : collect([]),
             'drivers' => $company->activeDrivers,
-            'routes' => $company->routes,
+            'routes' => $this->generalController->getRoutesFromCompany($company),
             'vehicles' => $user->assignedVehicles($company)
         ];
     }

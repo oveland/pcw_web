@@ -21,7 +21,7 @@ class GeneralController extends Controller
         $withAll = $request->get('withAll');
         $withNone = $request->get('withNone');
 
-        if ($company) $routes = self::getRoutesFromCompany($company);
+        if ($company) $routes = $this->getRoutesFromCompany($company);
         else if ($vehicle && $date) $routes = self::getRoutesFromVehicleAndDate($vehicle, $date);
 
         return view('partials.selects.routes', compact(['routes', 'withAll', 'withNone']));
@@ -100,9 +100,11 @@ class GeneralController extends Controller
         return null;
     }
 
-    public static function getRoutesFromCompany(Company $company = null)
+    public function getRoutesFromCompany(Company $company = null)
     {
-        return ($company ? $company->activeRoutes->sortBy('name') : []);
+        $routes = ($company ? $company->activeRoutes->sortBy('name') : []);
+
+        return  Auth::user()->canViewAllRoutes() ? $routes : $routes->where('as_group', true) ;
     }
 
     public static function getVehiclesFromCompany(Company $company = null)

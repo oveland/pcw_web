@@ -7,7 +7,7 @@
         <option value="">@lang('Select a route')</option>
     @endif
 
-    @if( isset($withNone) && ($withNone === true || $withNone === "true") )
+    @if( Auth::user()->canViewAllRoutes() && isset($withNone) && ($withNone === true || $withNone === "true") )
         <option value="none">@lang('Without route')</option>
     @endif
 

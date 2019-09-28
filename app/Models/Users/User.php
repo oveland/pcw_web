@@ -4,6 +4,7 @@ namespace App\Models\Users;
 
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
+use Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -194,5 +195,12 @@ class User extends Authenticatable
         }
 
         return $assignedVehicles;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewAllRoutes(){
+        return !($this->belongsToMontebello() && $this->isProprietary());
     }
 }
