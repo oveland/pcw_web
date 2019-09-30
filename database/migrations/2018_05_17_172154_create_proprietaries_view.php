@@ -16,21 +16,21 @@ class CreateProprietariesView extends Migration
         $this->down();
 
         DB::statement("
-            CREATE OR REPLACE VIEW proprietaries AS
-              SELECT
-                id_idpropietario id,
-                p_primer_nombre first_name,
-                p_segundo_nombre second_name,
-                p_primer_apellido surname,
-                p_segundo_apellido second_surname,    
-                p_tel phone,
-                p_cel cellphone,
-                p_direccion address,
-                p_correo email,
-                activo active,
-                passenger_report_via_sms,
-                id_empresa company_id
-              FROM propietario
+            CREATE OR REPLACE VIEW proprietaries(id,identity, first_name, second_name, surname, second_surname, phone, cellphone, address, email, active, passenger_report_via_sms, company_id) AS
+                SELECT propietario.id_idpropietario   AS id,
+                       propietario.id_propietario     AS identity,
+                       propietario.p_primer_nombre    AS first_name,
+                       propietario.p_segundo_nombre   AS second_name,
+                       propietario.p_primer_apellido  AS surname,
+                       propietario.p_segundo_apellido AS second_surname,
+                       propietario.p_tel              AS phone,
+                       propietario.p_cel              AS cellphone,
+                       propietario.p_direccion        AS address,
+                       propietario.p_correo           AS email,
+                       propietario.activo             AS active,
+                       propietario.passenger_report_via_sms,
+                       propietario.id_empresa         AS company_id
+                FROM propietario;
         ");
     }
 

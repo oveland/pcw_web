@@ -4,6 +4,8 @@ namespace App\Models\Vehicles;
 
 use App\LastLocation;
 use App\Models\Company\Company;
+use App\Models\Drivers\Driver;
+use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\DispatcherVehicle;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Services\Reports\Passengers\Seats\SeatTopology;
@@ -11,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -179,5 +182,21 @@ class Vehicle extends Model
             return CurrentLocation::where('vehicle_id', $this->id)->first();
         }
         return LastLocation::whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])->where('vehicle_id', $this->id)->first();
+    }
+
+    /**
+     * @return Driver | BelongsTo
+     */
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
+    }
+
+    /**
+     * @return Proprietary | BelongsTo
+     */
+    public function proprietary()
+    {
+        return $this->belongsTo(Proprietary::class);
     }
 }
