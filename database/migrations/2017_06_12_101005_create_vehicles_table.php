@@ -21,6 +21,8 @@ class CreateVehiclesTable extends Migration
             $table->boolean('active')->default(true);
             $table->boolean('in_repair')->default(true);
             $table->string('observations', 200)->nullable(true);
+            $table->bigInteger('driver_id')->unsigned();
+            $table->bigInteger('proprietary_id')->unsigned();
             $table->timestamps();
 
             /* table relations */
