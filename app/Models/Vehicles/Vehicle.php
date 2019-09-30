@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read GpsVehicle $gpsVehicle
  * @property-read DispatcherVehicle $dispatcherVehicles
  * @property int|null $bea_id
+ * @property int|null $driver_id
+ * @property int|null $proprietary_id
  * @method static Builder|Vehicle whereBeaId($value)
  * @property-read VehicleSeatDistribution $seatDistribution
  */
