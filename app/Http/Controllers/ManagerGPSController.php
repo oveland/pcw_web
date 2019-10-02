@@ -262,6 +262,8 @@ class ManagerGPSController extends Controller
         foreach ($simGPSList as $sim) {
             $simGPS = SimGPS::where('sim', $sim)->get()->first();
             $vehicle = $simGPS->vehicle;
+            $gpsVehicle = GpsVehicle::where('vehicle_id', $vehicle->id)->get()->first();
+
             $currentLocationGPS = CurrentLocationsGPS::where('vehicle_id', $vehicle->id)->get()->first() ?? null;
 
             //dd($currentLocationGPS);
@@ -281,7 +283,12 @@ class ManagerGPSController extends Controller
                     $totalOK++;
                 }
 
-                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date <span class='$classStatus'>$timePeriod</span></a><br><br>" : "********";
+                $imei = "";
+                if (Auth::user()->isSuperAdmin2() && $gpsVehicle) {
+                    $imei = "(<b>$gpsVehicle->imei</b>)";
+                }
+
+                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date <span class='$classStatus'>$timePeriod</span> $imei</a><br><br>" : "********";
 
                 $reportsStatus->push((object)[
                     'statusId' => $vehicleStatus->id,

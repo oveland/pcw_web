@@ -121,7 +121,7 @@ class ManagementReportMailCommand extends Command
                 break;
             case Company::MONTEBELLO:
                 if ($production) {
-                    $mailTo = ['Diegomanrique1970@gmail.com', 'vivianarodriguez@transmontebello.com', 'jenniferordonez@transmontebello.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
+                    $mailTo = ['vivianarodriguez@transmontebello.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }

@@ -119,7 +119,7 @@ class EventsReportMailCommand extends Command
                 break;*/
             default:
                 if ($production) {
-                    $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
+                    $mailTo = ['vivianarodriguez@transmontebello.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
