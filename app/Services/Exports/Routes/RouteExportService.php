@@ -438,13 +438,15 @@ class RouteExportService
                 }
 
                 $data = collect([
-                    __('#') => $dataExcel->count() + 1,                                                                  # A CELL
-                    __('Vehicle') => $vehicle->number,                                                                  # A CELL
-                    __('Status') => $vehicleStatus->des_status ?? '---',                                                                # B CELL
-                    __('Observations') => $vehicleObservations,                                                                  # A CELL
-                    __('Last report') => $currentLocation ? $currentLocation->date->toDateTimeString() : '',                                    # C CELL
-                    __('Mileage') => $currentLocation ? number_format($currentLocation->current_mileage/1000, 2, ',', '.') : '',                                        # D CELL
-                    __('Route') => $currentRoute,                                        # D CELL
+                    __('#') => $dataExcel->count() + 1,                                                                                                                     # A CELL
+                    __('Vehicle') => $vehicle->number,                                                                                                                      # B CELL
+                    __('Status') => $vehicleStatus->des_status ?? '---',                                                                                                    # C CELL
+                    __('Observations') => $vehicleObservations,                                                                                                             # D CELL
+                    __('Last report') => $currentLocation ? $currentLocation->date->toDateTimeString() : '',                                                                # E CELL
+                    __('Address') => $currentLocation ? $currentLocation->getAddress() : '',                                                                                # F CELL
+                    __('Mileage') => $currentLocation ? number_format($currentLocation->current_mileage/1000, 2, ',', '.') : '',    # G CELL
+                    __('Speed')." Km/h" => $currentLocation ? number_format($currentLocation->speed, 2, ',', '.') : '',                     # H CELL
+                    __('Route') => $currentRoute,                                                                                                                           # I CELL
                 ]);
 
                 $dataExcel->push($data->toArray());

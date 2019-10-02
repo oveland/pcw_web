@@ -316,13 +316,13 @@ class PCWExporterService
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);
 
-                $sheet->cells("A$config->startIndex:F$config->totalRows", function ($cells) {
+                $sheet->cells("A$config->startIndex:H$config->totalRows", function ($cells) {
                     $cells->setValignment('center');
                     $cells->setAlignment('center');
                 });
 
                 $sheet->setColumnFormat(array(
-                    "F$config->startIndex:F$lastRow" => "0.00"
+                    "G$config->startIndex:H$lastRow" => "0.00"
                 ));
 
                 break;
