@@ -125,7 +125,8 @@ class CurrentLocation extends Model
     public function getAddress($refresh = false)
     {
         $addressLocation = $this->addressLocation;
-        return "";
+
+        $address = "";
 
         if ($refresh && !$addressLocation) {
             $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude);

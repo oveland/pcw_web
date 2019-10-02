@@ -428,9 +428,9 @@ class RouteExportService
                 $currentLocation = $vehicleStatusReport->currentLocation;
                 $vehicleStatus = $vehicleStatusReport->vehicleStatus;
 
-                $currentRoute = '';
+                $currentRoute = strtoupper(__('Without turn'));
                 if( $dispatcherVehicle ) $currentRoute =  $dispatcherVehicle->route->name;
-                else if( $currentDispatchRegister ) $currentRoute = $currentDispatchRegister->route->name;
+                else if( $currentDispatchRegister )$currentRoute = $currentDispatchRegister->route_name;
 
                 $vehicleObservations = "";
                 if($vehicle->in_repair){
@@ -443,7 +443,7 @@ class RouteExportService
                     __('Status') => $vehicleStatus->des_status ?? '---',                                                                                                    # C CELL
                     __('Observations') => $vehicleObservations,                                                                                                             # D CELL
                     __('Last report') => $currentLocation ? $currentLocation->date->toDateTimeString() : '',                                                                # E CELL
-                    __('Address') => $currentLocation ? $currentLocation->getAddress() : '',                                                                                # F CELL
+                    __('Address') => $currentLocation ? $currentLocation->getAddress(true) : '',                                                                                # F CELL
                     __('Mileage') => $currentLocation ? number_format($currentLocation->current_mileage/1000, 2, ',', '.') : '',    # G CELL
                     __('Speed')." Km/h" => $currentLocation ? number_format($currentLocation->speed, 2, ',', '.') : '',                     # H CELL
                     __('Route') => $currentRoute,                                                                                                                           # I CELL
