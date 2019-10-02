@@ -23,6 +23,9 @@ class CreateRoutesTable extends Migration
             $table->integer('dispatch_id')->default(0);
             $table->boolean('active')->default(true);
             $table->boolean('as_group')->default(false);
+            $table->integer('distance_threshold')->default(90);
+            $table->integer('sampling_radius')->default(1200);
+
             $table->timestamps();
 
             /* table relations */

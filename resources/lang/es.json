@@ -593,5 +593,11 @@
   "Max speed time": "Hora vel. máx",
   "In repair": "En el taller",
   "Total off roads": "Total salidas de ruta",
-  "Total speeding": "Total excesos de velocidad"
+  "Total speeding": "Total excesos de velocidad",
+  "Vehicle report": "Reporte de vehículo",
+  "Proprietary info": "Información propietario",
+  "Driver info": "Información conductor",
+  "Identity": "Intentificación",
+  "Phone": "Teléfono",
+  "Email": "Correo"
 }

@@ -10,7 +10,8 @@ use App\Models\Vehicles\SimGPS;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleStatus;
 use App\Services\Auth\PCWAuthService;
-use App\Services\Reports\Routes\RouteService;
+use App\Services\Exports\Vehicles\VehicleExportService;
+use App\Services\Reports\Vehicles\VehicleService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -20,14 +21,14 @@ class ToolsController extends Controller
 {
     protected $auth;
     /**
-     * @var RouteService
+     * @var mixed
      */
-    private $routeService;
+    private $service;
 
-    public function __construct(PCWAuthService $auth, RouteService $routeService)
+    public function __construct(PCWAuthService $auth, VehicleService $vehicleService)
     {
         $this->auth = $auth;
-        $this->routeService = $routeService;
+        $this->service = $vehicleService;
     }
 
     public function checkGPSLimbo(Request $request)
@@ -52,15 +53,14 @@ class ToolsController extends Controller
     }
 
     public function test(Request $request){
-        $company = Company::find(21);
+        $company = Company::find(12);
         $dateReport = '2019-09-25';
         $routeReport = 'all';
         $vehicleReport = 'all';
         $completedTurns = true;
 
-        $managementReport = $this->routeService->dispatch->buildManagementReport($company, $dateReport, $vehicleReport, $vehicleReport, $completedTurns);
-
-        $this->routeService->export->exportManagementReport($managementReport, $dateReport);
+        $vehicleReport = $this->service->makeVehicleReport($company);
+        $this->service->export->exportVehicleReport($vehicleReport);
     }
 
     public function showGPSWithBadFrequency(Request $request)
