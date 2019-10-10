@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\DatabaseManageMarkersReportsCommand::class,
         Commands\GPSRestartCommand::class,
         Commands\GPSCheckStatusCommand::class,
+        Commands\GPSCheckServerCommand::class,
 
         /* Commands for SMS */
         Commands\SMSSendReportCommand::class,
@@ -57,6 +58,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('gps:restart')->dailyAt('12:00');
         $schedule->command('gps:check-status')->everyMinute();
+        $schedule->command('gps:check-server')->everyFiveMinutes();
 
         /* Route report for TUPAL (CompanyId = 28) */
         //$schedule->command('mail-routes:events --company=28 --prod=true')->dailyAt('04:00');
