@@ -38,7 +38,7 @@
                         </thead>
                         <tbody>
                         @foreach($vehicleStatusReport as $report)
-                            <tr class="text-center">
+                            <tr class="text-center" data-toggle="collapse" data-target="#report-{{ $report->id }}">
                                 <td >{{ $loop->iteration }}</td>
                                 <td >
                                     <small class="text-muted">{{ $report->created_at->toDateString() }}</small><br>
@@ -52,6 +52,11 @@
                                 <td >{{ $report->latitude }}</td>
                                 <td >{{ $report->longitude }}</td>
                                 <td >{{ $report->speed }}</td>
+                            </tr>
+                            <tr id="report-{{ $report->id }}" class="text-center collapse">
+                                <td colspan="7">
+                                    <pre class="pre col-md-12 m-0">{{ $report->frame }}</pre>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

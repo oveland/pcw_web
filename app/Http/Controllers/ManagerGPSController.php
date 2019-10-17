@@ -67,8 +67,8 @@ class ManagerGPSController extends Controller
             });
 
 
+
             $unAssignedVehicles = $vehiclesCompany
-                ->where('active', true)
                 ->whereNotIn('id', SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'))->get()->pluck('vehicle_id'))
                 ->sortBy(function ($vehicle) {
                     return $vehicle->number;
