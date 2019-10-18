@@ -64,6 +64,7 @@ class Company extends Model
     const COOTRANSOL = 12;
     const ALAMEDA = 14;
     const MONTEBELLO = 21;
+    const URBANUS_MONTEBELLO = 31;
     const TUPAL = 28;
     const YUMBENOS = 17;
     const COODETRANS = 30;

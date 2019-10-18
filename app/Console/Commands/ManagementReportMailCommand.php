@@ -116,6 +116,7 @@ class ManagementReportMailCommand extends Command
                 if ($production) {
                     $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
                 } else {
+                    $mailTo = ['oiva.pcw@gmail.com', 'soportenivel2pcwtecnologia@outlook.com'];
                     $mailTo = ['oiva.pcw@gmail.com'];
                 }
                 break;

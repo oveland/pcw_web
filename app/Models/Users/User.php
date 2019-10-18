@@ -124,7 +124,7 @@ class User extends Authenticatable
      */
     public function belongsToMontebello()
     {
-        return $this->company ? ($this->company->id === Company::MONTEBELLO || $this->isSuperAdmin()) : false;
+        return $this->company ? ($this->company->id === Company::MONTEBELLO || $this->company->id === Company::URBANUS_MONTEBELLO || $this->isSuperAdmin()) : false;
     }
 
     /**

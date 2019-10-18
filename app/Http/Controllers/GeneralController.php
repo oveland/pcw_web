@@ -62,10 +62,13 @@ class GeneralController extends Controller
 
         $user = Auth::user();
         if ($route) {
-            $vehicles = $user->assignedVehicles($route->company);
-            $vehicles = $vehicles->filter(function($vehicle) use ($routeId){
-                return $vehicle->dispatcherVehicles()->where('route_id', $routeId)->get()->count();
-            });
+            $company = $route->company;
+            $vehicles = $user->assignedVehicles($company);
+            if($company->id === Company::MONTEBELLO){
+                $vehicles = $vehicles->filter(function($vehicle) use ($routeId){
+                    return $vehicle->dispatcherVehicles()->where('route_id', $routeId)->get()->count();
+                });
+            }
         }else{
             $vehicles = $user->assignedVehicles(null);
         }
