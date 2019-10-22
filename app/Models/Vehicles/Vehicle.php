@@ -52,6 +52,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $proprietary_id
  * @method static Builder|Vehicle whereBeaId($value)
  * @property-read VehicleSeatDistribution $seatDistribution
+ * @property-read \App\Models\Drivers\Driver|null $driver
+ * @property-read \App\Models\Proprietaries\Proprietary|null $proprietary
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereDriverId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereObservations($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereProprietaryId($value)
  */
 class Vehicle extends Model
 {

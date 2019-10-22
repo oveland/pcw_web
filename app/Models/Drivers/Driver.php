@@ -38,6 +38,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $full_name
  * @method static Builder|Driver active()
  * @method static Builder|Driver whereBeaId($value)
+ * @property string|null $address
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereCellphone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver wherePhone($value)
  */
 class Driver extends Model
 {

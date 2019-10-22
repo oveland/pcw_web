@@ -225,8 +225,8 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END INBOX DROPDOWN -->
 
                 <li class="dropdown tooltips" data-title="@lang('Dispatch report')" data-placement="bottom">
-                    <a href="{{ route('report-dispatch')  }}" class="dropdown-toggle p-t-10">
-                        <i class="fa fa-paper-plane faa-vertical m-r-10"></i>
+                    <a href="{{ route('report-dispatch')  }}" class="dropdown-toggle p-t-10 faa-parent animated-hover">
+                        <i class="fa fa-rocket faa-float m-r-10"></i>
                     </a>
                 </li>
                 <li class="dropdown tooltips" data-title="@lang('Historic report')" data-placement="bottom">
@@ -442,7 +442,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <ul class="sub-menu">
                                 <li class="nav-item menu-route-report">
                                     <a href="{{ route('report-route')  }}" class="faa-parent animated-hover nav-link">
-                                        <i class="fa fa-paper-plane faa-vertical" aria-hidden="true"></i>
+                                        <i class="fa fa-rocket faa-float animated" aria-hidden="true"></i>
                                         @lang('Dispatch')
                                     </a>
                                 </li>

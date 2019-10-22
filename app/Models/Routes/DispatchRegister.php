@@ -133,6 +133,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|DispatchRegister query()
  * @method static Builder|DispatchRegister whereCompanyAndRouteId(Company $company, $routeId = null)
  * @method static Builder|DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(Company $company, $date, $routeId = null, $vehicleId = null)
+ * @property-read mixed $route_time
+ * @property-read mixed $total_off_road
  */
 class DispatchRegister extends Model
 {

@@ -57,6 +57,8 @@ use Auth;
  * @property int|null $max_speeding_threshold
  * @method static Builder|Company whereMaxSpeedingThreshold($value)
  * @method static Builder|Company whereSpeedingThreshold($value)
+ * @property string|null $default_kmz_url
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereDefaultKmzUrl($value)
  */
 class Company extends Model
 {

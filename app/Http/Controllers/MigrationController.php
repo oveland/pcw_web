@@ -156,6 +156,7 @@ class MigrationController extends Controller
             $company->link = $companyOLD->url;
             $company->timezone = $companyOLD->timezone;
             $company->active = $companyOLD->estado;
+            $company->default_kmz_url = $companyOLD->default_kmz_url;
 
             try {
                 $company->save();

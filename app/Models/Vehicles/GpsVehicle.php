@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle query()
  * @property-read GPSType|null $type
+ * @property string|null $tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle findByVehicleId($vehicle_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereTags($value)
  */
 class GpsVehicle extends Model
 {

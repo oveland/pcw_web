@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereIconClass($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereMainClass($value)
  * @property-read mixed $id
+ * @property int|null $order
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereOrder($value)
  */
 class VehicleStatus extends Model
 {

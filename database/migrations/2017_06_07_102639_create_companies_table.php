@@ -22,6 +22,7 @@ class CreateCompaniesTable extends Migration
             $table->string('link')->default('http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php');
             $table->string('timezone',100)->default('America/Bogota');
             $table->boolean('active')->default(true);
+            $table->string('default_kmz_url', 100)->nullable();
             $table->timestamps();
         });
     }

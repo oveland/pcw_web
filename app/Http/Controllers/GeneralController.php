@@ -24,7 +24,9 @@ class GeneralController extends Controller
         if ($company) $routes = $this->getRoutesFromCompany($company);
         else if ($vehicle && $date) $routes = self::getRoutesFromVehicleAndDate($vehicle, $date);
 
-        return view('partials.selects.routes', compact(['routes', 'withAll', 'withNone']));
+        $defaultKmzUrl = $company->default_kmz_url;
+
+        return view('partials.selects.routes', compact(['routes', 'withAll', 'withNone', 'defaultKmzUrl']));
     }
 
     public function loadSelectDrivers(Request $request)

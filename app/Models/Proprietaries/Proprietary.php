@@ -40,6 +40,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Proprietary whereSurname($value)
  * @mixin Eloquent
  * @property-read mixed $simple_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereIdentity($value)
  */
 class Proprietary extends Model
 {
