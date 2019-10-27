@@ -600,5 +600,17 @@
   "Identity": "Intentificación",
   "Phone": "Teléfono",
   "Email": "Correo",
-  "Without turn": "Sin turno"
+  "Without turn": "Sin turno",
+  "Vehicles with errors in GPS": "Vehículos con errores en GPS",
+  "Vehicles with GPS OK": "Vehículos con GPS OK",
+  "Locations per vehicle": "Ubicaciones por vehículo",
+  "Mileage per vehicle": "Kilometraje por vehículo",
+  "Average daily": "Promedio diario",
+  "Only active": "Solo activos",
+  "Exclude in repair": "Excluir en taller",
+  "Vehicle options": "Opciones de vehículos",
+  "of": "de",
+  "Minimum locations dialy": "Mínimo de ubicaciones diarias",
+  "Minimum percent for OK": "Procentaje de reportes en el rango de fechas",
+  "The final date cannot be greater or equals than current": "La fecha final no puede ser igual o superior a la actual"
 }

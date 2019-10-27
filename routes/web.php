@@ -182,11 +182,19 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/show', 'ReportVehicleRoundTripsController@show')->name('report-vehicle-round-trips-show');
             });
 
-            /* Speeding report */
+            /* Status report */
             Route::prefix(__('status'))->group(function () {
                 Route::get('/', 'VehicleStatusReportController@index')->name('report-vehicle-status');
                 Route::get('/show', 'VehicleStatusReportController@searchReport')->name('report-vehicle-status-search-report');
             });
+
+            /* GPS vehicle report */
+            Route::prefix(__('gps'))->group(function () {
+                Route::get('/', 'VehicleGPSReportController@index')->name('report-vehicle-gps');
+                Route::get('/show', 'VehicleGPSReportController@searchReport')->name('report-vehicle-gps-search-report');
+            });
+
+
         });
 
         /* Routes for passenger report */
@@ -346,6 +354,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::prefix(__('scripts'))->group(function () {
             Route::get('/{gps}', 'ToolsController@showScript')->name('tools-scripts');
+        });
+
+        Route::prefix(__('gps-total-frames'))->group(function () {
+            Route::get('/{company}', 'ToolsController@gpsTotalFrames')->name('tools-gps-total-frames');
         });
     });
 });

@@ -11,10 +11,12 @@ use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleStatus;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Exports\Vehicles\VehicleExportService;
+use App\Services\PCWTime;
 use App\Services\Reports\Vehicles\VehicleService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ToolsController extends Controller
@@ -50,6 +52,72 @@ class ToolsController extends Controller
         ");
 
         return view('tools.gpsLimbo', compact('simGPSLimbo'));
+    }
+
+    public function gpsTotalFrames(Company $company, Request $request)
+    {
+        $thresholdTotalLocationsForOK = 100;
+        $thresholdPercentForOK = 80;
+
+        $lastDays = $request->get('last-days') - 1;
+
+        $initialDate = Carbon::now()->subDays($lastDays);
+        $finalDate = Carbon::now()->subDays(2);
+        $dateRange = collect(PCWTime::dateRange($initialDate, $finalDate));
+
+        dump("Reporte desde ".$dateRange->first()->copy()->addDays(1)->toDateString()." hasta ".$dateRange->last()->toDateString()."");
+
+        $lastLocationsAll = collect(DB::select("
+            SELECT ll.*, to_char(ll.date::DATE,'YYYY-MM-DD') date, v.number vehicle_number FROM last_locations as ll
+            JOIN vehicles as v on v.id = ll.vehicle_id 
+            WHERE vehicle_id IN (SELECT id FROM vehicles WHERE company_id = $company->id) 
+              AND date BETWEEN '".$dateRange->first()->toDateString()."' AND '".$dateRange->last()->toDateString()." 23:59:59' ORDER BY v.number::INTEGER"));
+
+        $lastLocationsVehicles = $lastLocationsAll->groupBy('vehicle_id');
+
+        $report = collect([]);
+        foreach ($lastLocationsVehicles as $vehicleId => $lastLocations){
+            $reportVehicle = collect([]);
+            $lastLocations = $lastLocations->sortBy('date');
+            $last = $lastLocations->first();
+            $vehicleNumber = $last->vehicle_number;
+            $index = 0;
+
+            foreach ($dateRange as $date){
+                $lastLocation = $lastLocations->where('date', $date->toDateString())->first();
+
+                $totalLocations = $lastLocation ? ($lastLocation->total_locations - $last->total_locations) : 0;
+                $totalKm = $lastLocation ? $lastLocation->current_mileage : 0;
+
+                if($index > 0) {
+                    $reportVehicle->push((object)[
+                        'vehicleNumber' => $vehicleNumber,
+                        'date' => $date,
+                        'totalLocations' => $totalLocations,
+                        'totalKm' => $totalKm,
+                        'hasLocations' => !!$lastLocation
+                    ]);
+                }
+
+                if($lastLocation)$last= $lastLocation;
+                $index++;
+            }
+
+            $percentOK = 100 * $reportVehicle->where('totalLocations', '>=', $thresholdTotalLocationsForOK)->count() / $reportVehicle->count();
+            $statistics = (object)[
+                'isOK' => $percentOK >= $thresholdPercentForOK,
+                'percentOK' => $percentOK,
+                'report' => $reportVehicle,
+                'reportNR' => $reportVehicle->where('totalLocations', '<', $thresholdTotalLocationsForOK),
+                'averageLocations' => $reportVehicle->average('totalLocations'),
+                'averageKm' => $reportVehicle->average('totalKm')
+            ];
+
+            $report->put($vehicleId, $statistics);
+        }
+
+
+        dd($report->take(3));
     }
 
     public function test(Request $request){

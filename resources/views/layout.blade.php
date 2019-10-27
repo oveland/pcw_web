@@ -523,6 +523,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                             @lang('Status')
                                         </a>
                                     </li>
+                                    <li class="nav-item menu-report-vehicles-gps">
+                                        <a href="{{ route('report-vehicle-gps')  }}" class="faa-parent animated-hover nav-link">
+                                            <i class="fa fa-signal blue faa-burst" aria-hidden="true"></i>
+                                            @lang('GPS')
+                                        </a>
+                                    </li>
                                 @endif
                             </ul>
                         </li>
