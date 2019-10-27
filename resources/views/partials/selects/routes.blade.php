@@ -2,7 +2,12 @@
     <option value="">@lang('No routes found')</option>
 @else
     @if( isset($withAll) && ($withAll === true || $withAll === "true") )
-        <option data-kmz-url="{{ isset($defaultKmzUrl) ? $defaultKmzUrl : "" }}" value="all">@lang('All routes')</option>
+
+        @php
+            $defaultKmzUrl = isset($defaultKmzUrl) ? $defaultKmzUrl : $routes->first()->company->default_kmz_url;
+        @endphp
+
+        <option data-kmz-url="{{ $defaultKmzUrl }}" value="all">@lang('All routes')</option>
     @else
         <option value="">@lang('Select a route')</option>
     @endif
