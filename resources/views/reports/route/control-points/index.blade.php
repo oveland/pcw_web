@@ -82,7 +82,7 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
@@ -97,30 +97,41 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                    <div class="form-group">
+                                        <select name="route-report" id="route-report"
+                                                class="default-select2 form-control col-md-12">
+                                            <option value="null">@lang('Select a company')</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="date-report"
-                                       class="control-label field-required">@lang('Date report')</label>
+                                <label for="date-report" class="control-label field-required">@lang('Date report')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control"
-                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report"
-                                            class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company')</option>
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                        @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
                                     </select>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-3 hide">
                             <div class="form-group">
                                 <label for="type-report" class="control-label field-required">
@@ -159,10 +170,12 @@
     <script type="application/javascript">
         $('.menu-routes, .menu-report-control-points').addClass('active-animated');
 
+        let form = $('.form-search-report');
+        let reportContainer = $('.report-container');
+
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
                 e.preventDefault();
-                var form = $(this);
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
 
@@ -170,7 +183,7 @@
                         url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            $('.report-container').empty().hide().html(data).fadeIn();
+                            reportContainer.empty().hide().html(data).fadeIn();
                         },
                         complete: function () {
                             form.find('.btn-search-report').removeClass(loadingClass);
@@ -179,32 +192,27 @@
                 }
             });
 
-            $('#date-report, #type-report, #route-report, #company-report').change(function () {
-                var form = $('.form-search-report');
-                $('.report-container').slideUp();
+            $('#date-report, #type-report, #company-report').change(function () {
+                reportContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
             });
 
-            $('#company-report').change(function () {
-                loadRouteReport($(this).val());
+            $('#route-report').change(function () {
+                loadSelectVehicleReportFromRoute($(this).val());
+                reportContainer.slideUp(100);
             });
 
-            @if(!Auth::user()->isAdmin())
-            loadRouteReport(null);
+            @if(Auth::user()->isAdmin())
+                $('#company-report').change(function () {
+                    loadSelectVehicleReport($(this).val(), true);
+                    loadSelectRouteReport($(this).val());
+                    reportContainer.slideUp(100);
+                }).change();
+            @else
+                loadSelectRouteReport(null);
             @endif
         });
-
-        function loadRouteReport(company) {
-            var routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('route-ajax-action') }}', {
-                option: 'loadRoutes',
-                company: company
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        }
     </script>
 @endsection
