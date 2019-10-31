@@ -516,7 +516,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         @lang('Round trips') / @lang('Routes')
                                     </a>
                                 </li>
-                                @if( Auth::user()->isAdmin() )
+                                @if( Auth::user()->canAdmin() )
                                     <li class="nav-item menu-report-vehicles-status">
                                         <a href="{{ route('report-vehicle-status')  }}" class="faa-parent animated-hover nav-link">
                                             <i class="fa fa-podcast blue faa-burst" aria-hidden="true"></i>
