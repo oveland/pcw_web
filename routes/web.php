@@ -89,6 +89,16 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/reassign-route', 'AutoDispatcherController@reassignRoute')->name('operation-dispatch-auto-dispatcher-reassign-route');
             });
         });
+
+        Route::prefix(__('vehicles'))->group(function () {
+            Route::prefix(__('vehicle-issues'))->group(function () {
+                Route::get('/', 'VehicleIssuesController@index')->name('operation-vehicles-issues');
+                Route::get('/{vehicle}/form', 'VehicleIssuesController@form')->name('operation-vehicles-issues-form');
+                Route::post('/{vehicle}/create', 'VehicleIssuesController@create')->name('operation-vehicles-issues-create');
+                Route::post('/{vehicle}/update', 'VehicleIssuesController@update')->name('operation-vehicles-issues-update');
+                Route::get('/show', 'VehicleIssuesController@show')->name('operation-vehicles-issues-show');
+            });
+        });
     });
 
     /* Routes for route report */

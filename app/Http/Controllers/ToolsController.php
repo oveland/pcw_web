@@ -50,7 +50,7 @@ class ToolsController extends Controller
         ");
 
         return view('tools.gpsLimbo', compact('simGPSLimbo'));
-    }
+    }z
 
     public function test(Request $request){
         $company = Company::find(12);

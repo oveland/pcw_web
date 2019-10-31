@@ -600,5 +600,17 @@
   "Identity": "Intentificación",
   "Phone": "Teléfono",
   "Email": "Correo",
-  "Without turn": "Sin turno"
+  "Without turn": "Sin turno",
+  "vehicle-issues": "novedades",
+  "Vehicle issues": "Novedades de vehículo",
+  "Observations": "Observaciones",
+  "Back to normal status": "Regresar a estado normal",
+  "Register issue": "Registrar",
+  "Issue": "novedad",
+  "Other issue": "Otra novedad",
+  "Error in registering issue": "Error al registrar la Novedad",
+  "Error in updating issue": "Error al actualizar el registro de la Novedad",
+  "Issue registered successfully": "Novedad registrada correctamente",
+  "Issue updated successfully": "Novedad actualizada correctamente",
+  "Out of issue": "Salida de novedad"
 }

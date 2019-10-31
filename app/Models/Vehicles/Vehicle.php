@@ -7,9 +7,11 @@ use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\DispatcherVehicle;
+use App\Models\Users\User;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Services\Reports\Passengers\Seats\SeatTopology;
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +40,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Vehicle whereNumber($value)
  * @method static Builder|Vehicle wherePlate($value)
  * @method static Builder|Vehicle whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  * @property-read SimGPS $simGPS
  * @property-read Collection|MaintenanceVehicle[] $maintenance
  * @property-read Collection|PeakAndPlate[] $peakAndPlate
@@ -52,11 +54,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $proprietary_id
  * @method static Builder|Vehicle whereBeaId($value)
  * @property-read VehicleSeatDistribution $seatDistribution
- * @property-read \App\Models\Drivers\Driver|null $driver
- * @property-read \App\Models\Proprietaries\Proprietary|null $proprietary
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereDriverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereObservations($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereProprietaryId($value)
+ * @property-read Driver|null $driver
+ * @property-read Proprietary|null $proprietary
+ * @method static Builder|Vehicle whereDriverId($value)
+ * @method static Builder|Vehicle whereObservations($value)
+ * @method static Builder|Vehicle whereProprietaryId($value)
+ * @property-read CurrentVehicleIssue $currentIssue
  */
 class Vehicle extends Model
 {
@@ -203,5 +206,36 @@ class Vehicle extends Model
     public function proprietary()
     {
         return $this->belongsTo(Proprietary::class);
+    }
+
+    /**
+     * @return CurrentVehicleIssue | HasOne
+     */
+    public function currentIssue(){
+        return $this->hasOne(CurrentVehicleIssue::class);
+    }
+
+    /**
+     * @param $issueTypeId
+     * @return CurrentVehicleIssue
+     */
+    public function getCurrentIssue($issueTypeId = null)
+    {
+        $currentIssue = $this->currentIssue;
+
+        if (!$currentIssue) $currentIssue = new CurrentVehicleIssue([
+            'vehicle_id' => $this->id,
+        ]);
+
+        $currentLocation = $this->currentLocation;
+        $dispatchRegister = $currentLocation->dispatchRegister;
+
+        if ($issueTypeId) $currentIssue->issue_type_id = $issueTypeId;
+        $currentIssue->date = Carbon::now();
+        $currentIssue->user_id = auth()->user() ? auth()->user()->id : null;
+        $currentIssue->dispatch_register_id = $dispatchRegister ? $dispatchRegister->id : null;
+        $currentIssue->driver_id = $dispatchRegister && $dispatchRegister->driver ? $dispatchRegister->driver->id : null;
+
+        return $currentIssue;
     }
 }

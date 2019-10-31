@@ -410,7 +410,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     <ul class="sub-menu">
                         <li class="nav-item menu-operation-dispatch">
                             <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
-                                <i class="fa fa-automobile faa-passing"></i>
+                                <i class="fa fa-rocket faa-passing"></i>
                                 @lang('Dispatch')
                                 <span class="arrow"></span>
                             </a>
@@ -419,6 +419,21 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <a href="{{ route('operation-dispatch-auto-dispatcher') }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-play faa-burst" aria-hidden="true"></i>
                                         @lang('Automatic')
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item menu-operation-vehicles">
+                            <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
+                                <i class="fa fa-car faa-passing"></i>
+                                @lang('Vehicles')
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="nav-item menu-operation-vehicles-issues">
+                                    <a href="{{ route('operation-vehicles-issues') }}" class="faa-parent animated-hover nav-link">
+                                        <i class="fa fa-exclamation-triangle faa-burst" aria-hidden="true"></i>
+                                        @lang('Issues')
                                     </a>
                                 </li>
                             </ul>

@@ -394,7 +394,7 @@ class DispatchRouteService
             foreach ($vehicles as $vehicle) {
                 $dispatcherVehicle = $vehicle->dispatcherVehicle;
                 $currentLocation = $vehicle->currentLocation;
-                $currentDispatchRegister = $currentLocation->dispatchRegister ?? null;
+                $currentDispatchRegister = $currentLocation->currentDispatchRegister ?? null;
                 $vehicleStatus = $currentLocation->vehicleStatus ?? null;
 
                 $currentVehicleStatusReport->push((object)[

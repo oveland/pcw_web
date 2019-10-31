@@ -3,7 +3,10 @@
 namespace App\Models\Routes;
 
 use App\Models\Vehicles\Vehicle;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Routes\CurrentDispatchRegister
@@ -16,28 +19,33 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $round_trip
  * @property string|null $departure_time
  * @property string|null $arrival_time
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereArrivalTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereDepartureTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereDispatchRegisterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister wherePlate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereRoundTrip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereRouteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereRouteName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereVehicleId($value)
- * @mixin \Eloquent
+ * @method static Builder|CurrentDispatchRegister whereArrivalTime($value)
+ * @method static Builder|CurrentDispatchRegister whereDepartureTime($value)
+ * @method static Builder|CurrentDispatchRegister whereDispatchRegisterId($value)
+ * @method static Builder|CurrentDispatchRegister wherePlate($value)
+ * @method static Builder|CurrentDispatchRegister whereRoundTrip($value)
+ * @method static Builder|CurrentDispatchRegister whereRouteId($value)
+ * @method static Builder|CurrentDispatchRegister whereRouteName($value)
+ * @method static Builder|CurrentDispatchRegister whereVehicleId($value)
+ * @mixin Eloquent
  * @property string|null $date
  * @property string|null $driver_code
- * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\CurrentDispatchRegister whereDriverCode($value)
+ * @property-read Vehicle|null $vehicle
+ * @method static Builder|CurrentDispatchRegister whereDate($value)
+ * @method static Builder|CurrentDispatchRegister whereDriverCode($value)
+ * @property-read DispatchRegister $dispatchRegister
  */
 class CurrentDispatchRegister extends Model
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    public function dispatchRegister(){
+        return $this->hasOne(DispatchRegister::class);
     }
 }

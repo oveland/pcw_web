@@ -4,6 +4,7 @@ namespace App\Models\Vehicles;
 
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Routes\CurrentDispatchRegister;
+use App\Models\Routes\DispatchRegister;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,7 +50,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|CurrentLocation whereVersion($value)
  * @method static Builder|CurrentLocation whereVehicle($vehicle)
  * @mixin Eloquent
- * @property-read CurrentDispatchRegister|null $dispatchRegister
+ * @property-read DispatchRegister|null $dispatchRegister
  * @property-read Vehicle|null $vehicle
  * @property float|null $yesterday_odometer
  * @property float|null $current_mileage
@@ -67,6 +68,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|CurrentLocation whereLocationId($value)
  * @method static Builder|CurrentLocation whereTotalLocations($value)
  * @property-read AddressLocation $addressLocation
+ * @property-read CurrentDispatchRegister|null $currentDispatchRegister
  */
 class CurrentLocation extends Model
 {
@@ -79,12 +81,17 @@ class CurrentLocation extends Model
 
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+    }
+
+    public function currentDispatchRegister()
+    {
+        return $this->belongsTo(CurrentDispatchRegister::class, 'dispatch_register_id', 'dispatch_register_id');
     }
 
     public function dispatchRegister()
     {
-        return $this->belongsTo(CurrentDispatchRegister::class, 'dispatch_register_id', 'dispatch_register_id');
+        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id');
     }
 
     public function vehicle()
@@ -99,7 +106,7 @@ class CurrentLocation extends Model
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'orientation' => $this->orientation,
-            'current_mileage' => number_format($this->current_mileage/1000, 2, ',', '.'),
+            'current_mileage' => number_format($this->current_mileage / 1000, 2, ',', '.'),
             'speed' => $this->speed,
         ];
     }

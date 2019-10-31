@@ -357,6 +357,7 @@ class DispatchRegister extends Model
             'route' => $this->route->getAPIFields(),
             'vehicle' => $this->vehicle->getAPIFields(),
             'status' => $this->status,
+            'driver_id' => $this->driver ? $this->driver->id : null,
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
         ];
