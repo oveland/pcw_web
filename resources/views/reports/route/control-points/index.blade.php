@@ -199,8 +199,8 @@
                 }
             });
 
-            $('#route-report').change(function () {
-                loadSelectVehicleReportFromRoute($(this).val());
+            $('#route-report, #vehicle-report').change(function () {
+                //loadSelectVehicleReportFromRoute($(this).val());
                 reportContainer.slideUp(100);
             });
 
