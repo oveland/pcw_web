@@ -14,21 +14,26 @@ use App\Models\Routes\ControlPointTimeReport;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
 use Illuminate\Support\Collection;
 
 class ControlPointService
 {
     /**
      * @param Route $route
+     * @param Vehicle|null $vehicle
      * @param $dateReport
      * @return Collection
      */
-    function buildReportsByControlPoints(Route $route, $dateReport)
+    function buildReportsByControlPoints(Route $route, Vehicle $vehicle = null, $dateReport)
     {
         $dispatchRegisters = DispatchRegister::active()
             ->where('date', '=', $dateReport)
-            ->where('route_id', '=', $route->id)
-            ->orderByDesc('departure_time')->get();
+            ->where('route_id', '=', $route->id);
+
+        if($vehicle) $dispatchRegisters = $dispatchRegisters->where('vehicle_id', $vehicle->id);
+
+        $dispatchRegisters = $dispatchRegisters->orderByDesc('departure_time')->get();
 
         $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get()->sortByDesc(function (ControlPointTimeReport $report) {
             return $report->dispatchRegister->departure_time;
@@ -100,7 +105,7 @@ class ControlPointService
                     $timeMeasured = StrTime::subStrTime($arrivalTime, $departureTime);
                 } else { // On middle control points calculates the params report with the interpolation process
                     $controlPointTime = ControlPointTime::where('control_point_id', $controlPoint->id)
-                        ->where('fringe_id', $controlPointTimeReport->fringe_id)
+                        ->where('fringe_id', $dispatchRegister->departure_fringe_id)
                         ->get()->first();
 
                     if($controlPointTime){

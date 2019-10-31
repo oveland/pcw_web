@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
+use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Services\Reports\Routes\ControlPointService;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class ControlPointsReportController extends Controller
 {
@@ -16,44 +20,46 @@ class ControlPointsReportController extends Controller
      */
     private $controlPointService;
     /**
-     * @var GeneralController
+     * @var PCWAuthService
      */
-    private $generalController;
+    private $authService;
 
     /**
      * ControlPointsReportController constructor.
      * @param ControlPointService $controlPointService
-     * @param GeneralController $generalController
+     * @param PCWAuthService $authService
      */
-    public function __construct(ControlPointService $controlPointService, GeneralController $generalController)
+    public function __construct(ControlPointService $controlPointService, PCWAuthService $authService)
     {
         $this->controlPointService = $controlPointService;
-        $this->generalController = $generalController;
+        $this->authService = $authService;
     }
 
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
-        if (Auth::user()->isAdmin()) {
-            $companies = Company::active()->orderBy('short_name', 'asc')->get();
-        }
-        return view('reports.route.control-points.index', compact('companies'));
+        $access = $this->authService->getAccessProperties();
+        $companies = $access->companies;
+        $vehicles = $access->vehicles;
+        return view('reports.route.control-points.index', compact(['companies', 'vehicles']));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function searchReport(Request $request)
     {
-        $company = $this->generalController->getCompany($request);
+        $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
+        $vehicleId = $request->get('vehicle-report');
+        $vehicle = $vehicleId != 'all' ? Vehicle::find($request->get('vehicle-report')) : null;
         $route = Route::find($request->get('route-report'));
 
-        if($route->as_group){
+        if ($route->as_group) {
             return view('partials.alerts.unableRouteControlPoint');
         }
 
@@ -63,12 +69,14 @@ class ControlPointsReportController extends Controller
             'dateReport' => $dateReport,
             'typeReport' => $typeReport,
             'company' => $company,
-            'route' => $route
+            'route' => $route,
+            'vehicleId' => $vehicleId,
+            'vehicle' => $vehicle
         ];
 
         if (!$route || !$route->belongsToCompany($company)) abort(404);
 
-        $reportsByControlPoints = $this->controlPointService->buildReportsByControlPoints($route, $dateReport);
+        $reportsByControlPoints = $this->controlPointService->buildReportsByControlPoints($route, $vehicle, $dateReport);
 
         switch ($typeReport) {
             case 'round-trip':
@@ -119,7 +127,7 @@ class ControlPointsReportController extends Controller
             }
 
             $controlPointsReport = collect([]);
-            foreach ($reportsByControlPoint as $reportByControlPoint){
+            foreach ($reportsByControlPoint as $reportByControlPoint) {
                 $controlPoint = $reportByControlPoint->controlPoint;
                 $controlPointsReport->put($controlPoint->name, "$reportByControlPoint->difference\n$reportByControlPoint->statusText");
             }
@@ -140,7 +148,6 @@ class ControlPointsReportController extends Controller
             'data' => $dataExcel,
             'type' => 'controlPointTimesByAll'
         ];
-
 
 
         return PCWExporterService::excel($fileData);
