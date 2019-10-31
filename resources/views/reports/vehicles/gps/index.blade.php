@@ -98,7 +98,7 @@
                             <div class="form-group">
                                 <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="initial-date" id="initial-date" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ \Carbon\Carbon::now()->subDays(1)->toDateString() }}"/>
+                                    <input name="initial-date" id="initial-date" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ \Carbon\Carbon::now()->subDays(31)->toDateString() }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>

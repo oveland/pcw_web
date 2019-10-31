@@ -5,6 +5,11 @@ namespace App\Models\Users;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use Auth;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -19,25 +24,25 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string|null $remember_token
  * @property string|null $role
  * @property bool $active
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int|null $company_id
- * @property-read \App\Models\Company\Company|null $company
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRole($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereUsername($value)
- * @mixin \Eloquent
+ * @property-read Company|null $company
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
+ * @method static Builder|User whereActive($value)
+ * @method static Builder|User whereCompanyId($value)
+ * @method static Builder|User whereCreatedAt($value)
+ * @method static Builder|User whereEmail($value)
+ * @method static Builder|User whereId($value)
+ * @method static Builder|User whereName($value)
+ * @method static Builder|User wherePassword($value)
+ * @method static Builder|User whereRememberToken($value)
+ * @method static Builder|User whereRole($value)
+ * @method static Builder|User whereUpdatedAt($value)
+ * @method static Builder|User whereUsername($value)
+ * @mixin Eloquent
  * @property int $role_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRoleId($value)
+ * @method static Builder|User whereRoleId($value)
  */
 class User extends Authenticatable
 {
@@ -142,8 +147,10 @@ class User extends Authenticatable
     public function canAdmin()
     {
         $usersCanAdmin = [
-            999459,
-            841403,
+            999459, // CJHONATAN
+            841403, // AJHONATAN
+            2018101039, // JHONATAN569
+            1130648973, // BRIAN,
             679396,
             23994798,
             123994798,
