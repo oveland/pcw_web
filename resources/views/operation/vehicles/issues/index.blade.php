@@ -1,7 +1,11 @@
 @extends('layout')
 
 @section('stylesheets')
-
+    <style>
+        .issue-observations::first-letter{
+            text-transform: uppercase;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -38,15 +42,38 @@
                     </div>
                     <div class="panel-body p-b-15">
                         <div class="form-input-flat">
-                            <div class="col-md-4">
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label for="company-operation" class="control-label field-required">@lang('Company')</label>
+                                    <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
-                                        <select name="company" id="company-operation" class="default-select2 form-control col-md-12">
+                                        <select name="company" id="company-report" class="default-select2 form-control col-md-12">
                                             <option value="null">@lang('Select an option')</option>
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                             @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label for="date-report" class="control-label field-required">@lang('Date report')</label>
+                                    <div class="input-group date" id="datetimepicker-report">
+                                        <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ \Carbon\Carbon::now()->toDateString() }}"/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
+                                    <div class="form-group">
+                                        <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                            @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
                                         </select>
                                     </div>
                                 </div>
@@ -95,14 +122,19 @@
                 }
             });
 
-            $('#company-operation').change(function () {
+            $('#date-report, #vehicle-report').change(function () {
                 mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
                 }
             });
 
-            form.submit();
+            @if(Auth::user()->isAdmin())
+                $('#company-report').change(function () {
+                    loadSelectVehicleReport($(this).val(), true);
+                    mainContainer.slideUp(100);
+                }).change();
+            @endif
         });
     </script>
 @endsection
