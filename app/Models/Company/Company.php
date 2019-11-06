@@ -84,7 +84,23 @@ class Company extends Model
      */
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class)->orderBy('number');
+        $user = Auth::user();
+
+        $vehicles = $this->hasMany(Vehicle::class)->orderBy('number');
+
+        if ($user && !$user->isAdmin()) {
+            $userVehicleTags = $user->getVehicleTags();
+
+            if ($userVehicleTags->isNotEmpty()) {
+                $vehicles->where(function ($query) use ($userVehicleTags) {
+                    foreach ($userVehicleTags as $tag) {
+                        $query->where('tags', 'like', "%$tag%");
+                    }
+                });
+            }
+        }
+
+        return $vehicles;
     }
 
     /**

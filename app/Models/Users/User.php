@@ -210,4 +210,9 @@ class User extends Authenticatable
     public function canViewAllRoutes(){
         return !($this->belongsToMontebello() && $this->isProprietary());
     }
+
+    public function getVehicleTags()
+    {
+        return collect( $this->vehicle_tags ? explode(',', $this->vehicle_tags) : []);
+    }
 }
