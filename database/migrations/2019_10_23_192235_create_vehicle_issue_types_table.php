@@ -18,6 +18,7 @@ class CreateVehicleIssueTypesTable extends Migration
             $table->string('name', 32)->unique(true);
             $table->string('description', 128)->nullable();
             $table->boolean('active')->default(true);
+            $table->string('css_class', 10)->default('default');
 
             $table->timestamps();
 

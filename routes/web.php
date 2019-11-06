@@ -90,7 +90,7 @@ Route::group(['middleware' => ['auth']], function () {
             });
         });
 
-        Route::prefix(__('vehicles'))->group(function () {
+        Route::prefix(__('url-vehicles'))->group(function () {
             Route::prefix(__('vehicle-issues'))->group(function () {
                 Route::get('/', 'VehicleIssuesController@index')->name('operation-vehicles-issues');
                 Route::get('/{vehicle}/form', 'VehicleIssuesController@form')->name('operation-vehicles-issues-form');

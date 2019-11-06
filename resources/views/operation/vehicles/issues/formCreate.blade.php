@@ -61,7 +61,15 @@
                     </div>
                     <div class="form-group has-{{ $currentIssue->getColor() }} has-feedback m-b-10">
                         <label for="driver" class="control-label">@lang('Driver')</label>
-                        <input id="driver" name="driver" type="text" class="form-control" disabled value="{{ $driver ? $driver->fullName() : __('Unassigned') }}">
+
+                        <div class="form-group">
+                            <select name="driver" id="driver" class="default-select2 form-control col-md-12">
+                                <option value="">@lang('Unassigned')</option>
+                                @foreach($drivers as $driverSelection)
+                                    <option value="{{ $driverSelection->id }}" {{ $driver && $driverSelection->id == $driver->id ? "selected" : "" }} >{{ $driverSelection->code." | ".$driverSelection->fullName() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <span class="fa fa-user form-control-feedback"></span>
                     </div>
                     <div class="form-group has-{{ $currentIssue->getColor() }} has-feedback m-b-10">

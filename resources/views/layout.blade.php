@@ -433,7 +433,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <li class="nav-item menu-operation-vehicles-issues">
                                     <a href="{{ route('operation-vehicles-issues') }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-exclamation-triangle faa-burst" aria-hidden="true"></i>
-                                        @lang('Issues')
+                                        @lang('Vehicle issues')
                                     </a>
                                 </li>
                             </ul>

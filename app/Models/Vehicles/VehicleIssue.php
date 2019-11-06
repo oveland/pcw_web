@@ -2,6 +2,8 @@
 
 namespace App\Models\Vehicles;
 
+use App\Models\Drivers\Driver;
+use App\Models\Users\User;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,9 +38,36 @@ use Illuminate\Database\Eloquent\Model;
  */
 class VehicleIssue extends Model
 {
+    protected $dates = ['date'];
+
     public function getDateFormat()
     {
-        return config('app.date_time_format');
+        return config('app.simple_date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat( $this->getDateFormat(), explode('.', $date)[0]);
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(VehicleIssueType::class, 'issue_type_id', 'id');
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
     }
 
     protected $fillable = ['date', 'issue_type_id', 'issue_uid', 'vehicle_id', 'dispatch_register_id', 'driver_id', 'user_id', 'observations'];
