@@ -8,6 +8,7 @@
 
 namespace App\Services\Reports\Routes;
 
+use App\Models\Company\Company;
 use App\Models\Routes\ControlPoint;
 use App\Models\Routes\ControlPointTime;
 use App\Models\Routes\ControlPointTimeReport;
@@ -20,24 +21,22 @@ use Illuminate\Support\Collection;
 class ControlPointService
 {
     /**
+     * @param Company $company
      * @param Route $route
-     * @param Vehicle|null $vehicle
+     * @param string $vehicleReport
      * @param $dateReport
      * @return Collection
      */
-    function buildReportsByControlPoints(Route $route, Vehicle $vehicle = null, $dateReport)
+    function buildReportsByControlPoints(Company $company, Route $route, $vehicleReport = 'all', $dateReport)
     {
-        $dispatchRegisters = DispatchRegister::active()
-            ->where('date', '=', $dateReport)
-            ->where('route_id', '=', $route->id);
-
-        if($vehicle) $dispatchRegisters = $dispatchRegisters->where('vehicle_id', $vehicle->id);
-
-        $dispatchRegisters = $dispatchRegisters->orderByDesc('departure_time')->get();
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
+            ->orderByDesc('departure_time')
+            ->get();
 
         $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get()->sortByDesc(function (ControlPointTimeReport $report) {
             return $report->dispatchRegister->departure_time;
         });
+
         $reportsByDispatchRegister = $allReportsByControlPoints->groupBy('dispatch_register_id');
 
         $reportsByControlPoints = collect([]);

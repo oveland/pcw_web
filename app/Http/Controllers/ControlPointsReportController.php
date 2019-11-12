@@ -76,7 +76,7 @@ class ControlPointsReportController extends Controller
 
         if (!$route || !$route->belongsToCompany($company)) abort(404);
 
-        $reportsByControlPoints = $this->controlPointService->buildReportsByControlPoints($route, $vehicle, $dateReport);
+        $reportsByControlPoints = $this->controlPointService->buildReportsByControlPoints($company, $route, $vehicleId, $dateReport);
 
         switch ($typeReport) {
             case 'round-trip':
