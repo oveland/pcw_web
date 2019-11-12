@@ -56,9 +56,11 @@
                                     @if( $simGPSList )
                                         <div class="col-md-12">
                                             @if( $gpsReport != 'all' )
-                                            <button type="button" class="btn btn-warning m-b-10 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
-                                                <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
-                                            </button>
+                                                @if(Auth::user()->canSendSMS())
+                                                    <button type="button" class="btn btn-warning m-b-10 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
+                                                        <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
+                                                    </button>
+                                                @endif
                                             @else
                                                 <small class="pull-right">Para enviar comandos debe seleccionar un modelo GPS</small><hr>
                                             @endif
@@ -75,7 +77,7 @@
                             </div>
                         </div>
 
-                        @if( $gpsReport != 'all' )
+                        @if( $gpsReport != 'all' && Auth::user()->canSendSMS() )
                         <div class="modal fade" id="modal-show-sms-console">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -112,71 +114,98 @@
                                                                     <span class="caret"></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu">
-                                                                    @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL )
-                                                                    <li>
-                                                                        <a href="javascript:getScript('general-skypatrol')">
-                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script General Skypatrol')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:getScript('apn-skypatrol')">
-                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script APN Skypatrol')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:getScript('ip-skypatrol')">
-                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script IP Skypatrol')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:getScript('plate-skypatrol')">
-                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script plate Skypatrol')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="divider"></li>
-                                                                    <li>
-                                                                        <a href="javascript:getScript('new-skypatrol')">
-                                                                            <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Instrucciones generales')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="divider"></li>
-                                                                    @endif
-                                                                    @if( $gpsReport === \App\Models\Vehicles\SimGPS::COBAN )
-                                                                    <li>
-                                                                        <a href="javascript:getScript('apn-claro-coban')">
-                                                                            <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Script Coban - CLARO')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:getScript('apn-movistar-coban')">
-                                                                            <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Coban - MOVISTAR')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:getScript('apn-avantel-coban')">
-                                                                            <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Coban - AVANTEL')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="divider"></li>
-                                                                    @endif
-                                                                    @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
+                                                                    @if( Auth::user()->canSendSMS(true) )
+                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL )
                                                                         <li>
-                                                                            <a href="javascript:getScript('ip-ruptela')">
-                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 1°
+                                                                            <a href="javascript:getScript('general-skypatrol-8750+')">
+                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Skypatrol TT8750+')
                                                                             </a>
                                                                         </li>
                                                                         <li>
-                                                                            <a href="javascript:getScript('connection-report-ruptela')">
-                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 2°
+                                                                            <a href="javascript:getScript('apn-skypatrol-8750+')">
+                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('APN Skypatrol TT8750+')
                                                                             </a>
                                                                         </li>
                                                                         <li>
-                                                                            <a href="javascript:getScript('time-report-ruptela')">
-                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | @lang('Time report')
+                                                                            <a href="javascript:getScript('ip-skypatrol-8750+')">
+                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('IP Skypatrol TT8750+')
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:getScript('plate-skypatrol-8750+')">
+                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('ID GPS Skypatrol TT8750+')
                                                                             </a>
                                                                         </li>
                                                                         <li class="divider"></li>
+                                                                        <li>
+                                                                            <a href="javascript:getScript('new-skypatrol-8750+')">
+                                                                                <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Instrucciones generales')
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="divider"></li>
+                                                                        @endif
+                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL_OLD )
+                                                                            <li>
+                                                                                <a href="javascript:getScript('general-skypatrol-8750')">
+                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Skypatrol TT8750')
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="javascript:getScript('apn-skypatrol-8750')">
+                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('APN Skypatrol TT8750')
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="javascript:getScript('ip-skypatrol-8750')">
+                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('IP Skypatrol TT8750')
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="javascript:getScript('id-skypatrol-8750')">
+                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('ID GPS Skypatrol TT8750')
+                                                                                </a>
+                                                                            </li>
+                                                                            <li class="divider"></li>
+                                                                        @endif
+                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::COBAN )
+                                                                        <li>
+                                                                            <a href="javascript:getScript('apn-claro-coban')">
+                                                                                <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Script Coban - CLARO')
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:getScript('apn-movistar-coban')">
+                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Coban - MOVISTAR')
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:getScript('apn-avantel-coban')">
+                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Coban - AVANTEL')
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="divider"></li>
+                                                                        @endif
+                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
+                                                                            <li>
+                                                                                <a href="javascript:getScript('ip-ruptela')">
+                                                                                    <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 1°
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="javascript:getScript('connection-report-ruptela')">
+                                                                                    <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 2°
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="javascript:getScript('time-report-ruptela')">
+                                                                                    <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | @lang('Time report')
+                                                                                </a>
+                                                                            </li>
+                                                                            <li class="divider"></li>
+                                                                        @endif
+
                                                                     @endif
+
                                                                     <li>
                                                                         <a href="javascript:;" class="set-reset-command">
                                                                             <i class="fa fa-undo text-primary" aria-hidden="true"></i>
@@ -204,7 +233,7 @@
                                                                 </div>
                                                             </div>
                                                             <label for="command-gps" class="control-label col-md-12 field-required text-right">@lang('Commands')</label>
-                                                            <textarea id="command-gps" name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
+                                                            <textarea id="command-gps" {{ Auth::user()->isSuperAdmin2() ? "" : "readonly" }} name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="tab-pane fade" id="nav-pills-justified-2">

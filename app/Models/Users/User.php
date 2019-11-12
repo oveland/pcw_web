@@ -8,10 +8,12 @@ use Auth;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use phpDocumentor\Reflection\Types\This;
 
 /**
  * App\Models\Users\User
@@ -69,7 +71,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {
@@ -89,7 +91,11 @@ class User extends Authenticatable
      */
     public function isSuperAdmin()
     {
-        return $this->isAdmin() && ($this->id == 625565 || $this->id == 940736 || $this->id == 1130648973);
+        return $this->isAdmin() && (
+            $this->id == 625565             // OVELAND
+            || $this->id == 940736          // OMAR
+            || $this->id == 1130648973      // BRIAN
+        );
     }
 
     /**
@@ -97,7 +103,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin2()
     {
-        return $this->id == 625565;
+        return $this->id == 625565;     // OVELAND
     }
 
     /**
@@ -151,10 +157,17 @@ class User extends Authenticatable
             841403, // AJHONATAN
             2018101039, // JHONATAN569
             1130648973, // BRIAN,
-            679396,
-            23994798,
-            123994798,
-            323994798
+            23994798,   // SISTEMATUPAL
+            123994798,  // JULIANTP
+            323994798,  // JULIANYB,
+
+            // VICENTE
+            623994798,
+            2018101012,
+            2018101054,
+            523994798,
+            423994798,
+            2018101065,
         ];
 
         return in_array( $this->id, $usersCanAdmin ) || $this->isAdmin();
@@ -167,6 +180,23 @@ class User extends Authenticatable
     public function canAdminGPS()
     {
         return $this->canAdmin();
+    }
+
+    public function canSendSMS($onlyReset = false)
+    {
+        if($onlyReset)return $this->isSuperAdmin();
+
+        $usersCanSendSMS = [
+            // VICENTE
+            623994798,
+            2018101012,
+            2018101054,
+            523994798,
+            423994798,
+            2018101065,
+        ];
+
+        return (in_array( $this->id, $usersCanSendSMS ) && $this->canAdminGPS()) || $this->isSuperAdmin();
     }
 
     /**

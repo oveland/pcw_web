@@ -314,7 +314,7 @@ class ManagerGPSController extends Controller
     public function sendSMS(Request $request)
     {
         $gpsType = $request->get('gps-type');
-        if (!Auth::user()->isSuperAdmin() && Auth::user()->id != 999459) dd('Por temas administrativos la acción requerida se ha deshabilitado temporalmente');
+        if (!Auth::user()->canSendSMS()) dd('Por temas administrativos la acción requerida se ha deshabilitado temporalmente');
 
         $simGPSList = $request->get('sim-gps');
 
@@ -575,21 +575,38 @@ class ManagerGPSController extends Controller
     public function getScript($device)
     {
         switch ($device) {
-            case 'general-skypatrol':
+            case 'general-skypatrol-8750+':
                 $fileScript = 'ScriptSkypatrol.txt';
                 break;
-            case 'apn-skypatrol':
+            case 'apn-skypatrol-8750+':
                 $fileScript = 'ScriptAPNSkypatrol.txt';
                 break;
-            case 'plate-skypatrol':
+            case 'plate-skypatrol-8750+':
                 $fileScript = 'ScriptPlateSkypatrol.txt';
                 break;
-            case 'new-skypatrol':
+            case 'new-skypatrol-8750+':
                 $fileScript = 'NewScriptSkypatrol.txt';
                 break;
-            case 'ip-skypatrol':
+            case 'ip-skypatrol-8750+':
                 $fileScript = 'ScriptIPSkypatrol.txt';
                 break;
+
+            case 'general-skypatrol-8750':
+                $fileScript = 'ScriptSkypatrol8750.txt';
+                break;
+            case 'apn-skypatrol-8750':
+                $fileScript = 'ScriptAPNSkypatrol8750.txt';
+                break;
+            case 'id-skypatrol-8750':
+                $fileScript = 'ScriptPlateSkypatrol8750.txt';
+                break;
+            case 'new-skypatrol-8750':
+                $fileScript = 'NewScriptSkypatrol8750.txt';
+                break;
+            case 'ip-skypatrol-8750':
+                $fileScript = 'ScriptIPSkypatrol8750.txt';
+                break;
+
             case 'apn-claro-coban':
                 $fileScript = 'ApnClaroScriptCoban.txt';
                 break;
@@ -599,6 +616,7 @@ class ManagerGPSController extends Controller
             case 'apn-avantel-coban':
                 $fileScript = 'ApnAvantelScriptCoban.txt';
                 break;
+
             case 'ip-ruptela':
                 $fileScript = 'IpScriptRuptela.txt';
                 break;
@@ -608,6 +626,7 @@ class ManagerGPSController extends Controller
             case 'connection-report-ruptela':
                 $fileScript = 'ConnectionScriptRuptela.txt';
                 break;
+
             default:
                 $fileScript = '';
                 break;
