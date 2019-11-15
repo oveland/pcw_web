@@ -52,7 +52,7 @@ class ToolsController extends Controller
         ");
 
         return view('tools.gpsLimbo', compact('simGPSLimbo'));
-    }z
+    }
 
     public function gpsTotalFrames(Company $company, Request $request)
     {

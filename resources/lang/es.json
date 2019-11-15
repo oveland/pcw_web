@@ -627,5 +627,6 @@
   "Minimum percent for OK": "Procentaje de reportes en el rango de fechas",
   "The final date cannot be greater or equals than current": "La fecha final no puede ser igual o superior a la actual",
   "Vehicle issue duration": "Duración de la novedad",
-  "Greater than one day": "Mayor a un día"
+  "Greater than one day": "Mayor a un día",
+  "Vehicles status": "Estado vehículo"
 }

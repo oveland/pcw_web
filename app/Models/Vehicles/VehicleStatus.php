@@ -2,7 +2,8 @@
 
 namespace App\Models\Vehicles;
 
-use const Grpc\CALL_OK;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,16 +11,19 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int|null $id_status
  * @property string|null $des_status
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereDesStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereIdStatus($value)
- * @mixin \Eloquent
+ * @method static Builder|VehicleStatus whereDesStatus($value)
+ * @method static Builder|VehicleStatus whereIdStatus($value)
+ * @mixin Eloquent
  * @property string|null $main_class
  * @property string|null $icon_class
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereIconClass($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereMainClass($value)
+ * @method static Builder|VehicleStatus whereIconClass($value)
+ * @method static Builder|VehicleStatus whereMainClass($value)
  * @property-read mixed $id
  * @property int|null $order
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereOrder($value)
+ * @method static Builder|VehicleStatus whereOrder($value)
+ * @property bool|null $show_filter
+ * @method static Builder|VehicleStatus visibleFilter()
+ * @method static Builder|VehicleStatus whereShowFilter($value)
  */
 class VehicleStatus extends Model
 {
@@ -67,5 +71,14 @@ class VehicleStatus extends Model
     public function isWithoutGPSSignal()
     {
         return $this->id == self::WITHOUT_GPS_SIGNAL;
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeVisibleFilter($query)
+    {
+        return $query->where('show_filter', true);
     }
 }

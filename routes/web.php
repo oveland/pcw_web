@@ -196,6 +196,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('status'))->group(function () {
                 Route::get('/', 'VehicleStatusReportController@index')->name('report-vehicle-status');
                 Route::get('/show', 'VehicleStatusReportController@searchReport')->name('report-vehicle-status-search-report');
+                Route::get('/image/{vehicleStatusReport}', 'VehicleStatusReportController@getImageFromCoordinate')->name('report-vehicle-status-geolocation-image');
             });
 
             /* GPS vehicle report */

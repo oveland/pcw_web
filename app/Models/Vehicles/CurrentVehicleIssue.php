@@ -36,6 +36,8 @@ use const http\Client\Curl\VERSIONS;
  * @method static Builder|CurrentVehicleIssue whereUserId($value)
  * @method static Builder|CurrentVehicleIssue whereVehicleId($value)
  * @mixin Eloquent
+ * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
+ * @property-read \App\Models\Drivers\Driver|null $driver
  */
 class CurrentVehicleIssue extends Model
 {

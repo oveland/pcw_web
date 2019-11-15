@@ -35,6 +35,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|VehicleIssue whereUserId($value)
  * @method static Builder|VehicleIssue whereVehicleId($value)
  * @mixin Eloquent
+ * @property-read \App\Models\Drivers\Driver|null $driver
+ * @property-read \App\Models\Vehicles\VehicleIssueType $type
+ * @property-read \App\Models\Users\User $user
+ * @property-read \App\Models\Vehicles\Vehicle $vehicle
  */
 class VehicleIssue extends Model
 {
