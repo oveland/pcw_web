@@ -60,7 +60,7 @@ class VehicleStatusReportController extends Controller
             ->whereBetween('time',["$initialTime:00", "$finalTime:00"])
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
             ->whereIn('vehicle_status_id', $vehicleStatusList->pluck('id'))
-            ->orderBy('time')
+            ->orderBy('id')
             ->get()
             ->groupBy('vehicle_id');
 

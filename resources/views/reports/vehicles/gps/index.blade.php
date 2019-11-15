@@ -164,7 +164,7 @@
 
 @section('scripts')
     <script type="application/javascript">
-        $('.menu-report-vehicles, .menu-report-vehicles-status').addClass('active-animated');
+        $('.menu-report-vehicles, .menu-report-vehicles-gps').addClass('active-animated');
 
         let form = $('.form-search-report');
         let reportContainer = $('.report-container');
