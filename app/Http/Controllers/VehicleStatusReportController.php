@@ -24,7 +24,7 @@ class VehicleStatusReportController extends Controller
         $vehicleStatusReports = VehicleStatusReport::with('status')
             ->where('date',$request->get('date-report'))
             ->whereIn('vehicle_id',$request->get('vehicles-report'))
-            ->orderBy('created_at')
+            ->orderByDesc('id')
             ->get()
             ->groupBy('vehicle_id');
 

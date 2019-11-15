@@ -4,7 +4,7 @@
     @if( isset($withAll) && ($withAll === true || $withAll === "true") )
 
         @php
-            $defaultKmzUrl = isset($defaultKmzUrl) ? $defaultKmzUrl : $routes->first()->company->default_kmz_url;
+            $defaultKmzUrl = isset($defaultKmzUrl) ? $defaultKmzUrl : ($routes->count() ? $routes->first()->company->default_kmz_url : "");
         @endphp
 
         <option data-kmz-url="{{ $defaultKmzUrl }}" value="all">@lang('All routes')</option>
