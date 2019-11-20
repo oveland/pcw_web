@@ -9,6 +9,7 @@ use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
+use DB;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -138,9 +139,16 @@ class Company extends Model
         $user = Auth::user();
         $routes = $this->hasMany(Route::class)->orderBy('name');
 
-        if ($user && $user->isProprietary()) {
-            $assignedVehicles = $user->assignedVehicles(null, true);
-            $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
+        if($user){
+            if ($user->isProprietary()) {
+                $assignedVehicles = $user->assignedVehicles(null, true);
+                $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
+            }else{
+                if(!$user->isAdmin()){
+                    $userRoutes = $user->userRoutes;
+                    $routes = $routes->whereIn( 'id',  $userRoutes->pluck('id'));
+                }
+            }
         }
 
         return $routes;

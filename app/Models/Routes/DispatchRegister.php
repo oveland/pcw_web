@@ -11,6 +11,7 @@ use App\Models\Vehicles\Location;
 use App\Models\Vehicles\ParkingReport;
 use App\Models\Vehicles\Speeding;
 use App\Models\Vehicles\Vehicle;
+use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -427,7 +428,11 @@ class DispatchRegister extends Model
      */
     public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
     {
-        $query->where('date', explode(' ', $date)[0])->where(function ($query) use ($company, $routeId, $vehicleId) {
+        $user = Auth::user();
+
+        $query->where('date', explode(' ', $date)[0])
+            ->whereIn('route_id', $user->userRoutes->pluck('id'))
+            ->where(function ($query) use ($company, $routeId, $vehicleId) {
             if ($vehicleId == 'all') {
                 $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
             } else if ($vehicleId) {

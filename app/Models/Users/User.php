@@ -3,9 +3,11 @@
 namespace App\Models\Users;
 
 use App\Models\Company\Company;
+use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use Auth;
 use Carbon\Carbon;
+use DB;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +15,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use phpDocumentor\Reflection\Types\This;
 
 /**
@@ -45,6 +48,10 @@ use phpDocumentor\Reflection\Types\This;
  * @mixin Eloquent
  * @property int $role_id
  * @method static Builder|User whereRoleId($value)
+ * @property string|null $vehicle_tags
+ * @property-read mixed $user_routes
+ * @property-read Collection $userRoutes
+ * @method static Builder|User whereVehicleTags($value)
  */
 class User extends Authenticatable
 {
@@ -244,5 +251,11 @@ class User extends Authenticatable
     public function getVehicleTags()
     {
         return collect( $this->vehicle_tags ? explode(',', $this->vehicle_tags) : []);
+    }
+
+    public function getUserRoutesAttribute()
+    {
+        $userCompany = $this->company;
+        return collect(DB::select("SELECT * FROM get_user_routes($this->id, $userCompany->id)"));
     }
 }

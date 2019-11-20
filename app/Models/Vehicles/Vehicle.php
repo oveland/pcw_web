@@ -60,6 +60,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Vehicle whereObservations($value)
  * @method static Builder|Vehicle whereProprietaryId($value)
  * @property-read CurrentVehicleIssue $currentIssue
+ * @property string|null $tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereTags($value)
  */
 class Vehicle extends Model
 {

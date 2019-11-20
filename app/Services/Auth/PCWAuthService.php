@@ -8,6 +8,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\Route;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class PCWAuthService
 {
