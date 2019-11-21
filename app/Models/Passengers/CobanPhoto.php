@@ -54,7 +54,7 @@ class CobanPhoto extends Model
 
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0])->setTimezone('-10:00');
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);//->setTimezone('-10:00');
     }
 
     public function getCreatedAtAttribute($created)
