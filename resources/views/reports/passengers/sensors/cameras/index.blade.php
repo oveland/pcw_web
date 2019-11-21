@@ -23,7 +23,7 @@
     <div id="cameras-report" class="row" url="{{ route('report-passengers-sensors-cameras-show') }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
-            <search-component url-params="{{ route('report-passengers-sensors-cameras-search-params') }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
+            <search-component url-params="{{ route('report-passengers-sensors-cameras-search-params') }}?company={{ $company }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
         </form>
         <!-- end search form -->
         <hr class="hr">

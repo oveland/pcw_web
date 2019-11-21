@@ -29,7 +29,8 @@ class CobanCameraController extends Controller
      */
     public function index(Request $request)
     {
-        return view('reports.passengers.sensors.cameras.index');
+        $company = $request->get('company');
+        return view('reports.passengers.sensors.cameras.index', compact(['company']));
     }
 
     /**
@@ -39,7 +40,7 @@ class CobanCameraController extends Controller
     public function searchParams(Request $request)
     {
         //$access = $this->pcwAuthService->getAccessProperties();
-        $company = Company::find(26);
+        $company = Company::find($request->get('company'));
         //$company = Company::find(21);
         return response()->json([
             'vehicles' => $company->vehicles,
