@@ -13,15 +13,21 @@
                                 <i class="fa fa-users text-muted"></i><br> Passengers
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-dollar text-muted"></i><br> Total BEA
+                                <i class="fa fa-dollar text-muted"></i><br> Total Value
                             </th>
                             <th class="col-md-1">
-                                <i class="icon-tag text-muted"></i><br> Total Discounts
+                                <i class="fa fa-dollar text-muted"></i><br> Total Fuel
+                            </th>
+                            <th class="col-md-1">
+                                <i class="fa fa-fa-dollar text-muted"></i><br> Saldo
+                            </th>
+                            <th class="col-md-1">
+                                <i class="icon-tag text-muted"></i><br> Total Discounts <br> (No fuel, No aux)
                             </th>
                             <th class="col-md-1">
                                 <i class=" icon-user-follow text-muted"></i><br> Total Commissions
                             </th>
-                            <th class="col-md-1">
+                            <th class="col-md-1 hide">
                                 <i class="icon-shield text-muted"></i><br> Total Penalties
                             </th>
                             <th class="col-md-1">
@@ -31,7 +37,7 @@
                                 <i class="fa fa-retweet text-muted"></i><br> Turns Liquidated
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-user text-muted"></i><br> Responsable
+                                <i class="fa fa-user text-muted"></i><br> Responsible
                             </th>
                             <th class="col-md-1">
                                 <i class="fa fa-calendar text-muted"></i><br> Liquidated on
@@ -45,10 +51,12 @@
                         <tr v-for="liquidation in liquidations">
                             <td class="text-center">{{ liquidation.date }}</td>
                             <td class="text-center">{{ liquidation.totals.totalPassengersBea }}</td>
-                            <td class="text-center">{{ liquidation.liquidation.totalBea | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.liquidation.totalDiscounts | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.liquidation.totalGrossBea + liquidation.liquidation.totalPenalties | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ totalDiscountByFuel(liquidation.liquidation) | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.liquidation.totalGrossBea + liquidation.liquidation.totalPenalties - totalDiscountByFuel(liquidation.liquidation) | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.liquidation.totalDiscounts - totalDiscountByFuel(liquidation.liquidation) - totalDiscountByMobilityAuxilio(liquidation.liquidation) | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.liquidation.totalCommissions | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.liquidation.totalPenalties | numberFormat('$0,0') }}</td>
+                            <td class="text-center hide">{{ liquidation.liquidation.totalPenalties | numberFormat('$0,0') }}</td>
 
                             <td class="text-center text-bold">
                                 {{ liquidation.liquidation.total | numberFormat('$0,0') }} <br>
@@ -171,15 +179,17 @@
                                                             </div>
                                                         </div>
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
-                                                            <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10 text-center">
-                                                                <a href="javascript:" target="_blank" class="pull-left header-preview" @click="exportLiquidation()">
-                                                                    <i class="fa fa-download"></i> Print basic
-                                                                </a>
+                                                            <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10">
+                                                                <div class="text-center">
+                                                                    <a href="javascript:" target="_blank" class="pull-left header-preview" @click="exportLiquidation()">
+                                                                        <i class="fa fa-download"></i> Print basic
+                                                                    </a>
 
-                                                                <a href="javascript:" target="_blank" class="pull-right header-preview" @click="exportLiquidation(true)">
-                                                                    <i class="fa fa-download"></i> Print detailed
-                                                                </a>
-                                                                <span class="header-preview">#{{ liquidationDetail.id }}</span>
+                                                                    <a href="javascript:" target="_blank" class="pull-right header-preview" @click="exportLiquidation(true)">
+                                                                        <i class="fa fa-download"></i> Print detailed
+                                                                    </a>
+                                                                    <span class="header-preview">#{{ liquidationDetail.id }}</span>
+                                                                </div>
                                                                 <preview-component v-if="!showPrintArea" :liquidation="liquidationDetail.liquidation" :search="search" :readonly="true"></preview-component>
                                                             </div>
                                                             <div class="portlet light bordered phase-container col-md-8 col-md-offset-2 p-0 pdf-container" v-if="showPrintArea">
@@ -293,6 +303,20 @@
                 }).then(function () {
 
                 });
+            },
+            totalDiscountByFuel: function (liquidation) {
+                const fuelTotalDiscount = _.head(_.filter(liquidation.totalDiscountsDetail, function (detail) {
+                    return detail.discount.discount_type.name.toUpperCase() === "COMBUSTIBLE";
+                }));
+
+                return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
+            },
+            totalDiscountByMobilityAuxilio: function (liquidation) {
+                const fuelTotalDiscount = _.head(_.filter(liquidation.totalDiscountsDetail, function (detail) {
+                    return detail.discount.discount_type.name.toUpperCase() === "AUXILIO DE MOVILIDAD";
+                }));
+
+                return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
             }
         },
         components: {

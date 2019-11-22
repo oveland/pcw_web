@@ -296,6 +296,7 @@ class TakingsPassengersLiquidationController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function liquidate(Request $request)
     {
@@ -306,40 +307,58 @@ class TakingsPassengersLiquidationController extends Controller
 
         DB::beginTransaction();
         $user = Auth::user();
+
+        $marksID = collect($request->get('marks'));
+
         $liquidation = new Liquidation();
-        $liquidation->date = $request->get('date');
+        $liquidation->date = Mark::find($marksID->first())->date;
         $liquidation->vehicle_id = $request->get('vehicle');
         $liquidation->liquidation = collect($request->get('liquidation'))->toJson();
         $liquidation->totals = collect($request->get('totals'))->toJson();
         $liquidation->user_id = $user->id;
 
-        $marksID = collect($request->get('marks'));
+        $vehicle = $liquidation->vehicle;
+        $dateQuery = $liquidation->date->toDateString();
 
-        if ($marksID->count()) {
-            $liquidation->date = Mark::find($marksID->first())->date;
-            if ($liquidation->save()) {
-                foreach ($marksID as $markId) {
-                    $mark = Mark::find($markId);
-                    if ($mark) {
-                        $mark->liquidated = true;
-                        $mark->liquidation_id = $liquidation->id;
-                        if (!$mark->save()) {
-                            $response->success = false;
-                            $response->message = __('Error at associate liquidation with BEA Mark register');
-                            DB::rollBack();
-                            break;
-                        };
+        $lastMarksNoLiquidated = Mark::where('date', '<', $dateQuery)
+            ->whereHas('turn', function($turn) use ($vehicle){
+                return $turn->where('vehicle_id', $vehicle->id);
+            })
+            ->where('liquidated', false)
+            ->whereNotNull('trajectory_id')
+            ->orderByDesc('date')
+            ->limit(1)
+            ->get()->first();
+
+        if($lastMarksNoLiquidated){
+            $response->success = false;
+            $response->message = __('There are turns no liquidated in :date fot this vehicle', ['date' => $lastMarksNoLiquidated->date->toDateString()]);
+        }else{
+            if ($marksID->count()) {
+                if ($liquidation->save()) {
+                    foreach ($marksID as $markId) {
+                        $mark = Mark::find($markId);
+                        if ($mark) {
+                            $mark->liquidated = true;
+                            $mark->liquidation_id = $liquidation->id;
+                            if (!$mark->save()) {
+                                $response->success = false;
+                                $response->message = __('Error at associate liquidation with BEA Mark register');
+                                DB::rollBack();
+                                break;
+                            };
+                        }
                     }
+                } else {
+                    $response->success = false;
+                    $response->message = __('Error at generate liquidation register');
+                    DB::rollBack();
                 }
             } else {
                 $response->success = false;
-                $response->message = __('Error at generate liquidation register');
+                $response->message = __('No there are registers for liquidation');
                 DB::rollBack();
             }
-        } else {
-            $response->success = false;
-            $response->message = __('No there are registers for liquidation');
-            DB::rollBack();
         }
 
         DB::commit();

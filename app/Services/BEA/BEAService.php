@@ -103,7 +103,7 @@ class BEAService
         $marks = Mark::whereIn('turn_id', $vehicleTurns->pluck('id'))
             ->where('liquidated', false)
             ->where('taken', false)
-            ->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
+            ->whereDate('date', $date)
             ->with(['turn.vehicle', 'turn.route', 'turn.driver', 'trajectory'])
             ->orderBy('initial_time')
             ->get();

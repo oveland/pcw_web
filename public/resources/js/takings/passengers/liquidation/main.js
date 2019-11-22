@@ -1287,6 +1287,7 @@ __webpack_require__.r(__webpack_exports__);
         return other.value ? other.value : 0;
       });
 
+      this.liquidation.totalDiscountsDetail = this.totalDiscounts;
       return this.liquidation.totalDiscounts = this.totalDiscountByTurn + totalOtherDiscounts;
     }
   }
@@ -1440,9 +1441,11 @@ __webpack_require__.r(__webpack_exports__);
         totalBea: 0,
         totalGrossBea: 0,
         totalDiscounts: 0,
+        totalDiscountsDetail: {},
         totalCommissions: 0,
         totalPenalties: 0,
-        total: 0
+        total: 0,
+        observations: ""
       }
     };
   },
@@ -1678,6 +1681,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PreviewComponent",
   props: {
@@ -1688,6 +1718,20 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     totalToLiquidate: function totalToLiquidate() {
       return this.liquidation.total = this.liquidation.totalBea - this.liquidation.totalDiscounts - this.liquidation.totalCommissions + this.liquidation.totalPenalties;
+    },
+    totalDiscountByFuel: function totalDiscountByFuel() {
+      var fuelTotalDiscount = _.head(_.filter(this.liquidation.totalDiscountsDetail, function (detail) {
+        return detail.discount.discount_type.name.toUpperCase() === "COMBUSTIBLE";
+      }));
+
+      return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
+    },
+    totalDiscountByMobilityAuxilio: function totalDiscountByMobilityAuxilio() {
+      var fuelTotalDiscount = _.head(_.filter(this.liquidation.totalDiscountsDetail, function (detail) {
+        return detail.discount.discount_type.name.toUpperCase() === "AUXILIO DE MOVILIDAD";
+      }));
+
+      return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
     }
   }
 });
@@ -1753,6 +1797,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.search.date = moment().format("YYYY-MM-DD");
+      this.search.date = '2019-06-21';
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
       })["catch"](function (error) {
@@ -2124,6 +2169,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2215,6 +2270,20 @@ __webpack_require__.r(__webpack_exports__);
         gerror('Error in liquidation process!');
         console.log(error);
       }).then(function () {});
+    },
+    totalDiscountByFuel: function totalDiscountByFuel(liquidation) {
+      var fuelTotalDiscount = _.head(_.filter(liquidation.totalDiscountsDetail, function (detail) {
+        return detail.discount.discount_type.name.toUpperCase() === "COMBUSTIBLE";
+      }));
+
+      return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
+    },
+    totalDiscountByMobilityAuxilio: function totalDiscountByMobilityAuxilio(liquidation) {
+      var fuelTotalDiscount = _.head(_.filter(liquidation.totalDiscountsDetail, function (detail) {
+        return detail.discount.discount_type.name.toUpperCase() === "AUXILIO DE MOVILIDAD";
+      }));
+
+      return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
     }
   },
   components: {
@@ -5169,7 +5238,12 @@ var render = function() {
             },
             [
               _c("admin-commission-component", {
-                attrs: { routes: _vm.routes, commissions: _vm.commissions }
+                attrs: { routes: _vm.routes, commissions: _vm.commissions },
+                on: {
+                  "refresh-report": function($event) {
+                    return _vm.$emit("refresh-report")
+                  }
+                }
               })
             ],
             1
@@ -5180,7 +5254,12 @@ var render = function() {
             { staticClass: "tab-pane", attrs: { id: "penalties-params-tab" } },
             [
               _c("admin-penalty-component", {
-                attrs: { routes: _vm.routes, penalties: _vm.penalties }
+                attrs: { routes: _vm.routes, penalties: _vm.penalties },
+                on: {
+                  "refresh-report": function($event) {
+                    return _vm.$emit("refresh-report")
+                  }
+                }
               })
             ],
             1
@@ -6798,7 +6877,11 @@ var render = function() {
                     "span",
                     {
                       staticClass: "tooltips span-commission",
-                      attrs: { title: _vm.getCommissionTitle(mark.commission) }
+                      attrs: {
+                        "data-original-title": _vm.getCommissionTitle(
+                          mark.commission
+                        )
+                      }
                     },
                     [
                       _c("i", {
@@ -7061,9 +7144,10 @@ var render = function() {
                           _c(
                             "span",
                             {
-                              staticClass: "tooltipss",
+                              staticClass: "tooltips",
                               attrs: {
-                                title: discount.discount_type.description
+                                "data-original-title":
+                                  discount.discount_type.description
                               }
                             },
                             [
@@ -7131,7 +7215,7 @@ var render = function() {
                           {
                             staticClass: "tooltips",
                             attrs: {
-                              title:
+                              "data-original-title":
                                 totalDiscount.discount.discount_type.description
                             }
                           },
@@ -7940,7 +8024,9 @@ var render = function() {
                     "span",
                     {
                       staticClass: "tooltips span-penalty",
-                      attrs: { title: _vm.getPenaltyTitle(mark.penalty) }
+                      attrs: {
+                        "data-original-title": _vm.getPenaltyTitle(mark.penalty)
+                      }
                     },
                     [
                       _c("i", { class: _vm.getPenaltyIconClass(mark.penalty) }),
@@ -8150,7 +8236,14 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("span", { staticClass: "pull-right col-md-4" }, [
-        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.liquidation.totalBea, "$0,0")))
+        _vm._v(
+          _vm._s(
+            _vm._f("numberFormat")(
+              _vm.liquidation.totalGrossBea + _vm.liquidation.totalPenalties,
+              "$0,0"
+            )
+          )
+        )
       ])
     ]),
     _vm._v(" "),
@@ -8158,17 +8251,52 @@ var render = function() {
       _vm._m(1),
       _vm._v(" "),
       _c("span", { staticClass: "pull-right col-md-4" }, [
+        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totalDiscountByFuel, "$0,0")))
+      ])
+    ]),
+    _vm._v(" "),
+    _c("h3", { staticClass: "total-liquidation" }, [
+      _c("span", { staticClass: "text-bold" }, [
+        _vm._v("\n            Saldo\n        ")
+      ]),
+      _vm._v(" "),
+      _c("span", { staticClass: "pull-right text-bold" }, [
+        _vm._v(
+          _vm._s(
+            _vm._f("numberFormat")(
+              _vm.liquidation.totalGrossBea +
+                _vm.liquidation.totalPenalties -
+                _vm.totalDiscountByFuel,
+              "$0,0"
+            )
+          )
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _c("br"),
+    _vm._v(" "),
+    _c("h3", { staticClass: "totals" }, [
+      _vm._m(2),
+      _vm._v(" "),
+      _c("span", { staticClass: "pull-right col-md-4" }, [
         _vm._v(
           "- " +
             _vm._s(
-              _vm._f("numberFormat")(_vm.liquidation.totalDiscounts, "$0,0")
+              _vm._f("numberFormat")(
+                _vm.liquidation.totalDiscounts -
+                  _vm.totalDiscountByFuel -
+                  _vm.totalDiscountByMobilityAuxilio,
+                "$0,0"
+              )
             )
         )
       ])
     ]),
     _vm._v(" "),
     _c("h3", { staticClass: "totals" }, [
-      _vm._m(2),
+      _vm._m(3),
       _vm._v(" "),
       _c("span", { staticClass: "pull-right col-md-4" }, [
         _vm._v(
@@ -8180,19 +8308,37 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("h3", { staticClass: "totals" }, [
-      _vm._m(3),
+    _c("h3", { staticClass: "totals hide" }, [
+      _vm._m(4),
       _vm._v(" "),
       _c("span", { staticClass: "pull-right col-md-4" }, [
         _vm._v(
-          _vm._s(_vm._f("numberFormat")(_vm.liquidation.totalPenalties, "$0,0"))
+          "+ " +
+            _vm._s(
+              _vm._f("numberFormat")(_vm.liquidation.totalPenalties, "$0,0")
+            )
         )
       ])
     ]),
     _vm._v(" "),
+    _c("h3", { staticClass: "totals hide" }, [
+      _vm._m(5),
+      _vm._v(" "),
+      _c("span", { staticClass: "pull-right col-md-4" }, [
+        _vm._v(
+          "- " +
+            _vm._s(
+              _vm._f("numberFormat")(_vm.totalDiscountByMobilityAuxilio, "$0,0")
+            )
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _vm._v(" "),
     _c("h3", { staticClass: "total-liquidation" }, [
       _c("span", { staticClass: "text-bold" }, [
-        _vm._v("\n            Total to liquidate\n        ")
+        _vm._v("\n            Total Liquidation\n        ")
       ]),
       _vm._v(" "),
       _c("span", { staticClass: "pull-right text-bold" }, [
@@ -8201,6 +8347,45 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("hr", { staticClass: "hr" }),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticStyle: { "font-size": "1.5em !important" } }, [
+      _c(
+        "label",
+        { staticClass: "control-label", attrs: { for: "observations" } },
+        [_vm._v("Observations")]
+      ),
+      _vm._v(" "),
+      _c("textarea", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.liquidation.observations,
+            expression: "liquidation.observations"
+          }
+        ],
+        staticClass: "form-control",
+        staticStyle: { resize: "vertical" },
+        attrs: {
+          id: "observations",
+          rows: "2",
+          readonly: _vm.readonly,
+          disabled: _vm.readonly
+        },
+        domProps: { value: _vm.liquidation.observations },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.liquidation, "observations", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("br"),
     _vm._v(" "),
     !_vm.readonly
       ? _c("div", { staticClass: "text-center" }, [
@@ -8231,7 +8416,16 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "text-bold" }, [
       _c("i", { staticClass: "fa fa-dollar" }),
-      _vm._v(" Total BEA\n        ")
+      _vm._v(" Total Value\n        ")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "text-bold" }, [
+      _c("i", { staticClass: "fa fa-tachometer" }),
+      _vm._v(" Total fuel\n        ")
     ])
   },
   function() {
@@ -8240,7 +8434,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "text-bold" }, [
       _c("i", { staticClass: "icon-tag" }),
-      _vm._v(" Total discounts\n        ")
+      _vm._v(" Total discounts (No Fuel, No Aux)\n        ")
     ])
   },
   function() {
@@ -8257,8 +8451,17 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "text-bold" }, [
-      _c("i", { staticClass: "icon-shield" }),
+      _c("i", { staticClass: " icon-user-follow" }),
       _vm._v(" Total penalties\n        ")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "text-bold" }, [
+      _c("i", { staticClass: " icon-user-follow" }),
+      _vm._v(" totalDiscountByMobilityAuxilio\n        ")
     ])
   }
 ]
@@ -8781,7 +8984,8 @@ var render = function() {
                       _vm._v(
                         _vm._s(
                           _vm._f("numberFormat")(
-                            liquidation.liquidation.totalBea,
+                            liquidation.liquidation.totalGrossBea +
+                              liquidation.liquidation.totalPenalties,
                             "$0,0"
                           )
                         )
@@ -8792,7 +8996,35 @@ var render = function() {
                       _vm._v(
                         _vm._s(
                           _vm._f("numberFormat")(
-                            liquidation.liquidation.totalDiscounts,
+                            _vm.totalDiscountByFuel(liquidation.liquidation),
+                            "$0,0"
+                          )
+                        )
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(
+                        _vm._s(
+                          _vm._f("numberFormat")(
+                            liquidation.liquidation.totalGrossBea +
+                              liquidation.liquidation.totalPenalties -
+                              _vm.totalDiscountByFuel(liquidation.liquidation),
+                            "$0,0"
+                          )
+                        )
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(
+                        _vm._s(
+                          _vm._f("numberFormat")(
+                            liquidation.liquidation.totalDiscounts -
+                              _vm.totalDiscountByFuel(liquidation.liquidation) -
+                              _vm.totalDiscountByMobilityAuxilio(
+                                liquidation.liquidation
+                              ),
                             "$0,0"
                           )
                         )
@@ -8810,7 +9042,7 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
+                    _c("td", { staticClass: "text-center hide" }, [
                       _vm._v(
                         _vm._s(
                           _vm._f("numberFormat")(
@@ -9069,70 +9301,80 @@ var render = function() {
                                         "div",
                                         {
                                           staticClass:
-                                            "portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10 text-center"
+                                            "portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10"
                                         },
                                         [
                                           _c(
-                                            "a",
-                                            {
-                                              staticClass:
-                                                "pull-left header-preview",
-                                              attrs: {
-                                                href: "javascript:",
-                                                target: "_blank"
-                                              },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.exportLiquidation()
-                                                }
-                                              }
-                                            },
+                                            "div",
+                                            { staticClass: "text-center" },
                                             [
-                                              _c("i", {
-                                                staticClass: "fa fa-download"
-                                              }),
-                                              _vm._v(
-                                                " Print basic\n                                                            "
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "a",
-                                            {
-                                              staticClass:
-                                                "pull-right header-preview",
-                                              attrs: {
-                                                href: "javascript:",
-                                                target: "_blank"
-                                              },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.exportLiquidation(
-                                                    true
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass:
+                                                    "pull-left header-preview",
+                                                  attrs: {
+                                                    href: "javascript:",
+                                                    target: "_blank"
+                                                  },
+                                                  on: {
+                                                    click: function($event) {
+                                                      return _vm.exportLiquidation()
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c("i", {
+                                                    staticClass:
+                                                      "fa fa-download"
+                                                  }),
+                                                  _vm._v(
+                                                    " Print basic\n                                                                "
                                                   )
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("i", {
-                                                staticClass: "fa fa-download"
-                                              }),
-                                              _vm._v(
-                                                " Print detailed\n                                                            "
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "span",
-                                            { staticClass: "header-preview" },
-                                            [
-                                              _vm._v(
-                                                "#" +
-                                                  _vm._s(
-                                                    _vm.liquidationDetail.id
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "a",
+                                                {
+                                                  staticClass:
+                                                    "pull-right header-preview",
+                                                  attrs: {
+                                                    href: "javascript:",
+                                                    target: "_blank"
+                                                  },
+                                                  on: {
+                                                    click: function($event) {
+                                                      return _vm.exportLiquidation(
+                                                        true
+                                                      )
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c("i", {
+                                                    staticClass:
+                                                      "fa fa-download"
+                                                  }),
+                                                  _vm._v(
+                                                    " Print detailed\n                                                                "
                                                   )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "span",
+                                                {
+                                                  staticClass: "header-preview"
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "#" +
+                                                      _vm._s(
+                                                        _vm.liquidationDetail.id
+                                                      )
+                                                  )
+                                                ]
                                               )
                                             ]
                                           ),
@@ -9213,13 +9455,27 @@ var staticRenderFns = [
         _c("th", { staticClass: "col-md-1" }, [
           _c("i", { staticClass: "fa fa-dollar text-muted" }),
           _c("br"),
-          _vm._v(" Total BEA\n                        ")
+          _vm._v(" Total Value\n                        ")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [
+          _c("i", { staticClass: "fa fa-dollar text-muted" }),
+          _c("br"),
+          _vm._v(" Total Fuel\n                        ")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [
+          _c("i", { staticClass: "fa fa-fa-dollar text-muted" }),
+          _c("br"),
+          _vm._v(" Saldo\n                        ")
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [
           _c("i", { staticClass: "icon-tag text-muted" }),
           _c("br"),
-          _vm._v(" Total Discounts\n                        ")
+          _vm._v(" Total Discounts "),
+          _c("br"),
+          _vm._v(" (No fuel, No aux)\n                        ")
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [
@@ -9228,7 +9484,7 @@ var staticRenderFns = [
           _vm._v(" Total Commissions\n                        ")
         ]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [
+        _c("th", { staticClass: "col-md-1 hide" }, [
           _c("i", { staticClass: "icon-shield text-muted" }),
           _c("br"),
           _vm._v(" Total Penalties\n                        ")
@@ -9249,7 +9505,7 @@ var staticRenderFns = [
         _c("th", { staticClass: "col-md-1" }, [
           _c("i", { staticClass: "fa fa-user text-muted" }),
           _c("br"),
-          _vm._v(" Responsable\n                        ")
+          _vm._v(" Responsible\n                        ")
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [
@@ -10665,7 +10921,7 @@ $(document).ready(function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/oscar/PCW/pcw_mov_server_web_beta/resources/js/takings/passengers/liquidation/main.js */"./resources/js/takings/passengers/liquidation/main.js");
+module.exports = __webpack_require__(/*! /Users/oscar/PCWDev/pcw_mov_server_web_beta/resources/js/takings/passengers/liquidation/main.js */"./resources/js/takings/passengers/liquidation/main.js");
 
 
 /***/ })

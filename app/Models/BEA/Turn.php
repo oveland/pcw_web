@@ -5,8 +5,11 @@ namespace App\Models\BEA;
 use App\Models\Drivers\Driver;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\BEA\Turn
@@ -15,21 +18,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $vehicle_id
  * @property int $route_id
  * @property int $driver_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Drivers\Driver $driver
- * @property-read \App\Models\Routes\Route $route
- * @property-read \App\Models\Vehicles\Vehicle $vehicle
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereDriverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereRouteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereVehicleId($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Driver $driver
+ * @property-read Route $route
+ * @property-read Vehicle $vehicle
+ * @method static Builder|Turn newModelQuery()
+ * @method static Builder|Turn newQuery()
+ * @method static Builder|Turn query()
+ * @method static Builder|Turn whereCreatedAt($value)
+ * @method static Builder|Turn whereDriverId($value)
+ * @method static Builder|Turn whereId($value)
+ * @method static Builder|Turn whereRouteId($value)
+ * @method static Builder|Turn whereUpdatedAt($value)
+ * @method static Builder|Turn whereVehicleId($value)
+ * @mixin Eloquent
  * @property-read mixed $a_p_i
  */
 class Turn extends Model

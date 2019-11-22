@@ -132,9 +132,14 @@
                     totalBea: 0,
                     totalGrossBea: 0,
                     totalDiscounts: 0,
+                    totalDiscountsDetail: {},
+
                     totalCommissions: 0,
+
                     totalPenalties: 0,
-                    total: 0
+
+                    total: 0,
+                    observations : ""
                 }
             };
         },

@@ -36,9 +36,9 @@ class DiscountTypesTableSeeder extends Seeder
 
         foreach ($types as $name => $type) {
             DiscountType::create([
-                'name' => $name,
+                'name' => __(ucfirst($name)),
                 'icon' => $type->icon,
-                'description' => __('Discount by') . " ".ucfirst($name),
+                'description' => __('Discount by') . " ".__(ucfirst($name)),
                 'default' => random_int($type->min, $type->max)
             ]);
         }

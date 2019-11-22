@@ -45,7 +45,7 @@
                 <td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center col-md-3">
                     <div v-for="discount in mark.discounts" v-if="discount">
-                        <span :title="discount.discount_type.description" class="tooltipss">
+                        <span :data-original-title="discount.discount_type.description" class="tooltips">
                             <i :class="discount.discount_type.icon"></i> {{ discount.value | numberFormat('$0,0') }}
                         </span><br>
                     </div>
@@ -66,7 +66,7 @@
                 <td class="text-center">{{ totalGrossBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center">
                     <div v-for="totalDiscount in totalDiscounts" v-if="totalDiscount">
-                        <span :title="totalDiscount.discount.discount_type.description" class="tooltips">
+                        <span :data-original-title="totalDiscount.discount.discount_type.description" class="tooltips">
                             <i :class="totalDiscount.discount.discount_type.icon"></i> {{ totalDiscount.value | numberFormat('$0,0') }}
                         </span><br>
                     </div>
@@ -208,6 +208,7 @@
                 const totalOtherDiscounts = _.sumBy(this.liquidation.otherDiscounts, function (other) {
                     return (other.value ? other.value : 0);
                 });
+                this.liquidation.totalDiscountsDetail = this.totalDiscounts;
                 return this.liquidation.totalDiscounts = this.totalDiscountByTurn + totalOtherDiscounts;
             }
         }

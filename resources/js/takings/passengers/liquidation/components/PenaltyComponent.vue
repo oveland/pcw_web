@@ -40,7 +40,7 @@
                 <td class="text-center">{{ mark.passengersBEA }}</td>
                 <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center col-md-3">
-                    <span class="tooltips span-penalty" :title="getPenaltyTitle(mark.penalty)">
+                    <span class="tooltips span-penalty" :data-original-title="getPenaltyTitle(mark.penalty)">
                         <i :class="getPenaltyIconClass(mark.penalty)"></i> {{ mark.penalty.value | numberFormat('$0,0') }}
                     </span><br>
                 </td>

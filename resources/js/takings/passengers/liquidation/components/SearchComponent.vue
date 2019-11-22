@@ -44,6 +44,7 @@
         methods: {
             getSearchParams: function () {
                 this.search.date = moment().format("YYYY-MM-DD");
+                this.search.date = '2019-06-21';
                 axios.get(this.urlParams)
                     .then(response => {
                         this.search.vehicles = response.data;

@@ -151,7 +151,7 @@
                                                                     }
                                                                 }
                                                             @endphp
-                                                            <div class="tooltipss" data-title="{{ $controlPoint->name }}">
+                                                            <div class="tooltips" data-title="{{ $controlPoint->name }}">
                                                                 <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $statusColor }}"></i>
                                                                 <br>
                                                                 <button type="button" class="f-s-12 m-t-5 btn btn-{{ $statusColor }} light btn-xs"

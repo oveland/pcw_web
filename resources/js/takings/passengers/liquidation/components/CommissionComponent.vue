@@ -41,7 +41,7 @@
                 <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center col-md-3">
-                    <span class="tooltips span-commission" :title="getCommissionTitle(mark.commission)">
+                    <span class="tooltips span-commission" :data-original-title="getCommissionTitle(mark.commission)">
                         <i :class="getCommissionIconClass(mark.commission)"></i> {{ mark.commission.value | numberFormat('$0,0') }}
                     </span><br>
                 </td>

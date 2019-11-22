@@ -622,5 +622,6 @@
   "Parked": "Parqueado",
   "Power Off": "Apagado",
   "Vehicle no report": "No reporta",
-  "Historic report": "Reporte histórico"
+  "Historic report": "Reporte histórico",
+  "There are turns no liquidated in :date fot this vehicle": "Existen turnos sin liquidar para este vehículo en la fecha :date"
 }

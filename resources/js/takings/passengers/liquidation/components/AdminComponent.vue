@@ -35,10 +35,10 @@
                         <admin-discount-component :vehicles="vehicles" :routes="routes" :trajectories="trajectories" v-on:refresh-report="$emit('refresh-report')"></admin-discount-component>
                     </div>
                     <div class="tab-pane" id="commissions-params-tab">
-                        <admin-commission-component :routes="routes" :commissions="commissions"></admin-commission-component>
+                        <admin-commission-component :routes="routes" :commissions="commissions" v-on:refresh-report="$emit('refresh-report')"></admin-commission-component>
                     </div>
                     <div class="tab-pane" id="penalties-params-tab">
-                        <admin-penalty-component :routes="routes" :penalties="penalties"></admin-penalty-component>
+                        <admin-penalty-component :routes="routes" :penalties="penalties" v-on:refresh-report="$emit('refresh-report')"></admin-penalty-component>
                     </div>
                 </div>
             </div>
