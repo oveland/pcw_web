@@ -1721,7 +1721,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     totalDiscountByFuel: function totalDiscountByFuel() {
       var fuelTotalDiscount = _.head(_.filter(this.liquidation.totalDiscountsDetail, function (detail) {
-        return detail.discount.discount_type.name.toUpperCase() === "COMBUSTIBLE";
+        var discountName = detail.discount.discount_type.name.toUpperCase();
+        return discountName === "COMBUSTIBLE" || discountName === "FUEL";
       }));
 
       return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
