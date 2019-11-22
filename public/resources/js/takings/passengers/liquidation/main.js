@@ -9315,7 +9315,7 @@ var render = function() {
                                                     "pull-left header-preview",
                                                   attrs: {
                                                     href: "javascript:",
-                                                    target: "_blank"
+                                                    target: ""
                                                   },
                                                   on: {
                                                     click: function($event) {
@@ -9341,7 +9341,7 @@ var render = function() {
                                                     "pull-right header-preview",
                                                   attrs: {
                                                     href: "javascript:",
-                                                    target: "_blank"
+                                                    target: ""
                                                   },
                                                   on: {
                                                     click: function($event) {

@@ -181,11 +181,11 @@
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
                                                             <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10">
                                                                 <div class="text-center">
-                                                                    <a href="javascript:" target="_blank" class="pull-left header-preview" @click="exportLiquidation()">
+                                                                    <a href="javascript:" target="" class="pull-left header-preview" @click="exportLiquidation()">
                                                                         <i class="fa fa-download"></i> Print basic
                                                                     </a>
 
-                                                                    <a href="javascript:" target="_blank" class="pull-right header-preview" @click="exportLiquidation(true)">
+                                                                    <a href="javascript:" target="" class="pull-right header-preview" @click="exportLiquidation(true)">
                                                                         <i class="fa fa-download"></i> Print detailed
                                                                     </a>
                                                                     <span class="header-preview">#{{ liquidationDetail.id }}</span>
