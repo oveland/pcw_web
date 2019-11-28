@@ -49,7 +49,7 @@
                     .then(response => {
                         this.search.vehicles = response.data;
                         this.search.vehicle = _.find(response.data, function(v){
-                            return v.id === 1987;
+                            return v.id === 1941;
                         });
                         this.searchReport();
                     })

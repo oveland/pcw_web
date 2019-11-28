@@ -1744,7 +1744,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
         _this.search.vehicle = _.find(response.data, function (v) {
-          return v.id === 1987;
+          return v.id === 1941;
         });
 
         _this.searchReport();
