@@ -137,7 +137,7 @@
                                                     <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
                                                          href="#step-liquidate-detail" data-active="done">
                                                         <div class="mt-step-number bg-white">
-                                                            <i class="icon-calculator"></i>
+                                                            <i class="icon-layers"></i>
                                                         </div>
                                                         <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Liquidation') }}</div>
                                                         <div class="mt-step-content font-grey-cascade"></div>

@@ -12506,7 +12506,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "mt-step-number bg-white" }, [
-      _c("i", { staticClass: "icon-calculator" })
+      _c("i", { staticClass: "icon-layers" })
     ])
   }
 ]
