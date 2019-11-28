@@ -157,6 +157,18 @@ class Mark extends Model
         return $status[0];
     }
 
+    public function getBoardedAttribute()
+    {
+        switch ($this->id){
+            case 8771:
+                return 10;
+                break;
+            case 8840:
+                return 7;
+                break;
+        }
+    }
+
     /**
      * @return Discount[] | Collection
      */
