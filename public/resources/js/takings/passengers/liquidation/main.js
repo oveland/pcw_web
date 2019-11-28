@@ -1744,7 +1744,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
         _this.search.vehicle = _.find(response.data, function (v) {
-          return v.id === 1941;
+          return v.number === '8056';
         });
 
         _this.searchReport();
@@ -11259,7 +11259,7 @@ var render = function() {
                     "option-height": 104,
                     searchable: true,
                     "allow-empty": true,
-                    placeholder: "Select vehicle"
+                    placeholder: _vm.$t("Select a vehicle")
                   },
                   on: {
                     input: function($event) {
@@ -26445,10 +26445,12 @@ var liquidationView = new Vue({
   },
   computed: {
     searchParams: function searchParams() {
+      var vehicle = this.search.vehicle;
       return {
         flag: this.flag,
         date: this.search.date,
-        vehicle: this.search.vehicle.id
+        vehicle: vehicle ? this.search.vehicle.id : null,
+        valid: !!(vehicle && this.search.date)
       };
     },
     liquidatedMarks: function liquidatedMarks() {

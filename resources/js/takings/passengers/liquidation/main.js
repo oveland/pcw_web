@@ -45,10 +45,13 @@ let liquidationView = new Vue({
     },
     computed: {
         searchParams: function () {
+            const vehicle = this.search.vehicle;
+
             return {
                 flag: this.flag,
                 date: this.search.date,
-                vehicle: this.search.vehicle.id,
+                vehicle: vehicle? this.search.vehicle.id : null,
+                valid: !!(vehicle && this.search.date)
             }
         },
         liquidatedMarks: function () {

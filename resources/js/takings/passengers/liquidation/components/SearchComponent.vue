@@ -12,7 +12,7 @@
                         <label class="control-label">{{ $t('Vehicle') }}</label>
                         <div class="form-group">
                             <multiselect track-by="number" label="number" :options="search.vehicles" @input="searchReport()" v-model="search.vehicle"
-                                 :option-height="104" :searchable="true" :allow-empty="true" placeholder="Select vehicle"
+                                 :option-height="104" :searchable="true" :allow-empty="true" :placeholder="$t('Select a vehicle')"
                             ></multiselect>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                     .then(response => {
                         this.search.vehicles = response.data;
                         this.search.vehicle = _.find(response.data, function(v){
-                            return v.id === 1941;
+                            return v.number === '8056';
                         });
                         this.searchReport();
                     })
