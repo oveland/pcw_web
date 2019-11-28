@@ -12098,8 +12098,8 @@ var render = function() {
                                     "phases col-md-3 mt-step-col phase-inventory",
                                   attrs: {
                                     "data-toggle": "tab",
-                                    href: "#step-commissions-detail",
-                                    "data-active": "active"
+                                    href: "#step-penalties-detail",
+                                    "data-active": "error"
                                   }
                                 },
                                 [
@@ -12111,7 +12111,7 @@ var render = function() {
                                       staticClass:
                                         "mt-step-title uppercase font-grey-cascade"
                                     },
-                                    [_vm._v(_vm._s(_vm.$t("Commissions")))]
+                                    [_vm._v(_vm._s(_vm.$t("Penalties")))]
                                   ),
                                   _vm._v(" "),
                                   _c("div", {
@@ -12128,8 +12128,8 @@ var render = function() {
                                     "phases col-md-3 mt-step-col phase-inventory",
                                   attrs: {
                                     "data-toggle": "tab",
-                                    href: "#step-penalties-detail",
-                                    "data-active": "error"
+                                    href: "#step-commissions-detail",
+                                    "data-active": "active"
                                   }
                                 },
                                 [
@@ -12141,7 +12141,7 @@ var render = function() {
                                       staticClass:
                                         "mt-step-title uppercase font-grey-cascade"
                                     },
-                                    [_vm._v(_vm._s(_vm.$t("Penalties")))]
+                                    [_vm._v(_vm._s(_vm.$t("Commissions")))]
                                   ),
                                   _vm._v(" "),
                                   _c("div", {
@@ -12222,7 +12222,7 @@ var render = function() {
                                   "div",
                                   {
                                     staticClass: "tab-pane fade",
-                                    attrs: { id: "step-commissions-detail" }
+                                    attrs: { id: "step-penalties-detail" }
                                   },
                                   [
                                     _c(
@@ -12232,9 +12232,8 @@ var render = function() {
                                           " phase-container col-md-12 m-t-10"
                                       },
                                       [
-                                        _c("commission-component", {
+                                        _c("penalty-component", {
                                           attrs: {
-                                            readonly: true,
                                             marks: _vm.liquidationDetail.marks,
                                             totals:
                                               _vm.liquidationDetail.totals,
@@ -12252,7 +12251,7 @@ var render = function() {
                                   "div",
                                   {
                                     staticClass: "tab-pane fade",
-                                    attrs: { id: "step-penalties-detail" }
+                                    attrs: { id: "step-commissions-detail" }
                                   },
                                   [
                                     _c(
@@ -12262,8 +12261,9 @@ var render = function() {
                                           " phase-container col-md-12 m-t-10"
                                       },
                                       [
-                                        _c("penalty-component", {
+                                        _c("commission-component", {
                                           attrs: {
+                                            readonly: true,
                                             marks: _vm.liquidationDetail.marks,
                                             totals:
                                               _vm.liquidationDetail.totals,
@@ -12490,7 +12490,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "mt-step-number bg-white" }, [
-      _c("i", { staticClass: " icon-user-follow" })
+      _c("i", { staticClass: "icon-shield" })
     ])
   },
   function() {
@@ -12498,7 +12498,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "mt-step-number bg-white" }, [
-      _c("i", { staticClass: "icon-shield" })
+      _c("i", { staticClass: " icon-user-follow" })
     ])
   },
   function() {

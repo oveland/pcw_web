@@ -119,19 +119,19 @@
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                         href="#step-commissions-detail" data-active="active">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class=" icon-user-follow"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Commissions') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade hide"></div>
-                                                    </div>
-                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
                                                          href="#step-penalties-detail" data-active="error">
                                                         <div class="mt-step-number bg-white">
                                                             <i class="icon-shield"></i>
                                                         </div>
                                                         <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Penalties') }}</div>
+                                                        <div class="mt-step-content font-grey-cascade hide"></div>
+                                                    </div>
+                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
+                                                         href="#step-commissions-detail" data-active="active">
+                                                        <div class="mt-step-number bg-white">
+                                                            <i class=" icon-user-follow"></i>
+                                                        </div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Commissions') }}</div>
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
@@ -153,14 +153,14 @@
                                                                 <discount-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-commissions-detail" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-12 m-t-10">
-                                                                <commission-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
-                                                            </div>
-                                                        </div>
                                                         <div id="step-penalties-detail" class="tab-pane fade">
                                                             <div class=" phase-container col-md-12 m-t-10">
                                                                 <penalty-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></penalty-component>
+                                                            </div>
+                                                        </div>
+                                                        <div id="step-commissions-detail" class="tab-pane fade">
+                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                                <commission-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
