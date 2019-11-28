@@ -42,6 +42,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Fringe query()
  * @property string|null $uid
  * @method static Builder|Fringe whereUid($value)
+ * @property string|null $time_from
+ * @property string|null $time_to
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereTimeFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereTimeTo($value)
  */
 class Fringe extends Model
 {

@@ -70,12 +70,12 @@ class TakingsPassengersLiquidationController extends Controller
 
         $options = (object)[
             'w' => 350,
-            'h' => 340,
+            'h' => 600,
             'dpi' => 150,
         ];
         $template = 'takings.passengers.liquidation.exports.liquidation';
 
-        if($request->get('all')){
+        if ($request->get('all')) {
             $template = 'takings.passengers.liquidation.exports.liquidationAll';
             $options = (object)[
                 'w' => 350,
@@ -248,15 +248,15 @@ class TakingsPassengersLiquidationController extends Controller
                 $commissionToEdit = (object)$request->get('commission');
                 $commission = Commission::find($commissionToEdit->id);
 
-                if($commission){
+                if ($commission) {
                     $commission->type = $commissionToEdit->type;
                     $commission->value = $commissionToEdit->value;
 
-                    if(!$commission->save()){
+                    if (!$commission->save()) {
                         $response->error = true;
                         $response->message .= "<br> - " . __("Commission unable to update");
                     }
-                }else{
+                } else {
                     $response->error = true;
                     $response->message .= "<br> - " . __("Commission register doesn't exists in the system");
                 }
@@ -272,15 +272,15 @@ class TakingsPassengersLiquidationController extends Controller
                 $penaltyToEdit = (object)$request->get('penalty');
                 $penalty = Penalty::find($penaltyToEdit->id);
 
-                if($penalty){
+                if ($penalty) {
                     $penalty->type = $penaltyToEdit->type;
                     $penalty->value = $penaltyToEdit->value;
 
-                    if(!$penalty->save()){
+                    if (!$penalty->save()) {
                         $response->error = true;
                         $response->message .= "<br> - " . __("Penalty unable to update");
                     }
-                }else{
+                } else {
                     $response->error = true;
                     $response->message .= "<br> - " . __("Penalty register doesn't exists in the system");
                 }
@@ -307,13 +307,14 @@ class TakingsPassengersLiquidationController extends Controller
 
         DB::beginTransaction();
         $user = Auth::user();
-
+        $dataLiquidation = collect($request->get('liquidation'));
         $marksID = collect($request->get('marks'));
+        $falls = collect($request->get('falls'));
 
         $liquidation = new Liquidation();
         $liquidation->date = Mark::find($marksID->first())->date;
         $liquidation->vehicle_id = $request->get('vehicle');
-        $liquidation->liquidation = collect($request->get('liquidation'))->toJson();
+        $liquidation->liquidation = $dataLiquidation->toJson();
         $liquidation->totals = collect($request->get('totals'))->toJson();
         $liquidation->user_id = $user->id;
 
@@ -321,7 +322,7 @@ class TakingsPassengersLiquidationController extends Controller
         $dateQuery = $liquidation->date->toDateString();
 
         $lastMarksNoLiquidated = Mark::where('date', '<', $dateQuery)
-            ->whereHas('turn', function($turn) use ($vehicle){
+            ->whereHas('turn', function ($turn) use ($vehicle) {
                 return $turn->where('vehicle_id', $vehicle->id);
             })
             ->where('liquidated', false)
@@ -330,10 +331,10 @@ class TakingsPassengersLiquidationController extends Controller
             ->limit(1)
             ->get()->first();
 
-        if($lastMarksNoLiquidated){
+        if ($lastMarksNoLiquidated) {
             $response->success = false;
             $response->message = __('There are turns no liquidated in :date fot this vehicle', ['date' => $lastMarksNoLiquidated->date->toDateString()]);
-        }else{
+        } else {
             if ($marksID->count()) {
                 if ($liquidation->save()) {
                     foreach ($marksID as $markId) {
@@ -341,6 +342,8 @@ class TakingsPassengersLiquidationController extends Controller
                         if ($mark) {
                             $mark->liquidated = true;
                             $mark->liquidation_id = $liquidation->id;
+                            $mark->pay_fall = collect($falls->get('pay'))->get($mark->id);
+                            $mark->get_fall = collect($falls->get('get'))->get($mark->id);
                             if (!$mark->save()) {
                                 $response->success = false;
                                 $response->message = __('Error at associate liquidation with BEA Mark register');

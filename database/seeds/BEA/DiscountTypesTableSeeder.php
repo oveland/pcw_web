@@ -25,13 +25,7 @@ class DiscountTypesTableSeeder extends Seeder
                 'icon' => 'fa fa-ticket',
                 'min' => 8000,
                 'max' => 12000,
-            ],
-            'washing' => (object)[
-                'id' => 2,
-                'icon' => 'fa fa-tint',
-                'min' => 20000,
-                'max' => 30000,
-            ],
+            ]
         ];
 
         foreach ($types as $name => $type) {
@@ -47,6 +41,13 @@ class DiscountTypesTableSeeder extends Seeder
             'name' => __('Mobility auxilio'),
             'icon' => 'fa fa-user text-warning',
             'description' => __('Discount by') .' '. __('Mobility auxilio'),
+            'default' => random_int(2000, 5000)
+        ]);
+
+        DiscountType::create([
+            'name' => __('Operative Expenses'),
+            'icon' => 'fa fa-hint text-warning',
+            'description' => __('Discount by') .' '. __('Operative Expenses'),
             'default' => random_int(2000, 5000)
         ]);
     }

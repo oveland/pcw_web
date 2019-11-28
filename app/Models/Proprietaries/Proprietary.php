@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary query()
+ * @property string|null $identity
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereIdentity($value)
  */
 class Proprietary extends Model
 {

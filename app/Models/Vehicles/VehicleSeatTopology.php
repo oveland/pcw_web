@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|VehicleSeatTopology whereName($value)
  * @method static Builder|VehicleSeatTopology whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatTopology newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatTopology newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleSeatTopology query()
  */
 class VehicleSeatTopology extends Model
 {

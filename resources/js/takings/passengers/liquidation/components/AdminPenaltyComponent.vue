@@ -20,25 +20,25 @@
                                             <i class="fa fa-list-ol text-muted"></i><br>
                                         </th>
                                         <th class="col-md-2">
-                                            <i class="icon-tag text-muted"></i><br> Type
+                                            <i class="icon-tag text-muted"></i><br> {{ $t('Type') }}
                                         </th>
                                         <th class="col-md-2">
-                                            <i class="fa fa-dollar text-muted"></i><br> Value
+                                            <i class="fa fa-dollar text-muted"></i><br> {{ $t('Value') }}
                                         </th>
                                         <th class="col-md-2">
-                                            <i class="fa fa-rocket text-muted"></i><br> Options
+                                            <i class="fa fa-rocket text-muted"></i><br> {{ $t('Options') }}
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr class="" v-for="(penalty, indexPenalty) in penaltiesFor(route.id)">
                                         <td class="text-center">{{ indexPenalty + 1 }}</td>
-                                        <td class="text-center">{{ penalty.type | capitalize }}</td>
+                                        <td class="text-center">{{ $t(penalty.type) | capitalize }}</td>
                                         <td class="text-center">
                                             {{ penalty.value | numberFormat('$0,0') }}
                                         </td>
                                         <td class="text-center">
-                                            <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Edit" @click="editPenalty(penalty)"
+                                            <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Edit')" @click="editPenalty(penalty)"
                                                     data-toggle="modal" data-target="#modal-admin-penalty-edit">
                                                 <i class="fa fa-edit"></i>
                                             </button>
@@ -49,10 +49,6 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <hr class="hr">
-                                <button class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips pull-right" title="Editar" onclick="ginfo('Feature on development')">
-                                    <i class="fa fa-edit"></i> Edit
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -69,18 +65,17 @@
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
                                         <select id="edit-penalty-type" readonly type="text" class="form-control" v-model="editingPenalty.type">
-                                            <option v-for="(type) in penaltyTypes" :value="type">{{ type }}</option>
+                                            <option v-for="(type) in penaltyTypes" :value="type">{{ $t(type) | capitalize }}</option>
                                         </select>
-                                        <label for="edit-penalty-type">Penalty type</label>
-                                        <i class="fa fa-tag"></i>
+                                        <label for="edit-penalty-type">{{ $t('Penalty type') }}</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
-                                        <input id="edit-penalty-value" type="text" class="form-control" placeholder="Value" autofocus v-model="editingPenalty.value">
-                                        <label for="edit-penalty-value">Value</label>
+                                        <input id="edit-penalty-value" type="text" class="form-control" :placeholder="$t('Value')" autofocus v-model="editingPenalty.value">
+                                        <label for="edit-penalty-value">{{ $t('Value') }}</label>
                                         <i class="fa fa-dollar"></i>
                                     </div>
                                 </div>
@@ -88,10 +83,10 @@
                         </div>
                     </div>
                     <div class="modal-footer col-md-12 text-center">
-                        <button type="button" class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Cancel" onclick="$('#modal-admin-penalty-edit').modal('hide')">
+                        <button type="button" class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Cancel')" onclick="$('#modal-admin-penalty-edit').modal('hide')">
                             <i class="fa fa-times"></i>
                         </button>
-                        <button class="btn btn-success btn-outline sbold uppercase btn-circle tooltips" title="Save">
+                        <button class="btn btn-success btn-outline sbold uppercase btn-circle tooltips" :title="$t('Save')">
                             <i class="fa fa-save"></i>
                         </button>
                     </div>

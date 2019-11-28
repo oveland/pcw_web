@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use PhpParser\Node\Expr\Cast\Object_;
 
 /**
  * App\Models\BEA\Mark
@@ -74,9 +75,14 @@ use Illuminate\Support\Collection;
  * @property-read Carbon initialTime
  * @property-read Carbon finalTime
  * @property-read Object $penalty
+ * @property int $pay_fall
+ * @property int $get_fall
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereExtra($value)
  */
 class Mark extends Model
 {
+    const BEA_CTE = 1000; // TODO: Define real value from production!
+
     protected $table = 'bea_marks';
 
     protected $dates = ['date'];
@@ -167,13 +173,21 @@ class Mark extends Model
     }
 
     /**
-     * @param $data
      * @return int
      */
-    /*public function getTotalBeaAttribute($data)
+    function getTotalBeaAttribute()
     {
-        return $this->total_bea;
-    }*/
+        switch ($this->id){
+            case 8842:
+                return 193800 + 4000;
+                break;
+            case 8785:
+                return 109200 + 4000;
+                break;
+        }
+
+        return (($this->im_bea_max + $this->im_bea_min) / 2) * self::BEA_CTE;
+    }
 
     /**
      * @return int
@@ -185,9 +199,7 @@ class Mark extends Model
             return $d->discountType->name == __('Mobility auxilio');
         })->first();
 
-        $totalBEA = (($this->im_bea_max  + $this->im_bea_min)/2)*1000;
-
-        return $discountByMobilityAuxilio ? $totalBEA - $discountByMobilityAuxilio->value : $totalBEA;
+        return $discountByMobilityAuxilio ? $this->total_bea - $discountByMobilityAuxilio->value : $this->total_bea;
     }
 
     /**
@@ -206,11 +218,10 @@ class Mark extends Model
                     $commissionValue += $this->passengers_bea * $commissionByRoute->value;
                     break;
                 case 'percent':
-                    $commissionValue += $totalGrossBea * $commissionByRoute->value / 100;
+                    $commissionValue += ($totalGrossBea + $this->penalty->value) * $commissionByRoute->value / 100;
                     break;
             }
         }
-
 
         $commission = (object)[
             'value' => $commissionValue,
@@ -243,7 +254,6 @@ class Mark extends Model
 
     function getAPIFields()
     {
-        $totalBEA = (($this->im_bea_max  + $this->im_bea_min)/2)*1000;
         return (object)[
             'id' => $this->id,
             'turn' => $this->turn,
@@ -259,7 +269,7 @@ class Mark extends Model
             'boarded' => $this->boarded,
             'imBeaMax' => $this->im_bea_max,
             'imBeaMin' => $this->im_bea_min,
-            'totalBEA' => $totalBEA,
+            'totalBEA' => $this->total_bea,
             'totalGrossBEA' => $this->total_gross_bea,
             'passengersBEA' => $this->passengers_bea,
             'discounts' => $this->discounts->toArray(),
@@ -269,6 +279,8 @@ class Mark extends Model
             'liquidated' => $this->liquidated,
             'liquidation_id' => $this->liquidation_id,
             'taken' => $this->taken,
+            'payFall' => $this->pay_fall,
+            'getFall' => $this->get_fall
         ];
     }
 }

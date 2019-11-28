@@ -55,6 +55,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog query()
+ * @property string|null $vehicle_tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserLog whereVehicleTags($value)
  */
 class UserLog extends Model
 {

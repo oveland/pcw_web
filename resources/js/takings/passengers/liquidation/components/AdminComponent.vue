@@ -9,22 +9,22 @@
                 </div>
                 <div class="caption">
                     <i class="fa fa-cogs"></i>
-                    <span class="caption-subject font-dark bold uppercase">Params Manager</span>
+                    <span class="caption-subject font-dark bold uppercase">{{ $t('Params manager') }}</span>
                 </div>
                 <ul class="nav nav-tabs">
                     <li class="active">
                         <a href="#discounts-params-tab" data-toggle="tab">
-                            <i class="icon-tag"></i> Discounts
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#commissions-params-tab" data-toggle="tab">
-                            <i class=" icon-user-follow"></i> Commissions
+                            <i class="icon-tag"></i> {{ $t('Discounts') }}
                         </a>
                     </li>
                     <li>
                         <a href="#penalties-params-tab" data-toggle="tab">
-                            <i class="icon-shield"></i> Penalties
+                            <i class="icon-shield"></i> {{ $t('Penalties') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#commissions-params-tab" data-toggle="tab">
+                            <i class=" icon-user-follow"></i> {{ $t('Commissions') }}
                         </a>
                     </li>
                 </ul>
@@ -34,11 +34,11 @@
                     <div class="tab-pane active" id="discounts-params-tab">
                         <admin-discount-component :vehicles="vehicles" :routes="routes" :trajectories="trajectories" v-on:refresh-report="$emit('refresh-report')"></admin-discount-component>
                     </div>
-                    <div class="tab-pane" id="commissions-params-tab">
-                        <admin-commission-component :routes="routes" :commissions="commissions" v-on:refresh-report="$emit('refresh-report')"></admin-commission-component>
-                    </div>
                     <div class="tab-pane" id="penalties-params-tab">
                         <admin-penalty-component :routes="routes" :penalties="penalties" v-on:refresh-report="$emit('refresh-report')"></admin-penalty-component>
+                    </div>
+                    <div class="tab-pane" id="commissions-params-tab">
+                        <admin-commission-component :routes="routes" :commissions="commissions" v-on:refresh-report="$emit('refresh-report')"></admin-commission-component>
                     </div>
                 </div>
             </div>

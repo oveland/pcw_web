@@ -2,27 +2,13 @@
     function asDollars($value) {
       return '$' . number_format($value, 0);
     }
+
+    $totals = $liquidation->totals;
 @endphp
 <style>
-    /* latin-ext */
-    @font-face {
-        font-family: 'Lato';
-        font-style: normal;
-        font-weight: 400;
-        src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v15/S6uyw4BMUTPHjxAwXjeu.woff2) format('woff2');
-        unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-    }
-
-    /* latin */
-    @font-face {
-        font-family: 'Lato';
-        font-style: normal;
-        font-weight: 400;
-        src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v15/S6uyw4BMUTPHjx4wXg.woff2) format('woff2');
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-    }
+    @import url('https://fonts.googleapis.com/css?family=Bai+Jamjuree&display=swap');
     * {
-        font-family: 'Lato', sans-serif !important;
+        font-family: 'Bai Jamjuree', sans-serif !important;
         font-weight: normal;
     }
 
@@ -35,7 +21,13 @@
     }
 
     .text-bold{
-        font-weight: bold !important;
+
+    }
+    hr{
+        border: rgba(11, 18, 11, 0.36) 1px solid;
+    }
+    .hr{
+        margin-top: 35px !important;
     }
     .m-0{
         margin: 0 !important;
@@ -43,9 +35,16 @@
     .p-0{
         padding: 0 !important;
     }
-    .totals{
+    .totals, .total-liquidation{
         height: 10px;
         width: 100% !important;
+        clear: bottom;
+    }
+    h4.totals{
+        padding-left: 20px !important;
+    }
+    h4.totals span{
+        font-size: 0.9em !important;
     }
 </style>
 <body>
@@ -65,44 +64,110 @@
             <span class="text-bold">@lang('Date'):</span> {{ $liquidation->date->toDateString() }}
             <span>({{ $liquidation->firstMark->initialTime->totimeString() }} @lang('to') {{ $liquidation->lastMark->finalTime->totimeString() }})</span>
         </h4>
-        <hr class="hr">
+        <hr class="">
         <h5 class="search m-0" style="text-align: right;clear: both;text-align: center">
             <span>@lang('Printed at') {{ \Carbon\Carbon::now() }}</span>
             <br>
             <span>@lang('Liquidated at') {{ $liquidation->created_at }}</span>
         </h5>
+
+        <hr class="">
+
+        <h3 class="totals">
+            <span class="text-bold">
+                <i class="fa fa-dollar"></i> @lang('Total turns')
+            </span>
+            <span class="pull-right text-bold col-md-4">{{ asDollars($totals->totalTurns) }}</span>
+        </h3>
+        <h4 class="totals">
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total pay fall')
+            </span>
+            <span class="pull-right col-md-4">{{ asDollars($totals->totalPayFall) }}</span>
+        </h4>
+        <h4 class="totals">
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total get fall')
+            </span>
+            <span class="pull-right col-md-4">{{ asDollars($totals->totalGetFall) }}</span>
+        </h4>
+
+
+        <h3 class="totals">
+            <span class="text-bold">
+                <i class="icon-tag"></i> @lang('Subtotal')
+            </span>
+            <span class="pull-right text-bold col-md-4">{{ asDollars($totals->subTotalTurns) }}</span>
+        </h3>
+        <h4 class="totals">
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total tolls')
+            </span>
+            <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByTolls) }}</span>
+        </h4>
+        <h4 class="totals">
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total commissions')
+            </span>
+            <span class="pull-right col-md-4">{{ asDollars($totals->totalCommissions) }}</span>
+        </h4>
+        <h4 class="totals">
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total operative expenses')
+            </span>
+            <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByOperativeExpenses) }}</span>
+        </h4>
+        @if($totals->totalOtherDiscounts)
+        <h4 class="totals">
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total other discounts')
+            </span>
+            <span class="pull-right col-md-4">{{ asDollars($totals->totalOtherDiscounts) }}</span>
+        </h4>
+        @endif
+
+
+        <h3 class="totals">
+            <span class="text-bold">
+                <i class=" icon-user-follow"></i> @lang('Total dispatch')
+            </span>
+            <span class="pull-right text-bold col-md-4">{{ asDollars($totals->totalDispatch) }}</span>
+        </h3>
+
         <hr class="hr">
         <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-dollar"></i> Total BEA
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total fuel')
             </span>
-            <span class="pull-right col-md-4">{{ asDollars($liquidation->liquidation->totalBea) }}</span>
+            <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByFuel) }}</span>
         </h3>
-        <h3 class="totals">
+        <br>
+        <h3 class="total-liquidation">
             <span class="text-bold">
-                <i class="icon-tag"></i> Total @lang('Discounts')
+                @lang('Balance')
             </span>
-            <span class="pull-right col-md-4">- {{ asDollars($liquidation->liquidation->totalDiscounts) }}</span>
+            <span class="pull-right text-bold">{{ asDollars($totals->balance) }}</span>
         </h3>
-        <h3 class="totals">
-            <span class="text-bold">
-                <i class=" icon-user-follow"></i> Total @lang('Commissions')
-            </span>
-            <span class="pull-right col-md-4">- {{ asDollars($liquidation->liquidation->totalCommissions) }}</span>
-        </h3>
-        <h3 class="totals">
-            <span class="text-bold">
-                <i class="icon-shield"></i> Total @lang('Penalties')
-            </span>
-            <span class="pull-right col-md-4">{{ asDollars($liquidation->liquidation->totalPenalties) }}</span>
-        </h3>
+
         <hr class="hr">
-        <h2 class="total-liquidation">
-            <span class="text-bold">
-                @lang('Total liquidation')
+
+        <h5 class="totals">
+            <span class="">
+                @lang('Total locks'):
             </span>
-            <span class="pull-right text-bold">{{ asDollars($liquidation->total) }}</span>
-        </h2>
+            <span class="">{{ $totals->totalLocks }}</span>
+            <br>
+            <span class="">
+                @lang('Total exempts'):
+            </span>
+            <span class="">{{ $totals->totalAuxiliaries }}</span>
+
+            @if($liquidation->liquidation->observations)
+            <hr class="hr">
+
+            <span class="">@lang('Observations'): {{ $liquidation->liquidation->observations }}</span>
+        </h5>
+        @endif
     </div>
 </body>
 

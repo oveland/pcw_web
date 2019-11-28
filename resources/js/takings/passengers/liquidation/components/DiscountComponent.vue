@@ -1,31 +1,31 @@
 <template>
     <div>
-        <table class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">
+        <table class="table table-bordered table-condensed table-hover table-valign-middle table-report">
             <thead>
             <tr class="inverse">
                 <th class="col-md-2">
-                    <i class="fa fa-flag text-muted"></i><br> Route / Trajectory
+                    <i class="fa fa-flag text-muted"></i><br> {{ $t('Route') }} / {{ $t('Trajectory') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> Locks
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Locks') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> Auxiliaries
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Auxiliaries') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> Boarded
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Boarded') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> BEA
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('BEA') }}
                 </th>
                 <th class="col-md-2">
-                    <i class="fa fa-dollar text-muted"></i><br> Total BEA
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total BEA') }}
                 </th>
                 <th class="col-md-2">
-                    <i class="fa fa-dollar text-muted"></i><br> Gross BEA
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Gross BEA') }}
                 </th>
                 <th class="col-md-3">
-                    <i class="fa fa-dollar text-muted"></i><br> Discounts by Turn
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Discounts by turn') }}
                 </th>
             </tr>
             </thead>
@@ -34,8 +34,9 @@
                 <td class="col-md-2 text-center">
                     <span>{{ mark.turn.route.name }}</span><br>
                     <span class="label span-full" v-if="mark.trajectory" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
-                    {{ mark.trajectory.name }}
-                </span>
+                        {{ mark.trajectory.name }}
+                    </span>
+                    <span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
                 </td>
                 <td class="text-center">{{ mark.locks }}</td>
                 <td class="text-center">{{ mark.auxiliaries }}</td>
@@ -44,7 +45,7 @@
                 <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center col-md-3">
-                    <div v-for="discount in mark.discounts" v-if="discount">
+                    <div v-for="discount in orderBy(mark.discounts, 'discount_type_id')" v-if="discount">
                         <span :data-original-title="discount.discount_type.description" class="tooltips">
                             <i :class="discount.discount_type.icon"></i> {{ discount.value | numberFormat('$0,0') }}
                         </span><br>
@@ -58,14 +59,14 @@
                 <td class="text-right">
                    <i class="icon-layers"></i> Totals
                 </td>
-                <td class="text-center">{{ totalLocks }}</td>
-                <td class="text-center">{{ totalAuxiliaries }}</td>
-                <td class="text-center">{{ totalBoarded }}</td>
-                <td class="text-center">{{ totalPassengersBEA }}</td>
-                <td class="text-center">{{ totalBEA | numberFormat('$0,0') }}</td>
-                <td class="text-center">{{ totalGrossBEA | numberFormat('$0,0') }}</td>
+                <td class="text-center">{{ totals.totalLocks }}</td>
+                <td class="text-center">{{ totals.totalAuxiliaries }}</td>
+                <td class="text-center">{{ totals.totalBoarded }}</td>
+                <td class="text-center">{{ totals.totalPassengersBea }}</td>
+                <td class="text-center">{{ totals.totalBea | numberFormat('$0,0') }}</td>
+                <td class="text-center">{{ totals.totalGrossBea | numberFormat('$0,0') }}</td>
                 <td class="text-center">
-                    <div v-for="totalDiscount in totalDiscounts" v-if="totalDiscount">
+                    <div v-for="totalDiscount in orderBy(liquidation.discountsByTurns, 'type_id')" v-if="totalDiscount">
                         <span :data-original-title="totalDiscount.discount.discount_type.description" class="tooltips">
                             <i :class="totalDiscount.discount.discount_type.icon"></i> {{ totalDiscount.value | numberFormat('$0,0') }}
                         </span><br>
@@ -75,30 +76,30 @@
             <tr class="total-discount-by-turn">
                 <td colspan="7" class="text-right">
                 <span class="text-bold">
-                    <i class="icon-tag"></i> Total Discount by turns
+                    <i class="icon-tag"></i> {{ $t('Total Discount by turns') }}
                 </span>
                 </td>
                 <td class="text-center">
-                <span title="Total discount" class="text-bold tooltips">
-                    {{ totalDiscountByTurn | numberFormat('$0,0') }}
+                <span :title="$t('Total discount')" class="text-bold tooltips">
+                    {{ totals.totalDiscountsByTurns | numberFormat('$0,0') }}
                 </span><br>
                 </td>
             </tr>
 
             <tr class="" v-for="otherDiscount in liquidation.otherDiscounts">
                 <td colspan="7" class="text-right">
-                <span class="text-bold col-md-6 pull-right">
-                    <button v-if="!readonly" class="btn btn-danger btn-sm" style="position: absolute;left: -15px;" @click="removeOtherDiscount(otherDiscount.id)">
+                <span class="text-bold col-md-6 pull-right p-r-0">
+                    <button v-if="!readonly" class="btn btn-danger btn-sm tooltips" data-placement="left" :data-title="$t('Delete')" style="position: absolute;left: -15px;" @click="removeOtherDiscount(otherDiscount.id)">
                         <i class="fa fa-trash"></i>
                     </button>
                     <div class="input-icon">
-                        <i class="icon-tag font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" placeholder="Description" v-model.number="otherDiscount.name">
+                        <i class="icon-tag font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Description')" v-model="otherDiscount.name">
                     </div>
                 </span>
                 </td>
                 <td class="text-center">
                     <div class="input-icon">
-                        <i class="fa fa-dollar font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" placeholder="Discount" v-model.number="otherDiscount.value">
+                        <i class="fa fa-dollar font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Discount')" v-model.number="otherDiscount.value">
                     </div>
                 </td>
             </tr>
@@ -106,7 +107,7 @@
             <tr v-if="!readonly" class="">
                 <td colspan="8" class="text-right">
                     <button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount()">
-                        <i class="fa fa-plus"></i> Add
+                        <i class="fa fa-plus"></i> {{ $t('Add') }}
                     </button>
                 </td>
             </tr>
@@ -116,13 +117,13 @@
         <div class="form form-horizontal total-discount">
             <hr class="hr">
             <div class="form-group">
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <span class="pull-right text-bold">
-                        <i class="icon-tag"></i> Total discounts:
+                        <i class="icon-tag"></i> {{ $t('Total discounts') }}:
                     </span>
                 </div>
-                <div class="col-md-4 text-center">
-                    <span class="text-bold">{{ totalDiscount | numberFormat('$0,0') }}</span>
+                <div class="col-md-3 text-right">
+                    <span class="text-bold">{{ totals.totalDiscounts | numberFormat('$0,0') }}</span>
                 </div>
             </div>
         </div>
@@ -131,12 +132,16 @@
 </template>
 
 <script>
+    import Vue2Filters from 'vue2-filters';
+
     export default {
         name: "DiscountComponent",
+        mixins: [Vue2Filters.mixin],
         props: {
             marks: Array,
             readonly: Boolean,
             liquidation: Object,
+            totals: Object
         },
         methods: {
             addOtherDiscount: function () {
@@ -145,71 +150,14 @@
                     name: '',
                     value: ''
                 });
+                setTimeout(() => {
+                    $('.tooltips').tooltip();
+                }, 500);
             },
             removeOtherDiscount: function (idToRemove) {
                 this.liquidation.otherDiscounts = _.filter(this.liquidation.otherDiscounts, function (other) {
                     return other.id !== idToRemove;
                 });
-            }
-        },
-        computed: {
-            totalBEA: function () {
-                return _.sumBy(this.marks, 'totalBEA');
-            },
-            totalGrossBEA: function () {
-                return _.sumBy(this.marks, 'totalGrossBEA');
-            },
-            totalPassengersUp: function () {
-                return _.sumBy(this.marks, 'passengersUp');
-            },
-            totalPassengersDown: function () {
-                return _.sumBy(this.marks, 'passengersDown');
-            },
-            totalLocks: function () {
-                return _.sumBy(this.marks, 'locks');
-            },
-            totalAuxiliaries: function () {
-                return _.sumBy(this.marks, 'auxiliaries');
-            },
-            totalBoarded: function () {
-                return _.sumBy(this.marks, 'boarded');
-            },
-            totalPassengersBEA: function () {
-                return _.sumBy(this.marks, 'passengersBEA');
-            },
-            totalDiscounts: function(){
-                let totalDiscounts = [];
-                const markWithMaxDiscounts = _.maxBy(this.marks, function(mark){
-                    return Object.keys(mark.discounts).length;
-                });
-
-                if(markWithMaxDiscounts){
-                    _.forEach(markWithMaxDiscounts.discounts, (discount) => {
-                        const totalByTypeDiscount = _.sumBy(this.marks, function(mark){
-                            const markDiscount = _.find(mark.discounts, function(discountFilter){
-                                return discountFilter.discount_type.id === discount.discount_type.id
-                            });
-                            return markDiscount ? markDiscount.value : 0;
-                        });
-
-                        totalDiscounts.push({
-                            discount: discount,
-                            value: totalByTypeDiscount,
-                        });
-                    });
-                }
-
-                return totalDiscounts;
-            },
-            totalDiscountByTurn: function () {
-                return _.sumBy(this.totalDiscounts, 'value');
-            },
-            totalDiscount: function () {
-                const totalOtherDiscounts = _.sumBy(this.liquidation.otherDiscounts, function (other) {
-                    return (other.value ? other.value : 0);
-                });
-                this.liquidation.totalDiscountsDetail = this.totalDiscounts;
-                return this.liquidation.totalDiscounts = this.totalDiscountByTurn + totalOtherDiscounts;
             }
         }
     }

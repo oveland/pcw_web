@@ -49,7 +49,7 @@
                         <div class="btn-group btn-group-devided width-full" data-toggle="buttons">
                             <label class="btn btn-tab btn-transparent green-sharp btn-outline pull-left btn-circle uppercase active" data-toggle="tab" data-target="#table-liquidations"
                                 onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
-                                <i class="fa fa-file-text"></i> @lang('Liquidation')
+                                <i class="icon-layers"></i> @lang('Liquidation')
                             </label>
                             <label class="btn btn-tab btn-transparent yellow-crusta btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings"
                                 onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
@@ -64,7 +64,7 @@
                 <div class="portlet-body">
                     <div class="tab-content panel p-0">
                         <div id="table-liquidations" class="tab-pane fade active in">
-                            <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks="marks" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
+                            <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
                         </div>
                         <div id="table-takings" class="tab-pane fade">
                             <takings-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search') }}" url-takings="" url-export="{{ route('takings-passengers-liquidation-export') }}"></takings-component>
@@ -85,7 +85,6 @@
     </div>
     <!-- end row -->
 @endsection
-
 
 @section('scripts')
     <script src="{{ mix('resources/js/takings/passengers/liquidation/main.js') }}" type="application/ecmascript"></script>

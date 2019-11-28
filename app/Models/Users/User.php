@@ -40,6 +40,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User query()
+ * @property string|null $vehicle_tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereVehicleTags($value)
  */
 class User extends Authenticatable
 {

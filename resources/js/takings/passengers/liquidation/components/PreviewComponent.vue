@@ -9,67 +9,88 @@
             </span>
         </h3>
         <hr class="hr">
-        <h3 class="totals">
+        <h2 class="totals">
             <span class="text-bold">
-                <i class="fa fa-dollar"></i> Total Value
+                <i class="fa fa-dollar hide"></i> {{ $t('Total turns') }}
             </span>
-            <span class="pull-right col-md-4">{{ liquidation.totalGrossBea + liquidation.totalPenalties  | numberFormat('$0,0') }}</span>
-        </h3>
-        <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-tachometer"></i> Total fuel
-            </span>
-            <span class="pull-right col-md-4">{{ totalDiscountByFuel | numberFormat('$0,0') }}</span>
-        </h3>
-        <h3 class="total-liquidation">
-            <span class="text-bold">
-                Saldo
-            </span>
-            <span class="pull-right text-bold">{{ liquidation.totalGrossBea + liquidation.totalPenalties - totalDiscountByFuel | numberFormat('$0,0') }}</span>
-        </h3>
-        <br><br>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalTurns  | numberFormat('$0,0') }}</span>
+        </h2>
 
         <h3 class="totals">
             <span class="text-bold">
-                <i class="icon-tag"></i> Total discounts (No Fuel, No Aux)
+                <i class="fa fa-dollar hide"></i> {{ $t('Total pay fall') }}
             </span>
-            <span class="pull-right col-md-4">- {{ liquidation.totalDiscounts - totalDiscountByFuel - totalDiscountByMobilityAuxilio | numberFormat('$0,0') }}</span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalPayFall  | numberFormat('$0,0') }}</span>
         </h3>
         <h3 class="totals">
             <span class="text-bold">
-                <i class=" icon-user-follow"></i> Total commissions
+                <i class="fa fa-dollar hide"></i> {{ $t('Total get fall') }}
             </span>
-            <span class="pull-right col-md-4">- {{ liquidation.totalCommissions | numberFormat('$0,0') }}</span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalGetFall  | numberFormat('$0,0') }}</span>
         </h3>
-        <h3 class="totals hide">
+        <h2 class="totals">
             <span class="text-bold">
-                <i class=" icon-user-follow"></i> Total penalties
+                <i class="fa fa-dollar hide"></i> {{ $t('Subtotal') }}
             </span>
-            <span class="pull-right col-md-4">+ {{ liquidation.totalPenalties | numberFormat('$0,0') }}</span>
-        </h3>
-        <h3 class="totals hide">
+            <span class="pull-right col-md-4 p-0">{{ totals.subTotalTurns  | numberFormat('$0,0') }}</span>
+        </h2>
+
+        <h3 class="totals">
             <span class="text-bold">
-                <i class=" icon-user-follow"></i> totalDiscountByMobilityAuxilio
+                <i class="fa fa-tachometer hide"></i> {{ $t('Total tolls') }}
             </span>
-            <span class="pull-right col-md-4">- {{ totalDiscountByMobilityAuxilio | numberFormat('$0,0') }}</span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalDiscountByTolls | numberFormat('$0,0') }}</span>
         </h3>
-        <br>
-        <h3 class="total-liquidation">
+        <h3 class="totals">
             <span class="text-bold">
-                Total Liquidation
+                <i class="fa fa-tachometer hide"></i> {{ $t('Total commissions') }}
             </span>
-            <span class="pull-right text-bold">{{ totalToLiquidate | numberFormat('$0,0') }}</span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalCommissions | numberFormat('$0,0') }}</span>
         </h3>
-        <hr class="hr"><br>
+        <h3 class="totals">
+            <span class="text-bold">
+                <i class="fa fa-tachometer hide"></i> {{ $t('Operative Expenses') }}
+            </span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalDiscountByOperativeExpenses | numberFormat('$0,0') }}</span>
+        </h3>
+        <h3 class="totals" v-if="totals.totalOtherDiscounts">
+            <span class="text-bold">
+                <i class="fa fa-tachometer hide"></i> {{ $t('Total other discounts') }}
+            </span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalOtherDiscounts | numberFormat('$0,0') }}</span>
+        </h3>
+
+        <h2 class="totals">
+            <span class="text-bold">
+                <i class="fa fa-tachometer hide"></i> {{ $t('Total dispatch') }}
+            </span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalDispatch | numberFormat('$0,0') }}</span>
+        </h2>
+
+        <h3 class="totals">
+            <span class="text-bold">
+                <i class="fa fa-tachometer hide"></i> {{ $t('Total fuel') }}
+            </span>
+            <span class="pull-right col-md-4 p-0">{{ totals.totalDiscountByFuel | numberFormat('$0,0') }}</span>
+        </h3>
+
+        <h2 class="totals">
+            <span class="text-bold">
+                <i class="fa fa-tachometer hide"></i> {{ $t('Balance') }}
+            </span>
+            <span class="pull-right col-md-4 p-0">{{ totals.balance | numberFormat('$0,0') }}</span>
+        </h2>
+
+        <hr class="m-t-40 m-b-20">
 
         <div class="" style="font-size: 1.5em !important;">
-            <label for="observations" class="control-label">Observations</label>
+            <label for="observations" class="control-label">{{ $t('Observations') }}</label>
             <textarea id="observations" rows="2" :readonly="readonly" :disabled="readonly" class="form-control" v-model="liquidation.observations" style="resize: vertical;"></textarea>
         </div>
         <br>
         <div class="text-center" v-if="!readonly">
-            <button class="btn btn-circle red btn-outline f-s-13" @click="$emit('liquidate')" :disabled="liquidation.totalBea === 0">
-                LIQUIDATE <i class="icon-check"></i>
+            <button class="btn btn-circle red btn-outline f-s-13 uppercase" @click="$emit('liquidate')" :disabled="totals.totalBea === 0">
+                <i class="icon-layers"></i> {{ $t('Liquidate') }}
             </button>
         </div>
     </div>
@@ -81,27 +102,8 @@
         props: {
             search:Object,
             liquidation: Object,
+            totals: Object,
             readonly: Boolean
-        },
-        computed: {
-            totalToLiquidate: function () {
-                return this.liquidation.total = this.liquidation.totalBea - this.liquidation.totalDiscounts - this.liquidation.totalCommissions + this.liquidation.totalPenalties;
-            },
-            totalDiscountByFuel: function () {
-                const fuelTotalDiscount = _.head(_.filter(this.liquidation.totalDiscountsDetail, function (detail) {
-                    const discountName = detail.discount.discount_type.name.toUpperCase();
-                    return (discountName === "COMBUSTIBLE" || discountName === "FUEL");
-                }));
-
-                return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
-            },
-            totalDiscountByMobilityAuxilio: function () {
-                const fuelTotalDiscount = _.head(_.filter(this.liquidation.totalDiscountsDetail, function (detail) {
-                    return detail.discount.discount_type.name.toUpperCase() === "AUXILIO DE MOVILIDAD";
-                }));
-
-                return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
-            }
         }
     }
 </script>
@@ -110,16 +112,35 @@
     .search span {
         font-size: 1.6em !important;
     }
-    .totals{
-        border-bottom: 1px solid lightgray;
-        padding-bottom: 5px !important;
+
+    h2.totals{
+        border-bottom: 1px solid #c6c6c6;
+        padding-bottom: 10px !important;
     }
-    .totals span {
-        font-size: 1.3em !important;
+
+    h2.totals span {
+        font-size: 1.5em !important;
+        font-weight: bold !important;
     }
-    .totals span.pull-right{
+
+    h2.totals span.pull-right{
         text-align: right;
     }
+
+    h3.totals{
+        padding-left: 20px;
+        border-bottom: 1px solid rgba(236, 236, 236, 0.53);
+        padding-bottom: 5px !important;
+    }
+
+    h3.totals span {
+        font-size: 1.2em !important;
+    }
+
+    h3.totals span.pull-right{
+        text-align: right;
+    }
+
     .total-liquidation span {
         font-size: 1.6em !important;
     }

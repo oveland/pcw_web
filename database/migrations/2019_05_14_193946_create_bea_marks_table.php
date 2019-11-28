@@ -33,6 +33,8 @@ class CreateBeaMarksTable extends Migration
             $table->boolean('liquidated')->default(false);
             $table->unsignedBigInteger('liquidation_id')->nullable();
             $table->boolean('taken')->default(false);
+            $table->integer('pay_fall')->nullable();
+            $table->integer('get_fall')->nullable();
 
             $table->timestamps();
 

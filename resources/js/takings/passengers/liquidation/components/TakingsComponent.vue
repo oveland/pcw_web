@@ -7,43 +7,34 @@
                         <thead>
                         <tr class="inverse">
                             <th class="col-md-1">
-                                <i class="fa fa-calendar text-muted"></i><br> Date
+                                <i class="fa fa-calendar text-muted"></i><br> {{ $t('Date') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-users text-muted"></i><br> Passengers
+                                <i class="fa fa-users text-muted"></i><br> {{ $t('Passengers') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-dollar text-muted"></i><br> Total Value
+                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total turns') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-dollar text-muted"></i><br> Total Fuel
+                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Subtotal') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-fa-dollar text-muted"></i><br> Saldo
+                                <i class="fa fa-fa-dollar text-muted"></i><br> {{ $t('Total dispatch') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="icon-tag text-muted"></i><br> Total Discounts <br> (No fuel, No aux)
+                                <i class="icon-dollar text-muted"></i><br> {{ $t('Balance') }}
                             </th>
                             <th class="col-md-1">
-                                <i class=" icon-user-follow text-muted"></i><br> Total Commissions
-                            </th>
-                            <th class="col-md-1 hide">
-                                <i class="icon-shield text-muted"></i><br> Total Penalties
+                                <i class="fa fa-retweet text-muted"></i><br> {{ $t('Turns liquidated') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-dollar text-muted"></i><br> Total Liquidated
+                                <i class="fa fa-user text-muted"></i><br> {{ $t('Responsible') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-retweet text-muted"></i><br> Turns Liquidated
+                                <i class="fa fa-calendar text-muted"></i><br> {{ $t('Liquidated on') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-user text-muted"></i><br> Responsible
-                            </th>
-                            <th class="col-md-1">
-                                <i class="fa fa-calendar text-muted"></i><br> Liquidated on
-                            </th>
-                            <th class="col-md-1">
-                                <i class="fa fa-rocket text-muted"></i><br> Details
+                                <i class="fa fa-rocket text-muted"></i><br> {{ $t('Details') }}
                             </th>
                         </tr>
                         </thead>
@@ -51,16 +42,10 @@
                         <tr v-for="liquidation in liquidations">
                             <td class="text-center">{{ liquidation.date }}</td>
                             <td class="text-center">{{ liquidation.totals.totalPassengersBea }}</td>
-                            <td class="text-center">{{ liquidation.liquidation.totalGrossBea + liquidation.liquidation.totalPenalties | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ totalDiscountByFuel(liquidation.liquidation) | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.liquidation.totalGrossBea + liquidation.liquidation.totalPenalties - totalDiscountByFuel(liquidation.liquidation) | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.liquidation.totalDiscounts - totalDiscountByFuel(liquidation.liquidation) - totalDiscountByMobilityAuxilio(liquidation.liquidation) | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.liquidation.totalCommissions | numberFormat('$0,0') }}</td>
-                            <td class="text-center hide">{{ liquidation.liquidation.totalPenalties | numberFormat('$0,0') }}</td>
-
-                            <td class="text-center text-bold">
-                                {{ liquidation.liquidation.total | numberFormat('$0,0') }} <br>
-                           </td>
+                            <td class="text-center">{{ liquidation.totals.totalTurns | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.subTotalTurns | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.totalDispatch | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.balance | numberFormat('$0,0') }}</td>
                             <td class="text-center text-bold">
                                 <a class="link" @click="seeLiquidationDetail(liquidation.id)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
                                     {{ liquidation.marks.length }} turns
@@ -75,10 +60,10 @@
                             <td class="text-center">{{ liquidation.user.name }}</td>
                             <td class="text-center">{{ liquidation.dateLiquidation }}</td>
                             <td class="text-center">
-                                <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" title="Details" @click="seeLiquidationDetail(liquidation.id)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
+                                <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" :title="$t('Details')" @click="seeLiquidationDetail(liquidation.id)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
                                     <i class="fa fa-eye"></i>
                                 </button>
-                                <button class="btn btn-tab btn-transparent yellow-crusta btn-outline btn-circle tooltips" title="Recaudar" onclick="ginfo('Feature on development')">
+                                <button class="btn btn-tab btn-transparent yellow-crusta btn-outline btn-circle tooltips" :title="$t('Take liquidation')" onclick="ginfo('Feature on development')">
                                     <i class="fa fa-suitcase"></i>
                                 </button>
                             </td>
@@ -92,18 +77,18 @@
         <div class="modal fade" id="modal-takings-liquidated-marks" tabindex="-1" role="basic" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="portlet light bordered">
+                    <div class="portlet light">
                         <div class="portlet-title tabbable-line">
                             <div class="caption">
-                                <i class="fa fa-dollar"></i>
-                                <span class="caption-subject font-dark bold uppercase">Marks liquidated</span>
+                                <i class="icon-layers"></i>
+                                <span class="caption-subject font-dark bold uppercase">{{ $t('Liquidation details') }}</span>
                             </div>
                             <ul class="nav nav-tabs">
                                 <li class="active">
-                                    <a href="#detail-marks" data-toggle="tab"> Marks </a>
+                                    <a href="#detail-marks" data-toggle="tab"> {{ $t('Turnos') }} </a>
                                 </li>
                                 <li>
-                                    <a href="#detail-liquidation" data-toggle="tab"> Liquidation </a>
+                                    <a href="#detail-liquidation" data-toggle="tab"> {{ $t('Liquidation') }} </a>
                                 </li>
                             </ul>
                         </div>
@@ -113,12 +98,12 @@
                                     <table-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals"></table-component>
                                 </div>
                                 <div id="detail-liquidation" class="tab-pane fade">
-                                    <div class="portlet light portlet-fit bordered">
+                                    <div class="">
                                         <div class="portlet-title hide">
                                             <div class="caption">
                                                 <i class="fa fa-dollar font-green"></i>
                                                 <span class="caption-subject font-green bold uppercase">
-                                                    Liquidation details
+                                                    {{ $t('Liquidation details') }}
                                                 </span>
                                             </div>
                                         </div>
@@ -130,7 +115,7 @@
                                                         <div class="mt-step-number bg-white">
                                                             <i class="icon-tag"></i>
                                                         </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">Discounts</div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Discounts') }}</div>
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
@@ -138,7 +123,7 @@
                                                         <div class="mt-step-number bg-white">
                                                             <i class=" icon-user-follow"></i>
                                                         </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">Commissions</div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Commissions') }}</div>
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
@@ -146,7 +131,7 @@
                                                         <div class="mt-step-number bg-white">
                                                             <i class="icon-shield"></i>
                                                         </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">Penalties</div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Penalties') }}</div>
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
@@ -154,7 +139,7 @@
                                                         <div class="mt-step-number bg-white">
                                                             <i class="icon-calculator"></i>
                                                         </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">Liquidation</div>
+                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Liquidation') }}</div>
                                                         <div class="mt-step-content font-grey-cascade"></div>
                                                     </div>
                                                 </div>
@@ -164,35 +149,41 @@
                                                 <div class="col-md-12">
                                                     <div class="tab-content">
                                                         <div id="step-discounts-detail" class="tab-pane fade in active">
-                                                            <div class="portlet light bordered phase-container col-md-12 m-t-10">
+                                                            <div class=" phase-container col-md-12 m-t-10">
                                                                 <discount-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-commissions-detail" class="tab-pane fade">
-                                                            <div class="portlet light bordered phase-container col-md-12 m-t-10">
-                                                                <commission-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
+                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                                <commission-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-penalties-detail" class="tab-pane fade">
-                                                            <div class="portlet light bordered phase-container col-md-12 m-t-10">
+                                                            <div class=" phase-container col-md-12 m-t-10">
                                                                 <penalty-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></penalty-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
-                                                            <div class="portlet light bordered phase-container col-md-6 col-md-offset-3 m-t-10">
-                                                                <div class="text-center">
-                                                                    <a href="javascript:" target="" class="pull-left header-preview" @click="exportLiquidation()">
-                                                                        <i class="fa fa-download"></i> Print basic
-                                                                    </a>
-
-                                                                    <a href="javascript:" target="" class="pull-right header-preview" @click="exportLiquidation(true)">
-                                                                        <i class="fa fa-download"></i> Print detailed
-                                                                    </a>
+                                                            <div class=" phase-container col-md-6 col-md-offset-3 m-t-10">
+                                                                <div v-if="!showPrintArea" class="text-center col-md-12">
                                                                     <span class="header-preview">#{{ liquidationDetail.id }}</span>
                                                                 </div>
-                                                                <preview-component v-if="!showPrintArea" :liquidation="liquidationDetail.liquidation" :search="search" :readonly="true"></preview-component>
+                                                                <div class="text-center col-md-12">
+                                                                    <a href="javascript:" v-if="!showPrintArea" target="" class="btn btn-default btn-circle btn-sm" @click="exportLiquidation()">
+                                                                        <i class="fa fa-print"></i> | {{ $t('Print') }}
+                                                                    </a>
+
+                                                                    <a href="javascript:" v-if="showPrintArea" target="" class="btn btn-default btn-circle btn-sm" @click="showPrintArea = false">
+                                                                        <i class="fa fa-undo"></i>
+                                                                    </a>
+
+                                                                    <a href="javascript:" target="" class="header-preview hide" @click="exportLiquidation(true)">
+                                                                        <i class="fa fa-download"></i> {{ $t('Print detailed') }}
+                                                                    </a>
+                                                                </div>
+                                                                <preview-component v-if="!showPrintArea" :liquidation="liquidationDetail.liquidation" :totals="liquidationDetail.totals" :search="search" :readonly="true"></preview-component>
                                                             </div>
-                                                            <div class="portlet light bordered phase-container col-md-8 col-md-offset-2 p-0 pdf-container" v-if="showPrintArea">
+                                                            <div class="phase-container col-md-8 col-md-offset-2 p-0 m-t-10 pdf-container" v-if="showPrintArea">
                                                                 <vue-friendly-iframe :src="linkToPrintLiquidation"></vue-friendly-iframe>
                                                             </div>
                                                         </div>
@@ -206,7 +197,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn dark btn-outline" data-dismiss="modal">{{ $t('Close') }}</button>
                     </div>
                 </div>
             </div>
@@ -250,7 +241,6 @@
         },
         watch: {
             searchParams: function () {
-                console.log("Refresh Takings");
                 this.showPrintArea = false;
                 this.linkToPrintLiquidation = '';
                 this.searchLiquidationReport();
@@ -303,20 +293,6 @@
                 }).then(function () {
 
                 });
-            },
-            totalDiscountByFuel: function (liquidation) {
-                const fuelTotalDiscount = _.head(_.filter(liquidation.totalDiscountsDetail, function (detail) {
-                    return detail.discount.discount_type.name.toUpperCase() === "COMBUSTIBLE";
-                }));
-
-                return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
-            },
-            totalDiscountByMobilityAuxilio: function (liquidation) {
-                const fuelTotalDiscount = _.head(_.filter(liquidation.totalDiscountsDetail, function (detail) {
-                    return detail.discount.discount_type.name.toUpperCase() === "AUXILIO DE MOVILIDAD";
-                }));
-
-                return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
             }
         },
         components: {

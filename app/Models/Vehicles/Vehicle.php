@@ -47,6 +47,14 @@ use Sofa\Eloquence\Mappable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereBeaId($value)
  * @property-read \App\Models\Vehicles\VehicleSeatDistribution $seatDistribution
+ * @property string|null $observations
+ * @property int|null $proprietary_id
+ * @property int|null $driver_id
+ * @property string|null $tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereDriverId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereObservations($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereProprietaryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereTags($value)
  */
 class Vehicle extends Model
 {

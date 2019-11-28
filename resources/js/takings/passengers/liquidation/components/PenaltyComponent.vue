@@ -1,28 +1,34 @@
 <template>
     <div>
-        <table class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">
+        <table class="table table-bordered table-condensed table-hover table-valign-middle table-report">
             <thead>
             <tr class="inverse">
                 <th class="col-md-2">
-                    <i class="fa fa-flag text-muted"></i><br> Route / Trajectory
+                    <i class="fa fa-flag text-muted"></i><br> {{ $t('Route') }} / {{ $t('Trajectory') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> Locks
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Locks') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> Auxiliaries
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Auxiliaries') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> Boarded
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Boarded') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> BEA
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('BEA') }}
                 </th>
                 <th class="col-md-2">
-                    <i class="fa fa-dollar text-muted"></i><br> Total BEA
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total BEA') }}
+                </th>
+                <th class="col-md-2">
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Gross BEA') }}
                 </th>
                 <th class="col-md-3">
-                    <i class="fa fa-dollar text-muted"></i><br> Penalty by Turn
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Penalties by turn') }}
+                </th>
+                <th class="col-md-2">
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total by turn') }}
                 </th>
             </tr>
             </thead>
@@ -33,33 +39,36 @@
                     <span class="label span-full" v-if="mark.trajectory" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
                         {{ mark.trajectory.name }}
                     </span>
+                    <span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
                 </td>
                 <td class="text-center">{{ mark.locks }}</td>
                 <td class="text-center">{{ mark.auxiliaries }}</td>
                 <td class="text-center">{{ mark.boarded }}</td>
                 <td class="text-center">{{ mark.passengersBEA }}</td>
                 <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
+                <td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
                 <td class="text-center col-md-3">
                     <span class="tooltips span-penalty" :data-original-title="getPenaltyTitle(mark.penalty)">
                         <i :class="getPenaltyIconClass(mark.penalty)"></i> {{ mark.penalty.value | numberFormat('$0,0') }}
                     </span><br>
                 </td>
+                <td class="text-center" style="font-weight: bold !important;font-size: 1.3em !important;">{{ mark.totalGrossBEA + mark.penalty.value | numberFormat('$0,0') }}</td>
             </tr>
             <tr>
                 <td colspan="11" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
             </tr>
             <tr class="totals">
                 <td class="text-right">
-                    <i class="icon-layers"></i> Totals
+                    <i class="icon-layers"></i> {{ $t('Totals') }}
                 </td>
                 <td class="text-center">{{ totals.totalLocks }}</td>
                 <td class="text-center">{{ totals.totalAuxiliaries }}</td>
                 <td class="text-center">{{ totals.totalBoarded }}</td>
                 <td class="text-center">{{ totals.totalPassengersBea }}</td>
                 <td class="text-center">{{ totals.totalBea | numberFormat('$0,0') }}</td>
-                <td class="text-center">
-                    {{ totalPenaltiesByTurn | numberFormat('$0,0') }}
-                </td>
+                <td class="text-center">{{ totals.totalGrossBea | numberFormat('$0,0') }}</td>
+                <td class="text-center">{{ totals.totalPenalties | numberFormat('$0,0') }}</td>
+                <td class="text-center text-bold" style="font-weight: bold !important;font-size: 1.3em !important;">{{ totals.totalTurns | numberFormat('$0,0') }}</td>
             </tr>
             </tbody>
         </table>
@@ -67,13 +76,13 @@
         <div class="form form-horizontal total-discount">
             <hr class="hr">
             <div class="form-group">
-                <div class="col-md-7">
+                <div class="col-md-9">
                     <span class="pull-right text-bold">
-                        <i class="icon-tag"></i> Total penalties:
+                        <i class="icon-tag"></i> {{ $t('Total penalties') }}:
                     </span>
                 </div>
-                <div class="col-md-5 text-center">
-                    <span class="text-bold">{{ totalPenalties | numberFormat('$0,0') }}</span>
+                <div class="col-md-3 text-right">
+                    <span class="text-bold">{{ this.totals.totalPenalties | numberFormat('$0,0') }}</span>
                 </div>
             </div>
         </div>
@@ -86,28 +95,15 @@
         name: "PenaltyComponent",
         props: {
             marks: Array,
-            totals: Object,
-            liquidation: Object
+            totals: Object
         },
         methods: {
             getPenaltyTitle: function(penalty){
-                return penalty.type === 'boarding' ? 'Valor fijo por abordado: $'+penalty.baseValue : 'Valor fijo por abordado: '+penalty.baseValue+'%';
+                return penalty.type === 'boarding' ? 'Valor fijo por abordado: $'+penalty.baseValue : 'Porcentaje: '+penalty.baseValue+'%';
             },
             getPenaltyIconClass: function(penalty){
                 return penalty.type === 'boarding' ? 'icon-user': 'icon-user';
             }
-        },
-        computed: {
-            totalPenaltiesByTurn: function () {
-                return _.sumBy(this.marks, function (mark) {
-                    return mark.penalty.value;
-                });
-            },
-            totalPenalties: function () {
-                return this.liquidation.totalPenalties = this.totalPenaltiesByTurn;
-            }
-        },
-        created() {
         }
     }
 </script>

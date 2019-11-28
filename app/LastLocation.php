@@ -58,7 +58,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|\App\LastLocation newModelQuery()
  * @method static Builder|\App\LastLocation newQuery()
  * @method static Builder|\App\LastLocation query()
-
  * @property bool|null $vehicle_active
  * @property bool|null $vehicle_in_repair
  * @property int|null $jumps
@@ -68,7 +67,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|\App\LastLocation whereTotalLocations($value)
  * @method static Builder|\App\LastLocation whereVehicleActive($value)
  * @method static Builder|\App\LastLocation whereVehicleInRepair($value)
-
  */
 class LastLocation extends Model
 {
@@ -84,6 +82,7 @@ class LastLocation extends Model
 
     public function getDateAttribute($date)
     {
+        if(!$date) return Carbon::now();
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
@@ -114,7 +113,7 @@ class LastLocation extends Model
 
     public function gpsHasIssues()
     {
-        return $this->total_locations > self::MINIMUM_LOCATIONS_FOR_ANALYZE_JUMPS && (100 * $this->jumps / $this->total_locations) > self::JUMPS_PERCENT_WITH_ISSUES;
+        return $this->total_locations > self::MINIMUM_LOCATIONS_FOR_ANALYZE_JUMPS && ($this->total_locations ? 100 * $this->jumps / $this->total_locations : 0) > self::JUMPS_PERCENT_WITH_ISSUES;
     }
 
     public function gpsIsOK()

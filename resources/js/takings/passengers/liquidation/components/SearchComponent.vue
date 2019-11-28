@@ -2,14 +2,14 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <button type="button" class="btn btn-success btn-sm btn-search-report" @click="searchReport()">
-                <i class="fa fa-search"></i> Search
+                <i class="fa fa-search"></i> {{ $t('Search')}}
             </button>
         </div>
         <div class="panel-body p-b-15">
             <div class="form-input-flat">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label">Vehicle</label>
+                        <label class="control-label">{{ $t('Vehicle') }}</label>
                         <div class="form-group">
                             <multiselect track-by="number" label="number" :options="search.vehicles" @input="searchReport()" v-model="search.vehicle"
                                  :option-height="104" :searchable="true" :allow-empty="true" placeholder="Select vehicle"
@@ -20,7 +20,7 @@
 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label">Date report</label>
+                        <label class="control-label">{{ $t('Date') }}</label>
                         <div class="input-group col-md-12">
                             <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="searchReport()" width="100%"></date-picker>
                         </div>
@@ -48,6 +48,10 @@
                 axios.get(this.urlParams)
                     .then(response => {
                         this.search.vehicles = response.data;
+                        this.search.vehicle = _.find(response.data, function(v){
+                            return v.id === 1987;
+                        });
+                        this.searchReport();
                     })
                     .catch(function (error) {
                         console.log(error);

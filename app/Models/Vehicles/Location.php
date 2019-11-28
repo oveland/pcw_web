@@ -66,6 +66,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Location query()
  * @property string|null $ard_off_road
  * @method static Builder|Location whereArdOffRoad($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location withSpeeding()
  */
 class Location extends Model
 {

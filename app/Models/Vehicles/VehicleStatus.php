@@ -21,6 +21,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus query()
+ * @property int|null $order
+ * @property bool|null $show_filter
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereShowFilter($value)
  */
 class VehicleStatus extends Model
 {

@@ -20,13 +20,13 @@
                                             <i class="fa fa-list-ol text-muted"></i><br>
                                         </th>
                                         <th class="col-md-2">
-                                            <i class="icon-tag text-muted"></i><br> Type
+                                            <i class="icon-tag text-muted"></i><br> {{ $t('Type') }}
                                         </th>
                                         <th class="col-md-2">
-                                            <i class="fa fa-dollar text-muted"></i><br> Value
+                                            <i class="fa fa-dollar text-muted"></i><br> {{ $t('Value') }}
                                         </th>
                                         <th class="col-md-2">
-                                            <i class="fa fa-rocket text-muted"></i><br> Options
+                                            <i class="fa fa-rocket text-muted"></i><br> {{ $t('Options') }}
                                         </th>
                                     </tr>
                                     </thead>
@@ -51,7 +51,7 @@
                                 </table>
                                 <hr class="hr">
                                 <button class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips pull-right" title="Editar" onclick="ginfo('Feature on development')">
-                                    <i class="fa fa-edit"></i> Edit
+                                    <i class="fa fa-edit"></i> {{ $t('Edit') }}
                                 </button>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                                         <select id="edit-commission-type" readonly type="text" class="form-control" v-model="editingCommission.type">
                                             <option v-for="(type) in commissionTypes" :value="type">{{ type }}</option>
                                         </select>
-                                        <label for="edit-commission-type">Commission type</label>
+                                        <label for="edit-commission-type">{{ $t('Commission type') }}</label>
                                         <i class="fa fa-tag"></i>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
                                         <input id="edit-commission-value" type="text" class="form-control" placeholder="Value" autofocus v-model="editingCommission.value">
-                                        <label for="edit-commission-value">Value</label>
+                                        <label for="edit-commission-value">{{ $t('Value') }}</label>
                                         <i class="fa fa-dollar"></i>
                                     </div>
                                 </div>

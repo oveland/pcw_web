@@ -26,6 +26,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GPSType whereServerPort($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GPSType whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GPSType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GPSType newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GPSType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GPSType whereTags($value)
  */
 class GPSType extends Model
 {

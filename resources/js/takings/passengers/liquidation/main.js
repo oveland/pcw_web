@@ -1,11 +1,16 @@
 import NumberFormat from 'vue-filter-number-format';
+import numeral from 'numeral';
 
 import SearchComponent from './components/SearchComponent';
 import AdminComponent from './components/AdminComponent';
 import LiquidationComponent from './components/LiquidationComponent';
 import TakingsComponent from './components/TakingsComponent';
 
-Vue.filter('numberFormat', NumberFormat);
+import i18n from "../../../lang/i18n";
+import VueI18n from 'vue-i18n'
+Vue.use(VueI18n);
+
+Vue.filter('numberFormat', NumberFormat(numeral));
 
 Vue.filter('capitalize', function (value) {
     if (!value) return '';
@@ -15,6 +20,7 @@ Vue.filter('capitalize', function (value) {
 
 let liquidationView = new Vue({
     el: '#liquidation',
+    i18n,
     components: {
         SearchComponent,
         AdminComponent,
@@ -31,6 +37,11 @@ let liquidationView = new Vue({
             date: String,
         },
         allMarks: [],
+        liquidation: {
+            otherDiscounts: [],
+            discountsByTurns: [],
+            observations: ""
+        }
     },
     computed: {
         searchParams: function () {
@@ -53,16 +64,62 @@ let liquidationView = new Vue({
             });
         },
         totals: function () {
+            const totalGrossBea = _.sumBy(this.marks, 'totalGrossBEA');
+
+            const totalDiscountsByTurns = _.sumBy(this.liquidation.discountsByTurns, 'value');
+            const totalOtherDiscounts = _.sumBy(this.liquidation.otherDiscounts, function (other) {
+                return (other.value ? other.value : 0);
+            });
+            
+            const totalDiscounts = totalDiscountsByTurns + totalOtherDiscounts;
+            const totalDiscountByFuel = this.totalDiscountByFuel();
+            const totalDiscountByMobilityAuxilio = this.totalDiscountByMobilityAuxilio();
+            const totalDiscountByTolls = this.totalDiscountByTolls();
+            const totalDiscountByOperativeExpenses = this.totalDiscountByOperativeExpenses();
+
+            const totalPenalties = _.sumBy(this.marks, function (mark) {
+                return mark.penalty.value;
+            });
+            const totalCommissions = _.sumBy(this.marks, function (mark) {
+                return mark.commission.value;
+            });
+
+            const totalPayFall = _.sumBy(this.marks, 'payFall');
+            const totalGetFall = _.sumBy(this.marks, 'getFall');
+
+            const totalTurns = totalGrossBea + totalPenalties;
+            const subTotalTurns = totalTurns - totalPayFall + totalGetFall;
+            const totalDispatch = totalTurns - (totalDiscounts - totalDiscountByFuel - totalDiscountByMobilityAuxilio) - totalCommissions;
+            const balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
+
             return {
                 // Totals
                 totalBea: _.sumBy(this.marks, 'totalBEA'),
-                totalGrossBea: _.sumBy(this.marks, 'totalGrossBEA'),
+                totalGrossBea,
+
                 totalPassengersBea: _.sumBy(this.marks, 'passengersBEA'),
-                totalBoarded: _.sumBy(this.marks, 'boarded'),
                 totalPassengersDown: _.sumBy(this.marks, 'passengersDown'),
                 totalPassengersUp: _.sumBy(this.marks, 'passengersUp'),
                 totalLocks: _.sumBy(this.marks, 'locks'),
                 totalAuxiliaries: _.sumBy(this.marks, 'auxiliaries'),
+                totalBoarded: _.sumBy(this.marks, 'boarded'),
+
+                totalDiscountsByTurns,
+                totalOtherDiscounts,
+                totalDiscounts,
+                totalPenalties,
+                totalCommissions,
+                totalPayFall,
+                totalGetFall,
+                totalDiscountByFuel,
+                totalDiscountByMobilityAuxilio,
+                totalDiscountByTolls,
+                totalDiscountByOperativeExpenses,
+
+                totalTurns,
+                subTotalTurns,
+                totalDispatch,
+                balance,
                 // Averages
                 averageBea: _.meanBy(this.marks, 'totalBEA'),
                 averagePassengersBea: _.meanBy(this.marks, 'passengersBEA'),
@@ -93,6 +150,63 @@ let liquidationView = new Vue({
         },
         updateVehicles: function (params) {
             this.vehicles = params.vehicles;
+        },
+        totalDiscountByFuel: function () {
+            const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
+                return detail.discount.discount_type.name.toUpperCase() === "COMBUSTIBLE";
+            }));
+
+            return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
+        },
+        totalDiscountByTolls: function () {
+            const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
+                return detail.discount.discount_type.name.toUpperCase() === "PEAJES";
+            }));
+
+            return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
+        },
+        totalDiscountByOperativeExpenses: function () {
+            const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
+                return detail.discount.discount_type.name.toUpperCase() === "GASTOS OPERATIVOS";
+            }));
+
+            return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
+        },
+        totalDiscountByMobilityAuxilio: function () {
+            const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
+                return detail.discount.discount_type.name.toUpperCase() === "AUXILIO DE MOVILIDAD";
+            }));
+
+            return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
+        }
+    },
+    watch:{
+        marks: function () {
+            let discountsByTurns = [];
+            const markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
+                return Object.keys(mark.discounts).length;
+            });
+
+            if (markWithMaxDiscounts) {
+                _.forEach(markWithMaxDiscounts.discounts, (discount) => {
+                    const totalByTypeDiscount = _.sumBy(this.marks, function (mark) {
+                        const markDiscount = _.find(mark.discounts, function (discountFilter) {
+                            return discountFilter.discount_type.id === discount.discount_type.id
+                        });
+                        return markDiscount ? markDiscount.value : 0;
+                    });
+
+                    discountsByTurns.push({
+                        type_id: discount.discount_type_id,
+                        discount: discount,
+                        value: totalByTypeDiscount,
+                    });
+                });
+            }
+
+            this.liquidation.discountsByTurns = discountsByTurns;
+
+            return discountsByTurns;
         }
     },
     mounted: function () {

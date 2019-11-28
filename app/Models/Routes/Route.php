@@ -54,6 +54,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection|Route[] $subRoutes
  * @method static Builder|Route whereRouteId($value)
  * @property-read RouteGoogle $routeGoogle
+ * @property int $distance_threshold
+ * @property int $sampling_radius
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereDistanceThreshold($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereSamplingRadius($value)
  */
 class Route extends Model
 {

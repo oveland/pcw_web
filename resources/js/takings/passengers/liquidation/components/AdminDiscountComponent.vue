@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-3 col-sm-4 col-xs-12">
             <div class="col-md-12" v-if="vehicles">
-                <multiselect v-model="vehicle" placeholder="Select vehicle" label="number" track-by="id" :options="vehicles"></multiselect>
+                <multiselect v-model="vehicle" :placeholder="$t('Select a vehicle')" label="number" track-by="id" :options="vehicles"></multiselect>
             </div>
         </div>
         <div class="col-md-9 col-sm-8 col-xs-12" v-if="vehicle">
@@ -22,10 +22,10 @@
                                     <thead>
                                     <tr class="inverse">
                                         <th class="col-md-4">
-                                            <i class="fa fa-flag text-muted"></i><br> Trajectory
+                                            <i class="fa fa-flag text-muted"></i><br> {{ $t('Trajectory') }}
                                         </th>
                                         <th class="col-md-8">
-                                            <i class="icon-tag text-muted"></i><br> Discounts
+                                            <i class="icon-tag text-muted"></i><br> {{ $t('Discounts') }}
                                         </th>
                                     </tr>
                                     </thead>
@@ -50,16 +50,16 @@
                                                                 <i class="fa fa-list-ol text-muted"></i><br>
                                                             </th>
                                                             <th class="col-md-2">
-                                                                <i class="icon-tag text-muted"></i><br> Name
+                                                                <i class="icon-tag text-muted"></i><br> {{ $t('Name') }}
                                                             </th>
                                                             <th class="col-md-2">
-                                                                <i class="icon-tag text-muted"></i><br> Description
+                                                                <i class="icon-tag text-muted"></i><br> {{ $t('Description') }}
                                                             </th>
                                                             <th class="col-md-2">
-                                                                <i class="fa fa-dollar text-muted"></i><br> Value
+                                                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Value') }}
                                                             </th>
                                                             <th class="col-md-2">
-                                                                <i class="fa fa-rocket text-muted"></i><br> Options
+                                                                <i class="fa fa-rocket text-muted"></i><br> {{ $t('Options') }}
                                                             </th>
                                                         </tr>
                                                         </thead>
@@ -74,7 +74,7 @@
                                                                 {{ discount.value | numberFormat('$0,0') }}
                                                             </td>
                                                             <td class="text-center">
-                                                                <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Edit" @click="editDiscount(discount)"
+                                                                <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Edit')" @click="editDiscount(discount)"
                                                                 data-toggle="modal" data-target="#modal-admin-discount-edit">
                                                                     <i class="fa fa-edit"></i>
                                                                 </button>
@@ -106,8 +106,8 @@
                             <div class="col-md-6">
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
-                                        <input id="edit-discount-name" readonly type="text" class="form-control" placeholder="Name" v-model="editingDiscount.discount_type.name">
-                                        <label for="edit-discount-name">Name</label>
+                                        <input id="edit-discount-name" readonly type="text" class="form-control" :placeholder="$t('Namme')" v-model="editingDiscount.discount_type.name">
+                                        <label for="edit-discount-name">{{ $t('Name') }}</label>
                                         <i :class="editingDiscount.discount_type.icon"></i>
                                     </div>
                                 </div>
@@ -115,8 +115,8 @@
                             <div class="col-md-6">
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
-                                        <input id="edit-discount-value" type="text" class="form-control" placeholder="Value" autofocus v-model="editingDiscount.value">
-                                        <label for="edit-discount-value">Value</label>
+                                        <input id="edit-discount-value" type="text" class="form-control" :placeholder="$t('Value')" autofocus v-model="editingDiscount.value">
+                                        <label for="edit-discount-value">{{ $t('Value') }}</label>
                                         <i class="fa fa-dollar"></i>
                                     </div>
                                 </div>
@@ -124,8 +124,8 @@
                             <div class="col-md-12">
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
-                                        <input id="edit-discount-description" readonly type="text" class="form-control" placeholder="Description" v-model="editingDiscount.discount_type.description">
-                                        <label for="edit-discount-description">Description</label>
+                                        <input id="edit-discount-description" readonly type="text" class="form-control" :placeholder="$t('Description')" v-model="editingDiscount.discount_type.description">
+                                        <label for="edit-discount-description">{{ $t('Description') }}</label>
                                         <i :class="editingDiscount.discount_type.icon"></i>
                                     </div>
                                 </div>
@@ -136,7 +136,7 @@
 
                         <div class="col-md-12 text-center">
                             <h2 class="text-muted">
-                                <i class="fa fa-save"></i> Save options
+                                <i class="fa fa-save"></i> {{ $t('Save options') }}
                             </h2>
                         </div>
 
@@ -144,24 +144,24 @@
                             <div class="col-md-12 no-padding">
                                 <span class="col-md-3">
                                     <label class="typo__label">
-                                        <i class="fa fa-car"></i> Vehicles
+                                        <i class="fa fa-car"></i> {{ $t('Vehicles') }}
                                     </label>
                                 </span>
                                 <span class="col-md-3 text-center">
                                     <input type="radio" id="default-vehicles" value="default" name="for-vehicles" v-model="options.for.vehicles">
-                                    <label for="default-vehicles">Default</label>
+                                    <label for="default-vehicles">{{ $t('By default') }}</label>
                                 </span>
                                 <span class="col-md-3 text-center">
                                     <input type="radio" id="all-vehicles" value="all" name="for-vehicles" v-model="options.for.vehicles">
-                                    <label for="all-vehicles">All</label>
+                                    <label for="all-vehicles">{{ $t('All') }}</label>
                                 </span>
                                 <span class="col-md-3 text-center">
                                     <input type="radio" id="custom-vehicles" value="custom" name="for-vehicles" v-model="options.for.vehicles">
-                                    <label for="custom-vehicles">Custom</label>
+                                    <label for="custom-vehicles">{{ $t('Custom') }}</label>
                                 </span>
 
                                 <div class="col-md-12" v-if="options.for.vehicles === 'custom'">
-                                    <multiselect v-model="options.vehicles" placeholder="Select vehicles" label="number" track-by="id" :options="vehicles" :multiple="true"></multiselect>
+                                    <multiselect v-model="options.vehicles" :placeholder="$t('Select vehicles')" label="number" track-by="id" :options="vehicles" :multiple="true"></multiselect>
                                 </div>
                             </div>
 
@@ -170,34 +170,31 @@
                             <div class="col-md-12 no-padding">
                                 <span class="col-md-3">
                                     <label class="typo__label">
-                                        <i class="fa fa-retweet"></i> Trajectory
+                                        <i class="fa fa-retweet"></i> {{ $t('Trajectory') }}
                                     </label>
                                 </span>
                                 <span class="col-md-3 text-center">
                                     <input type="radio" id="default-trajectories" value="default" name="for-trajectories" v-model="options.for.trajectories">
-                                    <label for="default-trajectories">Default</label>
+                                    <label for="default-trajectories">{{ $t('By default') }}</label>
                                 </span>
                                 <span class="col-md-3 text-center">
                                     <input type="radio" id="all-trajectories" value="all" name="for-trajectories" v-model="options.for.trajectories">
-                                    <label for="all-trajectories">All</label>
+                                    <label for="all-trajectories">{{ $t('All') }}</label>
                                 </span>
                                 <span class="col-md-3 text-center">
                                     <input type="radio" id="custom-trajectories" value="custom" name="for-trajectories" v-model="options.for.trajectories">
-                                    <label for="custom-trajectories">Custom</label>
+                                    <label for="custom-trajectories">{{ $t('Custom') }}</label>
                                 </span>
 
                                 <div class="col-md-12" v-if="options.for.trajectories === 'custom'">
-                                    <multiselect v-model="options.trajectories" :options="trajectoriesForMultiselect" placeholder="Select trajectories" group-values="trajectories" group-label="route" label="name" track-by="id" :multiple="true"></multiselect>
+                                    <multiselect v-model="options.trajectories" :options="trajectoriesForMultiselect" :placeholder="$t('Select trajectories')" group-values="trajectories" group-label="route" label="name" track-by="id" :multiple="true"></multiselect>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer col-md-12 text-center">
-                        <button type="button" class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Cancel" onclick="$('#modal-admin-discount-edit').modal('hide')">
+                        <button type="button" class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Cancel')" onclick="$('#modal-admin-discount-edit').modal('hide')">
                             <i class="fa fa-times"></i>
-                        </button>
-                        <button class="btn btn-success btn-outline sbold uppercase btn-circle tooltips" title="Save">
-                            <i class="fa fa-save"></i>
                         </button>
                     </div>
                 </form>

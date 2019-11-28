@@ -43,7 +43,7 @@ class ControlPointTime extends Model
 
     protected $fillable = ['time', 'time_next_point', 'time_from_dispatch', 'day_type_id', 'control_point_id', 'fringe_id', 'uid'];
 
-    protected function getDateFormat()
+    public function getDateFormat()
     {
         return config('app.date_time_format');
     }

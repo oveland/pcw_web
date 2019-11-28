@@ -35,6 +35,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereBeaId($value)
+ * @property string|null $phone
+ * @property string|null $cellphone
+ * @property string|null $address
+ * @property string|null $email
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereCellphone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Drivers\Driver wherePhone($value)
  */
 class Driver extends Model
 {
