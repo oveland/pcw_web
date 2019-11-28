@@ -599,6 +599,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminDiscountComponent",
@@ -8766,7 +8769,9 @@ var render = function() {
                     }
                   },
                   [_c("i", { staticClass: "fa fa-times" })]
-                )
+                ),
+                _vm._v(" "),
+                _vm._m(2)
               ])
             ]
           )
@@ -8800,6 +8805,20 @@ var staticRenderFns = [
         attrs: { colspan: "11" }
       })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass:
+          "btn btn-success btn-outline sbold uppercase btn-circle tooltips",
+        attrs: { title: "Save" }
+      },
+      [_c("i", { staticClass: "fa fa-save" })]
+    )
   }
 ]
 render._withStripped = true

@@ -196,6 +196,9 @@
                         <button type="button" class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Cancel')" onclick="$('#modal-admin-discount-edit').modal('hide')">
                             <i class="fa fa-times"></i>
                         </button>
+                        <button class="btn btn-success btn-outline sbold uppercase btn-circle tooltips" title="Save">
+                            <i class="fa fa-save"></i>
+                        </button>
                     </div>
                 </form>
             </div>
