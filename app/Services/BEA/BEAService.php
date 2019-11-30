@@ -28,20 +28,26 @@ class BEAService
      * @var PenaltyService
      */
     private $penalty;
+    /**
+     * @var BEASyncService
+     */
+    private $sync;
 
     /**
      * BEAService constructor.
+     * @param BEASyncService $sync
      * @param BEARepository $repository
      * @param DiscountService $discountService
      * @param CommissionService $commissionService
      * @param PenaltyService $penaltyService
      */
-    public function __construct(BEARepository $repository, DiscountService $discountService, CommissionService $commissionService, PenaltyService $penaltyService)
+    public function __construct(BEASyncService $sync, BEARepository $repository, DiscountService $discountService, CommissionService $commissionService, PenaltyService $penaltyService)
     {
         $this->repository = $repository;
         $this->discount = $discountService;
         $this->commission = $commissionService;
         $this->penalty = $penaltyService;
+        $this->sync = $sync;
     }
 
     /**
@@ -97,8 +103,7 @@ class BEAService
      */
     function getBEAMarks($vehicleId, $date)
     {
-        //$refresh = new \BEADatabaseRefreshSeeder();
-        //$refresh->run();
+        $this->sync->last();
 
         $vehicle = Vehicle::find($vehicleId);
         if(!$vehicle)return collect([]);
