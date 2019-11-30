@@ -1746,9 +1746,6 @@ __webpack_require__.r(__webpack_exports__);
       this.search.date = '2019-06-21';
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
-        _this.search.vehicle = _.find(response.data, function (v) {
-          return v.number === '8056';
-        });
 
         _this.searchReport();
       })["catch"](function (error) {
@@ -1759,7 +1756,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.search.vehicle) {
         this.$emit('search-report');
       } else {
-        gerror("Select a vehicle");
+        gerror($t('Select a vehicle'));
       }
     }
   },
