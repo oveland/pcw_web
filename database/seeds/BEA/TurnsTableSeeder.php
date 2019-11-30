@@ -22,6 +22,9 @@ class TurnsTableSeeder extends Seeder
         $lastIdMigrated = Turn::max('id');
         $turns = BEADB::select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
 
+        $maxSequence = collect(\DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
+
         foreach ($turns as $turnBEA) {
             $turn = Turn::find($turnBEA->ATR_IDTURNO);
             $route = $this->validateRoute($turnBEA->ATR_IDRUTA);
@@ -38,6 +41,9 @@ class TurnsTableSeeder extends Seeder
                 throw new Exception("Error saving TURN with id: $turnBEA->ATR_IDTURNO");
             }
         }
+
+        $maxSequence = Vehicle::max('id') + 1;
+        DB::statement("ALTER SEQUENCE crear_vehiculo_id_crear_vehiculo_seq RESTART WITH $maxSequence");
     }
 
     /**
@@ -113,15 +119,13 @@ class TurnsTableSeeder extends Seeder
             $vehicleBEA = BEADB::select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleId")->first();
 
             if($vehicleBEA){
-                $maxSequence = collect(\DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
-                DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
-
                 $vehicle = new Vehicle();
                 $duplicatedPlates = BEADB::select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
 
                 if ($duplicatedPlates->TOTAL > 1) $vehicleBEA->CAU_PLACAS = "$vehicleBEA->CAU_PLACAS-$vehicleBEA->CAU_NUMECONOM";
 
                 if ($vehicleBEA->CAU_PLACAS) {
+                    $vehicle->id = Vehicle::max('id') + 1;
                     $vehicle->bea_id = $vehicleBEA->CAU_IDAUTOBUS;
                     $vehicle->plate = $vehicleBEA->CAU_PLACAS;
                     $vehicle->number = $vehicleBEA->CAU_NUMECONOM;
@@ -134,8 +138,7 @@ class TurnsTableSeeder extends Seeder
                     }
                 }
 
-                $maxSequence = Vehicle::max('id') + 1;
-                DB::statement("ALTER SEQUENCE crear_vehiculo_id_crear_vehiculo_seq RESTART WITH $maxSequence");
+
             }
         }
 
