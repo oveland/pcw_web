@@ -2,6 +2,7 @@
 
 use App\Facades\BEADB;
 use App\Models\BEA\Turn;
+use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
