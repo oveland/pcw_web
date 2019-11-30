@@ -83,9 +83,6 @@ class TurnsTableSeeder extends Seeder
         if (!$driver) {
             $driverBEA = BEADB::select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverId")->first();
             if ($driverBEA) {
-                $maxSequence = collect(\DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
-                DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
-
                 $driver = new Driver();
                 $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
                 $driver->first_name = $driverBEA->CCO_NOMBRE;
@@ -97,9 +94,6 @@ class TurnsTableSeeder extends Seeder
                 if (!$driver->saveData()) {
                     throw new Exception("Error on validation save DRIVER with id: $driverBEA->CCO_IDCONDUCTOR");
                 }
-
-                $maxSequence = Vehicle::max('id') + 1;
-                DB::statement("ALTER SEQUENCE crear_vehiculo_id_crear_vehiculo_seq RESTART WITH $maxSequence");
             }
         }
 
@@ -119,6 +113,9 @@ class TurnsTableSeeder extends Seeder
             $vehicleBEA = BEADB::select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleId")->first();
 
             if($vehicleBEA){
+                $maxSequence = collect(\DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
+                DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
+
                 $vehicle = new Vehicle();
                 $duplicatedPlates = BEADB::select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
 
@@ -136,6 +133,9 @@ class TurnsTableSeeder extends Seeder
                         throw new Exception("Error saving VEHICLE with id: $vehicleBEA->CAU_IDAUTOBUS");
                     }
                 }
+
+                $maxSequence = Vehicle::max('id') + 1;
+                DB::statement("ALTER SEQUENCE crear_vehiculo_id_crear_vehiculo_seq RESTART WITH $maxSequence");
             }
         }
 
