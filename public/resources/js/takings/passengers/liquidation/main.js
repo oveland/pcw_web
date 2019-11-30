@@ -1741,7 +1741,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.search.date = moment().format("YYYY-MM-DD");
-      this.search.date = '2019-06-21';
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
 
