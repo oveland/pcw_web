@@ -42,19 +42,6 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function index()
     {
-        $database = '$database';
-
-        $lastBeaMarkId = Mark::max('id');
-        dump($lastBeaMarkId);
-
-        $lastBeaMark = Mark::orderByDesc('id')->first();
-        dd($lastBeaMark->id);
-
-        $marks = BEADB::select("SELECT ");
-        dd();
-        //$accessProperties = $this->pcwAuthService->getAccessProperties();
-        //$companies = $accessProperties->companies;
-
         return view('takings.passengers.liquidation.index');
     }
 

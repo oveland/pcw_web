@@ -6,6 +6,10 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Services\Reports\Passengers\Seats\SeatTopology;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Sofa\Eloquence\Eloquence;
@@ -21,44 +25,49 @@ use Sofa\Eloquence\Mappable;
  * @property bool $active
  * @property bool $in_repair
  * @property int $bea_id
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Company\Company $company
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle active()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereInRepair($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle wherePlate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property-read \App\Models\Vehicles\SimGPS $simGPS
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\MaintenanceVehicle[] $maintenance
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\PeakAndPlate[] $peakAndPlate
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Company $company
+ * @method static Builder|Vehicle active()
+ * @method static Builder|Vehicle whereActive($value)
+ * @method static Builder|Vehicle whereCompanyId($value)
+ * @method static Builder|Vehicle whereCreatedAt($value)
+ * @method static Builder|Vehicle whereId($value)
+ * @method static Builder|Vehicle whereInRepair($value)
+ * @method static Builder|Vehicle whereNumber($value)
+ * @method static Builder|Vehicle wherePlate($value)
+ * @method static Builder|Vehicle whereUpdatedAt($value)
+ * @mixin Eloquent
+ * @property-read SimGPS $simGPS
+ * @property-read Collection|MaintenanceVehicle[] $maintenance
+ * @property-read Collection|PeakAndPlate[] $peakAndPlate
  * @property-read mixed $number_and_plate
- * @property-read \App\Models\Vehicles\CurrentLocation $currentLocation
- * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicle
- * @property-read \App\Models\Vehicles\GpsVehicle $gpsVehicle
- * @property-read \App\Models\Routes\DispatcherVehicle $dispatcherVehicles
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereBeaId($value)
- * @property-read \App\Models\Vehicles\VehicleSeatDistribution $seatDistribution
+ * @property-read CurrentLocation $currentLocation
+ * @property-read DispatcherVehicle $dispatcherVehicle
+ * @property-read GpsVehicle $gpsVehicle
+ * @property-read DispatcherVehicle $dispatcherVehicles
+ * @method static Builder|Vehicle newModelQuery()
+ * @method static Builder|Vehicle newQuery()
+ * @method static Builder|Vehicle query()
+ * @method static Builder|Vehicle whereBeaId($value)
+ * @property-read VehicleSeatDistribution $seatDistribution
  * @property string|null $observations
  * @property int|null $proprietary_id
  * @property int|null $driver_id
  * @property string|null $tags
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereDriverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereObservations($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereProprietaryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereTags($value)
+ * @method static Builder|Vehicle whereDriverId($value)
+ * @method static Builder|Vehicle whereObservations($value)
+ * @method static Builder|Vehicle whereProprietaryId($value)
+ * @method static Builder|Vehicle whereTags($value)
  */
 class Vehicle extends Model
 {
     protected $hidden = ['created_at', 'updated_at'];
+
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
 
     public function company()
     {

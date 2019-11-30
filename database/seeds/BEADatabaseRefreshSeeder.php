@@ -24,11 +24,11 @@ class BEADatabaseRefreshSeeder extends Seeder
             $this->call(VehiclesTableSeeder::class);
             $this->call(DriversTableSeeder::class);
         });
-        DB::transaction(function () {
+        /*DB:: transaction(function () {
             $this->call(TurnsTableSeeder::class);
             $this->call(TrajectoriesTableSeeder::class);
             $this->call(MarksTableSeeder::class);
-        });
+        });*/
     }
 
     /**
