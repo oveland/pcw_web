@@ -75,19 +75,19 @@
 
     <h3 class="totals">
             <span class="text-bold">
-                <i class="fa fa-dollar"></i> Total @lang('turns')
+                <i class="fa fa-dollar"></i> @lang('Total turns')
             </span>
         <span class="pull-right text-bold col-md-4">{{ asDollars($totals->totalTurns) }}</span>
     </h3>
     <h4 class="totals">
             <span class="">
-                <i class="fa fa-dollar"></i> Total @lang('pay fall')
+                <i class="fa fa-dollar"></i> @lang('Total pay fall')
             </span>
         <span class="pull-right col-md-4">{{ asDollars($totals->totalPayFall) }}</span>
     </h4>
     <h4 class="totals">
             <span class="">
-                <i class="fa fa-dollar"></i> Total @lang('get fall')
+                <i class="fa fa-dollar"></i> @lang('Total get fall')
             </span>
         <span class="pull-right col-md-4">{{ asDollars($totals->totalGetFall) }}</span>
     </h4>
@@ -95,32 +95,32 @@
 
     <h3 class="totals">
             <span class="text-bold">
-                <i class="icon-tag"></i> Subtotal
+                <i class="icon-tag"></i> @lang('Subtotal')
             </span>
         <span class="pull-right text-bold col-md-4">{{ asDollars($totals->subTotalTurns) }}</span>
     </h3>
     <h4 class="totals">
             <span class="">
-                <i class="fa fa-dollar"></i> Total @lang('tolls')
+                <i class="fa fa-dollar"></i> @lang('Total tolls')
             </span>
         <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByTolls) }}</span>
     </h4>
     <h4 class="totals">
             <span class="">
-                <i class="fa fa-dollar"></i> Total @lang('commissions')
+                <i class="fa fa-dollar"></i> @lang('Total commissions')
             </span>
         <span class="pull-right col-md-4">{{ asDollars($totals->totalCommissions) }}</span>
     </h4>
     <h4 class="totals">
             <span class="">
-                <i class="fa fa-dollar"></i> Total @lang('washing')
+                <i class="fa fa-dollar"></i> @lang('Total operative expenses')
             </span>
-        <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByWashing) }}</span>
+        <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByOperativeExpenses) }}</span>
     </h4>
     @if($totals->totalOtherDiscounts)
         <h4 class="totals">
             <span class="">
-                <i class="fa fa-dollar"></i> Total @lang('other discounts')
+                <i class="fa fa-dollar"></i> @lang('Total other discounts')
             </span>
             <span class="pull-right col-md-4">{{ asDollars($totals->totalOtherDiscounts) }}</span>
         </h4>
@@ -129,7 +129,7 @@
 
     <h3 class="totals">
             <span class="text-bold">
-                <i class=" icon-user-follow"></i> Total @lang('dispatch')
+                <i class=" icon-user-follow"></i> @lang('Total dispatch')
             </span>
         <span class="pull-right text-bold col-md-4">{{ asDollars($totals->totalDispatch) }}</span>
     </h3>
@@ -137,11 +137,11 @@
     <hr class="hr">
     <h3 class="totals">
             <span class="">
-                <i class="fa fa-dollar"></i> Total @lang('fuel')
+                <i class="fa fa-dollar"></i> @lang('Total fuel')
             </span>
         <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByFuel) }}</span>
     </h3>
-
+    <br>
     <h3 class="total-liquidation">
             <span class="text-bold">
                 @lang('Balance')
@@ -153,15 +153,21 @@
 
     <h5 class="totals">
             <span class="">
-                Total @lang('locks'):
+                @lang('Total locks'):
             </span>
         <span class="">{{ $totals->totalLocks }}</span>
         <br>
         <span class="">
-                Total @lang('exempts'):
+                @lang('Total exempts'):
             </span>
         <span class="">{{ $totals->totalAuxiliaries }}</span>
+
+        @if($liquidation->liquidation->observations)
+            <hr class="hr">
+
+            <span class="">@lang('Observations'): {{ $liquidation->liquidation->observations }}</span>
     </h5>
+    @endif
 </div>
 </body>
 

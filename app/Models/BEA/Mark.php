@@ -132,6 +132,18 @@ class Mark extends Model
         return $this->belongsTo(Trajectory::class);
     }
 
+    public function getBoardedAttribute()
+    {
+        switch ($this->id){
+            case 8771:
+                return 10;
+                break;
+            case 8840:
+                return 7;
+                break;
+        }
+    }
+
     function getStatusAttribute()
     {
         $status = [
@@ -157,18 +169,6 @@ class Mark extends Model
         return $status[0];
     }
 
-    public function getBoardedAttribute()
-    {
-        switch ($this->id){
-            case 8771:
-                return 10;
-                break;
-            case 8840:
-                return 7;
-                break;
-        }
-    }
-
     /**
      * @return Discount[] | Collection
      */
@@ -190,11 +190,11 @@ class Mark extends Model
     function getTotalBeaAttribute()
     {
         switch ($this->id){
-            case 8842:
-                return 193800 + 4000;
+            case 8771:
+                return 193800 + 3000;
                 break;
-            case 8785:
-                return 109200 + 4000;
+            case 8840:
+                return 109200 + 3000;
                 break;
         }
 
