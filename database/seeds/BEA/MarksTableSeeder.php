@@ -38,9 +38,10 @@ class MarksTableSeeder extends Seeder
      */
     function processMark($markBEA)
     {
-        $mark = Mark::find($markBEA->AMR_IDMARCA);
+        //$mark = Mark::find($markBEA->AMR_IDMARCA);
         
-        if (!$mark) $mark = new Mark();
+        //if (!$mark)
+        $mark = new Mark();
 
         $passengersUp = $markBEA->AMR_SUBIDAS;
         $passengersDown = $markBEA->AMR_BAJADAS;

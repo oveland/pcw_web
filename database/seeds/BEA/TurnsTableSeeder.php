@@ -26,12 +26,13 @@ class TurnsTableSeeder extends Seeder
         DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
 
         foreach ($turns as $turnBEA) {
-            $turn = Turn::find($turnBEA->ATR_IDTURNO);
+            //$turn = Turn::find($turnBEA->ATR_IDTURNO);
             $route = $this->validateRoute($turnBEA->ATR_IDRUTA);
             $driver = $this->validateDriver($turnBEA->ATR_IDCONDUCTOR);
             $vehicle = $this->validateVehicle($turnBEA->ATR_IDAUTOBUS);
 
-            if (!$turn) $turn = new Turn();
+            //if (!$turn)
+            $turn = new Turn();
             $turn->id = $turnBEA->ATR_IDTURNO;
             $turn->route_id = $route->id;
             $turn->driver_id = $driver->id;

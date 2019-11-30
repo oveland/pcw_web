@@ -97,6 +97,9 @@ class BEAService
      */
     function getBEAMarks($vehicleId, $date)
     {
+        //$refresh = new \BEADatabaseRefreshSeeder();
+        //$refresh->run();
+
         $vehicle = Vehicle::find($vehicleId);
         if(!$vehicle)return collect([]);
         $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();
