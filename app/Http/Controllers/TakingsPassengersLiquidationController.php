@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\BEADB;
 use App\Models\BEA\Commission;
 use App\Models\BEA\Discount;
 use App\Models\BEA\Liquidation;
@@ -41,6 +42,16 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function index()
     {
+        $database = '$database';
+
+        $lastBeaMarkId = Mark::max('id');
+        dump($lastBeaMarkId);
+
+        $lastBeaMark = Mark::orderByDesc('id')->first();
+        dd($lastBeaMark->id);
+
+        $marks = BEADB::select("SELECT ");
+        dd();
         //$accessProperties = $this->pcwAuthService->getAccessProperties();
         //$companies = $accessProperties->companies;
 
