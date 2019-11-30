@@ -1,5 +1,5 @@
 <template>
-    <div class="form form-horizontal preview">
+    <div v-if="search.vehicle" class="form form-horizontal preview">
         <h3 class="search p-b-15">
             <span class="text-bold">
                 <i class="fa fa-bus"></i> {{ search.vehicle.number }} | {{ search.vehicle.plate }}

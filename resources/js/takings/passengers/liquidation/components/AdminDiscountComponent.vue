@@ -251,8 +251,6 @@
                 }else{
                     this.loadTrajectories(_.head(this.routes));
                 }
-
-                console.log(this.allTrajectoriesByRoutes);
             }
         },
         computed:{
@@ -279,7 +277,7 @@
                 this.loadDiscounts(this.vehicle, _.head(this.trajectoriesByRoute));
             },
             loadDiscounts: function (vehicle, trajectory) {
-                if (!trajectory) return false;
+                if (!vehicle || !trajectory) return false;
                 this.selectedTrajectory = trajectory;
                 this.setParamToEdit('trajectory',trajectory);
                 this.discounts = [];

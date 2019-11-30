@@ -645,8 +645,6 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.loadTrajectories(_.head(this.routes));
       }
-
-      console.log(this.allTrajectoriesByRoutes);
     }
   },
   computed: {
@@ -675,7 +673,7 @@ __webpack_require__.r(__webpack_exports__);
     loadDiscounts: function loadDiscounts(vehicle, trajectory) {
       var _this = this;
 
-      if (!trajectory) return false;
+      if (!vehicle || !trajectory) return false;
       this.selectedTrajectory = trajectory;
       this.setParamToEdit('trajectory', trajectory);
       this.discounts = [];
@@ -1756,7 +1754,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.search.vehicle) {
         this.$emit('search-report');
       } else {
-        gerror($t('Select a vehicle'));
+        gerror(this.$t('Select a vehicle'));
       }
     }
   },
@@ -10988,230 +10986,252 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "form form-horizontal preview" }, [
-    _c("h3", { staticClass: "search p-b-15" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-bus" }),
-        _vm._v(
-          " " +
-            _vm._s(_vm.search.vehicle.number) +
-            " | " +
-            _vm._s(_vm.search.vehicle.plate) +
-            "\n        "
-        )
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right" }, [
-        _c("i", { staticClass: "fa fa-calendar" }),
-        _vm._v(" " + _vm._s(_vm.search.date) + "\n        ")
-      ])
-    ]),
-    _vm._v(" "),
-    _c("hr", { staticClass: "hr" }),
-    _vm._v(" "),
-    _c("h2", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-dollar hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Total turns")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totals.totalTurns, "$0,0")))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h3", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-dollar hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Total pay fall")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totals.totalPayFall, "$0,0")))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h3", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-dollar hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Total get fall")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totals.totalGetFall, "$0,0")))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h2", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-dollar hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Subtotal")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totals.subTotalTurns, "$0,0")))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h3", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-tachometer hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Total tolls")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(
-          _vm._s(
-            _vm._f("numberFormat")(_vm.totals.totalDiscountByTolls, "$0,0")
-          )
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h3", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-tachometer hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Total commissions")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(
-          _vm._s(_vm._f("numberFormat")(_vm.totals.totalCommissions, "$0,0"))
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h3", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-tachometer hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Operative Expenses")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(
-          _vm._s(
-            _vm._f("numberFormat")(
-              _vm.totals.totalDiscountByOperativeExpenses,
-              "$0,0"
+  return _vm.search.vehicle
+    ? _c("div", { staticClass: "form form-horizontal preview" }, [
+        _c("h3", { staticClass: "search p-b-15" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-bus" }),
+            _vm._v(
+              " " +
+                _vm._s(_vm.search.vehicle.number) +
+                " | " +
+                _vm._s(_vm.search.vehicle.plate) +
+                "\n        "
             )
-          )
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _vm.totals.totalOtherDiscounts
-      ? _c("h3", { staticClass: "totals" }, [
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right" }, [
+            _c("i", { staticClass: "fa fa-calendar" }),
+            _vm._v(" " + _vm._s(_vm.search.date) + "\n        ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("hr", { staticClass: "hr" }),
+        _vm._v(" "),
+        _c("h2", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-dollar hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Total turns")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(_vm._f("numberFormat")(_vm.totals.totalTurns, "$0,0"))
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h3", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-dollar hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Total pay fall")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(_vm._f("numberFormat")(_vm.totals.totalPayFall, "$0,0"))
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h3", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-dollar hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Total get fall")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(_vm._f("numberFormat")(_vm.totals.totalGetFall, "$0,0"))
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h2", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-dollar hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Subtotal")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(_vm._f("numberFormat")(_vm.totals.subTotalTurns, "$0,0"))
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h3", { staticClass: "totals" }, [
           _c("span", { staticClass: "text-bold" }, [
             _c("i", { staticClass: "fa fa-tachometer hide" }),
-            _vm._v(" " + _vm._s(_vm.$t("Total other discounts")) + "\n        ")
+            _vm._v(" " + _vm._s(_vm.$t("Total tolls")) + "\n        ")
           ]),
           _vm._v(" "),
           _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
             _vm._v(
               _vm._s(
-                _vm._f("numberFormat")(_vm.totals.totalOtherDiscounts, "$0,0")
+                _vm._f("numberFormat")(_vm.totals.totalDiscountByTolls, "$0,0")
               )
             )
           ])
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("h2", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-tachometer hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Total dispatch")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totals.totalDispatch, "$0,0")))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h3", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-tachometer hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Total fuel")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(
-          _vm._s(_vm._f("numberFormat")(_vm.totals.totalDiscountByFuel, "$0,0"))
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c("h2", { staticClass: "totals" }, [
-      _c("span", { staticClass: "text-bold" }, [
-        _c("i", { staticClass: "fa fa-tachometer hide" }),
-        _vm._v(" " + _vm._s(_vm.$t("Balance")) + "\n        ")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
-        _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totals.balance, "$0,0")))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("hr", { staticClass: "m-t-40 m-b-20" }),
-    _vm._v(" "),
-    _c("div", { staticStyle: { "font-size": "1.5em !important" } }, [
-      _c(
-        "label",
-        { staticClass: "control-label", attrs: { for: "observations" } },
-        [_vm._v(_vm._s(_vm.$t("Observations")))]
-      ),
-      _vm._v(" "),
-      _c("textarea", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.liquidation.observations,
-            expression: "liquidation.observations"
-          }
-        ],
-        staticClass: "form-control",
-        staticStyle: { resize: "vertical" },
-        attrs: {
-          id: "observations",
-          rows: "2",
-          readonly: _vm.readonly,
-          disabled: _vm.readonly
-        },
-        domProps: { value: _vm.liquidation.observations },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.liquidation, "observations", $event.target.value)
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c("br"),
-    _vm._v(" "),
-    !_vm.readonly
-      ? _c("div", { staticClass: "text-center" }, [
+        ]),
+        _vm._v(" "),
+        _c("h3", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-tachometer hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Total commissions")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(
+                _vm._f("numberFormat")(_vm.totals.totalCommissions, "$0,0")
+              )
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h3", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-tachometer hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Operative Expenses")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(
+                _vm._f("numberFormat")(
+                  _vm.totals.totalDiscountByOperativeExpenses,
+                  "$0,0"
+                )
+              )
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.totals.totalOtherDiscounts
+          ? _c("h3", { staticClass: "totals" }, [
+              _c("span", { staticClass: "text-bold" }, [
+                _c("i", { staticClass: "fa fa-tachometer hide" }),
+                _vm._v(
+                  " " + _vm._s(_vm.$t("Total other discounts")) + "\n        "
+                )
+              ]),
+              _vm._v(" "),
+              _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+                _vm._v(
+                  _vm._s(
+                    _vm._f("numberFormat")(
+                      _vm.totals.totalOtherDiscounts,
+                      "$0,0"
+                    )
+                  )
+                )
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("h2", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-tachometer hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Total dispatch")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(_vm._f("numberFormat")(_vm.totals.totalDispatch, "$0,0"))
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h3", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-tachometer hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Total fuel")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(
+              _vm._s(
+                _vm._f("numberFormat")(_vm.totals.totalDiscountByFuel, "$0,0")
+              )
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h2", { staticClass: "totals" }, [
+          _c("span", { staticClass: "text-bold" }, [
+            _c("i", { staticClass: "fa fa-tachometer hide" }),
+            _vm._v(" " + _vm._s(_vm.$t("Balance")) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "pull-right col-md-4 p-0" }, [
+            _vm._v(_vm._s(_vm._f("numberFormat")(_vm.totals.balance, "$0,0")))
+          ])
+        ]),
+        _vm._v(" "),
+        _c("hr", { staticClass: "m-t-40 m-b-20" }),
+        _vm._v(" "),
+        _c("div", { staticStyle: { "font-size": "1.5em !important" } }, [
           _c(
-            "button",
-            {
-              staticClass: "btn btn-circle red btn-outline f-s-13 uppercase",
-              attrs: { disabled: _vm.totals.totalBea === 0 },
-              on: {
-                click: function($event) {
-                  return _vm.$emit("liquidate")
-                }
+            "label",
+            { staticClass: "control-label", attrs: { for: "observations" } },
+            [_vm._v(_vm._s(_vm.$t("Observations")))]
+          ),
+          _vm._v(" "),
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.liquidation.observations,
+                expression: "liquidation.observations"
               }
+            ],
+            staticClass: "form-control",
+            staticStyle: { resize: "vertical" },
+            attrs: {
+              id: "observations",
+              rows: "2",
+              readonly: _vm.readonly,
+              disabled: _vm.readonly
             },
-            [
-              _c("i", { staticClass: "icon-layers" }),
-              _vm._v(" " + _vm._s(_vm.$t("Liquidate")) + "\n        ")
-            ]
-          )
-        ])
-      : _vm._e()
-  ])
+            domProps: { value: _vm.liquidation.observations },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.liquidation, "observations", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        !_vm.readonly
+          ? _c("div", { staticClass: "text-center" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn btn-circle red btn-outline f-s-13 uppercase",
+                  attrs: { disabled: _vm.totals.totalBea === 0 },
+                  on: {
+                    click: function($event) {
+                      return _vm.$emit("liquidate")
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "icon-layers" }),
+                  _vm._v(" " + _vm._s(_vm.$t("Liquidate")) + "\n        ")
+                ]
+              )
+            ])
+          : _vm._e()
+      ])
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true

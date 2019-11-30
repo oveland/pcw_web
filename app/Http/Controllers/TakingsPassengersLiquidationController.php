@@ -136,8 +136,6 @@ class TakingsPassengersLiquidationController extends Controller
      */
     function processSaveOptionsDiscount(Discount $discount, $options)
     {
-        $options = json_decode(json_encode($options), FALSE);;
-
         $default = $options->for->vehicles == 'default' && $options->for->trajectories == 'default';
 
         $vehicles = collect([]);
@@ -195,10 +193,11 @@ class TakingsPassengersLiquidationController extends Controller
                     'message' => __('Discount edited successfully'),
                 ];
 
+                $saveOptions = json_decode(json_encode($request->get('options')), FALSE);
                 $discountToEdit = (object)$request->get('discount');
                 $discount = Discount::find($discountToEdit->id);
                 if ($discount) {
-                    $options = $this->processSaveOptionsDiscount($discount, $request->get('options'));
+                    $options = $this->processSaveOptionsDiscount($discount, $saveOptions);
 
                     if ($options->default) {
                         $discount->value = $discountToEdit->value;
@@ -213,7 +212,7 @@ class TakingsPassengersLiquidationController extends Controller
                                     ->where('vehicle_id', $vehicle->id)
                                     ->where('trajectory_id', $trajectory->id)
                                     ->where('discount_type_id', $discountToEdit->discount_type_id)
-                                    ->get()->first();;
+                                    ->first();;
 
                                 if ($discountFromCustom) {
                                     $discountFromCustom->value = $discountToEdit->value;

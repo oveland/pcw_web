@@ -61,7 +61,7 @@
                 if(this.search.vehicle){
                     this.$emit('search-report');
                 }else{
-                    gerror($t('Select a vehicle'));
+                    gerror(this.$t('Select a vehicle'));
                 }
             }
         },
