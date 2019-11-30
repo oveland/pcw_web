@@ -18,7 +18,7 @@ class RoutesTableSeeder extends Seeder
         $routes = BEADB::select("SELECT * FROM C_RUTA");
 
         foreach ($routes as $routeBEA) {
-            $route = Route::where('bea_id', $routeBEA->CRU_IDRUTA)->get()->first();
+            $route = Route::where('bea_id', $routeBEA->CRU_IDRUTA)->first();
             if (!$route) $route = new Route();
 
             $route->bea_id = $routeBEA->CRU_IDRUTA;

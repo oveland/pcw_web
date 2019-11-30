@@ -42,7 +42,7 @@ class VehiclesTableSeeder extends Seeder
             }
         }
 
-        $maxSequence = collect(\DB::select("SELECT max(id) max FROM vehicles"))->first()->max + 1;
+        $maxSequence = Vehicle::max('id') + 1;
         DB::statement("ALTER SEQUENCE crear_vehiculo_id_crear_vehiculo_seq RESTART WITH $maxSequence");
     }
 }

@@ -7,6 +7,11 @@ use Illuminate\Database\Seeder;
 
 class MarksTableSeeder extends Seeder
 {
+    public function __construct()
+    {
+
+    }
+
     /**
      * Run the database seeds.
      *
@@ -15,7 +20,8 @@ class MarksTableSeeder extends Seeder
      */
     public function run()
     {
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_FHINICIO >= '2019-03-01'");
+        $lastIdMigrated = Mark::max('id');
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA > $lastIdMigrated");
 
         foreach ($marks as $markBEA) {
             $mark = $this->processMark($markBEA);

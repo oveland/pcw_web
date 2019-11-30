@@ -18,7 +18,7 @@ class DriversTableSeeder extends Seeder
         $drivers = BEADB::select("SELECT * FROM C_CONDUCTOR");
 
         foreach ($drivers as $driverBEA) {
-            $driver = Driver::where('bea_id', $driverBEA->CCO_IDCONDUCTOR)->get()->first();
+            $driver = Driver::where('bea_id', $driverBEA->CCO_IDCONDUCTOR)->first();
             if (!$driver) $driver = new Driver();
 
             $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
