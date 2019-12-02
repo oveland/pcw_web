@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Company\Company;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
@@ -38,6 +39,12 @@ class DatabaseManageOLDRoutinesCommand extends Command
      */
     public function handle()
     {
+        $companies = Company::all();
+
+        foreach ($companies as $company){
+            \DB::select("SELECT checkvehiclesformaps($company->id)");
+        }
+
         $client = new Client(['base_uri' => 'http://admin.pcwserviciosgps.com']);
         $response = $client->get('php/migrarContadorHistorialSeisMeses.php');
         dump($response->getBody()->getContents());

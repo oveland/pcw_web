@@ -9,6 +9,7 @@
 namespace App\Services\Reports\Routes;
 
 use App\Http\Controllers\Utils\StrTime;
+use App\Models\Company\Company;
 use App\Models\Routes\ControlPoint;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
