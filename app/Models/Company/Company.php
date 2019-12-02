@@ -145,7 +145,7 @@ class Company extends Model
                 $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
             }else{
                 if(!$user->isAdmin()){
-                    $userRoutes = $user->userRoutes;
+                    $userRoutes = $user->getUserRoutes($this);
                     $routes = $routes->whereIn( 'id',  $userRoutes->pluck('id'));
                 }
             }

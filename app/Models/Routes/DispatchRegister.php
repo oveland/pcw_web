@@ -431,7 +431,7 @@ class DispatchRegister extends Model
         $user = Auth::user();
 
         $query->where('date', explode(' ', $date)[0])
-            ->whereIn('route_id', $user->userRoutes->pluck('id'))
+            ->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'))
             ->where(function ($query) use ($company, $routeId, $vehicleId) {
             if ($vehicleId == 'all') {
                 $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));

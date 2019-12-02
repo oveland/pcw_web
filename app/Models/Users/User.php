@@ -253,9 +253,17 @@ class User extends Authenticatable
         return collect( $this->vehicle_tags ? explode(',', $this->vehicle_tags) : []);
     }
 
-    public function getUserRoutesAttribute()
+    /**
+     * @param Company $company
+     * @return Collection
+     */
+    public function getUserRoutes(Company $company)
     {
         $userCompany = $this->company;
+        if($this->isAdmin() && $company){
+            $userCompany = $company;
+        }
+
         return collect(DB::select("SELECT * FROM get_user_routes($this->id, $userCompany->id)"));
     }
 }
