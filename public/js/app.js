@@ -31390,6 +31390,7 @@ try {//window.$ = window.jQuery = require('jquery');
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+var showingErrorMessage = false;
 window.axios.interceptors.response.use(function (response) {
   setTimeout(function () {
     $('.tooltips').tooltip();
@@ -31398,7 +31399,15 @@ window.axios.interceptors.response.use(function (response) {
     }, 4000);
   }, 1000);
   return response;
-}, function () {});
+}, function (error) {
+  if (!showingErrorMessage && (error.response.data == "Unauthorized" || error.response.status == 401)) {
+    gerror('Acceso no autorizado o sesión caducada');
+    showingErrorMessage = true;
+    setTimeout(function () {
+      location.reload();
+    }, 1000);
+  }
+});
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

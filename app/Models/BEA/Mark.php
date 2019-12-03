@@ -132,18 +132,6 @@ class Mark extends Model
         return $this->belongsTo(Trajectory::class);
     }
 
-    public function getBoardedAttribute()
-    {
-        switch ($this->id){
-            case 8771:
-                return 10;
-                break;
-            case 8840:
-                return 7;
-                break;
-        }
-    }
-
     function getStatusAttribute()
     {
         $status = [

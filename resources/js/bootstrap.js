@@ -24,6 +24,8 @@ window.axios = require('axios');
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+let showingErrorMessage = false;
+
 window.axios.interceptors.response.use(
     (response) => {
         setTimeout(() => {
@@ -34,8 +36,14 @@ window.axios.interceptors.response.use(
         }, 1000);
         return response;
     },
-    function(){
-
+    function(error){
+        if ( !showingErrorMessage && (error.response.data == "Unauthorized" || error.response.status == 401)) {
+            gerror('Acceso no autorizado o sesión caducada');
+            showingErrorMessage = true;
+            setTimeout(function(){
+                location.reload();
+            },1000);
+        }
     },
 );
 
