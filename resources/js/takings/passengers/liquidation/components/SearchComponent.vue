@@ -44,9 +44,15 @@
         methods: {
             getSearchParams: function () {
                 this.search.date = moment().format("YYYY-MM-DD");
+                //this.search.date = '2019-06-21';
                 axios.get(this.urlParams)
                     .then(response => {
                         this.search.vehicles = response.data;
+
+                        this.search.vehicle = _.find(response.data, function(v){
+                            //return v.number === '8055';
+                        });
+
                         this.searchReport();
                     })
                     .catch(function (error) {

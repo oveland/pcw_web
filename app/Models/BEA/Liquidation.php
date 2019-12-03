@@ -116,4 +116,20 @@ class Liquidation extends Model
         $liquidation = $this->liquidation;
         return $liquidation->totalBea - $liquidation->totalDiscounts - $liquidation->totalCommissions + $liquidation->totalPenalties;
     }
+
+    public function setLiquidationAttribute($liquidation)
+    {
+        $liquidation = collect((object) $liquidation);
+
+        $otherDiscounts = $liquidation['otherDiscounts'];
+
+        foreach ($otherDiscounts as &$otherDiscount){
+            $otherDiscount = (object)$otherDiscount;
+            $otherDiscount->fileUrl = $otherDiscount->hasFile && $otherDiscount->fileUrl ? route('takings-passengers-file-discount', ['id' => $otherDiscount->id]) : '';
+        }
+
+        $liquidation['otherDiscounts'] = $otherDiscounts;
+
+        $this->attributes['liquidation'] = $liquidation->toJson();
+    }
 }

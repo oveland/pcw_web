@@ -2,7 +2,7 @@
     <div class="">
         <table-component :marks="marks" :totals="totals"></table-component>
 
-        <div class="modal fade" id="modal-generate-liquidation" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal fade" id="modal-generate-liquidation" role="basic" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header hide">

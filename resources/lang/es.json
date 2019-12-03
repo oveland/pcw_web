@@ -685,5 +685,8 @@
   "Print": "Imprimir",
   "Print detailed": "Imprimir detallado",
   "Total locks": "Total bloqueos",
-  "Total exempts": "Total excentos"
+  "Total exempts": "Total excentos",
+  "Show file": "Mostrar archivo",
+  "File other discount": "Archivo de otro descuento",
+  "Error saving other discounts files": "Error al guardar archivos de otros descuentos"
 }

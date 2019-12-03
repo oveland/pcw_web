@@ -310,6 +310,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::prefix(__('takings'))->group(function () {
         Route::prefix(__('passengers'))->group(function () {
             Route::get('/search', 'TakingsPassengersLiquidationController@searchLiquidated')->name('takings-passengers-search');
+            Route::get('/file/discount/{id}', 'TakingsPassengersLiquidationController@getFileDiscount')->name('takings-passengers-file-discount');
 
             Route::prefix(__('url-liquidation'))->group(function () {
                 Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');

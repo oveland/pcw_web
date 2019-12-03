@@ -88,14 +88,24 @@
 
             <tr class="" v-for="otherDiscount in liquidation.otherDiscounts">
                 <td colspan="7" class="text-right">
-                <span class="text-bold col-md-6 pull-right p-r-0">
-                    <button v-if="!readonly" class="btn btn-danger btn-sm tooltips" data-placement="left" :data-title="$t('Delete')" style="position: absolute;left: -15px;" @click="removeOtherDiscount(otherDiscount.id)">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                    <div class="input-icon">
-                        <i class="icon-tag font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Description')" v-model="otherDiscount.name">
+                <div class="text-bold col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-r-0">
+
+                    <div class="input-group">
+                        <span class="input-group-addon faa-parent animated-hover tooltips" v-if="!readonly" data-placement="left" :data-title="$t('Delete')" @click="removeOtherDiscount(otherDiscount.id)">
+                            <i class="fa fa-trash faa-shake font-red"></i>
+                        </span>
+                        <div class="input-icon">
+                            <i class="icon-tag font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Description')" v-model="otherDiscount.name">
+                        </div>
+                        <span v-if="otherDiscount.hasFile" class="input-group-addon faa-parent animated-hover tooltips" data-placement="top" :data-title="$t('Show file')" data-toggle="modal" data-target="#modal-show-file-discount" @click="showImagePreview(otherDiscount)">
+                            <i class="fa fa-image faa-shake font-red"></i>
+                        </span>
+                        <span class="input-group-addon" v-if="!readonly">
+                            <input type="file" accept="image/*" class="" @change="addDiscountFile(otherDiscount)">
+                        </span>
                     </div>
-                </span>
+
+                </div>
                 </td>
                 <td class="text-center">
                     <div class="input-icon">
@@ -128,15 +138,35 @@
             </div>
         </div>
 
+        <modal name="modal-show-file-discount" draggable="true" classes="vue-modal">
+            <div class="modal-header">
+                <button type="button" class="close" @click="hide" aria-hidden="true"></button>
+                <h5 class="modal-title">
+                    <i class="fa fa-image"></i> {{ $t('File other discount') }}
+                </h5>
+                <div v-if="imagePreview" class="col-md-12 p-10 text-center">
+                    <img :src="imagePreview" class="uploading-image" />
+                </div>
+            </div>
+        </modal>
+
     </div>
 </template>
 
 <script>
     import Vue2Filters from 'vue2-filters';
+    import VModal from 'vue-js-modal';
+
+    Vue.use(VModal)
 
     export default {
         name: "DiscountComponent",
         mixins: [Vue2Filters.mixin],
+        data: function () {
+            return {
+                imagePreview: null
+            }
+        },
         props: {
             marks: Array,
             readonly: Boolean,
@@ -144,12 +174,40 @@
             totals: Object
         },
         methods: {
+            show () {
+                this.$modal.show('modal-show-file-discount');
+            },
+            hide () {
+                this.$modal.hide('modal-show-file-discount');
+            },
+            addDiscountFile(otherDiscount){
+                const file = event.target.files[0];
+                otherDiscount.hasFile = !!file;
+                otherDiscount.fileUrl = null;
+
+                if(file){
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = e => {
+                        otherDiscount.fileUrl = e.target.result;
+                    }
+                }
+            },
+            showImagePreview(otherDiscount){
+                this.imagePreview = otherDiscount.fileUrl;
+                this.$modal.show('modal-show-file-discount');
+            },
             addOtherDiscount: function () {
+                const otherDiscountId = (new Date).getTime();
+
                 this.liquidation.otherDiscounts.push({
-                    id: (new Date).getTime(),
+                    id: otherDiscountId,
                     name: '',
-                    value: ''
+                    value: '',
+                    fileUrl: null,
+                    hasFile: false
                 });
+
                 setTimeout(() => {
                     $('.tooltips').tooltip();
                 }, 500);
@@ -164,6 +222,11 @@
 </script>
 
 <style scoped>
+    .uploading-image{
+        width: 100%;
+        border-radius: 5px;
+    }
+
     .totals span {
         font-size: 1.1em !important;
     }

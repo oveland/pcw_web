@@ -19,6 +19,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use PDF;
+use Storage;
 
 class TakingsPassengersLiquidationController extends Controller
 {
@@ -290,6 +291,44 @@ class TakingsPassengersLiquidationController extends Controller
         }
     }
 
+    public function getFileDiscount($otherDiscountId)
+    {
+        $filePath = config('takings.discounts.others.files.path') . "/$otherDiscountId." . config('takings.discounts.others.files.image-extension');
+
+        $exists = Storage::exists($filePath);
+        if($exists){
+            $file = Storage::get($filePath);
+            $image = \Image::make($file);
+            return $image->response(config('takings.discounts.others.files.image-extension'));
+        }else{
+            return response()->file("unavailable.jpeg");
+        }
+    }
+
+    public function processDiscountFiles($dataLiquidation)
+    {
+        $processedOK = true;
+
+        $otherDiscounts = $dataLiquidation['otherDiscounts'];
+
+        foreach ($otherDiscounts as $otherDiscount) {
+            $otherDiscount = (object)$otherDiscount;
+            $base64File = $otherDiscount->fileUrl;
+            if ($otherDiscount->hasFile && $base64File) {
+                list($baseType, $image) = explode(';', $base64File);
+                list(, $image) = explode(',', $image);
+                $image = base64_decode($image);
+                $imageName = config('takings.discounts.others.files.path') . "/$otherDiscount->id." . config('takings.discounts.others.files.image-extension');
+                $processedOK = Storage::put($imageName, $image);
+                if (!$processedOK) {
+                    break;
+                }
+            }
+        }
+
+        return $processedOK;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
@@ -311,7 +350,8 @@ class TakingsPassengersLiquidationController extends Controller
         $liquidation = new Liquidation();
         $liquidation->date = Mark::find($marksID->first())->date;
         $liquidation->vehicle_id = $request->get('vehicle');
-        $liquidation->liquidation = $dataLiquidation->toJson();
+        $liquidation->liquidation = $dataLiquidation;
+
         $liquidation->totals = collect($request->get('totals'))->toJson();
         $liquidation->user_id = $user->id;
 
@@ -341,7 +381,14 @@ class TakingsPassengersLiquidationController extends Controller
                             $mark->liquidation_id = $liquidation->id;
                             $mark->pay_fall = collect($falls->get('pay'))->get($mark->id);
                             $mark->get_fall = collect($falls->get('get'))->get($mark->id);
-                            if (!$mark->save()) {
+                            if ($mark->save()) {
+                                if (!$this->processDiscountFiles($dataLiquidation)) {
+                                    $response->success = false;
+                                    $response->message = __('Error saving other discounts files');
+                                    DB::rollBack();
+                                    break;
+                                };
+                            } else {
                                 $response->success = false;
                                 $response->message = __('Error at associate liquidation with BEA Mark register');
                                 DB::rollBack();

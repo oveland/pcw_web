@@ -143,6 +143,9 @@ let liquidationView = new Vue({
 
             axios.get(this.urlList, {params: this.searchParams}).then(data => {
                 this.allMarks = data.data;
+
+                this.liquidation.otherDiscounts = [];
+                this.liquidation.observations = "";
             }).catch(function (error) {
                 console.log(error);
             }).then(function () {
