@@ -29,12 +29,13 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Penalty whereValue($value)
  * @mixin Eloquent
  * @property-read Route $route
+ * @property-read \App\Models\BEA\Mark $mark
  */
-class Penalty extends Model
+class MarkPenalty extends Model
 {
-    protected $table = 'bea_penalties';
+    protected $table = 'bea_mark_penalties';
 
-    protected $fillable = ['route_id', 'type', 'value'];
+    protected $fillable = ['route_id', 'type', 'value', 'created_at', 'updated_at'];
 
     function getDateFormat()
     {
@@ -47,5 +48,10 @@ class Penalty extends Model
     function route()
     {
         return $this->belongsTo(Route::class);
+    }
+
+    public function mark()
+    {
+        return $this->belongsTo(Mark::class, 'mark_id', 'id');
     }
 }

@@ -37,10 +37,13 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Discount whereUpdatedAt($value)
  * @method static Builder|Discount whereValue($value)
  * @method static Builder|Discount whereVehicleId($value)
+ * @property int $mark_id
+ * @method static Builder|MarkDiscount whereMarkId($value)
+ * @property-read \App\Models\BEA\Mark $mark
  */
-class Discount extends Model
+class MarkDiscount extends Model
 {
-    protected $table = 'bea_discounts';
+    protected $table = 'bea_mark_discounts';
 
     protected $fillable = ['vehicle_id', 'route_id', 'trajectory_id', 'discount_type_id', 'value'];
 
@@ -78,6 +81,11 @@ class Discount extends Model
      */
     function discountType()
     {
-        return $this->belongsTo(DiscountType::class);
+        return $this->belongsTo(MarkDiscountType::class, 'discount_type_id', 'id');
+    }
+
+    public function mark()
+    {
+        return $this->belongsTo(Mark::class, 'mark_id', 'id');
     }
 }

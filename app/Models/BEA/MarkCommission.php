@@ -29,10 +29,13 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Commission whereValue($value)
  * @mixin Eloquent
  * @property-read Route $route
+ * @property int $mark_id
+ * @method static Builder|MarkCommission whereMarkId($value)
+ * @property-read \App\Models\BEA\Mark $mark
  */
-class Commission extends Model
+class MarkCommission extends Model
 {
-    protected $table = 'bea_commissions';
+    protected $table = 'bea_mark_commissions';
 
     protected $fillable = ['route_id', 'type', 'value'];
 
@@ -47,5 +50,10 @@ class Commission extends Model
     function route()
     {
         return $this->belongsTo(Route::class);
+    }
+
+    public function mark()
+    {
+        return $this->belongsTo(Mark::class, 'mark_id', 'id');
     }
 }
