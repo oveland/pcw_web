@@ -1446,7 +1446,9 @@ __webpack_require__.r(__webpack_exports__);
 
         switch (commissionType) {
           case 'percent':
-            mark.commission.value = (mark.totalGrossBEA + mark.penalty.value + mark.getFall - mark.payFall) * (mark.commission.baseValue / 100);
+            var getFall = Number.isInteger(parseInt(mark.getFall)) ? parseInt(mark.getFall) : 0;
+            var payFall = Number.isInteger(parseInt(mark.payFall)) ? parseInt(mark.payFall) : 0;
+            mark.commission.value = (mark.totalGrossBEA + mark.penalty.value + getFall - payFall) * (mark.commission.baseValue / 100);
             break;
         }
       });
@@ -1798,11 +1800,12 @@ __webpack_require__.r(__webpack_exports__);
     getSearchParams: function getSearchParams() {
       var _this = this;
 
-      this.search.date = moment().format("YYYY-MM-DD"); //this.search.date = '2019-06-21';
-
+      this.search.date = moment().format("YYYY-MM-DD");
+      this.search.date = '2019-06-20';
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
-        _this.search.vehicle = _.find(response.data, function (v) {//return v.number === '8055';
+        _this.search.vehicle = _.find(response.data, function (v) {
+          return v.number === '8002';
         });
 
         _this.searchReport();
@@ -26703,9 +26706,13 @@ var liquidationView = new Vue({
         return mark.commission.value;
       });
 
-      var totalPayFall = _.sumBy(this.marks, 'payFall');
+      var totalPayFall = _.sumBy(this.marks, function (m) {
+        return Number.isInteger(parseInt(m.payFall)) ? parseInt(m.payFall) : 0;
+      });
 
-      var totalGetFall = _.sumBy(this.marks, 'getFall');
+      var totalGetFall = _.sumBy(this.marks, function (m) {
+        return Number.isInteger(parseInt(m.getFall)) ? parseInt(m.getFall) : 0;
+      });
 
       var totalTurns = totalGrossBea + totalPenalties;
       var subTotalTurns = totalTurns - totalPayFall + totalGetFall;

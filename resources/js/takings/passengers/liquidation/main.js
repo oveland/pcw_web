@@ -87,8 +87,12 @@ let liquidationView = new Vue({
                 return mark.commission.value;
             });
 
-            const totalPayFall = _.sumBy(this.marks, 'payFall');
-            const totalGetFall = _.sumBy(this.marks, 'getFall');
+            const totalPayFall = _.sumBy(this.marks, function (m) {
+                return Number.isInteger(parseInt(m.payFall)) ? parseInt(m.payFall) : 0;
+            });
+            const totalGetFall = _.sumBy(this.marks, function (m) {
+                return Number.isInteger(parseInt(m.getFall)) ? parseInt(m.getFall) : 0;
+            });
 
             const totalTurns = totalGrossBea + totalPenalties;
             const subTotalTurns = totalTurns - totalPayFall + totalGetFall;

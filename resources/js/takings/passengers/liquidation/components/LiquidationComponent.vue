@@ -135,7 +135,9 @@
                     const commissionType = mark.commission.type;
                     switch (commissionType) {
                         case 'percent':
-                            mark.commission.value = (mark.totalGrossBEA + mark.penalty.value + mark.getFall - mark.payFall) * (mark.commission.baseValue / 100);
+                            const getFall = Number.isInteger(parseInt(mark.getFall)) ? parseInt(mark.getFall) : 0;
+                            const payFall = Number.isInteger(parseInt(mark.payFall)) ? parseInt(mark.payFall) : 0;
+                            mark.commission.value = (mark.totalGrossBEA + mark.penalty.value + getFall -payFall) * (mark.commission.baseValue / 100);
                             break;
                     }
                 });

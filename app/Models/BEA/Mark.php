@@ -243,17 +243,6 @@ class Mark extends Model
      */
     function getTotalBeaAttribute()
     {
-        /*
-        switch ($this->id){
-            case 8771:
-                return 193800 + 3000;
-                break;
-            case 8840:
-                return 109200 + 3000;
-                break;
-        }
-        */
-
         return (($this->im_bea_max + $this->im_bea_min) / 2) * self::BEA_CTE;
     }
 
