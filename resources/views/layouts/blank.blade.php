@@ -32,7 +32,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <div class="page-content-wrapper">
     <!-- BEGIN CONTENT BODY -->
-    <div class="p-20" style="background:white">
+    <div class="p-20" style="background:white;height: 1500px">
         <div class="body-content" style="display: none">
             @yield('content')
         </div>
@@ -40,7 +40,7 @@ License: You must have a valid license purchased only from themeforest(the above
 </div>
 <!-- BEGIN FOOTER -->
 
-<div class="page-footer">
+<div class="page-footer hide">
     <div class="page-footer-inner col-md-12 text-center"> <b>2019</b> &copy; PCW Ditech Integradores Tecnológicos:
         <a href="http://pcwtecnologia.com" title="PCW Tecnología" target="_blank">pcwtecnologia.com</a>
     </div>

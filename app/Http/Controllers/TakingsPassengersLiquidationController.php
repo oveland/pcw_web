@@ -38,12 +38,21 @@ class TakingsPassengersLiquidationController extends Controller
         $this->beaService = $beaService;
     }
 
+    public function test(Request $request)
+    {
+        $m = BEADB::select("SELECT count(*) FROM A_MARCA WHERE AMR_FHINICIO > current_date");
+        dd($m);
+    }
+
     /**
+     * @param Request $request
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('takings.passengers.liquidation.index');
+
+        $hideMenu = session('hide-menu');
+        return view('takings.passengers.liquidation.index', compact('hideMenu'));
     }
 
     /**
@@ -368,7 +377,7 @@ class TakingsPassengersLiquidationController extends Controller
             ->limit(1)
             ->get()->first();
 
-        if ($lastMarksNoLiquidated) {
+        if ($lastMarksNoLiquidated && false) {
             $response->success = false;
             $response->message = __('There are turns no liquidated in :date fot this vehicle', ['date' => $lastMarksNoLiquidated->date->toDateString()]);
         } else {

@@ -1,4 +1,4 @@
-@extends('layout')
+@extends( $hideMenu ? 'layouts.blank' : 'layout')
 
 @section('stylesheets')
     <!-- FUELUX - WIZARD -->

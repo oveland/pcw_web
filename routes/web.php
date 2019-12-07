@@ -11,6 +11,8 @@
 |
 */
 
+use App\Models\Users\User;
+
 Auth::routes();
 
 Route::get('/metronic', function(){
@@ -317,6 +319,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/search', 'TakingsPassengersLiquidationController@search')->name('takings-passengers-liquidation-search');
                 Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
                 Route::get('/export', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
+                Route::get('/test', 'TakingsPassengersLiquidationController@test')->name('takings-passengers-liquidation-test');
             });
 
             Route::prefix(__('url-params'))->group(function () {
@@ -383,7 +386,7 @@ Route::prefix(__('link'))->group(function () {
     // Url temporal. Because excel url on consolidated mail report was generated with url for historic view, instead of url for chart view on the month of March
     // TODO: Delete next code on July 2019
     Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{dispatchRegister}', function (Illuminate\Http\Request $request, $first) {
-        $user = \App\Models\Users\User::find($first);
+        $user = User::find($first);
         if(!$user){
             return redirect(route('report-route-chart-view',['dispatchRegister' => $first, 'location' => 0]));
         }
@@ -391,11 +394,22 @@ Route::prefix(__('link'))->group(function () {
         return redirect(route('report-route-historic'));
     });
 
-    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic-path') . '/{user}', function (\App\Models\Users\User $user) {
+    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic-path') . '/{user}', function (User $user) {
         Auth::login($user, true);
         return redirect(route('report-route-historic'));
     })->name('link-report-route-historic-path');
 
+    // TODO: Temporal link to render beta ML on NE
+    Route::prefix(__('takings'))->group(function () {
+        Route::prefix(__('passengers'))->group(function () {
+            Route::prefix(__('url-liquidation'))->group(function () {
+                Route::get('/{user}', function (User $user){
+                    Auth::login($user, true);
 
+                    return redirect(route('takings-passengers-liquidation'))->with('hide-menu', true);
+                })->name('link-takings-passengers-liquidation');
+            });
+        });
+    });
 });
 
