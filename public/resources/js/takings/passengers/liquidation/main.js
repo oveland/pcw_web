@@ -1800,12 +1800,11 @@ __webpack_require__.r(__webpack_exports__);
     getSearchParams: function getSearchParams() {
       var _this = this;
 
-      this.search.date = moment().format("YYYY-MM-DD");
-      this.search.date = '2019-06-20';
+      this.search.date = moment().format("YYYY-MM-DD"); //this.search.date = '2019-06-20';
+
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
-        _this.search.vehicle = _.find(response.data, function (v) {
-          return v.number === '8002';
+        _this.search.vehicle = _.find(response.data, function (v) {//return v.number === '8002';
         });
 
         _this.searchReport();

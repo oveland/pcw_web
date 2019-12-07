@@ -25,30 +25,25 @@ class AddNumberColumnToBeaMarksTable extends Migration
             AS $$
             DECLARE
                 last_mark RECORD;
-                turn RECORD;
             BEGIN
                 IF (TG_OP = 'INSERT' ) THEN
-                    --SELECT * FROM bea_turns WHERE id = NEW.turn_id LIMIT 1 INTO turn;
-            
-                    IF turn IS NOT NULL THEN
-                        SELECT *
-                        FROM bea_marks
-                        WHERE trajectory_id IS NOT NULL
-                          AND date::date = NEW.date::date
-                          AND turn_id = NEW.turn_id
-                        ORDER BY id DESC
-                        LIMIT 1
-                        INTO last_mark;
-            
-                        IF last_mark IS NOT NULL THEN
-                            NEW.number = last_mark.NUMBER + 1;
-                        ELSE
-                            NEW.number = 1;
-                        END IF;
+                    IF (TG_OP = 'INSERT' ) THEN
+                    SELECT *
+                    FROM bea_marks
+                    WHERE trajectory_id IS NOT NULL
+                      AND date::date = NEW.date::date
+                      AND turn_id = NEW.turn_id
+                    ORDER BY id DESC
+                    LIMIT 1
+                    INTO last_mark;
+
+                    IF last_mark IS NOT NULL THEN
+                        NEW.number = last_mark.NUMBER + 1;
                     ELSE
                         NEW.number = 1;
                     END IF;
             
+                END IF;
                 END IF;
                 RETURN NEW;
             END;
