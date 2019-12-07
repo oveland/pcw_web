@@ -90,61 +90,66 @@ class Mark extends Model
 
     protected $table = 'bea_marks';
 
-    protected $dates = ['date'];
+    protected $dates = ['date', 'initial_time', 'final_time'];
 
     protected static function boot()
     {
         parent::boot();
         static::saving(function (Mark $mark) {
-            $discounts = $mark->discounts;
-            $markDiscounts = collect([]);
-            foreach ($discounts as $discount) {
-                $markDiscountType = MarkDiscountType::create($discount->discountType->toArray());
+            if($mark->liquidated){
+                $discounts = $mark->discounts;
+                $markDiscounts = collect([]);
 
-                $markDiscount = new MarkDiscount();
-                $markDiscount->fill($discount->toArray());
-                $markDiscount->discountType()->associate($markDiscountType);
-                $markDiscount->mark()->associate($mark);
+                foreach ($discounts as $discount) {
+                    $markDiscountType = MarkDiscountType::create($discount->discountType->toArray());
 
-                $markDiscounts->push($markDiscount);
+                    $markDiscount = new MarkDiscount();
+                    $markDiscount->fill($discount->toArray());
+                    $markDiscount->discountType()->associate($markDiscountType);
+                    $markDiscount->mark()->associate($mark);
+
+                    $markDiscounts->push($markDiscount);
+                }
+                $mark->markDiscounts()->createMany($markDiscounts->toArray());
+
+                $commissionsByRoute = [$mark->getCommissionByRoute()];
+                $markCommissions = collect([]);
+                foreach ($commissionsByRoute as $commissionByRoute) {
+                    $markCommission = new MarkCommission();
+                    $markCommission->fill($commissionByRoute->toArray());
+                    $markCommission->mark()->associate($mark);
+
+                    $markCommissions->push($markCommission);
+                }
+                $mark->markCommissions()->createMany($markCommissions->toArray());
+
+                $penaltiesByRoute = [$mark->getPenaltyByRoute()];
+                $markPenalties = collect([]);
+                foreach ($penaltiesByRoute as $penaltyByRoute) {
+                    $markPenalty = new MarkPenalty();
+                    $markPenalty->fill($penaltyByRoute->toArray());
+                    $markPenalty->mark()->associate($mark);
+
+                    $markPenalties->push($markPenalty);
+                }
+                $mark->markPenalties()->createMany($markPenalties->toArray());
             }
-            $mark->markDiscounts()->createMany($markDiscounts->toArray());
-
-            $commissionsByRoute = [$mark->getCommissionByRoute()];
-            $markCommissions = collect([]);
-            foreach ($commissionsByRoute as $commissionByRoute) {
-                $markCommission = new MarkCommission();
-                $markCommission->fill($commissionByRoute->toArray());
-                $markCommission->mark()->associate($mark);
-
-                $markCommissions->push($markCommission);
-            }
-            $mark->markCommissions()->createMany($markCommissions->toArray());
-
-            $penaltiesByRoute = [$mark->getPenaltyByRoute()];
-            $markPenalties = collect([]);
-            foreach ($penaltiesByRoute as $penaltyByRoute) {
-                $markPenalty = new MarkPenalty();
-                $markPenalty->fill($penaltyByRoute->toArray());
-                $markPenalty->mark()->associate($mark);
-
-                $markPenalties->push($markPenalty);
-            }
-            $mark->markPenalties()->createMany($markPenalties->toArray());
         });
+    }
+
+    public function getInitialTimeAttribute()
+    {
+        return Carbon::createFromFormat( config('app.simple_time_format'), $this->attributes['initial_time'] );
+    }
+
+    public function getFinalTimeAttribute()
+    {
+        return Carbon::createFromFormat( config('app.simple_time_format'), $this->attributes['final_time'] );
     }
 
     function getDateFormat()
     {
         return config('app.simple_date_time_format');
-    }
-
-    /**
-     * @return DateTime
-     */
-    function getDateAttribute()
-    {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'), $this->attributes['date']);
     }
 
     public function markDiscounts()
@@ -160,22 +165,6 @@ class Mark extends Model
     public function markPenalties()
     {
         return $this->hasMany(MarkPenalty::class, 'mark_id', 'id');
-    }
-
-    /**
-     * @return DateTime
-     */
-    function getInitialTimeAttribute()
-    {
-        return Carbon::createFromFormat(config('app.simple_time_format'), $this->attributes['initial_time']);
-    }
-
-    /**
-     * @return DateTime
-     */
-    function getFinalTimeAttribute()
-    {
-        return Carbon::createFromFormat(config('app.simple_time_format'), $this->attributes['final_time']);
     }
 
     /**
@@ -312,7 +301,7 @@ class Mark extends Model
     function getPenaltyAttribute()
     {
         $penaltyByRoute = $this->getPenaltyByRoute();
-        $penaltyValue = $this->boarded > 5 ? $this->boarded * $penaltyByRoute->value : 0;
+        $penaltyValue = $this->boarded >= 4  ? $this->boarded * $penaltyByRoute->value : 0;
         return (object)[
             'value' => $penaltyValue,
             'type' => $penaltyByRoute->type,
@@ -332,8 +321,8 @@ class Mark extends Model
             'id' => $this->id,
             'turn' => $this->turn,
             'date' => $this->date->toDateString(),
-            'initialTime' => $this->initialTime->toTimeString(),
-            'finalTime' => $this->finalTime->toTimeString(),
+            'initialTime' => $this->initial_time->toTimeString(),
+            'finalTime' => $this->final_time->toTimeString(),
             'duration' => $this->duration,
             'trajectory' => $this->trajectory,
             'passengersUp' => $this->passengers_up,

@@ -26,6 +26,7 @@ class BEASyncService
             $this->trajectories();
             $this->marks();
         } catch (Exception $e) {
+            dd("Errorro ", $e);
         }
     }
 
