@@ -83,6 +83,8 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BEA\MarkCommission[] $markCommissions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BEA\MarkDiscount[] $markDiscounts
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BEA\MarkPenalty[] $markPenalties
+ * @property int|null $number
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereNumber($value)
  */
 class Mark extends Model
 {
@@ -320,6 +322,7 @@ class Mark extends Model
         return (object)[
             'id' => $this->id,
             'turn' => $this->turn,
+            'number' => $this->number,
             'date' => $this->date->toDateString(),
             'initialTime' => $this->initial_time->toTimeString(),
             'finalTime' => $this->final_time->toTimeString(),

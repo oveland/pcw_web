@@ -30,6 +30,8 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property-read Route $route
  * @property-read \App\Models\BEA\Mark $mark
+ * @property int $mark_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\MarkPenalty whereMarkId($value)
  */
 class MarkPenalty extends Model
 {

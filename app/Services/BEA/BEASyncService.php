@@ -38,6 +38,7 @@ class BEASyncService
     public function turns()
     {
         $lastIdMigrated = Turn::max('id');
+        $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
         $turns = BEADB::select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
 
         $maxSequence = collect(DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
@@ -96,6 +97,7 @@ class BEASyncService
     public function marks()
     {
         $lastIdMigrated = Mark::max('id');
+        $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
         $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA > $lastIdMigrated");
 
         foreach ($marks as $markBEA) {

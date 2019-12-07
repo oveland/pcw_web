@@ -28,14 +28,14 @@ class AddNumberColumnToBeaMarksTable extends Migration
                 turn RECORD;
             BEGIN
                 IF (TG_OP = 'INSERT' ) THEN
-                    SELECT * FROM bea_turns WHERE id = NEW.turn_id LIMIT 1 INTO turn;
+                    --SELECT * FROM bea_turns WHERE id = NEW.turn_id LIMIT 1 INTO turn;
             
                     IF turn IS NOT NULL THEN
                         SELECT *
                         FROM bea_marks
                         WHERE trajectory_id IS NOT NULL
                           AND date::date = NEW.date::date
-                          AND turn_id IN (SELECT id FROM bea_turns WHERE vehicle_id = turn.vehicle_id)
+                          AND turn_id = NEW.turn_id
                         ORDER BY id DESC
                         LIMIT 1
                         INTO last_mark;

@@ -1944,6 +1944,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
   props: {
@@ -11651,6 +11652,9 @@ var render = function() {
               _vm._l(_vm.marks, function(mark) {
                 return _c("tr", [
                   _c("td", { staticClass: "col-md-1 text-center" }, [
+                    _vm._v(
+                      "\n            " + _vm._s(mark.number) + "\n            "
+                    ),
                     _c("i", {
                       staticClass: "tooltips",
                       class: mark.status.icon + " font-" + mark.status.class,

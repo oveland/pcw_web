@@ -46,6 +46,7 @@
         <tbody>
         <tr v-for="mark in marks">
             <td class="col-md-1 text-center">
+                {{ mark.number }}
                 <i :class="mark.status.icon+' font-'+ mark.status.class" class="tooltips" :data-original-title="mark.status.name"></i>
             </td>
             <td class="col-md-2 text-center">{{ mark.date }}</td>
