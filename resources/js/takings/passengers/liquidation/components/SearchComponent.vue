@@ -2,7 +2,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <button type="button" class="btn btn-success btn-sm btn-search-report" @click="searchReport()">
-                <i class="fa fa-search"></i> {{ $t('Search')}}
+                <i class="fa fa-search"></i> <span class="hidden-xs">{{ $t('Search')}}</span>
             </button>
         </div>
         <div class="panel-body p-b-15">
@@ -21,8 +21,8 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="control-label">{{ $t('Date') }}</label>
-                        <div class="input-group col-md-12">
-                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="searchReport()" width="100%"></date-picker>
+                        <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="searchReport()"></date-picker>
                         </div>
                     </div>
                 </div>
@@ -44,13 +44,13 @@
         methods: {
             getSearchParams: function () {
                 this.search.date = moment().format("YYYY-MM-DD");
-                //this.search.date = '2019-06-20';
+                this.search.date = '2019-06-20';
                 axios.get(this.urlParams)
                     .then(response => {
                         this.search.vehicles = response.data;
 
                         this.search.vehicle = _.find(response.data, function(v){
-                            //return v.number === '8002';
+                            return v.number === '8060';
                         });
 
                         this.searchReport();
@@ -83,5 +83,7 @@
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
-
+    .mx-datepicker {
+        width: 100% !important;
+    }
 </style>

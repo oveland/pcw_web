@@ -77,14 +77,14 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property-read Object $penalty
  * @property int $pay_fall
  * @property int $get_fall
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereExtra($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereGetFall($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark wherePayFall($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BEA\MarkCommission[] $markCommissions
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BEA\MarkDiscount[] $markDiscounts
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BEA\MarkPenalty[] $markPenalties
+ * @method static Builder|Mark whereExtra($value)
+ * @method static Builder|Mark whereGetFall($value)
+ * @method static Builder|Mark wherePayFall($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|MarkCommission[] $markCommissions
+ * @property-read \Illuminate\Database\Eloquent\Collection|MarkDiscount[] $markDiscounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|MarkPenalty[] $markPenalties
  * @property int|null $number
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereNumber($value)
+ * @method static Builder|Mark whereNumber($value)
  */
 class Mark extends Model
 {
@@ -98,9 +98,9 @@ class Mark extends Model
     {
         parent::boot();
         static::saving(function (Mark $mark) {
-            if($mark->liquidated){
+            if($mark->liquidated && !$mark->taken){
                 $discounts = $mark->discounts;
-                $markDiscounts = collect([]);
+                $markDiscounts = array();
 
                 foreach ($discounts as $discount) {
                     $markDiscountType = MarkDiscountType::create($discount->discountType->toArray());
@@ -110,31 +110,32 @@ class Mark extends Model
                     $markDiscount->discountType()->associate($markDiscountType);
                     $markDiscount->mark()->associate($mark);
 
-                    $markDiscounts->push($markDiscount);
+                    $markDiscounts[] = $markDiscount->attributesToArray();
                 }
-                $mark->markDiscounts()->createMany($markDiscounts->toArray());
+
+                $mark->markDiscounts()->createMany($markDiscounts);
 
                 $commissionsByRoute = [$mark->getCommissionByRoute()];
-                $markCommissions = collect([]);
+                $markCommissions = [];
                 foreach ($commissionsByRoute as $commissionByRoute) {
                     $markCommission = new MarkCommission();
                     $markCommission->fill($commissionByRoute->toArray());
                     $markCommission->mark()->associate($mark);
 
-                    $markCommissions->push($markCommission);
+                    $markCommissions[] = $markCommission->attributesToArray();
                 }
-                $mark->markCommissions()->createMany($markCommissions->toArray());
+                $mark->markCommissions()->createMany($markCommissions);
 
                 $penaltiesByRoute = [$mark->getPenaltyByRoute()];
-                $markPenalties = collect([]);
+                $markPenalties = array();
                 foreach ($penaltiesByRoute as $penaltyByRoute) {
                     $markPenalty = new MarkPenalty();
                     $markPenalty->fill($penaltyByRoute->toArray());
                     $markPenalty->mark()->associate($mark);
 
-                    $markPenalties->push($markPenalty);
+                    $markPenalties[] = $markPenalty->attributesToArray();
                 }
-                $mark->markPenalties()->createMany($markPenalties->toArray());
+                $mark->markPenalties()->createMany($markPenalties);
             }
         });
     }
@@ -189,24 +190,24 @@ class Mark extends Model
     {
         $status = [
             0 => (object)[
-                'icon' => 'fa fa-file-o',
-                'class' => 'green-sharp',
-                'name' => __('No liquidated'),
+                'icon' => 'fa fa-warning',
+                'class' => 'yellow-crusta',
+                'name' => __('Turn')." $this->number > ".__('No liquidated'),
             ],
             1 => (object)[
-                'icon' => 'fa fa-file-text',
-                'class' => 'yellow-crusta',
-                'name' => __('Liquidated'),
+                'icon' => 'fa fa-warning',
+                'class' => 'blue',
+                'name' => __('Turn')." $this->number > ".__('Liquidated without taking'),
             ],
             2 => (object)[
-                'icon' => 'fa fa-suitcase',
-                'class' => 'red-thunderbird',
-                'name' => __('Taken'),
+                'icon' => 'fa fa-check-circle-o',
+                'class' => 'green-meadow',
+                'name' => __('Turn')." $this->number > ".__('Taken'),
             ]
         ];
 
-        if ($this->liquidated) return $status[1];
         if ($this->taken) return $status[2];
+        if ($this->liquidated) return $status[1];
         return $status[0];
     }
 
@@ -295,6 +296,11 @@ class Mark extends Model
         $markPenalties = $this->markPenalties;
         if ($this->liquidated && $markPenalties->isNotEmpty()) return $markPenalties->first();
         return Penalty::where('route_id', $this->turn->route->id)->first();
+    }
+
+    public function liquidation()
+    {
+        return $this->belongsTo(Liquidation::class, 'liquidation_id', 'id');
     }
 
     /**

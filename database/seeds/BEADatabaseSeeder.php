@@ -13,6 +13,11 @@ class BEADatabaseSeeder extends Seeder
     public function run()
     {
         $this->dropTables([
+            'bea_mark_discounts',
+            'bea_mark_discount_types',
+            'bea_mark_commissions',
+            'bea_mark_penalties',
+
             'bea_takings',
             'bea_liquidations',
             'bea_commissions',

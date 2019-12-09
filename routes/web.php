@@ -311,12 +311,16 @@ Route::group(['middleware' => ['auth']], function () {
     /* Routes for operation pages */
     Route::prefix(__('takings'))->group(function () {
         Route::prefix(__('passengers'))->group(function () {
-            Route::get('/search', 'TakingsPassengersLiquidationController@searchLiquidated')->name('takings-passengers-search');
-            Route::get('/file/discount/{id}', 'TakingsPassengersLiquidationController@getFileDiscount')->name('takings-passengers-file-discount');
+
+            Route::prefix(__('search'))->group(function () {
+                Route::get(__('url-liquidation'), 'TakingsPassengersLiquidationController@searchLiquidation')->name('takings-passengers-search-liquidation');
+                Route::get(__('takings'), 'TakingsPassengersLiquidationController@searchTakings')->name('takings-passengers-search-takings');
+                Route::get(__('takings').'/list', 'TakingsPassengersLiquidationController@searchTakingsList')->name('takings-passengers-search-takings-list');
+                Route::get('/file/discount/{id}', 'TakingsPassengersLiquidationController@getFileDiscount')->name('takings-passengers-search-file-discount');
+            });
 
             Route::prefix(__('url-liquidation'))->group(function () {
                 Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');
-                Route::get('/search', 'TakingsPassengersLiquidationController@search')->name('takings-passengers-liquidation-search');
                 Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
                 Route::get('/export', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
                 Route::get('/test', 'TakingsPassengersLiquidationController@test')->name('takings-passengers-liquidation-test');
@@ -326,6 +330,8 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/{name}', 'TakingsPassengersLiquidationController@getParams')->name('takings-passengers-liquidation-params');
                 Route::any('/{name}/'.__('save'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-set');
             });
+
+            Route::post('takings/{liquidation}', 'TakingsPassengersLiquidationController@takings')->name('taking-passengers-takings');
         });
     });
 

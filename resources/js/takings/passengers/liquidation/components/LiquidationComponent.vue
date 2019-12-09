@@ -1,6 +1,8 @@
 <template>
     <div class="">
-        <table-component :marks="marks" :totals="totals"></table-component>
+        <div class="table-responsive">
+            <table-component :marks="marks" :totals="totals"></table-component>
+        </div>
 
         <div class="modal fade" id="modal-generate-liquidation" role="basic" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -89,7 +91,13 @@
                                                     </div>
                                                     <div id="step-liquidate" class="tab-pane fade">
                                                         <div class=" phase-container col-md-6 col-md-offset-3 m-t-10">
-                                                            <preview-component :liquidation.sync="liquidation" :totals="totals" :search="search" v-on:liquidate="liquidate()"></preview-component>
+                                                            <preview-component :liquidation.sync="liquidation" :totals="totals" :search="search"></preview-component>
+                                                            <br>
+                                                            <div class="text-center">
+                                                                <button class="btn btn-circle yellow-crusta btn-outline f-s-13 uppercase" @click="liquidate" :disabled="totals.totalBea === 0">
+                                                                    <i class="icon-layers"></i> {{ $t('Liquidate') }}
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

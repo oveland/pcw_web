@@ -9,6 +9,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -38,14 +39,21 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Liquidation whereUserId($value)
  * @method static Builder|Liquidation whereVehicleId($value)
  * @property-read mixed $total
- * @property-read \App\Models\Vehicles\Vehicle $vehicle
+ * @property-read Vehicle $vehicle
  * @property-read \Mark|null $first_mark
  * @property-read \Mark|null $last_mark
+ * @property bool $taken
+ * @method static Builder|Liquidation whereTaken($value)
+ * @property string|null $taking_date
+ * @property int|null $taking_user_id
+ * @property-read User|null $takingUser
+ * @method static Builder|Liquidation whereTakingDate($value)
+ * @method static Builder|Liquidation whereTakingUserId($value)
  */
 class Liquidation extends Model
 {
     protected $table = 'bea_liquidations';
-    protected $dates = ['date'];
+    protected $dates = ['date', 'taking_date'];
 
     function getDateFormat()
     {
@@ -57,7 +65,7 @@ class Liquidation extends Model
      */
     function marks()
     {
-        return $this->hasMany(Mark::class);
+        return $this->hasMany(Mark::class)->orderBy('initial_time');
     }
 
     /**
@@ -75,7 +83,6 @@ class Liquidation extends Model
     {
         return $this->marks->last();
     }
-
 
     /**
      * @return object
@@ -96,7 +103,7 @@ class Liquidation extends Model
     }
 
     /**
-     * @return Vehicle | null
+     * @return Vehicle | BelongsTo
      */
     function vehicle()
     {
@@ -104,11 +111,19 @@ class Liquidation extends Model
     }
 
     /**
-     * @return User | null
+     * @return User | BelongsTo
      */
     function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return User | BelongsTo
+     */
+    function takingUser()
+    {
+        return $this->belongsTo(User::class, 'taking_user_id', 'id');
     }
 
     function getTotalAttribute()
@@ -125,7 +140,7 @@ class Liquidation extends Model
 
         foreach ($otherDiscounts as &$otherDiscount){
             $otherDiscount = (object)$otherDiscount;
-            $otherDiscount->fileUrl = $otherDiscount->hasFile && $otherDiscount->fileUrl ? route('takings-passengers-file-discount', ['id' => $otherDiscount->id]) : '';
+            $otherDiscount->fileUrl = $otherDiscount->hasFile && $otherDiscount->fileUrl ? route('takings-passengers-search-file-discount', ['id' => $otherDiscount->id]) : '';
         }
 
         $liquidation['otherDiscounts'] = $otherDiscounts;

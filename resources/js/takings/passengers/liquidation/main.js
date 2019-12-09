@@ -5,6 +5,7 @@ import SearchComponent from './components/SearchComponent';
 import AdminComponent from './components/AdminComponent';
 import LiquidationComponent from './components/LiquidationComponent';
 import TakingsComponent from './components/TakingsComponent';
+import TakingsListComponent from './components/TakingsListComponent';
 
 import i18n from "../../../lang/i18n";
 import VueI18n from 'vue-i18n'
@@ -25,7 +26,8 @@ let liquidationView = new Vue({
         SearchComponent,
         AdminComponent,
         LiquidationComponent,
-        TakingsComponent
+        TakingsComponent,
+        TakingsListComponent
     },
     data: {
         flag: false,

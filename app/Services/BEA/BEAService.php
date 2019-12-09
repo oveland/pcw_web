@@ -76,7 +76,7 @@ class BEAService
     {
         $beaLiquidations = collect([]);
         $liquidations = Liquidation::where('vehicle_id', $vehicleId)
-            ->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
+            ->whereDate('date', $date)
             ->with(['user', 'marks', 'vehicle', 'marks.turn.vehicle', 'marks.turn.route', 'marks.turn.driver', 'marks.trajectory'])
             ->get();
 
@@ -85,10 +85,13 @@ class BEAService
                 'id' => $liquidation->id,
                 'vehicle' => $liquidation->vehicle,
                 'date' => $liquidation->date->toDateString(),
-                'dateLiquidation' => $liquidation->created_at->toDateTimeString(),
+                'liquidationUser' => $liquidation->user,
+                'liquidationDate' => $liquidation->created_at->toDateTimeString(),
+                'taken' => $liquidation->taken,
+                'takingUser' => $liquidation->taken ? $liquidation->takingUser : null,
+                'takingDate' => $liquidation->taken ? $liquidation->taking_date->toDateTimeString() : null,
                 'liquidation' => $liquidation->liquidation,
                 'totals' => $liquidation->totals,
-                'user' => $liquidation->user,
                 'marks' => $this->processResponseMarks($liquidation->marks),
             ]);
         }
@@ -101,22 +104,41 @@ class BEAService
      * @param $date
      * @return Collection
      */
+    function getBEATakings($vehicleId, $date)
+    {
+        return $this->getBEALiquidations($vehicleId, $date)->where('taken',false);
+    }
+
+    /**
+     * @param $vehicleId
+     * @param $date
+     * @return Collection
+     */
+    function getBEATakingsList($vehicleId, $date)
+    {
+        return $this->getBEALiquidations($vehicleId, $date)->where('taken',true);
+    }
+
+    /**
+     * @param $vehicleId
+     * @param $date
+     * @return Collection
+     */
     function getBEAMarks($vehicleId, $date)
     {
-        $this->sync->last();
+        $this->sync->for($vehicleId, $date)->last();
 
         $vehicle = Vehicle::find($vehicleId);
         if(!$vehicle)return collect([]);
         $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();
         $marks = Mark::whereIn('turn_id', $vehicleTurns->pluck('id'))
+            ->where('trajectory_id', '<>', null)
             ->where('liquidated', false)
             ->where('taken', false)
             ->whereDate('date', $date)
             ->with(['turn.vehicle', 'turn.route', 'turn.driver', 'trajectory'])
             ->orderBy('initial_time')
             ->get();
-
-        $marks = $marks->where('trajectory_id', '<>', null);
 
         return $this->processResponseMarks($marks);
     }

@@ -1,8 +1,11 @@
 <template>
-    <div>
+    <div class="table-responsive">
         <table class="table table-bordered table-condensed table-hover table-valign-middle table-report">
             <thead>
             <tr class="inverse">
+                <th width="3%">
+                    <i class="fa fa-list-ol text-muted"></i>
+                </th>
                 <th class="col-md-2">
                     <i class="fa fa-flag text-muted"></i><br> {{ $t('Route') }} / {{ $t('Trajectory') }}
                 </th>
@@ -34,6 +37,7 @@
             </thead>
             <tbody>
             <tr class="" v-for="mark in marks">
+                <td class="text-center">{{ mark.number }}</td>
                 <td class="col-md-2 text-center">
                     <span>{{ mark.turn.route.name }}</span><br>
                     <span class="label span-full" v-if="mark.trajectory" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
@@ -55,10 +59,10 @@
                 <td class="text-center" style="font-weight: bold !important;font-size: 1.3em !important;">{{ mark.totalGrossBEA + mark.penalty.value | numberFormat('$0,0') }}</td>
             </tr>
             <tr>
-                <td colspan="11" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
+                <td colspan="10" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
             </tr>
             <tr class="totals">
-                <td class="text-right">
+                <td colspan="2" class="text-right">
                     <i class="icon-layers"></i> {{ $t('Totals') }}
                 </td>
                 <td class="text-center">{{ totals.totalLocks }}</td>
@@ -76,12 +80,12 @@
         <div class="form form-horizontal total-discount">
             <hr class="hr">
             <div class="form-group">
-                <div class="col-md-9">
-                    <span class="pull-right text-bold">
+                <div class="col-md-9 col-lg-9 col-sm-9 col-xs-12 text-right">
+                    <span class="text-bold">
                         <i class="icon-tag"></i> {{ $t('Total penalties') }}:
                     </span>
                 </div>
-                <div class="col-md-3 text-right">
+                <div class="col-md-3 col-lg-3 col-sm-3 col-xs-12 text-right">
                     <span class="text-bold">{{ this.totals.totalPenalties | numberFormat('$0,0') }}</span>
                 </div>
             </div>

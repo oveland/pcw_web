@@ -688,5 +688,12 @@
   "Total exempts": "Total excentos",
   "Show file": "Mostrar archivo",
   "File other discount": "Archivo de otro descuento",
-  "Error saving other discounts files": "Error al guardar archivos de otros descuentos"
+  "Error saving other discounts files": "Error al guardar archivos de otros descuentos",
+  "Taking details": "Detalle de Recaudo",
+  "search": "buscar",
+  "Taking processed successfully": "Recaudo procesado correctamente",
+  "Error at generate taking register": "Error al generar el registro de recaudo",
+  "Taking": "Recaudar",
+  "Takings list": "Listado Recaudo",
+  "Liquidated without taking": "Liquidado sin recaudar"
 }

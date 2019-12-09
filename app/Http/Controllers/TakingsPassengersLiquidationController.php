@@ -14,6 +14,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\BEA\BEAService;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -60,7 +61,7 @@ class TakingsPassengersLiquidationController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function search(Request $request)
+    public function searchLiquidation(Request $request)
     {
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
@@ -105,12 +106,27 @@ class TakingsPassengersLiquidationController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function searchLiquidated(Request $request)
+    public function searchTakings(Request $request)
     {
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
 
-        $beaLiquidations = $this->beaService->getBEALiquidations($vehicleReport, $dateReport);
+        $beaLiquidations = $this->beaService->getBEATakings($vehicleReport, $dateReport);
+
+        return response()->json($beaLiquidations);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function searchTakingsList(Request $request)
+    {
+        $vehicleReport = $request->get('vehicle');
+        $dateReport = $request->get('date');
+
+        $beaLiquidations = $this->beaService->getBEATakingsList($vehicleReport, $dateReport);
 
         return response()->json($beaLiquidations);
     }
@@ -305,11 +321,11 @@ class TakingsPassengersLiquidationController extends Controller
         $filePath = config('takings.discounts.others.files.path') . "/$otherDiscountId." . config('takings.discounts.others.files.image-extension');
 
         $exists = Storage::exists($filePath);
-        if($exists){
+        if ($exists) {
             $file = Storage::get($filePath);
             $image = \Image::make($file);
             return $image->response(config('takings.discounts.others.files.image-extension'));
-        }else{
+        } else {
             return response()->file("unavailable.jpeg");
         }
     }
@@ -351,7 +367,6 @@ class TakingsPassengersLiquidationController extends Controller
         ];
 
         DB::beginTransaction();
-        $user = Auth::user();
         $dataLiquidation = collect($request->get('liquidation'));
         $marksID = collect($request->get('marks'));
         $falls = collect($request->get('falls'));
@@ -362,7 +377,8 @@ class TakingsPassengersLiquidationController extends Controller
         $liquidation->liquidation = $dataLiquidation;
 
         $liquidation->totals = collect($request->get('totals'))->toJson();
-        $liquidation->user_id = $user->id;
+        $liquidation->user()->associate(Auth::user());
+        $liquidation->taken = false;
 
         $vehicle = $liquidation->vehicle;
         $dateQuery = $liquidation->date->toDateString();
@@ -387,7 +403,7 @@ class TakingsPassengersLiquidationController extends Controller
                         $mark = Mark::find($markId);
                         if ($mark) {
                             $mark->liquidated = true;
-                            $mark->liquidation_id = $liquidation->id;
+                            $mark->liquidation()->associate($liquidation);
                             $mark->pay_fall = collect($falls->get('pay'))->get($mark->id);
                             $mark->get_fall = collect($falls->get('get'))->get($mark->id);
                             if ($mark->save()) {
@@ -415,6 +431,43 @@ class TakingsPassengersLiquidationController extends Controller
                 $response->message = __('No there are registers for liquidation');
                 DB::rollBack();
             }
+        }
+
+        DB::commit();
+
+        return response()->json($response);
+    }
+
+    /**
+     * @param Liquidation $liquidation
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function takings(Liquidation $liquidation)
+    {
+        $response = (object)[
+            'success' => true,
+            'message' => __('Taking processed successfully')
+        ];
+
+        DB::beginTransaction();
+
+        $marks = $liquidation->marks;
+        foreach ($marks as $mark) {
+            $mark->taken = true;
+            if (!$mark->save()) {
+                DB::rollBack();
+            }
+        }
+
+        $liquidation->taken = true;
+        $liquidation->taking_date = Carbon::now();
+        $liquidation->takingUser()->associate(Auth::user());
+
+        if (!$liquidation->save()) {
+            $response->success = false;
+            $response->message = __('Error at generate taking register');
+            DB::rollBack();
         }
 
         DB::commit();

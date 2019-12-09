@@ -1044,6 +1044,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CommissionComponent",
   props: {
@@ -1076,6 +1080,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue2_filters__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue2_filters__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_js_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-js-modal */ "./node_modules/vue-js-modal/dist/index.js");
 /* harmony import */ var vue_js_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_js_modal__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
 //
 //
 //
@@ -1418,6 +1426,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1513,6 +1529,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -1724,12 +1744,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PreviewComponent",
   props: {
@@ -1800,11 +1814,12 @@ __webpack_require__.r(__webpack_exports__);
     getSearchParams: function getSearchParams() {
       var _this = this;
 
-      this.search.date = moment().format("YYYY-MM-DD"); //this.search.date = '2019-06-20';
-
+      this.search.date = moment().format("YYYY-MM-DD");
+      this.search.date = '2019-06-20';
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
-        _this.search.vehicle = _.find(response.data, function (v) {//return v.number === '8002';
+        _this.search.vehicle = _.find(response.data, function (v) {
+          return v.number === '8060';
         });
 
         _this.searchReport();
@@ -1840,6 +1855,24 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2179,6 +2212,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2206,6 +2274,364 @@ __webpack_require__.r(__webpack_exports__);
         liquidation: {},
         totals: {},
         user: {},
+        marks: [],
+        taken: false
+      }
+    };
+  },
+  watch: {
+    searchParams: function searchParams() {
+      this.showPrintArea = false;
+      this.linkToPrintLiquidation = '';
+      this.searchTakingsReport();
+    }
+  },
+  methods: {
+    exportLiquidation: function exportLiquidation(all) {
+      this.showPrintArea = true;
+      return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id + (all ? '&all=true' : '');
+    },
+    seeLiquidationDetail: function seeLiquidationDetail(liquidation, showMarksFirst) {
+      this.liquidationDetail = liquidation;
+      showMarksFirst ? $('a[href="#detail-marks-liquidated"]').tab('show') : $('a[href="#liquidation-detail"]').tab('show');
+      setTimeout(function () {
+        $('.tooltips').tooltip();
+        setTimeout(function () {
+          $('.tooltips').tooltip();
+        }, 4000);
+      }, 1000);
+    },
+    searchTakingsReport: function searchTakingsReport() {
+      var _this = this;
+
+      axios.get(this.urlList, {
+        params: this.searchParams
+      }).then(function (response) {
+        _this.liquidations = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      }).then(function () {});
+    },
+    takings: function takings(liquidation) {
+      var _this2 = this;
+
+      console.log("liquidation == ", liquidation);
+      axios.post(this.urlTakings.replace('ID', liquidation.id)).then(function (response) {
+        var data = response.data;
+
+        if (data.success) {
+          gsuccess(data.message);
+
+          _this2.$emit('refresh-report');
+
+          $('#modal-liquidation-detail').modal('hide');
+        } else {
+          gerror(data.message);
+        }
+      })["catch"](function (error) {
+        gerror(this.$t('Error at generate taking register') + '!');
+        console.log(error);
+      }).then(function () {});
+    }
+  },
+  components: {
+    TableComponent: _TableComponent__WEBPACK_IMPORTED_MODULE_5__["default"],
+    DiscountComponent: _DiscountComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    CommissionComponent: _CommissionComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
+    PenaltyComponent: _PenaltyComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
+    PreviewComponent: _PreviewComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
+    VueFriendlyIframe: vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4___default.a
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DiscountComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DiscountComponent.vue */ "./resources/js/takings/passengers/liquidation/components/DiscountComponent.vue");
+/* harmony import */ var _CommissionComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommissionComponent */ "./resources/js/takings/passengers/liquidation/components/CommissionComponent.vue");
+/* harmony import */ var _PenaltyComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PenaltyComponent */ "./resources/js/takings/passengers/liquidation/components/PenaltyComponent.vue");
+/* harmony import */ var _PreviewComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PreviewComponent */ "./resources/js/takings/passengers/liquidation/components/PreviewComponent.vue");
+/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-friendly-iframe */ "./node_modules/vue-friendly-iframe/dist/vue-friendly-iframe.js");
+/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _TableComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TableComponent */ "./resources/js/takings/passengers/liquidation/components/TableComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TakingsListComponent',
+  props: {
+    urlList: String,
+    urlTakings: String,
+    urlExport: String,
+    searchParams: Object,
+    search: Object
+  },
+  data: function data() {
+    return {
+      showPrintArea: false,
+      linkToPrintLiquidation: false,
+      liquidations: [],
+      liquidationDetail: {
+        id: 0,
+        vehicle: {},
+        date: '',
+        liquidation: {},
+        totals: {},
+        user: {},
         marks: []
       }
     };
@@ -2214,7 +2640,7 @@ __webpack_require__.r(__webpack_exports__);
     searchParams: function searchParams() {
       this.showPrintArea = false;
       this.linkToPrintLiquidation = '';
-      this.searchLiquidationReport();
+      this.searchTakingListReport();
     }
   },
   methods: {
@@ -2222,11 +2648,11 @@ __webpack_require__.r(__webpack_exports__);
       this.showPrintArea = true;
       return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id + (all ? '&all=true' : '');
     },
-    seeLiquidationDetail: function seeLiquidationDetail(liquidationId) {
+    seeLiquidationDetail: function seeLiquidationDetail(liquidationId, showMarksFirst) {
       this.liquidationDetail = _.find(this.liquidations, function (liquidation) {
         return liquidation.id === liquidationId;
       });
-      $('a[href="#detail-marks"]').tab('show');
+      showMarksFirst ? $('a[href="#detail-marks-taken"]').tab('show') : $('a[href="#takings-detail"]').tab('show');
       setTimeout(function () {
         $('.tooltips').tooltip();
         setTimeout(function () {
@@ -2234,7 +2660,7 @@ __webpack_require__.r(__webpack_exports__);
         }, 4000);
       }, 1000);
     },
-    searchLiquidationReport: function searchLiquidationReport() {
+    searchTakingListReport: function searchTakingListReport() {
       var _this = this;
 
       axios.get(this.urlList, {
@@ -2359,10 +2785,48 @@ exports.push([module.i, "\n.search span[data-v-63f34440] {\n    font-size: 1.6em
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.mx-datepicker[data-v-d68e438c] {\n    width: 100% !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsComponent.vue?vue&type=style&index=0&lang=css&":
 /*!*****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/TakingsComponent.vue?vue&type=style&index=0&lang=css& ***!
   \*****************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.pdf-container iframe{\n    width: 100%;\n    height: 600px;\n}\n.header-preview{\n    font-size: 1.2em !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4021,6 +4485,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader??ref--6-1!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsComponent.vue?vue&type=style&index=0&lang=css&":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/TakingsComponent.vue?vue&type=style&index=0&lang=css& ***!
@@ -4030,6 +4524,36 @@ if(false) {}
 
 
 var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader??ref--6-1!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TakingsComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsComponent.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader??ref--6-1!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TakingsListComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -9319,7 +9843,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticClass: "table-responsive" }, [
     _c(
       "table",
       {
@@ -9329,6 +9853,8 @@ var render = function() {
       [
         _c("thead", [
           _c("tr", { staticClass: "inverse" }, [
+            _vm._m(0),
+            _vm._v(" "),
             _c("th", { staticClass: "col-md-2" }, [
               _c("i", { staticClass: "fa fa-flag text-muted" }),
               _c("br"),
@@ -9406,6 +9932,10 @@ var render = function() {
           [
             _vm._l(_vm.marks, function(mark) {
               return _c("tr", {}, [
+                _c("td", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(mark.number))
+                ]),
+                _vm._v(" "),
                 _c("td", { staticClass: "col-md-2 text-center" }, [
                   _c("span", [_vm._v(_vm._s(mark.turn.route.name))]),
                   _c("br"),
@@ -9618,10 +10148,10 @@ var render = function() {
               ])
             }),
             _vm._v(" "),
-            _vm._m(0),
+            _vm._m(1),
             _vm._v(" "),
             _c("tr", { staticClass: "totals" }, [
-              _c("td", { staticClass: "text-right" }, [
+              _c("td", { staticClass: "text-right", attrs: { colspan: "2" } }, [
                 _c("i", { staticClass: "icon-layers" }),
                 _vm._v(" " + _vm._s(_vm.$t("Totals")) + "\n            ")
               ]),
@@ -9720,29 +10250,47 @@ var render = function() {
       _c("hr", { staticClass: "hr" }),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
-        _c("div", { staticClass: "col-md-9" }, [
-          _c("span", { staticClass: "pull-right text-bold" }, [
-            _c("i", { staticClass: "icon-tag" }),
-            _vm._v(
-              " " + _vm._s(_vm.$t("Total commissions")) + ":\n                "
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-3 text-right" }, [
-          _c("span", { staticClass: "text-bold" }, [
-            _vm._v(
-              _vm._s(
-                _vm._f("numberFormat")(_vm.totals.totalCommissions, "$0,0")
+        _c(
+          "div",
+          { staticClass: "col-md-9 col-lg-9 col-sm-9 col-xs-12 text-right" },
+          [
+            _c("span", { staticClass: "text-bold" }, [
+              _c("i", { staticClass: "icon-tag" }),
+              _vm._v(
+                " " +
+                  _vm._s(_vm.$t("Total commissions")) +
+                  ":\n                "
               )
-            )
-          ])
-        ])
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-md-3 col-lg-3 col-sm-3 col-xs-12 text-right" },
+          [
+            _c("span", { staticClass: "text-bold" }, [
+              _vm._v(
+                _vm._s(
+                  _vm._f("numberFormat")(_vm.totals.totalCommissions, "$0,0")
+                )
+              )
+            ])
+          ]
+        )
       ])
     ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("th", { attrs: { width: "3%" } }, [
+      _c("i", { staticClass: "fa fa-list-ol text-muted" })
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -9755,7 +10303,7 @@ var staticRenderFns = [
           "text-align": "center",
           padding: "0"
         },
-        attrs: { colspan: "11" }
+        attrs: { colspan: "9" }
       })
     ])
   }
@@ -9783,6 +10331,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "table-responsive" },
     [
       _c(
         "table",
@@ -9793,6 +10342,8 @@ var render = function() {
         [
           _c("thead", [
             _c("tr", { staticClass: "inverse" }, [
+              _vm._m(0),
+              _vm._v(" "),
               _c("th", { staticClass: "col-md-2" }, [
                 _c("i", { staticClass: "fa fa-flag text-muted" }),
                 _c("br"),
@@ -9856,6 +10407,10 @@ var render = function() {
             [
               _vm._l(_vm.marks, function(mark) {
                 return _c("tr", {}, [
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(mark.number))
+                  ]),
+                  _vm._v(" "),
                   _c("td", { staticClass: "col-md-2 text-center" }, [
                     _c("span", [_vm._v(_vm._s(mark.turn.route.name))]),
                     _c("br"),
@@ -9970,10 +10525,17 @@ var render = function() {
                 ])
               }),
               _vm._v(" "),
-              _vm._m(0),
+              _vm._m(1),
               _vm._v(" "),
               _c("tr", { staticClass: "totals" }, [
-                _vm._m(1),
+                _c(
+                  "td",
+                  { staticClass: "text-right", attrs: { colspan: "2" } },
+                  [
+                    _c("i", { staticClass: "icon-layers" }),
+                    _vm._v(" " + _vm._s(_vm.$t("Totals")) + "\n            ")
+                  ]
+                ),
                 _vm._v(" "),
                 _c("td", { staticClass: "text-center" }, [
                   _vm._v(_vm._s(_vm.totals.totalLocks))
@@ -10052,7 +10614,7 @@ var render = function() {
               _c("tr", { staticClass: "total-discount-by-turn" }, [
                 _c(
                   "td",
-                  { staticClass: "text-right", attrs: { colspan: "7" } },
+                  { staticClass: "text-right", attrs: { colspan: "8" } },
                   [
                     _c("span", { staticClass: "text-bold" }, [
                       _c("i", { staticClass: "icon-tag" }),
@@ -10301,24 +10863,34 @@ var render = function() {
         _c("hr", { staticClass: "hr" }),
         _vm._v(" "),
         _c("div", { staticClass: "form-group" }, [
-          _c("div", { staticClass: "col-md-9" }, [
-            _c("span", { staticClass: "pull-right text-bold" }, [
-              _c("i", { staticClass: "icon-tag" }),
-              _vm._v(
-                " " + _vm._s(_vm.$t("Total discounts")) + ":\n                "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-3 text-right" }, [
-            _c("span", { staticClass: "text-bold" }, [
-              _vm._v(
-                _vm._s(
-                  _vm._f("numberFormat")(_vm.totals.totalDiscounts, "$0,0")
+          _c(
+            "div",
+            { staticClass: "col-md-9 col-lg-9 col-sm-9 col-xs-12 text-right" },
+            [
+              _c("span", { staticClass: "text-bold" }, [
+                _c("i", { staticClass: "icon-tag" }),
+                _vm._v(
+                  " " +
+                    _vm._s(_vm.$t("Total discounts")) +
+                    ":\n                "
                 )
-              )
-            ])
-          ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-md-3 col-lg-3 col-sm-3 col-xs-12 text-right" },
+            [
+              _c("span", { staticClass: "text-bold" }, [
+                _vm._v(
+                  _vm._s(
+                    _vm._f("numberFormat")(_vm.totals.totalDiscounts, "$0,0")
+                  )
+                )
+              ])
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
@@ -10366,6 +10938,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("th", { attrs: { width: "3%" } }, [
+      _c("i", { staticClass: "fa fa-list-ol text-muted" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("tr", [
       _c("td", {
         staticStyle: {
@@ -10374,17 +10954,8 @@ var staticRenderFns = [
           "text-align": "center",
           padding: "0"
         },
-        attrs: { colspan: "14" }
+        attrs: { colspan: "9" }
       })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("i", { staticClass: "icon-layers" }),
-      _vm._v(" Totals\n            ")
     ])
   }
 ]
@@ -10409,368 +10980,385 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {},
-    [
-      _c("table-component", {
-        attrs: { marks: _vm.marks, totals: _vm.totals }
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "modal fade",
-          attrs: {
-            id: "modal-generate-liquidation",
-            role: "basic",
-            "aria-hidden": "true"
-          }
-        },
-        [
-          _c("div", { staticClass: "modal-dialog modal-lg" }, [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header hide" }, [
-                _c("button", {
-                  staticClass: "close",
-                  attrs: {
-                    type: "button",
-                    "data-dismiss": "modal",
-                    "aria-hidden": "true"
-                  }
-                }),
-                _vm._v(" "),
-                _c("h5", { staticClass: "modal-title" }, [
-                  _c("i", { staticClass: "fa fa-dollar" }),
-                  _vm._v(
-                    " " +
-                      _vm._s(_vm.$t("Generate liquidation")) +
-                      "\n                    "
-                  )
-                ])
-              ]),
+  return _c("div", {}, [
+    _c(
+      "div",
+      { staticClass: "table-responsive" },
+      [
+        _c("table-component", {
+          attrs: { marks: _vm.marks, totals: _vm.totals }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "modal-generate-liquidation",
+          role: "basic",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog modal-lg" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header hide" }, [
+              _c("button", {
+                staticClass: "close",
+                attrs: {
+                  type: "button",
+                  "data-dismiss": "modal",
+                  "aria-hidden": "true"
+                }
+              }),
               _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-md-12" }, [
-                    _c("div", {}, [
-                      _c("div", { staticClass: "portlet-title hide" }, [
-                        _c("div", { staticClass: "caption" }, [
-                          _c("i", { staticClass: "fa fa-dollar font-green" }),
+              _c("h5", { staticClass: "modal-title" }, [
+                _c("i", { staticClass: "fa fa-dollar" }),
+                _vm._v(
+                  " " +
+                    _vm._s(_vm.$t("Generate liquidation")) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-12" }, [
+                  _c("div", {}, [
+                    _c("div", { staticClass: "portlet-title hide" }, [
+                      _c("div", { staticClass: "caption" }, [
+                        _c("i", { staticClass: "fa fa-dollar font-green" }),
+                        _vm._v(" "),
+                        _c(
+                          "span",
+                          {
+                            staticClass:
+                              "caption-subject font-green bold uppercase"
+                          },
+                          [
+                            _vm._v(
+                              "\n                                            " +
+                                _vm._s(_vm.$t("Generate liquidation")) +
+                                "\n                                        "
+                            )
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "portlet-body" }, [
+                      _c("div", { staticClass: "mt-element-step" }, [
+                        _c("div", { staticClass: "row step-line" }, [
+                          _c(
+                            "div",
+                            { staticClass: "mt-step-desc text-center hide" },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "font-dark bold uppercase" },
+                                [
+                                  _vm._v(
+                                    "\n                                                    " +
+                                      _vm._s(_vm.$t("Generate liquidation")) +
+                                      "\n                                                "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("div", {
+                                staticClass: "caption-desc font-grey-cascade"
+                              }),
+                              _vm._v(" "),
+                              _c("br")
+                            ]
+                          ),
                           _vm._v(" "),
                           _c(
-                            "span",
+                            "div",
                             {
                               staticClass:
-                                "caption-subject font-green bold uppercase"
+                                "phases col-md-3 mt-step-col first phase-inventory warning",
+                              attrs: {
+                                "data-toggle": "tab",
+                                href: "#step-discounts",
+                                "data-active": "warning"
+                              }
                             },
                             [
-                              _vm._v(
-                                "\n                                            " +
-                                  _vm._s(_vm.$t("Generate liquidation")) +
-                                  "\n                                        "
-                              )
+                              _vm._m(0),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "mt-step-title uppercase font-grey-cascade"
+                                },
+                                [_vm._v(_vm._s(_vm.$t("Discounts")))]
+                              ),
+                              _vm._v(" "),
+                              _c("div", {
+                                staticClass:
+                                  "mt-step-content font-grey-cascade hide"
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "phases col-md-3 mt-step-col phase-inventory",
+                              attrs: {
+                                "data-toggle": "tab",
+                                href: "#step-penalties",
+                                "data-active": "error"
+                              }
+                            },
+                            [
+                              _vm._m(1),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "mt-step-title uppercase font-grey-cascade"
+                                },
+                                [_vm._v(_vm._s(_vm.$t("Penalties")))]
+                              ),
+                              _vm._v(" "),
+                              _c("div", {
+                                staticClass:
+                                  "mt-step-content font-grey-cascade hide"
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "phases col-md-3 mt-step-col phase-inventory",
+                              attrs: {
+                                "data-toggle": "tab",
+                                href: "#step-commissions",
+                                "data-active": "active"
+                              }
+                            },
+                            [
+                              _vm._m(2),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "mt-step-title uppercase font-grey-cascade"
+                                },
+                                [_vm._v(_vm._s(_vm.$t("Commissions")))]
+                              ),
+                              _vm._v(" "),
+                              _c("div", {
+                                staticClass:
+                                  "mt-step-content font-grey-cascade hide"
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "phases col-md-3 mt-step-col last phase-inventory",
+                              attrs: {
+                                "data-toggle": "tab",
+                                href: "#step-liquidate",
+                                "data-active": "done"
+                              }
+                            },
+                            [
+                              _vm._m(3),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "mt-step-title uppercase font-grey-cascade"
+                                },
+                                [_vm._v(_vm._s(_vm.$t("Liquidate")))]
+                              ),
+                              _vm._v(" "),
+                              _c("div", {
+                                staticClass: "mt-step-content font-grey-cascade"
+                              })
                             ]
                           )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "portlet-body" }, [
-                        _c("div", { staticClass: "mt-element-step" }, [
-                          _c("div", { staticClass: "row step-line" }, [
-                            _c(
-                              "div",
-                              { staticClass: "mt-step-desc text-center hide" },
-                              [
-                                _c(
-                                  "div",
-                                  { staticClass: "font-dark bold uppercase" },
-                                  [
-                                    _vm._v(
-                                      "\n                                                    " +
-                                        _vm._s(_vm.$t("Generate liquidation")) +
-                                        "\n                                                "
-                                    )
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c("div", {
-                                  staticClass: "caption-desc font-grey-cascade"
-                                }),
-                                _vm._v(" "),
-                                _c("br")
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "phases col-md-3 mt-step-col first phase-inventory warning",
-                                attrs: {
-                                  "data-toggle": "tab",
-                                  href: "#step-discounts",
-                                  "data-active": "warning"
-                                }
-                              },
-                              [
-                                _vm._m(0),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "mt-step-title uppercase font-grey-cascade"
-                                  },
-                                  [_vm._v(_vm._s(_vm.$t("Discounts")))]
-                                ),
-                                _vm._v(" "),
-                                _c("div", {
-                                  staticClass:
-                                    "mt-step-content font-grey-cascade hide"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "phases col-md-3 mt-step-col phase-inventory",
-                                attrs: {
-                                  "data-toggle": "tab",
-                                  href: "#step-penalties",
-                                  "data-active": "error"
-                                }
-                              },
-                              [
-                                _vm._m(1),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "mt-step-title uppercase font-grey-cascade"
-                                  },
-                                  [_vm._v(_vm._s(_vm.$t("Penalties")))]
-                                ),
-                                _vm._v(" "),
-                                _c("div", {
-                                  staticClass:
-                                    "mt-step-content font-grey-cascade hide"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "phases col-md-3 mt-step-col phase-inventory",
-                                attrs: {
-                                  "data-toggle": "tab",
-                                  href: "#step-commissions",
-                                  "data-active": "active"
-                                }
-                              },
-                              [
-                                _vm._m(2),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "mt-step-title uppercase font-grey-cascade"
-                                  },
-                                  [_vm._v(_vm._s(_vm.$t("Commissions")))]
-                                ),
-                                _vm._v(" "),
-                                _c("div", {
-                                  staticClass:
-                                    "mt-step-content font-grey-cascade hide"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "phases col-md-3 mt-step-col last phase-inventory",
-                                attrs: {
-                                  "data-toggle": "tab",
-                                  href: "#step-liquidate",
-                                  "data-active": "done"
-                                }
-                              },
-                              [
-                                _vm._m(3),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "mt-step-title uppercase font-grey-cascade"
-                                  },
-                                  [_vm._v(_vm._s(_vm.$t("Liquidate")))]
-                                ),
-                                _vm._v(" "),
-                                _c("div", {
-                                  staticClass:
-                                    "mt-step-content font-grey-cascade"
-                                })
-                              ]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("hr")
                         ]),
                         _vm._v(" "),
-                        _c("div", { staticClass: "row" }, [
-                          _c("div", { staticClass: "col-md-12" }, [
-                            _c("div", { staticClass: "tab-content" }, [
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "tab-pane fade in active",
-                                  attrs: { id: "step-discounts" }
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        " phase-container col-md-12 m-t-10"
-                                    },
-                                    [
-                                      _c("discount-component", {
-                                        attrs: {
-                                          marks: _vm.marks,
-                                          totals: _vm.totals,
-                                          liquidation: _vm.liquidation
-                                        },
-                                        on: {
-                                          "update:liquidation": function(
-                                            $event
-                                          ) {
-                                            _vm.liquidation = $event
-                                          }
+                        _c("hr")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row" }, [
+                        _c("div", { staticClass: "col-md-12" }, [
+                          _c("div", { staticClass: "tab-content" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass: "tab-pane fade in active",
+                                attrs: { id: "step-discounts" }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      " phase-container col-md-12 m-t-10"
+                                  },
+                                  [
+                                    _c("discount-component", {
+                                      attrs: {
+                                        marks: _vm.marks,
+                                        totals: _vm.totals,
+                                        liquidation: _vm.liquidation
+                                      },
+                                      on: {
+                                        "update:liquidation": function($event) {
+                                          _vm.liquidation = $event
                                         }
-                                      })
-                                    ],
-                                    1
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "tab-pane fade",
-                                  attrs: { id: "step-penalties" }
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        " phase-container col-md-12 m-t-10"
-                                    },
-                                    [
-                                      _c("penalty-component", {
-                                        attrs: {
-                                          marks: _vm.marks,
-                                          totals: _vm.totals,
-                                          liquidation: _vm.liquidation
-                                        },
-                                        on: {
-                                          "update:liquidation": function(
-                                            $event
-                                          ) {
-                                            _vm.liquidation = $event
-                                          }
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass: "tab-pane fade",
+                                attrs: { id: "step-penalties" }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      " phase-container col-md-12 m-t-10"
+                                  },
+                                  [
+                                    _c("penalty-component", {
+                                      attrs: {
+                                        marks: _vm.marks,
+                                        totals: _vm.totals,
+                                        liquidation: _vm.liquidation
+                                      },
+                                      on: {
+                                        "update:liquidation": function($event) {
+                                          _vm.liquidation = $event
                                         }
-                                      })
-                                    ],
-                                    1
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "tab-pane fade",
-                                  attrs: { id: "step-commissions" }
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        " phase-container col-md-12 m-t-10"
-                                    },
-                                    [
-                                      _c("commission-component", {
-                                        attrs: {
-                                          marks: _vm.marks,
-                                          totals: _vm.totals,
-                                          liquidation: _vm.liquidation
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass: "tab-pane fade",
+                                attrs: { id: "step-commissions" }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      " phase-container col-md-12 m-t-10"
+                                  },
+                                  [
+                                    _c("commission-component", {
+                                      attrs: {
+                                        marks: _vm.marks,
+                                        totals: _vm.totals,
+                                        liquidation: _vm.liquidation
+                                      },
+                                      on: {
+                                        "update:marks": function($event) {
+                                          _vm.marks = $event
                                         },
-                                        on: {
-                                          "update:marks": function($event) {
-                                            _vm.marks = $event
+                                        "update:liquidation": function($event) {
+                                          _vm.liquidation = $event
+                                        }
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass: "tab-pane fade",
+                                attrs: { id: "step-liquidate" }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      " phase-container col-md-6 col-md-offset-3 m-t-10"
+                                  },
+                                  [
+                                    _c("preview-component", {
+                                      attrs: {
+                                        liquidation: _vm.liquidation,
+                                        totals: _vm.totals,
+                                        search: _vm.search
+                                      },
+                                      on: {
+                                        "update:liquidation": function($event) {
+                                          _vm.liquidation = $event
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("br"),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "text-center" }, [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "btn btn-circle yellow-crusta btn-outline f-s-13 uppercase",
+                                          attrs: {
+                                            disabled: _vm.totals.totalBea === 0
                                           },
-                                          "update:liquidation": function(
-                                            $event
-                                          ) {
-                                            _vm.liquidation = $event
-                                          }
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "tab-pane fade",
-                                  attrs: { id: "step-liquidate" }
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        " phase-container col-md-6 col-md-offset-3 m-t-10"
-                                    },
-                                    [
-                                      _c("preview-component", {
-                                        attrs: {
-                                          liquidation: _vm.liquidation,
-                                          totals: _vm.totals,
-                                          search: _vm.search
+                                          on: { click: _vm.liquidate }
                                         },
-                                        on: {
-                                          "update:liquidation": function(
-                                            $event
-                                          ) {
-                                            _vm.liquidation = $event
-                                          },
-                                          liquidate: function($event) {
-                                            return _vm.liquidate()
-                                          }
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  )
-                                ]
-                              )
-                            ])
+                                        [
+                                          _c("i", {
+                                            staticClass: "icon-layers"
+                                          }),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(_vm.$t("Liquidate")) +
+                                              "\n                                                            "
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  ],
+                                  1
+                                )
+                              ]
+                            )
                           ])
                         ])
                       ])
@@ -10780,11 +11368,10 @@ var render = function() {
               ])
             ])
           ])
-        ]
-      )
-    ],
-    1
-  )
+        ])
+      ]
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -10841,7 +11428,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticClass: "table-responsive" }, [
     _c(
       "table",
       {
@@ -10851,6 +11438,8 @@ var render = function() {
       [
         _c("thead", [
           _c("tr", { staticClass: "inverse" }, [
+            _vm._m(0),
+            _vm._v(" "),
             _c("th", { staticClass: "col-md-2" }, [
               _c("i", { staticClass: "fa fa-flag text-muted" }),
               _c("br"),
@@ -10920,6 +11509,10 @@ var render = function() {
           [
             _vm._l(_vm.marks, function(mark) {
               return _c("tr", {}, [
+                _c("td", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(mark.number))
+                ]),
+                _vm._v(" "),
                 _c("td", { staticClass: "col-md-2 text-center" }, [
                   _c("span", [_vm._v(_vm._s(mark.turn.route.name))]),
                   _c("br"),
@@ -11035,10 +11628,10 @@ var render = function() {
               ])
             }),
             _vm._v(" "),
-            _vm._m(0),
+            _vm._m(1),
             _vm._v(" "),
             _c("tr", { staticClass: "totals" }, [
-              _c("td", { staticClass: "text-right" }, [
+              _c("td", { staticClass: "text-right", attrs: { colspan: "2" } }, [
                 _c("i", { staticClass: "icon-layers" }),
                 _vm._v(" " + _vm._s(_vm.$t("Totals")) + "\n            ")
               ]),
@@ -11109,27 +11702,45 @@ var render = function() {
       _c("hr", { staticClass: "hr" }),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
-        _c("div", { staticClass: "col-md-9" }, [
-          _c("span", { staticClass: "pull-right text-bold" }, [
-            _c("i", { staticClass: "icon-tag" }),
-            _vm._v(
-              " " + _vm._s(_vm.$t("Total penalties")) + ":\n                "
-            )
-          ])
-        ]),
+        _c(
+          "div",
+          { staticClass: "col-md-9 col-lg-9 col-sm-9 col-xs-12 text-right" },
+          [
+            _c("span", { staticClass: "text-bold" }, [
+              _c("i", { staticClass: "icon-tag" }),
+              _vm._v(
+                " " + _vm._s(_vm.$t("Total penalties")) + ":\n                "
+              )
+            ])
+          ]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3 text-right" }, [
-          _c("span", { staticClass: "text-bold" }, [
-            _vm._v(
-              _vm._s(_vm._f("numberFormat")(this.totals.totalPenalties, "$0,0"))
-            )
-          ])
-        ])
+        _c(
+          "div",
+          { staticClass: "col-md-3 col-lg-3 col-sm-3 col-xs-12 text-right" },
+          [
+            _c("span", { staticClass: "text-bold" }, [
+              _vm._v(
+                _vm._s(
+                  _vm._f("numberFormat")(this.totals.totalPenalties, "$0,0")
+                )
+              )
+            ])
+          ]
+        )
       ])
     ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("th", { attrs: { width: "3%" } }, [
+      _c("i", { staticClass: "fa fa-list-ol text-muted" })
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -11142,7 +11753,7 @@ var staticRenderFns = [
           "text-align": "center",
           padding: "0"
         },
-        attrs: { colspan: "11" }
+        attrs: { colspan: "10" }
       })
     ])
   }
@@ -11387,31 +11998,7 @@ var render = function() {
               }
             }
           })
-        ]),
-        _vm._v(" "),
-        _c("br"),
-        _vm._v(" "),
-        !_vm.readonly
-          ? _c("div", { staticClass: "text-center" }, [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn btn-circle red btn-outline f-s-13 uppercase",
-                  attrs: { disabled: _vm.totals.totalBea === 0 },
-                  on: {
-                    click: function($event) {
-                      return _vm.$emit("liquidate")
-                    }
-                  }
-                },
-                [
-                  _c("i", { staticClass: "icon-layers" }),
-                  _vm._v(" " + _vm._s(_vm.$t("Liquidate")) + "\n        ")
-                ]
-              )
-            ])
-          : _vm._e()
+        ])
       ])
     : _vm._e()
 }
@@ -11452,7 +12039,10 @@ var render = function() {
         },
         [
           _c("i", { staticClass: "fa fa-search" }),
-          _vm._v(" " + _vm._s(_vm.$t("Search")) + "\n        ")
+          _vm._v(" "),
+          _c("span", { staticClass: "hidden-xs" }, [
+            _vm._v(_vm._s(_vm.$t("Search")))
+          ])
         ]
       )
     ]),
@@ -11506,14 +12096,16 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "input-group col-md-12" },
+              {
+                staticClass:
+                  "input-group col-lg-12 col-md-12 col-sm-12 col-xs-12"
+              },
               [
                 _c("date-picker", {
                   attrs: {
                     valueType: "format",
                     "first-day-of-week": 1,
-                    lang: "es",
-                    width: "100%"
+                    lang: "es"
                   },
                   on: {
                     change: function($event) {
@@ -11559,330 +12151,373 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.marks.length
-    ? _c(
-        "table",
-        {
-          staticClass:
-            "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
-        },
-        [
-          _c("thead", [
-            _c("tr", { staticClass: "inverse" }, [
-              _vm._m(0),
-              _vm._v(" "),
-              _c("th", { staticClass: "col-md-2" }, [
-                _c("i", { staticClass: "fa fa-calendar text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Date")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", { staticClass: "col-md-2" }, [
-                _c("i", { staticClass: "fa fa-flag text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Route")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "fa fa-retweet text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Trajectory")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", { staticClass: "col-md-2" }, [
-                _c("i", { staticClass: "fa fa-user text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Driver")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "fa fa-clock-o text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("From")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "fa fa-clock-o text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("To")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "ion-android-stopwatch" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Duration")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "fa fa-users text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Ascents")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "fa fa-users text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Descents")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "fa fa-users text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Boarded")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", [
-                _c("i", { staticClass: "fa fa-users text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("BEA")) + "\n        ")
-              ]),
-              _vm._v(" "),
-              _c("th", { staticClass: "col-md-2" }, [
-                _c("i", { staticClass: "fa fa-dollar text-muted" }),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.$t("Total BEA")) + "\n        ")
+  return _c("div", [
+    _vm.marks.length
+      ? _c(
+          "table",
+          {
+            staticClass:
+              "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+          },
+          [
+            _c("thead", [
+              _c("tr", { staticClass: "inverse" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c("th", { staticClass: "col-md-2" }, [
+                  _c("i", { staticClass: "fa fa-calendar text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Date")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "col-md-2" }, [
+                  _c("i", { staticClass: "fa fa-flag text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Route")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "fa fa-retweet text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Trajectory")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "col-md-2" }, [
+                  _c("i", { staticClass: "fa fa-user text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Driver")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "fa fa-clock-o text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("From")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "fa fa-clock-o text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("To")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "ion-android-stopwatch" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Duration")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "fa fa-users text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Ascents")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "fa fa-users text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Descents")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "fa fa-users text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Boarded")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("i", { staticClass: "fa fa-users text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("BEA")) + "\n            ")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "col-md-2" }, [
+                  _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(_vm.$t("Total BEA")) + "\n            ")
+                ])
               ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            [
-              _vm._l(_vm.marks, function(mark) {
-                return _c("tr", [
-                  _c("td", { staticClass: "col-md-1 text-center" }, [
-                    _vm._v(
-                      "\n            " + _vm._s(mark.number) + "\n            "
-                    ),
-                    _c("i", {
-                      staticClass: "tooltips",
-                      class: mark.status.icon + " font-" + mark.status.class,
-                      attrs: { "data-original-title": mark.status.name }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "col-md-2 text-center" }, [
-                    _vm._v(_vm._s(mark.date))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "col-md-2 text-center" }, [
-                    _vm._v(_vm._s(mark.turn.route.name))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-center" }, [
-                    mark.trajectory
-                      ? _c(
-                          "span",
-                          {
-                            staticClass: "label span-full",
-                            class:
-                              mark.trajectory.name == "IDA"
-                                ? "label-success"
-                                : "label-warning"
-                          },
-                          [
+            ]),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              [
+                _vm._l(_vm.marks, function(mark) {
+                  return _c("tr", [
+                    _c("td", { staticClass: "text-center" }, [
+                      _c("i", {
+                        staticClass: "tooltips",
+                        class: mark.status.icon + " font-" + mark.status.class,
+                        attrs: { "data-original-title": mark.status.name }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _c("span", {}, [_vm._v(_vm._s(mark.number))])
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-2 text-center" }, [
+                      _vm._v(_vm._s(mark.date))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-2 text-center" }, [
+                      _vm._v(_vm._s(mark.turn.route.name))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      mark.trajectory
+                        ? _c(
+                            "span",
+                            {
+                              staticClass: "label span-full",
+                              class:
+                                mark.trajectory.name == "IDA"
+                                  ? "label-success"
+                                  : "label-warning"
+                            },
+                            [
+                              _vm._v(
+                                "\n                " +
+                                  _vm._s(mark.trajectory.name) +
+                                  "\n            "
+                              )
+                            ]
+                          )
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-2 text-center" }, [
+                      mark.turn.driver
+                        ? _c("span", [
                             _vm._v(
                               "\n                " +
-                                _vm._s(mark.trajectory.name) +
+                                _vm._s(
+                                  mark.turn.driver.first_name +
+                                    (mark.turn.driver.last_name
+                                      ? " " + mark.turn.driver.last_name
+                                      : "")
+                                ) +
                                 "\n            "
                             )
-                          ]
-                        )
-                      : _vm._e()
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "col-md-2 text-center" }, [
-                    mark.turn.driver
-                      ? _c("span", [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                mark.turn.driver.first_name +
-                                  (mark.turn.driver.last_name
-                                    ? " " + mark.turn.driver.last_name
-                                    : "")
-                              ) +
-                              "\n            "
+                          ])
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(_vm._s(mark.initialTime))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(_vm._s(mark.finalTime))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(_vm._s(mark.duration))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(_vm._s(mark.passengersUp))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(_vm._s(mark.passengersDown))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(_vm._s(mark.boarded))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-center" }, [
+                      _vm._v(_vm._s(mark.passengersBEA))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-2 text-center" }, [
+                      _vm._v(
+                        _vm._s(_vm._f("numberFormat")(mark.totalBEA, "$0,0"))
+                      )
+                    ])
+                  ])
+                }),
+                _vm._v(" "),
+                _vm._m(1),
+                _vm._v(" "),
+                _c("tr", [
+                  _c(
+                    "td",
+                    {
+                      staticClass: "text-center",
+                      attrs: { rowspan: "2", colspan: "6" }
+                    },
+                    [
+                      !_vm.readonly && _vm.marks.length
+                        ? _c(
+                            "button",
+                            {
+                              staticClass:
+                                "btn btn-sm yellow-crusta btn-circle btn-outline sbold uppercase m-t-5",
+                              attrs: {
+                                "data-toggle": "modal",
+                                "data-target": "#modal-generate-liquidation"
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "icon-layers" }),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.$t("Generate liquidation")) +
+                                  "\n                "
+                              )
+                            ]
                           )
-                        ])
-                      : _vm._e()
-                  ]),
+                        : _vm._e()
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    { staticClass: "text-right", attrs: { colspan: "3" } },
+                    [
+                      _c("i", { staticClass: "fa fa-sliders" }),
+                      _vm._v(" " + _vm._s(_vm.$t("Average")) + "\n            ")
+                    ]
+                  ),
                   _vm._v(" "),
                   _c("td", { staticClass: "text-center" }, [
-                    _vm._v(_vm._s(mark.initialTime))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-center" }, [
-                    _vm._v(_vm._s(mark.finalTime))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-center" }, [
-                    _vm._v(_vm._s(mark.duration))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-center" }, [
-                    _vm._v(_vm._s(mark.passengersUp))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-center" }, [
-                    _vm._v(_vm._s(mark.passengersDown))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-center" }, [
-                    _vm._v(_vm._s(mark.boarded))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-center" }, [
-                    _vm._v(_vm._s(mark.passengersBEA))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "col-md-2 text-center" }, [
                     _vm._v(
-                      _vm._s(_vm._f("numberFormat")(mark.totalBEA, "$0,0"))
+                      _vm._s(
+                        _vm._f("numberFormat")(
+                          _vm.totals.averagePassengersUp,
+                          "0.00"
+                        )
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("numberFormat")(
+                          _vm.totals.averagePassengersDown,
+                          "0.00"
+                        )
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("numberFormat")(
+                          _vm.totals.averageBoarded,
+                          "0.00"
+                        )
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("numberFormat")(
+                          _vm.totals.averagePassengersBea,
+                          "0.00"
+                        )
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("numberFormat")(_vm.totals.averageBea, "$0,0")
+                      )
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c(
+                    "td",
+                    { staticClass: "text-right", attrs: { colspan: "3" } },
+                    [
+                      _c("i", { staticClass: "icon-layers" }),
+                      _vm._v(" " + _vm._s(_vm.$t("Total")) + "\n            ")
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(_vm.totals.totalPassengersUp))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(_vm.totals.totalPassengersDown))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(_vm.totals.totalBoarded))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(_vm.totals.totalPassengersBea))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("numberFormat")(_vm.totals.totalBea, "$0,0")
+                      )
                     )
                   ])
                 ])
-              }),
+              ],
+              2
+            )
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.marks.length
+      ? _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            {
+              staticClass:
+                "alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3"
+            },
+            [
+              _vm._m(2),
               _vm._v(" "),
-              _vm._m(1),
-              _vm._v(" "),
-              _c("tr", [
+              _c("div", { staticClass: "col-md-10" }, [
                 _c(
-                  "td",
+                  "span",
                   {
-                    staticClass: "text-center",
-                    attrs: { rowspan: "2", colspan: "5" }
+                    staticClass: "close pull-right",
+                    attrs: { "data-dismiss": "alert" }
                   },
-                  [
-                    !_vm.readonly
-                      ? _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn btn-sm green-haze btn-outline sbold uppercase m-t-5",
-                            attrs: {
-                              "data-toggle": "modal",
-                              "data-target": "#modal-generate-liquidation"
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "icon-layers" }),
-                            _vm._v(
-                              " " +
-                                _vm._s(_vm.$t("Generate liquidation")) +
-                                "\n            "
-                            )
-                          ]
-                        )
-                      : _vm._e()
-                  ]
+                  [_vm._v("×")]
                 ),
                 _vm._v(" "),
-                _c(
-                  "td",
-                  { staticClass: "text-right", attrs: { colspan: "3" } },
-                  [
-                    _c("i", { staticClass: "fa fa-sliders" }),
-                    _vm._v(" " + _vm._s(_vm.$t("Average")) + "\n        ")
-                  ]
-                ),
+                _c("h4", [_c("strong", [_vm._v(_vm._s(_vm.$t("Ups!")))])]),
                 _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(
-                    _vm._s(
-                      _vm._f("numberFormat")(
-                        _vm.totals.averagePassengersUp,
-                        "0.00"
-                      )
-                    )
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(
-                    _vm._s(
-                      _vm._f("numberFormat")(
-                        _vm.totals.averagePassengersDown,
-                        "0.00"
-                      )
-                    )
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(
-                    _vm._s(
-                      _vm._f("numberFormat")(_vm.totals.averageBoarded, "0.00")
-                    )
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(
-                    _vm._s(
-                      _vm._f("numberFormat")(
-                        _vm.totals.averagePassengersBea,
-                        "0.00"
-                      )
-                    )
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(
-                    _vm._s(
-                      _vm._f("numberFormat")(_vm.totals.averageBea, "$0,0")
-                    )
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c(
-                  "td",
-                  { staticClass: "text-right", attrs: { colspan: "3" } },
-                  [
-                    _c("i", { staticClass: "icon-layers" }),
-                    _vm._v(" " + _vm._s(_vm.$t("Total")) + "\n        ")
-                  ]
-                ),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(_vm.totals.totalPassengersUp))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(_vm.totals.totalPassengersDown))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(_vm.totals.totalBoarded))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(_vm.totals.totalPassengersBea))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-center" }, [
-                  _vm._v(
-                    _vm._s(_vm._f("numberFormat")(_vm.totals.totalBea, "$0,0"))
-                  )
-                ])
+                _c("hr", { staticClass: "hr" }),
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.$t("No registers found")) +
+                    "\n            "
+                )
               ])
-            ],
-            2
+            ]
           )
-        ]
-      )
-    : _vm._e()
+        ])
+      : _vm._e()
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "col-md-1" }, [
-      _c("i", { staticClass: "fa fa-folder-open text-muted" })
+    return _c("th", { attrs: { width: "3%", colspan: "2" } }, [
+      _c("i", { staticClass: "fa fa-list-ol text-muted" })
     ])
   },
   function() {
@@ -11897,9 +12532,19 @@ var staticRenderFns = [
           "text-align": "center",
           padding: "0"
         },
-        attrs: { colspan: "13" }
+        attrs: { colspan: "14" }
       })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "col-md-2", staticStyle: { "padding-top": "10px" } },
+      [_c("i", { staticClass: "fa fa-3x fa-exclamation-circle" })]
+    )
   }
 ]
 render._withStripped = true
@@ -11924,266 +12569,254 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", {}, [
-    _c("div", {}, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-12 table-responsive" }, [
-          _c(
-            "table",
-            {
-              staticClass:
-                "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
-            },
-            [
-              _c("thead", [
-                _c("tr", { staticClass: "inverse" }, [
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-calendar text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Date")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-users text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Passengers")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-dollar text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Total turns")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-dollar text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Subtotal")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-fa-dollar text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Total dispatch")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "icon-dollar text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Balance")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-retweet text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Turns liquidated")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-user text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Responsible")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-calendar text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Liquidated on")) +
-                        "\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "col-md-1" }, [
-                    _c("i", { staticClass: "fa fa-rocket text-muted" }),
-                    _c("br"),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Details")) +
-                        "\n                        "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
+    _vm.liquidations.length
+      ? _c("div", [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12 table-responsive" }, [
               _c(
-                "tbody",
-                _vm._l(_vm.liquidations, function(liquidation) {
-                  return _c("tr", [
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(_vm._s(liquidation.date))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(_vm._s(liquidation.totals.totalPassengersBea))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(
-                        _vm._s(
-                          _vm._f("numberFormat")(
-                            liquidation.totals.totalTurns,
-                            "$0,0"
-                          )
+                "table",
+                {
+                  staticClass:
+                    "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+                },
+                [
+                  _c("thead", [
+                    _c("tr", { staticClass: "inverse" }, [
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-calendar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Date")) +
+                            "\n                        "
                         )
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(
-                        _vm._s(
-                          _vm._f("numberFormat")(
-                            liquidation.totals.subTotalTurns,
-                            "$0,0"
-                          )
-                        )
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(
-                        _vm._s(
-                          _vm._f("numberFormat")(
-                            liquidation.totals.totalDispatch,
-                            "$0,0"
-                          )
-                        )
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(
-                        _vm._s(
-                          _vm._f("numberFormat")(
-                            liquidation.totals.balance,
-                            "$0,0"
-                          )
-                        )
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center text-bold" }, [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "link",
-                          attrs: {
-                            "data-toggle": "modal",
-                            "data-target": "#modal-takings-liquidated-marks"
-                          },
-                          on: {
-                            click: function($event) {
-                              return _vm.seeLiquidationDetail(liquidation.id)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(liquidation.marks.length) +
-                              " turns\n                            "
-                          )
-                        ]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center hide" }, [
-                      _c("pre", { staticClass: "language-json" }, [
-                        _vm._v("                                "),
-                        _c("code", [_vm._v(_vm._s(liquidation.totals))]),
-                        _vm._v("\n                            ")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(_vm._s(liquidation.user.name))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(_vm._s(liquidation.dateLiquidation))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips",
-                          attrs: {
-                            title: _vm.$t("Details"),
-                            "data-toggle": "modal",
-                            "data-target": "#modal-takings-liquidated-marks"
-                          },
-                          on: {
-                            click: function($event) {
-                              return _vm.seeLiquidationDetail(liquidation.id)
-                            }
-                          }
-                        },
-                        [_c("i", { staticClass: "fa fa-eye" })]
-                      ),
+                      ]),
                       _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "btn btn-tab btn-transparent yellow-crusta btn-outline btn-circle tooltips",
-                          attrs: {
-                            title: _vm.$t("Take liquidation"),
-                            onclick: "ginfo('Feature on development')"
-                          }
-                        },
-                        [_c("i", { staticClass: "fa fa-suitcase" })]
-                      )
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-users text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Passengers")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Total turns")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Subtotal")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Total dispatch")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "icon-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Balance")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-retweet text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Turns liquidated")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-user text-muted" }),
+                        _c("br"),
+                        _vm._v(" " + _vm._s(_vm.$t("Responsible"))),
+                        _c("br"),
+                        _vm._v(
+                          _vm._s(_vm.$t("Liquidation")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-rocket text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Details")) +
+                            "\n                        "
+                        )
+                      ])
                     ])
-                  ])
-                }),
-                0
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.liquidations, function(liquidation) {
+                      return _c("tr", [
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(liquidation.date))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(liquidation.totals.totalPassengersBea))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.totalTurns,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.subTotalTurns,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.totalDispatch,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.balance,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center text-bold" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "link",
+                              attrs: {
+                                "data-toggle": "modal",
+                                "data-target": "#modal-liquidation-detail"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.seeLiquidationDetail(
+                                    liquidation,
+                                    true
+                                  )
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(liquidation.marks.length) +
+                                  " turns\n                            "
+                              )
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center hide" }, [
+                          _c("pre", { staticClass: "language-json" }, [
+                            _vm._v("                                "),
+                            _c("code", [_vm._v(_vm._s(liquidation.totals))]),
+                            _vm._v("\n                            ")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(liquidation.liquidationUser.name)
+                          ),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("small", [
+                            _c("i", { staticClass: "fa fa-calendar" }),
+                            _vm._v(" " + _vm._s(liquidation.liquidationDate))
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips",
+                              attrs: {
+                                title: _vm.$t("Details"),
+                                "data-toggle": "modal",
+                                "data-target": "#modal-liquidation-detail"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.seeLiquidationDetail(liquidation)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-eye" })]
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ]
               )
-            ]
-          )
+            ])
+          ])
         ])
-      ])
-    ]),
+      : _vm._e(),
     _vm._v(" "),
     _c(
       "div",
       {
         staticClass: "modal fade",
         attrs: {
-          id: "modal-takings-liquidated-marks",
+          id: "modal-liquidation-detail",
           tabindex: "-1",
           role: "basic",
           "aria-hidden": "true"
@@ -12205,26 +12838,29 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("ul", { staticClass: "nav nav-tabs" }, [
-                  _c("li", { staticClass: "active" }, [
-                    _c(
-                      "a",
-                      {
-                        attrs: { href: "#detail-marks", "data-toggle": "tab" }
-                      },
-                      [_vm._v(" " + _vm._s(_vm.$t("Turnos")) + " ")]
-                    )
-                  ]),
-                  _vm._v(" "),
                   _c("li", [
                     _c(
                       "a",
                       {
                         attrs: {
-                          href: "#detail-liquidation",
+                          href: "#liquidation-detail",
                           "data-toggle": "tab"
                         }
                       },
                       [_vm._v(" " + _vm._s(_vm.$t("Liquidation")) + " ")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("li", { staticClass: "active" }, [
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: "#detail-marks-liquidated",
+                          "data-toggle": "tab"
+                        }
+                      },
+                      [_vm._v(" " + _vm._s(_vm.$t("Turnos")) + " BEA ")]
                     )
                   ])
                 ])
@@ -12235,26 +12871,8 @@ var render = function() {
                   _c(
                     "div",
                     {
-                      staticClass: "tab-pane fade active in",
-                      attrs: { id: "detail-marks" }
-                    },
-                    [
-                      _c("table-component", {
-                        attrs: {
-                          readonly: true,
-                          marks: _vm.liquidationDetail.marks,
-                          totals: _vm.liquidationDetail.totals
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
                       staticClass: "tab-pane fade",
-                      attrs: { id: "detail-liquidation" }
+                      attrs: { id: "liquidation-detail" }
                     },
                     [
                       _c("div", {}, [
@@ -12280,131 +12898,229 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "portlet-body" }, [
-                          _c("div", { staticClass: "mt-element-step" }, [
-                            _c("div", { staticClass: "row step-line" }, [
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "phases col-md-3 mt-step-col first phase-inventory warning",
-                                  attrs: {
-                                    "data-toggle": "tab",
-                                    href: "#step-discounts-detail",
-                                    "data-active": "warning"
-                                  }
-                                },
-                                [
-                                  _vm._m(0),
-                                  _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "tabbable-custom hidden-lg hidden-md"
+                            },
+                            [
+                              _c("ul", { staticClass: "nav nav-tabs " }, [
+                                _c("li", { staticClass: "active" }, [
                                   _c(
-                                    "div",
+                                    "a",
                                     {
-                                      staticClass:
-                                        "mt-step-title uppercase font-grey-cascade"
+                                      attrs: {
+                                        href: "#step-discounts-detail",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "true"
+                                      }
                                     },
-                                    [_vm._v(_vm._s(_vm.$t("Discounts")))]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("div", {
+                                    [
+                                      _c("i", { staticClass: "icon-tag" }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Discounts")))
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", {}, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: "#step-penalties-detail",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "false"
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "icon-shield" }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Penalties")))
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", {}, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: "#step-commissions-detail",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "false"
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: " icon-user-follow"
+                                      }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Commissions")))
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", {}, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: "#step-liquidate-detail",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "false"
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "icon-layers" }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Liquidation")))
+                                      ])
+                                    ]
+                                  )
+                                ])
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "mt-element-step hidden-sm hidden-xs"
+                            },
+                            [
+                              _c("div", { staticClass: "row step-line" }, [
+                                _c(
+                                  "div",
+                                  {
                                     staticClass:
-                                      "mt-step-content font-grey-cascade hide"
-                                  })
-                                ]
-                              ),
+                                      "phases col-md-3 mt-step-col first phase-inventory warning",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-discounts-detail",
+                                      "data-active": "warning"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(0),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Discounts")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade hide"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "phases col-md-3 mt-step-col phase-inventory",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-penalties-detail",
+                                      "data-active": "error"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(1),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Penalties")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade hide"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "phases col-md-3 mt-step-col phase-inventory",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-commissions-detail",
+                                      "data-active": "active"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(2),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Commissions")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade hide"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "phases col-md-3 mt-step-col last phase-inventory",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-liquidate-detail",
+                                      "data-active": "done"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(3),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Liquidation")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade"
+                                    })
+                                  ]
+                                )
+                              ]),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "phases col-md-3 mt-step-col phase-inventory",
-                                  attrs: {
-                                    "data-toggle": "tab",
-                                    href: "#step-penalties-detail",
-                                    "data-active": "error"
-                                  }
-                                },
-                                [
-                                  _vm._m(1),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        "mt-step-title uppercase font-grey-cascade"
-                                    },
-                                    [_vm._v(_vm._s(_vm.$t("Penalties")))]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("div", {
-                                    staticClass:
-                                      "mt-step-content font-grey-cascade hide"
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "phases col-md-3 mt-step-col phase-inventory",
-                                  attrs: {
-                                    "data-toggle": "tab",
-                                    href: "#step-commissions-detail",
-                                    "data-active": "active"
-                                  }
-                                },
-                                [
-                                  _vm._m(2),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        "mt-step-title uppercase font-grey-cascade"
-                                    },
-                                    [_vm._v(_vm._s(_vm.$t("Commissions")))]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("div", {
-                                    staticClass:
-                                      "mt-step-content font-grey-cascade hide"
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "phases col-md-3 mt-step-col last phase-inventory",
-                                  attrs: {
-                                    "data-toggle": "tab",
-                                    href: "#step-liquidate-detail",
-                                    "data-active": "done"
-                                  }
-                                },
-                                [
-                                  _vm._m(3),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        "mt-step-title uppercase font-grey-cascade"
-                                    },
-                                    [_vm._v(_vm._s(_vm.$t("Liquidation")))]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("div", {
-                                    staticClass:
-                                      "mt-step-content font-grey-cascade"
-                                  })
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("hr")
-                          ]),
+                              _c("hr")
+                            ]
+                          ),
                           _vm._v(" "),
                           _c("div", { staticClass: "row" }, [
                             _c("div", { staticClass: "col-md-12" }, [
@@ -12646,7 +13362,44 @@ var render = function() {
                                                 readonly: true
                                               }
                                             })
-                                          : _vm._e()
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        _c("br"),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "text-center" },
+                                          [
+                                            _c(
+                                              "button",
+                                              {
+                                                staticClass:
+                                                  "btn btn-circle blue btn-outline f-s-13 uppercase",
+                                                attrs: {
+                                                  disabled:
+                                                    _vm.liquidationDetail.taken
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.takings(
+                                                      _vm.liquidationDetail
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass: "fa fa-suitcase"
+                                                }),
+                                                _vm._v(
+                                                  " " +
+                                                    _vm._s(_vm.$t("Taking")) +
+                                                    "\n                                                                "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
                                       ],
                                       1
                                     ),
@@ -12676,6 +13429,30 @@ var render = function() {
                         ])
                       ])
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "tab-pane fade active in",
+                      attrs: { id: "detail-marks-liquidated" }
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "table-responsive" },
+                        [
+                          _c("table-component", {
+                            attrs: {
+                              readonly: true,
+                              marks: _vm.liquidationDetail.marks,
+                              totals: _vm.liquidationDetail.totals
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
                   )
                 ])
               ])
@@ -12693,6 +13470,53 @@ var render = function() {
             ])
           ])
         ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.liquidations.length,
+            expression: "!liquidations.length"
+          }
+        ],
+        staticClass: "row"
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3"
+          },
+          [
+            _vm._m(4),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-10" }, [
+              _c(
+                "span",
+                {
+                  staticClass: "close pull-right",
+                  attrs: { "data-dismiss": "alert" }
+                },
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("h4", [_c("strong", [_vm._v(_vm._s(_vm.$t("Ups!")))])]),
+              _vm._v(" "),
+              _c("hr", { staticClass: "hr" }),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.$t("No registers found")) +
+                  "\n            "
+              )
+            ])
+          ]
+        )
       ]
     )
   ])
@@ -12729,6 +13553,1022 @@ var staticRenderFns = [
     return _c("div", { staticClass: "mt-step-number bg-white" }, [
       _c("i", { staticClass: "icon-layers" })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "col-md-2", staticStyle: { "padding-top": "10px" } },
+      [_c("i", { staticClass: "fa fa-3x fa-exclamation-circle" })]
+    )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=template&id=67e5519b&":
+/*!******************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=template&id=67e5519b& ***!
+  \******************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {}, [
+    _vm.liquidations.length
+      ? _c("div", [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12 table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+                },
+                [
+                  _c("thead", [
+                    _c("tr", { staticClass: "inverse" }, [
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-calendar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Date")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-users text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Passengers")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Total turns")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Subtotal")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Total dispatch")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "icon-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Balance")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-retweet text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Turns liquidated")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-user text-muted" }),
+                        _c("br"),
+                        _vm._v(" " + _vm._s(_vm.$t("Responsible"))),
+                        _c("br"),
+                        _vm._v(
+                          _vm._s(_vm.$t("Liquidation")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-user text-muted" }),
+                        _c("br"),
+                        _vm._v(" " + _vm._s(_vm.$t("Responsible"))),
+                        _c("br"),
+                        _vm._v(
+                          _vm._s(_vm.$t("Takings")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-rocket text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Details")) +
+                            "\n                        "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.liquidations, function(liquidation) {
+                      return _c("tr", [
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(liquidation.date))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(liquidation.totals.totalPassengersBea))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.totalTurns,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.subTotalTurns,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.totalDispatch,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.balance,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center text-bold" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "link",
+                              attrs: {
+                                "data-toggle": "modal",
+                                "data-target": "#modal-takings-liquidated-marks"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.seeLiquidationDetail(
+                                    liquidation.id,
+                                    true
+                                  )
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(liquidation.marks.length) +
+                                  " turns\n                            "
+                              )
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center hide" }, [
+                          _c("pre", { staticClass: "language-json" }, [
+                            _vm._v("                                "),
+                            _c("code", [_vm._v(_vm._s(liquidation.totals))]),
+                            _vm._v("\n                            ")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(liquidation.liquidationUser.name)
+                          ),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("small", [
+                            _c("i", { staticClass: "fa fa-calendar" }),
+                            _vm._v(" " + _vm._s(liquidation.liquidationDate))
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(liquidation.takingUser.name)
+                          ),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("small", [
+                            _c("i", { staticClass: "fa fa-calendar" }),
+                            _vm._v(" " + _vm._s(liquidation.takingDate))
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips",
+                              attrs: {
+                                title: _vm.$t("Details"),
+                                "data-toggle": "modal",
+                                "data-target": "#modal-takings-liquidated-marks"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.seeLiquidationDetail(
+                                    liquidation.id
+                                  )
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-eye" })]
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "modal-takings-liquidated-marks",
+          tabindex: "-1",
+          role: "basic",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog modal-lg" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "portlet light" }, [
+              _c("div", { staticClass: "portlet-title tabbable-line" }, [
+                _c("div", { staticClass: "caption" }, [
+                  _c("i", { staticClass: "icon-layers" }),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { staticClass: "caption-subject font-dark bold uppercase" },
+                    [_vm._v(_vm._s(_vm.$t("Taking details")))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("ul", { staticClass: "nav nav-tabs" }, [
+                  _c("li", [
+                    _c(
+                      "a",
+                      {
+                        attrs: { href: "#takings-detail", "data-toggle": "tab" }
+                      },
+                      [_vm._v(" " + _vm._s(_vm.$t("Takings")) + " ")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("li", { staticClass: "active" }, [
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: "#detail-marks-taken",
+                          "data-toggle": "tab"
+                        }
+                      },
+                      [_vm._v(" " + _vm._s(_vm.$t("Turnos")) + " BEA ")]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "portlet-body" }, [
+                _c("div", { staticClass: "tab-content row" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "tab-pane fade",
+                      attrs: { id: "takings-detail" }
+                    },
+                    [
+                      _c("div", {}, [
+                        _c("div", { staticClass: "portlet-title hide" }, [
+                          _c("div", { staticClass: "caption" }, [
+                            _c("i", { staticClass: "fa fa-dollar font-green" }),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass:
+                                  "caption-subject font-green bold uppercase"
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                                " +
+                                    _vm._s(_vm.$t("Liquidation details")) +
+                                    "\n                                            "
+                                )
+                              ]
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "portlet-body" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "tabbable-custom hidden-lg hidden-md"
+                            },
+                            [
+                              _c("ul", { staticClass: "nav nav-tabs " }, [
+                                _c("li", { staticClass: "active" }, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: "#step-discounts-detail-list",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "true"
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "icon-tag" }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Discounts")))
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", {}, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: "#step-penalties-detail-list",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "false"
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "icon-shield" }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Penalties")))
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", {}, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: "#step-commissions-detail-list",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "false"
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: " icon-user-follow"
+                                      }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Commissions")))
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", {}, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: "#step-liquidate-detail-list",
+                                        "data-toggle": "tab",
+                                        "aria-expanded": "false"
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "icon-layers" }),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "hidden-xs" }, [
+                                        _vm._v(_vm._s(_vm.$t("Liquidation")))
+                                      ])
+                                    ]
+                                  )
+                                ])
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "mt-element-step hidden-sm hidden-xs"
+                            },
+                            [
+                              _c("div", { staticClass: "row step-line" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "phases col-md-3 mt-step-col first phase-inventory warning",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-discounts-detail-list",
+                                      "data-active": "warning"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(0),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Discounts")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade hide"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "phases col-md-3 mt-step-col phase-inventory",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-penalties-detail-list",
+                                      "data-active": "error"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(1),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Penalties")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade hide"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "phases col-md-3 mt-step-col phase-inventory",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-commissions-detail-list",
+                                      "data-active": "active"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(2),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Commissions")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade hide"
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "phases col-md-3 mt-step-col last phase-inventory",
+                                    attrs: {
+                                      "data-toggle": "tab",
+                                      href: "#step-liquidate-detail-list",
+                                      "data-active": "done"
+                                    }
+                                  },
+                                  [
+                                    _vm._m(3),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "mt-step-title uppercase font-grey-cascade"
+                                      },
+                                      [_vm._v(_vm._s(_vm.$t("Liquidation")))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("div", {
+                                      staticClass:
+                                        "mt-step-content font-grey-cascade"
+                                    })
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("hr")
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col-md-12" }, [
+                              _c("div", { staticClass: "tab-content" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "tab-pane fade in active",
+                                    attrs: { id: "step-discounts-detail-list" }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          " phase-container col-md-12 m-t-10"
+                                      },
+                                      [
+                                        _c("discount-component", {
+                                          attrs: {
+                                            readonly: true,
+                                            marks: _vm.liquidationDetail.marks,
+                                            totals:
+                                              _vm.liquidationDetail.totals,
+                                            liquidation:
+                                              _vm.liquidationDetail.liquidation
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "tab-pane fade",
+                                    attrs: { id: "step-penalties-detail-list" }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          " phase-container col-md-12 m-t-10"
+                                      },
+                                      [
+                                        _c("penalty-component", {
+                                          attrs: {
+                                            marks: _vm.liquidationDetail.marks,
+                                            totals:
+                                              _vm.liquidationDetail.totals,
+                                            liquidation:
+                                              _vm.liquidationDetail.liquidation
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "tab-pane fade",
+                                    attrs: {
+                                      id: "step-commissions-detail-list"
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          " phase-container col-md-12 m-t-10"
+                                      },
+                                      [
+                                        _c("commission-component", {
+                                          attrs: {
+                                            readonly: true,
+                                            marks: _vm.liquidationDetail.marks,
+                                            totals:
+                                              _vm.liquidationDetail.totals,
+                                            liquidation:
+                                              _vm.liquidationDetail.liquidation
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "tab-pane fade",
+                                    attrs: { id: "step-liquidate-detail-list" }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          " phase-container col-md-6 col-md-offset-3 m-t-10"
+                                      },
+                                      [
+                                        !_vm.showPrintArea
+                                          ? _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "text-center col-md-12"
+                                              },
+                                              [
+                                                _c(
+                                                  "span",
+                                                  {
+                                                    staticClass:
+                                                      "header-preview"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "#" +
+                                                        _vm._s(
+                                                          _vm.liquidationDetail
+                                                            .id
+                                                        )
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass: "text-center col-md-12"
+                                          },
+                                          [
+                                            !_vm.showPrintArea
+                                              ? _c(
+                                                  "a",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-default btn-circle btn-sm",
+                                                    attrs: {
+                                                      href: "javascript:",
+                                                      target: ""
+                                                    },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.exportLiquidation()
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "fa fa-print"
+                                                    }),
+                                                    _vm._v(
+                                                      " | " +
+                                                        _vm._s(
+                                                          _vm.$t("Print")
+                                                        ) +
+                                                        "\n                                                                "
+                                                    )
+                                                  ]
+                                                )
+                                              : _vm._e(),
+                                            _vm._v(" "),
+                                            _vm.showPrintArea
+                                              ? _c(
+                                                  "a",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-default btn-circle btn-sm",
+                                                    attrs: {
+                                                      href: "javascript:",
+                                                      target: ""
+                                                    },
+                                                    on: {
+                                                      click: function($event) {
+                                                        _vm.showPrintArea = false
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "fa fa-undo"
+                                                    })
+                                                  ]
+                                                )
+                                              : _vm._e(),
+                                            _vm._v(" "),
+                                            _c(
+                                              "a",
+                                              {
+                                                staticClass:
+                                                  "header-preview hide",
+                                                attrs: {
+                                                  href: "javascript:",
+                                                  target: ""
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.exportLiquidation(
+                                                      true
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass: "fa fa-download"
+                                                }),
+                                                _vm._v(
+                                                  " " +
+                                                    _vm._s(
+                                                      _vm.$t("Print detailed")
+                                                    ) +
+                                                    "\n                                                                "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        !_vm.showPrintArea
+                                          ? _c("preview-component", {
+                                              attrs: {
+                                                liquidation:
+                                                  _vm.liquidationDetail
+                                                    .liquidation,
+                                                totals:
+                                                  _vm.liquidationDetail.totals,
+                                                search: _vm.search,
+                                                readonly: true
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _vm.showPrintArea
+                                      ? _c(
+                                          "div",
+                                          {
+                                            staticClass:
+                                              "phase-container col-md-8 col-md-offset-2 p-0 m-t-10 pdf-container"
+                                          },
+                                          [
+                                            _c("vue-friendly-iframe", {
+                                              attrs: {
+                                                src: _vm.linkToPrintLiquidation
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      : _vm._e()
+                                  ]
+                                )
+                              ])
+                            ])
+                          ])
+                        ])
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "tab-pane fade active in",
+                      attrs: { id: "detail-marks-taken" }
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "table-responsive" },
+                        [
+                          _c("table-component", {
+                            attrs: {
+                              readonly: true,
+                              marks: _vm.liquidationDetail.marks,
+                              totals: _vm.liquidationDetail.totals
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn dark btn-outline",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v(_vm._s(_vm.$t("Close")))]
+              )
+            ])
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.liquidations.length,
+            expression: "!liquidations.length"
+          }
+        ],
+        staticClass: "row"
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3"
+          },
+          [
+            _vm._m(4),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-10" }, [
+              _c(
+                "span",
+                {
+                  staticClass: "close pull-right",
+                  attrs: { "data-dismiss": "alert" }
+                },
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("h4", [_c("strong", [_vm._v(_vm._s(_vm.$t("Ups!")))])]),
+              _vm._v(" "),
+              _c("hr", { staticClass: "hr" }),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.$t("No registers found")) +
+                  "\n            "
+              )
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-step-number bg-white" }, [
+      _c("i", { staticClass: "icon-tag" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-step-number bg-white" }, [
+      _c("i", { staticClass: "icon-shield" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-step-number bg-white" }, [
+      _c("i", { staticClass: " icon-user-follow" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-step-number bg-white" }, [
+      _c("i", { staticClass: "icon-layers" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "col-md-2", staticStyle: { "padding-top": "10px" } },
+      [_c("i", { staticClass: "fa fa-3x fa-exclamation-circle" })]
+    )
   }
 ]
 render._withStripped = true
@@ -26390,7 +28230,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchComponent_vue_vue_type_template_id_d68e438c_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SearchComponent.vue?vue&type=template&id=d68e438c&scoped=true& */ "./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=template&id=d68e438c&scoped=true&");
 /* harmony import */ var _SearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SearchComponent.vue?vue&type=script&lang=js& */ "./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css& */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _SearchComponent_vue_vue_type_style_index_1_id_d68e438c_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css& */ "./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -26399,7 +28241,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__["default"])(
   _SearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _SearchComponent_vue_vue_type_template_id_d68e438c_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
   _SearchComponent_vue_vue_type_template_id_d68e438c_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -26428,6 +28270,22 @@ component.options.__file = "resources/js/takings/passengers/liquidation/componen
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SearchComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css&":
+/*!*********************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_style_index_1_id_d68e438c_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/style-loader!../../../../../../node_modules/css-loader??ref--6-1!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/SearchComponent.vue?vue&type=style&index=1&id=d68e438c&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_style_index_1_id_d68e438c_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_style_index_1_id_d68e438c_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_style_index_1_id_d68e438c_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_style_index_1_id_d68e438c_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchComponent_vue_vue_type_style_index_1_id_d68e438c_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -26605,6 +28463,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TakingsListComponent_vue_vue_type_template_id_67e5519b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TakingsListComponent.vue?vue&type=template&id=67e5519b& */ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=template&id=67e5519b&");
+/* harmony import */ var _TakingsListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TakingsListComponent.vue?vue&type=script&lang=js& */ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _TakingsListComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TakingsListComponent.vue?vue&type=style&index=0&lang=css& */ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _TakingsListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TakingsListComponent_vue_vue_type_template_id_67e5519b___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TakingsListComponent_vue_vue_type_template_id_67e5519b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TakingsListComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/style-loader!../../../../../../node_modules/css-loader??ref--6-1!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TakingsListComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=template&id=67e5519b&":
+/*!************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=template&id=67e5519b& ***!
+  \************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_template_id_67e5519b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TakingsListComponent.vue?vue&type=template&id=67e5519b& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue?vue&type=template&id=67e5519b&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_template_id_67e5519b___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TakingsListComponent_vue_vue_type_template_id_67e5519b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/takings/passengers/liquidation/main.js":
 /*!*************************************************************!*\
   !*** ./resources/js/takings/passengers/liquidation/main.js ***!
@@ -26622,8 +28567,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_AdminComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/AdminComponent */ "./resources/js/takings/passengers/liquidation/components/AdminComponent.vue");
 /* harmony import */ var _components_LiquidationComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/LiquidationComponent */ "./resources/js/takings/passengers/liquidation/components/LiquidationComponent.vue");
 /* harmony import */ var _components_TakingsComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/TakingsComponent */ "./resources/js/takings/passengers/liquidation/components/TakingsComponent.vue");
-/* harmony import */ var _lang_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../lang/i18n */ "./resources/js/lang/i18n.js");
-/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
+/* harmony import */ var _components_TakingsListComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/TakingsListComponent */ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue");
+/* harmony import */ var _lang_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../lang/i18n */ "./resources/js/lang/i18n.js");
+/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
 
 
 
@@ -26632,7 +28578,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-Vue.use(vue_i18n__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+Vue.use(vue_i18n__WEBPACK_IMPORTED_MODULE_8__["default"]);
 Vue.filter('numberFormat', vue_filter_number_format__WEBPACK_IMPORTED_MODULE_0___default()(numeral__WEBPACK_IMPORTED_MODULE_1___default.a));
 Vue.filter('capitalize', function (value) {
   if (!value) return '';
@@ -26641,12 +28588,13 @@ Vue.filter('capitalize', function (value) {
 });
 var liquidationView = new Vue({
   el: '#liquidation',
-  i18n: _lang_i18n__WEBPACK_IMPORTED_MODULE_6__["default"],
+  i18n: _lang_i18n__WEBPACK_IMPORTED_MODULE_7__["default"],
   components: {
     SearchComponent: _components_SearchComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
     AdminComponent: _components_AdminComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
     LiquidationComponent: _components_LiquidationComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
-    TakingsComponent: _components_TakingsComponent__WEBPACK_IMPORTED_MODULE_5__["default"]
+    TakingsComponent: _components_TakingsComponent__WEBPACK_IMPORTED_MODULE_5__["default"],
+    TakingsListComponent: _components_TakingsListComponent__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   data: {
     flag: false,
@@ -26864,10 +28812,10 @@ $(document).ready(function () {
 /*!********************************!*\
   !*** ./resources/lang/es.json ***!
   \********************************/
-/*! exports provided: Home, Create, Update, Save, save, Delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Percent of Gross BEA, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, default */
+/*! exports provided: Home, Create, Update, Save, save, Delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Percent of Gross BEA, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Liquidated without taking, default */
 /***/ (function(module) {
 
-module.exports = {"Home":"Inicio","Create":"Crear","Update":"Actualizar","Save":"Guardar","save":"guardar","Delete":"Eliminar","Cancel":"Cancelar","Close":"Cerrar","Manage <b>New Strategy</b>":"Gestión de <b>Nueva Estrategia</b>","Route":"Ruta","Company":"Empresa","Routes":"Rutas","Route Time":"Tiempo de ruta","Route time":"Tiempo de ruta","Reports":"Reportes","Report":"Reporte","report":"reporte","Route times":"Tiempos de ruta","Times":"Horas","Round trips":"Vueltas","round trips":"vueltas","round-trips":"vueltas","Search report":"Consultar reporte","Date report":"Fecha de Reporte","Search":"Consultar","Chart report":"Gráfica de repote","Vehicle":"Vehículo","vehicle":"vehículo","Vehicles":"Vehículos","vehicles":"vehículos","Hour dispatch":"Hora despachado","Round Trip":"Vuelta","round trip":"vuelta","Turn":"Turno","No registers found":"No se encontraron registros","No dispatch registers found":"No se encontraron despachos","Select an option":"Seleccione","Select a route":"Seleccione una ruta","Select a vehicle":"Seleccione un vehículo","Select an vehicle":"Seleccione un vehículo","Select a company":"Seleccione una empresa","Loading...":"Cargando...","No routes found":"Sin rutas","No vehicles found":"Sin vehículos","Actions":"Acciones","Detail":"Ver detalle","Report detail":"Ver reporte","Hide / Show":"Ocultar / Mostrar","Remove":"Eliminar","Expand / Compress":"Expandir / Comprimir","Round trip":"Vuelta","Historic route time chart":"Histórico gráfico de tiempos de ruta","Track on map":"Seguimiento en el mapa","Map":"Mapa","List":"Lista","Oops, something went wrong!":"Opps, parece que algo anda mal :(","of the route":"de la ruta","No report found for this vehicle":"No se ha encontrado ningún reporte para este vehículo","No passengers report found for this vehicle":"No se ha encontrado ningún reporte de pasajeros para este vehículo","Vehicle current status":"Estado actual del vehículo","Route info":"Información de la ruta","Route report":"Reporte de ruta","Control point going":"Ida","Control point return":"Regreso","Passengers report":"Reporte de pasajeros","Register historic":"Histórico de registro","Passengers":"Pasajeros","Seat":"Asiento","Seats":"Asientos","seat":"asiento","seats":"asientos","Seats report":"Reporte de asientos","Event active time":"Ocupado a las","Event inactive time":"Libre a las","Active time":"Activo durante","Active kilometers":"Kilómetros","Feature on development":"Funcionalidad en desarrollo","Still busy":"Ocupado aún","Username":"Usuario","Password":"Contraseña","Remember Me":"Recuérdame","Login":"Ingresar","Log In":"Inicia sesión","Type your credentials":"Ingresa tus credenciales","Confirm Password":"Confirma Contraseña","Register":"Registro","Name":"Nombre","Logout":"Cerrar Sesión","Passengers_Report_":"Reporte_Pasajeros_","Passengers Report":"Reporte de pasajeros","Report travel time and travel distance for vehicle seats":"Reporte de tiempo y recorrido de los asientos del vehículo","Export excel":"Exportar a excel","Export":"Exportar","Date":"Fecha","All Routes":"Todas las rutas","All routes":"Todas las rutas","Without route":"Sin ruta asignada","Chart":"Gráfica","url-chart":"grafico","Passenger report detail":"Ver reporte de pasajeros","Passengers report by route":"Reporte de pasajeros por ruta","Passengers register historic":"Histórico de registro de pasajeros","between":"entre las","Km in total":"Km en total","and":"y las","Total route distance":"Distancia total de la ruta","Active by":"Activo por","From":"Desde","from":"desde","To":"Hasta","to":"hasta","Table":"Tabla","Count trajectory":"Trayectoria de conteo","Trajectory":"Trayectoria","Active seat":"Asiento ocupado","Free seat":"Asiento libre","No seat report found":"No se ha encontrado reporte para el asiento seleccionado","passengers":"pasajeros","No registers location found":"No se encontraron registros de coordenadas","The vehicle haven´t off roads list":"El vehículo no presenta salidas de ruta","The date haven´t off roads list":"No se presentaron salidas de ruta en la fecha seleccionada","The driver haven´t off roads list in this round trip":"El conductor no presentó salidas de ruta en esta vuelta","The driver haven´t speeding report in this round trip":"El conductor no presentó excesos de velocidad en esta vuelta","The driver haven´t parking report in this round trip":"El conductor no presenta reportes de parkeos en esta vuelta","The date haven´t a control point time report":"No existe un reporte de puntos de control en la fecha seleccionada","Off Road":"Salida de ruta","Off Roads":"Salidas de ruta","Off road time":"Hora de salida de ruta","Off road report":"Reporte de salidas de ruta","Off road":"Salidas de ruta","Off road report by Vehicle":"Salidas de ruta por vehículos","Status":"Estado","Status Counter":"Estado de Contador","Report Counter":"Reporte de Contador","status":"estado","See off road report":"Ver reporte de salidas de ruta","Report vehicle off road":"Reporte de salidas de ruta del vehículo","Off_Road_Report_":"Reporte_Salida_Ruta_","Address":"Dirección","Longitude":"Longitud","Latitude":"Latitud","Oops... The page you're looking for doesn't exist.":"Ooops... La página que buscas no existe","Go Back":"Regresa","The page you are looking for might have been removed, had its name changed, or is temporarily unavailable":"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.","Oops... You don't have access permissions":"Ooops... No tiene permisos de acceso.","The page you are looking for might have been protected with admin permissions":"La página que estás buscando podría haber sido protegida con permisos de administrador","Access log":"Logs de acceso","Users":"Usuarios","Download report":"Descargar reporte","Download excel report":"Descargar reporte en excel","Logs report":"Reportes de usuarios","Access Logs":"Logs de acceso","Consolidated per day":"Consolidado por día","Consolidated daily":"Consolidado diario","Recorder":"Registradora","recorder":"registradora","Recorders":"Registradoras","recorders":"registradoras","fringes":"franjas","Fringes merged":"Franjas | Traslape","Fringes":"Franjas","By Fringes":"Por franjas","Start Recorder":"Registradora inicial","Start recorder":"Registradora inicial","First start recorder":"Primera registradora inicial","Start Rec.":"Reg. inicial","End Recorder":"Registradora final","End recorder":"Registradora final","Last end recorder":"Última registradora final","Arrived Recorder":"Registradora llegada","End Rec.":"Reg. final","All":"Todos","all":"todos","for all":"para todos","Total passengers":"Total pasajeros","Average per vehicle":"Promedio por vehículos","Average":"Promedio","Front door":"Puerta delantera","Back door":"Puerta trasera","Difference":"Diferencia","reports":"reportes","locations":"ubicaciones","url-reports":"reportes","routes":"rutas","route":"ruta","consolidated":"consolidado","off-road":"salidas-de-ruta","access-log":"logs-de-acceso","route-report":"reporte-de-ruta","users":"usuarios","Type report":"Tipo de reporte","By vehicle":"Por vehículo","By route":"Por ruta","Time":"Hora","In":"En","in":"en","Location":"Ubicación","outs":"salidas","Plate":"Placa","Between":"Entre","Dispatch report":"Reporte de despacho","Departure time":"Hora despachado","Departure":"Salida","Arrived":"Llegada","Departure Time":"Hora despachado","Arrival Time Scheduled":"Llegada programada","Arrival Time":"Hora de llegada","Arrival time":"Hora de llegada","Arrival Time Difference":"Diferencia llegada","Group":"Agrupar","No group":"Sin agrupar","Group By":"Agrupar por","by":"por","New":"Nuevo","Day":"Día","Daily":"Diario","daily":"diario","day":"día","Pass.":"Psj.","date-range":"rango-fechas","Date range":"Rango fechas","New feature":"Nueva funcionalidad","Graph report detail":"Ver gráfico de reporte","Verify possible error in register data":"Verificar posible error en los datos de registradora","An error occurred in the process. Contact your administrator":"Ocurrió un error en el proceso. Contacte a su administrador","Contact your administrator":"Contacte a su administrador","Route distance":"Distancia de ruta","Passengers by Km":"Pasajeros por total de km","Consolidated per date range":"Consolidado por rango de fechas","Detailed per date range":"Detallado por rango de fechas","Consolidated":"Consolidado","Final date":"Fecha final","Initial":"Inicial","Initial date":"Fecha inicial","The date range is not valid":"El rango de fechas no es válido","Detailed":"Detallado","detailed":"detallado","Detailed per day":"Detallado por día","Warning":"Advertencia","There are issues in data recorder":"Existen inconsistencias en los datos de registradora","See details":"Ver detalles","Error in":"Error en","Passengers by Route":"Pasajeros por Ruta","A high count":"un conteo demasiado alto","A negative count":"un conteo negativo","Accumulated":"Acumulado","control-points":"puntos-de-control","Control Points":"Puntos de Control","Control point time report":"Reporte de puntos de control","Time to control point":"Tiempo a punto de control","Control point time report by Route":"Reporte de puntos de control por ruta","Information":"Información","Reported Time":"Hora de reporte","Scheduled Time":"Hora programada","parked":"parqueados","Parked date":"Fecha parqueado","Parked time":"Hora parqueado","Parked Report":"Reporte de Parqueados","Parked report":"Reporte de parqueados","Parked vehicles":"Parqueados","Vehicles Report":"Reporte de Vehículos","Details":"Detalles","Route Information":"Información de ruta","Near of":"Cerca a","Time scheduled":"Hora programada","Time reported":"Hora reportada","Without assigned route":"Sin ruta asignada","fast":"Adelantado","slow":"Atrasado","on time":"A Tiempo","Fringe":"Franja","Time from dispatch":"Tiempo desde despacho","Km from dispatch":"Km desde despacho","Driver":"Conductor","Drivers":"Conductores","driver":"conductor","drivers":"conductores","Drivers report":"Reporte de conductores","Not assigned":"No asignado","Speeding":"Excesos de velocidad","Speeding Report":"Reporte excesos de velocidad","Speed":"Velocidad","speeding-vehicle":"excesos-de-velocidad","speeding":"excesos-de-velocidad","The date haven´t a speeding report":"No existen excesos de velocidad para la fecha seleccionada","with":"con","Peak and Plate":"Pico y Placa","peak-and-plate":"pico-y-placa","Administration":"Administración","administration":"administración","url-administration":"administracion","url-vehicles":"vehiculos","Projects":"Proyectos","prev":"anterior","Menu":"Menú","Public Holidays":"Días Festivos","Calendar":"Calendario","Unassigned Vehicles":"Vehículos no asignados","Unassigned":"Sin asignar","Reset":"Reestablecer","Assignations":"Asignaciones","url-manage":"gestion","Manage":"Gestión","Manage GPS":"Gestión de GPS","manage":"gestión","Options":"Opciones","Edit":"Modificar","Clear":"Limpiar","GPS Command":"Comandos GPS","Send SMS":"Enviar SMS","Send Commands":"Envío de comandos","Any GPS":"Cualquier GPS","Data updated successfully":"Dato actualizado correctamente","Error updating data":"Error actualizando la información","start_recorder":"registradora_salida","driver_code":"codigo_interno_conductor","end_recorder":"registradora_llegada","Registers updated":"Registros actualizados","Register created successfully":"Registro creado correctamente","Register deleted successfully":"Registro eliminado correctamente","Press enter for edit":"Presione 'Enter' para guardar","Last dispatch register":"Registro de despacho anterior","List GPS SIM":"Listado de SIM asociados a GPS","GPS SIM":"Número de SIM","GPS Type":"Tipo de GPS","Searching":"Consultando","Status GPS":"Estado del GPS","Select a SIM number":"Seleccione un número de SIM","Number":"Número","Type here the commands":"Ingrese aquí los comandos","Send":"Enviar","Counter":"Contador","counter":"contador","Reset Command":"Comando de reinicio","The SIM number :sim is already associated with another GPS (Vehicle :vehicle)":"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)","The Imei number :imei is already associated to vehicle :vehicle":"El número de imei :imei ya está asociado al vehículo :vehicle","A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior","Please refresh the report once you finish the fix bugs":"Porfavor actualice el reporte una vez termine la corrección de inconsistencias","Please refresh the report once you finish the update all data":"Porfavor actualice el reporte una vez termine la actualización de datos","The company haven´t issues in your counters at the selected date":"La empresa no tiene incidencias en sus contadores en la fecha seleccionada","List of counter issues":"Listado de incidencias en contador","alarms":"Alarmas","Alarms":"Alarmas","lowerCount":"Bajo conteo","Lower count":"Bajo conteo","higherCount":"Alto conteo","Higher count":"Alto conteo","Inactive cameras":"Cámara Inactiva","Camera":"Cámara","camera":"cámara","Cameras":"Cámaras","cameras":"cámaras","Cameras Report":"Reporte de Cámaras","Photo detail":"Detalle foto","url-cameras":"camaras","Check counter":"Contador de chequeo","Items issues":"Anomalías en los items","Counter issue":"Incidencia de contador","Type of report":"Tipo de reporte","Issues":"Incidencias","Of issues":"De incidencias","History":"Historial","Historic":"Histórico","historic":"histórico","url-historic":"historico","url-historic-path":"recorrido-historico","See frame":"Ver trama","By routes":"Por rutas","Text copied":"Texto copiado","Copy frame":"Copiar trama","Prev value":"Valor anterior","registers":"registros","Registers":"Registros","registers in total":"registros en total","Select a company first":"Primero seleccione una empresa","Select a vehicle first":"Primero seleccione un vehículo","Select a route first":"Primero seleccione una ruta","See all frames":"Ver todas las tramas","Type":"Tipo","Item count":"Conteo Items","Signal check":"Señal de chequeo","No round trips found":"Sin vueltas","Low count":"Bajo conteo","Dispatched":"Despachado","Parking counts":"Parqueos","Speeding counts":"Excesos de velocidad","Off road counts":"Salidas de ruta","List counter passengers by route":"Listado de conteo de pasajeros por ruta","List counter passengers":"Listado de conteo de pasajeros","Manage drivers":"Gestión de conductores","File":"Archivo","Import":"Importar","CSV File":"Archivo CSV","In dispatch":"En despacho","Passengers by fringes":"Pasajeros por franjas","The are not list of passengers and counter on this date range":"No existe conteo de pasajeros en la fecha seleccionada","Maintenance":"Mantenimiento","maintenance":"mantenimiento","Maintenance date created successfully":"Fecha de mantenimiento asignada correctamente","Maintenance date is not created":"La fecha de mantenimiento no fue asignada","Maintenance date updated successfully":"Fecha de mantenimiento actualizada correctamente","Maintenance date is not updated":"La fecha de mantenimiento no fue actualizada","Maintenance dates deleted successfully":"Fechas de mantenimiento eliminadas correctamente","Maintenance dates not deleted":"Las fechas de mantenimiento no fueron eliminadas","Play":"Reproducir","Pause":"Pausar","Stop":"Parar","Sensors":"Sensores","sensors":"sensores","Driver's seat":"Asiento del conductor","No Route":"Sin Ruta","Platform":"Plataforma","A record for this vehicle already exists":"Ya existe un registro para este vehículo","unassigned vehicles":"vehículos sin asignar","assigned vehicles":"vehículos asignados","Selection":"Selección","Ready":"Con Script*","Unready":"Sin script*","None":"Ninguno","Commands":"Comandos","Search vehicle":"Buscar vehículo","Manage SIM GPS":"Administrar SIM GPS","Mileage":"Kilometraje","mileage":"kilometraje","Mileage Report":"Reporte kilometraje","Mileage report":"Reporte kilometraje","Consolidated per dates":"Consolidado por fechas","Passengers per dates":"Pasajeros por fechas","Manage proprietaries":"Administrar propietarios","proprietary":"propietario","Proprietary":"Propietario","proprietaries":"propietarios","Proprietaries":"Propietarios","Script General Skypatrol":"Script Skypatrol general","Script APN Skypatrol":"Script Skypatrol para APN","Script plate Skypatrol":"Script Skypatrol para Placa","Script IP Skypatrol":"Script Skypatrol para IP","First Name":"Nombre","Last Name":"Apellido","Cellphone":"Celular","Assigned vehicles":"Vehículos asignados","Search proprietary":"Buscar propietario","in the fleet":"en la flota","in the day":"en el día","Auto set plate":"Auto setear placa","month":"mes","Consolidate month":"Consolidado mes","Without GPS signal":"Sin señal GPS","No report":"No reporta","Vehicles without route":"Vehículos sin ruta","Vehicle not found in platform":"Vehículo no registrado en plataforma","Proprietary not found in platform":"Propietario no registrado en plataforma","Dead time":"Tiempo muerto","Total dead time":"Tiempo muerto total","Accumulated dead time":"Tiempo muerto acumulado","Accumulated day":"Acumulado día","Dispatcher":"Despachador","User":"Usuario","All drivers":"Todos","Mixed report":"Reporte mixto","Mixed":"Mixto","mixed":"mixto","Initial frame counter":"Trama de conteo inicial","Final frame counter":"Trama de conteo final","Show frames":"Ver tramas de conteo","Empty":"Vacío","Geolocation":"Geolocalización","Geolocation report":"Reporte de Geolocalización","geolocation":"geolocalización","url-geolocation":"geolocalizacion","Count by round trip":"Conteo por vuelta","Sensor recorder":"Sensor registradora","Show geolocation report":"Mostrar reporte de Geolocalización","Operation":"Operación","operation":"operación","url-operation":"operacion","Dispatches":"Despachos","dispatches":"despachos","Dispatch":"Despacho","dispatch":"despacho","Auto Dispatcher":"Despachador Automático","Automatic":"Automático","url-auto-dispatcher":"despachador-automatico","Reassign route":"Reasignar ruta","Unassign":"Desasignar","The Route has ben reassigned successfully":"La ruta ha sido reasignada correctamente","The Route has ben unassigned successfully":"La ruta ha sido desasignada correctamente","Add vehicles":"Agregar vehículos","All vehicles are assigned":"Todos los vehículos están asignados","Not found":"No encontrado","Calculated":"Calculado","Current passengers on board":"Pasajeros actuales en bus","Descents":"Descensos","Ascents":"Ascensos","Total descents":"Total descensos","Total ascents":"Total ascensos","Count information":"Información de conteo","Arrival time on last round trip":"Hora de llegada de última vuelta","Departure time on first round trip":"Hora de salida de primera vuelta","Hide details":"Ocultar detalles","Vehicle with mixed routes":"Vehículo con rutas mixtas","Round trip report":"Reporte de vueltas","The imei must have a length of 15 characters":"El imei debe tener una longitud de 15 caracteres","Updated at":"Actualizado a las","Last report":"Último reporte","Dispatch users":"Usuarios despacho","dispatch-users":"usuarios-despacho","PCW Reports":"PCW Reportes","Consolidated report daily":"Reporte consolidado diario","Delay control points":"Retrasos en puntos de control","Reported at":"Reportó en","Speeding details":"Detalles excesos de velocidad","Off roads details":"Detalles salidas de ruta","Control points details":"Detalles de puntos de control","Unavailable":"No disponible","Process executed successfully":"Proceso ejecutado correctamente","Building route report":"Construyendo reporte de ruta","This process can take several minutes":"Este proceso puede tardar vaiors minutos","locations have been processed":"ubicaciones han sido procesadas","Detected route":"Ruta detectada","Vehicle information":"Información del vehículo","Off road vehicle":"Vehículo fuera de ruta","With speeding":"Con exceso de velocidad","Possible issue":"Posible incidencia","Invalid sequence":"Secuencia inválida","Great distance traveled":"Gran distancia recorrida","Calculated speed":"Velocidad calculada","Time scheduled from dispatch":"Tiempo programado","Time measured from dispatch":"Tiempo medido","Interpolation report":"Reporte con interpolación","GPS report":"Reporte GPS","Consolidated passengers report daily":"Reporte consolidado diario de pasajeros","Consolidated route report daily":"Reporte consolidado diario de ruta","General report":"Reporte general","Refresh":"Actualizar","Distance":"Distancia","Average speed":"Vel. media","The vehicle haven't off road":"El vehículo no presenta salidas de ruta","See":"Ver","In route":"En ruta","YES":"SI","NO":"NO","Info route":"Info Ruta","Vehicle status":"Estado vehículo","Takings":"Recaudo","takings":"recaudo","Liquidation":"Liquidación","liquidation":"liquidación","url-liquidation":"liquidacion","No GPS reports found":"GPS no reportó datos","Totals":"Totales","Duration":"Duración","Generate liquidation":"Generar liquidación","Tolls":"Peajes","Fuel":"Combustible","Washing":"Lavado","Discounts":"Descuentos","discounts":"descuentos","Commissions":"Comisiones","commissions":"comisiones","Penalties":"Sanciones","penalties":"sanciones","Liquidate":"Liquidar","Add other":"Añadir otro","Select a driver":"Seleccione un conductor","No drivers found":"Sin conductores","No liquidated":"Sin liquidar","Liquidated":"Liquidado","Taken":"Recaudado","Liquidation processed successfully":"Liquidación procesada correctamente","Error at generate liquidation register":"Error al generar registro de liquidación","Error at associate liquidation with BEA Mark register":"Error al asociar liquidación con registro de Marca BEA","Turn list":"Listado de turnos","Params":"Parámetros","params":"parámetros","url-params":"parametros","Mobility auxilio":"Auxilio de Movilidad","Discount by":"Descuento por","of":"de","TAKING RECEIPT":"COMPROBANTE DE RECAUDO","Printed at":"Impreso en","Liquidated at":"Liquidado en","Total liquidation":"Total Liquidación","Discount :name unable to update":"El descuento :name no fue actualizado","Discount :name unable to update for vehicle :vehicle on trajectory :trajectory":"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory","Discount :name doesn't exists in the system":"El descuento :name no existe en el sistema","Discount edited successfully":"El valor del descuento se ha modificado correctamente","Commission edited successfully":"El valor de comisión ha sido actualizado correctamente","Penalties edited successfully":"El varlor de penalización ha sido actualizado exitósamente","Commission unable to update":"No ha sido posible actualizar los valores de la comisión","Penalty unable to update":"No ha sido posible actualizar los valores de penalización","Other discounts":"Otros decuentos","Total Gross BEA":"Total BEA bruto","Gross BEA":"BEA bruto","Percent":"Porcentaje","Boarding":"Abordados","Settlement receipt":"Recibo de liquidación","Please fix the issues first":"Por favor revise y solucione las inconsistencias primero","Active":"Activo","Inactive":"Inactivo","Unregistered":"No calculado","The report is available only for dates before the current one":"El reporte está disponible solo para fechas anteriores al actual","Percent in off road":"Porcentaje por fuera de ruta","See historic report":"Ver Histórico Recorrido","Threshold km":"Con Km mayor a","Only allows reports for dates before the current":"Sólo permite reportes para fechas anteriores a la actual","Invalid date":"Fecha de consulta no válida","Upload":"Cargar","Name without spaces":"Nombre sin espacios","Kmz file":"Archivo KMZ","File name":"Nombre","Migrated":"Migrados","Migration interface":"Interfaz de Migración","Total vehicles":"Total vehículos","Completed turns":"Turnos completos","Total round trips":"Total vueltas","Export grouped report":"Exportar reporte agrupado","Export ungrouped report":"Exportar reporte desagrupado","Route dispatches":"Despachos de ruta","Without GPS Signal":"Sin Señal GPS","Parked":"Parqueado","Power Off":"Apagado","Vehicle no report":"No reporta","Historic report":"Reporte histórico","There are turns no liquidated in :date fot this vehicle":"Existen turnos sin liquidar para este vehículo en la fecha :date","turns":"turnos","Pay fall":"Pago caída","pay fall":"pago caída","Get fall":"Recibe caída","get fall":"recibe caída","Balance":"Saldo","fuel":"combustible","washing":"lavado","tolls":"peajes","locks":"bloqueos","exempts":"excentos","Value":"Valor","Params manager":"Administrador de parámetros","Select vehicles":"Seleccione vehículos","Select trajectories":"Seleccione trayectorias","Description":"Descripción","Default":"Defecto","By default":"Por defecto","Custom":"Personalizado","Save options":"Opciones de guardado","Penalty type":"Tipo de penalización","boarding":"abordado","Discount":"Descuento","Discounts by turn":"Descuentos por turno","Total Discount by turns":"Total descuentos por turnos","Penalties by turn":"Penalizaciones por turno","Commissions by turn":"Comisiones por turno","Boarded":"Abordados","Auxiliaries":"Auxiliares","Locks":"Bloqueos","Total by turn":"Total por turno","Fixed value per passenger":"Valor fijo por pasajero","Percent of Gross BEA":"Porcentaje de BEA Bruto","Initial time":"Hora inicial","Final time":"Hora final","Total discounts":"Total decuentos","Total discount":"Total decuento","Total penalties":"Total penalizaciones","Total commissions":"Total comisiones","Falls":"Caídas","Add":"Agregar","Total turns":"Total turnos","Total pay fall":"Total pago caídas","Total get fall":"Total recibe caídas","Subtotal":"Subtotal","Total tolls":"Total peajes","Total washing":"Total lavado","Total dispatch":"Total despacho","Total fuel":"Total combustible","Observations":"Observaciones","Operative Expenses":"Gastos Operativos","Total operative expenses":"Total gastos operativos","Total other discounts":"Total otros descuentos","Turns liquidated":"Turnos liquidados","Responsible":"Responsable","Liquidated on":"Liquidado en","Take liquidation":"Recaudar","Liquidation details":"Detalles de liquidación","Print":"Imprimir","Print detailed":"Imprimir detallado","Total locks":"Total bloqueos","Total exempts":"Total excentos","Show file":"Mostrar archivo","File other discount":"Archivo de otro descuento","Error saving other discounts files":"Error al guardar archivos de otros descuentos"};
+module.exports = {"Home":"Inicio","Create":"Crear","Update":"Actualizar","Save":"Guardar","save":"guardar","Delete":"Eliminar","Cancel":"Cancelar","Close":"Cerrar","Manage <b>New Strategy</b>":"Gestión de <b>Nueva Estrategia</b>","Route":"Ruta","Company":"Empresa","Routes":"Rutas","Route Time":"Tiempo de ruta","Route time":"Tiempo de ruta","Reports":"Reportes","Report":"Reporte","report":"reporte","Route times":"Tiempos de ruta","Times":"Horas","Round trips":"Vueltas","round trips":"vueltas","round-trips":"vueltas","Search report":"Consultar reporte","Date report":"Fecha de Reporte","Search":"Consultar","Chart report":"Gráfica de repote","Vehicle":"Vehículo","vehicle":"vehículo","Vehicles":"Vehículos","vehicles":"vehículos","Hour dispatch":"Hora despachado","Round Trip":"Vuelta","round trip":"vuelta","Turn":"Turno","No registers found":"No se encontraron registros","No dispatch registers found":"No se encontraron despachos","Select an option":"Seleccione","Select a route":"Seleccione una ruta","Select a vehicle":"Seleccione un vehículo","Select an vehicle":"Seleccione un vehículo","Select a company":"Seleccione una empresa","Loading...":"Cargando...","No routes found":"Sin rutas","No vehicles found":"Sin vehículos","Actions":"Acciones","Detail":"Ver detalle","Report detail":"Ver reporte","Hide / Show":"Ocultar / Mostrar","Remove":"Eliminar","Expand / Compress":"Expandir / Comprimir","Round trip":"Vuelta","Historic route time chart":"Histórico gráfico de tiempos de ruta","Track on map":"Seguimiento en el mapa","Map":"Mapa","List":"Lista","Oops, something went wrong!":"Opps, parece que algo anda mal :(","of the route":"de la ruta","No report found for this vehicle":"No se ha encontrado ningún reporte para este vehículo","No passengers report found for this vehicle":"No se ha encontrado ningún reporte de pasajeros para este vehículo","Vehicle current status":"Estado actual del vehículo","Route info":"Información de la ruta","Route report":"Reporte de ruta","Control point going":"Ida","Control point return":"Regreso","Passengers report":"Reporte de pasajeros","Register historic":"Histórico de registro","Passengers":"Pasajeros","Seat":"Asiento","Seats":"Asientos","seat":"asiento","seats":"asientos","Seats report":"Reporte de asientos","Event active time":"Ocupado a las","Event inactive time":"Libre a las","Active time":"Activo durante","Active kilometers":"Kilómetros","Feature on development":"Funcionalidad en desarrollo","Still busy":"Ocupado aún","Username":"Usuario","Password":"Contraseña","Remember Me":"Recuérdame","Login":"Ingresar","Log In":"Inicia sesión","Type your credentials":"Ingresa tus credenciales","Confirm Password":"Confirma Contraseña","Register":"Registro","Name":"Nombre","Logout":"Cerrar Sesión","Passengers_Report_":"Reporte_Pasajeros_","Passengers Report":"Reporte de pasajeros","Report travel time and travel distance for vehicle seats":"Reporte de tiempo y recorrido de los asientos del vehículo","Export excel":"Exportar a excel","Export":"Exportar","Date":"Fecha","All Routes":"Todas las rutas","All routes":"Todas las rutas","Without route":"Sin ruta asignada","Chart":"Gráfica","url-chart":"grafico","Passenger report detail":"Ver reporte de pasajeros","Passengers report by route":"Reporte de pasajeros por ruta","Passengers register historic":"Histórico de registro de pasajeros","between":"entre las","Km in total":"Km en total","and":"y las","Total route distance":"Distancia total de la ruta","Active by":"Activo por","From":"Desde","from":"desde","To":"Hasta","to":"hasta","Table":"Tabla","Count trajectory":"Trayectoria de conteo","Trajectory":"Trayectoria","Active seat":"Asiento ocupado","Free seat":"Asiento libre","No seat report found":"No se ha encontrado reporte para el asiento seleccionado","passengers":"pasajeros","No registers location found":"No se encontraron registros de coordenadas","The vehicle haven´t off roads list":"El vehículo no presenta salidas de ruta","The date haven´t off roads list":"No se presentaron salidas de ruta en la fecha seleccionada","The driver haven´t off roads list in this round trip":"El conductor no presentó salidas de ruta en esta vuelta","The driver haven´t speeding report in this round trip":"El conductor no presentó excesos de velocidad en esta vuelta","The driver haven´t parking report in this round trip":"El conductor no presenta reportes de parkeos en esta vuelta","The date haven´t a control point time report":"No existe un reporte de puntos de control en la fecha seleccionada","Off Road":"Salida de ruta","Off Roads":"Salidas de ruta","Off road time":"Hora de salida de ruta","Off road report":"Reporte de salidas de ruta","Off road":"Salidas de ruta","Off road report by Vehicle":"Salidas de ruta por vehículos","Status":"Estado","Status Counter":"Estado de Contador","Report Counter":"Reporte de Contador","status":"estado","See off road report":"Ver reporte de salidas de ruta","Report vehicle off road":"Reporte de salidas de ruta del vehículo","Off_Road_Report_":"Reporte_Salida_Ruta_","Address":"Dirección","Longitude":"Longitud","Latitude":"Latitud","Oops... The page you're looking for doesn't exist.":"Ooops... La página que buscas no existe","Go Back":"Regresa","The page you are looking for might have been removed, had its name changed, or is temporarily unavailable":"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.","Oops... You don't have access permissions":"Ooops... No tiene permisos de acceso.","The page you are looking for might have been protected with admin permissions":"La página que estás buscando podría haber sido protegida con permisos de administrador","Access log":"Logs de acceso","Users":"Usuarios","Download report":"Descargar reporte","Download excel report":"Descargar reporte en excel","Logs report":"Reportes de usuarios","Access Logs":"Logs de acceso","Consolidated per day":"Consolidado por día","Consolidated daily":"Consolidado diario","Recorder":"Registradora","recorder":"registradora","Recorders":"Registradoras","recorders":"registradoras","fringes":"franjas","Fringes merged":"Franjas | Traslape","Fringes":"Franjas","By Fringes":"Por franjas","Start Recorder":"Registradora inicial","Start recorder":"Registradora inicial","First start recorder":"Primera registradora inicial","Start Rec.":"Reg. inicial","End Recorder":"Registradora final","End recorder":"Registradora final","Last end recorder":"Última registradora final","Arrived Recorder":"Registradora llegada","End Rec.":"Reg. final","All":"Todos","all":"todos","for all":"para todos","Total passengers":"Total pasajeros","Average per vehicle":"Promedio por vehículos","Average":"Promedio","Front door":"Puerta delantera","Back door":"Puerta trasera","Difference":"Diferencia","reports":"reportes","locations":"ubicaciones","url-reports":"reportes","routes":"rutas","route":"ruta","consolidated":"consolidado","off-road":"salidas-de-ruta","access-log":"logs-de-acceso","route-report":"reporte-de-ruta","users":"usuarios","Type report":"Tipo de reporte","By vehicle":"Por vehículo","By route":"Por ruta","Time":"Hora","In":"En","in":"en","Location":"Ubicación","outs":"salidas","Plate":"Placa","Between":"Entre","Dispatch report":"Reporte de despacho","Departure time":"Hora despachado","Departure":"Salida","Arrived":"Llegada","Departure Time":"Hora despachado","Arrival Time Scheduled":"Llegada programada","Arrival Time":"Hora de llegada","Arrival time":"Hora de llegada","Arrival Time Difference":"Diferencia llegada","Group":"Agrupar","No group":"Sin agrupar","Group By":"Agrupar por","by":"por","New":"Nuevo","Day":"Día","Daily":"Diario","daily":"diario","day":"día","Pass.":"Psj.","date-range":"rango-fechas","Date range":"Rango fechas","New feature":"Nueva funcionalidad","Graph report detail":"Ver gráfico de reporte","Verify possible error in register data":"Verificar posible error en los datos de registradora","An error occurred in the process. Contact your administrator":"Ocurrió un error en el proceso. Contacte a su administrador","Contact your administrator":"Contacte a su administrador","Route distance":"Distancia de ruta","Passengers by Km":"Pasajeros por total de km","Consolidated per date range":"Consolidado por rango de fechas","Detailed per date range":"Detallado por rango de fechas","Consolidated":"Consolidado","Final date":"Fecha final","Initial":"Inicial","Initial date":"Fecha inicial","The date range is not valid":"El rango de fechas no es válido","Detailed":"Detallado","detailed":"detallado","Detailed per day":"Detallado por día","Warning":"Advertencia","There are issues in data recorder":"Existen inconsistencias en los datos de registradora","See details":"Ver detalles","Error in":"Error en","Passengers by Route":"Pasajeros por Ruta","A high count":"un conteo demasiado alto","A negative count":"un conteo negativo","Accumulated":"Acumulado","control-points":"puntos-de-control","Control Points":"Puntos de Control","Control point time report":"Reporte de puntos de control","Time to control point":"Tiempo a punto de control","Control point time report by Route":"Reporte de puntos de control por ruta","Information":"Información","Reported Time":"Hora de reporte","Scheduled Time":"Hora programada","parked":"parqueados","Parked date":"Fecha parqueado","Parked time":"Hora parqueado","Parked Report":"Reporte de Parqueados","Parked report":"Reporte de parqueados","Parked vehicles":"Parqueados","Vehicles Report":"Reporte de Vehículos","Details":"Detalles","Route Information":"Información de ruta","Near of":"Cerca a","Time scheduled":"Hora programada","Time reported":"Hora reportada","Without assigned route":"Sin ruta asignada","fast":"Adelantado","slow":"Atrasado","on time":"A Tiempo","Fringe":"Franja","Time from dispatch":"Tiempo desde despacho","Km from dispatch":"Km desde despacho","Driver":"Conductor","Drivers":"Conductores","driver":"conductor","drivers":"conductores","Drivers report":"Reporte de conductores","Not assigned":"No asignado","Speeding":"Excesos de velocidad","Speeding Report":"Reporte excesos de velocidad","Speed":"Velocidad","speeding-vehicle":"excesos-de-velocidad","speeding":"excesos-de-velocidad","The date haven´t a speeding report":"No existen excesos de velocidad para la fecha seleccionada","with":"con","Peak and Plate":"Pico y Placa","peak-and-plate":"pico-y-placa","Administration":"Administración","administration":"administración","url-administration":"administracion","url-vehicles":"vehiculos","Projects":"Proyectos","prev":"anterior","Menu":"Menú","Public Holidays":"Días Festivos","Calendar":"Calendario","Unassigned Vehicles":"Vehículos no asignados","Unassigned":"Sin asignar","Reset":"Reestablecer","Assignations":"Asignaciones","url-manage":"gestion","Manage":"Gestión","Manage GPS":"Gestión de GPS","manage":"gestión","Options":"Opciones","Edit":"Modificar","Clear":"Limpiar","GPS Command":"Comandos GPS","Send SMS":"Enviar SMS","Send Commands":"Envío de comandos","Any GPS":"Cualquier GPS","Data updated successfully":"Dato actualizado correctamente","Error updating data":"Error actualizando la información","start_recorder":"registradora_salida","driver_code":"codigo_interno_conductor","end_recorder":"registradora_llegada","Registers updated":"Registros actualizados","Register created successfully":"Registro creado correctamente","Register deleted successfully":"Registro eliminado correctamente","Press enter for edit":"Presione 'Enter' para guardar","Last dispatch register":"Registro de despacho anterior","List GPS SIM":"Listado de SIM asociados a GPS","GPS SIM":"Número de SIM","GPS Type":"Tipo de GPS","Searching":"Consultando","Status GPS":"Estado del GPS","Select a SIM number":"Seleccione un número de SIM","Number":"Número","Type here the commands":"Ingrese aquí los comandos","Send":"Enviar","Counter":"Contador","counter":"contador","Reset Command":"Comando de reinicio","The SIM number :sim is already associated with another GPS (Vehicle :vehicle)":"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)","The Imei number :imei is already associated to vehicle :vehicle":"El número de imei :imei ya está asociado al vehículo :vehicle","A Start Recorder less than the last End Recorder":"Registradora de salida menor que registradora de llegada anterior","Please refresh the report once you finish the fix bugs":"Porfavor actualice el reporte una vez termine la corrección de inconsistencias","Please refresh the report once you finish the update all data":"Porfavor actualice el reporte una vez termine la actualización de datos","The company haven´t issues in your counters at the selected date":"La empresa no tiene incidencias en sus contadores en la fecha seleccionada","List of counter issues":"Listado de incidencias en contador","alarms":"Alarmas","Alarms":"Alarmas","lowerCount":"Bajo conteo","Lower count":"Bajo conteo","higherCount":"Alto conteo","Higher count":"Alto conteo","Inactive cameras":"Cámara Inactiva","Camera":"Cámara","camera":"cámara","Cameras":"Cámaras","cameras":"cámaras","Cameras Report":"Reporte de Cámaras","Photo detail":"Detalle foto","url-cameras":"camaras","Check counter":"Contador de chequeo","Items issues":"Anomalías en los items","Counter issue":"Incidencia de contador","Type of report":"Tipo de reporte","Issues":"Incidencias","Of issues":"De incidencias","History":"Historial","Historic":"Histórico","historic":"histórico","url-historic":"historico","url-historic-path":"recorrido-historico","See frame":"Ver trama","By routes":"Por rutas","Text copied":"Texto copiado","Copy frame":"Copiar trama","Prev value":"Valor anterior","registers":"registros","Registers":"Registros","registers in total":"registros en total","Select a company first":"Primero seleccione una empresa","Select a vehicle first":"Primero seleccione un vehículo","Select a route first":"Primero seleccione una ruta","See all frames":"Ver todas las tramas","Type":"Tipo","Item count":"Conteo Items","Signal check":"Señal de chequeo","No round trips found":"Sin vueltas","Low count":"Bajo conteo","Dispatched":"Despachado","Parking counts":"Parqueos","Speeding counts":"Excesos de velocidad","Off road counts":"Salidas de ruta","List counter passengers by route":"Listado de conteo de pasajeros por ruta","List counter passengers":"Listado de conteo de pasajeros","Manage drivers":"Gestión de conductores","File":"Archivo","Import":"Importar","CSV File":"Archivo CSV","In dispatch":"En despacho","Passengers by fringes":"Pasajeros por franjas","The are not list of passengers and counter on this date range":"No existe conteo de pasajeros en la fecha seleccionada","Maintenance":"Mantenimiento","maintenance":"mantenimiento","Maintenance date created successfully":"Fecha de mantenimiento asignada correctamente","Maintenance date is not created":"La fecha de mantenimiento no fue asignada","Maintenance date updated successfully":"Fecha de mantenimiento actualizada correctamente","Maintenance date is not updated":"La fecha de mantenimiento no fue actualizada","Maintenance dates deleted successfully":"Fechas de mantenimiento eliminadas correctamente","Maintenance dates not deleted":"Las fechas de mantenimiento no fueron eliminadas","Play":"Reproducir","Pause":"Pausar","Stop":"Parar","Sensors":"Sensores","sensors":"sensores","Driver's seat":"Asiento del conductor","No Route":"Sin Ruta","Platform":"Plataforma","A record for this vehicle already exists":"Ya existe un registro para este vehículo","unassigned vehicles":"vehículos sin asignar","assigned vehicles":"vehículos asignados","Selection":"Selección","Ready":"Con Script*","Unready":"Sin script*","None":"Ninguno","Commands":"Comandos","Search vehicle":"Buscar vehículo","Manage SIM GPS":"Administrar SIM GPS","Mileage":"Kilometraje","mileage":"kilometraje","Mileage Report":"Reporte kilometraje","Mileage report":"Reporte kilometraje","Consolidated per dates":"Consolidado por fechas","Passengers per dates":"Pasajeros por fechas","Manage proprietaries":"Administrar propietarios","proprietary":"propietario","Proprietary":"Propietario","proprietaries":"propietarios","Proprietaries":"Propietarios","Script General Skypatrol":"Script Skypatrol general","Script APN Skypatrol":"Script Skypatrol para APN","Script plate Skypatrol":"Script Skypatrol para Placa","Script IP Skypatrol":"Script Skypatrol para IP","First Name":"Nombre","Last Name":"Apellido","Cellphone":"Celular","Assigned vehicles":"Vehículos asignados","Search proprietary":"Buscar propietario","in the fleet":"en la flota","in the day":"en el día","Auto set plate":"Auto setear placa","month":"mes","Consolidate month":"Consolidado mes","Without GPS signal":"Sin señal GPS","No report":"No reporta","Vehicles without route":"Vehículos sin ruta","Vehicle not found in platform":"Vehículo no registrado en plataforma","Proprietary not found in platform":"Propietario no registrado en plataforma","Dead time":"Tiempo muerto","Total dead time":"Tiempo muerto total","Accumulated dead time":"Tiempo muerto acumulado","Accumulated day":"Acumulado día","Dispatcher":"Despachador","User":"Usuario","All drivers":"Todos","Mixed report":"Reporte mixto","Mixed":"Mixto","mixed":"mixto","Initial frame counter":"Trama de conteo inicial","Final frame counter":"Trama de conteo final","Show frames":"Ver tramas de conteo","Empty":"Vacío","Geolocation":"Geolocalización","Geolocation report":"Reporte de Geolocalización","geolocation":"geolocalización","url-geolocation":"geolocalizacion","Count by round trip":"Conteo por vuelta","Sensor recorder":"Sensor registradora","Show geolocation report":"Mostrar reporte de Geolocalización","Operation":"Operación","operation":"operación","url-operation":"operacion","Dispatches":"Despachos","dispatches":"despachos","Dispatch":"Despacho","dispatch":"despacho","Auto Dispatcher":"Despachador Automático","Automatic":"Automático","url-auto-dispatcher":"despachador-automatico","Reassign route":"Reasignar ruta","Unassign":"Desasignar","The Route has ben reassigned successfully":"La ruta ha sido reasignada correctamente","The Route has ben unassigned successfully":"La ruta ha sido desasignada correctamente","Add vehicles":"Agregar vehículos","All vehicles are assigned":"Todos los vehículos están asignados","Not found":"No encontrado","Calculated":"Calculado","Current passengers on board":"Pasajeros actuales en bus","Descents":"Descensos","Ascents":"Ascensos","Total descents":"Total descensos","Total ascents":"Total ascensos","Count information":"Información de conteo","Arrival time on last round trip":"Hora de llegada de última vuelta","Departure time on first round trip":"Hora de salida de primera vuelta","Hide details":"Ocultar detalles","Vehicle with mixed routes":"Vehículo con rutas mixtas","Round trip report":"Reporte de vueltas","The imei must have a length of 15 characters":"El imei debe tener una longitud de 15 caracteres","Updated at":"Actualizado a las","Last report":"Último reporte","Dispatch users":"Usuarios despacho","dispatch-users":"usuarios-despacho","PCW Reports":"PCW Reportes","Consolidated report daily":"Reporte consolidado diario","Delay control points":"Retrasos en puntos de control","Reported at":"Reportó en","Speeding details":"Detalles excesos de velocidad","Off roads details":"Detalles salidas de ruta","Control points details":"Detalles de puntos de control","Unavailable":"No disponible","Process executed successfully":"Proceso ejecutado correctamente","Building route report":"Construyendo reporte de ruta","This process can take several minutes":"Este proceso puede tardar vaiors minutos","locations have been processed":"ubicaciones han sido procesadas","Detected route":"Ruta detectada","Vehicle information":"Información del vehículo","Off road vehicle":"Vehículo fuera de ruta","With speeding":"Con exceso de velocidad","Possible issue":"Posible incidencia","Invalid sequence":"Secuencia inválida","Great distance traveled":"Gran distancia recorrida","Calculated speed":"Velocidad calculada","Time scheduled from dispatch":"Tiempo programado","Time measured from dispatch":"Tiempo medido","Interpolation report":"Reporte con interpolación","GPS report":"Reporte GPS","Consolidated passengers report daily":"Reporte consolidado diario de pasajeros","Consolidated route report daily":"Reporte consolidado diario de ruta","General report":"Reporte general","Refresh":"Actualizar","Distance":"Distancia","Average speed":"Vel. media","The vehicle haven't off road":"El vehículo no presenta salidas de ruta","See":"Ver","In route":"En ruta","YES":"SI","NO":"NO","Info route":"Info Ruta","Vehicle status":"Estado vehículo","Takings":"Recaudo","takings":"recaudo","Liquidation":"Liquidación","liquidation":"liquidación","url-liquidation":"liquidacion","No GPS reports found":"GPS no reportó datos","Totals":"Totales","Duration":"Duración","Generate liquidation":"Generar liquidación","Tolls":"Peajes","Fuel":"Combustible","Washing":"Lavado","Discounts":"Descuentos","discounts":"descuentos","Commissions":"Comisiones","commissions":"comisiones","Penalties":"Sanciones","penalties":"sanciones","Liquidate":"Liquidar","Add other":"Añadir otro","Select a driver":"Seleccione un conductor","No drivers found":"Sin conductores","No liquidated":"Sin liquidar","Liquidated":"Liquidado","Taken":"Recaudado","Liquidation processed successfully":"Liquidación procesada correctamente","Error at generate liquidation register":"Error al generar registro de liquidación","Error at associate liquidation with BEA Mark register":"Error al asociar liquidación con registro de Marca BEA","Turn list":"Listado de turnos","Params":"Parámetros","params":"parámetros","url-params":"parametros","Mobility auxilio":"Auxilio de Movilidad","Discount by":"Descuento por","of":"de","TAKING RECEIPT":"COMPROBANTE DE RECAUDO","Printed at":"Impreso en","Liquidated at":"Liquidado en","Total liquidation":"Total Liquidación","Discount :name unable to update":"El descuento :name no fue actualizado","Discount :name unable to update for vehicle :vehicle on trajectory :trajectory":"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory","Discount :name doesn't exists in the system":"El descuento :name no existe en el sistema","Discount edited successfully":"El valor del descuento se ha modificado correctamente","Commission edited successfully":"El valor de comisión ha sido actualizado correctamente","Penalties edited successfully":"El varlor de penalización ha sido actualizado exitósamente","Commission unable to update":"No ha sido posible actualizar los valores de la comisión","Penalty unable to update":"No ha sido posible actualizar los valores de penalización","Other discounts":"Otros decuentos","Total Gross BEA":"Total BEA bruto","Gross BEA":"BEA bruto","Percent":"Porcentaje","Boarding":"Abordados","Settlement receipt":"Recibo de liquidación","Please fix the issues first":"Por favor revise y solucione las inconsistencias primero","Active":"Activo","Inactive":"Inactivo","Unregistered":"No calculado","The report is available only for dates before the current one":"El reporte está disponible solo para fechas anteriores al actual","Percent in off road":"Porcentaje por fuera de ruta","See historic report":"Ver Histórico Recorrido","Threshold km":"Con Km mayor a","Only allows reports for dates before the current":"Sólo permite reportes para fechas anteriores a la actual","Invalid date":"Fecha de consulta no válida","Upload":"Cargar","Name without spaces":"Nombre sin espacios","Kmz file":"Archivo KMZ","File name":"Nombre","Migrated":"Migrados","Migration interface":"Interfaz de Migración","Total vehicles":"Total vehículos","Completed turns":"Turnos completos","Total round trips":"Total vueltas","Export grouped report":"Exportar reporte agrupado","Export ungrouped report":"Exportar reporte desagrupado","Route dispatches":"Despachos de ruta","Without GPS Signal":"Sin Señal GPS","Parked":"Parqueado","Power Off":"Apagado","Vehicle no report":"No reporta","Historic report":"Reporte histórico","There are turns no liquidated in :date fot this vehicle":"Existen turnos sin liquidar para este vehículo en la fecha :date","turns":"turnos","Pay fall":"Pago caída","pay fall":"pago caída","Get fall":"Recibe caída","get fall":"recibe caída","Balance":"Saldo","fuel":"combustible","washing":"lavado","tolls":"peajes","locks":"bloqueos","exempts":"excentos","Value":"Valor","Params manager":"Administrador de parámetros","Select vehicles":"Seleccione vehículos","Select trajectories":"Seleccione trayectorias","Description":"Descripción","Default":"Defecto","By default":"Por defecto","Custom":"Personalizado","Save options":"Opciones de guardado","Penalty type":"Tipo de penalización","boarding":"abordado","Discount":"Descuento","Discounts by turn":"Descuentos por turno","Total Discount by turns":"Total descuentos por turnos","Penalties by turn":"Penalizaciones por turno","Commissions by turn":"Comisiones por turno","Boarded":"Abordados","Auxiliaries":"Auxiliares","Locks":"Bloqueos","Total by turn":"Total por turno","Fixed value per passenger":"Valor fijo por pasajero","Percent of Gross BEA":"Porcentaje de BEA Bruto","Initial time":"Hora inicial","Final time":"Hora final","Total discounts":"Total decuentos","Total discount":"Total decuento","Total penalties":"Total penalizaciones","Total commissions":"Total comisiones","Falls":"Caídas","Add":"Agregar","Total turns":"Total turnos","Total pay fall":"Total pago caídas","Total get fall":"Total recibe caídas","Subtotal":"Subtotal","Total tolls":"Total peajes","Total washing":"Total lavado","Total dispatch":"Total despacho","Total fuel":"Total combustible","Observations":"Observaciones","Operative Expenses":"Gastos Operativos","Total operative expenses":"Total gastos operativos","Total other discounts":"Total otros descuentos","Turns liquidated":"Turnos liquidados","Responsible":"Responsable","Liquidated on":"Liquidado en","Take liquidation":"Recaudar","Liquidation details":"Detalles de liquidación","Print":"Imprimir","Print detailed":"Imprimir detallado","Total locks":"Total bloqueos","Total exempts":"Total excentos","Show file":"Mostrar archivo","File other discount":"Archivo de otro descuento","Error saving other discounts files":"Error al guardar archivos de otros descuentos","Taking details":"Detalle de Recaudo","search":"buscar","Taking processed successfully":"Recaudo procesado correctamente","Error at generate taking register":"Error al generar el registro de recaudo","Taking":"Recaudar","Takings list":"Listado Recaudo","Liquidated without taking":"Liquidado sin recaudar"};
 
 /***/ }),
 

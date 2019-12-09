@@ -39,7 +39,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Discount whereVehicleId($value)
  * @property int $mark_id
  * @method static Builder|MarkDiscount whereMarkId($value)
- * @property-read \App\Models\BEA\Mark $mark
+ * @property-read Mark $mark
  */
 class MarkDiscount extends Model
 {

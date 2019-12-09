@@ -34,7 +34,7 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div id="liquidation" class="row" url="{{ route('takings-passengers-liquidation-search') }}">
+    <div id="liquidation" class="row" url="{{ route('takings-passengers-search-liquidation') }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
             <search-component url-params="{{ route('takings-passengers-liquidation-params',['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
@@ -47,16 +47,20 @@
                 <div class="portlet-title">
                     <div class="">
                         <div class="btn-group btn-group-devided width-full" data-toggle="buttons">
-                            <label class="btn btn-tab btn-transparent green-sharp btn-outline pull-left btn-circle uppercase active" data-toggle="tab" data-target="#table-liquidations"
+                            <label class="btn btn-tab btn-transparent yellow-crusta btn-outline pull-left btn-circle uppercase active" data-toggle="tab" data-target="#table-liquidations"
                                 onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
-                                <i class="icon-layers"></i> @lang('Liquidation')
+                                <i class="icon-layers"></i> <span class="hidden-xs">@lang('Liquidation')</span>
                             </label>
-                            <label class="btn btn-tab btn-transparent yellow-crusta btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings"
+                            <label class="btn btn-tab btn-transparent blue btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings"
                                 onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
-                                <i class="fa fa-suitcase"></i> @lang('Takings')
+                                <i class="fa fa-suitcase"></i> <span class="hidden-xs">@lang('Takings')</span>
+                            </label>
+                            <label class="btn btn-tab btn-transparent green-meadow btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings-list"
+                                   onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
+                                <i class="fa fa-check-circle-o"></i> <span class="hidden-xs">@lang('Takings list')</span>
                             </label>
                             <label class="btn blue-hoki btn-outline btn-circle pull-right uppercase" data-toggle="modal" data-target="#modal-params-manager">
-                                <i class="fa fa-cogs"></i> @lang('Admin')
+                                <i class="fa fa-cogs"></i> <span class="hidden-xs">@lang('Admin')</span>
                             </label>
                         </div>
                     </div>
@@ -67,7 +71,10 @@
                             <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
                         </div>
                         <div id="table-takings" class="tab-pane fade">
-                            <takings-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search') }}" url-takings="" url-export="{{ route('takings-passengers-liquidation-export') }}"></takings-component>
+                            <takings-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings') }}" url-takings="{{ route('taking-passengers-takings', ['liquidation' => 'ID']) }}" url-export="{{ route('takings-passengers-liquidation-export') }}" v-on:refresh-report="searchReport($event)"></takings-component>
+                        </div>
+                        <div id="table-takings-list" class="tab-pane fade">
+                            <takings-list-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings-list') }}" url-takings="" url-export="{{ route('takings-passengers-liquidation-export') }}"></takings-list-component>
                         </div>
                     </div>
                 </div>

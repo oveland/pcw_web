@@ -31,6 +31,9 @@
                                 <i class="fa fa-user text-muted"></i><br> {{ $t('Responsible') }}<br>{{ $t('Liquidation') }}
                             </th>
                             <th class="col-md-1">
+                                <i class="fa fa-user text-muted"></i><br> {{ $t('Responsible') }}<br>{{ $t('Takings') }}
+                            </th>
+                            <th class="col-md-1">
                                 <i class="fa fa-rocket text-muted"></i><br> {{ $t('Details') }}
                             </th>
                         </tr>
@@ -44,7 +47,7 @@
                             <td class="text-center">{{ liquidation.totals.totalDispatch | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.totals.balance | numberFormat('$0,0') }}</td>
                             <td class="text-center text-bold">
-                                <a class="link" @click="seeLiquidationDetail(liquidation, true)" data-toggle="modal" data-target="#modal-liquidation-detail">
+                                <a class="link" @click="seeLiquidationDetail(liquidation.id, true)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
                                     {{ liquidation.marks.length }} turns
                                 </a>
                             </td>
@@ -59,7 +62,11 @@
                                 <small><i class="fa fa-calendar"></i> {{ liquidation.liquidationDate }}</small>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" :title="$t('Details')" @click="seeLiquidationDetail(liquidation)" data-toggle="modal" data-target="#modal-liquidation-detail">
+                                {{ liquidation.takingUser.name }}<br>
+                                <small><i class="fa fa-calendar"></i> {{ liquidation.takingDate }}</small>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" :title="$t('Details')" @click="seeLiquidationDetail(liquidation.id)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
                                     <i class="fa fa-eye"></i>
                                 </button>
                             </td>
@@ -70,27 +77,27 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal-liquidation-detail" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal fade" id="modal-takings-liquidated-marks" tabindex="-1" role="basic" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="portlet light">
                         <div class="portlet-title tabbable-line">
                             <div class="caption">
                                 <i class="icon-layers"></i>
-                                <span class="caption-subject font-dark bold uppercase">{{ $t('Liquidation details') }}</span>
+                                <span class="caption-subject font-dark bold uppercase">{{ $t('Taking details') }}</span>
                             </div>
                             <ul class="nav nav-tabs">
                                 <li>
-                                    <a href="#liquidation-detail" data-toggle="tab"> {{ $t('Liquidation') }} </a>
+                                    <a href="#takings-detail" data-toggle="tab"> {{ $t('Takings') }} </a>
                                 </li>
                                 <li class="active">
-                                    <a href="#detail-marks-liquidated" data-toggle="tab"> {{ $t('Turnos') }} BEA </a>
+                                    <a href="#detail-marks-taken" data-toggle="tab"> {{ $t('Turnos') }} BEA </a>
                                 </li>
                             </ul>
                         </div>
                         <div class="portlet-body">
                             <div class="tab-content row">
-                                <div id="liquidation-detail" class="tab-pane fade">
+                                <div id="takings-detail" class="tab-pane fade">
                                     <div class="">
                                         <div class="portlet-title hide">
                                             <div class="caption">
@@ -104,16 +111,16 @@
                                             <div class="tabbable-custom hidden-lg hidden-md">
                                                 <ul class="nav nav-tabs ">
                                                     <li class="active">
-                                                        <a href="#step-discounts-detail" data-toggle="tab" aria-expanded="true"> <i class="icon-tag"></i> <span class="hidden-xs">{{ $t('Discounts') }}</span> </a>
+                                                        <a href="#step-discounts-detail-list" data-toggle="tab" aria-expanded="true"> <i class="icon-tag"></i> <span class="hidden-xs">{{ $t('Discounts') }}</span> </a>
                                                     </li>
                                                     <li class="">
-                                                        <a href="#step-penalties-detail" data-toggle="tab" aria-expanded="false"> <i class="icon-shield"></i> <span class="hidden-xs">{{ $t('Penalties') }}</span> </a>
+                                                        <a href="#step-penalties-detail-list" data-toggle="tab" aria-expanded="false"> <i class="icon-shield"></i> <span class="hidden-xs">{{ $t('Penalties') }}</span> </a>
                                                     </li>
                                                     <li class="">
-                                                        <a href="#step-commissions-detail" data-toggle="tab" aria-expanded="false"> <i class=" icon-user-follow"></i> <span class="hidden-xs">{{ $t('Commissions') }}</span> </a>
+                                                        <a href="#step-commissions-detail-list" data-toggle="tab" aria-expanded="false"> <i class=" icon-user-follow"></i> <span class="hidden-xs">{{ $t('Commissions') }}</span> </a>
                                                     </li>
                                                     <li class="">
-                                                        <a href="#step-liquidate-detail" data-toggle="tab" aria-expanded="false"> <i class="icon-layers"></i> <span class="hidden-xs">{{ $t('Liquidation') }}</span> </a>
+                                                        <a href="#step-liquidate-detail-list" data-toggle="tab" aria-expanded="false"> <i class="icon-layers"></i> <span class="hidden-xs">{{ $t('Liquidation') }}</span> </a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -121,7 +128,7 @@
                                             <div class="mt-element-step hidden-sm hidden-xs">
                                                 <div class="row step-line">
                                                     <div class="phases col-md-3 mt-step-col first phase-inventory warning"
-                                                         data-toggle="tab" href="#step-discounts-detail" data-active="warning">
+                                                         data-toggle="tab" href="#step-discounts-detail-list" data-active="warning">
                                                         <div class="mt-step-number bg-white">
                                                             <i class="icon-tag"></i>
                                                         </div>
@@ -129,7 +136,7 @@
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                         href="#step-penalties-detail" data-active="error">
+                                                         href="#step-penalties-detail-list" data-active="error">
                                                         <div class="mt-step-number bg-white">
                                                             <i class="icon-shield"></i>
                                                         </div>
@@ -137,7 +144,7 @@
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                         href="#step-commissions-detail" data-active="active">
+                                                         href="#step-commissions-detail-list" data-active="active">
                                                         <div class="mt-step-number bg-white">
                                                             <i class=" icon-user-follow"></i>
                                                         </div>
@@ -145,7 +152,7 @@
                                                         <div class="mt-step-content font-grey-cascade hide"></div>
                                                     </div>
                                                     <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
-                                                         href="#step-liquidate-detail" data-active="done">
+                                                         href="#step-liquidate-detail-list" data-active="done">
                                                         <div class="mt-step-number bg-white">
                                                             <i class="icon-layers"></i>
                                                         </div>
@@ -158,22 +165,22 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="tab-content">
-                                                        <div id="step-discounts-detail" class="tab-pane fade in active">
+                                                        <div id="step-discounts-detail-list" class="tab-pane fade in active">
                                                             <div class=" phase-container col-md-12 m-t-10">
                                                                 <discount-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-penalties-detail" class="tab-pane fade">
+                                                        <div id="step-penalties-detail-list" class="tab-pane fade">
                                                             <div class=" phase-container col-md-12 m-t-10">
                                                                 <penalty-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></penalty-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-commissions-detail" class="tab-pane fade">
+                                                        <div id="step-commissions-detail-list" class="tab-pane fade">
                                                             <div class=" phase-container col-md-12 m-t-10">
                                                                 <commission-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-liquidate-detail" class="tab-pane fade">
+                                                        <div id="step-liquidate-detail-list" class="tab-pane fade">
                                                             <div class=" phase-container col-md-6 col-md-offset-3 m-t-10">
                                                                 <div v-if="!showPrintArea" class="text-center col-md-12">
                                                                     <span class="header-preview">#{{ liquidationDetail.id }}</span>
@@ -192,12 +199,6 @@
                                                                     </a>
                                                                 </div>
                                                                 <preview-component v-if="!showPrintArea" :liquidation="liquidationDetail.liquidation" :totals="liquidationDetail.totals" :search="search" :readonly="true"></preview-component>
-                                                                <br>
-                                                                <div class="text-center">
-                                                                    <button class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings(liquidationDetail)" :disabled="liquidationDetail.taken">
-                                                                        <i class="fa fa-suitcase"></i> {{ $t('Taking') }}
-                                                                    </button>
-                                                                </div>
                                                             </div>
                                                             <div class="phase-container col-md-8 col-md-offset-2 p-0 m-t-10 pdf-container" v-if="showPrintArea">
                                                                 <vue-friendly-iframe :src="linkToPrintLiquidation"></vue-friendly-iframe>
@@ -209,7 +210,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="detail-marks-liquidated" class="tab-pane fade active in">
+                                <div id="detail-marks-taken" class="tab-pane fade active in">
                                     <div class="table-responsive">
                                         <table-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals"></table-component>
                                     </div>
@@ -250,7 +251,7 @@
 
 
     export default {
-        name: 'TakingsComponent',
+        name: 'TakingsListComponent',
         props: {
             urlList: String,
             urlTakings: String,
@@ -271,7 +272,6 @@
                     totals: {},
                     user: {},
                     marks: [],
-                    taken: false
                 },
             };
         },
@@ -279,7 +279,7 @@
             searchParams: function () {
                 this.showPrintArea = false;
                 this.linkToPrintLiquidation = '';
-                this.searchTakingsReport();
+                this.searchTakingListReport();
             }
         },
         methods: {
@@ -287,10 +287,12 @@
                 this.showPrintArea = true;
                 return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id + (all ? '&all=true' : '');
             },
-            seeLiquidationDetail(liquidation, showMarksFirst) {
-                this.liquidationDetail = liquidation;
+            seeLiquidationDetail(liquidationId, showMarksFirst) {
+                this.liquidationDetail = _.find(this.liquidations, function(liquidation){
+                    return liquidation.id === liquidationId
+                });
 
-                showMarksFirst ? $('a[href="#detail-marks-liquidated"]').tab('show') : $('a[href="#liquidation-detail"]').tab('show');
+                showMarksFirst ? $('a[href="#detail-marks-taken"]').tab('show') : $('a[href="#takings-detail"]').tab('show');
                 setTimeout(() => {
                     $('.tooltips').tooltip();
                     setTimeout(() => {
@@ -298,7 +300,7 @@
                     }, 4000);
                 }, 1000);
             },
-            searchTakingsReport: function () {
+            searchTakingListReport: function () {
                 axios.get(this.urlList, {params: this.searchParams}).then(response => {
                     this.liquidations = response.data;
                 }).catch(function (error) {
@@ -306,19 +308,23 @@
                 }).then(function () {
                 });
             },
-            takings: function (liquidation) {
-                console.log("liquidation == ",liquidation);
-                axios.post(this.urlTakings.replace('ID', liquidation.id)).then(response => {
+            takings: function () {
+                axios.post(this.urlTakings, {
+                    vehicle: this.search.vehicle.id,
+                    liquidation: this.liquidation,
+                    totals: this.totals,
+                    marks: _.map(this.marks, 'id'),
+                }).then(response => {
                     const data = response.data;
                     if (data.success) {
                         gsuccess(data.message);
                         this.$emit('refresh-report');
-                        $('#modal-liquidation-detail').modal('hide');
+                        $('#modal-generate-liquidation').modal('hide');
                     } else {
                         gerror(data.message);
                     }
                 }).catch(function (error) {
-                    gerror(this.$t('Error at generate taking register')+'!');
+                    gerror('Error in liquidation process!');
                     console.log(error);
                 }).then(function () {
 

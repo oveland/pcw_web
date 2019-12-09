@@ -87,12 +87,6 @@
             <label for="observations" class="control-label">{{ $t('Observations') }}</label>
             <textarea id="observations" rows="2" :readonly="readonly" :disabled="readonly" class="form-control" v-model="liquidation.observations" style="resize: vertical;"></textarea>
         </div>
-        <br>
-        <div class="text-center" v-if="!readonly">
-            <button class="btn btn-circle red btn-outline f-s-13 uppercase" @click="$emit('liquidate')" :disabled="totals.totalBea === 0">
-                <i class="icon-layers"></i> {{ $t('Liquidate') }}
-            </button>
-        </div>
     </div>
 </template>
 

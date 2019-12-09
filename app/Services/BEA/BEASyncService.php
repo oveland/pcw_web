@@ -16,6 +16,18 @@ use Exception;
 
 class BEASyncService
 {
+    private $vehicleId;
+    private $date;
+
+    public function for($vehicleId, $date)
+    {
+        $this->vehicleId = $vehicleId;
+        $this->date = $date;
+
+        return $this;
+    }
+
+
     /**
      * Sync last marks data
      */
@@ -25,6 +37,7 @@ class BEASyncService
             $this->turns();
             $this->trajectories();
             $this->marks();
+
         } catch (Exception $e) {
             dd("Errorro ", $e);
         }
@@ -98,7 +111,7 @@ class BEASyncService
     {
         $lastIdMigrated = Mark::max('id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA > $lastIdMigrated");
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA > $lastIdMigrated AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = $this->vehicleId)");
 
         foreach ($marks as $markBEA) {
             $mark = $this->processMark($markBEA);
@@ -107,6 +120,8 @@ class BEASyncService
                 throw new Exception("Error saving MARK with id: $markBEA->AMR_IDMARCA");
             }
         }
+
+        DB::select("SELECT refresh_bea_marks_turns_numbers_function($this->vehicleId, '$this->date')");
     }
 
     /**
