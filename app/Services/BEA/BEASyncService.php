@@ -16,12 +16,15 @@ use Exception;
 
 class BEASyncService
 {
-    private $vehicleId;
+    /**
+     * @var Vehicle
+     */
+    private $vehicle;
     private $date;
 
     public function for($vehicleId, $date)
     {
-        $this->vehicleId = $vehicleId;
+        $this->vehicle = Vehicle::find($vehicleId);
         $this->date = $date;
 
         return $this;
@@ -111,7 +114,7 @@ class BEASyncService
     {
         $lastIdMigrated = Mark::max('id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA > $lastIdMigrated AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = $this->vehicleId)");
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA > $lastIdMigrated AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$this->vehicle->bea_id.")");
 
         foreach ($marks as $markBEA) {
             $mark = $this->processMark($markBEA);
@@ -121,7 +124,7 @@ class BEASyncService
             }
         }
 
-        DB::select("SELECT refresh_bea_marks_turns_numbers_function($this->vehicleId, '$this->date')");
+        DB::select("SELECT refresh_bea_marks_turns_numbers_function(".$this->vehicle->id.", '$this->date')");
     }
 
     /**
