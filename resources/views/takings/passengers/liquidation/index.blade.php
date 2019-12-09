@@ -42,7 +42,7 @@
         <!-- end search form -->
         <hr class="hr">
         <!-- begin content report -->
-        <div class="report-container col-md-12">
+        <div class="report-container col-md-12" style="display: none">
             <div class="portlet light ">
                 <div class="portlet-title">
                     <div class="">

@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <label class="control-label">{{ $t('Date') }}</label>
                         <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="searchReport()"></date-picker>
+                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="searchReport()" bootstrap-styling="true" clear-button="true" calendar-button="true"></date-picker>
                         </div>
                     </div>
                 </div>
@@ -44,13 +44,13 @@
         methods: {
             getSearchParams: function () {
                 this.search.date = moment().format("YYYY-MM-DD");
-                this.search.date = '2019-06-20';
+                // this.search.date = '2019-06-20';
                 axios.get(this.urlParams)
                     .then(response => {
                         this.search.vehicles = response.data;
 
                         this.search.vehicle = _.find(response.data, function(v){
-                            return v.number === '8060';
+                            // return v.number === '8060';
                         });
 
                         this.searchReport();

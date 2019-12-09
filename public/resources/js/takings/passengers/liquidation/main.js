@@ -1814,12 +1814,11 @@ __webpack_require__.r(__webpack_exports__);
     getSearchParams: function getSearchParams() {
       var _this = this;
 
-      this.search.date = moment().format("YYYY-MM-DD");
-      this.search.date = '2019-06-20';
+      this.search.date = moment().format("YYYY-MM-DD"); // this.search.date = '2019-06-20';
+
       axios.get(this.urlParams).then(function (response) {
         _this.search.vehicles = response.data;
-        _this.search.vehicle = _.find(response.data, function (v) {
-          return v.number === '8060';
+        _this.search.vehicle = _.find(response.data, function (v) {// return v.number === '8060';
         });
 
         _this.searchReport();
@@ -12105,7 +12104,10 @@ var render = function() {
                   attrs: {
                     valueType: "format",
                     "first-day-of-week": 1,
-                    lang: "es"
+                    lang: "es",
+                    "bootstrap-styling": "true",
+                    "clear-button": "true",
+                    "calendar-button": "true"
                   },
                   on: {
                     change: function($event) {
@@ -28709,26 +28711,32 @@ var liquidationView = new Vue({
     searchReport: function searchReport() {
       var _this = this;
 
-      App.blockUI({
-        target: '.report-container',
-        animate: true
-      });
-      this.flag = !this.searchParams.flag;
-      var form = $('.form-search-report');
-      form.find('.btn-search-report').addClass(loadingClass);
-      axios.get(this.urlList, {
-        params: this.searchParams
-      }).then(function (data) {
-        _this.allMarks = data.data;
-        _this.liquidation.otherDiscounts = [];
-        _this.liquidation.observations = "";
-      })["catch"](function (error) {
-        console.log(error);
-      }).then(function () {
-        $('.report-container').hide().fadeIn();
-        form.find('.btn-search-report').removeClass(loadingClass);
-        App.unblockUI('.report-container');
-      });
+      var mainContainer = $('.report-container');
+
+      if (this.searchParams.valid) {
+        App.blockUI({
+          target: '.report-container',
+          animate: true
+        });
+        this.flag = !this.searchParams.flag;
+        var form = $('.form-search-report');
+        form.find('.btn-search-report').addClass(loadingClass);
+        axios.get(this.urlList, {
+          params: this.searchParams
+        }).then(function (data) {
+          _this.allMarks = data.data;
+          _this.liquidation.otherDiscounts = [];
+          _this.liquidation.observations = "";
+        })["catch"](function (error) {
+          console.log(error);
+        }).then(function () {
+          mainContainer.hide().fadeIn();
+          form.find('.btn-search-report').removeClass(loadingClass);
+          App.unblockUI('.report-container');
+        });
+      } else {
+        mainContainer.slideUp();
+      }
     },
     updateVehicles: function updateVehicles(params) {
       this.vehicles = params.vehicles;

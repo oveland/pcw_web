@@ -142,23 +142,28 @@ let liquidationView = new Vue({
     },
     methods: {
         searchReport: function () {
-            App.blockUI({target: '.report-container', animate: true});
-            this.flag = !this.searchParams.flag;
-            const form = $('.form-search-report');
-            form.find('.btn-search-report').addClass(loadingClass);
+            const mainContainer = $('.report-container');
+            if(this.searchParams.valid){
+                App.blockUI({target: '.report-container', animate: true});
+                this.flag = !this.searchParams.flag;
+                const form = $('.form-search-report');
+                form.find('.btn-search-report').addClass(loadingClass);
 
-            axios.get(this.urlList, {params: this.searchParams}).then(data => {
-                this.allMarks = data.data;
+                axios.get(this.urlList, {params: this.searchParams}).then(data => {
+                    this.allMarks = data.data;
 
-                this.liquidation.otherDiscounts = [];
-                this.liquidation.observations = "";
-            }).catch(function (error) {
-                console.log(error);
-            }).then(function () {
-                $('.report-container').hide().fadeIn();
-                form.find('.btn-search-report').removeClass(loadingClass);
-                App.unblockUI('.report-container');
-            });
+                    this.liquidation.otherDiscounts = [];
+                    this.liquidation.observations = "";
+                }).catch(function (error) {
+                    console.log(error);
+                }).then(function () {
+                    mainContainer.hide().fadeIn();
+                    form.find('.btn-search-report').removeClass(loadingClass);
+                    App.unblockUI('.report-container');
+                });
+            }else{
+                mainContainer.slideUp();
+            }
         },
         updateVehicles: function (params) {
             this.vehicles = params.vehicles;
