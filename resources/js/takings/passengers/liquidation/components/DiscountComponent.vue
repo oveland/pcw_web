@@ -91,7 +91,7 @@
             </tr>
 
             <tr class="" v-for="otherDiscount in liquidation.otherDiscounts">
-                <td colspan="7" class="text-right">
+                <td colspan="8" class="text-right">
                 <div class="text-bold col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-r-0">
 
                     <div class="input-group">
@@ -119,7 +119,7 @@
             </tr>
 
             <tr v-if="!readonly" class="">
-                <td colspan="8" class="text-right">
+                <td colspan="9" class="text-right">
                     <button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount()">
                         <i class="fa fa-plus"></i> {{ $t('Add') }}
                     </button>
