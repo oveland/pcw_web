@@ -2463,8 +2463,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       var totalDispatch = totals.totalTurns - (totalDiscounts - totals.totalDiscountByFuel - totals.totalDiscountByMobilityAuxilio) - totals.totalCommissions;
+      var balance = totalDispatch - totals.totalPayFall + totals.totalGetFall - totals.totalDiscountByFuel;
       totals.totalDiscounts = totalDiscounts;
       totals.totalDispatch = totalDispatch;
+      totals.balance = balance;
       this.liquidation.totals = totals;
       return this.liquidation.totals;
     }

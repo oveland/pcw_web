@@ -286,9 +286,11 @@
                 }
 
                 const totalDispatch = totals.totalTurns - ( totalDiscounts - totals.totalDiscountByFuel - totals.totalDiscountByMobilityAuxilio) - totals.totalCommissions;
+                const balance = totalDispatch - totals.totalPayFall + totals.totalGetFall - totals.totalDiscountByFuel;
 
                 totals.totalDiscounts = totalDiscounts;
                 totals.totalDispatch = totalDispatch;
+                totals.balance = balance;
 
                 this.liquidation.totals = totals;
                 return this.liquidation.totals;
