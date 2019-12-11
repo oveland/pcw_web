@@ -276,7 +276,7 @@ class Mark extends Model
                 $commissionValue += $this->passengers_bea * $commissionByRoute->value;
                 break;
             case 'percent':
-                $commissionValue += ($totalGrossBea + $this->penalty->value) * $commissionByRoute->value / 100;
+                $commissionValue += ($totalGrossBea + $this->penalty->value - intval($this->pay_fall) + intval($this->get_fall) ) * $commissionByRoute->value / 100;
                 break;
         }
 

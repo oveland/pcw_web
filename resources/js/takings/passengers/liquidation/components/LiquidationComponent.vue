@@ -154,7 +154,7 @@
                         case 'percent':
                             const getFall = Number.isInteger(parseInt(mark.getFall)) ? parseInt(mark.getFall) : 0;
                             const payFall = Number.isInteger(parseInt(mark.payFall)) ? parseInt(mark.payFall) : 0;
-                            mark.commission.value = (mark.totalGrossBEA + mark.penalty.value + getFall -payFall) * (mark.commission.baseValue / 100);
+                            mark.commission.value = (mark.totalGrossBEA + mark.penalty.value + getFall - payFall) * (mark.commission.baseValue / 100);
                             break;
                     }
                 });
