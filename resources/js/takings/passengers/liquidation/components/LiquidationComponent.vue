@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <div class="table-responsive">
-            <table-component :marks="marks" :totals="totals"></table-component>
+            <table-component :search.sync="search" :marks="marks" :totals="totals"></table-component>
         </div>
 
         <div class="modal fade" id="modal-generate-liquidation" role="basic" aria-hidden="true">
@@ -76,7 +76,7 @@
                                                 <div class="tab-content">
                                                     <div id="step-discounts" class="tab-pane fade in active">
                                                         <div class=" phase-container col-md-12 m-t-10">
-                                                            <discount-component :marks="marks" :totals="totals" :liquidation.sync="liquidation"></discount-component>
+                                                            <discount-component :control.sync="control" :marks="marks" :totals="totals" :liquidation.sync="liquidation"></discount-component>
                                                         </div>
                                                     </div>
                                                     <div id="step-penalties" class="tab-pane fade">
@@ -90,10 +90,10 @@
                                                         </div>
                                                     </div>
                                                     <div id="step-liquidate" class="tab-pane fade">
-                                                        <div class=" phase-container col-md-6 col-md-offset-3 m-t-10">
-                                                            <preview-component :liquidation.sync="liquidation" :totals="totals" :search="search"></preview-component>
-                                                            <br>
-                                                            <div class="text-center">
+                                                        <div class=" phase-container col-md-12 m-t-10">
+                                                            <summary-component :url-export="urlExport" :marks="marks" :liquidation.sync="liquidation" :totals="totals" :search="search"></summary-component>
+
+                                                            <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10">
                                                                 <button class="btn btn-circle yellow-crusta btn-outline f-s-13 uppercase" @click="liquidate" :disabled="totals.totalBea === 0">
                                                                     <i class="icon-layers"></i> {{ $t('Liquidate') }}
                                                                 </button>
@@ -119,23 +119,32 @@
     import DiscountComponent from './DiscountComponent.vue';
     import CommissionComponent from './CommissionComponent';
     import PenaltyComponent from './PenaltyComponent';
-    import PreviewComponent from './PreviewComponent';
+    import SummaryComponent from "./SummaryComponent";
 
     export default {
         name: 'LiquidationComponent',
         props: {
             urlLiquidate: String,
+            urlExport: String,
             search: Object,
             marks: Array,
             totals: Object,
             liquidation: Object
+        },
+        data(){
+          return {
+              control: {
+                  enableSaving: false,
+                  creating: true
+              },
+          }
         },
         components: {
             TableComponent,
             DiscountComponent,
             CommissionComponent,
             PenaltyComponent,
-            PreviewComponent
+            SummaryComponent,
         },
         watch: {
             totals: function () {

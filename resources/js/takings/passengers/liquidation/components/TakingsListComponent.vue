@@ -167,7 +167,7 @@
                                                     <div class="tab-content">
                                                         <div id="step-discounts-detail-list" class="tab-pane fade in active">
                                                             <div class=" phase-container col-md-12 m-t-10">
-                                                                <discount-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
+                                                                <discount-component :control="control" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-penalties-detail-list" class="tab-pane fade">
@@ -181,27 +181,8 @@
                                                             </div>
                                                         </div>
                                                         <div id="step-liquidate-detail-list" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-6 col-md-offset-3 m-t-10">
-                                                                <div v-if="!showPrintArea" class="text-center col-md-12">
-                                                                    <span class="header-preview">#{{ liquidationDetail.id }}</span>
-                                                                </div>
-                                                                <div class="text-center col-md-12">
-                                                                    <a href="javascript:" v-if="!showPrintArea" target="" class="btn btn-default btn-circle btn-sm" @click="exportLiquidation()">
-                                                                        <i class="fa fa-print"></i> | {{ $t('Print') }}
-                                                                    </a>
-
-                                                                    <a href="javascript:" v-if="showPrintArea" target="" class="btn btn-default btn-circle btn-sm" @click="showPrintArea = false">
-                                                                        <i class="fa fa-undo"></i>
-                                                                    </a>
-
-                                                                    <a href="javascript:" target="" class="header-preview hide" @click="exportLiquidation(true)">
-                                                                        <i class="fa fa-download"></i> {{ $t('Print detailed') }}
-                                                                    </a>
-                                                                </div>
-                                                                <preview-component v-if="!showPrintArea" :liquidation="liquidationDetail.liquidation" :totals="liquidationDetail.totals" :search="search" :readonly="true"></preview-component>
-                                                            </div>
-                                                            <div class="phase-container col-md-8 col-md-offset-2 p-0 m-t-10 pdf-container" v-if="showPrintArea">
-                                                                <vue-friendly-iframe :src="linkToPrintLiquidation"></vue-friendly-iframe>
+                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                                <summary-component :url-export="urlExport.replace('ID', liquidationDetail.id)" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation" :search="search"></summary-component>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -245,7 +226,7 @@
     import DiscountComponent from './DiscountComponent.vue';
     import CommissionComponent from './CommissionComponent';
     import PenaltyComponent from './PenaltyComponent';
-    import PreviewComponent from './PreviewComponent';
+    import SummaryComponent from "./SummaryComponent";
     import VueFriendlyIframe from 'vue-friendly-iframe';
     import TableComponent from "./TableComponent";
 
@@ -261,6 +242,9 @@
         },
         data: function () {
             return {
+                control: {
+                    enableSaving: false
+                },
                 showPrintArea: false,
                 linkToPrintLiquidation: false,
                 liquidations: [],
@@ -336,7 +320,7 @@
             DiscountComponent,
             CommissionComponent,
             PenaltyComponent,
-            PreviewComponent,
+            SummaryComponent,
             VueFriendlyIframe
         }
     }

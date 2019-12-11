@@ -28,12 +28,14 @@ use Illuminate\Support\Carbon;
  * @method static Builder|DiscountType whereName($value)
  * @method static Builder|DiscountType whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property int|null $uid
+ * @method static Builder|MarkDiscountType whereUid($value)
  */
 class MarkDiscountType extends Model
 {
     protected $table = 'bea_mark_discount_types';
 
-    protected $fillable = ['name', 'description', 'icon', 'default', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'description', 'icon', 'default', 'created_at', 'updated_at', 'uid'];
 
     function getDateFormat()
     {

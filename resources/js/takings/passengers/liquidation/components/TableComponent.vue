@@ -47,7 +47,7 @@
             <tbody>
             <tr v-for="mark in marks">
                 <td class="text-center">
-                    <i :class="mark.status.icon+' font-'+ mark.status.class" class="tooltips" :data-original-title="mark.status.name"></i>
+                    <i :class="mark.status.icon+' font-'+ mark.status.class" class="tooltips" data-placement="right" :data-original-title="mark.status.name"></i>
                 </td>
                 <td class="text-center">
                     <span class="">{{ mark.number }}</span>
@@ -55,14 +55,14 @@
                 <td class="col-md-2 text-center">{{ mark.date }}</td>
                 <td class="col-md-2 text-center">{{ mark.turn.route.name }}</td>
                 <td class="text-center">
-                <span class="label span-full" v-if="mark.trajectory" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
-                    {{ mark.trajectory.name }}
-                </span>
+                    <span class="span-full badge badge-info" v-if="mark.trajectory">
+                        {{ mark.trajectory.name }}
+                    </span>
                 </td>
                 <td class="col-md-2 text-center">
-                <span v-if="mark.turn.driver">
-                    {{ mark.turn.driver.first_name + (mark.turn.driver.last_name ? (' ' + mark.turn.driver.last_name):'') }}
-                </span>
+                    <span v-if="mark.turn.driver">
+                        {{ mark.turn.driver.first_name + (mark.turn.driver.last_name ? (' ' + mark.turn.driver.last_name):'') }}
+                    </span>
                 </td>
                 <td class="text-center">{{ mark.initialTime }}</td>
                 <td class="text-center">{{ mark.finalTime }}</td>

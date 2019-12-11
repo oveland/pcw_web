@@ -19,6 +19,15 @@ Vue.filter('capitalize', function (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
 });
 
+window.ml = {
+    discountTypes : {
+        auxiliary: 1,
+        fuel: 2,
+        operative: 3,
+        toll: 4
+    }
+};
+
 let liquidationView = new Vue({
     el: '#liquidation',
     i18n,
@@ -36,10 +45,11 @@ let liquidationView = new Vue({
         search: {
             vehicles: [],
             vehicle: {},
-            date: String,
+            date: String
         },
-        allMarks: [],
+        marks: [],
         liquidation: {
+            byTurns:[],
             otherDiscounts: [],
             discountsByTurns: [],
             observations: ""
@@ -56,19 +66,13 @@ let liquidationView = new Vue({
                 valid: !!(vehicle && this.search.date)
             }
         },
-        liquidatedMarks: function () {
-            return _.filter(this.allMarks, {
-                liquidated: true,
-                taken: false,
-            });
-        },
-        marks: function () {
-            return _.filter(this.allMarks, {
-                liquidated: false,
-                taken: false,
-            });
-        },
         totals: function () {
+            /***************** LIQUIDATION BY TURN (MARK) ********************/
+            this.liquidation.byTurns = [];
+            _.forEach(this.marks, (mark) => {
+                this.liquidation.byTurns.push( this.liquidationByTurn(mark) );
+            });
+
             const totalGrossBea = _.sumBy(this.marks, 'totalGrossBEA');
 
             const totalDiscountsByTurns = _.sumBy(this.liquidation.discountsByTurns, 'value');
@@ -150,7 +154,7 @@ let liquidationView = new Vue({
                 form.find('.btn-search-report').addClass(loadingClass);
 
                 axios.get(this.urlList, {params: this.searchParams}).then(data => {
-                    this.allMarks = data.data;
+                    this.marks = data.data;
 
                     this.liquidation.otherDiscounts = [];
                     this.liquidation.observations = "";
@@ -168,34 +172,87 @@ let liquidationView = new Vue({
         updateVehicles: function (params) {
             this.vehicles = params.vehicles;
         },
-        totalDiscountByFuel: function () {
+
+        totalDiscountByMobilityAuxilio: function () {
             const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
-                return detail.discount.discount_type.name.toUpperCase() === "COMBUSTIBLE";
+                return detail.type_uid === window.ml.discountTypes.auxiliary;
             }));
 
             return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
         },
-        totalDiscountByTolls: function () {
+        totalDiscountByFuel: function () {
             const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
-                return detail.discount.discount_type.name.toUpperCase() === "PEAJES";
+                return detail.type_uid === window.ml.discountTypes.fuel;
             }));
 
             return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
         },
         totalDiscountByOperativeExpenses: function () {
             const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
-                return detail.discount.discount_type.name.toUpperCase() === "GASTOS OPERATIVOS";
+                return detail.type_uid === window.ml.discountTypes.operative;
             }));
 
             return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
         },
-        totalDiscountByMobilityAuxilio: function () {
+        totalDiscountByTolls: function () {
             const fuelTotalDiscount = _.head(_.filter(this.liquidation.discountsByTurns, function (detail) {
-                return detail.discount.discount_type.name.toUpperCase() === "AUXILIO DE MOVILIDAD";
+                return detail.type_uid === window.ml.discountTypes.toll;
             }));
 
             return fuelTotalDiscount ? fuelTotalDiscount.value : 0;
-        }
+        },
+
+        /***************** LIQUIDATION BY TURN (MARK) ********************/
+        liquidationByTurn: function(mark){
+            const payFall = (Number.isInteger(mark.payFall) ? mark.payFall : 0);
+            const getFall = (Number.isInteger(mark.getFall) ? mark.getFall : 0);
+            const turnDiscounts = this.turnDiscounts(mark);
+            const totalTurn = mark.totalGrossBEA + mark.penalty.value;
+            const subTotalTurn = totalTurn - payFall  + getFall;
+            const totalDispatch = totalTurn - ( turnDiscounts.total - turnDiscounts.byFuel - turnDiscounts.byMobilityAuxilio) - mark.commission.value;
+            const balance = totalDispatch - payFall  + getFall - turnDiscounts.byFuel;
+
+            return {
+                markId: mark.id,
+                payFall,
+                getFall,
+                turnDiscounts,
+                totalTurn,
+                subTotalTurn,
+                totalDispatch,
+                balance
+            };
+        },
+        turnDiscounts: function (mark) {
+            let discounts = {
+                byMobilityAuxilio: 0,
+                byFuel: 0,
+                byOperativeExpenses: 0,
+                byTolls: 0,
+                total: 0
+            };
+
+            _.each(mark.discounts, function (discount) {
+
+                switch (discount.discount_type.uid) {
+                    case window.ml.discountTypes.auxiliary:
+                        discounts.byMobilityAuxilio = discount.value;
+                        break;
+                    case window.ml.discountTypes.fuel:
+                        discounts.byFuel = discount.value;
+                        break;
+                    case window.ml.discountTypes.operative:
+                        discounts.byOperativeExpenses = discount.value;
+                        break;
+                    case window.ml.discountTypes.toll:
+                        discounts.byTolls = discount.value;
+                        break;
+                }
+                discounts.total += discount.value;
+            });
+
+            return discounts;
+        },
     },
     watch:{
         marks: function () {
@@ -203,7 +260,6 @@ let liquidationView = new Vue({
             const markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
                 return Object.keys(mark.discounts).length;
             });
-
             if (markWithMaxDiscounts) {
                 _.forEach(markWithMaxDiscounts.discounts, (discount) => {
                     const totalByTypeDiscount = _.sumBy(this.marks, function (mark) {
@@ -214,16 +270,13 @@ let liquidationView = new Vue({
                     });
 
                     discountsByTurns.push({
-                        type_id: discount.discount_type_id,
+                        type_uid: discount.discount_type.uid,
                         discount: discount,
                         value: totalByTypeDiscount,
                     });
                 });
             }
-
             this.liquidation.discountsByTurns = discountsByTurns;
-
-            return discountsByTurns;
         }
     },
     mounted: function () {

@@ -44,7 +44,7 @@
                             <td class="text-center">{{ liquidation.totals.totalDispatch | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.totals.balance | numberFormat('$0,0') }}</td>
                             <td class="text-center text-bold">
-                                <a class="link" @click="seeLiquidationDetail(liquidation, true)" data-toggle="modal" data-target="#modal-liquidation-detail">
+                                <a class="link" @click="seeLiquidation(liquidation, true)" data-toggle="modal" data-target="#modal-liquidation-detail">
                                     {{ liquidation.marks.length }} turns
                                 </a>
                             </td>
@@ -59,7 +59,7 @@
                                 <small><i class="fa fa-calendar"></i> {{ liquidation.liquidationDate }}</small>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" :title="$t('Details')" @click="seeLiquidationDetail(liquidation)" data-toggle="modal" data-target="#modal-liquidation-detail">
+                                <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" :title="$t('Details')" @click="seeLiquidation(liquidation)" data-toggle="modal" data-target="#modal-liquidation-detail">
                                     <i class="fa fa-eye"></i>
                                 </button>
                             </td>
@@ -160,47 +160,30 @@
                                                     <div class="tab-content">
                                                         <div id="step-discounts-detail" class="tab-pane fade in active">
                                                             <div class=" phase-container col-md-12 m-t-10">
-                                                                <discount-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
+                                                                <discount-component :url-update-liquidate="urlUpdateLiquidate" :control.sync="control" :marks="liquidation.marks" :totals.sync="liquidation.totals" :liquidation.sync="liquidation.liquidation" v-on:update-liquidation="updateLiquidation"></discount-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-penalties-detail" class="tab-pane fade">
                                                             <div class=" phase-container col-md-12 m-t-10">
-                                                                <penalty-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></penalty-component>
+                                                                <penalty-component :marks="liquidation.marks" :totals="totals" :liquidation="liquidation.liquidation"></penalty-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-commissions-detail" class="tab-pane fade">
                                                             <div class=" phase-container col-md-12 m-t-10">
-                                                                <commission-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
+                                                                <commission-component :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation="liquidation.liquidation"></commission-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-6 col-md-offset-3 m-t-10">
-                                                                <div v-if="!showPrintArea" class="text-center col-md-12">
-                                                                    <span class="header-preview">#{{ liquidationDetail.id }}</span>
-                                                                </div>
-                                                                <div class="text-center col-md-12">
-                                                                    <a href="javascript:" v-if="!showPrintArea" target="" class="btn btn-default btn-circle btn-sm" @click="exportLiquidation()">
-                                                                        <i class="fa fa-print"></i> | {{ $t('Print') }}
-                                                                    </a>
-
-                                                                    <a href="javascript:" v-if="showPrintArea" target="" class="btn btn-default btn-circle btn-sm" @click="showPrintArea = false">
-                                                                        <i class="fa fa-undo"></i>
-                                                                    </a>
-
-                                                                    <a href="javascript:" target="" class="header-preview hide" @click="exportLiquidation(true)">
-                                                                        <i class="fa fa-download"></i> {{ $t('Print detailed') }}
-                                                                    </a>
-                                                                </div>
-                                                                <preview-component v-if="!showPrintArea" :liquidation="liquidationDetail.liquidation" :totals="liquidationDetail.totals" :search="search" :readonly="true"></preview-component>
-                                                                <br>
-                                                                <div class="text-center">
-                                                                    <button class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings(liquidationDetail)" :disabled="liquidationDetail.taken">
+                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                                <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
+                                                                <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10">
+                                                                    <button v-if="!control.enableSaving" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken">
                                                                         <i class="fa fa-suitcase"></i> {{ $t('Taking') }}
                                                                     </button>
+                                                                    <button v-if="control.enableSaving" class="btn btn-circle green btn-outline f-s-13 uppercase" @click="updateLiquidation">
+                                                                        <i class="fa fa-save"></i> {{ $t('Save') }}
+                                                                    </button>
                                                                 </div>
-                                                            </div>
-                                                            <div class="phase-container col-md-8 col-md-offset-2 p-0 m-t-10 pdf-container" v-if="showPrintArea">
-                                                                <vue-friendly-iframe :src="linkToPrintLiquidation"></vue-friendly-iframe>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -211,7 +194,7 @@
                                 </div>
                                 <div id="detail-marks-liquidated" class="tab-pane fade active in">
                                     <div class="table-responsive">
-                                        <table-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals"></table-component>
+                                        <table-component :readonly="true" :marks="liquidation.marks" :totals="totals"></table-component>
                                     </div>
                                 </div>
                             </div>
@@ -244,7 +227,7 @@
     import DiscountComponent from './DiscountComponent.vue';
     import CommissionComponent from './CommissionComponent';
     import PenaltyComponent from './PenaltyComponent';
-    import PreviewComponent from './PreviewComponent';
+    import SummaryComponent from "./SummaryComponent";
     import VueFriendlyIframe from 'vue-friendly-iframe';
     import TableComponent from "./TableComponent";
 
@@ -253,6 +236,7 @@
         name: 'TakingsComponent',
         props: {
             urlList: String,
+            urlUpdateLiquidate: String,
             urlTakings: String,
             urlExport: String,
             searchParams: Object,
@@ -260,10 +244,13 @@
         },
         data: function () {
             return {
+                control: {
+                    enableSaving: false
+                },
                 showPrintArea: false,
                 linkToPrintLiquidation: false,
                 liquidations: [],
-                liquidationDetail: {
+                liquidation: {
                     id: 0,
                     vehicle: {},
                     date: '',
@@ -275,6 +262,9 @@
                 },
             };
         },
+        mounted(){
+            this.control.enableSaving = false;
+        },
         watch: {
             searchParams: function () {
                 this.showPrintArea = false;
@@ -282,13 +272,46 @@
                 this.searchTakingsReport();
             }
         },
+        computed:{
+            totals: function () {
+                this.liquidation.totals.totalOtherDiscounts = _.sumBy(this.liquidation.liquidation.otherDiscounts, function (other) {
+                    return (Number.isInteger(other.value) ? other.value : 0);
+                });
+
+                const totalDiscounts = parseInt(this.liquidation.totals.totalDiscountsByTurns) + parseInt(this.liquidation.totals.totalOtherDiscounts);
+
+                if(totalDiscounts !== this.liquidation.totals.totalDiscounts){
+                    this.control.enableSaving = true;
+                }
+                this.liquidation.totals.totalDiscounts = totalDiscounts;
+
+                return this.liquidation.totals;
+            }
+        },
         methods: {
-            exportLiquidation(all){
-                this.showPrintArea = true;
-                return this.linkToPrintLiquidation = this.urlExport + '?id=' + this.liquidationDetail.id + (all ? '&all=true' : '');
+            updateLiquidation: function () {
+                App.blockUI({target: '.liquidation-detail', animate: true});
+                axios.post(this.urlUpdateLiquidate.replace('ID', this.liquidation.id), {
+                    liquidation: this.liquidation.liquidation,
+                    totals: this.totals,
+                }).then(response => {
+                    const data = response.data;
+                    if( data.success ){
+                        this.control.enableSaving = false;
+                        gsuccess(data.message);
+                    }else{
+                        gerror(data.message);
+                    }
+                }).catch(function (error) {
+                    gerror('Error in liquidation process!');
+                    console.log(error);
+                }).then(function () {
+                    App.unblockUI('.preview');
+                });
             },
-            seeLiquidationDetail(liquidation, showMarksFirst) {
-                this.liquidationDetail = liquidation;
+            seeLiquidation(liquidation, showMarksFirst) {
+                this.control.enableSaving = false;
+                this.liquidation = liquidation;
 
                 showMarksFirst ? $('a[href="#detail-marks-liquidated"]').tab('show') : $('a[href="#liquidation-detail"]').tab('show');
                 setTimeout(() => {
@@ -306,9 +329,8 @@
                 }).then(function () {
                 });
             },
-            takings: function (liquidation) {
-                console.log("liquidation == ",liquidation);
-                axios.post(this.urlTakings.replace('ID', liquidation.id)).then(response => {
+            takings: function () {
+                axios.post(this.urlTakings.replace('ID', this.liquidation.id)).then(response => {
                     const data = response.data;
                     if (data.success) {
                         gsuccess(data.message);
@@ -330,8 +352,8 @@
             DiscountComponent,
             CommissionComponent,
             PenaltyComponent,
-            PreviewComponent,
-            VueFriendlyIframe
+            VueFriendlyIframe,
+            SummaryComponent
         }
     }
 </script>

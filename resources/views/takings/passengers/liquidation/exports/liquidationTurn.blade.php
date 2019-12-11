@@ -4,6 +4,7 @@
     }
 
     $totals = $liquidation->totals;
+    $liquidationBYTurn = (object) collect($liquidation->liquidation->byTurns)->where('markId', $mark->id)->first();
 @endphp
 <style>
     @import url('https://fonts.googleapis.com/css?family=Bai+Jamjuree&display=swap');
@@ -61,8 +62,12 @@
             </span>
     </h3>
     <h4 class="search m-0" style="text-align: center">
+        <span class="text-bold">@lang('Turn'):</span> {{ $mark->number }}
+        <span>{{ $mark->trajectory->name }}</span>
+    </h4>
+    <h4 class="search m-0" style="text-align: center">
         <span class="text-bold">@lang('Date'):</span> {{ $liquidation->date->toDateString() }}
-        <span>({{ $liquidation->firstMark->initialTime->totimeString() }} @lang('to') {{ $liquidation->lastMark->finalTime->totimeString() }})</span>
+        <span>({{ $mark->initialTime->totimeString() }} @lang('to') {{ $mark->finalTime->totimeString() }})</span>
     </h4>
     <hr class="">
     <h5 class="search m-0" style="text-align: right;clear: both;text-align: center">
@@ -77,19 +82,19 @@
             <span class="text-bold">
                 <i class="fa fa-dollar"></i> @lang('Total turns')
             </span>
-        <span class="pull-right text-bold col-md-4">{{ asDollars($totals->totalTurns) }}</span>
+        <span class="pull-right text-bold col-md-4">{{ asDollars($liquidationBYTurn->totalTurn) }}</span>
     </h3>
     <h4 class="totals">
             <span class="">
                 <i class="fa fa-dollar"></i> @lang('Total pay fall')
             </span>
-        <span class="pull-right col-md-4">{{ asDollars($totals->totalPayFall) }}</span>
+        <span class="pull-right col-md-4">{{ asDollars($liquidationBYTurn->payFall) }}</span>
     </h4>
     <h4 class="totals">
             <span class="">
                 <i class="fa fa-dollar"></i> @lang('Total get fall')
             </span>
-        <span class="pull-right col-md-4">{{ asDollars($totals->totalGetFall) }}</span>
+        <span class="pull-right col-md-4">{{ asDollars($liquidationBYTurn->getFall) }}</span>
     </h4>
 
 
@@ -97,41 +102,32 @@
             <span class="text-bold">
                 <i class="icon-tag"></i> @lang('Subtotal')
             </span>
-        <span class="pull-right text-bold col-md-4">{{ asDollars($totals->subTotalTurns) }}</span>
+        <span class="pull-right text-bold col-md-4">{{ asDollars($liquidationBYTurn->subTotalTurn) }}</span>
     </h3>
     <h4 class="totals">
             <span class="">
                 <i class="fa fa-dollar"></i> @lang('Total tolls')
             </span>
-        <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByTolls) }}</span>
+        <span class="pull-right col-md-4">{{ asDollars($liquidationBYTurn->turnDiscounts['byTolls']) }}</span>
     </h4>
     <h4 class="totals">
             <span class="">
                 <i class="fa fa-dollar"></i> @lang('Total commissions')
             </span>
-        <span class="pull-right col-md-4">{{ asDollars($totals->totalCommissions) }}</span>
+        <span class="pull-right col-md-4">{{ asDollars($mark->commission->value) }}</span>
     </h4>
     <h4 class="totals">
             <span class="">
                 <i class="fa fa-dollar"></i> @lang('Total operative expenses')
             </span>
-        <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByOperativeExpenses) }}</span>
+        <span class="pull-right col-md-4">{{ asDollars($liquidationBYTurn->turnDiscounts['byOperativeExpenses']) }}</span>
     </h4>
-    @if($totals->totalOtherDiscounts)
-        <h4 class="totals">
-            <span class="">
-                <i class="fa fa-dollar"></i> @lang('Total other discounts')
-            </span>
-            <span class="pull-right col-md-4">{{ asDollars($totals->totalOtherDiscounts) }}</span>
-        </h4>
-    @endif
-
 
     <h3 class="totals">
             <span class="text-bold">
                 <i class=" icon-user-follow"></i> @lang('Total dispatch')
             </span>
-        <span class="pull-right text-bold col-md-4">{{ asDollars($totals->totalDispatch) }}</span>
+        <span class="pull-right text-bold col-md-4">{{ asDollars($liquidationBYTurn->totalDispatch) }}</span>
     </h3>
 
     <hr class="hr">
@@ -139,14 +135,14 @@
             <span class="">
                 <i class="fa fa-dollar"></i> @lang('Total fuel')
             </span>
-        <span class="pull-right col-md-4">{{ asDollars($totals->totalDiscountByFuel) }}</span>
+        <span class="pull-right col-md-4">{{ asDollars($liquidationBYTurn->turnDiscounts['byFuel']) }}</span>
     </h3>
     <br>
     <h3 class="total-liquidation">
             <span class="text-bold">
                 @lang('Balance')
             </span>
-        <span class="pull-right text-bold">{{ asDollars($totals->balance) }}</span>
+        <span class="pull-right text-bold">{{ asDollars($liquidationBYTurn->balance) }}</span>
     </h3>
 
     <hr class="hr">
@@ -155,19 +151,12 @@
             <span class="">
                 @lang('Total locks'):
             </span>
-        <span class="">{{ $totals->totalLocks }}</span>
+        <span class="">{{ $mark->locks }}</span>
         <br>
         <span class="">
                 @lang('Total exempts'):
             </span>
-        <span class="">{{ $totals->totalAuxiliaries }}</span>
-
-        @if($liquidation->liquidation->observations)
-            <hr class="hr">
-
-            <span class="">@lang('Observations'): {{ $liquidation->liquidation->observations }}</span>
-    </h5>
-    @endif
+        <span class="">{{ $mark->auxiliaries }}</span>
 </div>
 </body>
 

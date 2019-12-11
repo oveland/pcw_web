@@ -19,6 +19,7 @@ class CreateBeaMarkDiscountTypesTable extends Migration
             $table->string('description', 300);
             $table->string('icon', 50);
             $table->integer('default')->default(0);
+            $table->integer('uid')->nullable();
             $table->timestamps();
         });
     }

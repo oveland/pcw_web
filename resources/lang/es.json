@@ -695,5 +695,10 @@
   "Error at generate taking register": "Error al generar el registro de recaudo",
   "Taking": "Recaudar",
   "Takings list": "Listado Recaudo",
-  "Liquidated without taking": "Liquidado sin recaudar"
+  "Liquidated without taking": "Liquidado sin recaudar",
+  "Print total": "Imprimir total",
+  "Receipt": "Comprobante",
+  "Turns": "Turnos",
+  "Liquidation updated successfully": "Liquidación actualizada correctamente",
+  "Error at updating liquidation register": "Error al actualizar el registro de liquidación"
 }

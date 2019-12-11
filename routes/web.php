@@ -322,7 +322,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('url-liquidation'))->group(function () {
                 Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');
                 Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
-                Route::get('/export', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
+                Route::post('/update/{liquidation}', 'TakingsPassengersLiquidationController@updateLiquidation')->name('takings-passengers-liquidation-update');
+                Route::get('/export/'.__('Receipt').'-{liquidation}', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
                 Route::get('/test', 'TakingsPassengersLiquidationController@test')->name('takings-passengers-liquidation-test');
             });
 

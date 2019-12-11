@@ -19,6 +19,7 @@ use DB;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use PDF;
 use Storage;
 
@@ -71,34 +72,23 @@ class TakingsPassengersLiquidationController extends Controller
         return response()->json($beaMarks);
     }
 
-    public function exportLiquidation(Request $request)
+    public function exportLiquidation(Liquidation $liquidation, Request $request)
     {
-        $liquidation = Liquidation::find($request->get('id'));
+        $mark = Mark::find($request->get('mark'));
 
-        //dd($liquidation->marks->first()->getAPIFields());
-
+        $template = 'takings.passengers.liquidation.exports.liquidation' . ($mark ? 'Turn' : 'Total');
         $options = (object)[
             'w' => 350,
             'h' => 600,
             'dpi' => 150,
         ];
-        $template = 'takings.passengers.liquidation.exports.liquidation';
 
-        if ($request->get('all')) {
-            $template = 'takings.passengers.liquidation.exports.liquidationAll';
-            $options = (object)[
-                'w' => 350,
-                'h' => 1440,
-                'dpi' => 150,
-            ];
-        }
+        $pdf = PDF::setOptions([
+            'dpi' => $options->dpi,
+            'defaultFont' => 'sans-serif'
+        ])->setPaper(array(0, 0, $options->w, $options->h))->loadView($template, compact(['liquidation', 'mark']));
 
-        $pdf = PDF::setOptions(['dpi' => $options->dpi, 'defaultFont' => 'sans-serif'])->loadView($template, compact('liquidation'));
-
-        $customPaper = array(0, 0, $options->w, $options->h);
-        $pdf->setPaper($customPaper);
-
-        return $pdf->stream('invoice.pdf');
+        return $pdf->stream(__('Receipt')."-$liquidation->id.pdf");
     }
 
     /**
@@ -339,7 +329,7 @@ class TakingsPassengersLiquidationController extends Controller
         foreach ($otherDiscounts as $otherDiscount) {
             $otherDiscount = (object)$otherDiscount;
             $base64File = $otherDiscount->fileUrl;
-            if ($otherDiscount->hasFile && $base64File) {
+            if ($otherDiscount->hasFile && $base64File && !Str::contains($base64File, 'http')) {
                 list($baseType, $image) = explode(';', $base64File);
                 list(, $image) = explode(',', $image);
                 $image = base64_decode($image);
@@ -431,6 +421,39 @@ class TakingsPassengersLiquidationController extends Controller
                 $response->message = __('No there are registers for liquidation');
                 DB::rollBack();
             }
+        }
+
+        DB::commit();
+
+        return response()->json($response);
+    }
+
+    /**
+     * @param Liquidation $liquidation
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateLiquidation(Liquidation $liquidation, Request $request)
+    {
+        $response = (object)[
+            'success' => true,
+            'message' => __('Liquidation updated successfully')
+        ];
+
+        DB::beginTransaction();
+        $dataLiquidation = collect($request->get('liquidation'));
+        $liquidation->liquidation = $dataLiquidation;
+        $liquidation->totals = collect($request->get('totals'))->toJson();
+
+        if (!$this->processDiscountFiles($dataLiquidation)) {
+            $response->success = false;
+            $response->message = __('Error saving other discounts files');
+            DB::rollBack();
+        };
+        if (!$liquidation->save()) {
+            $response->success = false;
+            $response->message = __('Error at updating liquidation register');
+            DB::rollBack();
         }
 
         DB::commit();

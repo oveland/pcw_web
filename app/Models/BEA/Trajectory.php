@@ -3,29 +3,32 @@
 namespace App\Models\BEA;
 
 use App\Models\Routes\Route;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\BEA\Trajectory
  *
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory query()
- * @mixin \Eloquent
+ * @method static Builder|Trajectory newModelQuery()
+ * @method static Builder|Trajectory newQuery()
+ * @method static Builder|Trajectory query()
+ * @mixin Eloquent
  * @property int $id
  * @property string $name
  * @property string|null $description
  * @property int|null $route_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereUpdatedAt($value)
- * @property-read \App\Models\Routes\Route $route
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereRouteId($value)
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|Trajectory whereCreatedAt($value)
+ * @method static Builder|Trajectory whereDescription($value)
+ * @method static Builder|Trajectory whereId($value)
+ * @method static Builder|Trajectory whereName($value)
+ * @method static Builder|Trajectory whereUpdatedAt($value)
+ * @property-read Route $route
+ * @method static Builder|Trajectory whereRouteId($value)
  */
 class Trajectory extends Model
 {

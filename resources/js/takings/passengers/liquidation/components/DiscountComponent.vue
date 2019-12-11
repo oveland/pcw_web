@@ -37,7 +37,7 @@
                 <td class="text-center">{{ mark.number }}</td>
                 <td class="col-md-2 text-center">
                     <span>{{ mark.turn.route.name }}</span><br>
-                    <span class="label span-full" v-if="mark.trajectory" :class="mark.trajectory.name == 'IDA' ? 'label-success':'label-warning'">
+                    <span class="span-full badge badge-info" v-if="mark.trajectory">
                         {{ mark.trajectory.name }}
                     </span>
                     <span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
@@ -95,16 +95,16 @@
                 <div class="text-bold col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-r-0">
 
                     <div class="input-group">
-                        <span class="input-group-addon faa-parent animated-hover tooltips" v-if="!readonly" data-placement="left" :data-title="$t('Delete')" @click="removeOtherDiscount(otherDiscount.id)">
+                        <span v-if="!readonly" class="input-group-addon faa-parent animated-hover tooltips" data-placement="bottom" :data-title="$t('Delete')" @click="removeOtherDiscount(otherDiscount.id)">
                             <i class="fa fa-trash faa-shake font-red"></i>
                         </span>
                         <div class="input-icon">
-                            <i class="icon-tag font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Description')" v-model="otherDiscount.name">
+                            <i class="icon-tag font-green"></i> <input type="text" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Description')" v-model="otherDiscount.name" @keyup="control.enableSaving = true">
                         </div>
-                        <span v-if="otherDiscount.hasFile" class="input-group-addon faa-parent animated-hover tooltips" data-placement="top" :data-title="$t('Show file')" data-toggle="modal" data-target="#modal-show-file-discount" @click="showImagePreview(otherDiscount)">
+                        <span v-if="otherDiscount.hasFile" class="input-group-addon faa-parent animated-hover tooltips" data-placement="left" :data-title="$t('Show file')" data-toggle="modal" data-target="#modal-show-file-discount" @click="showImagePreview(otherDiscount)">
                             <i class="fa fa-image faa-shake font-red"></i>
                         </span>
-                        <span class="input-group-addon" v-if="!readonly">
+                        <span v-if="!readonly" class="input-group-addon">
                             <input type="file" accept="image/*" class="" @change="addDiscountFile(otherDiscount)">
                         </span>
                     </div>
@@ -113,13 +113,16 @@
                 </td>
                 <td class="text-center">
                     <div class="input-icon">
-                        <i class="fa fa-dollar font-green"></i> <input type="text" :readonly="readonly" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Discount')" v-model.number="otherDiscount.value">
+                        <i class="fa fa-dollar font-green"></i> <input type="number" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Discount')" v-model.number="otherDiscount.value">
                     </div>
                 </td>
             </tr>
 
             <tr v-if="!readonly" class="">
                 <td colspan="9" class="text-right">
+                    <button v-if="control.enableSaving && !control.creating" class="btn btn-sm green btn-outline-light btn-outline btn-white" @click="$emit('update-liquidation')">
+                        <i class="fa fa-plus"></i> {{ $t('Save') }}
+                    </button>
                     <button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount()">
                         <i class="fa fa-plus"></i> {{ $t('Add') }}
                     </button>
@@ -161,7 +164,7 @@
     import Vue2Filters from 'vue2-filters';
     import VModal from 'vue-js-modal';
 
-    Vue.use(VModal)
+    Vue.use(VModal);
 
     export default {
         name: "DiscountComponent",
@@ -172,10 +175,12 @@
             }
         },
         props: {
-            marks: Array,
             readonly: Boolean,
+            marks: Array,
             liquidation: Object,
-            totals: Object
+            urlUpdateLiquidate: String,
+            totals: Object,
+            control: Object
         },
         methods: {
             show () {
@@ -194,6 +199,10 @@
                     reader.readAsDataURL(file);
                     reader.onload = e => {
                         otherDiscount.fileUrl = e.target.result;
+                        this.control.enableSaving = true;
+                        setTimeout(() => {
+                            $('.tooltips').tooltip();
+                        }, 500);
                     }
                 }
             },
@@ -215,11 +224,16 @@
                 setTimeout(() => {
                     $('.tooltips').tooltip();
                 }, 500);
+                this.control.enableSaving = true;
+            },
+            saveOtherDiscounts: function(){
+                this.$emit('update-liquidation');
             },
             removeOtherDiscount: function (idToRemove) {
                 this.liquidation.otherDiscounts = _.filter(this.liquidation.otherDiscounts, function (other) {
                     return other.id !== idToRemove;
                 });
+                this.control.enableSaving = true;
             }
         }
     }

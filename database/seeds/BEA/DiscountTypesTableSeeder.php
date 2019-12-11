@@ -15,12 +15,14 @@ class DiscountTypesTableSeeder extends Seeder
     {
         $types = [
             'fuel' => (object)[
+                'uid' => 2,
                 'id' => 0,
                 'icon' => 'fa fa-tachometer',
                 'min' => 30000,
                 'max' => 36000,
             ],
             'tolls' => (object)[
+                'uid' => 4,
                 'id' => 1,
                 'icon' => 'fa fa-ticket',
                 'min' => 8000,
@@ -30,6 +32,7 @@ class DiscountTypesTableSeeder extends Seeder
 
         foreach ($types as $name => $type) {
             DiscountType::create([
+                'uid' => $type->uid,
                 'name' => __(ucfirst($name)),
                 'icon' => $type->icon,
                 'description' => __('Discount by') . " ".__(ucfirst($name)),
@@ -38,6 +41,7 @@ class DiscountTypesTableSeeder extends Seeder
         }
 
         DiscountType::create([
+            'uid' => 1,
             'name' => __('Mobility auxilio'),
             'icon' => 'fa fa-user text-warning',
             'description' => __('Discount by') .' '. __('Mobility auxilio'),
@@ -45,6 +49,7 @@ class DiscountTypesTableSeeder extends Seeder
         ]);
 
         DiscountType::create([
+            'uid' => 3,
             'name' => __('Operative Expenses'),
             'icon' => 'fa fa-hint text-warning',
             'description' => __('Discount by') .' '. __('Operative Expenses'),

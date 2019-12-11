@@ -85,6 +85,7 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property-read \Illuminate\Database\Eloquent\Collection|MarkPenalty[] $markPenalties
  * @property int|null $number
  * @method static Builder|Mark whereNumber($value)
+ * @property-read \App\Models\BEA\Liquidation|null $liquidation
  */
 class Mark extends Model
 {

@@ -28,6 +28,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|DiscountType whereName($value)
  * @method static Builder|DiscountType whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property int|null $uid
+ * @method static Builder|DiscountType whereUid($value)
  */
 class DiscountType extends Model
 {

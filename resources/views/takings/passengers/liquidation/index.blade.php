@@ -71,10 +71,10 @@
                             <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
                         </div>
                         <div id="table-takings" class="tab-pane fade">
-                            <takings-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings') }}" url-takings="{{ route('taking-passengers-takings', ['liquidation' => 'ID']) }}" url-export="{{ route('takings-passengers-liquidation-export') }}" v-on:refresh-report="searchReport($event)"></takings-component>
+                            <takings-component url-update-liquidate="{{ route('takings-passengers-liquidation-update', ['liquidation' => 'ID']) }}" :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings') }}" url-takings="{{ route('taking-passengers-takings', ['liquidation' => 'ID']) }}" url-export="{{ route('takings-passengers-liquidation-export', ['liquidation' => 'ID']) }}" v-on:refresh-report="searchReport($event)"></takings-component>
                         </div>
                         <div id="table-takings-list" class="tab-pane fade">
-                            <takings-list-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings-list') }}" url-takings="" url-export="{{ route('takings-passengers-liquidation-export') }}"></takings-list-component>
+                            <takings-list-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings-list') }}" url-export="{{ route('takings-passengers-liquidation-export', ['liquidation' => 'ID']) }}"></takings-list-component>
                         </div>
                     </div>
                 </div>
