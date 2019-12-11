@@ -274,17 +274,23 @@
         },
         computed:{
             totals: function () {
-                this.liquidation.totals.totalOtherDiscounts = _.sumBy(this.liquidation.liquidation.otherDiscounts, function (other) {
+                let totals = this.liquidation.totals;
+
+                totals.totalOtherDiscounts = _.sumBy(this.liquidation.liquidation.otherDiscounts, function (other) {
                     return (Number.isInteger(other.value) ? other.value : 0);
                 });
 
-                const totalDiscounts = parseInt(this.liquidation.totals.totalDiscountsByTurns) + parseInt(this.liquidation.totals.totalOtherDiscounts);
-
-                if(totalDiscounts !== this.liquidation.totals.totalDiscounts){
+                const totalDiscounts = parseInt(totals.totalDiscountsByTurns) + parseInt(totals.totalOtherDiscounts);
+                if(totalDiscounts !== totals.totalDiscounts){
                     this.control.enableSaving = true;
                 }
-                this.liquidation.totals.totalDiscounts = totalDiscounts;
 
+                const totalDispatch = totals.totalTurns - ( totalDiscounts - totals.totalDiscountByFuel - totals.totalDiscountByMobilityAuxilio) - totals.totalCommissions;
+
+                totals.totalDiscounts = totalDiscounts;
+                totals.totalDispatch = totalDispatch;
+
+                this.liquidation.totals = totals;
                 return this.liquidation.totals;
             }
         },

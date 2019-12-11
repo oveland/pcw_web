@@ -432,6 +432,7 @@ class TakingsPassengersLiquidationController extends Controller
      * @param Liquidation $liquidation
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function updateLiquidation(Liquidation $liquidation, Request $request)
     {

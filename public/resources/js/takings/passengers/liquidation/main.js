@@ -2452,16 +2452,20 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     totals: function totals() {
-      this.liquidation.totals.totalOtherDiscounts = _.sumBy(this.liquidation.liquidation.otherDiscounts, function (other) {
+      var totals = this.liquidation.totals;
+      totals.totalOtherDiscounts = _.sumBy(this.liquidation.liquidation.otherDiscounts, function (other) {
         return Number.isInteger(other.value) ? other.value : 0;
       });
-      var totalDiscounts = parseInt(this.liquidation.totals.totalDiscountsByTurns) + parseInt(this.liquidation.totals.totalOtherDiscounts);
+      var totalDiscounts = parseInt(totals.totalDiscountsByTurns) + parseInt(totals.totalOtherDiscounts);
 
-      if (totalDiscounts !== this.liquidation.totals.totalDiscounts) {
+      if (totalDiscounts !== totals.totalDiscounts) {
         this.control.enableSaving = true;
       }
 
-      this.liquidation.totals.totalDiscounts = totalDiscounts;
+      var totalDispatch = totals.totalTurns - (totalDiscounts - totals.totalDiscountByFuel - totals.totalDiscountByMobilityAuxilio) - totals.totalCommissions;
+      totals.totalDiscounts = totalDiscounts;
+      totals.totalDispatch = totalDispatch;
+      this.liquidation.totals = totals;
       return this.liquidation.totals;
     }
   },
