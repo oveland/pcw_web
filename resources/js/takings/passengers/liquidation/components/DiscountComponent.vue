@@ -1,5 +1,5 @@
 <template>
-    <div class="table-responsive">
+    <div class="">
         <table class="table table-bordered table-condensed table-hover table-valign-middle table-report">
             <thead>
             <tr class="inverse">

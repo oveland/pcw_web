@@ -32,10 +32,10 @@
             <div class="portlet-body">
                 <div class="tab-content">
                     <div class="tab-pane active" id="discounts-params-tab">
-                        <admin-discount-component :vehicles="vehicles" :routes="routes" :trajectories="trajectories" v-on:refresh-report="$emit('refresh-report')"></admin-discount-component>
+                        <admin-discount-component :vehicles="vehicles" :vehicle-selected="vehicle" :routes="routes" :trajectories="trajectories" v-on:refresh-report="$emit('refresh-report')"></admin-discount-component>
                     </div>
                     <div class="tab-pane" id="penalties-params-tab">
-                        <admin-penalty-component :routes="routes" :penalties="penalties" v-on:refresh-report="$emit('refresh-report')"></admin-penalty-component>
+                        <admin-penalty-component :vehicles="vehicles" :vehicle-selected="vehicle" :routes="routes" :penalties="penalties" v-on:refresh-report="$emit('refresh-report')"></admin-penalty-component>
                     </div>
                     <div class="tab-pane" id="commissions-params-tab">
                         <admin-commission-component :routes="routes" :commissions="commissions" v-on:refresh-report="$emit('refresh-report')"></admin-commission-component>

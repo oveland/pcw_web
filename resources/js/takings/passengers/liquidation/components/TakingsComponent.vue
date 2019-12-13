@@ -159,22 +159,22 @@
                                                 <div class="col-md-12">
                                                     <div class="tab-content">
                                                         <div id="step-discounts-detail" class="tab-pane fade in active">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <discount-component :url-update-liquidate="urlUpdateLiquidate" :control.sync="control" :marks="liquidation.marks" :totals.sync="liquidation.totals" :liquidation.sync="liquidation.liquidation" v-on:update-liquidation="updateLiquidation"></discount-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-penalties-detail" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <penalty-component :marks="liquidation.marks" :totals="totals" :liquidation="liquidation.liquidation"></penalty-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-commissions-detail" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <commission-component :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation="liquidation.liquidation"></commission-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
                                                                 <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10">
                                                                     <button v-if="!control.enableSaving" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken">

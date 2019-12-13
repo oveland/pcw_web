@@ -1,6 +1,11 @@
 <template>
     <div class="row">
-        <div class="col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
+        <div class="col-md-3 col-sm-12 col-xs-12">
+            <div class="col-md-12" v-if="vehicles">
+                <multiselect v-model="vehicle" :placeholder="$t('Select a vehicle')" label="number" track-by="id" :options="vehicles"></multiselect>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-12 col-xs-12">
             <div class="tab-content">
                 <div class="">
                     <div class="">
@@ -20,6 +25,9 @@
                                             <i class="fa fa-list-ol text-muted"></i><br>
                                         </th>
                                         <th class="col-md-2">
+                                            <i class="fa fa-car text-muted"></i><br> {{ $t('Vehicle') }}
+                                        </th>
+                                        <th class="col-md-2">
                                             <i class="icon-tag text-muted"></i><br> {{ $t('Type') }}
                                         </th>
                                         <th class="col-md-2">
@@ -33,6 +41,7 @@
                                     <tbody>
                                     <tr class="" v-for="(penalty, indexPenalty) in penaltiesFor(route.id)">
                                         <td class="text-center">{{ indexPenalty + 1 }}</td>
+                                        <td class="text-center">{{ penalty.vehicle.number }}</td>
                                         <td class="text-center">{{ $t(penalty.type) | capitalize }}</td>
                                         <td class="text-center">
                                             {{ penalty.value | numberFormat('$0,0') }}
@@ -102,30 +111,39 @@
     export default {
         name: "AdminPenaltyComponent",
         props: {
+            vehicles: Array,
+            vehicleSelected: Object,
             routes: Array,
             penalties: Array,
         },
         data: function () {
             return {
+                vehicle: Object,
                 penaltyTypes: Array,
                 editingPenalty: Object,
                 editing: false,
             }
         },
+        watch: {
+            vehicleSelected: function () {
+                this.vehicle = this.vehicleSelected;
+            }
+        },
         mounted() {
             this.penaltyTypes = ['boarding'];
-        },
-        computed:{
-
         },
         methods: {
             editPenalty: function(penalty){
                 this.editingPenalty = penalty;
             },
             penaltiesFor(routeId) {
-                return _.filter(this.penalties, {
+                let filter = {
                     'route_id': routeId,
-                });
+                };
+
+                if(this.vehicle)filter.vehicle_id = this.vehicle.id;
+                
+                return _.filter(this.penalties, filter);
             },
             savePenalty: function(){
                 App.blockUI({target: '#penalties-params-tab', animate: true});

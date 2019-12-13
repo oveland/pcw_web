@@ -85,7 +85,7 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property-read \Illuminate\Database\Eloquent\Collection|MarkPenalty[] $markPenalties
  * @property int|null $number
  * @method static Builder|Mark whereNumber($value)
- * @property-read \App\Models\BEA\Liquidation|null $liquidation
+ * @property-read Liquidation|null $liquidation
  */
 class Mark extends Model
 {
@@ -296,7 +296,8 @@ class Mark extends Model
     {
         $markPenalties = $this->markPenalties;
         if ($this->liquidated && $markPenalties->isNotEmpty()) return $markPenalties->first();
-        return Penalty::where('route_id', $this->turn->route->id)->first();
+
+        return Penalty::where('route_id', $this->turn->route->id)->where('vehicle_id', $this->turn->vehicle->id)->first();
     }
 
     public function liquidation()

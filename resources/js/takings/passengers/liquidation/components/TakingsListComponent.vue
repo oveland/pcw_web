@@ -166,22 +166,22 @@
                                                 <div class="col-md-12">
                                                     <div class="tab-content">
                                                         <div id="step-discounts-detail-list" class="tab-pane fade in active">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <discount-component :control="control" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-penalties-detail-list" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <penalty-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></penalty-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-commissions-detail-list" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <commission-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
                                                             </div>
                                                         </div>
                                                         <div id="step-liquidate-detail-list" class="tab-pane fade">
-                                                            <div class=" phase-container col-md-12 m-t-10">
+                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidationDetail.id)" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation" :search="search"></summary-component>
                                                             </div>
                                                         </div>

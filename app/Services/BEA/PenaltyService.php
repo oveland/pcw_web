@@ -21,6 +21,8 @@ class PenaltyService
      */
     function all()
     {
-        return Penalty::with('route')->get();
+        return Penalty::with(['route', 'vehicle'])->get()->sortBy(function ($p){
+            return intval($p->vehicle->number);
+        })->values();
     }
 }

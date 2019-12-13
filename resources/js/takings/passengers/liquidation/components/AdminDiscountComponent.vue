@@ -213,6 +213,7 @@
         name: "AdminDiscountComponent",
         props: {
             vehicles: Array,
+            vehicleSelected: Object,
             routes: Array,
             trajectories: Array,
         },
@@ -243,6 +244,9 @@
             this.options.for.trajectories = 'default';
         },
         watch: {
+            vehicleSelected: function () {
+                this.vehicle = this.vehicleSelected;
+            },
             vehicle: function(){
                 this.setParamToEdit('vehicle',this.vehicle);
 

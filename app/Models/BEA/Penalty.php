@@ -3,6 +3,7 @@
 namespace App\Models\BEA;
 
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +35,7 @@ class Penalty extends Model
 {
     protected $table = 'bea_penalties';
 
-    protected $fillable = ['route_id', 'type', 'value'];
+    protected $fillable = ['route_id', 'type', 'vehicle_id', 'value'];
 
     function getDateFormat()
     {
@@ -47,5 +48,10 @@ class Penalty extends Model
     function route()
     {
         return $this->belongsTo(Route::class);
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 }

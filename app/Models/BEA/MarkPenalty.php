@@ -3,6 +3,7 @@
 namespace App\Models\BEA;
 
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,15 +30,15 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Penalty whereValue($value)
  * @mixin Eloquent
  * @property-read Route $route
- * @property-read \App\Models\BEA\Mark $mark
+ * @property-read Mark $mark
  * @property int $mark_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\MarkPenalty whereMarkId($value)
+ * @method static Builder|MarkPenalty whereMarkId($value)
  */
 class MarkPenalty extends Model
 {
     protected $table = 'bea_mark_penalties';
 
-    protected $fillable = ['route_id', 'type', 'value', 'created_at', 'updated_at'];
+    protected $fillable = ['route_id', 'type', 'vehicle_id', 'value', 'created_at', 'updated_at'];
 
     function getDateFormat()
     {
@@ -52,8 +53,13 @@ class MarkPenalty extends Model
         return $this->belongsTo(Route::class);
     }
 
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
     public function mark()
     {
-        return $this->belongsTo(Mark::class, 'mark_id', 'id');
+        return $this->belongsTo(Mark::class);
     }
 }

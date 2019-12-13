@@ -26,7 +26,24 @@
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                        <div class="mt-element-step">
+                                        <div class="tabbable-custom hidden-lg hidden-md">
+                                            <ul class="nav nav-tabs ">
+                                                <li class="active">
+                                                    <a href="#step-discounts" data-toggle="tab" aria-expanded="true"> <i class="icon-tag"></i> <span class="hidden-xs">{{ $t('Discounts') }}</span> </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#step-penalties" data-toggle="tab" aria-expanded="false"> <i class="icon-shield"></i> <span class="hidden-xs">{{ $t('Penalties') }}</span> </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#step-commissions" data-toggle="tab" aria-expanded="false"> <i class=" icon-user-follow"></i> <span class="hidden-xs">{{ $t('Commissions') }}</span> </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#step-liquidate" data-toggle="tab" aria-expanded="false"> <i class="icon-layers"></i> <span class="hidden-xs">{{ $t('Liquidation') }}</span> </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="mt-element-step hidden-sm hidden-xs">
                                             <div class="row step-line">
                                                 <div class="mt-step-desc text-center hide">
                                                     <div class="font-dark bold uppercase">
@@ -75,22 +92,22 @@
                                             <div class="col-md-12">
                                                 <div class="tab-content">
                                                     <div id="step-discounts" class="tab-pane fade in active">
-                                                        <div class=" phase-container col-md-12 m-t-10">
+                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
                                                             <discount-component :control.sync="control" :marks="marks" :totals="totals" :liquidation.sync="liquidation"></discount-component>
                                                         </div>
                                                     </div>
                                                     <div id="step-penalties" class="tab-pane fade">
-                                                        <div class=" phase-container col-md-12 m-t-10">
+                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
                                                             <penalty-component :marks="marks" :totals="totals" :liquidation.sync="liquidation"></penalty-component>
                                                         </div>
                                                     </div>
                                                     <div id="step-commissions" class="tab-pane fade">
-                                                        <div class=" phase-container col-md-12 m-t-10">
+                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
                                                             <commission-component :marks.sync="marks" :totals="totals" :liquidation.sync="liquidation"></commission-component>
                                                         </div>
                                                     </div>
                                                     <div id="step-liquidate" class="tab-pane fade">
-                                                        <div class=" phase-container col-md-12 m-t-10">
+                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
                                                             <summary-component :url-export="urlExport" :marks="marks" :liquidation.sync="liquidation" :totals="totals" :search="search"></summary-component>
 
                                                             <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10">

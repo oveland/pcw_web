@@ -607,6 +607,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "AdminDiscountComponent",
   props: {
     vehicles: Array,
+    vehicleSelected: Object,
     routes: Array,
     trajectories: Array
   },
@@ -637,6 +638,9 @@ __webpack_require__.r(__webpack_exports__);
     this.options["for"].trajectories = 'default';
   },
   watch: {
+    vehicleSelected: function vehicleSelected() {
+      this.vehicle = this.vehicleSelected;
+    },
     vehicle: function vehicle() {
       this.setParamToEdit('vehicle', this.vehicle);
 
@@ -865,32 +869,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminPenaltyComponent",
   props: {
+    vehicles: Array,
+    vehicleSelected: Object,
     routes: Array,
     penalties: Array
   },
   data: function data() {
     return {
+      vehicle: Object,
       penaltyTypes: Array,
       editingPenalty: Object,
       editing: false
     };
   },
+  watch: {
+    vehicleSelected: function vehicleSelected() {
+      this.vehicle = this.vehicleSelected;
+    }
+  },
   mounted: function mounted() {
     this.penaltyTypes = ['boarding'];
   },
-  computed: {},
   methods: {
     editPenalty: function editPenalty(penalty) {
       this.editingPenalty = penalty;
     },
     penaltiesFor: function penaltiesFor(routeId) {
-      return _.filter(this.penalties, {
+      var filter = {
         'route_id': routeId
-      });
+      };
+      if (this.vehicle) filter.vehicle_id = this.vehicle.id;
+      return _.filter(this.penalties, filter);
     },
     savePenalty: function savePenalty() {
       var _this = this;
@@ -1334,6 +1356,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CommissionComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CommissionComponent */ "./resources/js/takings/passengers/liquidation/components/CommissionComponent.vue");
 /* harmony import */ var _PenaltyComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PenaltyComponent */ "./resources/js/takings/passengers/liquidation/components/PenaltyComponent.vue");
 /* harmony import */ var _SummaryComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SummaryComponent */ "./resources/js/takings/passengers/liquidation/components/SummaryComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -8707,6 +8746,7 @@ var render = function() {
               _c("admin-discount-component", {
                 attrs: {
                   vehicles: _vm.vehicles,
+                  "vehicle-selected": _vm.vehicle,
                   routes: _vm.routes,
                   trajectories: _vm.trajectories
                 },
@@ -8725,7 +8765,12 @@ var render = function() {
             { staticClass: "tab-pane", attrs: { id: "penalties-params-tab" } },
             [
               _c("admin-penalty-component", {
-                attrs: { routes: _vm.routes, penalties: _vm.penalties },
+                attrs: {
+                  vehicles: _vm.vehicles,
+                  "vehicle-selected": _vm.vehicle,
+                  routes: _vm.routes,
+                  penalties: _vm.penalties
+                },
                 on: {
                   "refresh-report": function($event) {
                     return _vm.$emit("refresh-report")
@@ -9908,7 +9953,34 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-md-8 col-sm-12 col-xs-12 col-md-offset-2" }, [
+    _c("div", { staticClass: "col-md-3 col-sm-12 col-xs-12" }, [
+      _vm.vehicles
+        ? _c(
+            "div",
+            { staticClass: "col-md-12" },
+            [
+              _c("multiselect", {
+                attrs: {
+                  placeholder: _vm.$t("Select a vehicle"),
+                  label: "number",
+                  "track-by": "id",
+                  options: _vm.vehicles
+                },
+                model: {
+                  value: _vm.vehicle,
+                  callback: function($$v) {
+                    _vm.vehicle = $$v
+                  },
+                  expression: "vehicle"
+                }
+              })
+            ],
+            1
+          )
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-md-9 col-sm-12 col-xs-12" }, [
       _c("div", { staticClass: "tab-content" }, [
         _c("div", {}, [
           _c("div", {}, [
@@ -9964,6 +10036,16 @@ var render = function() {
                             _vm._m(0, true),
                             _vm._v(" "),
                             _c("th", { staticClass: "col-md-2" }, [
+                              _c("i", { staticClass: "fa fa-car text-muted" }),
+                              _c("br"),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.$t("Vehicle")) +
+                                  "\n                                    "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "col-md-2" }, [
                               _c("i", { staticClass: "icon-tag text-muted" }),
                               _c("br"),
                               _vm._v(
@@ -10009,6 +10091,10 @@ var render = function() {
                               return _c("tr", {}, [
                                 _c("td", { staticClass: "text-center" }, [
                                   _vm._v(_vm._s(indexPenalty + 1))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-center" }, [
+                                  _vm._v(_vm._s(penalty.vehicle.number))
                                 ]),
                                 _vm._v(" "),
                                 _c("td", { staticClass: "text-center" }, [
@@ -10315,7 +10401,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "table-responsive" }, [
+  return _c("div", {}, [
     _c(
       "table",
       {
@@ -10795,7 +10881,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "table-responsive" },
+    {},
     [
       _c(
         "table",
@@ -11538,154 +11624,247 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "portlet-body" }, [
-                      _c("div", { staticClass: "mt-element-step" }, [
-                        _c("div", { staticClass: "row step-line" }, [
-                          _c(
-                            "div",
-                            { staticClass: "mt-step-desc text-center hide" },
-                            [
+                      _c(
+                        "div",
+                        { staticClass: "tabbable-custom hidden-lg hidden-md" },
+                        [
+                          _c("ul", { staticClass: "nav nav-tabs " }, [
+                            _c("li", { staticClass: "active" }, [
                               _c(
-                                "div",
-                                { staticClass: "font-dark bold uppercase" },
+                                "a",
+                                {
+                                  attrs: {
+                                    href: "#step-discounts",
+                                    "data-toggle": "tab",
+                                    "aria-expanded": "true"
+                                  }
+                                },
                                 [
-                                  _vm._v(
-                                    "\n                                                    " +
-                                      _vm._s(_vm.$t("Generate liquidation")) +
-                                      "\n                                                "
-                                  )
+                                  _c("i", { staticClass: "icon-tag" }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "hidden-xs" }, [
+                                    _vm._v(_vm._s(_vm.$t("Discounts")))
+                                  ])
                                 ]
-                              ),
-                              _vm._v(" "),
-                              _c("div", {
-                                staticClass: "caption-desc font-grey-cascade"
-                              }),
-                              _vm._v(" "),
-                              _c("br")
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "phases col-md-3 mt-step-col first phase-inventory warning",
-                              attrs: {
-                                "data-toggle": "tab",
-                                href: "#step-discounts",
-                                "data-active": "warning"
-                              }
-                            },
-                            [
-                              _vm._m(0),
-                              _vm._v(" "),
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", {}, [
                               _c(
-                                "div",
+                                "a",
                                 {
-                                  staticClass:
-                                    "mt-step-title uppercase font-grey-cascade"
+                                  attrs: {
+                                    href: "#step-penalties",
+                                    "data-toggle": "tab",
+                                    "aria-expanded": "false"
+                                  }
                                 },
-                                [_vm._v(_vm._s(_vm.$t("Discounts")))]
-                              ),
-                              _vm._v(" "),
-                              _c("div", {
+                                [
+                                  _c("i", { staticClass: "icon-shield" }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "hidden-xs" }, [
+                                    _vm._v(_vm._s(_vm.$t("Penalties")))
+                                  ])
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", {}, [
+                              _c(
+                                "a",
+                                {
+                                  attrs: {
+                                    href: "#step-commissions",
+                                    "data-toggle": "tab",
+                                    "aria-expanded": "false"
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: " icon-user-follow" }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "hidden-xs" }, [
+                                    _vm._v(_vm._s(_vm.$t("Commissions")))
+                                  ])
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", {}, [
+                              _c(
+                                "a",
+                                {
+                                  attrs: {
+                                    href: "#step-liquidate",
+                                    "data-toggle": "tab",
+                                    "aria-expanded": "false"
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "icon-layers" }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "hidden-xs" }, [
+                                    _vm._v(_vm._s(_vm.$t("Liquidation")))
+                                  ])
+                                ]
+                              )
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "mt-element-step hidden-sm hidden-xs" },
+                        [
+                          _c("div", { staticClass: "row step-line" }, [
+                            _c(
+                              "div",
+                              { staticClass: "mt-step-desc text-center hide" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "font-dark bold uppercase" },
+                                  [
+                                    _vm._v(
+                                      "\n                                                    " +
+                                        _vm._s(_vm.$t("Generate liquidation")) +
+                                        "\n                                                "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("div", {
+                                  staticClass: "caption-desc font-grey-cascade"
+                                }),
+                                _vm._v(" "),
+                                _c("br")
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
                                 staticClass:
-                                  "mt-step-content font-grey-cascade hide"
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "phases col-md-3 mt-step-col phase-inventory",
-                              attrs: {
-                                "data-toggle": "tab",
-                                href: "#step-penalties",
-                                "data-active": "error"
-                              }
-                            },
-                            [
-                              _vm._m(1),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
+                                  "phases col-md-3 mt-step-col first phase-inventory warning",
+                                attrs: {
+                                  "data-toggle": "tab",
+                                  href: "#step-discounts",
+                                  "data-active": "warning"
+                                }
+                              },
+                              [
+                                _vm._m(0),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "mt-step-title uppercase font-grey-cascade"
+                                  },
+                                  [_vm._v(_vm._s(_vm.$t("Discounts")))]
+                                ),
+                                _vm._v(" "),
+                                _c("div", {
                                   staticClass:
-                                    "mt-step-title uppercase font-grey-cascade"
-                                },
-                                [_vm._v(_vm._s(_vm.$t("Penalties")))]
-                              ),
-                              _vm._v(" "),
-                              _c("div", {
+                                    "mt-step-content font-grey-cascade hide"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
                                 staticClass:
-                                  "mt-step-content font-grey-cascade hide"
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "phases col-md-3 mt-step-col phase-inventory",
-                              attrs: {
-                                "data-toggle": "tab",
-                                href: "#step-commissions",
-                                "data-active": "active"
-                              }
-                            },
-                            [
-                              _vm._m(2),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
+                                  "phases col-md-3 mt-step-col phase-inventory",
+                                attrs: {
+                                  "data-toggle": "tab",
+                                  href: "#step-penalties",
+                                  "data-active": "error"
+                                }
+                              },
+                              [
+                                _vm._m(1),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "mt-step-title uppercase font-grey-cascade"
+                                  },
+                                  [_vm._v(_vm._s(_vm.$t("Penalties")))]
+                                ),
+                                _vm._v(" "),
+                                _c("div", {
                                   staticClass:
-                                    "mt-step-title uppercase font-grey-cascade"
-                                },
-                                [_vm._v(_vm._s(_vm.$t("Commissions")))]
-                              ),
-                              _vm._v(" "),
-                              _c("div", {
+                                    "mt-step-content font-grey-cascade hide"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
                                 staticClass:
-                                  "mt-step-content font-grey-cascade hide"
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "phases col-md-3 mt-step-col last phase-inventory",
-                              attrs: {
-                                "data-toggle": "tab",
-                                href: "#step-liquidate",
-                                "data-active": "done"
-                              }
-                            },
-                            [
-                              _vm._m(3),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
+                                  "phases col-md-3 mt-step-col phase-inventory",
+                                attrs: {
+                                  "data-toggle": "tab",
+                                  href: "#step-commissions",
+                                  "data-active": "active"
+                                }
+                              },
+                              [
+                                _vm._m(2),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "mt-step-title uppercase font-grey-cascade"
+                                  },
+                                  [_vm._v(_vm._s(_vm.$t("Commissions")))]
+                                ),
+                                _vm._v(" "),
+                                _c("div", {
                                   staticClass:
-                                    "mt-step-title uppercase font-grey-cascade"
-                                },
-                                [_vm._v(_vm._s(_vm.$t("Liquidate")))]
-                              ),
-                              _vm._v(" "),
-                              _c("div", {
-                                staticClass: "mt-step-content font-grey-cascade"
-                              })
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("hr")
-                      ]),
+                                    "mt-step-content font-grey-cascade hide"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "phases col-md-3 mt-step-col last phase-inventory",
+                                attrs: {
+                                  "data-toggle": "tab",
+                                  href: "#step-liquidate",
+                                  "data-active": "done"
+                                }
+                              },
+                              [
+                                _vm._m(3),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "mt-step-title uppercase font-grey-cascade"
+                                  },
+                                  [_vm._v(_vm._s(_vm.$t("Liquidate")))]
+                                ),
+                                _vm._v(" "),
+                                _c("div", {
+                                  staticClass:
+                                    "mt-step-content font-grey-cascade"
+                                })
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("hr")
+                        ]
+                      ),
                       _vm._v(" "),
                       _c("div", { staticClass: "row" }, [
                         _c("div", { staticClass: "col-md-12" }, [
@@ -11701,7 +11880,7 @@ var render = function() {
                                   "div",
                                   {
                                     staticClass:
-                                      " phase-container col-md-12 m-t-10"
+                                      "table-responsive phase-container col-md-12 m-t-10"
                                   },
                                   [
                                     _c("discount-component", {
@@ -11737,7 +11916,7 @@ var render = function() {
                                   "div",
                                   {
                                     staticClass:
-                                      " phase-container col-md-12 m-t-10"
+                                      "table-responsive phase-container col-md-12 m-t-10"
                                   },
                                   [
                                     _c("penalty-component", {
@@ -11769,7 +11948,7 @@ var render = function() {
                                   "div",
                                   {
                                     staticClass:
-                                      " phase-container col-md-12 m-t-10"
+                                      "table-responsive phase-container col-md-12 m-t-10"
                                   },
                                   [
                                     _c("commission-component", {
@@ -11804,7 +11983,7 @@ var render = function() {
                                   "div",
                                   {
                                     staticClass:
-                                      " phase-container col-md-12 m-t-10"
+                                      "table-responsive phase-container col-md-12 m-t-10"
                                   },
                                   [
                                     _c("summary-component", {
@@ -11927,7 +12106,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "table-responsive" }, [
+  return _c("div", {}, [
     _c(
       "table",
       {
@@ -14021,7 +14200,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("discount-component", {
@@ -14075,7 +14254,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("penalty-component", {
@@ -14103,7 +14282,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("commission-component", {
@@ -14132,7 +14311,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("summary-component", {
@@ -14984,7 +15163,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("discount-component", {
@@ -15015,7 +15194,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("penalty-component", {
@@ -15046,7 +15225,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("commission-component", {
@@ -15076,7 +15255,7 @@ var render = function() {
                                       "div",
                                       {
                                         staticClass:
-                                          " phase-container col-md-12 m-t-10"
+                                          "table-responsive phase-container col-md-12 m-t-10"
                                       },
                                       [
                                         _c("summary-component", {
