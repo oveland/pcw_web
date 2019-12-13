@@ -93,7 +93,7 @@ class Mark extends Model
 
     protected $table = 'bea_marks';
 
-    protected $dates = ['date', 'initial_time', 'final_time'];
+    protected $dates = ['date'];
 
     protected static function boot()
     {

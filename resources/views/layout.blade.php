@@ -1462,8 +1462,8 @@ License: You must have a valid license purchased only from themeforest(the above
 </template>
 
 <div class="page-footer">
-    <div class="page-footer-inner col-md-12 text-center"> <b>2019</b> &copy; PCW Ditech Integradores Tecnológicos:
-        <a href="http://pcwtecnologia.com" title="PCW Tecnología" target="_blank">pcwtecnologia.com</a>
+    <div class="page-footer-inner col-md-12 text-center"> <b>2020</b> &copy;
+        <a href="http://brochure.pcwserviciosgps.com/" title="PCW Tecnología" class="text-bold text-muted" target="_blank">Powered by PCW</a>
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>

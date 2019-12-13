@@ -9,6 +9,7 @@ use App\Models\BEA\Liquidation;
 use App\Models\BEA\Mark;
 use App\Models\BEA\Penalty;
 use App\Models\BEA\Trajectory;
+use App\Models\BEA\Turn;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
@@ -42,8 +43,14 @@ class TakingsPassengersLiquidationController extends Controller
 
     public function test(Request $request)
     {
-        $m = BEADB::select("SELECT count(*) FROM A_MARCA WHERE AMR_FHINICIO > current_date");
-        dd($m);
+        $vehicle = Vehicle::find(1962);
+        $lastIdMigrated = Mark::whereIn('turn_id', Turn::where('vehicle_id', $vehicle->id)->get()->pluck('id'))->max('id');
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_IDMARCA > $lastIdMigrated OR AMR_FHINICIO > current_date) AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = $vehicle->bea_id)");
+        dump($marks);
+
+        $mpcw = Mark::whereDate('date', Carbon::now())->whereIn('turn_id', Turn::where('vehicle_id', $vehicle->id)->get()->pluck('id'))->get();
+
+        dd($mpcw);
     }
 
     /**
@@ -393,6 +400,7 @@ class TakingsPassengersLiquidationController extends Controller
                         $mark = Mark::find($markId);
                         if ($mark) {
                             $mark->liquidated = true;
+                            $mark->taken = false;
                             $mark->liquidation()->associate($liquidation);
                             $mark->pay_fall = collect($falls->get('pay'))->get($mark->id);
                             $mark->get_fall = collect($falls->get('get'))->get($mark->id);
@@ -478,6 +486,7 @@ class TakingsPassengersLiquidationController extends Controller
 
         $marks = $liquidation->marks;
         foreach ($marks as $mark) {
+            $mark->liquidated = true;
             $mark->taken = true;
             if (!$mark->save()) {
                 DB::rollBack();

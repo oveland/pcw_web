@@ -112,16 +112,16 @@ class BEASyncService
      */
     public function marks()
     {
-        $lastIdMigrated = Mark::max('id');
+        $lastIdMigrated = Mark::whereIn('turn_id', Turn::where('vehicle_id', $this->vehicle->id)->get()->pluck('id'))->max('id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA > $lastIdMigrated AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$this->vehicle->bea_id.")");
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_IDMARCA > $lastIdMigrated OR AMR_FHINICIO > '$this->date') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$this->vehicle->bea_id.")");
 
         foreach ($marks as $markBEA) {
             $mark = $this->processMark($markBEA);
-
-            if (!$mark->save()) {
+            if ($mark && !$mark->save()) {
                 throw new Exception("Error saving MARK with id: $markBEA->AMR_IDMARCA");
             }
+
         }
 
         DB::select("SELECT refresh_bea_marks_turns_numbers_function(".$this->vehicle->id.", '$this->date')");
@@ -136,8 +136,9 @@ class BEASyncService
         $mark = Mark::find($markBEA->AMR_IDMARCA);
 
         if (!$mark) $mark = new Mark();
+        else if($mark->liquidated) return null;
 
-        $passengersUp = $markBEA->AMR_SUBIDAS;
+            $passengersUp = $markBEA->AMR_SUBIDAS;
         $passengersDown = $markBEA->AMR_BAJADAS;
 
         $locks = $markBEA->AMR_BLOQUEOS;
@@ -154,9 +155,9 @@ class BEASyncService
         $mark->id = $markBEA->AMR_IDMARCA;
         $mark->turn_id = $markBEA->AMR_IDTURNO;
         $mark->trajectory_id = $markBEA->AMR_IDDERROTERO;
-        $mark->date = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO);
-        $mark->initial_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO);
-        $mark->final_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHFINAL);
+        $mark->date = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO)->format(config('app.simple_date_time_format'));
+        $mark->initial_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO)->format(config('app.simple_time_format'));
+        $mark->final_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHFINAL)->format(config('app.simple_time_format'));
         $mark->passengers_up = $passengersUp;
         $mark->passengers_down = $passengersDown;
         $mark->locks = $locks;
