@@ -4,6 +4,10 @@ namespace App\Models\Users;
 
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -18,34 +22,38 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string|null $remember_token
  * @property string|null $role
  * @property bool $active
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int|null $company_id
- * @property-read \App\Models\Company\Company|null $company
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRole($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereUsername($value)
+ * @property-read Company|null $company
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
+ * @method static Builder|User whereActive($value)
+ * @method static Builder|User whereCompanyId($value)
+ * @method static Builder|User whereCreatedAt($value)
+ * @method static Builder|User whereEmail($value)
+ * @method static Builder|User whereId($value)
+ * @method static Builder|User whereName($value)
+ * @method static Builder|User wherePassword($value)
+ * @method static Builder|User whereRememberToken($value)
+ * @method static Builder|User whereRole($value)
+ * @method static Builder|User whereUpdatedAt($value)
+ * @method static Builder|User whereUsername($value)
  * @mixin \Eloquent
  * @property int $role_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRoleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User query()
+ * @method static Builder|User whereRoleId($value)
+ * @method static Builder|User newModelQuery()
+ * @method static Builder|User newQuery()
+ * @method static Builder|User query()
  * @property string|null $vehicle_tags
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereVehicleTags($value)
+ * @method static Builder|User whereVehicleTags($value)
  */
 class User extends Authenticatable
 {
+    const ADMIN_ROLE = 1;
+    const SYSTEM_ROLE = 2;
     const PROPRIETARY_ROLE = 3;
+    const DISPATCHER_ROLE = 4;
+    const ANALYST_ML_ROLE = 5;
 
     use Notifiable;
 
@@ -204,5 +212,27 @@ class User extends Authenticatable
         }
 
         return $assignedVehicles;
+    }
+
+    public function canML($roleName)
+    {
+        switch ($roleName){
+            case 'liquidate':
+                return $this->role_id === self::ANALYST_ML_ROLE || ($this->role_id < 3) || $this->isAdmin();
+            break;
+            case 'takings':
+                return $this->role_id === self::ANALYST_ML_ROLE || $this->role_id === self::DISPATCHER_ROLE || ($this->role_id < 3) || $this->isAdmin();
+            break;
+            case 'takings-list':
+                return $this->role_id === self::ANALYST_ML_ROLE || $this->role_id === self::DISPATCHER_ROLE || ($this->role_id < 3) || $this->isAdmin();
+            break;
+            case 'admin-params':
+                return $this->role_id === self::ANALYST_ML_ROLE || ($this->role_id < 3) || $this->isAdmin();
+            break;
+            default:
+                return false;
+                break;
+
+        }
     }
 }

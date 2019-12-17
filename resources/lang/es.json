@@ -656,7 +656,6 @@
   "Locks": "Bloqueos",
   "Total by turn": "Total por turno",
   "Fixed value per passenger": "Valor fijo por pasajero",
-  "Percent of Gross BEA": "Porcentaje de BEA Bruto",
   "Initial time": "Hora inicial",
   "Final time": "Hora final",
   "Total discounts": "Total decuentos",
@@ -700,5 +699,6 @@
   "Receipt": "Comprobante",
   "Turns": "Turnos",
   "Liquidation updated successfully": "Liquidación actualizada correctamente",
-  "Error at updating liquidation register": "Error al actualizar el registro de liquidación"
+  "Error at updating liquidation register": "Error al actualizar el registro de liquidación",
+  "Percent of Gross BEA": "Porcentaje de Total turno"
 }

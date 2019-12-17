@@ -46,36 +46,50 @@
             <div class="portlet light ">
                 <div class="portlet-title">
                     <div class="">
-                        <div class="btn-group btn-group-devided width-full" data-toggle="buttons">
+                        <div class="btn-group btn-group-devided width-full btn-group-modules" data-toggle="buttons">
+                            @if( Auth::user()->canML('liquidate') )
                             <label class="btn btn-tab btn-transparent yellow-crusta btn-outline pull-left btn-circle uppercase active" data-toggle="tab" data-target="#table-liquidations"
                                 onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
                                 <i class="icon-layers"></i> <span class="hidden-xs">@lang('Liquidation')</span>
                             </label>
+                            @endif
+                            @if( Auth::user()->canML('takings') )
                             <label class="btn btn-tab btn-transparent blue btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings"
                                 onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
                                 <i class="fa fa-suitcase"></i> <span class="hidden-xs">@lang('Takings')</span>
                             </label>
+                            @endif
+                            @if( Auth::user()->canML('takings-list') )
                             <label class="btn btn-tab btn-transparent green-meadow btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings-list"
                                    onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
                                 <i class="fa fa-check-circle-o"></i> <span class="hidden-xs">@lang('Takings list')</span>
                             </label>
+                            @endif
+                            @if( Auth::user()->canML('admin-params') )
                             <label class="btn blue-hoki btn-outline btn-circle pull-right uppercase" data-toggle="modal" data-target="#modal-params-manager">
                                 <i class="fa fa-cogs"></i> <span class="hidden-xs">@lang('Admin')</span>
                             </label>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="portlet-body">
                     <div class="tab-content panel p-0">
+                        @if( Auth::user()->canML('liquidate') )
                         <div id="table-liquidations" class="tab-pane fade active in">
                             <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
                         </div>
+                        @endif
+                        @if( Auth::user()->canML('takings') )
                         <div id="table-takings" class="tab-pane fade">
                             <takings-component url-update-liquidate="{{ route('takings-passengers-liquidation-update', ['liquidation' => 'ID']) }}" :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings') }}" url-takings="{{ route('taking-passengers-takings', ['liquidation' => 'ID']) }}" url-export="{{ route('takings-passengers-liquidation-export', ['liquidation' => 'ID']) }}" v-on:refresh-report="searchReport($event)"></takings-component>
                         </div>
+                        @endif
+                        @if( Auth::user()->canML('takings-list') )
                         <div id="table-takings-list" class="tab-pane fade">
                             <takings-list-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings-list') }}" url-export="{{ route('takings-passengers-liquidation-export', ['liquidation' => 'ID']) }}"></takings-list-component>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -99,8 +113,10 @@
 
     <script type="application/ecmascript">
         $('.menu-takings-passengers, .menu-takings-passengers-liquidation').addClass('active-animated');
-        @if(!Auth::user()->isAdmin())
-            //$(document).ready(loadSelectRouteReport(null));
-        @endif
+        $(document).ready(function () {
+            setTimeout(()=>{
+                $('.btn-group-modules .btn-tab:first').click();
+            },1000);
+        });
     </script>
 @endsection
