@@ -36,6 +36,7 @@ class CreateBeaMarksTrigger extends Migration
                   AND passengers_bea = NEW.passengers_bea
                   AND final_time > NEW.initial_time
                   AND trajectory_id IS NOT NULL
+                  AND id <> NEW.id
                   ORDER BY final_time DESC
                 LIMIT 1
                 INTO duplicated_id;
