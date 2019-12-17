@@ -331,6 +331,7 @@
             },
             searchTakingsReport: function () {
                 axios.get(this.urlList, {params: this.searchParams}).then(response => {
+                    console.log(response.data);
                     this.liquidations = response.data;
                 }).catch(function (error) {
                     console.log(error);

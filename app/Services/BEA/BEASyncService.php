@@ -53,7 +53,7 @@ class BEASyncService
      */
     public function turns()
     {
-        $lastIdMigrated = Turn::max('id');
+        $lastIdMigrated = Turn::where('vehicle_id', $this->vehicle->id)->max('id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
         $turns = BEADB::select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
 
@@ -114,7 +114,7 @@ class BEASyncService
     {
         $lastIdMigrated = Mark::whereIn('turn_id', Turn::where('vehicle_id', $this->vehicle->id)->get()->pluck('id'))->max('id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_IDMARCA > $lastIdMigrated OR AMR_FHINICIO > '$this->date') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$this->vehicle->bea_id.")");
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > '$this->date') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$this->vehicle->bea_id.")");
 
         foreach ($marks as $markBEA) {
             $mark = $this->processMark($markBEA);
@@ -238,7 +238,7 @@ class BEASyncService
      */
     public function validateVehicle($vehicleId)
     {
-        $vehicle = Vehicle::where('bea_id', $vehicleId)->first();
+        $vehicle = Vehicle::where('bea_id', $vehicleId)->where('company_id', Company::COODETRANS)->first();
 
         if (!$vehicle) {
             $vehicleBEA = BEADB::select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleId")->first();

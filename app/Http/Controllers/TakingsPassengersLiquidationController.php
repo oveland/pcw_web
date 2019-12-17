@@ -10,6 +10,7 @@ use App\Models\BEA\Mark;
 use App\Models\BEA\Penalty;
 use App\Models\BEA\Trajectory;
 use App\Models\BEA\Turn;
+use App\Models\Company\Company;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
@@ -41,16 +42,82 @@ class TakingsPassengersLiquidationController extends Controller
         $this->beaService = $beaService;
     }
 
+    public function searchMarksBEA()
+    {
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA = 78141 OR AMR_IDMARCA = 78256");
+        dd($marks);
+    }
+
     public function test(Request $request)
     {
-        $vehicle = Vehicle::find(1962);
+
+        $this->searchMarksBEA();
+        $date = Carbon::now()->toDateString();
+        $date = '2019-12-14';
+        $vehicle = Vehicle::find($request->get('vehicle'));
+        dump("BEA ID > $vehicle->bea_id");
+
+
+        dump("Check for BEA TURNS");
+
+        $lastIdMigrated = Turn::where('vehicle_id', $vehicle->id)->max('id');
+        $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
+        $turns = BEADB::select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
+        dump($turns);
+
+        dump("Check for BEA MARKS ");
+
         $lastIdMigrated = Mark::whereIn('turn_id', Turn::where('vehicle_id', $vehicle->id)->get()->pluck('id'))->max('id');
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_IDMARCA > $lastIdMigrated OR AMR_FHINICIO > current_date) AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = $vehicle->bea_id)");
-        dump($marks);
+        $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
+        dump("Last Id Migrated > $lastIdMigrated");
 
-        $mpcw = Mark::whereDate('date', Carbon::now())->whereIn('turn_id', Turn::where('vehicle_id', $vehicle->id)->get()->pluck('id'))->get();
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO >= '$date 00:00:00' AND AMR_FHINICIO <= '$date 23:59:59') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$vehicle->bea_id.")");
+        $marks = $marks->where('AMR_IDDERROTERO', '<>', null)->sortBy('AMR_FHINICIO');
+        foreach ($marks as $markBEA) {
+            dump ("$markBEA->AMR_IDMARCA > $markBEA->AMR_FHINICIO - $markBEA->AMR_FHFINAL turn: $markBEA->AMR_IDTURNO");
+        }
+    }
 
-        dd($mpcw);
+    public function copyParamsFromVehicle()
+    {
+        $referenceVehicle = Vehicle::find(1946);
+
+        $vehicle = Vehicle::where('company_id', Company::COODETRANS)->where('number', '8039')->first();
+        $ok = true;
+        if($vehicle){
+            $discounts = Discount::where('vehicle_id', $referenceVehicle->id)->get();
+            foreach ($discounts as $discount){
+                $exists = Discount::where('vehicle_id', $vehicle->id)->where('route_id', $discount->route->id)->where('trajectory_id', $discount->trajectory_id)->where('discount_type_id', $discount->discount_type_id)->first();
+
+                if(!$exists){
+                    $new = new Discount();
+                    $new->vehicle_id = $vehicle->id;
+                    $new->discount_type_id = $discount->discount_type_id;
+                    $new->route_id = $discount->route_id;
+                    $new->trajectory_id = $discount->trajectory_id;
+                    $new->value = $discount->value;
+
+                    if(!$new->save())$ok = false;
+                }
+            }
+
+            $penalties = Penalty::where('vehicle_id', $referenceVehicle->id)->get();
+            foreach ($penalties as $penalty){
+                $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $penalty->route->id)->first();
+
+                if(!$exists){
+                    $new = new Penalty();
+                    $new->vehicle_id = $vehicle->id;
+                    $new->route_id = $penalty->route_id;
+                    $new->type = $penalty->type;
+                    $new->value = $penalty->value;
+
+                    if(!$new->save())$ok = false;
+                }
+            }
+        }
+
+        dd($ok);
     }
 
     /**
@@ -108,7 +175,7 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
 
-        $beaLiquidations = $this->beaService->getBEATakings($vehicleReport, $dateReport);
+        $beaLiquidations = $this->beaService->getBEATakings($vehicleReport, $dateReport)->values()->toArray();
 
         return response()->json($beaLiquidations);
     }
@@ -123,7 +190,7 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
 
-        $beaLiquidations = $this->beaService->getBEATakingsList($vehicleReport, $dateReport);
+        $beaLiquidations = $this->beaService->getBEATakingsList($vehicleReport, $dateReport)->values()->toArray();
 
         return response()->json($beaLiquidations);
     }
