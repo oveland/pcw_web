@@ -166,7 +166,7 @@ class RouteExportService
                     __('Arrival Time Difference') => '----------',
                     __('Route Time') => '----------',
                     __('Route') => strtoupper(__('Total round trips')),
-                    __('Dead time') => number_format($dispatchRegisters->count() / 2, '1', '.', '')
+                    __('Dead time') => number_format($dispatchRegisters->count() / ($company->isIntermunicipal() ? 2 : 1), '1', '.', '')
                 ]);
 
                 $dataExcel->push($data->toArray());
