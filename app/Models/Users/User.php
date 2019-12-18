@@ -56,6 +56,7 @@ use phpDocumentor\Reflection\Types\This;
 class User extends Authenticatable
 {
     const PROPRIETARY_ROLE = 3;
+    const DISPATCHER_ROLE = 4;
 
     use Notifiable;
 
@@ -220,6 +221,14 @@ class User extends Authenticatable
     public function isProprietary()
     {
         return $this->role_id == self::PROPRIETARY_ROLE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDispatcher()
+    {
+        return $this->role_id == self::DISPATCHER_ROLE;
     }
 
     /**

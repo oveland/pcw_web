@@ -197,7 +197,7 @@ class Company extends Model
      */
     public function hasRecorderCounter()
     {
-        return collect([self::ALAMEDA])->contains($this->id);
+        return collect([self::ALAMEDA, self::TUPAL])->contains($this->id);
     }
 
     /*

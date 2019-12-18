@@ -46,6 +46,8 @@ class MigrationController extends Controller
     public function getRoutesForMigrate(Request $request)
     {
         $routesForMigrate = collect(self::ROUTES_FOR_MIGRATE);
+        $routesForMigrate = $routesForMigrate->merge( collect(DB::select("SELECT id_rutas FROM ruta WHERE migrate IS TRUE"))->pluck('id_rutas')->toArray() );
+
         $routeFromRequest = $request->get('route');
         if ($routeFromRequest) {
             $routesForMigrate = $routesForMigrate->filter(function ($value, $key) use ($routeFromRequest) {

@@ -198,7 +198,7 @@
                     mainContainer.slideUp(100);
                 }).change();
             @else
-                loadSelectVehicleReport(null, true);
+                loadSelectVehicleReport({{ Auth::user()->company->id  }}, true);
             @endif
 
             let time = moment('00:00', 'HH:mm');

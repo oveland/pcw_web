@@ -67,5 +67,6 @@ class GPSCheckStatusCommand extends Command
         DB::update($sql);
         $this->info($sql);
 
+        DB::select("SELECT auto_close_dispatch_register_with_invalid_gps(21)");
     }
 }

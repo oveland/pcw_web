@@ -39,8 +39,9 @@ class ReportRouteHistoricController extends Controller
         $companyReport = $request->get('c');
         $initialTime = $request->get('i');
         $finalTime = $request->get('f');
+        $hideMenu = session('hide-menu');
 
-        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles', 'dateReport', 'vehicleReport', 'companyReport', 'initialTime', 'finalTime']));
+        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles', 'dateReport', 'vehicleReport', 'companyReport', 'initialTime', 'finalTime', 'hideMenu']));
     }
 
     /**
