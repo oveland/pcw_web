@@ -27,7 +27,6 @@
     <div class="row"  style="{{ Session::has('hide-menu') ? 'height:600px !important;' : '' }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-operation" action="{{ route('operation-vehicles-issues-show') }}">
-            @if(Auth::user()->isAdmin())
                 <div class="panel panel-inverse">
                     <div class="panel-heading">
                         <div class="panel-heading-btn">
@@ -42,6 +41,7 @@
                     </div>
                     <div class="panel-body p-b-15">
                         <div class="form-input-flat">
+                            @if(Auth::user()->isAdmin())
                             <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
@@ -54,6 +54,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                @endif
                             </div>
 
                             <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
@@ -81,7 +82,6 @@
                         </div>
                     </div>
                 </div>
-            @endif
         </form>
         <!-- end search form -->
         <hr class="hr {{ Auth::user()->isAdmin()?'':'hide' }}">
