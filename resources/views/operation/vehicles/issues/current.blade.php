@@ -41,8 +41,8 @@
                         $vehicle = $issue->vehicle;
                     @endphp
                     <span class="p-1">
-                        <label class="label label-{{ $type->css_class }} tooltips" data-html="true" data-placement="top" data-title="<i class='fa fa-exclamation-triangle text-{{ $type->css_class }}'></i> <span class=''>{{ $issue->observations }}</span><br> <small class='issue-type-description'>({{ $type->description }})</small>">
-                            <span class="info-vehicle tooltips" data-title="{{ $issue->updated_at }}" data-placement="bottom">
+                        <label class="label label-{{ $type->css_class }} tooltips" data-html="true" data-placement="top" data-title="<i class='fa fa-exclamation-triangle text-{{ $type->css_class }}'></i> <span class=''>{{ $issue->observations }}</span>">
+                            <span class="info-vehicle tooltips" data-title="{{ $issue->updated_at }}<br> <small class='issue-type-description'>({{ $type->description }})</small>" data-placement="bottom" data-html="true">
                                 <i class="fa fa-car"></i> {{ $vehicle->number }}
                             </span>
                         </label>
