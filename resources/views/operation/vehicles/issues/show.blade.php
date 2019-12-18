@@ -1,4 +1,6 @@
 @php
+    use App\Models\Vehicles\VehicleIssue;
+    use App\Models\Vehicles\VehicleIssueType;
     $vehicleIssuesGroups = $report->vehicleIssues->groupBy('issue_uid');
 @endphp
 
@@ -47,7 +49,7 @@
                             $vehicle = $vehicleIssuesGroup->first()->vehicle;
                             $vehicleIssuesGroup =  $vehicleIssuesGroup->sortBy('date');
 
-                            $issueIn = \App\Models\Vehicles\VehicleIssue::where('issue_uid', $issueUid)->where('issue_type_id', \App\Models\Vehicles\VehicleIssueType::IN)->get()->first();
+                            $issueIn = VehicleIssue::where('issue_uid', $issueUid)->where('issue_type_id', VehicleIssueType::IN)->get()->first();
 
                             $dateIn = $issueIn ? $issueIn->date : null;
                         @endphp
@@ -59,7 +61,7 @@
                         @foreach($vehicleIssuesGroup as $issue)
                             @php
                                 $type = $issue->type;
-                                $duration = $type->id == \App\Models\Vehicles\VehicleIssueType::OUT ? ($dateIn ? $issue->date->diffAsCarbonInterval($dateIn, false)->forHumans() : __('Greater than one day') ) : null;
+                                $duration = $type->id == VehicleIssueType::OUT ? ($dateIn ? $issue->date->diffAsCarbonInterval($dateIn, false)->forHumans() : __('Greater than one day') ) : null;
                                 $driver = $issue->driver;
                             @endphp
                             <tr class="text-center">

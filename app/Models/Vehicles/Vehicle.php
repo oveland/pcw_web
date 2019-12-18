@@ -127,7 +127,7 @@ class Vehicle extends Model
             'id' => $this->id,
             'number' => $this->number,
             'plate' => $this->plate,
-            'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ''
+            'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ($this->currentLocation ? $this->currentLocation->vehicleStatus->des_status : '')
         ];
     }
 

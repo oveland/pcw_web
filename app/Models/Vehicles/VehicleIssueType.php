@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|VehicleIssueType whereName($value)
  * @method static Builder|VehicleIssueType whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property string|null $css_class
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleIssueType whereCssClass($value)
  */
 class VehicleIssueType extends Model
 {

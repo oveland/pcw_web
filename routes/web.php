@@ -11,6 +11,9 @@
 |
 */
 
+use App\Models\Company\Company;
+use App\Models\Users\User;
+
 Auth::routes();
 
 Route::get('/metronic', function(){
@@ -93,6 +96,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('url-vehicles'))->group(function () {
             Route::prefix(__('vehicle-issues'))->group(function () {
                 Route::get('/', 'VehicleIssuesController@index')->name('operation-vehicles-issues');
+                Route::get('/current/{company}', 'VehicleIssuesController@current')->name('operation-vehicles-issues-current');
                 Route::get('/{vehicle}/form', 'VehicleIssuesController@form')->name('operation-vehicles-issues-form');
                 Route::post('/{vehicle}/create', 'VehicleIssuesController@create')->name('operation-vehicles-issues-create');
                 Route::post('/{vehicle}/update', 'VehicleIssuesController@update')->name('operation-vehicles-issues-update');
@@ -382,7 +386,7 @@ Route::prefix(__('link'))->group(function () {
     // Url temporal. Because excel url on consolidated mail report was generated with url for historic view, instead of url for chart view on the month of March
     // TODO: Delete next code on July 2019
     Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{dispatchRegister}', function (Illuminate\Http\Request $request, $first) {
-        $user = \App\Models\Users\User::find($first);
+        $user = User::find($first);
         if(!$user){
             return redirect(route('report-route-chart-view',['dispatchRegister' => $first, 'location' => 0]));
         }
@@ -390,11 +394,19 @@ Route::prefix(__('link'))->group(function () {
         return redirect(route('report-route-historic'));
     });
 
-    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic-path') . '/{user}', function (\App\Models\Users\User $user) {
+    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic-path') . '/{user}', function (User $user) {
         Auth::login($user, true);
         return redirect(route('report-route-historic'));
     })->name('link-report-route-historic-path');
 
+    Route::get(__('url-operation')."/".__('url-vehicles')."/".__('vehicle-issues')."/current/{company}/{user}", function (Company $company, User $user){
+        Auth::login($user, true);
+        return redirect(route('operation-vehicles-issues-current', ['company' => $company->id]));
+    });
 
+    Route::get(__('url-operation')."/".__('url-vehicles')."/".__('vehicle-issues')."/{user}", function (User $user, Request $request){
+        if (Auth::guest()) Auth::login($user, true);
+        return redirect(route('operation-vehicles-issues'))->with(['hide-menu' => true]);
+    });
 });
 

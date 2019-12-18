@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
+use App\Models\Users\User;
+use App\Models\Vehicles\CurrentVehicleIssue;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleIssue;
 use App\Models\Vehicles\VehicleIssueType;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Auth;
 use Illuminate\Http\Request;
 
 class VehicleIssuesController extends Controller
@@ -17,23 +18,23 @@ class VehicleIssuesController extends Controller
     /**
      * @var PCWAuthService
      */
-    private $authService;
+    private $auth;
 
     /**
      * ReportRouteController constructor.
-     * @param PCWAuthService $authService
+     * @param PCWAuthService $auth
      */
-    public function __construct(PCWAuthService $authService)
+    public function __construct(PCWAuthService $auth)
     {
-        $this->authService = $authService;
+        $this->auth = $auth;
     }
 
     public function index()
     {
-        $accessProperties = $this->authService->getAccessProperties();
+        $access = $this->auth->access();
 
-        $companies = $accessProperties->companies;
-        $vehicles = $accessProperties->vehicles;
+        $companies = $access->companies;
+        $vehicles = $access->vehicles;
 
         return view('operation.vehicles.issues.index', compact(['companies', 'vehicles']));
     }
@@ -42,13 +43,21 @@ class VehicleIssuesController extends Controller
     {
         $dateReport = $request->get('date-report');
         $vehicleReport = $request->get('vehicle-report');
-        $company = $this->authService->getCompanyFromRequest($request);
+        $company = $this->auth->getCompanyFromRequest($request);
 
         $report = $this->buildReport($company, $vehicleReport, $dateReport);
 
         if ($request->get('export')) $this->export($report);
 
         return view('operation.vehicles.issues.show', compact('report'));
+    }
+
+    public function current(Company $company)
+    {
+        $vehicles = $company->activeVehicles;
+        $currentVehiclesIssues = CurrentVehicleIssue::whereIn('vehicle_id', $vehicles->pluck('id'))->withActiveIssue()->get();
+        
+        return view('operation.vehicles.issues.current', compact('currentVehiclesIssues'));
     }
 
     /**

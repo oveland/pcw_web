@@ -5,6 +5,7 @@ namespace App\Models\Vehicles;
 use App\Models\Drivers\Driver;
 use App\Models\Routes\DispatchRegister;
 use Carbon\Carbon;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -36,8 +37,9 @@ use const http\Client\Curl\VERSIONS;
  * @method static Builder|CurrentVehicleIssue whereUserId($value)
  * @method static Builder|CurrentVehicleIssue whereVehicleId($value)
  * @mixin Eloquent
- * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
- * @property-read \App\Models\Drivers\Driver|null $driver
+ * @property-read DispatchRegister|null $dispatchRegister
+ * @property-read Driver|null $driver
+ * @method static Builder|CurrentVehicleIssue withActiveIssue()
  */
 class CurrentVehicleIssue extends Model
 {
@@ -77,6 +79,11 @@ class CurrentVehicleIssue extends Model
         return VehicleIssueType::getColor($nexIssueType);
     }
 
+    public function type()
+    {
+        return $this->belongsTo(VehicleIssueType::class, 'issue_type_id', 'id');
+    }
+
     public function dispatchRegister()
     {
         return $this->belongsTo(DispatchRegister::class);
@@ -90,5 +97,19 @@ class CurrentVehicleIssue extends Model
     public function generateUid()
     {
         if ($this->issue_type_id == VehicleIssueType::IN) $this->issue_uid = "$this->vehicle_id-" . Carbon::now()->micro;
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    /**
+     * @param QueryBuilder $query
+     * @return mixed
+     */
+    public function scopeWithActiveIssue($query)
+    {
+        return $query->where('issue_type_id', '<', 3);
     }
 }

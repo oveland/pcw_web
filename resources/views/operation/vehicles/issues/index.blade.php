@@ -1,4 +1,4 @@
-@extends('layout')
+@extends( Session::has('hide-menu') ? 'layouts.blank' : 'layout')
 
 @section('stylesheets')
     <style>
@@ -24,7 +24,7 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div class="row">
+    <div class="row"  style="{{ Session::has('hide-menu') ? 'height:600px !important;' : '' }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-operation" action="{{ route('operation-vehicles-issues-show') }}">
             @if(Auth::user()->isAdmin())
@@ -94,7 +94,6 @@
 
 
 @section('scripts')
-    <script src="{{ asset('assets/plugins/block-ui/jquery.blockUI.js') }}"></script>
 
     <script type="application/javascript">
         let mainContainer = $('.main-container');

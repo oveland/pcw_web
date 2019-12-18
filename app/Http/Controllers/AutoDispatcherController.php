@@ -6,6 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
 use App\Http\Requests\StoreDispatcherVehicle;
 use App\Models\Routes\Route;
+use App\Models\Vehicles\CurrentLocation;
 use App\Models\Vehicles\Vehicle;
 use Auth;
 use Carbon\Carbon;
