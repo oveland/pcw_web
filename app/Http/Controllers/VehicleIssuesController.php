@@ -150,7 +150,7 @@ class VehicleIssuesController extends Controller
             if ($currentIssue->save() && $issue->save()) {
 
                 try{
-                    $quitIssue = $currentIssue->issue_type_id === VehicleIssueType::OUT;
+                    $quitIssue = $currentIssue->issue_type_id == VehicleIssueType::OUT;
                     if($quitIssue){
                         DB::statement("UPDATE crear_vehiculo SET en_taller = 0 WHERE id_crear_vehiculo = $vehicle->id");
                         DB::statement("UPDATE vehicles SET in_repair = FALSE WHERE id = $vehicle->id");
