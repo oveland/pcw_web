@@ -33,7 +33,7 @@
                     <i class="fa fa-refresh"></i>
                 </button>
             </h1>
-            <div class="">
+            <div class="p-t-10">
                 @foreach($currentVehiclesIssues as $issue)
                     @php
                         $type = $issue->type;

@@ -358,8 +358,8 @@ class MigrationController extends Controller
             $vehicle->plate = $vehicleOLD->placa;
             $vehicle->number = $vehicleOLD->num_vehiculo;
             $vehicle->company_id = $vehicleOLD->empresa;
-            $vehicle->active = $vehicleOLD->estado == 1 ? true : false;
-            $vehicle->in_repair = $vehicleOLD->en_taller == 1 ? true : false;
+            $vehicle->active = $vehicleOLD->estado == 1;
+            $vehicle->in_repair = $vehicleOLD->en_taller == 1;
             $vehicle->observations = $vehicleOLD->observaciones;
             $vehicle->proprietary_id = $vehicleOLD->proprietary_id;
             $vehicle->driver_id = $vehicleOLD->conductor_id;

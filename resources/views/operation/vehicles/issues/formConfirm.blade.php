@@ -22,7 +22,6 @@
                 <strong>
                     <i class="fa fa-check"></i>
                     {{ session('message') }}
-                    <span class="close" data-dismiss="alert">×</span>
                 </strong>
             </div>
         </div>

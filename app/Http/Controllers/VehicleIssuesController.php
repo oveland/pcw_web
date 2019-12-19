@@ -11,6 +11,7 @@ use App\Models\Vehicles\VehicleIssueType;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 
 class VehicleIssuesController extends Controller
@@ -132,7 +133,7 @@ class VehicleIssuesController extends Controller
 
     public function create(Vehicle $vehicle, Request $request)
     {
-        $transaction = \DB::transaction(function () use ($vehicle, $request) {
+        $transaction = DB::transaction(function () use ($vehicle, $request) {
             $success = false;
             $message = "";
 
@@ -147,11 +148,23 @@ class VehicleIssuesController extends Controller
 
 
             if ($currentIssue->save() && $issue->save()) {
+
+                try{
+                    $quitIssue = $currentIssue->issue_type_id === VehicleIssueType::OUT;
+                    if($quitIssue){
+                        DB::statement("UPDATE crear_vehiculo SET en_taller = 0 WHERE id_crear_vehiculo = $vehicle->id");
+                        DB::statement("UPDATE vehicles SET in_repair = FALSE WHERE id = $vehicle->id");
+                    }else{
+                        DB::statement("UPDATE crear_vehiculo SET en_taller = 1, observaciones = '$currentIssue->observations' WHERE id_crear_vehiculo = $vehicle->id");
+                        DB::statement("UPDATE vehicles SET in_repair = TRUE, observations = '$currentIssue->observations' WHERE id = $vehicle->id");
+                    }
+                }catch (\Exception $e){}
+
                 $success = true;
                 $message = __('Issue registered successfully') . ". ";
             } else {
-                if ($currentIssue->save()) $message .= __('Error in registering issue') . ". ";
-                if ($currentIssue->save()) $message .= __('Error in registering Current issue') . ". ";
+                if (!$currentIssue->save()) $message .= __('Error in registering issue') . ". ";
+                if (!$currentIssue->save()) $message .= __('Error in registering Current issue') . ". ";
             }
 
             return (object)[
