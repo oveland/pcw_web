@@ -55,10 +55,7 @@ class RouteExportService
                         __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # E CELL
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # F CELL
                         __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # G CELL
-                        __('Route Time') =>
-                            $dispatchRegister->complete() ?
-                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) :
-                                '',                                                                                         # H CELL
+                        __('Route Time') => $dispatchRegister->getRouteTime(),                                          # H CELL
                         __('Status') => $dispatchRegister->status,                                                     # I CELL
                         __('Start Rec.') => intval($startRecorder),                                                    # J CELL
                         __('End Rec.') => intval($endRecorder),                                                        # K CELL
@@ -113,6 +110,7 @@ class RouteExportService
                 $lastArrivalTime = null;
 
                 $totalDeadTime = '00:00:00';
+                $averageRouteTime = '00:00:00';
 
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
@@ -126,16 +124,15 @@ class RouteExportService
 
                     $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
 
+                    $averageRouteTime = StrTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime());
+
                     $data = collect([
                         __('Vehicle') => $vehicle->number,                                                                    # A CELL
                         __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # E CELL
                         __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # F CELL
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # G CELL
                         __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # H CELL
-                        __('Route Time') =>
-                            $dispatchRegister->complete() ?
-                                StrTime::subStrTime($dispatchRegister->arrival_time, $dispatchRegister->departure_time) :
-                                '',                                                                                         # I CELL
+                        __('Route Time') => $dispatchRegister->getRouteTime(),                                          # I CELL
                         __('Route') => $route->name,                                                                    # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
                         __('Status') => $dispatchRegister->status,                                                     # J CELL
@@ -164,7 +161,7 @@ class RouteExportService
                     __('Arrival Time Scheduled') => '----------',
                     __('Arrival Time') => '----------',
                     __('Arrival Time Difference') => '----------',
-                    __('Route Time') => '----------',
+                    __('Route Time') => "Prom. ".StrTime::segToStrTime(StrTime::toSeg($averageRouteTime)/$dispatchRegisters->count()),
                     __('Route') => strtoupper(__('Total round trips')),
                     __('Dead time') => number_format($dispatchRegisters->count() / ($company->isIntermunicipal() ? 2 : 1), '1', '.', '')
                 ]);

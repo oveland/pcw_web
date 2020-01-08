@@ -78,8 +78,11 @@
     </thead>
     <tbody>
     @php
+        $strTime = new \App\Http\Controllers\Utils\StrTime();
+
         $totalDeadTime = array();
         $lastArrivalTime = array();
+        $averageRouteTime = '00:00:00';
 
         $totalPassengersBySensor = 0;
         $totalPassengersBySensorRecorder = 0;
@@ -87,7 +90,6 @@
 
     @foreach( $dispatchRegisters as $dispatchRegister )
         @php
-            $strTime = new \App\Http\Controllers\Utils\StrTime();
             $route = $dispatchRegister->route;
             $driver = $dispatchRegister->driver;
             $vehicle = $dispatchRegister->vehicle;
@@ -104,6 +106,8 @@
             $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0)?true:false;
 
             $offRoadPercent = $dispatchRegister->getOffRoadPercent();
+
+            $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime())
         @endphp
         <tr>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
@@ -308,6 +312,19 @@
             </script>
         @endif
     @endforeach
+    @if($dispatchRegisters->count())
+    <tr>
+        <td colspan="7">
+
+        </td>
+        <td class="text-center tooltips" data-title="@lang('Average'): @lang('Route time')">
+            {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}
+        </td>
+        <td colspan="3">
+
+        </td>
+    </tr>
+    @endif
     </tbody>
 </table>
 <!-- end table -->
