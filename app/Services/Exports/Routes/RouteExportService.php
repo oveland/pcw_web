@@ -124,7 +124,7 @@ class RouteExportService
 
                     $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
 
-                    $averageRouteTime = StrTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime());
+                    $averageRouteTime = StrTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true));
 
                     $data = collect([
                         __('Vehicle') => $vehicle->number,                                                                    # A CELL

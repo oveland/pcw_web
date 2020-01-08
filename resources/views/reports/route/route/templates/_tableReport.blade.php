@@ -107,7 +107,7 @@
 
             $offRoadPercent = $dispatchRegister->getOffRoadPercent();
 
-            $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime())
+            $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true))
         @endphp
         <tr>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">

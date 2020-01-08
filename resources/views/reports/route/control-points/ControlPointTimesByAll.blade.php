@@ -67,12 +67,19 @@
                             </thead>
                             <tbody>
 
+                            @php
+                                $strTime = new \App\Http\Controllers\Utils\StrTime();
+                                $averageRouteTime = '00:00:00';
+                            @endphp
+
                             @foreach( $reportsByControlPoints as $reportsByControlPoint )
                                 @php
                                     $dispatchRegister = $reportsByControlPoint->dispatchRegister;
                                     $offRoadPercent = $dispatchRegister->getOffRoadPercent();
                                     $vehicle = $reportsByControlPoint->vehicle;
                                     $driver = $reportsByControlPoint->driver;
+
+                                    $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true))
                                 @endphp
                                 <tr class="">
                                     <th class="text-capitalize text-muted bg-{{ $dispatchRegister->inProgress() ? 'warning':'inverse' }}">
@@ -175,6 +182,19 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            @if($reportsByControlPoints->count())
+                                <tr>
+                                    <td colspan="4">
+
+                                    </td>
+                                    <th class="text-center text-muted bg-inverse tooltips" data-title="@lang('Average'): @lang('Route time')">
+                                        {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$reportsByControlPoints->count()) }}
+                                    </th>
+                                    <td colspan="20">
+
+                                    </td>
+                                </tr>
+                            @endif
                             </tbody>
                         </table>
                     </div>
