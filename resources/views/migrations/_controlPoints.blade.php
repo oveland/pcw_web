@@ -6,7 +6,10 @@
 <div class="col-sm-12 col-xs-12 col-md-12">
     <ul class="list-group">
         @foreach($route->controlPoints->sortBy('order') as $controlPoint)
-            @php($controlPointTimes = \App\Models\Routes\ControlPointTime::whereControlPointId($controlPoint->id)->orderBy('day_type_id')->get())
+            @php
+                $overloaded = collect(DB::select("SELECT * FROM puntos_control_ruta WHERE secpuntos_control_ruta = $controlPoint->id"))->first();
+                $controlPointTimes = \App\Models\Routes\ControlPointTime::whereControlPointId($controlPoint->id)->orderBy('day_type_id')->get()
+            @endphp
             <li class="list-group-item text-muted text-left bg-{{$loop->first && $controlPoint->type !='Inicial'?'danger':''}} bg-{{$loop->last && $controlPoint->type !='Normal'?'danger':''}}"
                 data-toggle="collapse" data-target="#control-point-{{ $controlPoint->id }}">
                 <div class="row">
@@ -19,7 +22,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <strong>({{ $controlPoint->id }}) {{ $controlPoint->name }}</strong>
+                        <strong class="{{ !$overloaded ? 'label label-danger tooltips' : '' }}" data-title="@lang('Overloaded')!" data-placement="right">({{ $controlPoint->id }}) {{ $controlPoint->name }}</strong>
                         <hr class="m-t-5 m-b-5">
                         <div class="m-t-2">
                             <div class="pull-left m-t-5">
