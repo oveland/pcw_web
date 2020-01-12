@@ -48,18 +48,22 @@ class ConsolidatedService
         $dateRange = collect(PCWTime::dateRange($initialDate, $finalDate, false, true))->toArray();
 
         foreach ($dateRange as $date){
-            Log::info("Consolidated on: $date");
             $dispatchRegisters = DispatchRegister::completed()
                 ->with(['locations', 'route', 'vehicle'])
                 ->whereIn('vehicle_id', $company->vehicles->pluck('id'))
                 ->where('date', $date )
                 ->get();
 
+
             $dispatchRegistersByRoutes = $dispatchRegisters->groupBy('route_id');
+            Log::info("CONSOLIDATED $date >> ".$dispatchRegisters->count()." dispatch registers and ".$dispatchRegistersByRoutes->count(). " routes");
             foreach ($dispatchRegistersByRoutes as $routeId => $dispatchRegistersByRoute){
                 $route = Route::find($routeId);
 
                 $dispatchRegistersByRouteAndVehicles = $dispatchRegistersByRoute->groupBy('vehicle_id');
+
+                Log::info("     Process $route->name >> ".$dispatchRegistersByRouteAndVehicles->count()." vehicles");
+
                 foreach ($dispatchRegistersByRouteAndVehicles as $vehicleId => $turns){
                     $vehicle = Vehicle::find($vehicleId);
 
@@ -70,6 +74,8 @@ class ConsolidatedService
                             $allRouteLocations->push($location);
                         }
                     }
+
+                    Log::info("         - Vehicle $vehicle->number >> ".$allRouteLocations->count()." locations");
 
                     $offRoadEventLocation = $this->offRoadService->groupByFirstOffRoad($allRouteLocations);
 
