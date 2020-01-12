@@ -12,6 +12,7 @@ use App\Models\Vehicles\VehicleStatus;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Exports\Vehicles\VehicleExportService;
 use App\Services\PCWTime;
+use App\Services\Reports\Vehicles\ConsolidatedService;
 use App\Services\Reports\Vehicles\VehicleService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
@@ -27,10 +28,10 @@ class ToolsController extends Controller
      */
     private $service;
 
-    public function __construct(PCWAuthService $auth, VehicleService $vehicleService)
+    public function __construct(PCWAuthService $auth, ConsolidatedService $service)
     {
         $this->auth = $auth;
-        $this->service = $vehicleService;
+        $this->service = $service;
     }
 
     public function checkGPSLimbo(Request $request)
@@ -121,14 +122,7 @@ class ToolsController extends Controller
     }
 
     public function test(Request $request){
-        $company = Company::find(12);
-        $dateReport = '2019-09-25';
-        $routeReport = 'all';
-        $vehicleReport = 'all';
-        $completedTurns = true;
 
-        $vehicleReport = $this->service->makeVehicleReport($company);
-        $this->service->export->exportVehicleReport($vehicleReport);
     }
 
     public function showGPSWithBadFrequency(Request $request)

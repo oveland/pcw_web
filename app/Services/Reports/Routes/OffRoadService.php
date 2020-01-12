@@ -69,7 +69,7 @@ class OffRoadService
             ->orderBy('date')->get();*/
 
 
-        $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->where('off_road', true);
+        $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->witOffRoads();
 
         if($routeReport == 'all' || !$routeReport){
             $vehicles = $company->vehicles();
@@ -98,7 +98,7 @@ class OffRoadService
     function offRoadsByVehicle(Vehicle $vehicle, $dateReport)
     {
         return Location::whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
-            ->where('off_road', true)
+            ->witOffRoads()
             ->where('vehicle_id', $vehicle->id)
             ->orderBy('date')
             ->get();

@@ -10,10 +10,12 @@ namespace App\Services\API\Web\Reports;
 
 use App\Models\Company\Company;
 use App\Models\Passengers\CurrentSensorPassengers;
+use App\Models\Reports\ConsolidatedRouteVehicle;
 use App\Models\Routes\DispatchRegister;
 use App\Services\API\Web\Contracts\APIWebInterface;
 use App\Services\Reports\Routes\ControlPointService;
 use App\Services\Reports\Routes\RouteService;
+use App\Services\Reports\Vehicles\ConsolidatedService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Models\Vehicles\Vehicle;
@@ -29,16 +31,22 @@ class APIReportService implements APIWebInterface
      * @var RouteService
      */
     private $routeService;
+    /**
+     * @var ConsolidatedService
+     */
+    private $consolidatedVehicle;
 
     /**
      * APIReportService constructor.
      * @param ControlPointService $controlPointService
      * @param RouteService $routeService
+     * @param ConsolidatedService $consolidatedVehicle
      */
-    public function __construct(ControlPointService $controlPointService, RouteService $routeService)
+    public function __construct(ControlPointService $controlPointService, RouteService $routeService, ConsolidatedService $consolidatedVehicle)
     {
         $this->controlPointService = $controlPointService;
         $this->routeService = $routeService;
+        $this->consolidatedVehicle = $consolidatedVehicle;
     }
 
 
@@ -90,6 +98,28 @@ class APIReportService implements APIWebInterface
 
                     $this->routeService->export->exportCurrentVehicleStatusReport($managementReport);
                 }
+                break;
+
+            case 'consolidated-route-vehicle':
+                $company = Company::find($request->get('company'));
+                $fromRequest = $request->get('from');
+                $toRequest = $request->get('to');
+                if(!$company || !$fromRequest || !$toRequest){
+                    return response()->json([
+                        'error' => true,
+                        'message' => "No params yet"
+                    ]);
+                }
+
+                $from = Carbon::createFromFormat('Y-m-d', $fromRequest);
+                $to = Carbon::createFromFormat('Y-m-d', $toRequest);
+
+                $this->consolidatedVehicle->build($company, $from, $to);
+
+                return response()->json([
+                    'error' => false,
+                    'message' => 'Process executed successfully'
+                ]);
                 break;
 
             default:

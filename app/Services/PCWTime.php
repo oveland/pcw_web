@@ -17,16 +17,19 @@ class PCWTime
     /**
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool $inclusive
+     * @param bool $asString
      * @return array
      */
-    public static function dateRange(Carbon $start, Carbon $end)
+    public static function dateRange(Carbon $start, Carbon $end, $inclusive = true, $asString = false)
     {
+        if($inclusive) $end->addDay();
         $dates = [];
         while ($end->greaterThan($start)) {
-            $dates[] = $start->copy();
+            $date = $start->copy();
+            $dates[] = $asString ? $date->toDateString() : $date;
             $start->addDay();
         }
-        $dates[] = $start->copy();
         return $dates;
     }
 

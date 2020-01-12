@@ -31,7 +31,7 @@ class SpeedingService
         $speedingByVehicles = $this->speedingByVehicles($this->allSpeeding($company, $dateReport));
 
         foreach ($speedingByVehicles as $vehicleId => $speedingByVehicle) {
-            $speedingByVehicleByRoute = self::groupByFirstSpeedingEventByRoute($speedingByVehicle);
+            $speedingByVehicleByRoute = $this->groupByFirstSpeedingEventByRoute($speedingByVehicle);
             $speedingByVehiclesReport->put($vehicleId, [
                 'vehicle' => Vehicle::find($vehicleId),
                 'speedingByVehicle' => $speedingByVehicle,
@@ -90,7 +90,7 @@ class SpeedingService
             ->orderBy('date')
             ->get();
 
-        return self::groupByFirstSpeedingEvent($allSpeedingByDispatchRegister);
+        return $this->groupByFirstSpeedingEvent($allSpeedingByDispatchRegister);
     }
 
     /**
@@ -105,7 +105,7 @@ class SpeedingService
 
         $speedingByVehicles = collect([]);
         foreach ($allSpeedingReportByVehicles as $vehicleId => $speedingByVehicle) {
-            $speedingEvents = self::groupByFirstSpeedingEvent($speedingByVehicle);
+            $speedingEvents = $this->groupByFirstSpeedingEvent($speedingByVehicle);
             if (count($speedingEvents)) $speedingByVehicles->put($vehicleId, $speedingEvents);
         }
 
@@ -119,9 +119,9 @@ class SpeedingService
      * @param $speedingByVehicle
      * @return Collection
      */
-    static function groupByFirstSpeedingEventByRoute($speedingByVehicle)
+    function groupByFirstSpeedingEventByRoute($speedingByVehicle)
     {
-        $speedingEvents = self::groupByFirstSpeedingEvent($speedingByVehicle);
+        $speedingEvents = $this->groupByFirstSpeedingEvent($speedingByVehicle);
 
         $speedingEventsByRoutes = $speedingEvents->where('dispatch_register_id', '<>', null)
             ->sortBy(function ($speeding, $key) {
@@ -140,8 +140,10 @@ class SpeedingService
      * @param $speedingByVehicle
      * @return Collection
      */
-    public static function groupByFirstSpeedingEvent($speedingByVehicle)
+    public function groupByFirstSpeedingEvent($speedingByVehicle)
     {
+        $speedingByVehicle = $speedingByVehicle->where('speeding', true);
+
         $speedingEvents = collect([]);
         if (!count($speedingByVehicle)) return $speedingEvents;
 
