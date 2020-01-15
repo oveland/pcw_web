@@ -9,6 +9,7 @@
 namespace App\Services\Reports\Vehicles;
 
 
+use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Reports\ConsolidatedRouteVehicle;
 use App\Models\Vehicles\Vehicle;
@@ -24,6 +25,7 @@ use App\Traits\CounterBySensor;
 use App\Services\PCWExporterService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Excel;
 
 class ConsolidatedService
 {
@@ -44,38 +46,42 @@ class ConsolidatedService
 
     public function build(Company $company, Carbon $initialDate, Carbon $finalDate)
     {
-        Log::useDailyFiles(storage_path().'/logs/consolidatedVehicle.log',10);
+        Log::useDailyFiles(storage_path() . '/logs/consolidatedVehicle.log', 10);
         $dateRange = collect(PCWTime::dateRange($initialDate, $finalDate, false, true))->toArray();
 
-        foreach ($dateRange as $date){
+        foreach ($dateRange as $date) {
             $dispatchRegisters = DispatchRegister::completed()
                 ->with(['locations', 'route', 'vehicle'])
                 ->whereIn('vehicle_id', $company->vehicles->pluck('id'))
-                ->where('date', $date )
+                ->where('date', $date)
+                //->whereIn('id', [738473, 737877, 739513])
                 ->get();
 
-
-            $dispatchRegistersByRoutes = $dispatchRegisters->groupBy('route_id');
-            Log::info("CONSOLIDATED $date >> ".$dispatchRegisters->count()." dispatch registers and ".$dispatchRegistersByRoutes->count(). " routes");
-            foreach ($dispatchRegistersByRoutes as $routeId => $dispatchRegistersByRoute){
+            $dispatchRegistersByRoutes = $dispatchRegisters
+                ->groupBy('route_id');
+            $totalRoutes = $dispatchRegistersByRoutes->count();
+            Log::info("CONSOLIDATED $date >> " . $dispatchRegisters->count() . " dispatch registers and $totalRoutes routes");
+            $indexRoute = 1;
+            foreach ($dispatchRegistersByRoutes as $routeId => $dispatchRegistersByRoute) {
                 $route = Route::find($routeId);
 
                 $dispatchRegistersByRouteAndVehicles = $dispatchRegistersByRoute->groupBy('vehicle_id');
+                $percent = intval((100 / $totalRoutes) * $indexRoute);
+                $indexRoute++;
+                Log::info("     Process $date ($percent%) $route->name >> " . $dispatchRegistersByRouteAndVehicles->count() . " vehicles");
 
-                Log::info("     Process $route->name >> ".$dispatchRegistersByRouteAndVehicles->count()." vehicles");
-
-                foreach ($dispatchRegistersByRouteAndVehicles as $vehicleId => $turns){
+                foreach ($dispatchRegistersByRouteAndVehicles as $vehicleId => $turns) {
                     $vehicle = Vehicle::find($vehicleId);
 
                     $allRouteLocations = collect([]);
-                    foreach ($turns as $turn){
+                    foreach ($turns as $turn) {
                         $locations = $turn->locations;
-                        foreach ($locations as $location){
+                        foreach ($locations as $location) {
                             $allRouteLocations->push($location);
                         }
                     }
 
-                    Log::info("         - Vehicle $vehicle->number >> ".$allRouteLocations->count()." locations");
+                    //Log::info("         - Vehicle $vehicle->number >> ".$allRouteLocations->count()." locations");
 
                     $offRoadEventLocation = $this->offRoadService->groupByFirstOffRoad($allRouteLocations);
 
@@ -85,7 +91,7 @@ class ConsolidatedService
                         ->where('route_id', $route->id)
                         ->where('vehicle_id', $vehicle->id)
                         ->first();
-                    if(!$consolidated) $consolidated = new ConsolidatedRouteVehicle();
+                    if (!$consolidated) $consolidated = new ConsolidatedRouteVehicle();
 
                     $consolidated->fill([
                         'date' => $date,
@@ -101,109 +107,61 @@ class ConsolidatedService
                 }
             }
         }
+
+        Log::info("    ***** CONSOLIDATED finished!!!");
     }
 
     /**
-     * Build vehicle report from company and date
-     *
      * @param Company $company
-     * @param $dateReport
-     * @return object
+     * @param Carbon $initialDate
+     * @param Carbon $finalDate
      */
-    public function buildDailyReport(Company $company, $dateReport)
+    public function export(Company $company, Carbon $initialDate, Carbon $finalDate)
     {
-        $routes = Route::where('company_id', $company->id)->get();
-        $dispatchRegisters = DispatchRegister::active()
-            ->whereIn('route_id', $routes->pluck('id'))
-            ->where('date', $dateReport)
-            ->get()
-            ->sortBy('id');
+        $initialDate = $initialDate->toDateString();
+        $finalDate = $finalDate->toDateString();
+        $vehicles = $company->vehicles;
 
-        $passengerBySensor = CounterBySensor::report($dispatchRegisters);
-        $passengerByRecorder = CounterByRecorder::report($dispatchRegisters);
+        $consolidated = ConsolidatedRouteVehicle::where('date', '>=', $initialDate)
+            ->where('date', '<=', $finalDate)
+            ->whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->get();
 
-        // Build report data
-        $reports = collect([]);
-        foreach ($passengerBySensor->report as $vehicleId => $sensor) {
-            $recorder = $passengerByRecorder->report["$vehicleId"];
 
-            $reports->push((object)[
-                'vehicle_id' => $vehicleId,
-                'date' => $dateReport,
-                'passengers' => (object)[
-                    'sensor' => $sensor->passengersBySensor,
-                    'sensorRecorder' => $sensor->passengersBySensorRecorder,
-                    'recorder' => $recorder->passengersByRecorder,
-                    'start_recorder' => $recorder->start_recorder,
-                    'issue' => $recorder->issue
-                ],
-                'historyRoutesByRecorder' => $recorder->history->sortBy('routeName')->groupBy('routeId'),
-                'historyRoutesBySensor' => $sensor->history->sortBy('routeName')->groupBy('routeId'),
-            ]);
-        }
+        $consolidatedByRoutes = $consolidated->groupBy('route_id');
 
-        $passengerReport = (object)[
-            'date' => $dateReport,
-            'companyId' => $company->id,
-            'reports' => $reports,
-            'totalReports' => $reports->count(),
-            'issues' => $passengerByRecorder->issues,
-        ];
+        Excel::create(__('Consolidated route vehicle'), function ($excel) use ($consolidatedByRoutes, $initialDate, $finalDate) {
+            foreach ($consolidatedByRoutes as $routeId => $consolidatedByRoute) {
+                $dataExcel = array();
+                $route = Route::find($routeId);
+                foreach ($consolidatedByRoute->sortBy('date') as $consolidated) {
+                    $vehicle = $consolidated->vehicle;
+                    $date = $consolidated->date->toDateString();
+                    $totalOffRoads = $consolidated->total_off_roads;
+                    $totalSpeeding = $consolidated->total_speeding;
 
-        //dd($passengerReport);
+                    $dataExcel[] = [
+                        __('Date') => $date,                                                                # A CELL
+                        __('Route') => $route->name,                                                        # B CELL
+                        __('Vehicle') => $vehicle->number,                                                  # C CELL
+                        __('Plate') => $vehicle->plate,                                                     # D CELL
+                        __('Off Roads') => $totalOffRoads,                                                  # E CELL
+                        __('Speeding') => $totalSpeeding,                                                   # F CELL
+                    ];
+                }
 
-        return $passengerReport;
-    }
-
-    /**
-     * Export and store report to excel format
-     * returns tag
-     *
-     * @param $passengerReports
-     * @param bool $download
-     * @return string
-     */
-    function exportDailyReportFiles($passengerReports, $download = true)
-    {
-        $dateReport = $passengerReports->date;
-
-        $dataExcel = array();
-        foreach ($passengerReports->reports as $report) {
-            $vehicle = Vehicle::find($report->vehicle_id);
-            $sensor = $report->passengers->sensor;
-            $recorder = $report->passengers->recorder;
-            $sensorRecorder = $report->passengers->sensorRecorder;
-
-            $totalRoundTrips = 0;
-            $detailedRoutes = "";
-            foreach ($report->historyRoutesByRecorder as $routeId => $historyRecorder) {
-                $ln = $totalRoundTrips > 0 ? "\n" : "";
-                $lastHistory = $historyRecorder->last();
-                $totalRoundTrips += $lastHistory->roundTrip;
-                $detailedRoutes .= "$ln$lastHistory->routeName : $lastHistory->roundTrip " . __('round trips');
+                $dataExport = (object)[
+                    'fileName' => __('Consolidated route vehicle'),
+                    'title' => __('Consolidated route vehicle'),
+                    'subTitle' => "$initialDate - $finalDate",
+                    'sheetTitle' => "$route->name",
+                    'data' => $dataExcel,
+                    'type' => 'consolidatedRouteVehicle'
+                ];
+                /* SHEETS */
+                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
-
-            $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                      # A CELL
-                __('Vehicle') => intval($vehicle->number),                              # B CELL
-                __('Plate') => $vehicle->plate,                                         # C CELL
-                __('Routes') => $detailedRoutes,                                        # D CELL
-                __('Round trips') => $totalRoundTrips,                                  # E CELL
-                __('Sensor recorder') => intval($sensorRecorder),                       # F CELL
-                __('Recorder') => intval($recorder),                                    # G CELL
-                __('Sensor') => intval($sensor),                                        # H CELL
-            ];
-        }
-
-        $fileData = [
-            'fileName' => __('Passengers report') . " $dateReport",
-            'title' => __('Passengers')."\n".__('Consolidated per day'),
-            'subTitle' => Carbon::createFromFormat('Y-m-d', $passengerReports->date)->format('d-m-Y'),
-            'data' => $dataExcel,
-            'type' => 'passengerReportTotalFooter'
-        ];
-
-        if ($download) PCWExporterService::excel($fileData);
-        else return PCWExporterService::store($fileData);
+        })->export('xlsx');
     }
 }

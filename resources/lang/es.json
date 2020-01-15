@@ -630,5 +630,7 @@
   "Greater than one day": "Mayor a un día",
   "Vehicles status": "Estado vehículo",
   "No vehicles issues found": "Sin novedades de vehículos",
-  "Vehicle with issues": "Vehículos con novedades"
+  "Vehicle with issues": "Vehículos con novedades",
+  "Is fake": "Es falsa",
+  "Consolidated route vehicle": "Consolidado ruta vehículo"
 }

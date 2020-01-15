@@ -122,6 +122,28 @@ class APIReportService implements APIWebInterface
                 ]);
                 break;
 
+            case 'export-consolidated-route-vehicle':
+                $company = Company::find($request->get('company'));
+                $fromRequest = $request->get('from');
+                $toRequest = $request->get('to');
+                if(!$company || !$fromRequest || !$toRequest){
+                    return response()->json([
+                        'error' => true,
+                        'message' => "No params yet"
+                    ]);
+                }
+
+                $from = Carbon::createFromFormat('Y-m-d', $fromRequest);
+                $to = Carbon::createFromFormat('Y-m-d', $toRequest);
+
+                $this->consolidatedVehicle->export($company, $from, $to);
+
+                return response()->json([
+                    'error' => false,
+                    'message' => 'Process executed successfully'
+                ]);
+                break;
+
             default:
                 return response()->json([
                     'error' => true,

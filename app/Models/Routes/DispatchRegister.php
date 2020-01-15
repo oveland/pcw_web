@@ -439,7 +439,7 @@ class DispatchRegister extends Model
                 $query = $query->where('vehicle_id', $vehicleId);
             }
 
-            if ($company->hasADD()) {
+            if ($company->hasADD() && $vehicleId == 'all') {
                 $query = $query->orWhere('route_id', intval($routeId));
             } else if ($routeId != 'all') {
                 $query = $query->where('route_id', intval($routeId));

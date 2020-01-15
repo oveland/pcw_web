@@ -391,6 +391,18 @@ class PCWExporterService
                 $sheet->setCellValue("E$lastRow", "TOTAL KM");
                 $sheet = self::styleFooter($sheet, $config);
                 break;
+
+            case 'consolidatedRouteVehicle':
+                $sheet->cells("A$config->startIndex:A" . $lastRow, function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->cells("C$config->startIndex:F" . $lastRow, function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                });
+                break;
         }
         return $sheet;
     }

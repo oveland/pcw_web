@@ -319,7 +319,7 @@
                                 data.offRoadReport.forEach(function(offRoadReport, i){
                                     let offRoadDate = moment(offRoadReport.date.date);
                                     let tr = $('<tr></tr>');
-                                    let tdDate = $('<td></td>').append(offRoadDate.format('hh:mm:ss'));
+                                    let tdDate = $('<td></td>').append(offRoadDate.format('HH:mm:ss'));
                                     tdDate.css('width', '40% !important');
                                     tr.append(tdDate);
 

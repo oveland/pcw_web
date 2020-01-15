@@ -122,7 +122,7 @@ class ToolsController extends Controller
     }
 
     public function test(Request $request){
-
+        phpinfo();
     }
 
     public function showGPSWithBadFrequency(Request $request)

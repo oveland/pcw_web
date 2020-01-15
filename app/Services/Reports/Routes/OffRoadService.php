@@ -61,31 +61,30 @@ class OffRoadService
      */
     function allOffRoads(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
-        /*$dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+        /*
+            $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->witOffRoads();
 
-        $allOffRoads = Location::whereBetween('date', [$initialDate, $finalDate])
-            ->where('off_road', true)
-            ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-            ->orderBy('date')->get();*/
+            if($routeReport == 'all' || !$routeReport){
+                $vehicles = $company->vehicles();
+                if($vehicleReport != 'all'){
+                    $vehicles = $vehicles->where('id', $vehicleReport);
+                }
 
-
-        $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->witOffRoads();
-
-        if($routeReport == 'all' || !$routeReport){
-            $vehicles = $company->vehicles();
-            if($vehicleReport != 'all'){
-                $vehicles = $vehicles->where('id', $vehicleReport);
+                $allSpeeding = $allSpeeding->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
+            }else{
+                $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+                $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
             }
 
-            $allSpeeding = $allSpeeding->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
-        }else{
-            $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
-            $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
-        }
+            return $allSpeeding->orderBy('date')->get();
+         */
 
-        $allSpeeding = $allSpeeding->orderBy('date')->get();
-
-        return $allSpeeding;
+        $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+        return Location::witOffRoads()
+            ->whereBetween('date', [$initialDate, $finalDate])
+            ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
+            ->orderBy('date')
+            ->get();
     }
 
     /**
@@ -172,34 +171,61 @@ class OffRoadService
      * Extract first event of the all off roads
      *
      * @param Collection $offRoadsByVehicle
+     * @param null $truncateTimeFromDispatchRegister
      * @return \Illuminate\Support\Collection
      */
-    static function groupByFirstOffRoadEvent($offRoadsByVehicle)
+    static function groupByFirstOffRoadEvent($offRoadsByVehicle, $truncateTimeFromDispatchRegister = null)
     {
         $offRoadsByVehicle = $offRoadsByVehicle->where('off_road', true);
         $offRoadsEvents = collect([]);
         if (!count($offRoadsByVehicle)) return $offRoadsEvents;
 
+        // Filter locations with signification movement
+        $lastOffRoad = null;
+        $offRoadMove = collect([]);
+        foreach ($offRoadsByVehicle as $offRoad) {
+            if( $lastOffRoad && Geolocation::getDistance($offRoad->latitude, $offRoad->longitude, $lastOffRoad->latitude, $lastOffRoad->longitude) > 10 ){
+                $offRoadMove->push($offRoad);
+            }
+            $lastOffRoad = $offRoad;
+        }
+
         $lastOffRoad = null;
         $totalByGroup = 0;
         $firstOffRoadOnGroup = null;
-        foreach ($offRoadsByVehicle as $offRoad) {
-            if (!$lastOffRoad || $offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:05:00') {
-                $firstOffRoadOnGroup = $offRoad;
-                $totalByGroup = 1;
-            } else if ($totalByGroup > 0) {
-                $totalByGroup++;
-            }
 
-            if ($totalByGroup > 1) {
-                if( $firstOffRoadOnGroup->isTrueOffRoad() ){
-                    $offRoadsEvents->push($firstOffRoadOnGroup);
+        $offRoadByDispatchRegisters = $offRoadMove->groupBy('dispatch_register_id');
+
+        foreach ($offRoadByDispatchRegisters as $offRoadByDispatchRegister){
+
+            if($truncateTimeFromDispatchRegister || true){
+                $dispatchRegister = $offRoadByDispatchRegister->first()->dispatchRegister;
+                if($dispatchRegister){
+                    $date = $dispatchRegister->getParsedDate()->toDateString();
+                    $offRoadByDispatchRegister = $offRoadByDispatchRegister->where('date', '<=', "$date $dispatchRegister->arrival_time_scheduled");
                 }
-                $totalByGroup = 0;
             }
 
-            $lastOffRoad = $offRoad;
+            // Detect off road event as first location with off road in more than 5 minutes
+            foreach ($offRoadByDispatchRegister as $offRoad) {
+                if (!$lastOffRoad || $offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:02:00') {
+                    $firstOffRoadOnGroup = $offRoad;
+                    $totalByGroup = 1;
+                } else if ($totalByGroup > 0) {
+                    $totalByGroup++;
+                }
+
+                if ($totalByGroup > 3) {
+                    if( $firstOffRoadOnGroup->isTrueOffRoad() ){
+                        $offRoadsEvents->push($firstOffRoadOnGroup);
+                    }
+                    $totalByGroup = 0;
+                }
+
+                $lastOffRoad = $offRoad;
+            }
         }
+
         return $offRoadsEvents;
     }
 

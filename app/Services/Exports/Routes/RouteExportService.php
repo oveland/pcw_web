@@ -6,8 +6,6 @@ namespace App\Services\Exports\Routes;
 
 use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
-use App\Models\Company\Company;
-use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
