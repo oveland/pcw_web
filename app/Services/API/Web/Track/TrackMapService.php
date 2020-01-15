@@ -1,5 +1,6 @@
 <?php
 
+//NUEVO:
 
 namespace App\Services\API\Web\Track;
 
@@ -35,10 +36,16 @@ class TrackMapService
             v.placa,
             v.num_vehiculo,	
             CASE WHEN ( SELECT count(mv) FROM maintenance_vehicles mv WHERE mv.vehicle_id = v.id_crear_vehiculo AND mv.date = current_date) > 0 THEN
-                'En mantenimiento programado'
+                TRUE
             ELSE
-                v.observaciones
-            END observaciones,
+                FALSE
+            END in_maintenance,
+            CASE WHEN v.en_taller = 1 THEN
+                TRUE
+            ELSE
+                FALSE
+            END in_repair,	
+            v.observaciones observaciones,
             c.pas_tot,
             c.des_p1,
             c.frame,
@@ -84,16 +91,7 @@ class TrackMapService
             markers as m
             INNER JOIN crear_vehiculo as v ON (v.placa = m.name AND v.estado = '1')
             INNER JOIN contador as c ON (c.placa = m.name)	
-            INNER JOIN status_vehi as sv ON (sv.id_status = (
-              SELECT
-                     CASE WHEN (cv.en_taller = 1 OR ( SELECT count(mv) FROM maintenance_vehicles mv WHERE mv.vehicle_id = v.id_crear_vehiculo AND mv.date = current_date) > 0)
-                     THEN 31
-                     ELSE m.status
-                     END
-              FROM crear_vehiculo as cv
-              WHERE cv.placa = m.name
-              LIMIT 1)
-            )
+            INNER JOIN status_vehi as sv ON (sv.id_status = m.status)
             LEFT JOIN current_dispatch_registers AS cdr ON (cdr.plate = m.name)
             LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo ".($routeID ? 'AND': 'OR')." dv_group.route_id = $routeID)
             LEFT JOIN dispatcher_vehicles AS dv ON (dv.vehicle_id = dv_group.vehicle_id AND dv.\"default\" is true)
@@ -117,10 +115,16 @@ class TrackMapService
             v.placa,
             v.num_vehiculo,	
             CASE WHEN ( SELECT count(mv) FROM maintenance_vehicles mv WHERE mv.vehicle_id = v.id_crear_vehiculo AND mv.date = current_date) > 0 THEN
-                'En mantenimiento programado'
+                TRUE
             ELSE
-                v.observaciones
-            END observaciones,
+                FALSE
+            END in_maintenance,
+            CASE WHEN v.en_taller = 1 THEN
+                TRUE
+            ELSE
+                FALSE
+            END in_repair,	
+            v.observaciones observaciones,
             c.pas_tot,
             c.des_p1,
             c.total,
@@ -166,16 +170,7 @@ class TrackMapService
             markers as m	
             INNER JOIN crear_vehiculo as v ON (v.placa = m.name AND v.estado = '1')
             INNER JOIN contador as c ON (c.placa = m.name)	
-            INNER JOIN status_vehi as sv ON (sv.id_status = (
-              SELECT
-                     CASE WHEN (cv.en_taller = 1 OR ( SELECT count(mv) FROM maintenance_vehicles mv WHERE mv.vehicle_id = v.id_crear_vehiculo AND mv.date = current_date) > 0)
-                     THEN 31
-                     ELSE m.status
-                     END
-              FROM crear_vehiculo as cv
-              WHERE cv.placa = m.name
-              LIMIT 1)
-            )
+            INNER JOIN status_vehi as sv ON (sv.id_status = m.status)
             LEFT JOIN current_dispatch_registers as cdr ON (cdr.plate = m.name)
             LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo ".($routeID ? 'AND': 'OR')." dv_group.route_id = $routeID)
             LEFT JOIN dispatcher_vehicles AS dv ON (dv.vehicle_id = dv_group.vehicle_id AND dv.\"default\" is true)
@@ -199,10 +194,16 @@ class TrackMapService
             v.placa,
             v.num_vehiculo,	
             CASE WHEN ( SELECT count(mv) FROM maintenance_vehicles mv WHERE mv.vehicle_id = v.id_crear_vehiculo AND mv.date = current_date) > 0 THEN
-                'En mantenimiento programado'
+                TRUE
             ELSE
-                v.observaciones
-            END observaciones,
+                FALSE
+            END in_maintenance,
+            CASE WHEN v.en_taller = 1 THEN
+                TRUE
+            ELSE
+                FALSE
+            END in_repair,	
+            v.observaciones observaciones,
             c.pas_tot,	
             c.des_p1,
             c.total,
@@ -249,16 +250,7 @@ class TrackMapService
             INNER JOIN crear_vehiculo as v ON (v.placa = m.name AND v.estado = '1')
             INNER JOIN contador as c ON (c.placa = m.name)	
             INNER JOIN usuario_vehi ON (usuario_vehi.placa = m.name)	
-            INNER JOIN status_vehi as sv ON (sv.id_status = (
-              SELECT
-                     CASE WHEN (cv.en_taller = 1 OR ( SELECT count(mv) FROM maintenance_vehicles mv WHERE mv.vehicle_id = v.id_crear_vehiculo AND mv.date = current_date) > 0)
-                     THEN 31
-                     ELSE m.status
-                     END
-              FROM crear_vehiculo as cv
-              WHERE cv.placa = m.name
-              LIMIT 1)
-            )
+            INNER JOIN status_vehi as sv ON (sv.id_status = m.status)
             INNER JOIN acceso ON (acceso.usuario = usuario_vehi.usuario)
             LEFT JOIN current_dispatch_registers as cdr ON (cdr.plate = m.name)
             LEFT JOIN dispatcher_vehicles AS dv_group ON (dv_group.vehicle_id = v.id_crear_vehiculo ".($routeID ? 'AND': 'OR')." dv_group.route_id = $routeID)
@@ -388,7 +380,7 @@ class TrackMapService
                 /* Info vehicle */
                 'vehiclePlate' => $row->name,
                 'vehicleNumber' => $row->num_vehiculo,
-                'vehicleStatusId' => $row->status,
+                'vehicleStatusId' => $row->in_maintenance == 't' || $row->in_repair == 't' ? 31 : $row->status,
                 'vehicleTimeStatus' => $row->hora_status,
                 'vehicleWithPeakAndPlate' => (in_array($row->name, $vehiclesCurrentPeakAndPlate) ? true : false),
                 'vehicleStatusName' => $row->des_status,
@@ -405,9 +397,9 @@ class TrackMapService
                 'mileage' => $row->current_mileage,
                 'speed' => $speed,
                 'speeding' => $speeding,
-                'observations' => $row->observaciones,
-                'alertOffRoad' => $row->alert_off_road ? true : false,
-                'alertParked' => $row->alert_parked ? true : false,
+                'observations' => $row->in_maintenance == 't' ? 'En mantenimiento programado' : $row->observaciones,
+                'alertOffRoad' => $row->alert_off_road == 't' ? true : false,
+                'alertParked' => $row->alert_parked == 't' ? true : false,
                 'alertControlPoint' => $row->alert_control_point ? true : false,
                 'controlPointAlertName' => 'COOPERATIVA',
                 'controlPointAlertTrajectoryId' => $row->control_point_alert_trajectory,
