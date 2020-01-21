@@ -181,7 +181,7 @@ class BEASyncService
         $route = Route::where('bea_id', $routeId)->first();
 
         if (!$route) {
-            $routeBEA = BEADB::select("SELECT * FROM CRU_IDRUTA = $routeId")->first();
+            $routeBEA = BEADB::select("SELECT * FROM C_RUTA = $routeId")->first();
             if ($routeBEA) {
                 $route = new Route();
                 $route->bea_id = $routeBEA->CRU_IDRUTA;

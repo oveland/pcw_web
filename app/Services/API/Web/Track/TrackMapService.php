@@ -373,6 +373,11 @@ class TrackMapService
                 $row->lng = -76.52156849484516;
             }
 
+            $row->hora = explode(".", $row->hora)[0];
+            $vehicleStatusId = $row->in_maintenance == 't' || $row->in_repair == 't' ? 31 : $row->status;
+            $vehicleObservations = $row->in_maintenance == 't' ? 'En mantenimiento programado' : $row->observaciones;
+            $vehicleObservations .= ($vehicleStatusId == 31 ? "<small style='font-size: 0.8em'><hr> GPS $row->des_status desde $row->fecha $row->hora</small>" : "");
+
             $response[] = (object)[
                 /* Info company */
                 'companyId' => $companyId,
@@ -380,7 +385,7 @@ class TrackMapService
                 /* Info vehicle */
                 'vehiclePlate' => $row->name,
                 'vehicleNumber' => $row->num_vehiculo,
-                'vehicleStatusId' => $row->in_maintenance == 't' || $row->in_repair == 't' ? 31 : $row->status,
+                'vehicleStatusId' => $vehicleStatusId,
                 'vehicleTimeStatus' => $row->hora_status,
                 'vehicleWithPeakAndPlate' => (in_array($row->name, $vehiclesCurrentPeakAndPlate) ? true : false),
                 'vehicleStatusName' => $row->des_status,
@@ -397,7 +402,7 @@ class TrackMapService
                 'mileage' => $row->current_mileage,
                 'speed' => $speed,
                 'speeding' => $speeding,
-                'observations' => $row->in_maintenance == 't' ? 'En mantenimiento programado' : $row->observaciones,
+                'observations' => $vehicleObservations,
                 'alertOffRoad' => $row->alert_off_road == 't' ? true : false,
                 'alertParked' => $row->alert_parked == 't' ? true : false,
                 'alertControlPoint' => $row->alert_control_point ? true : false,
