@@ -3,23 +3,29 @@
 namespace App\Models\Company;
 
 use App\Models\Drivers\Driver;
+use App\Models\Drivers\Drivers;
 use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\Dispatch;
 use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\Company\Company
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Vehicle[] $activeVehicles
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicles\Vehicle[] $vehicles
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Drivers\Drivers[] $drivers
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Drivers\Drivers[] $activeDrivers
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Dispatch[] $dispatches
- * @mixin \Eloquent
+ * @property-read Collection|Vehicle[] $activeVehicles
+ * @property-read Collection|Vehicle[] $vehicles
+ * @property-read Collection|Drivers[] $drivers
+ * @property-read Collection|Drivers[] $activeDrivers
+ * @property-read Collection|Dispatch[] $dispatches
+ * @mixin Eloquent
  * @property int $id
  * @property string $name
  * @property string $short_name
@@ -27,33 +33,33 @@ use Illuminate\Support\Facades\Auth;
  * @property string|null $address
  * @property string $link
  * @property bool $active
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $routes
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereNit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereShortName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company active()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company findAllActive()
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Collection|Route[] $routes
+ * @method static Builder|Company whereActive($value)
+ * @method static Builder|Company whereAddress($value)
+ * @method static Builder|Company whereCreatedAt($value)
+ * @method static Builder|Company whereId($value)
+ * @method static Builder|Company whereLink($value)
+ * @method static Builder|Company whereName($value)
+ * @method static Builder|Company whereNit($value)
+ * @method static Builder|Company whereShortName($value)
+ * @method static Builder|Company whereUpdatedAt($value)
+ * @method static Builder|Company active()
+ * @method static Builder|Company findAllActive()
  * @property string|null $timezone
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereTimezone($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Route[] $activeRoutes
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proprietaries\Proprietary[] $proprietaries
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company query()
+ * @method static Builder|Company whereTimezone($value)
+ * @property-read Collection|Route[] $activeRoutes
+ * @property-read Collection|Proprietary[] $proprietaries
+ * @method static Builder|Company newModelQuery()
+ * @method static Builder|Company newQuery()
+ * @method static Builder|Company query()
  * @property int|null $speeding_threshold
  * @property int|null $max_speeding_threshold
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereMaxSpeedingThreshold($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereSpeedingThreshold($value)
+ * @method static Builder|Company whereMaxSpeedingThreshold($value)
+ * @method static Builder|Company whereSpeedingThreshold($value)
  * @property string|null $default_kmz_url
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereDefaultKmzUrl($value)
+ * @method static Builder|Company whereDefaultKmzUrl($value)
  */
 class Company extends Model
 {
@@ -64,6 +70,7 @@ class Company extends Model
     const TUPAL = 28;
     const YUMBENOS = 17;
     const COODETRANS = 30;
+    const PAPAGAYO = 24;
 
     /**
      * @return mixed|string
@@ -74,7 +81,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function vehicles()
     {
@@ -82,7 +89,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activeVehicles()
     {
@@ -109,7 +116,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function routes()
     {
@@ -125,7 +132,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activeRoutes()
     {
@@ -133,7 +140,7 @@ class Company extends Model
     }
 
     /**
-     * @param $query
+     * @param Eloquent $query
      * @return mixed
      */
     public function scopeActive($query)
@@ -141,6 +148,10 @@ class Company extends Model
         return $query->where('active', '=', true)->orderBy('short_name');
     }
 
+    /**
+     * @param Eloquent $query
+     * @return mixed
+     */
     public function scopeFindAllActive($query)
     {
         return $query->where('active', '=', true)->orderBy('short_name', 'asc')->get();
@@ -177,7 +188,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany | Driver
      */
     public function drivers()
     {
@@ -185,7 +196,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activeDrivers()
     {
@@ -193,7 +204,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function dispatches()
     {
@@ -201,7 +212,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function proprietaries()
     {

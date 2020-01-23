@@ -7,6 +7,17 @@
         </div>
         <div class="panel-body p-b-15">
             <div class="form-input-flat">
+                <div class="col-md-3" v-if="admin">
+                    <div class="form-group">
+                        <label class="control-label">{{ $t('Company') }}</label>
+                        <div class="form-group">
+                            <multiselect track-by="short_name" label="short_name" :options="search.companies" @input="getSearchParams()" v-model="search.company"
+                                 :option-height="104" :searchable="true" :allow-empty="true" :placeholder="$t('Select a company')"
+                            ></multiselect>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="control-label">{{ $t('Vehicle') }}</label>
@@ -39,21 +50,31 @@
         name: "SearchComponent",
         props: {
             urlParams: String,
-            search: Object
+            search: Object,
+            admin: ""
         },
         methods: {
             getSearchParams: function () {
+                const mainContainer = $('.report-container');
+                mainContainer.fadeIn();
+
                 this.search.date = moment().format("YYYY-MM-DD");
                 //this.search.date = '2019-06-17';
-                axios.get(this.urlParams)
-                    .then(response => {
-                        this.search.vehicles = response.data;
+                const companySearch = this.search.company;
+                axios.get(this.urlParams, {
+                    params: {
+                        company: companySearch ? companySearch.id : null,
+                    }
+                }).then(response => {
+                        const data = response.data;
+                        this.search.vehicles = data.vehicles;
+                        this.search.companies = data.companies;
 
-                        this.search.vehicle = _.find(response.data, function(v){
-                            // return v.number === '8060';
+                        this.search.company = _.find(this.search.companies, function(c){
+                            return c.id === data.company.id;
                         });
 
-                        this.searchReport();
+                        //this.searchReport();
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -63,7 +84,7 @@
                     });
             },
             searchReport: function () {
-                if(this.search.vehicle){
+                if(this.search.vehicle && this.search.vehicle.id){
                     this.$emit('search-report');
                 }else{
                     gerror(this.$t('Select a vehicle'));

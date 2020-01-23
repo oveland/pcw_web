@@ -94,11 +94,20 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'beadb' => [
+        'BEA_COODETRANS' => [
+            'company_id' => App\Models\Company\Company::COODETRANS,
             'driver' => 'firebird',
             'path' => env('BEADB_PATH'),
             'username' => env('BEADB_USERNAME', 'BEADMIN'),
             'password' => env('BEADB_PASSWORD', 'bea00001'),
+        ],
+
+        'BEA_PAPAGAYO' => [
+            'company_id' => App\Models\Company\Company::PAPAGAYO,
+            'driver' => 'firebird',
+            'path' => env('BEADB_PATH_PAPAGAYO'),
+            'username' => env('BEADB_USERNAME_PAPAGAYO', 'BEADMIN'),
+            'password' => env('BEADB_PASSWORD_PAPAGAYO', 'bea00001'),
         ],
     ],
 

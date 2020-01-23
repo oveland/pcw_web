@@ -1,9 +1,7 @@
 <?php
 
-use App\Facades\BEADB;
-use App\Models\BEA\Mark;
+use App\Models\Company\Company;
 use App\Services\BEA\BEASyncService;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class MarksTableSeeder extends Seeder
@@ -15,8 +13,8 @@ class MarksTableSeeder extends Seeder
 
     public function __construct(BEASyncService $sync)
     {
-
         $this->sync = $sync;
+        $this->sync->company = Company::find(Company::PAPAGAYO);
     }
 
     /**

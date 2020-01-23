@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class BEADatabaseRefreshSeeder extends Seeder
+class MLModelsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -24,11 +24,6 @@ class BEADatabaseRefreshSeeder extends Seeder
             $this->call(VehiclesTableSeeder::class);
             $this->call(DriversTableSeeder::class);
         });
-        /*DB:: transaction(function () {
-            $this->call(TurnsTableSeeder::class);
-            $this->call(TrajectoriesTableSeeder::class);
-            $this->call(MarksTableSeeder::class);
-        });*/
     }
 
     /**

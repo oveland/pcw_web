@@ -1,18 +1,28 @@
 <?php
 
+use App\Facades\BEADB;
+use App\Models\BEA\Discount;
+use App\Models\BEA\Penalty;
+use App\Models\Company\Company;
+use App\Models\Vehicles\Vehicle;
 use App\Services\BEA\BEASyncService;
 use Illuminate\Database\Seeder;
 
-class TurnsTableSeeder extends Seeder
+class VehiclesTableSeeder extends Seeder
 {
     /**
      * @var BEASyncService
      */
     private $sync;
 
+    /**
+     * VehiclesTableSeeder constructor.
+     * @param BEASyncService $sync
+     */
     public function __construct(BEASyncService $sync)
     {
         $this->sync = $sync;
+        $this->sync->company = Company::find(Company::PAPAGAYO);
     }
 
     /**
@@ -23,6 +33,6 @@ class TurnsTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->sync->turns();
+        $this->sync->vehicles();
     }
 }

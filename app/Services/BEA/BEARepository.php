@@ -9,18 +9,19 @@ use App\Models\Company\Company;
 use App\Models\Drivers\Drivers;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use Illuminate\Support\Collection;
 
 class BEARepository
 {
     public $company;
 
-    public function __construct()
+    public function __construct(Company $company)
     {
-        $this->company = Company::find(Company::COODETRANS);
+        $this->company = $company;
     }
 
     /**
-     * @return Vehicle[]
+     * @return Vehicle[] | Collection
      */
     function getAllVehicles()
     {
@@ -33,7 +34,10 @@ class BEARepository
      */
     function getTrajectoriesByRoute($routeId)
     {
-        return Trajectory::where('route_id', $routeId)->get();
+        return Trajectory::with('route')
+            ->where('route_id', $routeId)
+            ->whereIn('route_id', $this->getAllRoutes()->pluck('id'))
+            ->get();
     }
 
     /**
@@ -42,7 +46,10 @@ class BEARepository
     function getAllTrajectories()
     {
         $trajectories = collect([]);
-        $trajectoriesDB = Trajectory::with('route')->get();
+
+        $trajectoriesDB = Trajectory::with('route')
+            ->whereIn('route_id', $this->getAllRoutes()->pluck('id'))
+            ->get();
         foreach ($trajectoriesDB as $trajectory){
             $trajectories->push([
                 'id' => $trajectory->id,
@@ -58,7 +65,7 @@ class BEARepository
     }
 
     /**
-     * @return Route[]
+     * @return Route[] | Collection
      */
     function getAllRoutes()
     {
@@ -78,6 +85,6 @@ class BEARepository
      */
     function getAllDiscountTypes()
     {
-       return DiscountType::orderBy('name')->get();
+       return DiscountType::where('company_id', $this->company->id)->orderBy('name')->get();
     }
 }

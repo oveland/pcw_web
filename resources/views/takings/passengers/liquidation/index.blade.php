@@ -37,7 +37,7 @@
     <div id="liquidation" class="row" url="{{ route('takings-passengers-search-liquidation') }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
-            <search-component url-params="{{ route('takings-passengers-liquidation-params',['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
+            <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('takings-passengers-liquidation-params',['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
         </form>
         <!-- end search form -->
         <hr class="hr">
@@ -99,7 +99,7 @@
         <div class="modal fade" id="modal-params-manager" tabindex="-1" role="basic" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog modal-lg" style="width: 80%">
                 <div class="modal-content">
-                    <admin-component url-params="{{  route('takings-passengers-liquidation-params',['name' => __('all')]) }}" v-on:refresh-report="searchReport($event)" :vehicle="search.vehicle"></admin-component>
+                    <admin-component :search-params="searchParams" url-params="{{  route('takings-passengers-liquidation-params',['name' => __('all')]) }}" v-on:refresh-report="searchReport($event)" :vehicle="search.vehicle"></admin-component>
                 </div>
             </div>
         </div>

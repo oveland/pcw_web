@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class BEAMarksRefreshSeeder extends Seeder
+class MLMarksSeeder extends Seeder
 {
     /**
      * Run the database seeds.

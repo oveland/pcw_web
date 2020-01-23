@@ -14,6 +14,6 @@ class BEADB extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'beadb';
+        return 'bea.coodetrans';
     }
 }

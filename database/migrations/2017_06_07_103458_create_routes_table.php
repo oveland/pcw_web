@@ -15,7 +15,7 @@ class CreateRoutesTable extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('bea_id')->unique()->nullable(true);
+            $table->unsignedBigInteger('bea_id')->nullable(true);
             $table->string('name');
             $table->integer('distance')->default(0)->comment('Distance in meters');
             $table->integer('road_time')->default(0)->comment('Road time in minutes');
@@ -33,6 +33,7 @@ class CreateRoutesTable extends Migration
 
             /*Indexes*/
             $table->unique(['name', 'company_id']); // One company has a unique name route
+            $table->unique(['company_id', 'bea_id']);
         });
     }
 

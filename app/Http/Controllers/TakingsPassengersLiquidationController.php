@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Facades\BEADB;
 use App\Models\BEA\Commission;
 use App\Models\BEA\Discount;
@@ -30,16 +31,20 @@ class TakingsPassengersLiquidationController extends Controller
     /**
      * @var PCWAuthService
      */
-    private $pcwAuthService;
+    private $auth;
     /**
      * @var BEAService
      */
     private $beaService;
 
-    public function __construct(PCWAuthService $pcwAuthService, BEAService $beaService)
+    public function __construct(PCWAuthService $auth)
     {
-        $this->pcwAuthService = $pcwAuthService;
-        $this->beaService = $beaService;
+        $this->auth = $auth;
+
+        $this->middleware(function ($request, $next) {
+            $this->beaService = App::makeWith('bea.service', ['company' =>  $this->auth->getCompanyFromRequest($request)]);
+            return $next($request);
+        });
     }
 
     public function searchMarksBEA()
@@ -78,55 +83,12 @@ class TakingsPassengersLiquidationController extends Controller
         }
     }
 
-    public function copyParamsFromVehicle()
-    {
-        $referenceVehicle = Vehicle::find(1946);
-
-        $vehicle = Vehicle::where('company_id', Company::COODETRANS)->where('number', '8039')->first();
-        $ok = true;
-        if($vehicle){
-            $discounts = Discount::where('vehicle_id', $referenceVehicle->id)->get();
-            foreach ($discounts as $discount){
-                $exists = Discount::where('vehicle_id', $vehicle->id)->where('route_id', $discount->route->id)->where('trajectory_id', $discount->trajectory_id)->where('discount_type_id', $discount->discount_type_id)->first();
-
-                if(!$exists){
-                    $new = new Discount();
-                    $new->vehicle_id = $vehicle->id;
-                    $new->discount_type_id = $discount->discount_type_id;
-                    $new->route_id = $discount->route_id;
-                    $new->trajectory_id = $discount->trajectory_id;
-                    $new->value = $discount->value;
-
-                    if(!$new->save())$ok = false;
-                }
-            }
-
-            $penalties = Penalty::where('vehicle_id', $referenceVehicle->id)->get();
-            foreach ($penalties as $penalty){
-                $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $penalty->route->id)->first();
-
-                if(!$exists){
-                    $new = new Penalty();
-                    $new->vehicle_id = $vehicle->id;
-                    $new->route_id = $penalty->route_id;
-                    $new->type = $penalty->type;
-                    $new->value = $penalty->value;
-
-                    if(!$new->save())$ok = false;
-                }
-            }
-        }
-
-        dd($ok);
-    }
-
     /**
      * @param Request $request
      * @return View
      */
     public function index(Request $request)
     {
-
         $hideMenu = session('hide-menu');
         return view('takings.passengers.liquidation.index', compact('hideMenu'));
     }
@@ -205,7 +167,14 @@ class TakingsPassengersLiquidationController extends Controller
     {
         switch ($name) {
             case __('search'):
-                return response()->json($this->beaService->repository->getAllVehicles());
+                $company = $this->auth->getCompanyFromRequest($request);
+                $access = $this->auth->access($company);
+
+                return response()->json([
+                    'company' => $this->beaService->repository->company,
+                    'vehicles' => $this->beaService->repository->getAllVehicles(),
+                    'companies' => $access->companies
+                ]);
                 break;
             case __('discounts'):
                 $vehicle = $request->get('vehicle');

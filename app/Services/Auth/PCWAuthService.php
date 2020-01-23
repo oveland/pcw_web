@@ -41,7 +41,7 @@ class PCWAuthService
 
         return (object)[
             'company' => $company,
-            'companies' => $user->isAdmin() ? Company::active()->get() : collect([]),
+            'companies' => $user->isAdmin() ? Company::active()->get() : collect([$company]),
             'drivers' => $company->activeDrivers,
             'routes' => $company->routes,
             'vehicles' => $user->assignedVehicles($company)

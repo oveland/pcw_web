@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class BEADatabaseSeeder extends Seeder
+class MLParamsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class BEADatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->dropTables([
+        /*$this->dropTables([
             'bea_mark_discounts',
             'bea_mark_discount_types',
             'bea_mark_commissions',
@@ -24,7 +24,7 @@ class BEADatabaseSeeder extends Seeder
             'bea_penalties',
             'bea_discounts',
             'bea_discount_types'
-        ]);
+        ]);*/
 
         DB::transaction(function () {
             $this->call(DiscountTypesTableSeeder::class);

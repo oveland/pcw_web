@@ -3,7 +3,9 @@
 namespace App\Services\BEA;
 
 use App\Facades\BEADB;
+use App\Models\BEA\Discount;
 use App\Models\BEA\Mark;
+use App\Models\BEA\Penalty;
 use App\Models\BEA\Trajectory;
 use App\Models\BEA\Turn;
 use App\Models\Company\Company;
@@ -13,6 +15,7 @@ use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 class BEASyncService
 {
@@ -20,7 +23,20 @@ class BEASyncService
      * @var Vehicle
      */
     private $vehicle;
+    /**
+     * @var string
+     */
     private $date;
+
+    /**
+     * @var Company $company
+     */
+    public $company;
+
+    public function __construct(Company $company)
+    {
+        $this->company = $company;
+    }
 
     public function for($vehicleId, $date)
     {
@@ -30,19 +46,18 @@ class BEASyncService
         return $this;
     }
 
-
     /**
      * Sync last marks data
      */
     public function last()
     {
         try {
-            $this->turns();
-            $this->trajectories();
+            //$this->turns();
+            //$this->trajectories();
             $this->marks();
 
         } catch (Exception $e) {
-            dd("Errorro ", $e);
+            //echo "Error sync";
         }
     }
 
@@ -53,32 +68,73 @@ class BEASyncService
      */
     public function turns()
     {
-        $lastIdMigrated = Turn::where('vehicle_id', $this->vehicle->id)->max('id');
+        $lastIdMigrated = Turn::where('company_id', $this->company->id)->max('bea_id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $turns = BEADB::select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
+        $turns = BEADB::for($this->company)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
 
         $maxSequence = collect(DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
 
+        $maxSequence = collect(DB::select("SELECT max(id) max FROM bea_turns"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE bea_turns_id_seq RESTART WITH $maxSequence");
+
         foreach ($turns as $turnBEA) {
-            $turn = Turn::find($turnBEA->ATR_IDTURNO);
-            $route = $this->validateRoute($turnBEA->ATR_IDRUTA);
-            $driver = $this->validateDriver($turnBEA->ATR_IDCONDUCTOR);
-            $vehicle = $this->validateVehicle($turnBEA->ATR_IDAUTOBUS);
-
-            if (!$turn) $turn = new Turn();
-            $turn->id = $turnBEA->ATR_IDTURNO;
-            $turn->route_id = $route->id;
-            $turn->driver_id = $driver->id;
-            $turn->vehicle_id = $vehicle->id;
-
-            if (!$turn->save()) {
-                throw new Exception("Error saving TURN with id: $turnBEA->ATR_IDTURNO");
-            }
+            $this->validateTurn($turnBEA->ATR_IDTURNO, $turnBEA);
         }
 
         $maxSequence = Vehicle::max('id') + 1;
         DB::statement("ALTER SEQUENCE crear_vehiculo_id_crear_vehiculo_seq RESTART WITH $maxSequence");
+    }
+
+    /**
+     * Sync C_AUTOBUS >> vehicles
+     * @throws Exception
+     */
+    public function vehicles()
+    {
+        $maxSequence = collect(DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
+
+        $vehicles = BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS");
+
+        foreach ($vehicles as $vehicleBEA) {
+            $this->validateVehicle($vehicleBEA->CAU_IDAUTOBUS, $vehicleBEA);
+        }
+
+        $maxSequence = Vehicle::max('id') + 1;
+        DB::statement("ALTER SEQUENCE crear_vehiculo_id_crear_vehiculo_seq RESTART WITH $maxSequence");
+    }
+
+    /**
+     * Sync C_CONDUCTOR >> drivers
+     * @throws Exception
+     */
+    public function drivers()
+    {
+        $maxSequence = Driver::max('id') + 1;
+        DB::statement("ALTER SEQUENCE conductor_id_idconductor_seq RESTART WITH $maxSequence");
+
+        $drivers = BEADB::select("SELECT * FROM C_CONDUCTOR");
+
+        foreach ($drivers as $driverBEA) {
+            $this->validateDriver($driverBEA->CCO_IDCONDUCTOR, $driverBEA);
+        }
+
+        $maxSequence = Driver::max('id') + 1;
+        DB::statement("ALTER SEQUENCE conductor_id_idconductor_seq RESTART WITH $maxSequence");
+    }
+
+    /**
+     * Sync C_RUTA >> routes
+     * @throws Exception
+     */
+    public function routes()
+    {
+        $routes = BEADB::for($this->company)->select("SELECT * FROM C_RUTA");
+
+        foreach ($routes as $routeBEA) {
+            $this->validateRoute($routeBEA->CRU_IDRUTA, $routeBEA);
+        }
     }
 
     /**
@@ -87,21 +143,14 @@ class BEASyncService
      */
     public function trajectories()
     {
-        $trajectories = BEADB::select("SELECT * FROM C_DERROTERO");
+        $maxSequence = collect(DB::select("SELECT max(id) max FROM bea_trajectories"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE bea_trajectories_id_seq RESTART WITH $maxSequence");
+
+
+        $trajectories = BEADB::for($this->company)->select("SELECT * FROM C_DERROTERO");
 
         foreach ($trajectories as $trajectoryBEA) {
-            $trajectory = Trajectory::find($trajectoryBEA->CDR_IDDERROTERO);
-            $route = $this->validateRoute($trajectoryBEA->CDR_IDRUTA);
-            if (!$trajectory) $trajectory = new Trajectory();
-
-            $trajectory->id = $trajectoryBEA->CDR_IDDERROTERO;
-            $trajectory->name = $trajectoryBEA->CDR_DESCRIPCION;
-            $trajectory->route_id = $route->id;
-            $trajectory->description = "$trajectoryBEA->CDR_DESCRIPCION";
-
-            if (!$trajectory->save()) {
-                throw new Exception("Error saving TRAJECTORY with id: $trajectoryBEA->CDR_IDDERROTERO");
-            }
+            $this->validateTrajectory($trajectoryBEA->CDR_IDDERROTERO, $trajectoryBEA);
         }
     }
 
@@ -112,33 +161,33 @@ class BEASyncService
      */
     public function marks()
     {
-        $lastIdMigrated = Mark::whereIn('turn_id', Turn::where('vehicle_id', $this->vehicle->id)->get()->pluck('id'))->max('id');
-        $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > '$this->date') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$this->vehicle->bea_id.")");
+        $maxSequence = collect(DB::select("SELECT max(id) max FROM bea_marks"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE bea_marks_id_seq RESTART WITH $maxSequence");
+
+        $queryVehicle = $this->vehicle ? "AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . ($this->vehicle->bea_id ?? 0) . ")" : "";
+
+        $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
 
         foreach ($marks as $markBEA) {
-            $mark = $this->processMark($markBEA);
-            if ($mark && !$mark->save()) {
-                throw new Exception("Error saving MARK with id: $markBEA->AMR_IDMARCA");
-            }
-
+            $this->validateMark($markBEA);
         }
 
-        DB::select("SELECT refresh_bea_marks_turns_numbers_function(".$this->vehicle->id.", '$this->date')");
+        if ($this->vehicle && $this->date) DB::select("SELECT refresh_bea_marks_turns_numbers_function(" . $this->vehicle->id . ", '$this->date')");
     }
 
     /**
      * @param $markBEA
      * @return Mark
+     * @throws Exception
      */
-    function processMark($markBEA)
+    function validateMark($markBEA)
     {
-        $mark = Mark::find($markBEA->AMR_IDMARCA);
+        $mark = Mark::where('company_id', $this->company->id)->where('bea_id', $markBEA->AMR_IDMARCA)->first();
 
         if (!$mark) $mark = new Mark();
-        else if($mark->liquidated) return null;
+        else if ($mark->liquidated) return null;
 
-            $passengersUp = $markBEA->AMR_SUBIDAS;
+        $passengersUp = $markBEA->AMR_SUBIDAS;
         $passengersDown = $markBEA->AMR_BAJADAS;
 
         $locks = $markBEA->AMR_BLOQUEOS;
@@ -152,9 +201,14 @@ class BEASyncService
         $passengersBEA = $passengersUp > $passengersDown ? $passengersUp : $passengersDown;
         $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 2500;
 
-        $mark->id = $markBEA->AMR_IDMARCA;
-        $mark->turn_id = $markBEA->AMR_IDTURNO;
-        $mark->trajectory_id = $markBEA->AMR_IDDERROTERO;
+        // Synchronized models
+        $turn = $this->validateTurn($markBEA->AMR_IDTURNO);
+        $trajectory = $this->validateTrajectory($markBEA->AMR_IDDERROTERO);
+
+        $mark->company_id = $this->company->id;
+        $mark->bea_id = $markBEA->AMR_IDMARCA;
+        $mark->turn_id = $turn->id;
+        $mark->trajectory_id = $trajectory ? $trajectory->id : null;
         $mark->date = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO)->format(config('app.simple_date_time_format'));
         $mark->initial_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO)->format(config('app.simple_time_format'));
         $mark->final_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHFINAL)->format(config('app.simple_time_format'));
@@ -168,20 +222,91 @@ class BEASyncService
         $mark->total_bea = ceil($totalBEA);
         $mark->passengers_bea = $passengersBEA;
 
+        if (!$mark->save()) {
+            throw new Exception("Error saving MARK with id: $markBEA->AMR_IDMARCA");
+        }
+
         return $mark;
     }
 
+
     /**
-     * @param $routeId
-     * @return Route|Model|null
+     * @param $turnBEAId
+     * @param null $data
+     * @return Turn|Model|null
      * @throws Exception
      */
-    public function validateRoute($routeId)
+    public function validateTurn($turnBEAId, $data = null)
     {
-        $route = Route::where('bea_id', $routeId)->first();
+        $turn = Turn::where('bea_id', $turnBEAId)->where('company_id', $this->company->id)->first();
 
-        if (!$route) {
-            $routeBEA = BEADB::select("SELECT * FROM C_RUTA = $routeId")->first();
+        if (!$turn && $turnBEAId) {
+            $turnBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO = $turnBEAId")->first();
+            if ($turnBEA) {
+                $route = $this->validateRoute($turnBEA->ATR_IDRUTA);
+                $driver = $this->validateDriver($turnBEA->ATR_IDCONDUCTOR);
+                $vehicle = $this->validateVehicle($turnBEA->ATR_IDAUTOBUS);
+
+                $turn = new Turn();
+                $turn->company_id = $this->company->id;
+                $turn->bea_id = $turnBEA->ATR_IDTURNO;
+                $turn->route_id = $route->id;
+                $turn->driver_id = $driver ? $driver->id : null;
+                $turn->vehicle_id = $vehicle->id;
+
+                if (!$turn->save()) {
+                    throw new Exception("Error saving TURN with id: $turnBEA->ATR_IDTURNO");
+                }
+            }
+        }
+
+        return $turn;
+    }
+
+    /**
+     * @param $trajectoryBEAId
+     * @param $data
+     * @return Trajectory|Model|null
+     * @throws Exception
+     */
+    public function validateTrajectory($trajectoryBEAId, $data = null)
+    {
+        $trajectory = Trajectory::where('bea_id', $trajectoryBEAId)->where('company_id', $this->company->id)->first();
+
+        if (!$trajectory && $trajectoryBEAId) {
+            $trajectoryBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_DERROTERO WHERE CDR_IDDERROTERO = $trajectoryBEAId")->first();
+
+            if ($trajectoryBEA) {
+                $route = $this->validateRoute($trajectoryBEA->CDR_IDRUTA);
+
+                $trajectory = new Trajectory();
+                $trajectory->company_id = $this->company->id;
+                $trajectory->bea_id = $trajectoryBEA->CDR_IDDERROTERO;
+                $trajectory->name = $trajectoryBEA->CDR_DESCRIPCION;
+                $trajectory->route_id = $route->id;
+                $trajectory->description = "$trajectoryBEA->CDR_DESCRIPCION";
+
+                if (!$trajectory->save()) {
+                    throw new Exception("Error saving TRAJECTORY with id: $trajectoryBEA->CDR_IDDERROTERO");
+                }
+            }
+        }
+
+        return $trajectory;
+    }
+
+    /**
+     * @param $routeBEAId
+     * @param $data
+     * @return Route|integer|null
+     * @throws Exception
+     */
+    private function validateRoute($routeBEAId, $data = null)
+    {
+        $route = Route::where('bea_id', $routeBEAId)->where('company_id', $this->company->id)->first();
+
+        if (!$route && $routeBEAId) {
+            $routeBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_RUTA WHERE CRU_IDRUTA = $routeBEAId")->first();
             if ($routeBEA) {
                 $route = new Route();
                 $route->bea_id = $routeBEA->CRU_IDRUTA;
@@ -189,7 +314,7 @@ class BEASyncService
                 $route->distance = 0;
                 $route->road_time = 0;
                 $route->url = 'none';
-                $route->company_id = Company::COODETRANS;
+                $route->company_id = $this->company->id;
                 $route->dispatch_id = 46;
                 $route->active = true;
 
@@ -203,23 +328,24 @@ class BEASyncService
     }
 
     /**
-     * @param $driverId
+     * @param $driverBEAId
+     * @param $data
      * @return Driver|Model|null
      * @throws Exception
      */
-    public function validateDriver($driverId)
+    private function validateDriver($driverBEAId, $data = null)
     {
-        $driver = Driver::where('bea_id', $driverId)->first();
+        $driver = Driver::where('bea_id', $driverBEAId)->where('company_id', $this->company->id)->first();
 
-        if (!$driver) {
-            $driverBEA = BEADB::select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverId")->first();
+        if (!$driver && $driverBEAId) {
+            $driverBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverBEAId")->first();
             if ($driverBEA) {
                 $driver = new Driver();
                 $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
                 $driver->first_name = $driverBEA->CCO_NOMBRE;
                 $driver->last_name = "$driverBEA->CCO_APELLIDOP $driverBEA->CCO_APELLIDOM";
                 $driver->identity = $driverBEA->CCO_CLAVECOND;
-                $driver->company_id = Company::COODETRANS;
+                $driver->company_id = $this->company->id;
                 $driver->active = true;
 
                 if (!$driver->saveData()) {
@@ -232,20 +358,21 @@ class BEASyncService
     }
 
     /**
-     * @param $vehicleId
-     * @return Vehicle|Model|null
+     * @param $vehicleBEAId
+     * @param null $data
+     * @return Vehicle|integer|null
      * @throws Exception
      */
-    public function validateVehicle($vehicleId)
+    private function validateVehicle($vehicleBEAId, $data = null)
     {
-        $vehicle = Vehicle::where('bea_id', $vehicleId)->where('company_id', Company::COODETRANS)->first();
+        $vehicle = Vehicle::where('bea_id', $vehicleBEAId)->where('company_id', $this->company->id)->first();
 
-        if (!$vehicle) {
-            $vehicleBEA = BEADB::select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleId")->first();
+        if (!$vehicle && $vehicleBEAId) {
+            $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
 
             if ($vehicleBEA) {
                 $vehicle = new Vehicle();
-                $duplicatedPlates = BEADB::select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
+                $duplicatedPlates = BEADB::for($this->company)->select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
 
                 if ($duplicatedPlates->TOTAL > 1) $vehicleBEA->CAU_PLACAS = "$vehicleBEA->CAU_PLACAS-$vehicleBEA->CAU_NUMECONOM";
 
@@ -254,12 +381,14 @@ class BEASyncService
                     $vehicle->bea_id = $vehicleBEA->CAU_IDAUTOBUS;
                     $vehicle->plate = $vehicleBEA->CAU_PLACAS;
                     $vehicle->number = $vehicleBEA->CAU_NUMECONOM;
-                    $vehicle->company_id = Company::COODETRANS;
+                    $vehicle->company_id = $this->company->id;
                     $vehicle->active = true;
                     $vehicle->in_repair = false;
 
                     if (!$vehicle->save()) {
                         throw new Exception("Error saving VEHICLE with id: $vehicleBEA->CAU_IDAUTOBUS");
+                    } else {
+                        $this->checkVehicleParams($vehicle);
                     }
                 }
 
@@ -268,5 +397,46 @@ class BEASyncService
         }
 
         return $vehicle;
+    }
+
+    private function checkVehicleParams(Vehicle $vehicle)
+    {
+        $referenceVehicle = $this->company->activeVehicles->first();
+
+        $ok = true;
+        if ($vehicle && $referenceVehicle) {
+            $discounts = Discount::where('vehicle_id', $referenceVehicle->id)->get();
+            foreach ($discounts as $discount) {
+                $exists = Discount::where('vehicle_id', $vehicle->id)->where('route_id', $discount->route->id)->where('trajectory_id', $discount->trajectory_id)->where('discount_type_id', $discount->discount_type_id)->first();
+
+                if (!$exists) {
+                    $new = new Discount();
+                    $new->vehicle_id = $vehicle->id;
+                    $new->discount_type_id = $discount->discount_type_id;
+                    $new->route_id = $discount->route_id;
+                    $new->trajectory_id = $discount->trajectory_id;
+                    $new->value = $discount->value;
+
+                    if (!$new->save()) $ok = false;
+                }
+            }
+
+            $penalties = Penalty::where('vehicle_id', $referenceVehicle->id)->get();
+            foreach ($penalties as $penalty) {
+                $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $penalty->route->id)->first();
+
+                if (!$exists) {
+                    $new = new Penalty();
+                    $new->vehicle_id = $vehicle->id;
+                    $new->route_id = $penalty->route_id;
+                    $new->type = $penalty->type;
+                    $new->value = $penalty->value;
+
+                    if (!$new->save()) $ok = false;
+                }
+            }
+        }
+
+        return $ok;
     }
 }

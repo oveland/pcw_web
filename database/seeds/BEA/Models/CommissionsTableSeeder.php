@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BEA\Commission;
+use App\Models\Company\Company;
 use App\Services\BEA\BEARepository;
 use Illuminate\Database\Seeder;
 
@@ -11,9 +12,14 @@ class CommissionsTableSeeder extends Seeder
      */
     private $repository;
 
+    /**
+     * CommissionsTableSeeder constructor.
+     * @param BEARepository $repository
+     */
     public function __construct(BEARepository $repository)
     {
         $this->repository = $repository;
+        $this->repository->company = Company::find(Company::PAPAGAYO);
     }
 
     /**
@@ -39,11 +45,16 @@ class CommissionsTableSeeder extends Seeder
 
         foreach ($routes as $index => $route) {
             $c = $criteria[random_int(0, 1)];
-            Commission::create([
-                'route_id' => $route->id,
-                'type' => $c->type,
-                'value' => $c->value,
-            ]);
+
+            $exists = Commission::where('route_id', $route->id)->first();
+
+            if (!$exists) {
+                Commission::create([
+                    'route_id' => $route->id,
+                    'type' => $c->type,
+                    'value' => $c->value,
+                ]);
+            }
         }
     }
 }

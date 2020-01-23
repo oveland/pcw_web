@@ -43,6 +43,8 @@ let liquidationView = new Vue({
         urlList: String,
         vehicles: [],
         search: {
+            companies: [],
+            company: [],
             vehicles: [],
             vehicle: {},
             date: String
@@ -58,12 +60,14 @@ let liquidationView = new Vue({
     computed: {
         searchParams: function () {
             const vehicle = this.search.vehicle;
+            const company = this.search.company;
 
             return {
                 flag: this.flag,
                 date: this.search.date,
-                vehicle: vehicle? this.search.vehicle.id : null,
-                valid: !!(vehicle && this.search.date)
+                vehicle: vehicle ? vehicle.id : null,
+                company: company ? company.id : null,
+                valid: !!(vehicle && vehicle.id && this.search.date)
             }
         },
         totals: function () {
@@ -147,7 +151,7 @@ let liquidationView = new Vue({
     methods: {
         searchReport: function () {
             const mainContainer = $('.report-container');
-            if(this.searchParams.valid){
+            if (this.searchParams.valid) {
                 App.blockUI({target: '.report-container', animate: true});
                 this.flag = !this.searchParams.flag;
                 const form = $('.form-search-report');
@@ -204,12 +208,15 @@ let liquidationView = new Vue({
 
         /***************** LIQUIDATION BY TURN (MARK) ********************/
         liquidationByTurn: function(mark){
+            const penalty = mark.penalty;
+            const commission = mark.commission;
+
             const payFall = (Number.isInteger(mark.payFall) ? mark.payFall : 0);
             const getFall = (Number.isInteger(mark.getFall) ? mark.getFall : 0);
             const turnDiscounts = this.turnDiscounts(mark);
-            const totalTurn = mark.totalGrossBEA + mark.penalty.value;
+            const totalTurn = mark.totalGrossBEA + (penalty ? penalty.value : 0);
             const subTotalTurn = totalTurn - payFall  + getFall;
-            const totalDispatch = totalTurn - ( turnDiscounts.total - turnDiscounts.byFuel - turnDiscounts.byMobilityAuxilio) - mark.commission.value;
+            const totalDispatch = totalTurn - ( turnDiscounts.total - turnDiscounts.byFuel - turnDiscounts.byMobilityAuxilio) - (commission ? commission.value : 0);
             const balance = totalDispatch - payFall  + getFall - turnDiscounts.byFuel;
 
             return {
@@ -257,24 +264,27 @@ let liquidationView = new Vue({
     watch:{
         marks: function () {
             let discountsByTurns = [];
-            const markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
-                return Object.keys(mark.discounts).length;
-            });
-            if (markWithMaxDiscounts) {
-                _.forEach(markWithMaxDiscounts.discounts, (discount) => {
-                    const totalByTypeDiscount = _.sumBy(this.marks, function (mark) {
-                        const markDiscount = _.find(mark.discounts, function (discountFilter) {
-                            return discountFilter.discount_type.id === discount.discount_type.id
-                        });
-                        return markDiscount ? markDiscount.value : 0;
-                    });
 
-                    discountsByTurns.push({
-                        type_uid: discount.discount_type.uid,
-                        discount: discount,
-                        value: totalByTypeDiscount,
-                    });
+            if(this.marks.length.length){
+                const markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
+                    return Object.keys(mark.discounts).length;
                 });
+                if (markWithMaxDiscounts) {
+                    _.forEach(markWithMaxDiscounts.discounts, (discount) => {
+                        const totalByTypeDiscount = _.sumBy(this.marks, function (mark) {
+                            const markDiscount = _.find(mark.discounts, function (discountFilter) {
+                                return discountFilter.discount_type.id === discount.discount_type.id
+                            });
+                            return markDiscount ? markDiscount.value : 0;
+                        });
+
+                        discountsByTurns.push({
+                            type_uid: discount.discount_type.uid,
+                            discount: discount,
+                            value: totalByTypeDiscount,
+                        });
+                    });
+                }
             }
             this.liquidation.discountsByTurns = discountsByTurns;
         }

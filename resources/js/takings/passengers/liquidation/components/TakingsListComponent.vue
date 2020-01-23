@@ -285,12 +285,14 @@
                 }, 1000);
             },
             searchTakingListReport: function () {
-                axios.get(this.urlList, {params: this.searchParams}).then(response => {
-                    this.liquidations = response.data;
-                }).catch(function (error) {
-                    console.log(error);
-                }).then(function () {
-                });
+                if (this.searchParams.valid) {
+                    axios.get(this.urlList, {params: this.searchParams}).then(response => {
+                        this.liquidations = response.data;
+                    }).catch(function (error) {
+                        console.log(error);
+                    }).then(function () {
+                    });
+                }
             },
             takings: function () {
                 axios.post(this.urlTakings, {

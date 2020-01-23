@@ -80,7 +80,7 @@ class Driver extends Model
             $response = DB::update("
                 UPDATE conductor 
                 SET bea_id = $this->bea_id,
-                    nombre1 = '$this->first_name',
+                    nombre1 = '".utf8_encode($this->first_name)."',
                     apellido1 = '$lastName1', 
                     apellido2 = '$lastName2',
                     identidad = '$this->identity',
@@ -91,7 +91,7 @@ class Driver extends Model
         } else {
             $response = DB::insert("
                 INSERT INTO conductor (bea_id, nombre1, apellido1, apellido2, identidad, empresa, activo) 
-                VALUES ($this->bea_id, '$this->first_name', '$lastName1', '$lastName2', '$this->identity', '$this->company_id', 'TRUE')
+                VALUES ($this->bea_id, '".utf8_encode($this->first_name)."', '$lastName1', '$lastName2', '$this->identity', '$this->company_id', 'TRUE')
             ");
         }
 

@@ -5,6 +5,7 @@ namespace App\Services\BEA;
 use App\Models\BEA\Liquidation;
 use App\Models\BEA\Mark;
 use App\Models\BEA\Turn;
+use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use BEADB;
 use Exception;
@@ -34,6 +35,11 @@ class BEAService
     private $sync;
 
     /**
+     * @var integer
+     */
+    private $companyID;
+
+    /**
      * BEAService constructor.
      * @param BEASyncService $sync
      * @param BEARepository $repository
@@ -52,7 +58,6 @@ class BEAService
 
     /**
      * @return object
-     * @throws Exception
      */
     function getLiquidationParams()
     {
@@ -106,7 +111,7 @@ class BEAService
      */
     function getBEATakings($vehicleId, $date)
     {
-        return $this->getBEALiquidations($vehicleId, $date)->where('taken',false);
+        return $this->getBEALiquidations($vehicleId, $date)->where('taken', false);
     }
 
     /**
@@ -116,7 +121,7 @@ class BEAService
      */
     function getBEATakingsList($vehicleId, $date)
     {
-        return $this->getBEALiquidations($vehicleId, $date)->where('taken',true);
+        return $this->getBEALiquidations($vehicleId, $date)->where('taken', true);
     }
 
     /**
@@ -129,8 +134,10 @@ class BEAService
         $this->sync->for($vehicleId, $date)->last();
 
         $vehicle = Vehicle::find($vehicleId);
-        if(!$vehicle)return collect([]);
+
+        if (!$vehicle) return collect([]);
         $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();
+
         $marks = Mark::whereIn('turn_id', $vehicleTurns->pluck('id'))
             ->where('trajectory_id', '<>', null)
             ->where('liquidated', false)

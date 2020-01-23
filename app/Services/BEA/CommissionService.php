@@ -3,6 +3,7 @@
 namespace App\Services\BEA;
 
 use App\Models\BEA\Commission;
+use App\Models\Company\Company;
 
 class CommissionService
 {
@@ -21,6 +22,8 @@ class CommissionService
      */
     function all()
     {
-        return Commission::with('route')->get();
+        return Commission::with('route')
+            ->whereIn('route_id', $this->repository->getAllRoutes()->pluck('id'))
+            ->get();
     }
 }

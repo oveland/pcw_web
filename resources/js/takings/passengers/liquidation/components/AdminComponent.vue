@@ -56,10 +56,16 @@
         props: {
             urlParams: String,
             vehicle: Object,
+            searchParams: Object,
         },
         data: function () {
             return {
                 params: []
+            }
+        },
+        watch: {
+            searchParams: function () {
+                this.getParams();
             }
         },
         computed: {
@@ -87,8 +93,9 @@
         },
         methods: {
             getParams: function () {
-                axios.get(this.urlParams)
-                    .then(data => {
+                axios.get(this.urlParams, {
+                    params: this.searchParams
+                }).then(data => {
                         this.params = data.data;
                     })
                     .catch(function (error) {
@@ -98,9 +105,6 @@
 
                     });
             }
-        },
-        created() {
-            this.getParams();
         },
         components: {
             AdminCommissionComponent,

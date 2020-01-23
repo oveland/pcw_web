@@ -1,9 +1,12 @@
 <?php
 
+use App\Facades\BEADB;
+use App\Models\Company\Company;
+use App\Models\Routes\Route;
 use App\Services\BEA\BEASyncService;
 use Illuminate\Database\Seeder;
 
-class TrajectoriesTableSeeder extends Seeder
+class RoutesTableSeeder extends Seeder
 {
     /**
      * @var BEASyncService
@@ -13,6 +16,7 @@ class TrajectoriesTableSeeder extends Seeder
     public function __construct(BEASyncService $sync)
     {
         $this->sync = $sync;
+        $this->sync->company = Company::find(Company::PAPAGAYO);
     }
 
     /**
@@ -23,6 +27,6 @@ class TrajectoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->sync->trajectories();
+        $this->sync->routes();
     }
 }
