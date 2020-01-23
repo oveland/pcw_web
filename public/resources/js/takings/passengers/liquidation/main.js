@@ -30259,7 +30259,7 @@ var liquidationView = new Vue({
 
       var discountsByTurns = [];
 
-      if (this.marks.length.length) {
+      if (this.marks.length) {
         var markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
           return Object.keys(mark.discounts).length;
         });

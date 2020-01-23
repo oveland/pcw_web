@@ -265,7 +265,7 @@ let liquidationView = new Vue({
         marks: function () {
             let discountsByTurns = [];
 
-            if(this.marks.length.length){
+            if(this.marks.length){
                 const markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
                     return Object.keys(mark.discounts).length;
                 });
