@@ -29,6 +29,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Trajectory whereUpdatedAt($value)
  * @property-read Route $route
  * @method static Builder|Trajectory whereRouteId($value)
+ * @property int|null $bea_id
+ * @property int $company_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereBeaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Trajectory whereCompanyId($value)
  */
 class Trajectory extends Model
 {

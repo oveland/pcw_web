@@ -30,6 +30,8 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property int|null $uid
  * @method static Builder|MarkDiscountType whereUid($value)
+ * @property int $company_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\MarkDiscountType whereCompanyId($value)
  */
 class MarkDiscountType extends Model
 {

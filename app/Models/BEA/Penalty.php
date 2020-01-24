@@ -30,6 +30,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Penalty whereValue($value)
  * @mixin Eloquent
  * @property-read Route $route
+ * @property int|null $vehicle_id
+ * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Penalty whereVehicleId($value)
  */
 class Penalty extends Model
 {

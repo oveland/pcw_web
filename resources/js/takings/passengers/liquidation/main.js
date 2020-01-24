@@ -9,6 +9,10 @@ import TakingsListComponent from './components/TakingsListComponent';
 
 import i18n from "../../../lang/i18n";
 import VueI18n from 'vue-i18n'
+
+import Swal from 'sweetalert2/dist/sweetalert2.min'
+import 'sweetalert2/src/sweetalert2.scss'
+
 Vue.use(VueI18n);
 
 Vue.filter('numberFormat', NumberFormat(numeral));
@@ -150,6 +154,7 @@ let liquidationView = new Vue({
     },
     methods: {
         searchReport: function () {
+            this.marks = [];
             const mainContainer = $('.report-container');
             if (this.searchParams.valid) {
                 App.blockUI({target: '.report-container', animate: true});
@@ -159,11 +164,16 @@ let liquidationView = new Vue({
 
                 axios.get(this.urlList, {params: this.searchParams}).then(data => {
                     this.marks = data.data;
-
                     this.liquidation.otherDiscounts = [];
                     this.liquidation.observations = "";
-                }).catch(function (error) {
-                    console.log(error);
+                }).catch( (error) => {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: this.$t('An error occurred in the process. Contact your administrator'),
+                        icon: 'error',
+                        timer: 4000,
+                        timerProgressBar: true,
+                    })
                 }).then(function () {
                     mainContainer.hide().fadeIn();
                     form.find('.btn-search-report').removeClass(loadingClass);

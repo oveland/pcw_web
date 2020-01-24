@@ -67,7 +67,7 @@ class BEASyncService
             $this->marks();
 
         } catch (Exception $e) {
-            //echo "Error sync";
+            echo "Error sync";
         }
     }
 
@@ -181,6 +181,23 @@ class BEASyncService
         foreach ($marks as $markBEA) {
             $this->validateMark($markBEA);
         }
+
+        if ($this->vehicle && $this->date) {
+            $markIdsBEA = $marks->pluck('AMR_IDMARCA');
+
+            $turns = Turn::where('company_id', $this->company->id)->where('vehicle_id', $this->vehicle->id)->get();
+            $marksIdsPCW = Mark::where('company_id', $this->company->id)
+                ->whereIn('turn_id', $turns->pluck('id'))
+                ->whereDate('date', $this->date)
+                ->get()->pluck('bea_id');
+
+            $duplicatedIdsPCW = $marksIdsPCW->diff($markIdsBEA)->implode(',');
+            if($duplicatedIdsPCW){
+                $companyId = $this->company->id;
+                DB::statement("UPDATE bea_marks SET duplicated = TRUE WHERE company_id = $companyId AND bea_id IN ($duplicatedIdsPCW)");
+            }
+        }
+
 
         if ($this->vehicle && $this->date) DB::select("SELECT refresh_bea_marks_turns_numbers_function(" . $this->vehicle->id . ", '$this->date')");
     }
