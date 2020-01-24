@@ -177,10 +177,12 @@ class TakingsPassengersLiquidationController extends Controller
                 ]);
                 break;
             case __('discounts'):
-                $vehicle = $request->get('vehicle');
+                $vehicle = Vehicle::find($request->get('vehicle'));
                 $trajectory = $request->get('trajectory');
 
-                return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle, $trajectory));
+                $this->beaService->sync->checkDiscountsFor($vehicle);
+
+                return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory));
                 break;
             default:
                 return response()->json($this->beaService->getLiquidationParams());

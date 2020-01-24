@@ -59,6 +59,9 @@
                                                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('Value') }}
                                                             </th>
                                                             <th class="col-md-2">
+                                                                <i class="fa fa-calendar text-muted"></i><br> {{ $t('Updated at') }}
+                                                            </th>
+                                                            <th class="col-md-2">
                                                                 <i class="fa fa-rocket text-muted"></i><br> {{ $t('Options') }}
                                                             </th>
                                                         </tr>
@@ -72,6 +75,9 @@
                                                             <td class="text-center">{{ discount.discount_type.description }}</td>
                                                             <td class="text-center">
                                                                 {{ discount.value | numberFormat('$0,0') }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="tooltips" :data-title="$t('Updated at')">{{ discount.updated_at }}</span>
                                                             </td>
                                                             <td class="text-center">
                                                                 <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Edit')" @click="editDiscount(discount)"
@@ -290,6 +296,7 @@
                 axios.get('parametros/descuentos', {
                     params: {
                         vehicle: vehicle.id,
+                        company: vehicle.company_id,
                         trajectory: trajectory.id,
                     }
                 }).then(r => {

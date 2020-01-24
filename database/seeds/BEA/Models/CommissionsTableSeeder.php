@@ -2,24 +2,29 @@
 
 use App\Models\BEA\Commission;
 use App\Models\Company\Company;
-use App\Services\BEA\BEARepository;
+use App\Services\BEA\BEASyncService;
 use Illuminate\Database\Seeder;
 
 class CommissionsTableSeeder extends Seeder
 {
     /**
-     * @var BEARepository
+     * @var Company
      */
-    private $repository;
+    private $company;
+    /**
+     * @var BEASyncService
+     */
+    private $sync;
 
     /**
-     * CommissionsTableSeeder constructor.
-     * @param BEARepository $repository
+     * DiscountsTableSeeder constructor.
+     * @param BEASyncService $sync
      */
-    public function __construct(BEARepository $repository)
+    public function __construct(BEASyncService $sync)
     {
-        $this->repository = $repository;
-        $this->repository->company = Company::find(Company::PAPAGAYO);
+        $this->company = Company::find(Company::PAPAGAYO);
+        $this->sync = $sync;
+        $this->sync->company = $this->company;
     }
 
     /**
@@ -30,21 +35,21 @@ class CommissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $routes = $this->repository->getAllRoutes();
+        $routes = $this->company->activeRoutes;
 
         $criteria = [
             0 => (object)[
                 'type' => 'percent',
-                'value' => random_int(5, 10),
+                'value' => 15,
             ],
             1 => (object)[
                 'type' => 'fixed',
-                'value' => random_int(1, 5) * 100,
+                'value' => 500,
             ]
         ];
 
         foreach ($routes as $index => $route) {
-            $c = $criteria[random_int(0, 1)];
+            $c = $criteria[0];
 
             $exists = Commission::where('route_id', $route->id)->first();
 

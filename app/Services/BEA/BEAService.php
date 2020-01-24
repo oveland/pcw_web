@@ -32,7 +32,7 @@ class BEAService
     /**
      * @var BEASyncService
      */
-    private $sync;
+    public $sync;
 
     /**
      * @var integer
@@ -61,8 +61,15 @@ class BEAService
      */
     function getLiquidationParams()
     {
+        $vehicles = $this->repository->getAllVehicles();
+
+        foreach ($vehicles as $vehicle){
+            $this->sync->checkDiscountsFor($vehicle);
+            $this->sync->checkPenaltiesFor($vehicle);
+        }
+
         return (object)[
-            'vehicles' => $this->repository->getAllVehicles(),
+            'vehicles' => $vehicles,
             'routes' => $this->repository->getAllRoutes(),
             //'discounts' => $this->discount->all(),
             'discounts' => [],
@@ -134,6 +141,8 @@ class BEAService
         $this->sync->for($vehicleId, $date)->last();
 
         $vehicle = Vehicle::find($vehicleId);
+        $this->sync->checkDiscountsFor($vehicle);
+        $this->sync->checkPenaltiesFor($vehicle);
 
         if (!$vehicle) return collect([]);
         $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();

@@ -47,7 +47,7 @@ class BEAServiceProvider extends ServiceProvider
             $company = !$user  || $user->isAdmin() ? $params['company'] : $user->company;
 
             $repository = new BEARepository($company);
-            return new BEAService(new BEASyncService($company), $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
+            return new BEAService(new BEASyncService($company, $repository), $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
         });
     }
 }

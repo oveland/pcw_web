@@ -607,6 +607,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminDiscountComponent",
@@ -693,6 +699,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('parametros/descuentos', {
         params: {
           vehicle: vehicle.id,
+          company: vehicle.company_id,
           trajectory: trajectory.id
         }
       }).then(function (r) {
@@ -9162,6 +9169,29 @@ var render = function() {
                                                       [
                                                         _c("i", {
                                                           staticClass:
+                                                            "fa fa-calendar text-muted"
+                                                        }),
+                                                        _c("br"),
+                                                        _vm._v(
+                                                          " " +
+                                                            _vm._s(
+                                                              _vm.$t(
+                                                                "Updated at"
+                                                              )
+                                                            ) +
+                                                            "\n                                                        "
+                                                        )
+                                                      ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "th",
+                                                      {
+                                                        staticClass: "col-md-2"
+                                                      },
+                                                      [
+                                                        _c("i", {
+                                                          staticClass:
                                                             "fa fa-rocket text-muted"
                                                         }),
                                                         _c("br"),
@@ -9268,6 +9298,35 @@ var render = function() {
                                                                   )
                                                                 ) +
                                                                 "\n                                                        "
+                                                            )
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "td",
+                                                          {
+                                                            staticClass:
+                                                              "text-center"
+                                                          },
+                                                          [
+                                                            _c(
+                                                              "span",
+                                                              {
+                                                                staticClass:
+                                                                  "tooltips",
+                                                                attrs: {
+                                                                  "data-title": _vm.$t(
+                                                                    "Updated at"
+                                                                  )
+                                                                }
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    discount.updated_at
+                                                                  )
+                                                                )
+                                                              ]
                                                             )
                                                           ]
                                                         ),

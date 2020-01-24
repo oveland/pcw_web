@@ -1,25 +1,29 @@
 <?php
 
-use App\Models\BEA\Penalty;
 use App\Models\Company\Company;
-use App\Services\BEA\BEARepository;
+use App\Services\BEA\BEASyncService;
 use Illuminate\Database\Seeder;
 
 class PenaltiesTableSeeder extends Seeder
 {
     /**
-     * @var BEARepository
+     * @var Company
      */
-    private $repository;
+    private $company;
+    /**
+     * @var BEASyncService
+     */
+    private $sync;
 
     /**
-     * PenaltiesTableSeeder constructor.
-     * @param BEARepository $repository
+     * DiscountsTableSeeder constructor.
+     * @param BEASyncService $sync
      */
-    public function __construct(BEARepository $repository)
+    public function __construct(BEASyncService $sync)
     {
-        $this->repository = $repository;
-        $this->repository->company = Company::find(Company::PAPAGAYO);
+        $this->company = Company::find(Company::PAPAGAYO);
+        $this->sync = $sync;
+        $this->sync->company = $this->company;
     }
 
     /**
@@ -30,32 +34,10 @@ class PenaltiesTableSeeder extends Seeder
      */
     public function run()
     {
-        $routes = $this->repository->getAllRoutes();
-        $vehicles = $this->repository->getAllVehicles();
+        $vehicles = $this->company->activeVehicles;
 
-        $criteria = [
-            0 => (object)[
-                'type' => 'boarding',
-                'value' => random_int(5, 9) * 100,
-            ]
-        ];
-
-
-        foreach ($vehicles as  $vehicle) {
-            foreach ($routes as $route) {
-                $c = $criteria[0];
-
-                $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $route->id)->first();
-
-                if (!$exists) {
-                    Penalty::create([
-                        'vehicle_id' => $vehicle->id,
-                        'route_id' => $route->id,
-                        'type' => $c->type,
-                        'value' => $c->value,
-                    ]);
-                }
-            }
+        foreach ($vehicles as $vehicle) {
+            $this->sync->checkPenaltiesFor($vehicle);
         }
     }
 }

@@ -32,10 +32,20 @@ class BEASyncService
      * @var Company $company
      */
     public $company;
+    /**
+     * @var BEARepository
+     */
+    private $repository;
 
-    public function __construct(Company $company)
+    /**
+     * BEASyncService constructor.
+     * @param Company $company
+     * @param BEARepository $repository
+     */
+    public function __construct(Company $company, BEARepository $repository)
     {
         $this->company = $company;
+        $this->repository = $repository;
     }
 
     public function for($vehicleId, $date)
@@ -401,25 +411,8 @@ class BEASyncService
 
     private function checkVehicleParams(Vehicle $vehicle)
     {
-        $referenceVehicle = $this->company->activeVehicles->first();
-
-        $ok = true;
-        if ($vehicle && $referenceVehicle) {
-            $discounts = Discount::where('vehicle_id', $referenceVehicle->id)->get();
-            foreach ($discounts as $discount) {
-                $exists = Discount::where('vehicle_id', $vehicle->id)->where('route_id', $discount->route->id)->where('trajectory_id', $discount->trajectory_id)->where('discount_type_id', $discount->discount_type_id)->first();
-
-                if (!$exists) {
-                    $new = new Discount();
-                    $new->vehicle_id = $vehicle->id;
-                    $new->discount_type_id = $discount->discount_type_id;
-                    $new->route_id = $discount->route_id;
-                    $new->trajectory_id = $discount->trajectory_id;
-                    $new->value = $discount->value;
-
-                    if (!$new->save()) $ok = false;
-                }
-            }
+        if ($vehicle) {
+            $this->checkDiscountsFor($vehicle);
 
             $penalties = Penalty::where('vehicle_id', $referenceVehicle->id)->get();
             foreach ($penalties as $penalty) {
@@ -436,7 +429,61 @@ class BEASyncService
                 }
             }
         }
+    }
 
-        return $ok;
+    public function checkPenaltiesFor(Vehicle $vehicle)
+    {
+        $routes = $this->repository->getAllRoutes();
+
+        $criteria = [
+            0 => (object)[
+                'type' => 'boarding',
+                'value' => 3000,
+            ]
+        ];
+
+        foreach ($routes as $route) {
+            $c = $criteria[0];
+
+            $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $route->id)->first();
+
+            if (!$exists) {
+                Penalty::create([
+                    'vehicle_id' => $vehicle->id,
+                    'route_id' => $route->id,
+                    'type' => $c->type,
+                    'value' => $c->value,
+                ]);
+            }
+        }
+    }
+
+    public function checkDiscountsFor(Vehicle $vehicle)
+    {
+        $routes = $this->repository->getAllRoutes();
+        $discountTypes = $this->repository->getAllDiscountTypes();
+
+        foreach ($routes as $route) {
+            $trajectories = $this->repository->getTrajectoriesByRoute($route->id);
+            foreach ($trajectories as $trajectory) {
+                foreach ($discountTypes as $discountType) {
+                    $exists = Discount::where('discount_type_id', $discountType->id)
+                        ->where('vehicle_id', $vehicle->id)
+                        ->where('route_id', $route->id)
+                        ->where('trajectory_id', $trajectory->id)
+                        ->first();
+
+                    if (!$exists) {
+                        Discount::create([
+                            'discount_type_id' => $discountType->id,
+                            'vehicle_id' => $vehicle->id,
+                            'route_id' => $route->id,
+                            'trajectory_id' => $trajectory->id,
+                            'value' => $discountType->default
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }
