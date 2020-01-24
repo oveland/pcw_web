@@ -146,8 +146,8 @@ class BEAService
         if (!$vehicle) return collect([]);
         $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();
 
-        $marks = Mark::whereIn('turn_id', $vehicleTurns->pluck('id'))
-            ->where('trajectory_id', '<>', null)
+        $marks = Mark::enabled()
+            ->whereIn('turn_id', $vehicleTurns->pluck('id'))
             ->where('liquidated', false)
             ->where('taken', false)
             ->whereDate('date', $date)

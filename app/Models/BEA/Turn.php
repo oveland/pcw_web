@@ -34,6 +34,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Turn whereVehicleId($value)
  * @mixin Eloquent
  * @property-read mixed $a_p_i
+ * @property int|null $bea_id
+ * @property int $company_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereBeaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Turn whereCompanyId($value)
  */
 class Turn extends Model
 {

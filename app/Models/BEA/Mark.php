@@ -86,6 +86,15 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property int|null $number
  * @method static Builder|Mark whereNumber($value)
  * @property-read Liquidation|null $liquidation
+ * @property bool $duplicated
+ * @property int|null $duplicated_mark_id
+ * @property int|null $bea_id
+ * @property int $company_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark enabled()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereBeaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereDuplicated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereDuplicatedMarkId($value)
  */
 class Mark extends Model
 {
@@ -356,5 +365,10 @@ class Mark extends Model
             'payFall' => $this->pay_fall,
             'getFall' => $this->get_fall
         ];
+    }
+
+    public function scopeEnabled($query)
+    {
+        return $query->where('trajectory_id', '<>', null)->where('duplicated', false);
     }
 }

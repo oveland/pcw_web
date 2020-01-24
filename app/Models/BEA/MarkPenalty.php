@@ -33,6 +33,9 @@ use Illuminate\Support\Carbon;
  * @property-read Mark $mark
  * @property int $mark_id
  * @method static Builder|MarkPenalty whereMarkId($value)
+ * @property int|null $vehicle_id
+ * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\MarkPenalty whereVehicleId($value)
  */
 class MarkPenalty extends Model
 {

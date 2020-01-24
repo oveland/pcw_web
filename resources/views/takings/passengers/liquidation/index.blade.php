@@ -117,6 +117,10 @@
             setTimeout(()=>{
                 $('.btn-group-modules .btn-tab:first').click();
             },1000);
+
+            $("#modal-params-manager").on('hidden.bs.modal', function () {
+                $('.btn-search-report').click();
+            });
         });
     </script>
 @endsection
