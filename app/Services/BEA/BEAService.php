@@ -64,7 +64,6 @@ class BEAService
         $vehicles = $this->repository->getAllVehicles();
 
         foreach ($vehicles as $vehicle){
-            $this->sync->checkDiscountsFor($vehicle);
             $this->sync->checkPenaltiesFor($vehicle);
         }
 
