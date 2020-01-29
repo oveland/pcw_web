@@ -50,7 +50,7 @@ class DatabaseManageOLDRoutinesCommand extends Command
         dump($response->getBody()->getContents());
 
         $client = new Client(['base_uri' => 'http://www.pcwserviciosgps.com']);
-        $response = $client->get('pcw_gps/php/administrar_correos/enviar.php');
+        $response = $client->get('pcw_gps/php/administrar_correos/send.php');
         dd($response->getBody()->getContents());
     }
 }
