@@ -238,7 +238,7 @@ class User extends Authenticatable
      */
     public function assignedVehicles($company, $active = true)
     {
-        if ($this->isProprietary() && $this->belongsToMontebello()) {
+        if ($this->isProprietary()) {
             $assignedVehicles = Vehicle::whereIn('plate', collect(\DB::select("SELECT placa plate FROM usuario_vehi WHERE usuario = '$this->username'"))->pluck('plate'));
             if( $active ) $assignedVehicles = $assignedVehicles->active();
             $assignedVehicles = $assignedVehicles->get();
