@@ -45,12 +45,12 @@ class DatabaseManageOLDRoutinesCommand extends Command
             \DB::select("SELECT checkvehiclesformaps($company->id)");
         }
 
+        $client = new Client(['base_uri' => 'http://www.pcwserviciosgps.com']);
+        $response = $client->get('pcw_gps/php/administrar_correos/send.php');
+        dump($response->getBody()->getContents());
+
         $client = new Client(['base_uri' => 'http://admin.pcwserviciosgps.com']);
         $response = $client->get('php/migrarContadorHistorialSeisMeses.php');
         dump($response->getBody()->getContents());
-
-        $client = new Client(['base_uri' => 'http://www.pcwserviciosgps.com']);
-        $response = $client->get('pcw_gps/php/administrar_correos/send.php');
-        dd($response->getBody()->getContents());
     }
 }
