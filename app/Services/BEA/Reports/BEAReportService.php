@@ -29,7 +29,7 @@ class BEAReportService
             'marks' => $this->mergeMarks($marksGroup),
             'totals' => $this->mergeTotals($totalsGroup),
             'details' => $this->mergeDetails($detailGroup),
-            'liquidations' => $liquidations
+            'liquidations' => $liquidations->values()
         ]);
     }
 

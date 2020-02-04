@@ -39,4 +39,9 @@ class ManagementCost extends Model
     protected $table = 'bea_management_costs';
 
     protected $fillable = ['uid', 'name', 'description', 'value', 'vehicle_id'];
+
+    public function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
 }
