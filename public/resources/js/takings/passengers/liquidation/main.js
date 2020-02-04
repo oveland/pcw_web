@@ -915,8 +915,8 @@ __webpack_require__.r(__webpack_exports__);
 
       var mainContainer = $('.report-container');
       mainContainer.fadeIn();
-      this.search.date = moment().format("YYYY-MM-DD");
-      this.search.date = '2020-01-09';
+      this.search.date = moment().format("YYYY-MM-DD"); //this.search.date = '2020-01-09';
+
       var companySearch = this.search.company;
       axios.get(this.urlParams, {
         params: {
@@ -926,9 +926,6 @@ __webpack_require__.r(__webpack_exports__);
         var data = response.data;
         _this.search.vehicles = data.vehicles;
         _this.search.companies = data.companies;
-        _this.search.vehicle = _.find(_this.search.vehicles, function (c) {
-          return c.id === 2181;
-        });
         _this.search.company = _.find(_this.search.companies, function (c) {
           return c.id === data.company.id;
         }); //this.searchReport();
