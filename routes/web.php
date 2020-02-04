@@ -319,6 +319,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/file/discount/{id}', 'TakingsPassengersLiquidationController@getFileDiscount')->name('takings-passengers-search-file-discount');
             });
 
+
             Route::prefix(__('url-liquidation'))->group(function () {
                 Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');
                 Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
@@ -333,6 +334,11 @@ Route::group(['middleware' => ['auth']], function () {
             });
 
             Route::post('takings/{liquidation}', 'TakingsPassengersLiquidationController@takings')->name('taking-passengers-takings');
+
+            Route::prefix(__('report'))->group(function () {
+                Route::get(__('daily'), 'TakingsPassengersLiquidationController@searchDailyReport')->name('takings-passengers-report-daily');
+                Route::get(__('daily')."/export", 'TakingsPassengersLiquidationController@exportDailyReport')->name('takings-passengers-report-daily-export');
+            });
         });
     });
 

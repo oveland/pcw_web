@@ -2,10 +2,11 @@ import NumberFormat from 'vue-filter-number-format';
 import numeral from 'numeral';
 
 import SearchComponent from './components/SearchComponent';
-import AdminComponent from './components/AdminComponent';
+import AdminComponent from './components/admin/AdminComponent';
 import LiquidationComponent from './components/LiquidationComponent';
 import TakingsComponent from './components/TakingsComponent';
 import TakingsListComponent from './components/TakingsListComponent';
+import DailyReportComponent from './components/reports/DailyReportComponent';
 
 import i18n from "../../../lang/i18n";
 import VueI18n from 'vue-i18n'
@@ -40,7 +41,8 @@ let liquidationView = new Vue({
         AdminComponent,
         LiquidationComponent,
         TakingsComponent,
-        TakingsListComponent
+        TakingsListComponent,
+        DailyReportComponent
     },
     data: {
         flag: false,

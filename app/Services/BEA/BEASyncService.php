@@ -4,6 +4,7 @@ namespace App\Services\BEA;
 
 use App\Facades\BEADB;
 use App\Models\BEA\Discount;
+use App\Models\BEA\ManagementCost;
 use App\Models\BEA\Mark;
 use App\Models\BEA\Penalty;
 use App\Models\BEA\Trajectory;
@@ -168,6 +169,7 @@ class BEASyncService
      * Sync A_MARCA >> bea_marks
      *
      * @throws Exception
+     * @throws \Throwable
      */
     public function marks()
     {
@@ -179,7 +181,9 @@ class BEASyncService
         $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
 
         foreach ($marks as $markBEA) {
-            $this->validateMark($markBEA);
+            DB::transaction(function () use ($markBEA){
+                $this->validateMark($markBEA);
+            });
         }
 
         if ($this->vehicle && $this->date) {
@@ -472,6 +476,21 @@ class BEASyncService
                     'value' => $c->value,
                 ]);
             }
+        }
+    }
+
+    public function checkManagementCostsFor(Vehicle $vehicle)
+    {
+        $exists = ManagementCost::where('vehicle_id', $vehicle->id)->first();
+
+        if (!$exists) {
+            ManagementCost::create([
+                'uid' => ManagementCost::PAYROLL_ID,
+                'vehicle_id' => $vehicle->id,
+                'name' => __('Payroll cost'),
+                'description' => __('Payroll cost'),
+                'value' => ManagementCost::PAYROLL_DEFAULT,
+            ]);
         }
     }
 

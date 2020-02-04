@@ -10,6 +10,7 @@ use App\Services\BEA\CommissionService;
 use App\Services\BEA\Database;
 use App\Services\BEA\DiscountService;
 use App\Services\BEA\PenaltyService;
+use App\Services\BEA\Reports\BEAReportService;
 use Auth;
 use Illuminate\Support\ServiceProvider;
 
@@ -47,7 +48,9 @@ class BEAServiceProvider extends ServiceProvider
             $company = !$user  || $user->isAdmin() ? $params['company'] : $user->company;
 
             $repository = new BEARepository($company);
-            return new BEAService(new BEASyncService($company, $repository), $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
+            $report = new BEAReportService();
+
+            return new BEAService(new BEASyncService($company, $repository), $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
         });
     }
 }

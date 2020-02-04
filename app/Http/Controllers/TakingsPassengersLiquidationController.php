@@ -7,12 +7,11 @@ use App\Facades\BEADB;
 use App\Models\BEA\Commission;
 use App\Models\BEA\Discount;
 use App\Models\BEA\Liquidation;
+use App\Models\BEA\ManagementCost;
 use App\Models\BEA\Mark;
 use App\Models\BEA\Penalty;
 use App\Models\BEA\Trajectory;
 use App\Models\BEA\Turn;
-use App\Models\Company\Company;
-use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\BEA\BEAService;
@@ -125,6 +124,42 @@ class TakingsPassengersLiquidationController extends Controller
         ])->setPaper(array(0, 0, $options->w, $options->h))->loadView($template, compact(['liquidation', 'mark']));
 
         return $pdf->stream(__('Receipt')."-$liquidation->id.pdf");
+    }
+
+    public function exportDailyReport(Request $request)
+    {
+        $vehicle = Vehicle::find($request->get('vehicle'));
+        $date = $request->get('date');
+
+        $report = (object) $this->beaService->getDailyReport($vehicle->id, $date)->toArray();
+
+        $options = (object)[
+            'w' => 1400,
+            'h' => 600,
+            'dpi' => 1650,
+        ];
+
+        $pdf = PDF::setOptions([
+            'dpi' => $options->dpi,
+            'defaultFont' => 'sans-serif'
+        ])->setPaper(array(0, 0, $options->w, $options->h))->loadView('takings.passengers.liquidation.exports.dailyReport', compact(['report', 'vehicle', 'date']));
+
+        return $pdf->stream(__('Daily report')."-$date.pdf");
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function searchDailyReport(Request $request)
+    {
+        $vehicleReport = $request->get('vehicle');
+        $dateReport = $request->get('date');
+
+        $dailyReport = $this->beaService->getDailyReport($vehicleReport, $dateReport)->toArray();
+
+        return response()->json($dailyReport);
     }
 
     /**
@@ -341,6 +376,31 @@ class TakingsPassengersLiquidationController extends Controller
                 } else {
                     $response->error = true;
                     $response->message .= "<br> - " . __("Penalty register doesn't exists in the system");
+                }
+
+                return response()->json($response);
+                break;
+            case __('costs'):
+                $response = (object)[
+                    'error' => false,
+                    'message' => __('Cost edited successfully'),
+                ];
+
+                $costToEdit = (object)$request->get('cost');
+                $cost = ManagementCost::find($costToEdit->id);
+
+                if ($cost) {
+                    $cost->name = $costToEdit->name;
+                    $cost->description = $costToEdit->description;
+                    $cost->value = $costToEdit->value;
+
+                    if (!$cost->save()) {
+                        $response->error = true;
+                        $response->message .= "<br> - " . __("Cost unable to update");
+                    }
+                } else {
+                    $response->error = true;
+                    $response->message .= "<br> - " . __("Cost register doesn't exists in the system");
                 }
 
                 return response()->json($response);

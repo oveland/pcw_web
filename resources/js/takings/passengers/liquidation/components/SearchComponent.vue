@@ -59,7 +59,7 @@
                 mainContainer.fadeIn();
 
                 this.search.date = moment().format("YYYY-MM-DD");
-                //this.search.date = '2019-06-17';
+                this.search.date = '2020-01-09';
                 const companySearch = this.search.company;
                 axios.get(this.urlParams, {
                     params: {
@@ -70,6 +70,9 @@
                         this.search.vehicles = data.vehicles;
                         this.search.companies = data.companies;
 
+                        this.search.vehicle = _.find(this.search.vehicles, function(c){
+                            return c.id === 2181;
+                        });
                         this.search.company = _.find(this.search.companies, function(c){
                             return c.id === data.company.id;
                         });

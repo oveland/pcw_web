@@ -7,6 +7,7 @@ use App\Models\BEA\Mark;
 use App\Models\BEA\Turn;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
+use App\Services\BEA\Reports\BEAReportService;
 use BEADB;
 use Exception;
 use Illuminate\Support\Collection;
@@ -38,22 +39,28 @@ class BEAService
      * @var integer
      */
     private $companyID;
+    /**
+     * @var BEAReportService
+     */
+    private $report;
 
     /**
      * BEAService constructor.
      * @param BEASyncService $sync
+     * @param BEAReportService $report
      * @param BEARepository $repository
      * @param DiscountService $discountService
      * @param CommissionService $commissionService
      * @param PenaltyService $penaltyService
      */
-    public function __construct(BEASyncService $sync, BEARepository $repository, DiscountService $discountService, CommissionService $commissionService, PenaltyService $penaltyService)
+    public function __construct(BEASyncService $sync, BEAReportService $report, BEARepository $repository, DiscountService $discountService, CommissionService $commissionService, PenaltyService $penaltyService)
     {
         $this->repository = $repository;
         $this->discount = $discountService;
         $this->commission = $commissionService;
         $this->penalty = $penaltyService;
         $this->sync = $sync;
+        $this->report = $report;
     }
 
     /**
@@ -65,6 +72,7 @@ class BEAService
 
         foreach ($vehicles as $vehicle){
             $this->sync->checkPenaltiesFor($vehicle);
+            $this->sync->checkManagementCostsFor($vehicle);
         }
 
         return (object)[
@@ -74,7 +82,8 @@ class BEAService
             'discounts' => [],
             'commissions' => $this->commission->all(),
             'trajectories' => $this->repository->getAllTrajectories(),
-            'penalties' => $this->penalty->all()
+            'penalties' => $this->penalty->all(),
+            'managementCosts' => $this->repository->getManagementCosts()
         ];
     }
 
@@ -135,6 +144,17 @@ class BEAService
      * @param $date
      * @return Collection
      */
+    function getDailyReport($vehicleId, $date)
+    {
+        $beaLiquidations = $this->getBEALiquidations($vehicleId, $date)->where('taken', true);
+        return $this->report->buildDailyReport($beaLiquidations);
+    }
+
+    /**
+     * @param $vehicleId
+     * @param $date
+     * @return Collection
+     */
     function getBEAMarks($vehicleId, $date)
     {
         $this->sync->for($vehicleId, $date)->last();
@@ -142,6 +162,7 @@ class BEAService
         $vehicle = Vehicle::find($vehicleId);
         $this->sync->checkDiscountsFor($vehicle);
         $this->sync->checkPenaltiesFor($vehicle);
+        $this->sync->checkManagementCostsFor($vehicle);
 
         if (!$vehicle) return collect([]);
         $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();

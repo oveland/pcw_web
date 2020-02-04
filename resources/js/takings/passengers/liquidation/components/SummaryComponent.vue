@@ -103,89 +103,6 @@
             <label for="observations" class="control-label">{{ $t('Observations') }}</label>
             <textarea id="observations" :readonly="readonly" :disabled="readonly" rows="2" class="form-control" v-model="liquidation.observations" style="resize: vertical;min-height: 30px !important;"></textarea>
         </div>
-
-        <div v-if="search.vehicle && false" class="form form-horizontal preview">
-            <h3 class="search p-b-15">
-            <span class="text-bold">
-                <i class="fa fa-bus"></i> {{ search.vehicle.number }} | {{ search.vehicle.plate }}
-            </span>
-                <span class="pull-right">
-                <i class="fa fa-calendar"></i> {{ search.date }}
-            </span>
-            </h3>
-            <hr class="hr">
-            <h2 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-dollar hide"></i> {{ $t('Total turns') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalTurns  | numberFormat('$0,0') }}</span>
-            </h2>
-
-            <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-dollar hide"></i> {{ $t('Total pay fall') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalPayFall  | numberFormat('$0,0') }}</span>
-            </h3>
-            <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-dollar hide"></i> {{ $t('Total get fall') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalGetFall  | numberFormat('$0,0') }}</span>
-            </h3>
-            <h2 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-dollar hide"></i> {{ $t('Subtotal') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.subTotalTurns  | numberFormat('$0,0') }}</span>
-            </h2>
-
-            <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-tachometer hide"></i> {{ $t('Total tolls') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalDiscountByTolls | numberFormat('$0,0') }}</span>
-            </h3>
-            <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-tachometer hide"></i> {{ $t('Total commissions') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalCommissions | numberFormat('$0,0') }}</span>
-            </h3>
-            <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-tachometer hide"></i> {{ $t('Operative Expenses') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalDiscountByOperativeExpenses | numberFormat('$0,0') }}</span>
-            </h3>
-            <h3 class="totals" v-if="totals.totalOtherDiscounts">
-            <span class="text-bold">
-                <i class="fa fa-tachometer hide"></i> {{ $t('Total other discounts') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalOtherDiscounts | numberFormat('$0,0') }}</span>
-            </h3>
-
-            <h2 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-tachometer hide"></i> {{ $t('Total dispatch') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalDispatch | numberFormat('$0,0') }}</span>
-            </h2>
-
-            <h3 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-tachometer hide"></i> {{ $t('Total fuel') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.totalDiscountByFuel | numberFormat('$0,0') }}</span>
-            </h3>
-
-            <h2 class="totals">
-            <span class="text-bold">
-                <i class="fa fa-tachometer hide"></i> {{ $t('Balance') }}
-            </span>
-                <span class="pull-right col-md-4 p-0">{{ totals.balance | numberFormat('$0,0') }}</span>
-            </h2>
-        </div>
     </div>
 </template>
 
@@ -203,7 +120,6 @@
             VueFriendlyIframe
         },
         props: {
-            search:Object,
             liquidation: Object,
             urlExport: String,
             totals: Object,

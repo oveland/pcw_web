@@ -49,10 +49,6 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <hr class="hr">
-                                <button class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips pull-right" title="Editar" onclick="ginfo('Feature on development')">
-                                    <i class="fa fa-edit"></i> {{ $t('Edit') }}
-                                </button>
                             </div>
                         </div>
                     </div>

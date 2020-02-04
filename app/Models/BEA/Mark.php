@@ -108,7 +108,7 @@ class Mark extends Model
     {
         parent::boot();
         static::saving(function (Mark $mark) {
-            if($mark->liquidated && !$mark->taken){
+            if ($mark->liquidated && !$mark->taken) {
                 $discounts = $mark->discounts;
                 $markDiscounts = array();
 
@@ -152,12 +152,12 @@ class Mark extends Model
 
     public function getInitialTimeAttribute()
     {
-        return Carbon::createFromFormat( config('app.simple_time_format'), $this->attributes['initial_time'] );
+        return Carbon::createFromFormat(config('app.simple_time_format'), $this->attributes['initial_time']);
     }
 
     public function getFinalTimeAttribute()
     {
-        return Carbon::createFromFormat( config('app.simple_time_format'), $this->attributes['final_time'] );
+        return Carbon::createFromFormat(config('app.simple_time_format'), $this->attributes['final_time']);
     }
 
     function getDateFormat()
@@ -202,17 +202,17 @@ class Mark extends Model
             0 => (object)[
                 'icon' => 'fa fa-warning',
                 'class' => 'yellow-crusta',
-                'name' => __('Turn')." $this->number > ".__('No liquidated'),
+                'name' => __('Turn') . " $this->number > " . __('No liquidated'),
             ],
             1 => (object)[
                 'icon' => 'fa fa-warning',
                 'class' => 'blue',
-                'name' => __('Turn')." $this->number > ".__('Liquidated without taking'),
+                'name' => __('Turn') . " $this->number > " . __('Liquidated without taking'),
             ],
             2 => (object)[
                 'icon' => 'fa fa-check-circle-o',
                 'class' => 'green-meadow',
-                'name' => __('Turn')." $this->number > ".__('Taken'),
+                'name' => __('Turn') . " $this->number > " . __('Taken'),
             ]
         ];
 
@@ -285,7 +285,7 @@ class Mark extends Model
                 $commissionValue += $this->passengers_bea * $commissionByRoute->value;
                 break;
             case 'percent':
-                $commissionValue += ($totalGrossBea + $this->penalty->value - intval($this->pay_fall) + intval($this->get_fall) ) * $commissionByRoute->value / 100;
+                $commissionValue += ($totalGrossBea + $this->penalty->value - intval($this->pay_fall) + intval($this->get_fall)) * $commissionByRoute->value / 100;
                 break;
         }
 
@@ -320,7 +320,7 @@ class Mark extends Model
     function getPenaltyAttribute()
     {
         $penaltyByRoute = $this->getPenaltyByRoute();
-        $penaltyValue = $this->boarded >= 4  ? $this->boarded * $penaltyByRoute->value : 0;
+        $penaltyValue = $this->boarded >= 4 ? $this->boarded * $penaltyByRoute->value : 0;
         return (object)[
             'value' => $penaltyValue,
             'type' => $penaltyByRoute->type,
@@ -332,6 +332,19 @@ class Mark extends Model
     {
         $duration = $this->initialTime->diff($this->finalTime);
         return $duration->h . "h " . $duration->i . " m";
+    }
+
+    public function getPayRollCostAttribute()
+    {
+        $turn = $this->turn;
+        if ($turn && $turn->vehicle_id) {
+            $payRollCost = ManagementCost::where('vehicle_id', $turn->vehicle_id)
+                ->where('uid', ManagementCost::PAYROLL_ID)
+                ->first();
+
+            return $payRollCost ? $payRollCost->value : 0;
+        }
+        return 0;
     }
 
     function getAPIFields()
@@ -363,7 +376,8 @@ class Mark extends Model
             'liquidation_id' => $this->liquidation_id,
             'taken' => $this->taken,
             'payFall' => $this->pay_fall,
-            'getFall' => $this->get_fall
+            'getFall' => $this->get_fall,
+            'payRollCost' => $this->payRollCost,
         ];
     }
 

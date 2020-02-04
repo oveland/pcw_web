@@ -652,6 +652,7 @@
   "Penalties by turn": "Penalizaciones por turno",
   "Commissions by turn": "Comisiones por turno",
   "Boarded": "Abordados",
+  "Pay bearded": "Cobro abordados",
   "Auxiliaries": "Auxiliares",
   "Locks": "Bloqueos",
   "Total by turn": "Total por turno",
@@ -674,6 +675,7 @@
   "Total fuel": "Total combustible",
   "Observations": "Observaciones",
   "Operative Expenses": "Gastos Operativos",
+  "Operative expenses": "Gastos operativos",
   "Total operative expenses": "Total gastos operativos",
   "Total other discounts": "Total otros descuentos",
   "Turns liquidated": "Turnos liquidados",
@@ -700,5 +702,10 @@
   "Turns": "Turnos",
   "Liquidation updated successfully": "Liquidación actualizada correctamente",
   "Error at updating liquidation register": "Error al actualizar el registro de liquidación",
-  "Percent of Gross BEA": "Porcentaje de Total turno"
+  "Percent of Gross BEA": "Porcentaje de Total turno",
+  "Daily report": "Reporte diario",
+  "Payroll cost": "Costo planilla",
+  "costs": "costos",
+  "Penalty": "Sanción",
+  "Daily report taking": "Informe de recaudo diario"
 }

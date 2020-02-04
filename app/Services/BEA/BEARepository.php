@@ -4,6 +4,7 @@
 namespace App\Services\BEA;
 
 use App\Models\BEA\DiscountType;
+use App\Models\BEA\ManagementCost;
 use App\Models\BEA\Trajectory;
 use App\Models\Company\Company;
 use App\Models\Drivers\Drivers;
@@ -69,7 +70,7 @@ class BEARepository
      */
     function getAllRoutes()
     {
-        return $this->company->activeRoutes;
+        return collect($this->company->activeRoutes->where('bea_id', '>', 0)->values());
     }
 
     /**
@@ -88,4 +89,11 @@ class BEARepository
         return DiscountType::where('company_id', $this->company->id)->orderBy('name')->get();
     }
 
+    /**
+     * @return ManagementCost[]| Collection
+     */
+    public function getManagementCosts()
+    {
+        return ManagementCost::whereIn('vehicle_id', $this->getAllVehicles()->pluck('id'))->orderBy('uid')->get();
+    }
 }

@@ -24,7 +24,15 @@
                     </li>
                     <li>
                         <a href="#commissions-params-tab" data-toggle="tab">
-                            <i class=" icon-user-follow"></i> {{ $t('Commissions') }}
+                            <i class="icon-user-follow"></i> {{ $t('Commissions') }}
+                        </a>
+                    </li>
+
+                    <li class="divider-menu hidden-sm hidden-xs"></li>
+
+                    <li>
+                        <a href="#management-costs-tab" data-toggle="tab">
+                            <i class="fa fa-dollar"></i> {{ $t('Costs') }}
                         </a>
                     </li>
                 </ul>
@@ -40,6 +48,9 @@
                     <div class="tab-pane" id="commissions-params-tab">
                         <admin-commission-component :routes="routes" :commissions="commissions" v-on:refresh-report="$emit('refresh-report')"></admin-commission-component>
                     </div>
+                    <div class="tab-pane" id="management-costs-tab">
+                        <management-cost-component :vehicles="vehicles" :vehicle-selected="vehicle" :management-costs="managementCosts" v-on:refresh-report="$emit('refresh-report')"></management-cost-component>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,6 +61,7 @@
     import AdminDiscountComponent from "./AdminDiscountComponent";
     import AdminCommissionComponent from "./AdminCommissionComponent";
     import AdminPenaltyComponent from "./AdminPenaltyComponent";
+    import ManagementCostComponent from "./ManagementCostComponent";
 
     export default {
         name: "ParamsManagerComponent",
@@ -89,6 +101,9 @@
             },
             penalties: function () {
                 return this.params.penalties;
+            },
+            managementCosts: function () {
+                return this.params.managementCosts;
             }
         },
         methods: {
@@ -107,12 +122,18 @@
             }
         },
         components: {
-            AdminCommissionComponent,
             AdminDiscountComponent,
-            AdminPenaltyComponent
+            AdminPenaltyComponent,
+            AdminCommissionComponent,
+            ManagementCostComponent
         }
     }
 </script>
 
 <style scoped>
+    .divider-menu {
+        height: 23px !important;
+        border: 1px solid lightblue !important;
+        margin: 10px !important;
+    }
 </style>

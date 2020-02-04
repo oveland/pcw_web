@@ -65,6 +65,12 @@
                                 <i class="fa fa-check-circle-o"></i> <span class="hidden-xs">@lang('Takings list')</span>
                             </label>
                             @endif
+                            @if( Auth::user()->canML('takings-list') )
+                            <label class="btn btn-tab btn-transparent blue btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings-daily-report"
+                                   onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
+                                <i class="fa fa-file-o"></i> <span class="hidden-xs">@lang('Daily report')</span>
+                            </label>
+                            @endif
                             @if( Auth::user()->canML('admin-params') )
                             <label class="btn blue-hoki btn-outline btn-circle pull-right uppercase" data-toggle="modal" data-target="#modal-params-manager">
                                 <i class="fa fa-cogs"></i> <span class="hidden-xs">@lang('Admin')</span>
@@ -88,6 +94,11 @@
                         @if( Auth::user()->canML('takings-list') )
                         <div id="table-takings-list" class="tab-pane fade">
                             <takings-list-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings-list') }}" url-export="{{ route('takings-passengers-liquidation-export', ['liquidation' => 'ID']) }}"></takings-list-component>
+                        </div>
+                        @endif
+                        @if( Auth::user()->canML('takings-list') )
+                        <div id="table-takings-daily-report" class="tab-pane fade">
+                            <daily-report-component :search-params="searchParams" :search="search" url-report="{{ route('takings-passengers-report-daily') }}" url-list="{{ route('takings-passengers-search-takings-list') }}" url-export="{{ route('takings-passengers-report-daily-export') }}"></daily-report-component>
                         </div>
                         @endif
                     </div>
