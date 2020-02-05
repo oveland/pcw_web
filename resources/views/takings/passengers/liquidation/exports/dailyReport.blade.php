@@ -141,6 +141,9 @@
                             <th class="col-md-1">
                                 {{ __('Payroll cost') }}
                             </th>
+                            <th class="col-md-1">
+                                {{ __('Net to car') }}
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -178,6 +181,7 @@
                             <td class="text-center">{{ asDollars($mark->penalty->value) }}</td>
                             <td class="text-center">{{ asDollars($turn->totalDispatch) }}</td>
                             <td class="text-center">{{ asDollars($mark->payRollCost) }}</td>
+                            <td class="text-center">{{ asDollars(intval($turn->totalDispatch - $mark->payRollCost - $turn->turnDiscounts['byFuel'] + $turn->getFall) ) }}</td>
                         </tr>
                         @endforeach
                         <tr class="inverse">
@@ -198,6 +202,7 @@
                             <th class="text-center">{{ asDollars($totals->totalPenalties) }}</th>
                             <th class="text-center">{{ asDollars($totals->totalDispatch) }}</th>
                             <th class="text-center">{{ asDollars($totals->payRollCost) }}</th>
+                            <th class="text-center">{{ asDollars(intval($totals->totalDispatch - $totals->payRollCost - $totals->totalDiscountByFuel + $totals->totalGetFall)) }}</th>
                         </tr>
                         </tbody>
                     </table>
