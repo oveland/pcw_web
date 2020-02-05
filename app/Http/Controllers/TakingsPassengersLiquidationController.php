@@ -134,15 +134,15 @@ class TakingsPassengersLiquidationController extends Controller
         $report = (object) $this->beaService->getDailyReport($vehicle->id, $date)->toArray();
 
         $options = (object)[
-            'w' => 1400,
+            'w' => 1500,
             'h' => 600,
-            'dpi' => 1650,
+            'dpi' => 2650,
         ];
 
         $pdf = PDF::setOptions([
             'dpi' => $options->dpi,
             'defaultFont' => 'sans-serif'
-        ])->setPaper(array(0, 0, $options->w, $options->h))->loadView('takings.passengers.liquidation.exports.dailyReport', compact(['report', 'vehicle', 'date']));
+        ])->setPaper('A4', 'landscape')->loadView('takings.passengers.liquidation.exports.dailyReport', compact(['report', 'vehicle', 'date']));
 
         return $pdf->stream(__('Daily report')."-$date.pdf");
     }

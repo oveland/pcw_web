@@ -10,7 +10,7 @@
 <style>
     @import url('https://fonts.googleapis.com/css?family=Bai+Jamjuree&display=swap');
     * {
-        font-family: 'Bai Jamjuree', sans-serif !important;
+        font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
     }
 
     .uppercase{
@@ -37,7 +37,7 @@
     }
 
     .table-bordered td, .table-bordered th{
-        border: 1px solid lightgrey;
+        border-bottom: 1px solid lightgrey;
     }
 
     .text-right{
@@ -45,16 +45,17 @@
     }
 
     .text-center, th{
-        padding: 20px;
+        padding: 10px;
         text-align: center !important;
     }
 
     tr.inverse th{
-        padding: 10px;
-        background: black;
+        padding: 200px;
+        background: #333333;
         color: white;
-        font-weight: bold;
-        font-size: 1.1em;
+    }
+    table *{
+        font-size: 0.8em;
     }
 </style>
 <body>
@@ -164,7 +165,7 @@
                                 </small>
                             </td>
                             <td class="text-center">
-                                <small>{{ $mark->initialTime }} - {{ $mark->finalTime }}</small>
+                                <small>{{ $mark->initialTime }}<br>{{ $mark->finalTime }}</small>
                             </td>
 
                             <td class="text-center">{{ asDollars($mark->totalBEA) }}</td>
@@ -181,7 +182,7 @@
                             <td class="text-center">{{ asDollars($mark->penalty->value) }}</td>
                             <td class="text-center">{{ asDollars($turn->totalDispatch) }}</td>
                             <td class="text-center">{{ asDollars($mark->payRollCost) }}</td>
-                            <td class="text-center">{{ asDollars(intval($turn->totalDispatch - $mark->payRollCost - $turn->turnDiscounts['byFuel'] + $turn->getFall) ) }}</td>
+                            <td class="text-right">{{ asDollars(intval($turn->totalDispatch - $mark->payRollCost - $turn->turnDiscounts['byFuel'] + $turn->getFall) ) }}</td>
                         </tr>
                         @endforeach
                         <tr class="inverse">
@@ -202,7 +203,7 @@
                             <th class="text-center">{{ asDollars($totals->totalPenalties) }}</th>
                             <th class="text-center">{{ asDollars($totals->totalDispatch) }}</th>
                             <th class="text-center">{{ asDollars($totals->payRollCost) }}</th>
-                            <th class="text-center">{{ asDollars(intval($totals->totalDispatch - $totals->payRollCost - $totals->totalDiscountByFuel + $totals->totalGetFall)) }}</th>
+                            <th class="text-right" style="background: black !important;font-size: 1em">{{ asDollars(intval($totals->totalDispatch - $totals->payRollCost - $totals->totalDiscountByFuel + $totals->totalGetFall)) }}</th>
                         </tr>
                         </tbody>
                     </table>
