@@ -59,7 +59,7 @@
                 mainContainer.fadeIn();
 
                 this.search.date = moment().format("YYYY-MM-DD");
-                //this.search.date = '2020-01-09';
+                this.search.date = '2020-01-09';
                 const companySearch = this.search.company;
                 axios.get(this.urlParams, {
                     params: {

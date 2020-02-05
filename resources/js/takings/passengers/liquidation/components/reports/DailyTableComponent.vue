@@ -59,6 +59,9 @@
                             <th class="col-md-1">
                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('Payroll cost') }}
                             </th>
+                            <th class="col-md-1">
+                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Net to car') }}
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -90,6 +93,7 @@
                             <td class="text-center">{{ mark.penalty.value | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ turn.totalDispatch | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ mark.payRollCost | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ turnNetToCar(mark, turn) | numberFormat('$0,0') }}</td>
                         </tr>
                         <tr>
                             <td colspan="3" class="text-right">
@@ -109,6 +113,7 @@
                             <td class="text-center">{{ totals.totalPenalties | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ totals.totalDispatch | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ totalPayRollCost | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ totalNetToCar | numberFormat('$0,0') }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -132,6 +137,9 @@
         computed:{
             totalPayRollCost: function () {
                 return _.sumBy(this.marks, 'payRollCost')
+            },
+            totalNetToCar: function () {
+                return this.totals.totalDispatch - this.totalPayRollCost - this.totals.totalDiscountByFuel + this.totals.totalGetFall;
             }
         },
         data(){
@@ -142,6 +150,9 @@
         methods:{
             getLiquidationTurn: function (mark) {
                 return _.find(this.liquidation.byTurns, {markId: mark.id});
+            },
+            turnNetToCar: function(mark, turn){
+                return turn.totalDispatch - mark.payRollCost - turn.turnDiscounts.byFuel + turn.getFall;
             }
         }
     }
