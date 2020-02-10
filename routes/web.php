@@ -23,11 +23,15 @@ Route::get('/metronic', function(){
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect(route('report-route'));
-    })->name('home');
+    })->name('index');
 
     Route::get('/home', function () {
         return redirect(route('report-route'));
-    })->name('index');
+    })->name('home');
+
+    Route::get('/info', function () {
+        phpinfo();
+    })->name('info');
 
     /* Routes for general actions */
     Route::prefix(__('general'))->group(function () {
