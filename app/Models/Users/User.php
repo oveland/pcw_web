@@ -212,7 +212,8 @@ class User extends Authenticatable
      */
     public function canSelectRouteReport()
     {
-        return $this->belongsToMontebello();
+        return true;
+        //return $this->belongsToMontebello();
     }
 
     /**
