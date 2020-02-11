@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e2e622cde47f37dfbe082b1ee53d39d",
+    "content-hash": "07317a8f0a7922114caac7f603aa6163",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1686,6 +1686,7 @@
                 "cron",
                 "schedule"
             ],
+            "abandoned": "dragonmantank/cron-expression",
             "time": "2017-01-23T04:29:33+00:00"
         },
         {
@@ -3802,6 +3803,62 @@
                 "environment"
             ],
             "time": "2019-01-29T11:11:52+00:00"
+        },
+        {
+            "name": "vluzrmos/lumen-cors",
+            "version": "v2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vluzrmos/lumen-cors.git",
+                "reference": "5f4fd2687db1eea7cbd05bc31e2563b181a0f885"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vluzrmos/lumen-cors/zipball/5f4fd2687db1eea7cbd05bc31e2563b181a0f885",
+                "reference": "5f4fd2687db1eea7cbd05bc31e2563b181a0f885",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "~2.0",
+                "laravel/lumen": "~5.0",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "package",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vluzrmos\\LumenCors\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vagner do Carmo",
+                    "email": "vluzrmos@gmail.com"
+                }
+            ],
+            "description": "A Simple Lumen CORS.",
+            "keywords": [
+                "cors",
+                "laravel",
+                "lumen"
+            ],
+            "time": "2017-06-19T19:23:25+00:00"
         }
     ],
     "packages-dev": [
