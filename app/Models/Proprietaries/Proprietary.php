@@ -3,7 +3,12 @@
 namespace App\Models\Proprietaries;
 
 use App\Models\Company\Company;
+use App\Models\Users\User;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Proprietaries\Proprietary
@@ -20,27 +25,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool|null $active
  * @property bool|null $passenger_report_via_sms
  * @property string|null $company_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proprietaries\ProprietaryVehicle[] $assignedVehicles
- * @property-read \App\Models\Company\Company|null $company
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereCellphone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary wherePassengerReportViaSms($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereSecondName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereSecondSurname($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereSurname($value)
- * @mixin \Eloquent
+ * @property-read Collection|ProprietaryVehicle[] $assignedVehicles
+ * @property-read Company|null $company
+ * @method static Builder|Proprietary whereActive($value)
+ * @method static Builder|Proprietary whereAddress($value)
+ * @method static Builder|Proprietary whereCellphone($value)
+ * @method static Builder|Proprietary whereCompanyId($value)
+ * @method static Builder|Proprietary whereEmail($value)
+ * @method static Builder|Proprietary whereFirstName($value)
+ * @method static Builder|Proprietary whereId($value)
+ * @method static Builder|Proprietary wherePassengerReportViaSms($value)
+ * @method static Builder|Proprietary wherePhone($value)
+ * @method static Builder|Proprietary whereSecondName($value)
+ * @method static Builder|Proprietary whereSecondSurname($value)
+ * @method static Builder|Proprietary whereSurname($value)
+ * @mixin Eloquent
  * @property-read mixed $simple_name
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary query()
+ * @method static Builder|Proprietary newModelQuery()
+ * @method static Builder|Proprietary newQuery()
+ * @method static Builder|Proprietary query()
  * @property string|null $identity
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereIdentity($value)
+ * @method static Builder|Proprietary whereIdentity($value)
  */
 class Proprietary extends Model
 {
@@ -62,5 +67,13 @@ class Proprietary extends Model
     public function assignedVehicles()
     {
         return $this->hasMany(ProprietaryVehicle::class);
+    }
+
+    /**
+     * @return User | BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

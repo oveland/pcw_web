@@ -375,8 +375,8 @@ class Mark extends Model
             'liquidated' => $this->liquidated,
             'liquidation_id' => $this->liquidation_id,
             'taken' => $this->taken,
-            'payFall' => $this->pay_fall,
-            'getFall' => $this->get_fall,
+            'payFall' => $this->pay_fall ? $this->pay_fall : 0,
+            'getFall' => $this->get_fall ? $this->get_fall : 0,
             'payRollCost' => $this->payRollCost,
         ];
     }

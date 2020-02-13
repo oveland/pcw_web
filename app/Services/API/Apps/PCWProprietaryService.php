@@ -8,16 +8,10 @@
 
 namespace App\Services\API\Apps;
 
-use App\Models\Vehicles\CurrentLocation;
-use App\Models\Passengers\CurrentSensorPassengers;
-use App\Models\Routes\DispatchRegister;
+use App;
 use App\Models\Proprietaries\Proprietary;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
-use App\Services\Reports\Passengers\SeatDistributionService;
-use App\Traits\CounterByRecorder;
-use App\Traits\CounterBySensor;
-use App\Models\Vehicles\Vehicle;
-use Carbon\Carbon;
+use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,8 +23,8 @@ class PCWProprietaryService implements APIAppsInterface
         $action = $request->get('action');
         if ($action) {
             switch ($action) {
-                case 'track-passengers':
-                    return self::trackPassengers($request);
+                case 'get-daily-taking-report':
+                    return self::getDailyTakingReport($request);
                     break;
                 default:
                     return response()->json([
@@ -47,134 +41,25 @@ class PCWProprietaryService implements APIAppsInterface
         }
     }
 
-    public static function trackPassengers(Request $request): JsonResponse
+    public static function getDailyTakingReport(Request $request)
     {
         $data = collect(['success' => true, 'message' => '']);
+        $proprietary = Proprietary::find($request->get('proprietary'));
+        self::checkSession($proprietary);
+        $vehicleId = $request->get('vehicle');
+        $date = $request->get('date');
+        $beaService = App::makeWith('bea.service', ['company' => $proprietary->company_id]);
 
-        $proprietary = Proprietary::where('id', $request->get('id'))->get()->first();
+        $data->put('report', $beaService->getDailyReport($vehicleId, $date));
 
-        if ($proprietary) {
-            $assignedVehicles = $proprietary->assignedVehicles;
-
-            $reports = collect([]);
-            foreach ($assignedVehicles as $assignation) {
-                $vehicle = $assignation->vehicle;
-                $passengersReportByVehicle = self::makeVehicleReport($vehicle);
-                if ($passengersReportByVehicle->isNotEmpty()) {
-                    $reports->push($passengersReportByVehicle);
-                }
-            }
-            $data->put('currentPassengersReports', $reports);
-            $data->put('proprietaryName', $proprietary->simpleName);
-        } else {
-            $data->put('success', false);
-            $data->put('message', __('Proprietaries not found in platform'));
-        }
-
-
-        //dd($data);
         return response()->json($data);
     }
 
-    /**
-     * @param Vehicle $vehicle
-     * @return \Illuminate\Support\Collection|object $passengersReportByVehicle
-     */
-    public static function makeVehicleReport(Vehicle $vehicle)
+    public static function checkSession(Proprietary $proprietary)
     {
-        $now = Carbon::now();
-        $allDispatchRegisters = DispatchRegister::active()
-            ->where('date', $now->toDateString())
-            ->where('vehicle_id', $vehicle->id)
-            ->orderBy('departure_time')
-            ->with('vehicle')
-            ->with('route')
-            ->get();
-
-        $completedDispatchRegisters = $allDispatchRegisters->filter(function ($dispatchRegister, $key) {
-            return $dispatchRegister->complete();
-        });
-
-        $lastDispatchRegister = $allDispatchRegisters->last();
-        $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
-        $currentLocation = CurrentLocation::whereVehicle($vehicle);
-
-        /* ONLY FOR VEHICLES WITH SEATING SENSOR COUNTER */
-
-        $topology = $vehicle->seatTopology();
-        $seatingStatus = $topology->getSeatingStatusFromHex($currentSensor->seating);
-
-        if ($completedDispatchRegisters->isNotEmpty()) {
-            $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);
-            $counterBySensor = CounterBySensor::reportByVehicle($vehicle->id, $completedDispatchRegisters);
-
-            $totalByRecorder = $counterByRecorder->report->passengers;
-
-            $totalSensorRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->sensorCounter - $lastDispatchRegister->initial_sensor_counter);
-            $passengersBySensor = $counterBySensor->report->passengersBySensor + $totalSensorRealTime;
-
-            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->sensorRecorderCounter - $lastDispatchRegister->initial_sensor_recorder);
-            $totalBySensorRecorder = $counterBySensor->report->passengersBySensorRecorder + $totalSensorRecorderRealTime;
-
-            $passengersReportByVehicle = collect((object)[
-                'totalByRecorder' => $totalByRecorder,
-                'totalBySensorRecorder' => $totalBySensorRecorder,
-                'totalBySensor' => $passengersBySensor,
-                'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->getAPIFields() : null,
-                'vehicle' => $vehicle->getAPIFields($currentLocation),
-                'currentLocation' => $currentLocation->getAPIFields(),
-                'timeSensor' => $currentSensor->timeStatus,
-                'timeSensorRecorder' => $currentSensor->timeSensorRecorder,
-                'timeRecorder' => $counterByRecorder->report->timeRecorder,
-                'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor),
-                'seatingStatus' => $seatingStatus
-            ]);
-        } else {
-            $passengersReportByVehicle = collect((object)[
-                'totalByRecorder' => 0,
-                'totalBySensorRecorder' => 0,
-                'totalBySensor' => $currentSensor->pas_tot,
-                'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->getAPIFields() : null,
-                'vehicle' => $vehicle->getAPIFields($currentLocation),
-                'currentLocation' => $currentLocation->getAPIFields(),
-                'timeSensor' => $currentSensor->timeStatus,
-                'timeSensorRecorder' => $currentSensor->timeSensorRecorder,
-                'timeRecorder' => '00:00:00',
-                'historyReport' => [],
-                'seatingStatus' => $seatingStatus
-            ]);
+        $user = $proprietary->user;
+        if ($user && Auth::guest()) {
+            Auth::login($user);
         }
-
-        return $passengersReportByVehicle;
-    }
-
-    /**
-     * @param Vehicle $vehicle
-     * @param $counterByRecorder
-     * @param $counterBySensor
-     * @return \Illuminate\Support\Collection
-     */
-    public static function makeHistoryReport(Vehicle $vehicle, $counterByRecorder, $counterBySensor)
-    {
-        $historyReport = collect([]);
-        $historyReportByRecorder = $counterByRecorder->report->history;
-        $historyReportBySensor = $counterBySensor->report->history;
-
-        foreach ($historyReportByRecorder as $historyRecorder) {
-            $dispatchRegister = $historyRecorder->dispatchRegister;
-            $historySensor = $historyReportBySensor[$dispatchRegister->id];
-
-            $historyReport->push((object)[
-                'totalByRecorder' => $historyRecorder->passengersByRoundTrip,
-                'totalBySensorRecorder' => $historySensor->totalBySensorRecorderByRoundTrip,
-                'totalBySensor' => $historySensor->totalBySensorByRoundTrip,
-                'dispatchRegister' => $dispatchRegister->getAPIFields(),
-                'vehicle' => $vehicle->getAPIFields(),
-                'timeSensor' => $dispatchRegister->arrivalTime,
-                'timeRecorder' => $dispatchRegister->arrivalTime,
-            ]);
-        }
-
-        return $historyReport;
     }
 }

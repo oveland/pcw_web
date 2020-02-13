@@ -9,6 +9,7 @@
     "type": "project",
     "require": {
         "php": "^7.1.3",
+        "ext-interbase": "*",
         "aws/aws-sdk-php": "~3.0",
         "barryvdh/laravel-dompdf": "^0.8.4",
         "barryvdh/laravel-ide-helper": "^2.4",
@@ -23,7 +24,7 @@
         "maatwebsite/excel": "^3.1",
         "pusher/pusher-php-server": "^3.4",
         "romanpitak/php-rest-client": "^1.2",
-        "ext-interbase": "*"
+        "vluzrmos/lumen-cors": "^2.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
