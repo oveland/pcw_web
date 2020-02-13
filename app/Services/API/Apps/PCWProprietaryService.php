@@ -17,9 +17,11 @@ use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Models\Vehicles\Vehicle;
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class PCWProprietaryService implements APIAppsInterface
 {
@@ -29,6 +31,12 @@ class PCWProprietaryService implements APIAppsInterface
         $action = $request->get('action');
         if ($action) {
             switch ($action) {
+                case 'get-vehicle':
+                    return self::getVehicle($request);
+                    break;
+                case 'get-vehicles':
+                    return self::getVehicles($request);
+                    break;
                 case 'track-passengers':
                     return self::trackPassengers($request);
                     break;
@@ -47,38 +55,73 @@ class PCWProprietaryService implements APIAppsInterface
         }
     }
 
+    public static function getVehicle(Request $request): JsonResponse
+    {
+        $data = collect(['success' => true, 'message' => '']);
+
+        $vehicle = Vehicle::find($request->get('vehicle'));
+        $proprietary = Proprietary::find($request->get('proprietary'));
+        self::checkSession($proprietary);
+
+        if ($vehicle) {
+            $data->put('vehicle', $vehicle->getAPIFields());
+        } else {
+            $data->put('success', false);
+            $data->put('message', __('Vehicle not found in platform'));
+        }
+
+        return response()->json($data);
+    }
+
+    public static function getVehicles(Request $request): JsonResponse
+    {
+        $data = collect(['success' => true, 'message' => '']);
+        $proprietary = Proprietary::find($request->get('proprietary'));
+        self::checkSession($proprietary);
+
+        if ($proprietary && $proprietary->user) {
+            $assignedVehicles = $proprietary->assignedVehicles();
+
+            $vehicles = collect([]);
+            foreach ($assignedVehicles as $vehicle) {
+                $vehicles->push($vehicle->getAPIFields());
+            }
+            $data->put('vehicles', $vehicles);
+            $data->put('proprietaryName', $proprietary->simpleName);
+        } else {
+            $data->put('success', false);
+            if (!$proprietary) {
+                $data->put('message', __('Proprietaries not found in platform'));
+            } elseif (!$proprietary->user) {
+                $data->put('message', __('Proprietary not have assigned vehicles'));
+            }
+        }
+
+        return response()->json($data);
+    }
+
     public static function trackPassengers(Request $request): JsonResponse
     {
         $data = collect(['success' => true, 'message' => '']);
 
-        $proprietary = Proprietary::where('id', $request->get('id'))->get()->first();
+        $proprietary = Proprietary::find($request->get('proprietary'));
+        $vehicle = Vehicle::find($request->get('vehicle'));
+        self::checkSession($proprietary);
 
         if ($proprietary) {
-            $assignedVehicles = $proprietary->assignedVehicles;
-
-            $reports = collect([]);
-            foreach ($assignedVehicles as $assignation) {
-                $vehicle = $assignation->vehicle;
-                $passengersReportByVehicle = self::makeVehicleReport($vehicle);
-                if ($passengersReportByVehicle->isNotEmpty()) {
-                    $reports->push($passengersReportByVehicle);
-                }
-            }
-            $data->put('currentPassengersReports', $reports);
-            $data->put('proprietaryName', $proprietary->simpleName);
+            $passengersReportByVehicle = self::makeVehicleReport($vehicle);
+            $data->put('currentPassengersReport', $passengersReportByVehicle);
         } else {
             $data->put('success', false);
             $data->put('message', __('Proprietaries not found in platform'));
         }
 
-
-        //dd($data);
         return response()->json($data);
     }
 
     /**
      * @param Vehicle $vehicle
-     * @return \Illuminate\Support\Collection|object $passengersReportByVehicle
+     * @return Collection|object $passengersReportByVehicle
      */
     public static function makeVehicleReport(Vehicle $vehicle)
     {
@@ -97,12 +140,14 @@ class PCWProprietaryService implements APIAppsInterface
 
         $lastDispatchRegister = $allDispatchRegisters->last();
         $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
+        $currentSensor = isset($currentSensor->passengers) ? $currentSensor : null;
         $currentLocation = CurrentLocation::whereVehicle($vehicle);
 
         /* ONLY FOR VEHICLES WITH SEATING SENSOR COUNTER */
 
         $topology = $vehicle->seatTopology();
-        $seatingStatus = $topology->getSeatingStatusFromHex($currentSensor->seating);
+
+        $seatingStatus = $topology->getSeatingStatusFromHex($currentSensor ? $currentSensor->seating : '000000');
 
         if ($completedDispatchRegisters->isNotEmpty()) {
             $counterByRecorder = CounterByRecorder::reportByVehicle($vehicle->id, $completedDispatchRegisters, true);
@@ -110,10 +155,10 @@ class PCWProprietaryService implements APIAppsInterface
 
             $totalByRecorder = $counterByRecorder->report->passengers;
 
-            $totalSensorRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->sensorCounter - $lastDispatchRegister->initial_sensor_counter);
+            $totalSensorRealTime = $lastDispatchRegister->complete() && $currentSensor ? 0 : ($currentSensor->sensorCounter - $lastDispatchRegister->initial_sensor_counter);
             $passengersBySensor = $counterBySensor->report->passengersBySensor + $totalSensorRealTime;
 
-            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() ? 0 : ($currentSensor->sensorRecorderCounter - $lastDispatchRegister->initial_sensor_recorder);
+            $totalSensorRecorderRealTime = $lastDispatchRegister->complete() && $currentSensor ? 0 : ($currentSensor->sensorRecorderCounter - $lastDispatchRegister->initial_sensor_recorder);
             $totalBySensorRecorder = $counterBySensor->report->passengersBySensorRecorder + $totalSensorRecorderRealTime;
 
             $passengersReportByVehicle = collect((object)[
@@ -123,8 +168,8 @@ class PCWProprietaryService implements APIAppsInterface
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->getAPIFields() : null,
                 'vehicle' => $vehicle->getAPIFields($currentLocation),
                 'currentLocation' => $currentLocation->getAPIFields(),
-                'timeSensor' => $currentSensor->timeStatus,
-                'timeSensorRecorder' => $currentSensor->timeSensorRecorder,
+                'timeSensor' => $currentSensor ? $currentSensor->timeStatus : '00:00:00',
+                'timeSensorRecorder' => $currentSensor ? $currentSensor->timeSensorRecorder : '00:00:00',
                 'timeRecorder' => $counterByRecorder->report->timeRecorder,
                 'historyReport' => self::makeHistoryReport($vehicle, $counterByRecorder, $counterBySensor),
                 'seatingStatus' => $seatingStatus
@@ -133,12 +178,12 @@ class PCWProprietaryService implements APIAppsInterface
             $passengersReportByVehicle = collect((object)[
                 'totalByRecorder' => 0,
                 'totalBySensorRecorder' => 0,
-                'totalBySensor' => $currentSensor->pas_tot,
+                'totalBySensor' => $currentSensor ? $currentSensor->pas_tot : 0,
                 'dispatchRegister' => $lastDispatchRegister ? $lastDispatchRegister->getAPIFields() : null,
                 'vehicle' => $vehicle->getAPIFields($currentLocation),
                 'currentLocation' => $currentLocation->getAPIFields(),
-                'timeSensor' => $currentSensor->timeStatus,
-                'timeSensorRecorder' => $currentSensor->timeSensorRecorder,
+                'timeSensor' => $currentSensor ? $currentSensor->timeStatus : '00:00:00',
+                'timeSensorRecorder' => $currentSensor ? $currentSensor->timeSensorRecorder : '00:00:00',
                 'timeRecorder' => '00:00:00',
                 'historyReport' => [],
                 'seatingStatus' => $seatingStatus
@@ -152,7 +197,7 @@ class PCWProprietaryService implements APIAppsInterface
      * @param Vehicle $vehicle
      * @param $counterByRecorder
      * @param $counterBySensor
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function makeHistoryReport(Vehicle $vehicle, $counterByRecorder, $counterBySensor)
     {
@@ -176,5 +221,13 @@ class PCWProprietaryService implements APIAppsInterface
         }
 
         return $historyReport;
+    }
+
+    public static function checkSession(Proprietary $proprietary)
+    {
+        $user = $proprietary->user;
+        if( $user && Auth::guest() ){
+            Auth::login($user);
+        }
     }
 }

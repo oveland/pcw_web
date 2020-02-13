@@ -46,7 +46,7 @@ class CurrentSensorPassengers extends Model
 
     public function scopeWhereVehicle($query, $vehicle)
     {
-        return $query->where('placa', $vehicle ? $vehicle->plate : '')->get()->first();
+        return $query->where('placa', $vehicle ? $vehicle->plate : '')->first();
     }
 
     public function getSensorCounterAttribute()

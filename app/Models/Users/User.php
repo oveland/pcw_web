@@ -11,6 +11,7 @@ use DB;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
@@ -52,6 +53,7 @@ use phpDocumentor\Reflection\Types\This;
  * @property-read mixed $user_routes
  * @property-read Collection $userRoutes
  * @method static Builder|User whereVehicleTags($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\UserVehicle[] $userVehicles
  */
 class User extends Authenticatable
 {
@@ -235,12 +237,13 @@ class User extends Authenticatable
     /**
      * @param Company $company
      * @param bool $active
-     * @return Vehicle|Vehicle[]
+     * @return Vehicle[]
      */
-    public function assignedVehicles($company, $active = true)
+    public function assignedVehicles($company = null, $active = true)
     {
         if ($this->isProprietary()) {
-            $assignedVehicles = Vehicle::whereIn('plate', collect(\DB::select("SELECT placa plate FROM usuario_vehi WHERE usuario = '$this->username'"))->pluck('plate'));
+            $assignedVehicles = Vehicle::whereIn('id', $this->userVehicles->pluck('vehicle_id'));
+
             if( $active ) $assignedVehicles = $assignedVehicles->active();
             $assignedVehicles = $assignedVehicles->get();
         } else {
@@ -275,5 +278,13 @@ class User extends Authenticatable
         }
 
         return collect(DB::select("SELECT * FROM get_user_routes($this->id, $userCompany->id)"));
+    }
+
+    /**
+     * @return UserVehicle[] | HasMany
+     */
+    public function userVehicles()
+    {
+        return $this->hasMany(UserVehicle::class);
     }
 }

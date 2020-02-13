@@ -40,6 +40,8 @@ use const http\Client\Curl\VERSIONS;
  * @property-read DispatchRegister|null $dispatchRegister
  * @property-read Driver|null $driver
  * @method static Builder|CurrentVehicleIssue withActiveIssue()
+ * @property-read \App\Models\Vehicles\VehicleIssueType $type
+ * @property-read \App\Models\Vehicles\Vehicle $vehicle
  */
 class CurrentVehicleIssue extends Model
 {

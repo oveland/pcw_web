@@ -1,17 +1,18 @@
 @php
     $error = $error ?? false;
     $updated = $updated ?? false;
-    $assignedVehicles = $proprietary->assignedVehicles;
+    $assignedVehicles = $proprietary->assignedVehicles();
     $totalAssignedVehicles = count($assignedVehicles);
-    $assignedIdVehicles = $totalAssignedVehicles?$assignedVehicles->pluck('vehicle_id')->toArray():[];
+    $assignedIdVehicles = $totalAssignedVehicles?$assignedVehicles->pluck('id')->toArray():[];
+    $user = $proprietary->user;
 @endphp
 <td class="text-center bg-inverse text-white">
     {!! $loop->iteration ?? '*' !!}
     <br>
     <strong>ID {{ $proprietary->id }}</strong>
 </td>
-<td>{{ $proprietary->first_name }}</td>
-<td>{{ $proprietary->surname }}</td>
+<td>{{ $proprietary->fullName() }}</td>
+<td>{{ $user ? $user->username : '' }}</td>
 <td>
     <input name="cellphone" class="form-control input-sm" value="{{ $proprietary->cellphone }}" placeholder="@lang('Cellphone')">
 </td>

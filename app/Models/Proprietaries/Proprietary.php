@@ -3,10 +3,13 @@
 namespace App\Models\Proprietaries;
 
 use App\Models\Company\Company;
+use App\Models\Users\User;
+use App\Models\Vehicles\Vehicle;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Proprietaries\Proprietary
@@ -24,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool|null $active
  * @property bool|null $passenger_report_via_sms
  * @property string|null $company_id
- * @property-read Collection|ProprietaryVehicle[] $assignedVehicles
+ * @property-read Collection|Vehicle[] $assignedVehicles
  * @property-read Company|null $company
  * @method static Builder|Proprietary whereActive($value)
  * @method static Builder|Proprietary whereAddress($value)
@@ -40,7 +43,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Proprietary whereSurname($value)
  * @mixin Eloquent
  * @property-read mixed $simple_name
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereIdentity($value)
+ * @method static Builder|Proprietary whereIdentity($value)
+ * @property int|null $user_id
+ * @method static Builder|Proprietary whereUserId($value)
+ * @property-read \App\Models\Users\User|null $user
  */
 class Proprietary extends Model
 {
@@ -59,17 +65,30 @@ class Proprietary extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function assignedVehicles()
+    /**
+     * @return User | BelongsTo
+     */
+    public function user()
     {
-        return $this->hasMany(ProprietaryVehicle::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function getPhone(){
-        return $this->phone . ($this->cellphone ? ", Cel: ".$this->cellphone : "");
+    /**
+     * @return Collection | Vehicle[]
+     */
+    public function assignedVehicles()
+    {
+        $user = $this->user;
+        return $user ? $user->assignedVehicles() : collect([]);
+    }
+
+    public function getPhone()
+    {
+        return $this->phone . ($this->cellphone ? ", Cel: " . $this->cellphone : "");
     }
 
     public function infoDetail()
     {
-        return __('Identity').": $this->identity\n".__('Phone').": ".$this->getPhone()."\n".__('Email').": $this->email\n".__('Address').": $this->address";
+        return __('Identity') . ": $this->identity\n" . __('Phone') . ": " . $this->getPhone() . "\n" . __('Email') . ": $this->email\n" . __('Address') . ": $this->address";
     }
 }

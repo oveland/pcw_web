@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <!-- begin panel -->
         <div class="panel panel-inverse">
-            <div class="panel-heading">
+            <div class="panel-heading hide">
                 <div class="panel-heading-btn pull-rigth">
                     <a class="btn btn-sm btn-icon btn-rounded btn-lime disabled" onclick="ginfo('@lang('Feature on development')')">
                         <i class="fa fa-cog fa-spin"></i> @lang('Create')
@@ -22,30 +22,30 @@
                 </h4>
             </div>
             <div class="table-responsive">
-                <table class="table table-striped table-td-valign-middle table-hover">
+                <table class="table table-striped table-td-valign-middle table-hover table-report">
                     <thead>
                     <tr class="inverse">
                         <th class="text-center">
                             <i class="icon-list"></i>
                         </th>
                         <th>
-                            <i class="fa fa-car"></i>
-                            @lang('Name')
+                            <i class="fa fa-user"></i><br>
+                            @lang('Proprietary name')
                         </th>
                         <th>
-                            <i class="fa fa-car"></i>
-                            @lang('Last Name')
+                            <i class="fa fa-user-plus"></i><br>
+                            @lang('Username')
                         </th>
                         <th>
-                            <i class="fa fa-podcast"></i>
+                            <i class="fa fa-podcast"></i><br>
                             @lang('Cellphone')
                         </th>
                         <th>
-                            <i class="fa fa-phone"></i>
+                            <i class="fa fa-phone"></i><br>
                             @lang('Assigned vehicles')
                         </th>
                         <th class="text-center">
-                            <i class="fa fa-cogs"></i>
+                            <i class="fa fa-cogs"></i><br>
                             @lang('Actions')
                         </th>
                     </tr>

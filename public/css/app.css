@@ -1607,3 +1607,34 @@ a.bg-warning:hover,
 a.bg-warning:focus {
     background-color: #cb840c
 }
+
+.table-valign-middle th,
+.table-valign-middle td {
+    vertical-align: middle !important;
+}
+.table-th-valign-middle th,
+.table-td-valign-middle td {
+    vertical-align: middle !important;
+}
+.table-valign-top th,
+.table-valign-top td {
+    vertical-align: top !important;
+}
+.table-th-valign-top th,
+.table-td-valign-top td {
+    vertical-align: top !important;
+}
+.table-valign-bottom th,
+.table-valign-bottom td {
+    vertical-align: bottom !important;
+}
+.table-th-valign-bottom th,
+.table-td-valign-bottom td {
+    vertical-align: bottom !important;
+}
+.table-last-row-no-border-bottom tr:last-child td {
+    border-bottom: none !important;
+}
+.table-last-row-no-border-top tr:last-child td {
+    border-top: none !important;
+}

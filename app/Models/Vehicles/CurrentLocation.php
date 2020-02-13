@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property int $id
  * @property int|null $version
- * @property string|null $date
+ * @property Carbon|null $date
  * @property string $date_created
  * @property int|null $dispatch_register_id
  * @property float|null $distance
@@ -73,12 +73,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class CurrentLocation extends Model
 {
     protected $dates = ['date'];
+    public $timestamps = false;
+
+    protected $fillable = ['vehicle_id', 'date', 'latitude', 'longitude', 'orientation', 'odometer', 'current_mileage', 'speed', 'vehicle_status_id', 'date_created', 'last_updated'];
 
     protected function getDateFormat()
     {
         return config('app.date_time_format');
     }
 
+    /**
+     * @param $date
+     * @return Carbon
+     */
     public function getDateAttribute($date)
     {
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
@@ -103,11 +110,13 @@ class CurrentLocation extends Model
     {
         return (object)[
             'id' => $this->id,
+            'speed' => $this->speed,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'orientation' => $this->orientation,
-            'current_mileage' => number_format($this->current_mileage / 1000, 2, ',', '.'),
-            'speed' => $this->speed,
+            'date' => $this->date->toDateTimeString(),
+            'currentStatus' => $this->vehicleStatus->des_status,
+            'currentMileage' => number_format($this->current_mileage / 1000, 2, ',', '.'),
         ];
     }
 
@@ -118,7 +127,26 @@ class CurrentLocation extends Model
 
     public function scopeWhereVehicle($query, Vehicle $vehicle)
     {
-        return $query->where('vehicle_id', $vehicle->id)->get()->first();
+        $currentLocation = $query->where('vehicle_id', $vehicle->id)->get()->first();
+
+        if (!$currentLocation) {
+            $currentLocation = CurrentLocation::create([
+                '',
+                'vehicle_id' => $vehicle->id,
+                'date' => '2020-01-01 00:00:00.0',
+                'latitude' => 3.4529876122683594,
+                'longitude' => -76.51858507170815,
+                'orientation' => 0,
+                'odometer' => 0,
+                'current_mileage' => 0,
+                'speed' => 0,
+                'vehicle_status_id' => 1,
+                'date_created' => Carbon::now()->toDateTimeString().".0",
+                'last_updated' => Carbon::now()->toDateTimeString().".0"
+            ]);
+        }
+
+        return $currentLocation;
     }
 
     /**

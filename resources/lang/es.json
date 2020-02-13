@@ -632,5 +632,7 @@
   "No vehicles issues found": "Sin novedades de vehículos",
   "Vehicle with issues": "Vehículos con novedades",
   "Is fake": "Es falsa",
-  "Consolidated route vehicle": "Consolidado ruta vehículo"
+  "Consolidated route vehicle": "Consolidado ruta vehículo",
+  "Proprietary name": "Nombre propietario",
+  "Proprietary not have assigned vehicles": "El propietario no tiene vehículos asignados. Contacte a su administrador"
 }

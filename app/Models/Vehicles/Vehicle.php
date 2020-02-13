@@ -123,11 +123,15 @@ class Vehicle extends Model
 
     public function getAPIFields(CurrentLocation $currentLocation = null)
     {
+        $currentLocation = $currentLocation ? $currentLocation : ($this->currentLocation ? $this->currentLocation : null);
+        $vehicleStatus = $currentLocation ? $currentLocation->vehicleStatus : null;
+
         return (object)[
             'id' => $this->id,
             'number' => $this->number,
             'plate' => $this->plate,
-            'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ($this->currentLocation ? $this->currentLocation->vehicleStatus->des_status : '')
+            'companyId' => $this->company_id,
+            'currentLocation' => $currentLocation ? $currentLocation->getAPIFields() : []
         ];
     }
 
