@@ -915,8 +915,8 @@ __webpack_require__.r(__webpack_exports__);
 
       var mainContainer = $('.report-container');
       mainContainer.fadeIn();
-      this.search.date = moment().format("YYYY-MM-DD");
-      this.search.date = '2020-01-09';
+      this.search.date = moment().format("YYYY-MM-DD"); //this.search.date = '2020-01-09';
+
       var companySearch = this.search.company;
       axios.get(this.urlParams, {
         params: {
