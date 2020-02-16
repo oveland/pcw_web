@@ -414,7 +414,7 @@ class TakingsPassengersLiquidationController extends Controller
     public function getFileDiscount($otherDiscountId)
     {
         $filePath = config('takings.discounts.others.files.path') . "/$otherDiscountId." . config('takings.discounts.others.files.image-extension');
-        dD($filePath);
+        
 
         $exists = Storage::exists($filePath);
         if ($exists) {
