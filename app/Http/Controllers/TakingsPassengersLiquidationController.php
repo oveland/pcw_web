@@ -429,20 +429,24 @@ class TakingsPassengersLiquidationController extends Controller
     public function processDiscountFiles($dataLiquidation)
     {
         $processedOK = true;
-
         $otherDiscounts = $dataLiquidation['otherDiscounts'];
 
         foreach ($otherDiscounts as $otherDiscount) {
             $otherDiscount = (object)$otherDiscount;
             $base64File = $otherDiscount->fileUrl;
-            if ($otherDiscount->hasFile && $base64File && !Str::contains($base64File, 'http')) {
-                list($baseType, $image) = explode(';', $base64File);
-                list(, $image) = explode(',', $image);
-                $image = base64_decode($image);
-                $imageName = config('takings.discounts.others.files.path') . "/$otherDiscount->id." . config('takings.discounts.others.files.image-extension');
-                $processedOK = Storage::put($imageName, $image);
-                if (!$processedOK) {
-                    break;
+            if ($otherDiscount->hasFile && $base64File && Str::contains($base64File, 'data:image')) {
+                $processedOK = false;
+                try{
+                    list($baseType, $image) = explode(';', $base64File);
+                    list(, $image) = explode(',', $image);
+                    $image = base64_decode($image);
+                    $imageName = config('takings.discounts.others.files.path') . "/$otherDiscount->id." . config('takings.discounts.others.files.image-extension');
+                    $processedOK = Storage::put($imageName, $image);
+                    if (!$processedOK) {
+                        break;
+                    }
+                }catch (Exception $e){
+                    $processedOK = false;
                 }
             }
         }
@@ -457,8 +461,6 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function liquidate(Request $request)
     {
-        sleep(3);
-
         $response = (object)[
             'success' => true,
             'message' => __('Liquidation processed successfully')
@@ -545,7 +547,6 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function updateLiquidation(Liquidation $liquidation, Request $request)
     {
-        sleep(3);
         $response = (object)[
             'success' => true,
             'message' => __('Liquidation updated successfully')
@@ -579,8 +580,6 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function takings(Liquidation $liquidation)
     {
-        sleep(3);
-
         $response = (object)[
             'success' => true,
             'message' => __('Taking processed successfully')

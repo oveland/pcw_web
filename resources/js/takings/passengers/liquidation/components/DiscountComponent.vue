@@ -145,13 +145,13 @@
             </div>
         </div>
 
-        <modal name="modal-show-file-discount" draggable="true" classes="vue-modal">
+        <modal name="modal-show-file-discount" draggable="true" classes="vue-modal" :adaptive="true">
             <div class="modal-header">
                 <button type="button" class="close" @click="hide" aria-hidden="true"></button>
                 <h5 class="modal-title">
                     <i class="fa fa-image"></i> {{ $t('File other discount') }}
                 </h5>
-                <div v-if="imagePreview" class="col-md-12 p-10 text-center">
+                <div v-if="imagePreview" class="row p-t-20 text-center">
                     <img :src="imagePreview" class="uploading-image" />
                 </div>
             </div>
@@ -208,7 +208,11 @@
             },
             showImagePreview(otherDiscount){
                 this.imagePreview = otherDiscount.fileUrl;
-                this.$modal.show('modal-show-file-discount');
+                if(this.imagePreview){
+                    this.show();
+                }else {
+                    this.hide();
+                }
             },
             addOtherDiscount: function () {
                 const otherDiscountId = (new Date).getTime();
@@ -234,6 +238,11 @@
                     return other.id !== idToRemove;
                 });
                 this.control.enableSaving = true;
+            }
+        },
+        updated() {
+            if(!this.imagePreview){
+                this.hide();
             }
         }
     }

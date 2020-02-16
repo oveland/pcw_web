@@ -448,7 +448,12 @@ Vue.use(vue_js_modal__WEBPACK_IMPORTED_MODULE_1___default.a);
     },
     showImagePreview: function showImagePreview(otherDiscount) {
       this.imagePreview = otherDiscount.fileUrl;
-      this.$modal.show('modal-show-file-discount');
+
+      if (this.imagePreview) {
+        this.show();
+      } else {
+        this.hide();
+      }
     },
     addOtherDiscount: function addOtherDiscount() {
       var otherDiscountId = new Date().getTime();
@@ -472,6 +477,11 @@ Vue.use(vue_js_modal__WEBPACK_IMPORTED_MODULE_1___default.a);
         return other.id !== idToRemove;
       });
       this.control.enableSaving = true;
+    }
+  },
+  updated: function updated() {
+    if (!this.imagePreview) {
+      this.hide();
     }
   }
 });
@@ -9989,7 +9999,8 @@ var render = function() {
           attrs: {
             name: "modal-show-file-discount",
             draggable: "true",
-            classes: "vue-modal"
+            classes: "vue-modal",
+            adaptive: true
           }
         },
         [
@@ -10008,7 +10019,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _vm.imagePreview
-              ? _c("div", { staticClass: "col-md-12 p-10 text-center" }, [
+              ? _c("div", { staticClass: "row p-t-20 text-center" }, [
                   _c("img", {
                     staticClass: "uploading-image",
                     attrs: { src: _vm.imagePreview }
