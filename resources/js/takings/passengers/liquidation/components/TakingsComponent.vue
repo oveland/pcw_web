@@ -177,7 +177,7 @@
                                                             <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
                                                                 <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10">
-                                                                    <button v-if="!control.enableSaving" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken">
+                                                                    <button v-if="!control.enableSaving && !control.processing" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken">
                                                                         <i class="fa fa-suitcase"></i> {{ $t('Taking') }}
                                                                     </button>
                                                                     <button v-if="control.enableSaving" class="btn btn-circle green btn-outline f-s-13 uppercase" @click="updateLiquidation">
@@ -231,6 +231,7 @@
     import VueFriendlyIframe from 'vue-friendly-iframe';
     import TableComponent from "./TableComponent";
 
+    import Swal from 'sweetalert2/dist/sweetalert2.min'
 
     export default {
         name: 'TakingsComponent',
@@ -245,7 +246,9 @@
         data: function () {
             return {
                 control: {
-                    enableSaving: false
+                    enableSaving: false,
+                    processing: false,
+                    canUpdate: true
                 },
                 showPrintArea: false,
                 linkToPrintLiquidation: false,
@@ -264,6 +267,7 @@
         },
         mounted(){
             this.control.enableSaving = false;
+            this.control.processing = false;
         },
         watch: {
             searchParams: function () {
@@ -299,6 +303,20 @@
         methods: {
             updateLiquidation: function () {
                 App.blockUI({target: '.liquidation-detail', animate: true});
+
+                Swal.fire({
+                    title: this.$t('Processing'),
+                    text: this.$t('Please wait'),
+                    onBeforeOpen: () => {
+                        Swal.showLoading();
+                    },
+                    heightAuto: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false
+                });
+                this.control.processing = true;
+
                 axios.post(this.urlUpdateLiquidate.replace('ID', this.liquidation.id), {
                     liquidation: this.liquidation.liquidation,
                     totals: this.totals,
@@ -313,8 +331,10 @@
                 }).catch(function (error) {
                     gerror('Error in liquidation process!');
                     console.log(error);
-                }).then(function () {
+                }).then( () => {
                     App.unblockUI('.preview');
+                    this.control.processing = false;
+                    Swal.close();
                 });
             },
             seeLiquidation(liquidation, showMarksFirst) {
@@ -340,6 +360,21 @@
                 }
             },
             takings: function () {
+
+                Swal.fire({
+                    title: this.$t('Processing'),
+                    text: this.$t('Please wait'),
+                    onBeforeOpen: () => {
+                        Swal.showLoading();
+                    },
+                    heightAuto: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false
+                });
+
+                this.control.processing = true;
+                
                 axios.post(this.urlTakings.replace('ID', this.liquidation.id)).then(response => {
                     const data = response.data;
                     if (data.success) {
@@ -352,8 +387,9 @@
                 }).catch(function (error) {
                     gerror(this.$t('Error at generate taking register')+'!');
                     console.log(error);
-                }).then(function () {
-
+                }).then( () => {
+                    this.control.processing = false;
+                    Swal.close();
                 });
             }
         },

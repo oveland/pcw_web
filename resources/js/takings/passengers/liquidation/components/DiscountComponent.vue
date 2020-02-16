@@ -120,7 +120,7 @@
 
             <tr v-if="!readonly" class="">
                 <td colspan="9" class="text-right">
-                    <button v-if="control.enableSaving && !control.creating" class="btn btn-sm green btn-outline-light btn-outline btn-white" @click="$emit('update-liquidation')">
+                    <button v-if="control.canUpdate && control.enableSaving && !control.processing" class="btn btn-sm green btn-outline-light btn-outline btn-white" @click="$emit('update-liquidation')">
                         <i class="fa fa-plus"></i> {{ $t('Save') }}
                     </button>
                     <button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount()">

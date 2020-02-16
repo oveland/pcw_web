@@ -15,6 +15,10 @@
         .fa{
             z-index:1 !important;
         }
+
+        .swal2-container{
+            z-index: 10000 !important;
+        }
     </style>
 @endsection
 

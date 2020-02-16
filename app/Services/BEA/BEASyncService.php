@@ -68,7 +68,7 @@ class BEASyncService
             $this->marks();
 
         } catch (Exception $e) {
-            echo "Error sync";
+            // echo "Error sync";
         }
     }
 

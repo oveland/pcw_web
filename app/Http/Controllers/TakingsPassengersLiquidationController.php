@@ -457,6 +457,8 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function liquidate(Request $request)
     {
+        sleep(3);
+
         $response = (object)[
             'success' => true,
             'message' => __('Liquidation processed successfully')
@@ -543,6 +545,7 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function updateLiquidation(Liquidation $liquidation, Request $request)
     {
+        sleep(3);
         $response = (object)[
             'success' => true,
             'message' => __('Liquidation updated successfully')
@@ -576,6 +579,8 @@ class TakingsPassengersLiquidationController extends Controller
      */
     public function takings(Liquidation $liquidation)
     {
+        sleep(3);
+
         $response = (object)[
             'success' => true,
             'message' => __('Taking processed successfully')

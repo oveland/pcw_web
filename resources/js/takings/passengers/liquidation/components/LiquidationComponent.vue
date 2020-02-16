@@ -110,7 +110,7 @@
                                                         <div class="table-responsive phase-container col-md-12 m-t-10">
                                                             <summary-component :url-export="urlExport" :marks="marks" :liquidation.sync="liquidation" :totals="totals" :search="search"></summary-component>
 
-                                                            <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10">
+                                                            <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10" v-show="!control.processing">
                                                                 <button class="btn btn-circle yellow-crusta btn-outline f-s-13 uppercase" @click="liquidate" :disabled="totals.totalBea === 0">
                                                                     <i class="icon-layers"></i> {{ $t('Liquidate') }}
                                                                 </button>
@@ -138,6 +138,8 @@
     import PenaltyComponent from './PenaltyComponent';
     import SummaryComponent from "./SummaryComponent";
 
+    import Swal from 'sweetalert2/dist/sweetalert2.min'
+
     export default {
         name: 'LiquidationComponent',
         props: {
@@ -152,7 +154,8 @@
           return {
               control: {
                   enableSaving: false,
-                  creating: true
+                  processing: false,
+                  canUpdate: false
               },
           }
         },
@@ -187,6 +190,21 @@
                 });
 
                 App.blockUI({target: '.preview', animate: true});
+
+                Swal.fire({
+                    title: this.$t('Processing'),
+                    text: this.$t('Please wait'),
+                    onBeforeOpen: () => {
+                        Swal.showLoading();
+                    },
+                    heightAuto: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false
+                });
+
+                this.control.processing = true;
+
                 axios.post(this.urlLiquidate, {
                     vehicle: this.search.vehicle.id,
                     liquidation: this.liquidation,
@@ -210,8 +228,12 @@
                 }).catch(function (error) {
                     gerror('Error in liquidation process!');
                     console.log(error);
-                }).then(function () {
+                }).then(() => {
                     App.unblockUI('.preview');
+                    Swal.close();
+                    setTimeout(() => {
+                        this.control.processing = false;
+                    }, 500);
                 });
             }
         }
