@@ -35,7 +35,7 @@ class TakingsPassengersLiquidationController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $link = "http://beta.pcwserviciosgps.com/link/recaudo/pasajeros/liquidacion/$user->id";
+        $link = config('app.beta_server_url')."/link/recaudo/pasajeros/liquidacion/$user->id"; // TODO: Change when BETA migrated fully to NE domain
 
         return view('takings.passengers.liquidation.index', compact('link'));
     }

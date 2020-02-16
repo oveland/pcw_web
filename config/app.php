@@ -126,6 +126,9 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+
+    'beta_server_url' => env('BETA_SERVER_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
