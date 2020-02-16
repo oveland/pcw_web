@@ -61,13 +61,19 @@ class PCWProprietaryService implements APIAppsInterface
 
         $vehicle = Vehicle::find($request->get('vehicle'));
         $proprietary = Proprietary::find($request->get('proprietary'));
-        self::checkSession($proprietary);
 
-        if ($vehicle) {
-            $data->put('vehicle', $vehicle->getAPIFields());
+        if ($proprietary) {
+            self::checkSession($proprietary);
+
+            if ($vehicle) {
+                $data->put('vehicle', $vehicle->getAPIFields());
+            } else {
+                $data->put('success', false);
+                $data->put('message', __('Vehicle not found in platform'));
+            }
         } else {
             $data->put('success', false);
-            $data->put('message', __('Vehicle not found in platform'));
+            $data->put('message', __('Proprietary not found in platform'));
         }
 
         return response()->json($data);
@@ -77,24 +83,28 @@ class PCWProprietaryService implements APIAppsInterface
     {
         $data = collect(['success' => true, 'message' => '']);
         $proprietary = Proprietary::find($request->get('proprietary'));
-        self::checkSession($proprietary);
 
-        if ($proprietary && $proprietary->user) {
-            $assignedVehicles = $proprietary->assignedVehicles();
+        if ($proprietary) {
+            self::checkSession($proprietary);
 
-            $vehicles = collect([]);
-            foreach ($assignedVehicles as $vehicle) {
-                $vehicles->push($vehicle->getAPIFields());
+            if ($proprietary->user) {
+                $assignedVehicles = $proprietary->assignedVehicles();
+
+                $vehicles = collect([]);
+                foreach ($assignedVehicles as $vehicle) {
+                    $vehicles->push($vehicle->getAPIFields());
+                }
+                $data->put('vehicles', $vehicles);
+                $data->put('proprietaryName', $proprietary->simpleName);
+            } else {
+                $data->put('success', false);
+                if (!$proprietary->user) {
+                    $data->put('message', __('Proprietary not have assigned vehicles'));
+                }
             }
-            $data->put('vehicles', $vehicles);
-            $data->put('proprietaryName', $proprietary->simpleName);
         } else {
             $data->put('success', false);
-            if (!$proprietary) {
-                $data->put('message', __('Proprietaries not found in platform'));
-            } elseif (!$proprietary->user) {
-                $data->put('message', __('Proprietary not have assigned vehicles'));
-            }
+            $data->put('message', __('Proprietary not found in platform'));
         }
 
         return response()->json($data);
@@ -105,15 +115,15 @@ class PCWProprietaryService implements APIAppsInterface
         $data = collect(['success' => true, 'message' => '']);
 
         $proprietary = Proprietary::find($request->get('proprietary'));
-        $vehicle = Vehicle::find($request->get('vehicle'));
-        self::checkSession($proprietary);
 
         if ($proprietary) {
+            $vehicle = Vehicle::find($request->get('vehicle'));
+            self::checkSession($proprietary);
             $passengersReportByVehicle = self::makeVehicleReport($vehicle);
             $data->put('currentPassengersReport', $passengersReportByVehicle);
         } else {
             $data->put('success', false);
-            $data->put('message', __('Proprietaries not found in platform'));
+            $data->put('message', __('Proprietary not found in platform'));
         }
 
         return response()->json($data);
@@ -226,7 +236,7 @@ class PCWProprietaryService implements APIAppsInterface
     public static function checkSession(Proprietary $proprietary)
     {
         $user = $proprietary->user;
-        if( $user && Auth::guest() ){
+        if ($user && Auth::guest()) {
             Auth::login($user);
         }
     }
