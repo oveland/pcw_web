@@ -33,7 +33,7 @@
         }
         .btn-clear-search{
             position: absolute !important;
-            right: 55px !important;
+            right: 65px !important;
             color: rgba(0, 0, 0, 0.14) !important;
             z-index: 1 !important;
         }

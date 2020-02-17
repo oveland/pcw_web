@@ -72,7 +72,7 @@
         var mainContainer = $('.main-container');
         var form = $('.form-search-report');
 
-        $('.menu-administration-vehicles, .menu-administration-vehicles-maintenance').addClass('active-animated');
+        $('.menu-administration-proprietaries, .menu-administration-proprietaries-manage').addClass('active-animated');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {

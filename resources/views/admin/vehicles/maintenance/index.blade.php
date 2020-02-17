@@ -96,6 +96,7 @@
     <script src="{{ asset('assets/plugins/fullcalendar/lang/es.js') }}"></script>
     <script src="{{ asset('assets/plugins/block-ui/jquery.blockUI.js') }}"></script>
 
+    <script src="{{ asset('assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js') }}"></script>
 
     <script type="application/javascript">
         var animateSubmit = true;
@@ -115,19 +116,19 @@
                         url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            if (animateSubmit){
+                            if (animateSubmit) {
                                 mainContainer.hide();
                                 mainContainer.empty();
                             }
                             mainContainer.html(data);
                             if (animateSubmit) mainContainer.fadeIn();
                         },
-                        complete:function(){
+                        complete: function () {
                             form.find('.btn-search-report').removeClass(loadingClass);
                             animateSubmit = true;
                             setTimeout(function () {
                                 containerCalendar.unblock();
-                            },100);
+                            }, 100);
                         }
                     });
                 }

@@ -98,7 +98,7 @@
 
 <div class="row p-10">
     <div class="col-md-12">
-        <ul class="nav nav-pills nav-pills-success">
+        <ul class="nav nav-pills nav-pills-success row">
             @foreach($dispatches as $dispatch)
                 <li class="{{ $loop->first ? 'active' : '' }}">
                     <a href="#dispatch-{{ $dispatch->id }}" data-toggle="tab" class="text-center">

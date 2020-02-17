@@ -57,10 +57,10 @@ class MaintenanceVehicleController extends Controller
     {
         DB::delete("DELETE FROM maintenance_vehicles WHERE vehicle_id = $vehicle->id");
 
-        $dateRange = PCWTime::dateRange($date, $date->copy()->addMonth(6));
+        $dateRange = PCWTime::dateRange($date, $date->copy()->addMonth(config('vehicle.maintenance.scheduled_months')));
 
-        $periodDays = config('vehicle.maintenance_period_days');
-        $checkAssignable = config('vehicle.maintenance_check_assignable_days');
+        $periodDays = config('vehicle.maintenance.period_in_days');
+        $checkAssignable = config('vehicle.maintenance.check_assignable_days');
         $totalRegisters = 0;
         foreach ($dateRange as $nextDate) {
             if ($checkAssignable && ($nextDate->dayOfWeek == Carbon::SUNDAY || $nextDate->dayOfWeek == Carbon::MONDAY)){
@@ -71,12 +71,12 @@ class MaintenanceVehicleController extends Controller
             }
             $periodDays++;
 
-            if ($periodDays > config('vehicle.maintenance_period_days') && $assignable) {
+            if ($periodDays > config('vehicle.maintenance.period_in_days') && $assignable) {
                 $maintenanceVehicle = new MaintenanceVehicle();
                 $maintenanceVehicle->vehicle_id = $vehicle->id;
                 $maintenanceVehicle->date = $nextDate->toDateString();
                 $maintenanceVehicle->week_day = $nextDate->dayOfWeek;
-                $maintenanceVehicle->observations = config('vehicle.maintenance_default_observations');
+                $maintenanceVehicle->observations = config('vehicle.maintenance.default_observations');
                 if ($maintenanceVehicle->save()) $totalRegisters++;
                 $periodDays = 1;
             }

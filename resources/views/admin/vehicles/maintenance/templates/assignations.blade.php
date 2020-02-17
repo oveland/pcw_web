@@ -55,7 +55,7 @@
                 assignments.push(
                     {
                         id: maintenance.id,
-                        title: assignedVehicle.vehicleNumber+' 🚍 '+assignedVehicle.vehiclePlate,
+                        title: assignedVehicle.vehicleNumber+' • '+assignedVehicle.vehiclePlate,
                         start: moment(maintenance.date).format('YYYY-MM-DD')
                     }
                 );
@@ -171,7 +171,7 @@
         @if(Auth::user()->isAdmin())
             companyId = $('#company-report').val();
         @endif
-        var confirm = window.confirm('@lang('Reset')?');
+        var confirm = window.confirm('@lang('Reset')? @lang('This will delete all scheduled maintenance')');
         var deleteRoute = '{{ route('admin-vehicles-maintenance-delete',[':COMPANY_ID']) }}';
         if (confirm) {
             $('.main-container').slideUp(100);

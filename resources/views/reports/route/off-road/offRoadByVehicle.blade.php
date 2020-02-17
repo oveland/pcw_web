@@ -17,8 +17,8 @@
             </h5>
         </div>
         <div class="tab-content panel">
-            <div class="row">
-                <div class="col-md-6 col-lg-4 col-sm-12 col-xs-12">
+            <div class="row" style="display: contents">
+                <div class="col-md-6 col-lg-4 col-sm-12 col-xs-12 p-0">
                     <div class="widge p-t-0 report-by-vehicle-container">
                         <div class="widget-header bg-inverse m-0">
                             <h4 class="text-white label-vehicles">{{ count($offRoadsByVehicles) }} @lang('Vehicles')
@@ -31,7 +31,7 @@
                             </h4>
                         </div>
                         <div data-scrollbar="true" data-height="400px" data-distance="0px">
-                            <ul class="widget-todolist">
+                            <ul class="widget-todolist m-0">
                                 @foreach($offRoadsByVehicles as $vehicleId => $offRoadReport)
                                     @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
                                     @php( $totalOffRoads = $offRoadReport->sum(function ($route) { return count($route); }) )
@@ -60,14 +60,14 @@
                         </div>
                     </div>
                 </div>
-                <div id="accordion-vehicles" class="col-md-6 col-lg-8 col-sm-12 col-sm-12">
+                <div id="accordion-vehicles" class="col-md-6 col-lg-8 col-sm-12 col-sm-12 p-l-0">
                     @foreach($offRoadsByVehicles as $vehicleId => $offRoadReports)
                         @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
                         <div id="vehicle-{{ $vehicleId }}" class="panel-collapse collapse {{ $loop->first ? 'in':'' }}" aria-expanded="false">
                             <!-- begin panel -->
                             <div class="panel panel-white panel-with-tabs">
-                                <div class="panel-heading">
-                                    <ul id="panel-tab" class="nav nav-tabs nav-tabs-warning pull-right">
+                                <div class="panel-heading" style="display: flow-root;margin-top: 10px">
+                                    <ul id="panel-tab" class="nav nav-tabs nav-tabs-warning pull-right m-0">
                                         @foreach($offRoadReports as $routeId => $offRoadReport)
                                             @php($route = \App\Models\Routes\Route::find($routeId))
                                             <li class="{{ $loop->first ? 'active':'' }}">
@@ -86,7 +86,7 @@
                                     @foreach($offRoadReports as $routeId => $offRoadReport)
                                         @php($route = \App\Models\Routes\Route::find($routeId))
                                         <div id="panel-tab-{{ $vehicleId }}-{{ $routeId }}" class="tab-pane fade in {{ $loop->first ? 'active':'' }}">
-                                            <div class="table-responsive">
+                                            <div class="table-responsive col-md-12 p-0">
                                                 <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
                                                     <thead>
                                                         <tr class="inverse">

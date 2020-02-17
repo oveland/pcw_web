@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="panel">
-            <ul class="nav nav-pills nav-pills-danger tab-report">
+            <ul class="nav nav-tabs tab-report">
                 <li class="active" onclick="if(editedSIM)$('.form-search-report').submit()">
                     <a href="#tab-1" data-toggle="tab">
                         <i class="fa fa-paper-plane"></i>

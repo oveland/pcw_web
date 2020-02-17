@@ -15,25 +15,36 @@ return [
     */
     'threshold_truncate_speeding' => 150,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Maintenance period days
-    |--------------------------------------------------------------------------
-    */
-    'maintenance_period_days' => 15,
+    'maintenance' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Maintenance period days
+        |--------------------------------------------------------------------------
+        | Defines the period in days for scheduled maintenance of a vehicle
+        */
+        'period_in_days' => 15,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Maintenance default observations
-    |--------------------------------------------------------------------------
-    */
-    'maintenance_default_observations' => "En mantenimiento programado",
+        /*
+        |--------------------------------------------------------------------------
+        | Maintenance default observations
+        |--------------------------------------------------------------------------
+        */
+        'default_observations' => "En mantenimiento programado",
 
-    /*
-    |--------------------------------------------------------------------------
-    | Check if should check assignable days.
-    |   When is false all days are assignable
-    |--------------------------------------------------------------------------
-    */
-    'maintenance_check_assignable_days' => true,
+        /*
+        |--------------------------------------------------------------------------
+        | Check if should check assignable days.
+        |   When is false all days are assignable
+        |--------------------------------------------------------------------------
+        */
+        'check_assignable_days' => true,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Scheduled months
+        |--------------------------------------------------------------------------
+        | Defines the number of months to automatic scheduled maintenance
+        */
+        'scheduled_months' => 12,
+    ]
 ];

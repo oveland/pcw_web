@@ -95,6 +95,8 @@
     <script src="{{ asset('assets/plugins/fullcalendar/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/fullcalendar/lang/es.js') }}"></script>
 
+    <script src="{{ asset('assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js') }}"></script>
+
     <script type="application/javascript">
         var mainContainer = $('.main-container');
         var form = $('.form-search-report');
