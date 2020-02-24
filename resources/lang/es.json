@@ -635,5 +635,7 @@
   "Consolidated route vehicle": "Consolidado ruta vehículo",
   "Proprietary name": "Nombre propietario",
   "Proprietary not have assigned vehicles": "El propietario no tiene vehículos asignados. Contacte a su administrador",
-  "This will delete all scheduled maintenance": "Esto eliminará todo el plan de mantenimientos de todos los vehículos"
+  "This will delete all scheduled maintenance": "Esto eliminará todo el plan de mantenimientos de todos los vehículos",
+  "Ascendant": "Ascendente",
+  "Paint profile": "Pintar perfil"
 }

@@ -1,4 +1,16 @@
 @if(count($reportsByControlPoints))
+    <style>
+        .measured-time {
+            font-size: 0.6em;
+        }
+
+        .measured-time-dark {
+            color: white;
+            font-weight: bold;
+            text-shadow: #111111 1px 1px 4px;
+        }
+    </style>
+
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -115,11 +127,11 @@
                                     @foreach($reportsByControlPoint->reportsByControlPoint as $reportByControlPoint)
                                         @php( $controlPoint = $reportByControlPoint->controlPoint )
                                         @if( $reportByControlPoint->hasReport )
-                                            <td class="text-center">
+                                            <td class="text-center td-info" style="background: {{  $query->paintProfile ? $reportByControlPoint->backgroundProfile : "white" }};">
                                                 <div class="tooltipss" data-title="{{ $controlPoint->name }}">
-                                                    <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $reportByControlPoint->statusColor }}"></i>
+                                                    <i class="fa fa-bus f-s-15 icon-vehicle-status text-{{ $reportByControlPoint->statusColor }}" style="{{  $query->paintProfile ? "" : "font-size: 1.5em !important;color: $reportByControlPoint->backgroundProfile !important" }}"></i>
                                                     <br>
-                                                    <button type="button" class="f-s-12 m-t-5 btn btn-{{ $reportByControlPoint->statusColor }} light btn-xs"
+                                                    <button type="button" class="f-s-12 m-t-5 btn btn-{{ $reportByControlPoint->statusColor }} light btn-xs" style="{{  $query->paintProfile ? "" : "background: $reportByControlPoint->backgroundProfile !important" }}"
                                                             data-placement="bottom" data-toggle="popover" data-html="true" data-trigger="click"
                                                             title="
                                                                 <strong>
@@ -151,11 +163,10 @@
                                                                 <small><strong> • @lang('Time scheduled from dispatch'):</strong> {{ $reportByControlPoint->timep }}</small><br>
                                                                 <small><strong> • @lang('Time measured from dispatch'):</strong> {{ $reportByControlPoint->timem }}</small>
                                                             </div>">
-                                                        <span>
-                                                            {{ $reportByControlPoint->difference }}
-                                                        </span>
+                                                        <span>{{ $reportByControlPoint->difference }}</span>
                                                     </button>
                                                     <br>
+                                                    <small class="measured-time {{ $query->paintProfile ? "measured-time-dark" : ""  }}"><i class="fa fa-clock-o"></i> {{ $reportByControlPoint->measuredControlPointTime }}</small>
                                                 </div>
                                             </td>
                                         @else

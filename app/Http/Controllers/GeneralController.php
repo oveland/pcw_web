@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
-use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use Auth;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class GeneralController extends Controller
@@ -80,11 +81,11 @@ class GeneralController extends Controller
 
     /**
      * @param Request $request
-     * @return Company|Company[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     * @return Company|Company[]|Collection|Model|null
      */
     public function getCompany(Request $request)
     {
-        $requestCompany = $request->get('company') ?? $request->get('company-report');
+        $requestCompany = intval($request->get('company') ?? $request->get('company-report'));
         return (Auth::user()->isAdmin() && $requestCompany ? Company::find($requestCompany) : Auth::user()->company);
     }
 
