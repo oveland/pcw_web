@@ -41,14 +41,103 @@ class TakingsPassengersLiquidationController extends Controller
         $this->auth = $auth;
 
         $this->middleware(function ($request, $next) {
-            $this->beaService = App::makeWith('bea.service', ['company' =>  $this->auth->getCompanyFromRequest($request)]);
+            $this->beaService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)]);
             return $next($request);
         });
     }
 
+    function asDollars($value) {
+        return '$' . number_format($value, 0);
+    }
+
+    private function paintTable($marks) {
+        $str = "
+            <style>
+                table {
+                  font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;
+                  border-collapse: collapse;
+                  width: 100%;
+                }
+            
+                table th, table td{
+                    border: solid 1px lightgrey;
+                    padding: 10px;
+                    margin: 0;
+                    text-align: center !important;
+                }
+                table tr:nth-child(even){background-color: #f2f2f2 !important;}
+                
+                table th{
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    text-align: left;
+                    background-color: #c2c6cd;
+                    color: black;
+                }
+            </style>
+        ";
+
+        $str .= "<table>
+            <thead><tr>
+                <th>TURNO</th>
+                <th>H. INICIO</th>
+                <th>H. FIN</th>
+                <th>SUBIDAS</th>
+                <th>BAJADAS</th>
+                <th style='background: #3f570a;color: white'>PASAJEROS EXCEL</th>
+                <th style='background: #234c5b;color: white'>PASAJEROS PCW</th>
+                <th>BLOQ</th>
+                <th>AUX</th>
+                <th>ABOR</th>
+                <th>IMBEAMAX</th>
+                <th>IMBEAMIN</th>
+                <th style='background: #3f570a;color: white'>TOTAL BEA EXCEL</th>
+                <th style='background: #234c5b;color: white'>TOTAL BEA PCW</th>
+            </tr></thead>
+            <tbody>";
+                $turn = 1;
+                foreach ($marks as $m){
+                    $str .= "<tr>";
+                    $passengersUp = $m->AMR_SUBIDAS;
+                    $passengersDown = $m->AMR_BAJADAS;
+
+                    $imBeaMax = $m->AMR_IMEBEAMAX;
+                    $imBeaMin = $m->AMR_IMEBEAMIN;
+
+                    $passengersBoarding = $passengersUp > $passengersDown ? ($passengersUp - $passengersDown) : 0;
+                    $passengersBEA = $passengersUp > $passengersDown ? $passengersUp : $passengersDown;
+
+                    $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 1000;
+
+                    $str .= "<td>$turn</td>";
+                    $str .= "<td>$m->AMR_FHINICIO</td>";
+                    $str .= "<td>$m->AMR_FHFINAL</td>";
+                    $str .= "<td>$passengersUp</td>";
+                    $str .= "<td>$passengersDown</td>";
+                    $str .= "<td>$m->AMR_PASBEA</td>";
+                    $str .= "<td>$passengersBEA</td>";
+                    $str .= "<td>$m->AMR_BLOQUEOS</td>";
+                    $str .= "<td>$m->AMR_AUXILIARES</td>";
+                    $str .= "<td>$passengersBoarding</td>";
+                    $str .= "<td>".number_format($imBeaMax, 2)."</td>";
+                    $str .= "<td>".number_format($imBeaMin, 2)."</td>";
+                    $str .= "<td>".$this->asDollars($totalBEA)."</td>";
+                    $str .= "<td>???</td>";
+                    $str .= "</tr>";
+
+                    $turn += 1;
+                }
+        $str .= "</tbody></table>";
+
+        return $str;
+    }
+
     public function searchMarksBEA()
     {
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDMARCA = 78141 OR AMR_IDMARCA = 78256");
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = 15) AND AMR_FHINICIO BETWEEN '2020-02-17 00:00:00' AND '2020-02-17 23:59:59' AND AMR_IDDERROTERO IS NOT NULL ORDER BY AMR_FHINICIO");
+        echo $this->paintTable($marks);
+
+
         dd($marks);
     }
 
@@ -75,10 +164,10 @@ class TakingsPassengersLiquidationController extends Controller
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
         dump("Last Id Migrated > $lastIdMigrated");
 
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO >= '$date 00:00:00' AND AMR_FHINICIO <= '$date 23:59:59') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = ".$vehicle->bea_id.")");
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO >= '$date 00:00:00' AND AMR_FHINICIO <= '$date 23:59:59') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . $vehicle->bea_id . ")");
         $marks = $marks->where('AMR_IDDERROTERO', '<>', null)->sortBy('AMR_FHINICIO');
         foreach ($marks as $markBEA) {
-            dump ("$markBEA->AMR_IDMARCA > $markBEA->AMR_FHINICIO - $markBEA->AMR_FHFINAL turn: $markBEA->AMR_IDTURNO");
+            dump("$markBEA->AMR_IDMARCA > $markBEA->AMR_FHINICIO - $markBEA->AMR_FHFINAL turn: $markBEA->AMR_IDTURNO");
         }
     }
 
@@ -123,7 +212,7 @@ class TakingsPassengersLiquidationController extends Controller
             'defaultFont' => 'sans-serif'
         ])->setPaper(array(0, 0, $options->w, $options->h))->loadView($template, compact(['liquidation', 'mark']));
 
-        return $pdf->stream(__('Receipt')."-$liquidation->id.pdf");
+        return $pdf->stream(__('Receipt') . "-$liquidation->id.pdf");
     }
 
     public function exportDailyReport(Request $request)
@@ -131,7 +220,7 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicle = Vehicle::find($request->get('vehicle'));
         $date = $request->get('date');
 
-        $report = (object) $this->beaService->getDailyReport($vehicle->id, $date)->toArray();
+        $report = (object)$this->beaService->getDailyReport($vehicle->id, $date)->toArray();
 
         $options = (object)[
             'w' => 1500,
@@ -144,7 +233,7 @@ class TakingsPassengersLiquidationController extends Controller
             'defaultFont' => 'sans-serif'
         ])->setPaper('A4', 'landscape')->loadView('takings.passengers.liquidation.exports.dailyReport', compact(['report', 'vehicle', 'date']));
 
-        return $pdf->stream(__('Daily report')."-$date.pdf");
+        return $pdf->stream(__('Daily report') . "-$date.pdf");
     }
 
     /**
@@ -414,7 +503,7 @@ class TakingsPassengersLiquidationController extends Controller
     public function getFileDiscount($otherDiscountId)
     {
         $filePath = config('takings.discounts.others.files.path') . "/$otherDiscountId." . config('takings.discounts.others.files.image-extension');
-        
+
 
         $exists = Storage::exists($filePath);
         if ($exists) {
@@ -436,7 +525,7 @@ class TakingsPassengersLiquidationController extends Controller
             $base64File = $otherDiscount->fileUrl;
             if ($otherDiscount->hasFile && $base64File && Str::contains($base64File, 'data:image')) {
                 $processedOK = false;
-                try{
+                try {
                     list($baseType, $image) = explode(';', $base64File);
                     list(, $image) = explode(',', $image);
                     $image = base64_decode($image);
@@ -445,7 +534,7 @@ class TakingsPassengersLiquidationController extends Controller
                     if (!$processedOK) {
                         break;
                     }
-                }catch (Exception $e){
+                } catch (Exception $e) {
                     $processedOK = false;
                 }
             }

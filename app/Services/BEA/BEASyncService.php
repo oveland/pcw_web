@@ -192,6 +192,7 @@ class BEASyncService
             $turns = Turn::where('company_id', $this->company->id)->where('vehicle_id', $this->vehicle->id)->get();
             $marksIdsPCW = Mark::where('company_id', $this->company->id)
                 ->whereIn('turn_id', $turns->pluck('id'))
+                ->where('liquidated', false)
                 ->whereDate('date', $this->date)
                 ->get()->pluck('bea_id');
 
