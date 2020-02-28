@@ -65,7 +65,7 @@ class Liquidation extends Model
      */
     function marks()
     {
-        return $this->hasMany(Mark::class)->orderBy('initial_time');
+        return $this->hasMany(Mark::class)->enabled()->orderBy('initial_time');
     }
 
     /**

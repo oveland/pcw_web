@@ -12,6 +12,7 @@ use App\Models\BEA\Mark;
 use App\Models\BEA\Penalty;
 use App\Models\BEA\Trajectory;
 use App\Models\BEA\Turn;
+use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\BEA\BEAService;
@@ -79,6 +80,7 @@ class TakingsPassengersLiquidationController extends Controller
 
         $str .= "<table>
             <thead><tr>
+                <th>ID</th>
                 <th>TURNO</th>
                 <th>H. INICIO</th>
                 <th>H. FIN</th>
@@ -109,6 +111,7 @@ class TakingsPassengersLiquidationController extends Controller
 
                     $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 1000;
 
+                    $str .= "<td>$m->AMR_IDMARCA</td>";
                     $str .= "<td>$turn</td>";
                     $str .= "<td>$m->AMR_FHINICIO</td>";
                     $str .= "<td>$m->AMR_FHFINAL</td>";
@@ -132,9 +135,12 @@ class TakingsPassengersLiquidationController extends Controller
         return $str;
     }
 
-    public function searchMarksBEA()
+    public function searchMarksBEA(Request $request)
     {
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = 15) AND AMR_FHINICIO BETWEEN '2020-02-17 00:00:00' AND '2020-02-17 23:59:59' AND AMR_IDDERROTERO IS NOT NULL ORDER BY AMR_FHINICIO");
+        $vehicle = Vehicle::where('number', $request->get('vehicle'))->where('company_id', Company::COODETRANS)->first();
+        if (!$vehicle) dd('Not vehicle found for request');
+
+        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = $vehicle->bea_id) AND AMR_FHINICIO BETWEEN '2020-02-27 00:00:00' AND '2020-02-27 23:59:59' AND AMR_IDDERROTERO IS NOT NULL ORDER BY AMR_FHINICIO");
         echo $this->paintTable($marks);
 
 
@@ -144,7 +150,7 @@ class TakingsPassengersLiquidationController extends Controller
     public function test(Request $request)
     {
 
-        $this->searchMarksBEA();
+        $this->searchMarksBEA($request);
         $date = Carbon::now()->toDateString();
         $date = '2019-12-14';
         $vehicle = Vehicle::find($request->get('vehicle'));

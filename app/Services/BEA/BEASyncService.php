@@ -68,7 +68,7 @@ class BEASyncService
             $this->marks();
 
         } catch (Exception $e) {
-            // echo "Error sync";
+            if ($this->vehicle && $this->date) DB::select("SELECT refresh_bea_marks_turns_numbers_function(" . $this->vehicle->id . ", '$this->date')");
         }
     }
 

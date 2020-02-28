@@ -9,6 +9,7 @@ use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use App\Services\BEA\Reports\BEAReportService;
 use BEADB;
+use DB;
 use Exception;
 use Illuminate\Support\Collection;
 
@@ -101,19 +102,21 @@ class BEAService
             ->get();
 
         foreach ($liquidations as $liquidation) {
-            $beaLiquidations->push((object)[
-                'id' => $liquidation->id,
-                'vehicle' => $liquidation->vehicle,
-                'date' => $liquidation->date->toDateString(),
-                'liquidationUser' => $liquidation->user,
-                'liquidationDate' => $liquidation->created_at->toDateTimeString(),
-                'taken' => $liquidation->taken,
-                'takingUser' => $liquidation->taken ? $liquidation->takingUser : null,
-                'takingDate' => $liquidation->taken ? $liquidation->taking_date->toDateTimeString() : null,
-                'liquidation' => $liquidation->liquidation,
-                'totals' => $liquidation->totals,
-                'marks' => $this->processResponseMarks($liquidation->marks),
-            ]);
+            if ($liquidation->marks->isNotEmpty()) {
+                $beaLiquidations->push((object)[
+                    'id' => $liquidation->id,
+                    'vehicle' => $liquidation->vehicle,
+                    'date' => $liquidation->date->toDateString(),
+                    'liquidationUser' => $liquidation->user,
+                    'liquidationDate' => $liquidation->created_at->toDateTimeString(),
+                    'taken' => $liquidation->taken,
+                    'takingUser' => $liquidation->taken ? $liquidation->takingUser : null,
+                    'takingDate' => $liquidation->taken ? $liquidation->taking_date->toDateTimeString() : null,
+                    'liquidation' => $liquidation->liquidation,
+                    'totals' => $liquidation->totals,
+                    'marks' => $this->processResponseMarks($liquidation->marks),
+                ]);
+            }
         }
 
         return $beaLiquidations;
@@ -158,7 +161,7 @@ class BEAService
     function getBEAMarks($vehicleId, $date)
     {
         $this->sync->for($vehicleId, $date)->last();
-
+        
         $vehicle = Vehicle::find($vehicleId);
         $this->sync->checkDiscountsFor($vehicle);
         $this->sync->checkPenaltiesFor($vehicle);
