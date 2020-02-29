@@ -26,8 +26,10 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.4.1",
-    "node-sass": "^4.13.0",
+    "laravel-echo": "^1.6.1",
+    "node-sass": "^4.13.1",
     "numeral": "^2.0.6",
+    "pusher-js": "^5.1.1",
     "sweetalert2": "^9.7.0",
     "vue-filter-number-format": "^2.0.0",
     "vue-i18n": "^8.15.0",

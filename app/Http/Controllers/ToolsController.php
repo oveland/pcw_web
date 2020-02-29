@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TrackingMapEvent;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Passengers\Passenger;
@@ -50,6 +51,16 @@ class ToolsController extends Controller
 
     public function test(Request $request)
     {
+        $company = 14;
+        $route = 135;
+
+        $data = [
+            'name' => 'Oscar',
+            'phone' => 3145224312
+        ];
+
+        event(new TrackingMapEvent($company, $route, $data));
+
         if (!extension_loaded('gd2')) { echo 'zipless'; }else{ dump('gd OK');}
 
         phpinfo();

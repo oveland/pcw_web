@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\TrackingMapEvent;
 use App\Models\Company\Company;
 use App\Services\API\Web\Track\TrackMapService;
 use Illuminate\Console\Command;
@@ -16,7 +17,7 @@ class TrackMapCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'track:map {--company=21}';
+    protected $signature = 'track:map {--company=21} {--driver=echo} {--delay=0}';
 
     /**
      * The console command description.
@@ -34,6 +35,14 @@ class TrackMapCommand extends Command
      */
     private $company;
 
+
+    /**
+     * Driver broadcaster
+     *
+     * @var $driver
+     */
+    private $driver;
+
     /**
      * Create a new command instance.
      *
@@ -43,6 +52,7 @@ class TrackMapCommand extends Command
     {
         parent::__construct();
         $this->trackMapService = $trackMapService;
+        $this->driver = 'echo';
     }
 
     /**
@@ -71,7 +81,7 @@ class TrackMapCommand extends Command
      */
     function sendTrackData($data, $routeId)
     {
-        $this->getPusher()->trigger("track-route-$routeId", "gps", $data);
+        $this->getPusher()->trigger("gps", "track-route-$routeId", $data);
     }
 
     /**
@@ -81,18 +91,28 @@ class TrackMapCommand extends Command
      */
     public function handle()
     {
+        $delay = $this->option('delay');
+        if ($delay) sleep($delay);
+
+        $requestDriver = $this->option('driver');
+        if ($requestDriver) $this->driver = $requestDriver;
+
         $this->company = Company::find($this->option('company'));
 
         if ($this->company) {
             $routes = $this->company->activeRoutes;
 
-            $this->logData("Sending track data");
+            $this->logData("Sending track data via <<$this->driver>> driver");
 
             foreach ($routes as $route) {
-                $trackData = collect($this->trackMapService->track($this->company->id, $route->id))->chunk(8);
-
-                foreach ($trackData as $track) {
-                    $this->sendTrackData($track->values(), $route->id);
+                $track = collect($this->trackMapService->track($this->company->id, $route->id));
+                if ($this->driver == 'echo') {
+                    event(new TrackingMapEvent($this->company->id, $route->id, $track->values()));
+                } else if ($this->driver == 'pusher') {
+                    $trackChunked = $track->chunk(8);
+                    foreach ($trackChunked as $trackShort) {
+                        $this->sendTrackData($trackShort->values(), $route->id);
+                    }
                 }
             }
         } else {

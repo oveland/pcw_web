@@ -16,6 +16,7 @@ class CreateBeaMarksTrigger extends Migration
         Schema::table('bea_marks', function(Blueprint $table){
             $table->boolean('duplicated')->default(false);
             $table->bigInteger('duplicated_mark_id')->nullable();
+            $table->boolean('ignore_trigger')->default(false);
         });
 
         DB::statement("
