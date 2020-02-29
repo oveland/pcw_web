@@ -61,3 +61,24 @@ window.axios.interceptors.response.use(
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+
+
+import Echo from "laravel-echo"
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: '16f9596b985e59db2b9a',
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    disableStats: true
+});
+
+window.Echo.channel('map')
+    .listen('TrackingMapEvent', (e) => {
+        console.log('Arrived WS!!!!');
+        console.log(e);
+    });
+
+console.log('Init WS');
