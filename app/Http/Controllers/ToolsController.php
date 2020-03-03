@@ -51,13 +51,10 @@ class ToolsController extends Controller
 
     public function test(Request $request)
     {
-        $company = 14;
-        $route = 135;
+        $company = 21;
+        $route = 212;
 
-        $data = [
-            'name' => 'Oscar',
-            'phone' => 3145224312
-        ];
+        $data = collect([]);
 
         event(new TrackingMapEvent($company, $route, $data));
 

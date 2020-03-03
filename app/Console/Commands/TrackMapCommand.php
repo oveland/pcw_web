@@ -81,7 +81,7 @@ class TrackMapCommand extends Command
      */
     function sendTrackData($data, $routeId)
     {
-        $this->getPusher()->trigger("gps", "track-route-$routeId", $data);
+        $this->getPusher()->trigger("track-route-$routeId", "gps", $data);
     }
 
     /**
@@ -90,6 +90,19 @@ class TrackMapCommand extends Command
      * @throws PusherException
      */
     public function handle()
+    {
+        foreach (range(1, 3) as $index) {
+            $this->track();
+            sleep(16);
+        }
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @throws PusherException
+     */
+    public function track()
     {
         $delay = $this->option('delay');
         if ($delay) sleep($delay);
