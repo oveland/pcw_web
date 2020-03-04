@@ -30,6 +30,7 @@
             @foreach($speedingReportByVehicles as $vehicleId => $speedingReports)
                 @php
                     $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
+                    $dispatcherVehicle = $vehicle->dispatcherVehicle;
                 @endphp
                 <div id="report-tab-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first ? 'active in' : '' }}">
                     <div class="table-responsive">
@@ -73,20 +74,23 @@
                                         {{ number_format($speeding->speed,2, ',', '') }}
                                     </td>
                                     <td class="text-uppercase" width="40%">
-                                        @if($dispatchRegister)
-                                            @php
-                                                $route = $dispatchRegister->route;
-                                                $driver = $dispatchRegister->driver;
-                                            @endphp
-                                            <div class="col-md-12">
-                                                <span class="tooltips" data-title="@lang('Route')"><i class="fa fa-flag"></i> {{ $route->name }}</span>
-                                                <span class="tooltips" data-title="@lang('Round trip')"><i class="fa fa-retweet text-muted"></i> {{ $dispatchRegister->round_trip }}</span>
-                                                <span class="tooltips" data-title="@lang('Turn')"><i class="fa fa-list-ol text-muted"></i> {{ $dispatchRegister->turn }}</span>
-                                                @if($driver || $dispatchRegister->driver_code)
-                                                    <br><span class="tooltips" data-title="@lang('Driver')"><i class="fa fa-user text-muted"></i> {{ $driver ? $driver->fullName() : $dispatchRegister->driver_code }}</span>
-                                                @endif
-                                            </div>
-                                        @endif
+                                        <div class="col-md-12">
+                                            @if($dispatchRegister)
+                                                @php
+                                                    $route = $dispatchRegister->route;
+                                                    $driver = $dispatchRegister->driver;
+                                                @endphp
+
+                                                    <span class="tooltips" data-title="@lang('Route')"><i class="fa fa-flag"></i> {{ $route->name }}</span>
+                                                    <span class="tooltips" data-title="@lang('Round trip')"><i class="fa fa-retweet text-muted"></i> {{ $dispatchRegister->round_trip }}</span>
+                                                    <span class="tooltips" data-title="@lang('Turn')"><i class="fa fa-list-ol text-muted"></i> {{ $dispatchRegister->turn }}</span>
+                                                    @if($driver || $dispatchRegister->driver_code)
+                                                        <br><span class="tooltips" data-title="@lang('Driver')"><i class="fa fa-user text-muted"></i> {{ $driver ? $driver->fullName() : $dispatchRegister->driver_code }}</span>
+                                                    @endif
+                                            @elseif($dispatcherVehicle)
+                                                <span class="tooltips" data-title="@lang('Route')"><i class="fa fa-flag"></i> {{ $dispatcherVehicle->route->name }}</span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>
                                         <button class="btn btn-xs btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $speeding->id }}" data-title="@lang('Location')">
