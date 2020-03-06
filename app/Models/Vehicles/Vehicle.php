@@ -229,9 +229,14 @@ class Vehicle extends Model
     {
         $currentIssue = $this->currentIssue;
 
-        if (!$currentIssue) $currentIssue = new CurrentVehicleIssue([
-            'vehicle_id' => $this->id,
-        ]);
+        if (!$currentIssue){
+            $currentIssue = new CurrentVehicleIssue([
+                'vehicle_id' => $this->id,
+            ]);
+
+            $currentIssue->issue_type_id = VehicleIssueType::IN;
+            $currentIssue->generateUid();
+        };
 
         $currentLocation = $this->currentLocation;
         $dispatchRegister = $currentLocation ? $currentLocation->dispatchRegister : null;
