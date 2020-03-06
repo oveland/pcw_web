@@ -1,4 +1,4 @@
-@if( Auth::user()->isAdmin() )
+@if(Auth::user() && Auth::user()->isAdmin() )
 <script type="application/javascript">
     $(document).ready(function () {
         $('body').on('click', '.box-edit', function () {
@@ -22,7 +22,7 @@
                     url: input.data('url'),
                     data: {
                         id: dispatchRegisterId,
-                        field: dispatchRegisterField,
+                            field: dispatchRegisterField,
                         value: dispatchRegisterValue
                     },
                     success: function (data) {

@@ -234,7 +234,7 @@ class Vehicle extends Model
         ]);
 
         $currentLocation = $this->currentLocation;
-        $dispatchRegister = $currentLocation->dispatchRegister;
+        $dispatchRegister = $currentLocation ? $currentLocation->dispatchRegister : null;
 
         if ($issueTypeId) $currentIssue->issue_type_id = $issueTypeId;
         $currentIssue->date = Carbon::now();

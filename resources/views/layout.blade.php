@@ -248,7 +248,9 @@ License: You must have a valid license purchased only from themeforest(the above
 
                         <span class="username">
                             <i class="icon-user"></i>
-                            {{ Auth::user()->name }}
+                            @if(Auth::user())
+                                {{ Auth::user()->name }}
+                            @endif
                         </span>
                         <i class="fa fa-angle-down"></i>
                     </a>
@@ -335,7 +337,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     <!-- END RESPONSIVE QUICK SEARCH FORM -->
                 </li>
 
-                @if( Auth::user()->canAdmin())
+                @if( Auth::user() && Auth::user()->canAdmin())
                     <li class="nav-item start {{ $baseMenu == __('url-administration')?'active-animated':'' }}">
                         <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
                             <i class="fa fa-cogs faa-horizontal"></i>
@@ -365,7 +367,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </li>
                                 </ul>
                             </li>
-                            @if( Auth::user()->canAdminGPS() )
+                            @if( Auth::user() && Auth::user()->canAdminGPS() )
                                 <li class="nav-item menu-administration-gps">
                                     <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                         <i class="fa fa-podcast faa-vertical"></i>
@@ -419,21 +421,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <a href="{{ route('operation-dispatch-auto-dispatcher') }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-play faa-burst" aria-hidden="true"></i>
                                         @lang('Automatic')
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item menu-operation-vehicles">
-                            <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
-                                <i class="fa fa-car faa-passing"></i>
-                                @lang('Vehicles')
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item menu-operation-vehicles-issues">
-                                    <a href="{{ route('operation-vehicles-issues') }}" class="faa-parent animated-hover nav-link">
-                                        <i class="fa fa-exclamation-triangle faa-burst" aria-hidden="true"></i>
-                                        @lang('Vehicle issues')
                                     </a>
                                 </li>
                             </ul>
@@ -494,6 +481,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
+                                <li class="nav-item menu-report-vehicles-issues">
+                                    <a href="{{ route('report-vehicles-issues')  }}" class="faa-parent animated-hover nav-link">
+                                        <i class="fa fa-wrench faa-wrench" aria-hidden="true"></i>
+                                        @lang('Vehicle issues')
+                                    </a>
+                                </li>
                                 <li class="nav-item menu-report-vehicles-parked">
                                     <a href="{{ route('report-vehicle-parked')  }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-product-hunt faa-vertical" aria-hidden="true"></i>
@@ -531,11 +524,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                         @lang('Round trips') / @lang('Routes')
                                     </a>
                                 </li>
-                                @if( Auth::user()->canAdmin() )
+                                @if( Auth::user() && Auth::user()->canAdmin() )
                                     <li class="nav-item menu-report-vehicles-status">
                                         <a href="{{ route('report-vehicle-status')  }}" class="faa-parent animated-hover nav-link">
                                             <i class="fa fa-podcast blue faa-burst" aria-hidden="true"></i>
-                                            @lang('Status')
+                                            @lang('GPS Status')
                                         </a>
                                     </li>
                                     <li class="nav-item menu-report-vehicles-gps">
@@ -554,7 +547,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                                @if( Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter() )
+                                @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter()) )
                                     <li class="nav-item menu-passengers-recorders">
                                         <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                             <i class="fa fa-compass faa-vertical"></i>
@@ -614,7 +607,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </li>
                                 @endif
 
-                                @if( Auth::user()->isAdmin() ||  Auth::user()->company->hasSeatSensorCounter() )
+                                @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->company->hasSeatSensorCounter()) )
                                     <li class="nav-item menu-passengers-sensors">
                                         <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                             <i class="fa fa-crosshairs faa-vertical"></i>
@@ -638,7 +631,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </li>
                                 @endif
 
-                                @if( Auth::user()->isAdmin() )
+                                @if( Auth::user() && Auth::user()->isAdmin() )
                                     <li class="nav-item menu-passengers-mixed">
                                         <a href="{{ route('report-passengers-mixed')  }}" class="faa-parent animated-hover nav-link">
                                             <i class="fa fa-compass faa-vertical"></i> <i class="fa fa-crosshairs faa-vertical"></i>
@@ -653,7 +646,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </a>
                                 </li>
 
-                                @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
+                                @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral()) )
                                     <li class="nav-item menu-passengers-taxcentral">
                                         <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                             <i class="fa fa-building faa-vertical"></i>
@@ -694,7 +687,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </ul>
                         </li>
 
-                        @if( Auth::user()->isAdmin() )
+                        @if( Auth::user() && Auth::user()->isAdmin() )
                             <li class="nav-item menu-logs">
                                 <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                     <i class="fa fa-user faa-vertical"></i>
@@ -1475,7 +1468,7 @@ License: You must have a valid license purchased only from themeforest(the above
 </template>
 
 <div class="page-footer">
-    <div class="page-footer-inner col-md-12 text-center"> <b>2020</b> <i class="fa fa-rocket"></i> PCW @
+    <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>2020</b> <i class="fa fa-rocket"></i> PCW @
         <a href="http://pcwtecnologia.com" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>
     </div>
     <div class="scroll-to-top">

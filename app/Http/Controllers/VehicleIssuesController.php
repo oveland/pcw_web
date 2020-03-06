@@ -9,10 +9,14 @@ use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleIssue;
 use App\Models\Vehicles\VehicleIssueType;
 use App\Services\Auth\PCWAuthService;
-use App\Services\PCWExporterService;
+use App\Services\Operation\Vehicles\NoveltyService;
 use Auth;
-use DB;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
+use Throwable;
 
 class VehicleIssuesController extends Controller
 {
@@ -20,33 +24,47 @@ class VehicleIssuesController extends Controller
      * @var PCWAuthService
      */
     private $auth;
+    /**
+     * @var NoveltyService
+     */
+    private $novelty;
 
     /**
-     * ReportRouteController constructor.
+     * VehicleIssuesController constructor.
      * @param PCWAuthService $auth
+     * @param NoveltyService $novelty
      */
-    public function __construct(PCWAuthService $auth)
+    public function __construct(PCWAuthService $auth, NoveltyService $novelty)
     {
         $this->auth = $auth;
+        $this->novelty = $novelty;
     }
 
+    /**
+     * @return Factory|View
+     */
     public function index()
     {
         $access = $this->auth->access();
 
         $companies = $access->companies;
-        $vehicles = $access->vehicles;
+        $vehicles = $access->company->vehicles;
 
         return view('operation.vehicles.issues.index', compact(['companies', 'vehicles']));
     }
 
+    /**
+     * @param Request $request
+     * @return Factory|View
+     */
     public function show(Request $request)
     {
         $dateReport = $request->get('date-report');
         $vehicleReport = $request->get('vehicle-report');
+        $sortDescending = $request->get('sort-desc');
         $company = $this->auth->getCompanyFromRequest($request);
 
-        $report = $this->buildReport($company, $vehicleReport, $dateReport);
+        $report = $this->buildReport($company, $vehicleReport, $dateReport, $sortDescending);
 
         if ($request->get('export')) $this->export($report);
 
@@ -57,7 +75,7 @@ class VehicleIssuesController extends Controller
     {
         $vehicles = $company->activeVehicles;
         $currentVehiclesIssues = CurrentVehicleIssue::whereIn('vehicle_id', $vehicles->pluck('id'))->withActiveIssue()->get();
-        
+
         return view('operation.vehicles.issues.current', compact('currentVehiclesIssues'));
     }
 
@@ -65,114 +83,125 @@ class VehicleIssuesController extends Controller
      * @param Company $company
      * @param $vehicleReport
      * @param $dateReport
+     * @param bool $sortDescending
      * @return object
      */
-    public function buildReport(Company $company, $vehicleReport, $dateReport)
+    public function buildReport(Company $company, $vehicleReport, $dateReport, $sortDescending = false)
     {
-        $vehicles = ($vehicleReport == 'all') ? $company->activeVehicles : $company->activeVehicles()->where('id', $vehicleReport)->get();
+        $vehicles = ($vehicleReport == 'all') ? $company->vehicles : $company->vehicles()->where('id', $vehicleReport)->get();
 
-        $vehicleIssues = VehicleIssue::whereDate('date', $dateReport)
-            ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->get()->sortBy('date');
+        $vehicleIssues = VehicleIssue::whereIn('vehicle_id', $vehicles->pluck('id'));
+        if ($dateReport) $vehicleIssues = $vehicleIssues->whereDate('date', $dateReport);
+        $vehicleIssues = $vehicleIssues->get()->sortBy('date', 0, $sortDescending);
+
 
         return (object)[
             'company' => $company,
             'vehicleReport' => $vehicleReport,
             'dateReport' => $dateReport,
-            'vehicleIssues' => $vehicleIssues
+            'vehicleIssues' => $vehicleIssues,
+            'isNotEmpty' => $vehicleIssues->isNotEmpty(),
+            'sortDescending' => $sortDescending,
         ];
     }
 
     /**
-     * Export report to excel format
-     *
-     * @param $report
+     * @param Vehicle $vehicle
+     * @param Request $request
+     * @return Factory|View
      */
-    public function export($report)
-    {
-        $vehicleIssuesGroups = $report->vehicleIssues->groupBy('issue_uid');
-
-        $dataExcel = array();
-        foreach ($vehicleIssuesGroups as $issueUid => $vehicleIssuesGroup){
-            $issueIn = VehicleIssue::where('issue_uid', $issueUid)->where('issue_type_id', VehicleIssueType::IN)->get()->first();
-            $dateIn = $issueIn ? $issueIn->date : null;
-
-            foreach ($vehicleIssuesGroup->sortBy('date') as $issue) {
-                $vehicle = $issue->vehicle;
-                $type = $issue->type;
-                $user = $issue->user;
-                $driver = $issue->driver;
-
-                $duration = $type->id == VehicleIssueType::OUT ? ($dateIn ? $issue->date->diffAsCarbonInterval($dateIn, false)->forHumans() : __('Greater than one day') ) : null;
-
-                $dataExcel[] = [
-                    __('Vehicle') => $vehicle->number,                      # A CELL
-                    __('Date') => $issue->date->toDateTimeString(),          # B CELL
-                    __('Type') => $type->name.($duration ? "\n$duration" : ""),                              # C CELL
-                    __('Vehicle issue') => $issue->observations,            # D CELL
-                    __('Driver') => $driver ? $driver->fullName() : "",     # E CELL
-                    __('User') => $user->name,                              # F CELL
-                ];
-            }
-        }
-
-        PCWExporterService::excel([
-            'fileName' => __('Vehicle issues')." ".__('Vehicles') . " $report->dateReport",
-            'title' => __('Vehicle issues')." ".__('Vehicles') . " $report->dateReport",
-            'subTitle' => __('Vehicle issues')." ".__('Vehicles'),
-            'data' => $dataExcel
-        ]);
-    }
-
     public function form(Vehicle $vehicle, Request $request)
     {
         $company = $vehicle->company;
         $drivers = $company->activeDrivers;
-        return view('operation.vehicles.issues.formCreate', compact(['vehicle', 'drivers']));
+
+        $presetOutIssue = $request->get('preset-out-issue') == "true";
+
+        return view('operation.vehicles.issues.formCreate', compact(['vehicle', 'drivers', 'presetOutIssue']));
     }
 
+    /**
+     * @param Company $company
+     * @param Request $request
+     * @throws Throwable
+     */
+    public function migrateOldReports(Company $company, Request $request)
+    {
+        $oldReports = collect(\DB::select("SELECT * FROM report_vehicle_status WHERE vehicle_id in (SELECT id FROM vehicles WHERE company_id = $company->id) AND date < '2020-03-05' ORDER BY date_time ASC"));
+
+        $oldReportsByVehicles = $oldReports->groupBy('vehicle_id');
+        foreach ($oldReportsByVehicles as $vehicleId => $oldReportsByVehicle) {
+            $vehicle = Vehicle::find($vehicleId);
+
+            $vehicleIsActive = true;
+            $vehicleIsInRepair = false;
+
+            $init = false;
+            foreach ($oldReportsByVehicle->sortBY('date_time') as $old) {
+                $issueTypeId = VehicleIssueType::UPDATE;
+
+                switch ($old->status) {
+                    case 'EN TALLER':
+                        $vehicleIsInRepair = true;
+                        $issueTypeId = VehicleIssueType::IN;
+                        $init = true;
+                        break;
+                    case 'EN TRANSITO':
+                        $vehicleIsInRepair = false;
+                        $issueTypeId = VehicleIssueType::OUT;
+                        break;
+                    case 'DESACTIVADO':
+                        $init = true;
+                        $vehicleIsActive = false;
+                        $issueTypeId = VehicleIssueType::IN;
+                        break;
+                    case 'ACTIVADO':
+                        $vehicleIsActive = true;
+                        $issueTypeId = VehicleIssueType::OUT;
+                        break;
+                }
+
+                if ($init) {
+                    $vehicle->active = $vehicleIsActive;
+                    $vehicle->in_repair = $vehicleIsInRepair;
+
+                    $this->novelty->create($vehicle, $issueTypeId, $old->observations, false, $issueTypeId, $old->date_time, $old->updated_user_id);
+                }
+            }
+        }
+
+        dump("Finished ".count($oldReports)." migrated");
+    }
+
+
+    /**
+     * TODO: delete when list vehicle migrated to NE
+     *
+     * @param User $user
+     * @param Vehicle $vehicle
+     * @param Request $request
+     * @return Factory|RedirectResponse|Redirector|View
+     * @throws Throwable
+     */
+    public function createFromOldPlatform(User $user, Vehicle $vehicle, Request $request)
+    {
+        if (Auth::guest()) Auth::login($user, true);
+        return $this->create($vehicle, $request);
+    }
+
+    /**
+     * @param Vehicle $vehicle
+     * @param Request $request
+     * @return Factory|RedirectResponse|Redirector|View
+     * @throws Throwable
+     */
     public function create(Vehicle $vehicle, Request $request)
     {
-        $transaction = DB::transaction(function () use ($vehicle, $request) {
-            $success = false;
-            $message = "";
-
-            $currentIssue = $vehicle->getCurrentIssue();
-
-            $currentIssue->issue_type_id = $currentIssue->readyForIn() ? VehicleIssueType::IN : $request->get('issue_type_id');
-            $currentIssue->generateUid();
-
-            $currentIssue->observations = $request->get('observations');
-
-            $issue = new VehicleIssue($currentIssue->toArray());
-
-
-            if ($currentIssue->save() && $issue->save()) {
-
-                try{
-                    $quitIssue = $currentIssue->issue_type_id == VehicleIssueType::OUT;
-                    if($quitIssue){
-                        DB::statement("UPDATE crear_vehiculo SET en_taller = 0 WHERE id_crear_vehiculo = $vehicle->id");
-                        DB::statement("UPDATE vehicles SET in_repair = FALSE WHERE id = $vehicle->id");
-                    }else{
-                        DB::statement("UPDATE crear_vehiculo SET en_taller = 1, observaciones = '$currentIssue->observations' WHERE id_crear_vehiculo = $vehicle->id");
-                        DB::statement("UPDATE vehicles SET in_repair = TRUE, observations = '$currentIssue->observations' WHERE id = $vehicle->id");
-                    }
-                }catch (\Exception $e){}
-
-                $success = true;
-                $message = __('Issue registered successfully') . ". ";
-            } else {
-                if (!$currentIssue->save()) $message .= __('Error in registering issue') . ". ";
-                if (!$currentIssue->save()) $message .= __('Error in registering Current issue') . ". ";
-            }
-
-            return (object)[
-                'success' => $success,
-                'message' => $message,
-            ];
-        });
-
+        $issueTypeId = $request->get('issue_type_id');
+        $observations = $request->get('observations');
+        $forceOut = $request->get('force_out');
+        $setInRepair = $request->get('set_in_repair') == "true";
+        $transaction = $this->novelty->create($vehicle, $issueTypeId, $observations, $forceOut, $setInRepair);
         if ($transaction->success) {
             $request->session()->flash('message', $transaction->message);
             return view('operation.vehicles.issues.formConfirm', compact('currentIssue'));

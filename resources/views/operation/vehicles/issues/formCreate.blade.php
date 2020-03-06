@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-lg-2 col-lg-offset-5 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
             <!-- begin page-header -->
-            <h1 class="page-header"><i class="fa fa-life-ring fa-spin" aria-hidden="true"></i> @lang('Operation')
+            <h1 class="page-header" style="border: 0"><i class="fa fa-life-ring fa-spin" aria-hidden="true"></i> @lang('Operation')
                 <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> {{ __($currentIssue->readyForIn() ? "Create" : "Update") }} @lang('Vehicle issues')</small>
             </h1>
             <!-- end page-header -->
@@ -35,21 +35,25 @@
                     </div>
                 @endif
 
-                <div class="clearfix m-b-10 text-center">
+                <div class="clearfix m-b-10 p-t-10">
                     @if($currentIssue->readyForIn())
                         <input type="hidden" checked name="issue_type_id" value="{{ \App\Models\Vehicles\VehicleIssueType::IN }}"/>
                     @else
-                        <label class="p-t-10">
-                            <i class="fa fa-edit"></i> @lang('Register issue'):
+                        <input type="hidden" checked name="force_out" value="true"/>
+
+                        @if(!$presetOutIssue)
+                        <label class="radio-inline m-0 p-0 btn btn-sm btn-info" onclick="$('#observations').attr('required', true);$('#set_in_repair').attr('checked', 'checked').parent().addClass('checked').parents('label').slideDown()">
+                            <input type="radio" {{ $presetOutIssue ? "" : "checked" }} name="issue_type_id" value="{{ \App\Models\Vehicles\VehicleIssueType::UPDATE }}"/> @lang('Other issue') <i class="fa fa-exclamation-triangle"></i>
                         </label>
-                        <br>
-                        <label class="radio-inline m-0 p-0 btn btn-sm btn-success" onclick="$('#observations').removeAttr('required')">
-                            <input type="radio" name="issue_type_id" value="{{ \App\Models\Vehicles\VehicleIssueType::OUT }}"/> @lang('Out of issue') <i class="fa fa-check"></i>
+                        @endif
+                        <label class="radio-inline m-0 p-0 btn btn-sm btn-success" onclick="$('#observations').removeAttr('required');$('#set_in_repair').removeAttr('checked').parent().removeClass('checked').parents('label').hide()">
+                            <input type="radio" {{ $presetOutIssue ? "checked" : "" }} name="issue_type_id" value="{{ \App\Models\Vehicles\VehicleIssueType::OUT }}"/> @lang('Out of issue') <i class="fa fa-check"></i>
                         </label>
-                        <label class="radio-inline m-0 p-0 btn btn-sm btn-warning" onclick="$('#observations').attr('required', true)">
-                            <input type="radio" checked name="issue_type_id" value="{{ \App\Models\Vehicles\VehicleIssueType::UPDATE }}"/> @lang('Other issue') <i class="fa fa-exclamation-triangle"></i>
-                        </label>
-                        <hr class="hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    @endif
+                    @if(!$presetOutIssue)
+                    <label class="radio-inline m-0 p-0 btn btn-sm btn-warning pull-right" onclick="$('#observations').removeAttr('required')">
+                        <input type="checkbox" id="set_in_repair" name="set_in_repair" value="true" checked/> @lang('Set in repair') <i class="fa fa-wrench faa-wrench animated"></i>
+                    </label>
                     @endif
                 </div>
 

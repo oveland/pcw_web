@@ -32,7 +32,7 @@ class MigrationController extends Controller
         'control_point_times' => 'tiempos_punto_control',
     ];
 
-    const ROUTES_FOR_MIGRATE = [124, 125, 126, 127, 128, 129, 135, 136, 137, 139, 141, 144, 145, 146, 151, 154, 155, 156, 158, 159, 161, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 192, 193, 198, 199, 201, 202, 203, 206, 207, 210, 213, 214, 215, 216, 218, 219, 221, 222, 223, 224, 228, 229, 230, 231, 232, 233, 234, 235, 236 ,237, 238, 242, 243];
+    const ROUTES_FOR_MIGRATE = [124, 125, 126, 127, 128, 129, 135, 136, 137, 139, 141, 144, 145, 146, 151, 154, 155, 156, 158, 159, 161, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 192, 193, 198, 199, 201, 202, 203, 206, 207, 210, 213, 214, 215, 216, 218, 219, 221, 222, 223, 224, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 242, 243];
 
     /**
      * Create a new controller instance.
@@ -46,7 +46,7 @@ class MigrationController extends Controller
     public function getRoutesForMigrate(Request $request)
     {
         $routesForMigrate = collect(self::ROUTES_FOR_MIGRATE);
-        $routesForMigrate = $routesForMigrate->merge( collect(DB::select("SELECT id_rutas FROM ruta WHERE migrate IS TRUE"))->pluck('id_rutas')->toArray() );
+        $routesForMigrate = $routesForMigrate->merge(collect(DB::select("SELECT id_rutas FROM ruta WHERE migrate IS TRUE"))->pluck('id_rutas')->toArray());
 
         $routeFromRequest = $request->get('route');
         if ($routeFromRequest) {
@@ -70,7 +70,7 @@ class MigrationController extends Controller
 
         $tables = collect([]);
 
-        if(!$route){
+        if (!$route) {
             $tables->push((object)[
                 'name' => self::OLD_TABLES['companies'],
                 'route' => route('migrate-companies'),
@@ -125,7 +125,7 @@ class MigrationController extends Controller
             'name' => self::OLD_TABLES['control_point_times'],
             'route' => route('migrate-control-point-times'),
             'total' => DB::table(self::OLD_TABLES['control_point_times'])->whereIn('id_ruta', $this->getRoutesForMigrate($request))->count(),
-            'total_migrated' => ControlPointTime::whereIn( 'control_point_id', ControlPoint::whereIn('route_id', $this->getRoutesForMigrate($request))->get()->pluck('id') )->count()
+            'total_migrated' => ControlPointTime::whereIn('control_point_id', ControlPoint::whereIn('route_id', $this->getRoutesForMigrate($request))->get()->pluck('id'))->count()
         ]);
 
         return view('migrations.tables', compact(['tables', 'route']));
@@ -189,7 +189,7 @@ class MigrationController extends Controller
         DB::statement("
             UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER 
             FROM control_points WHERE route_id = ruta.id_rutas 
-            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE id_rutas IN (" . implode(',', $this->getRoutesForMigrate($request)) .")
+            ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE id_rutas IN (" . implode(',', $this->getRoutesForMigrate($request)) . ")
         ");
 
         $totalCreated = 0;
@@ -336,6 +336,12 @@ class MigrationController extends Controller
             $deleted = DB::delete('DELETE FROM vehicles');
             dd($deleted . ' registers has ben deleted!');;
         }
+
+        $maxIdGpsVehicles = collect(DB::select("SELECT max(id) FROM gps_vehicles"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE gps_vehicles_id_seq RESTART WITH $maxIdGpsVehicles");
+        $maxIdSimGps = collect(DB::select("SELECT max(id) FROM sim_gps"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE sim_gps_id_seq RESTART WITH $maxIdSimGps");
+
         /* For vehicles table */
         $totalCreated = 0;
         $totalUpdated = 0;
@@ -347,6 +353,18 @@ class MigrationController extends Controller
         $gpsVehicleTotalErrors = 0;
 
         $vehicles = DB::table(self::OLD_TABLES['vehicles'])->get();
+        $migrateCompany = $request->get('company');
+        $migrateVehicle = $request->get('vehicle');
+
+        if ($migrateCompany) {
+            $vehicles = $vehicles->where('empresa', $migrateCompany);
+        }
+        if ($migrateVehicle) {
+            $vehicles = $vehicles->where('id_crear_vehiculo', $migrateVehicle);
+        }
+
+
+
         foreach ($vehicles as $vehicleOLD) {
             $new = false;
             $vehicle = Vehicle::find($vehicleOLD->id_crear_vehiculo);
@@ -365,8 +383,9 @@ class MigrationController extends Controller
             $vehicle->driver_id = $vehicleOLD->conductor_id;
             $vehicle->tags = $vehicleOLD->tags;
 
+            $vehicle->save();
+
             try {
-                $vehicle->save();
                 $new ? $totalCreated++ : $totalUpdated++;
 
                 /* Migrate data for gps_vehicle */
@@ -389,7 +408,7 @@ class MigrationController extends Controller
                 }
             } catch (QueryException $e) {
                 $totalErrors++;
-                dump($e->getMessage());
+                // dump($e->getMessage());
             } catch (\PDOException $e) {
                 $totalErrors++;
                 dump($e->getMessage());
@@ -400,6 +419,8 @@ class MigrationController extends Controller
             'Total Created' => $totalCreated,
             'Total Updated' => $totalUpdated,
             'Total Errors' => $totalErrors,
+            'Company' => $migrateCompany,
+            'Vehicle' => $migrateVehicle,
             '------------------------------',
             'Gps Vehicle Total Created' => $gpsVehicleTotalCreated,
             'Gps Vehicle Total Updated' => $gpsVehicleTotalUpdated,
@@ -482,7 +503,7 @@ class MigrationController extends Controller
 
                 $new = false;
                 $fringe = Fringe::where('uid', $uid)->get()->first();
-                if(!$fringe){
+                if (!$fringe) {
                     $fringe = new Fringe();
                     $new = true;
                 }
@@ -588,7 +609,7 @@ class MigrationController extends Controller
 
                             $controlPointTime = ControlPointTime::where('uid', $uid)->get()->first();
 
-                            if(!$controlPointTime){
+                            if (!$controlPointTime) {
                                 $controlPointTime = new ControlPointTime();
                                 $new = true;
                             }

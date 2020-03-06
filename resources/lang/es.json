@@ -635,5 +635,11 @@
   "Consolidated route vehicle": "Consolidado ruta vehículo",
   "Proprietary name": "Nombre propietario",
   "Proprietary not have assigned vehicles": "El propietario no tiene vehículos asignados. Contacte a su administrador",
-  "This will delete all scheduled maintenance": "Esto eliminará todo el plan de mantenimientos de todos los vehículos"
+  "This will delete all scheduled maintenance": "Esto eliminará todo el plan de mantenimientos de todos los vehículos",
+  "Show since the most recent": "Mostrar desde el más reciente",
+  "GPS Status": "Estados GPS",
+  "Register issue in": "Registrar INGRESO a novedad",
+  "Continue in repair": "Continúa en taller",
+  "Continue inactive": "Continúa desactivado",
+  "Set in repair": "Ingreso a taller"
 }

@@ -13,6 +13,7 @@
 
 use App\Models\Company\Company;
 use App\Models\Users\User;
+use App\Models\Vehicles\Vehicle;
 
 Auth::routes();
 
@@ -99,12 +100,14 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::prefix(__('url-vehicles'))->group(function () {
             Route::prefix(__('vehicle-issues'))->group(function () {
-                Route::get('/', 'VehicleIssuesController@index')->name('operation-vehicles-issues');
+                Route::get('/', function(){
+                    return redirect(route('report-vehicles-issues'));
+                })->name('operation-vehicles-issues');
                 Route::get('/current/{company}', 'VehicleIssuesController@current')->name('operation-vehicles-issues-current');
                 Route::get('/{vehicle}/form', 'VehicleIssuesController@form')->name('operation-vehicles-issues-form');
                 Route::post('/{vehicle}/create', 'VehicleIssuesController@create')->name('operation-vehicles-issues-create');
-                Route::post('/{vehicle}/update', 'VehicleIssuesController@update')->name('operation-vehicles-issues-update');
                 Route::get('/show', 'VehicleIssuesController@show')->name('operation-vehicles-issues-show');
+                Route::get('/migrate/{company}', 'VehicleIssuesController@migrateOldReports')->name('operation-vehicles-issues-migrate');
             });
         });
     });
@@ -165,6 +168,10 @@ Route::group(['middleware' => ['auth']], function () {
         });
 
         Route::prefix(__('url-vehicles'))->group(function () {
+            Route::prefix(__('vehicle-issues'))->group(function () {
+                Route::get('/', 'VehicleIssuesController@index')->name('report-vehicles-issues');
+            });
+
             /* Off Road report */
             Route::prefix(__('parked'))->group(function () {
                 Route::get('/', 'ParkedVehiclesReportController@index')->name('report-vehicle-parked');
@@ -415,7 +422,9 @@ Route::prefix(__('link'))->group(function () {
 
     Route::get(__('url-operation')."/".__('url-vehicles')."/".__('vehicle-issues')."/{user}", function (User $user, Request $request){
         if (Auth::guest()) Auth::login($user, true);
-        return redirect(route('operation-vehicles-issues'))->with(['hide-menu' => true]);
+        return redirect(route('report-vehicles-issues'))->with(['hide-menu' => true]);
     });
+
+    Route::post("{user}/operation/vehicles/issues/{vehicle}/create", 'VehicleIssuesController@createFromOldPlatform');
 });
 
