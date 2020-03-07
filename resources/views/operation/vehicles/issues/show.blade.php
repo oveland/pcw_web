@@ -81,7 +81,7 @@
                                         <td class="text=uppercase hide">{{ $driver ? $driver->fullName() : "" }}</td>
                                         <td class="text-uppercase">
                                             @if($issue->user)
-                                                {{ $issue->user->name }}
+                                                <small>{{ $issue->user->username }} - {{ $issue->user->role }}</small>
                                             @endif
                                         </td>
                                     </tr>

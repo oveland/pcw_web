@@ -87,7 +87,7 @@ class NoveltyService
 
             if ($currentIssue->readyForIn() && $issueTypeId != VehicleIssueType::OUT) {
                 $issueTypeId = VehicleIssueType::IN;
-                if ($setInRepair) $observations = __('Set in repair') . ": $observations";
+                if ($setInRepair) $observations = __('Set in repair') . ". $observations";
             }
 
 

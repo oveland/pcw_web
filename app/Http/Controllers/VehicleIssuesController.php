@@ -15,6 +15,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Throwable;
 
@@ -66,7 +67,7 @@ class VehicleIssuesController extends Controller
 
         $report = $this->buildReport($company, $vehicleReport, $dateReport, $sortDescending);
 
-        if ($request->get('export')) $this->export($report);
+        if ($request->get('export')) $this->novelty->export($report);
 
         return view('operation.vehicles.issues.show', compact('report'));
     }
@@ -128,6 +129,7 @@ class VehicleIssuesController extends Controller
     public function migrateOldReports(Company $company, Request $request)
     {
         $oldReports = collect(\DB::select("SELECT * FROM report_vehicle_status WHERE vehicle_id in (SELECT id FROM vehicles WHERE company_id = $company->id) AND date < '2020-03-05' ORDER BY date_time ASC"));
+        // $oldReports = collect(\DB::select("SELECT * FROM report_vehicle_status WHERE vehicle_id in (SELECT id FROM vehicles WHERE id = 1333) AND date < '2020-03-05' ORDER BY date_time ASC"));
 
         $oldReportsByVehicles = $oldReports->groupBy('vehicle_id');
         foreach ($oldReportsByVehicles as $vehicleId => $oldReportsByVehicle) {
@@ -136,9 +138,16 @@ class VehicleIssuesController extends Controller
             $vehicleIsActive = true;
             $vehicleIsInRepair = false;
 
+            DB::statement("UPDATE current_vehicle_issues SET issue_type_id = 3 WHERE vehicle_id = $vehicleId");
+
             $init = false;
-            foreach ($oldReportsByVehicle->sortBY('date_time') as $old) {
+            $firstInit = true;
+
+            foreach ($oldReportsByVehicle->sortBY('id') as $old) {
                 $issueTypeId = VehicleIssueType::UPDATE;
+                $forceOut = false;
+
+                $observations = $old->observations;
 
                 switch ($old->status) {
                     case 'EN TALLER':
@@ -147,6 +156,7 @@ class VehicleIssuesController extends Controller
                         $init = true;
                         break;
                     case 'EN TRANSITO':
+                        $forceOut = true;
                         $vehicleIsInRepair = false;
                         $issueTypeId = VehicleIssueType::OUT;
                         break;
@@ -154,18 +164,26 @@ class VehicleIssuesController extends Controller
                         $init = true;
                         $vehicleIsActive = false;
                         $issueTypeId = VehicleIssueType::IN;
+                        $observations = __('Vehicle')." desactivado. $observations";
                         break;
                     case 'ACTIVADO':
                         $vehicleIsActive = true;
                         $issueTypeId = VehicleIssueType::OUT;
+                        $observations = __('Vehicle')." activado. $observations";
                         break;
                 }
 
                 if ($init) {
-                    $vehicle->active = $vehicleIsActive;
-                    $vehicle->in_repair = $vehicleIsInRepair;
+                    if($firstInit){
+                        $vehicle->active = true;
+                        $vehicle->in_repair = false;
+                        $firstInit = false;
+                    }else{
+                        $vehicle->active = $vehicleIsActive;
+                        $vehicle->in_repair = $vehicleIsInRepair;
+                    }
 
-                    $this->novelty->create($vehicle, $issueTypeId, $old->observations, false, $issueTypeId, $old->date_time, $old->updated_user_id);
+                    $this->novelty->create($vehicle, $issueTypeId, $observations, $forceOut, $vehicleIsInRepair, $old->date_time, $old->updated_user_id);
                 }
             }
         }
