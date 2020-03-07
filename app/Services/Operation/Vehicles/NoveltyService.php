@@ -75,7 +75,7 @@ class NoveltyService
 
             if (!$vehicle->active || !$forceOut && ($issueTypeId == VehicleIssueType::OUT || $issueTypeId == VehicleIssueType::IN) && $vehicle->in_repair) {
                 if ($issueTypeId != VehicleIssueType::IN) {
-                    if ($vehicle->in_repair && !$forceOut) {
+                    if ($vehicle->in_repair && !$forceOut && $setInRepair) {
                         $observations .= ". " . __('Continue in repair');
                     }
                     if (!$vehicle->active) {
@@ -87,7 +87,7 @@ class NoveltyService
 
             if ($currentIssue->readyForIn() && $issueTypeId != VehicleIssueType::OUT) {
                 $issueTypeId = VehicleIssueType::IN;
-                if ($setInRepair) $observations = __('Set in repair') . ": $observations";
+                if ($setInRepair) $observations = __('Set in repair') . ". $observations";
             }
 
 

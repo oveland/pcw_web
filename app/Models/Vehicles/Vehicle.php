@@ -247,6 +247,8 @@ class Vehicle extends Model
         $currentIssue->dispatch_register_id = $dispatchRegister ? $dispatchRegister->id : null;
         $currentIssue->driver_id = $dispatchRegister && $dispatchRegister->driver ? $dispatchRegister->driver->id : null;
 
+        $currentIssue->save();
+
         return $currentIssue;
     }
 }

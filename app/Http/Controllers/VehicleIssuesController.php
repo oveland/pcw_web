@@ -11,12 +11,14 @@ use App\Models\Vehicles\VehicleIssueType;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Operation\Vehicles\NoveltyService;
 use Auth;
+use DB;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Throwable;
+use function GuzzleHttp\Promise\all;
 
 class VehicleIssuesController extends Controller
 {
@@ -116,8 +118,10 @@ class VehicleIssuesController extends Controller
         $drivers = $company->activeDrivers;
 
         $presetOutIssue = $request->get('preset-out-issue') == "true";
+        $presetActivate = $request->get('preset-activate') == "true";
+        $presetInactivate = $request->get('preset-inactivate') == "true";
 
-        return view('operation.vehicles.issues.formCreate', compact(['vehicle', 'drivers', 'presetOutIssue']));
+        return view('operation.vehicles.issues.formCreate', compact(['vehicle', 'drivers', 'presetOutIssue', 'presetActivate', 'presetInactivate']));
     }
 
     /**
@@ -170,7 +174,7 @@ class VehicleIssuesController extends Controller
             }
         }
 
-        dump("Finished ".count($oldReports)." migrated");
+        dump("Finished " . count($oldReports) . " migrated");
     }
 
 
@@ -201,6 +205,23 @@ class VehicleIssuesController extends Controller
         $observations = $request->get('observations');
         $forceOut = $request->get('force_out');
         $setInRepair = $request->get('set_in_repair') == "true";
+        $activate = $request->get('activate') == "true";
+        $inactivate = $request->get('inactivate') == "true";
+
+        //dd($request->all());
+
+        if ($activate) {
+            $vehicle->active = true;
+            $observations = __('Activated') . ". $observations";
+            DB::statement("UPDATE crear_vehiculo SET estado = 1, observaciones = '$observations' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: Delete when structure for vehicles is migrated
+        }
+        if ($inactivate) {
+            $vehicle->active = false;
+            $observations = __('Inactivated') . ". $observations";
+            DB::statement("UPDATE crear_vehiculo SET estado = 2, observaciones = '$observations' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: Delete when structure for vehicles is migrated
+        }
+        $vehicle->save();
+
         $transaction = $this->novelty->create($vehicle, $issueTypeId, $observations, $forceOut, $setInRepair);
         if ($transaction->success) {
             $request->session()->flash('message', $transaction->message);
