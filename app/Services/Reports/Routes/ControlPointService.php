@@ -29,7 +29,7 @@ class ControlPointService
      */
     function buildReportsByControlPoints(Company $company, Route $route, $vehicleReport = 'all', $dateReport)
     {
-        $dispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
+        $dispatchRegisters = DispatchRegister::active()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
             ->orderByDesc('departure_time')
             ->get();
 

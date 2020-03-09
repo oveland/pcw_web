@@ -16,10 +16,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Throwable;
-use function GuzzleHttp\Promise\all;
 
 class VehicleIssuesController extends Controller
 {
