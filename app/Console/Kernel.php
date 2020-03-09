@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
     {
         if (config('app.env') == 'local') {
             $schedule->command('track:map --company=21')->everyMinute()->between('04:00', '22:00');
-            $schedule->command('track:map --company=21')->everyFiveMinutes()->between('22:00', '04:00');
+            $schedule->command('track:map --company=21')->everyFiveMinutes()->between('22:00', '23:59');
+            $schedule->command('track:map --company=21')->everyFiveMinutes()->between('00:00', '04:00');
 
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
