@@ -128,6 +128,11 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndRouteId(\App\Models\Company\Company $company, $routeId = null)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(\App\Models\Company\Company $company, $date, $routeId = null, $vehicleId = null)
+ * @property-read int|null $control_point_time_reports_count
+ * @property-read int|null $off_roads_count
+ * @property-read int|null $parking_report_count
+ * @property-read int|null $reports_count
+ * @property-read int|null $speeding_report_count
  */
 class DispatchRegister extends Model
 {

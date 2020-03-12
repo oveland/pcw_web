@@ -46,6 +46,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static Builder|User query()
  * @property string|null $vehicle_tags
  * @method static Builder|User whereVehicleTags($value)
+ * @property-read int|null $notifications_count
  */
 class User extends Authenticatable
 {

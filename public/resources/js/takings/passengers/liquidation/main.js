@@ -930,6 +930,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -945,9 +963,12 @@ __webpack_require__.r(__webpack_exports__);
 
       var mainContainer = $('.report-container');
       mainContainer.fadeIn();
-      this.search.date = moment().format("YYYY-MM-DD"); //this.search.date = '2020-01-09';
-
+      this.search.date = moment().format("YYYY-MM-DD");
+      this.search.date = '2020-02-27';
       var companySearch = this.search.company;
+      companySearch = {
+        id: 30
+      };
       axios.get(this.urlParams, {
         params: {
           company: companySearch ? companySearch.id : null
@@ -957,8 +978,14 @@ __webpack_require__.r(__webpack_exports__);
         _this.search.vehicles = data.vehicles;
         _this.search.companies = data.companies;
         _this.search.company = _.find(_this.search.companies, function (c) {
-          return c.id === data.company.id;
-        }); //this.searchReport();
+          //return c.id === data.company.id;
+          return c.id === 30;
+        });
+        _this.search.vehicle = _.find(_this.search.vehicles, function (c) {
+          return c.id === 1953;
+        });
+
+        _this.searchReport();
       })["catch"](function (error) {
         console.log(error);
       }).then(function () {});
@@ -1747,12 +1774,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-friendly-iframe */ "./node_modules/vue-friendly-iframe/dist/vue-friendly-iframe.js");
 /* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _TableComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TableComponent */ "./resources/js/takings/passengers/liquidation/components/TableComponent.vue");
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3318,6 +3339,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ManagementCostComponent",
@@ -3374,6 +3397,9 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function () {
         App.unblockUI('#management-costs-tab');
       });
+    },
+    info: function info(message) {
+      ginfo(message);
     }
   },
   components: {
@@ -3708,6 +3734,656 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'RoadSafetyTakingsComponent',
+  props: {
+    urlList: String,
+    urlCosts: String,
+    urlTakings: String,
+    searchParams: Object,
+    search: Object
+  },
+  data: function data() {
+    return {
+      control: {
+        enableSaving: false
+      },
+      driverCostSelected: {
+        id: 1,
+        name: 'Conduce 1 | $11.000',
+        total: 18
+      },
+      driverCost: [{
+        id: 1,
+        name: 'Conduce 1 | $11.000',
+        total: 18
+      }, {
+        id: 2,
+        name: 'Conduce 2 | $9.000',
+        total: 1000
+      }],
+      costs: [],
+      liquidations: [],
+      liquidationCharge: {
+        id: 0,
+        vehicle: {},
+        date: '',
+        liquidation: {},
+        totals: {},
+        user: {},
+        marks: []
+      }
+    };
+  },
+  watch: {
+    searchParams: function searchParams() {
+      this.searchTakingListReport();
+    }
+  },
+  computed: {
+    totalCosts: function totalCosts() {
+      return _.sumBy(this.costs, 'value');
+    }
+  },
+  methods: {
+    processCharge: function processCharge(liquidationId, showMarksFirst) {
+      this.liquidationCharge = _.find(this.liquidations, function (liquidation) {
+        return liquidation.id === liquidationId;
+      });
+    },
+    searchTakingListReport: function searchTakingListReport() {
+      var _this = this;
+
+      if (this.searchParams.valid) {
+        axios.get(this.urlList, {
+          params: this.searchParams
+        }).then(function (response) {
+          _this.liquidations = response.data;
+        })["catch"](function (error) {
+          console.log(error);
+        }).then(function () {});
+        axios.get(this.urlCosts, {
+          params: this.searchParams
+        }).then(function (response) {
+          _this.costs = response.data;
+        })["catch"](function (error) {
+          console.log(error);
+        }).then(function () {});
+      }
+    },
+    charge: function charge() {
+      var _this2 = this;
+
+      axios.post(this.urlTakings, {
+        vehicle: this.search.vehicle.id,
+        liquidation: this.liquidation,
+        totals: this.totals,
+        marks: _.map(this.marks, 'id')
+      }).then(function (response) {
+        var data = response.data;
+
+        if (data.success) {
+          gsuccess(data.message);
+
+          _this2.$emit('refresh-report');
+
+          $('#modal-generate-liquidation').modal('hide');
+        } else {
+          gerror(data.message);
+        }
+      })["catch"](function (error) {
+        gerror('Error in liquidation process!');
+        console.log(error);
+      }).then(function () {});
+    }
+  },
+  components: {
+    Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_js_modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-js-modal */ "./node_modules/vue-js-modal/dist/index.js");
+/* harmony import */ var vue_js_modal__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_js_modal__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-friendly-iframe */ "./node_modules/vue-friendly-iframe/dist/vue-friendly-iframe.js");
+/* harmony import */ var vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _RoadSafetyTakingsTurnsTableComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RoadSafetyTakingsTurnsTableComponent */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+Vue.use(vue_js_modal__WEBPACK_IMPORTED_MODULE_0___default.a);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'RoadSafetyTakingsTurnsComponent',
+  props: {
+    urlList: String,
+    urlCosts: String,
+    urlReport: String,
+    urlTakings: String,
+    urlExport: String,
+    searchParams: Object,
+    search: Object
+  },
+  data: function data() {
+    return {
+      report: {
+        marks: [],
+        details: [],
+        totals: {}
+      },
+      linkToPrintLiquidation: false,
+      liquidations: [],
+      liquidationDetail: {
+        id: 0,
+        vehicle: {},
+        date: '',
+        liquidation: {},
+        totals: {},
+        user: {},
+        marks: []
+      },
+      costs: []
+    };
+  },
+  watch: {
+    searchParams: function searchParams() {
+      this.linkToPrintLiquidation = '';
+      this.searchReport();
+    }
+  },
+  methods: {
+    exportReport: function exportReport() {
+      this.linkToPrintLiquidation = this.urlExport + ('?date=' + this.searchParams.date + '&vehicle=' + this.searchParams.vehicle);
+      this.$modal.show('modal-daily-report-print');
+    },
+    closeExporter: function closeExporter() {
+      this.$modal.hide('modal-daily-report-print');
+    },
+    seeLiquidationDetail: function seeLiquidationDetail(liquidationId, showMarksFirst) {
+      this.liquidationDetail = _.find(this.liquidations, function (liquidation) {
+        return liquidation.id === liquidationId;
+      });
+      showMarksFirst ? $('a[href="#detail-marks-taken"]').tab('show') : $('a[href="#takings-detail"]').tab('show');
+      setTimeout(function () {
+        $('.tooltips').tooltip();
+        setTimeout(function () {
+          $('.tooltips').tooltip();
+        }, 4000);
+      }, 1000);
+    },
+    searchReport: function searchReport() {
+      var _this = this;
+
+      if (this.searchParams.valid) {
+        this.liquidations = [];
+        this.report = {};
+        axios.get(this.urlReport, {
+          params: this.searchParams
+        }).then(function (response) {
+          var report = response.data;
+
+          if (!report.empty) {
+            _this.liquidations = report.liquidations;
+            _this.report = {
+              marks: report.marks,
+              details: report.details,
+              totals: report.totals
+            };
+          }
+        })["catch"](function (error) {
+          console.log(error);
+        }).then(function () {});
+        axios.get(this.urlCosts, {
+          params: this.searchParams
+        }).then(function (response) {
+          _this.costs = response.data;
+        })["catch"](function (error) {
+          console.log(error);
+        }).then(function () {});
+      }
+    }
+  },
+  components: {
+    RoadSafetyTakingsTurnsTableComponent: _RoadSafetyTakingsTurnsTableComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
+    VueFriendlyIframe: vue_friendly_iframe__WEBPACK_IMPORTED_MODULE_1___default.a
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "RoadSafetyTakingsTurnsTableComponent",
+  props: {
+    costsList: Array,
+    liquidation: Object,
+    urlExport: String,
+    totals: Object,
+    marks: Array,
+    readonly: Boolean,
+    searchParams: Object,
+    liquidationTurn: {
+      id: 0,
+      vehicle: {},
+      date: '',
+      liquidation: {},
+      totals: {},
+      user: {},
+      marks: []
+    }
+  },
+  computed: {
+    totalPayRollCost: function totalPayRollCost() {
+      return _.sumBy(this.marks, 'payRollCost');
+    },
+    totalNetToCar: function totalNetToCar() {
+      return this.totals.totalDispatch - this.totalPayRollCost - this.totals.totalDiscountByFuel + this.totals.totalGetFall;
+    },
+    totalCosts: function totalCosts() {
+      return _.sumBy(this.costs, 'value');
+    }
+  },
+  data: function data() {
+    return {
+      linkToPrintLiquidation: String,
+      costs: [],
+      driverCostSelected: {
+        id: 1,
+        name: 'Conduce 1 | $11.000',
+        total: 18
+      },
+      driverCost: [{
+        id: 1,
+        name: 'Conduce 1 | $11.000',
+        total: 18
+      }, {
+        id: 2,
+        name: 'Conduce 2 | $9.000',
+        total: 1000
+      }]
+    };
+  },
+  methods: {
+    processCharge: function processCharge(mark) {
+      this.liquidationTurn = this.getLiquidationTurn(mark);
+    },
+    getLiquidationTurn: function getLiquidationTurn(mark) {
+      return _.find(this.liquidation.byTurns, {
+        markId: mark.id
+      });
+    },
+    turnNetToCar: function turnNetToCar(mark, turn) {
+      return turn.totalDispatch - mark.payRollCost - turn.turnDiscounts.byFuel + turn.getFall;
+    }
+  },
+  mounted: function mounted() {
+    this.costs = this.costsList;
+  },
+  components: {
+    Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/sweetalert2/src/sweetalert2.scss":
 /*!********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/sweetalert2/src/sweetalert2.scss ***!
@@ -3902,6 +4578,44 @@ exports.push([module.i, "\n.divider-menu[data-v-0645aef9] {\n    height: 23px !i
 /*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/reports/DailyReportComponent.vue?vue&type=style&index=0&lang=css& ***!
   \*****************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.pdf-container iframe{\n    width: 100%;\n    height: 600px;\n}\n.header-preview{\n    font-size: 1.2em !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.pdf-container iframe{\n    width: 100%;\n    height: 600px;\n}\n.header-preview{\n    font-size: 1.2em !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5719,6 +6433,66 @@ if(false) {}
 
 
 var content = __webpack_require__(/*! !../../../../../../../node_modules/css-loader??ref--6-1!../../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./DailyReportComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/reports/DailyReportComponent.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../../../node_modules/css-loader??ref--6-1!../../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../../../node_modules/css-loader??ref--6-1!../../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -10991,12 +11765,12 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "panel panel-inverse" }, [
+  return _c("div", { staticClass: "panel panel-default" }, [
     _c("div", { staticClass: "panel-heading" }, [
       _c(
         "button",
         {
-          staticClass: "btn btn-success btn-sm btn-search-report",
+          staticClass: "btn btn-success btn-search-report pull-left",
           attrs: { type: "button" },
           on: {
             click: function($event) {
@@ -11011,7 +11785,38 @@ var render = function() {
             _vm._v(_vm._s(_vm.$t("Search")))
           ])
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("ul", { staticClass: "nav nav-tabs tabs-reversed" }, [
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { onclick: "$('#modal-params-manager').modal('show')" } },
+            [
+              _c("i", { staticClass: "fa fa-cogs" }),
+              _vm._v(" " + _vm._s(_vm.$t("Admin")) + "\n                ")
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "#tab-road-safety", "data-toggle": "tab" } },
+            [
+              _c("i", { staticClass: "fa fa-user-secret" }),
+              _vm._v(" " + _vm._s(_vm.$t("Read safety")) + "\n                ")
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "active" }, [
+          _c("a", { attrs: { href: "#tab-takings", "data-toggle": "tab" } }, [
+            _c("i", { staticClass: "fa fa-briefcase" }),
+            _vm._v(" " + _vm._s(_vm.$t("Takings")) + "\n                ")
+          ])
+        ])
+      ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "panel-body p-b-15" }, [
@@ -13168,14 +13973,6 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _c("td", { staticClass: "text-center hide" }, [
-                          _c("pre", { staticClass: "language-json" }, [
-                            _vm._v("                                "),
-                            _c("code", [_vm._v(_vm._s(liquidation.totals))]),
-                            _vm._v("\n                            ")
-                          ])
-                        ]),
-                        _vm._v(" "),
                         _c("td", { staticClass: "text-center" }, [
                           _vm._v(
                             "\n                            " +
@@ -14729,6 +15526,7 @@ var render = function() {
             _c(
               "a",
               {
+                staticClass: ".management-costs-tab",
                 attrs: { href: "#management-costs-tab", "data-toggle": "tab" }
               },
               [
@@ -16483,165 +17281,188 @@ var render = function() {
     "div",
     { staticClass: "row", staticStyle: { "min-height": "400px" } },
     [
-      _c("div", { staticClass: "col-md-3 col-sm-12 col-xs-12" }, [
-        _vm.vehicles
-          ? _c(
-              "div",
-              { staticClass: "col-md-12" },
-              [
-                _c("multiselect", {
-                  attrs: {
-                    placeholder: _vm.$t("Select a vehicle"),
-                    label: "number",
-                    "track-by": "id",
-                    options: _vm.vehicles
-                  },
-                  model: {
-                    value: _vm.vehicle,
-                    callback: function($$v) {
-                      _vm.vehicle = $$v
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12 col-xs-12"
+        },
+        [
+          _vm.vehicles
+            ? _c(
+                "div",
+                { staticClass: "col-lg-3 col-md-4 col-sm-6 col-xs-12" },
+                [
+                  _c("multiselect", {
+                    attrs: {
+                      placeholder: _vm.$t("Select a vehicle"),
+                      label: "number",
+                      "track-by": "id",
+                      options: _vm.vehicles
                     },
-                    expression: "vehicle"
+                    model: {
+                      value: _vm.vehicle,
+                      callback: function($$v) {
+                        _vm.vehicle = $$v
+                      },
+                      expression: "vehicle"
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-9 col-md-8 col-sm-6 col-xs-12" }, [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "btn btn-success btn-outline btn-sm btn-white sbold uppercase btn-circle pull-right tooltips",
+                attrs: { title: _vm.$t("Create") },
+                on: {
+                  click: function($event) {
+                    return _vm.info("Funcionalidad en desarrollo...")
                   }
-                })
-              ],
-              1
+                }
+              },
+              [_c("i", { staticClass: "fa fa-plus" })]
             )
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-9 col-sm-12 col-xs-12" }, [
-        _c("div", { staticClass: "tab-content" }, [
-          _c("div", {}, [
-            _c("div", {}, [
-              _c("div", {}, [
-                _c(
-                  "table",
-                  {
-                    staticClass:
-                      "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
-                  },
-                  [
-                    _c("thead", [
-                      _c("tr", { staticClass: "inverse" }, [
-                        _vm._m(0),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "col-md-2" }, [
-                          _c("i", { staticClass: "fa fa-car text-muted" }),
-                          _c("br"),
-                          _vm._v(
-                            " " +
-                              _vm._s(_vm.$t("Vehicle")) +
-                              "\n                                "
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "col-md-2" }, [
-                          _c("i", { staticClass: "icon-tag text-muted" }),
-                          _c("br"),
-                          _vm._v(
-                            " " +
-                              _vm._s(_vm.$t("Name")) +
-                              "\n                                "
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "col-md-2" }, [
-                          _c("i", { staticClass: "fa fa-dollar text-muted" }),
-                          _c("br"),
-                          _vm._v(
-                            " " +
-                              _vm._s(_vm.$t("Value")) +
-                              "\n                                "
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "col-md-2" }, [
-                          _c("i", { staticClass: "fa fa-rocket text-muted" }),
-                          _c("br"),
-                          _vm._v(
-                            " " +
-                              _vm._s(_vm.$t("Options")) +
-                              "\n                                "
-                          )
-                        ])
-                      ])
+          ]),
+          _vm._v(" "),
+          _c("hr", { staticClass: "col-md-12 col-sm-12 col-xs-12" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "table-responsive col-md-12" }, [
+            _c(
+              "table",
+              {
+                staticClass:
+                  "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+              },
+              [
+                _c("thead", [
+                  _c("tr", { staticClass: "inverse" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "col-md-2" }, [
+                      _c("i", { staticClass: "fa fa-car text-muted" }),
+                      _c("br"),
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.$t("Vehicle")) +
+                          "\n                    "
+                      )
                     ]),
                     _vm._v(" "),
-                    _c(
-                      "tbody",
-                      [
-                        _vm._l(_vm.costsFor(_vm.vehicle), function(
-                          cost,
-                          indexCost
-                        ) {
-                          return _vm.vehicle
-                            ? _c("tr", {}, [
-                                _c("td", { staticClass: "text-center" }, [
-                                  _vm._v(_vm._s(indexCost + 1))
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-center" }, [
-                                  _vm._v(_vm._s(_vm.vehicle.number))
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-center" }, [
-                                  _vm._v(
-                                    _vm._s(_vm._f("capitalize")(cost.name))
+                    _c("th", { staticClass: "col-md-2" }, [
+                      _c("i", { staticClass: "fa fa-tag text-muted" }),
+                      _c("br"),
+                      _vm._v(
+                        " " + _vm._s(_vm.$t("Name")) + "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "col-md-2" }, [
+                      _c("i", { staticClass: "fa fa-tags text-muted" }),
+                      _c("br"),
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.$t("Concept")) +
+                          "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "col-md-2" }, [
+                      _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                      _c("br"),
+                      _vm._v(
+                        " " + _vm._s(_vm.$t("Value")) + "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "col-md-2" }, [
+                      _c("i", { staticClass: "fa fa-rocket text-muted" }),
+                      _c("br"),
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.$t("Options")) +
+                          "\n                    "
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  [
+                    _vm._l(_vm.costsFor(_vm.vehicle), function(
+                      cost,
+                      indexCost
+                    ) {
+                      return _vm.vehicle
+                        ? _c("tr", {}, [
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(indexCost + 1))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm.vehicle.number))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(_vm._f("capitalize")(cost.name)))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(cost.concept))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(
+                                "\n                        " +
+                                  _vm._s(
+                                    _vm._f("numberFormat")(cost.value, "$0,0")
+                                  ) +
+                                  "\n                    "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              !_vm.editing
+                                ? _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                                      attrs: {
+                                        title: _vm.$t("Edit"),
+                                        "data-toggle": "modal",
+                                        "data-target":
+                                          "#modal-management-costs-edit"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editCost(cost)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-edit" })]
                                   )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-center" }, [
-                                  _vm._v(
-                                    "\n                                    " +
-                                      _vm._s(
-                                        _vm._f("numberFormat")(
-                                          cost.value,
-                                          "$0,0"
-                                        )
-                                      ) +
-                                      "\n                                "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-center" }, [
-                                  !_vm.editing
-                                    ? _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
-                                          attrs: {
-                                            title: _vm.$t("Edit"),
-                                            "data-toggle": "modal",
-                                            "data-target":
-                                              "#modal-management-costs-edit"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.editCost(cost)
-                                            }
-                                          }
-                                        },
-                                        [_c("i", { staticClass: "fa fa-edit" })]
-                                      )
-                                    : _vm._e()
-                                ])
-                              ])
-                            : _vm._e()
-                        }),
-                        _vm._v(" "),
-                        _vm._m(1)
-                      ],
-                      2
-                    )
-                  ]
+                                : _vm._e()
+                            ])
+                          ])
+                        : _vm._e()
+                    }),
+                    _vm._v(" "),
+                    _vm._m(1)
+                  ],
+                  2
                 )
-              ])
-            ])
+              ]
+            )
           ])
-        ])
-      ]),
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",
@@ -16739,19 +17560,19 @@ var render = function() {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.editingCost.description,
-                                        expression: "editingCost.description"
+                                        value: _vm.editingCost.concept,
+                                        expression: "editingCost.concept"
                                       }
                                     ],
                                     staticClass: "form-control",
                                     attrs: {
-                                      id: "edit-cost-description",
+                                      id: "edit-cost-concept",
                                       type: "text",
-                                      placeholder: _vm.$t("Description"),
+                                      placeholder: _vm.$t("Concept"),
                                       autofocus: ""
                                     },
                                     domProps: {
-                                      value: _vm.editingCost.description
+                                      value: _vm.editingCost.concept
                                     },
                                     on: {
                                       input: function($event) {
@@ -16760,7 +17581,7 @@ var render = function() {
                                         }
                                         _vm.$set(
                                           _vm.editingCost,
-                                          "description",
+                                          "concept",
                                           $event.target.value
                                         )
                                       }
@@ -16769,8 +17590,8 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "label",
-                                    { attrs: { for: "edit-cost-description" } },
-                                    [_vm._v(_vm._s(_vm.$t("Description")))]
+                                    { attrs: { for: "edit-cost-concept" } },
+                                    [_vm._v(_vm._s(_vm.$t("Concept")))]
                                   ),
                                   _vm._v(" "),
                                   _c("i", { staticClass: "fa fa-tags" })
@@ -17658,6 +18479,1276 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("th", { attrs: { width: "2%" } }, [
       _c("i", { staticClass: "fa fa-list-ol text-muted" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {}, [
+    _vm.liquidations.length
+      ? _c("div", [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12 table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+                },
+                [
+                  _c("thead", [
+                    _c("tr", { staticClass: "inverse" }, [
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-calendar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Date")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-users text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Passengers")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Total turns")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Subtotal")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Total dispatch")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "icon-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Balance")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-retweet text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Turns liquidated")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-rocket text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Actions")) +
+                            "\n                        "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.liquidations, function(liquidation) {
+                      return _c("tr", [
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(liquidation.date))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(liquidation.totals.totalPassengersBea))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.totalTurns,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.subTotalTurns,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.totalDispatch,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                liquidation.totals.balance,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center text-bold" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(liquidation.marks.length) +
+                              " turns\n                        "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips",
+                              attrs: {
+                                title: _vm.$t("Process charge"),
+                                "data-toggle": "modal",
+                                "data-target": "#modal-charge"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.processCharge(liquidation.id)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-user-secret" })]
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.liquidations.length,
+            expression: "!liquidations.length"
+          }
+        ],
+        staticClass: "row"
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3"
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-10" }, [
+              _c(
+                "span",
+                {
+                  staticClass: "close pull-right",
+                  attrs: { "data-dismiss": "alert" }
+                },
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("h4", [_c("strong", [_vm._v(_vm._s(_vm.$t("Ups!")))])]),
+              _vm._v(" "),
+              _c("hr", { staticClass: "hr" }),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.$t("No registers found")) +
+                  "\n            "
+              )
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { id: "modal-charge", tabindex: "1", "data-backdrop": "static" }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c(
+            "form",
+            {
+              staticClass: "modal-content row ",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "portlet light m-0" }, [
+                _c("div", { staticClass: "portlet-title tabbable-line m-0" }, [
+                  _c("div", { staticClass: "caption  col-md-12" }, [
+                    _c("i", { staticClass: "fa fa-user-secret" }),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "caption-subject font-dark bold uppercase"
+                      },
+                      [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(_vm.$t("Process charge")) +
+                            "\n                            "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "strong",
+                      {
+                        staticClass: "pull-right",
+                        staticStyle: { "font-size": "1.2em !important" }
+                      },
+                      [
+                        _vm._v(
+                          "Total recaudado " +
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                _vm.liquidationCharge.totals.totalDispatch,
+                                "$0,0"
+                              )
+                            )
+                        )
+                      ]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row portlet-body" }, [
+                  _vm.liquidationCharge
+                    ? _c(
+                        "div",
+                        { staticClass: "col-md-12 text-left no-padding" },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "col-md-6" },
+                            [
+                              _c("label", { staticClass: "control-label" }, [
+                                _vm._v("Valor Conduce")
+                              ]),
+                              _vm._v(" "),
+                              _c("multiselect", {
+                                attrs: {
+                                  placeholder: _vm.$t("Select a vehicle"),
+                                  label: "name",
+                                  "track-by": "id",
+                                  options: _vm.driverCost
+                                },
+                                model: {
+                                  value: _vm.driverCostSelected,
+                                  callback: function($$v) {
+                                    _vm.driverCostSelected = $$v
+                                  },
+                                  expression: "driverCostSelected"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("hr", { staticClass: "col-md-12 no-padding" }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-12 table-responsive" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report m-0"
+                      },
+                      [
+                        _c("thead", [
+                          _c("tr", { staticClass: "inverse" }, [
+                            _c("th", { staticClass: "col-md-2" }, [
+                              _c("i", { staticClass: "fa fa-tag text-muted" }),
+                              _c("br"),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.$t("Name")) +
+                                  "\n                                    "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "col-md-2" }, [
+                              _c("i", { staticClass: "fa fa-tags text-muted" }),
+                              _c("br"),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.$t("Concept")) +
+                                  "\n                                    "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "col-md-2" }, [
+                              _c("i", {
+                                staticClass: "fa fa-dollar text-muted"
+                              }),
+                              _c("br"),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.$t("Value")) +
+                                  "\n                                    "
+                              )
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          [
+                            _vm._l(_vm.costs, function(cost) {
+                              return _c("tr", [
+                                _c("td", { staticClass: "text-center" }, [
+                                  _vm._v(
+                                    _vm._s(_vm._f("capitalize")(cost.name))
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-center" }, [
+                                  _vm._v(_vm._s(cost.concept))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-center" }, [
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(
+                                        _vm._f("numberFormat")(
+                                          cost.value,
+                                          "$0,0"
+                                        )
+                                      ) +
+                                      "\n                                    "
+                                  )
+                                ])
+                              ])
+                            }),
+                            _vm._v(" "),
+                            _c("tr", [
+                              _c(
+                                "td",
+                                {
+                                  staticClass: "text-right",
+                                  attrs: { colspan: "2" }
+                                },
+                                [_vm._v(_vm._s(_vm.$t("Total")))]
+                              ),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-center" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("numberFormat")(
+                                      _vm.totalCosts,
+                                      "$0,0"
+                                    )
+                                  )
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _vm._m(1)
+                          ],
+                          2
+                        )
+                      ]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer col-md-12 text-center" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                    attrs: {
+                      type: "button",
+                      title: _vm.$t("Cancel"),
+                      "data-dismiss": "modal"
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-times" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "btn btn-success btn-outline sbold uppercase btn-circle tooltips",
+                    attrs: { title: _vm.$t("Save") }
+                  },
+                  [_c("i", { staticClass: "fa fa-save" })]
+                )
+              ])
+            ]
+          )
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "col-md-2", staticStyle: { "padding-top": "10px" } },
+      [_c("i", { staticClass: "fa fa-3x fa-exclamation-circle" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", {
+        staticStyle: {
+          height: "3px !important",
+          background: "gray",
+          "text-align": "center",
+          padding: "0"
+        },
+        attrs: { colspan: "11" }
+      })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {}, [
+    _vm.liquidations.length
+      ? _c(
+          "div",
+          [
+            _vm.report
+              ? _c("div", { staticClass: "row" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "table-responsive phase-container col-md-12 m-t-10"
+                    },
+                    [
+                      _c("road-safety-takings-turns-table-component", {
+                        attrs: {
+                          readonly: true,
+                          "costs-list": _vm.costs,
+                          marks: _vm.report.marks,
+                          totals: _vm.report.totals,
+                          liquidation: _vm.report.details
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("hr"),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-default btn-sm pull-right",
+                          on: { click: _vm.exportReport }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-print" }),
+                          _vm._v(
+                            " " + _vm._s(_vm.$t("Print")) + "\n                "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "modal",
+              {
+                staticStyle: { "z-index": "1000" },
+                attrs: {
+                  name: "modal-daily-report-print",
+                  draggable: "true",
+                  classes: "vue-modal",
+                  width: "90%"
+                }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal-header",
+                    staticStyle: { "margin-top": "30px" }
+                  },
+                  [
+                    _c("button", {
+                      staticClass: "close",
+                      attrs: { type: "button", "aria-hidden": "true" },
+                      on: { click: _vm.closeExporter }
+                    }),
+                    _vm._v(" "),
+                    _c("h5", { staticClass: "modal-title" }, [
+                      _c("i", { staticClass: "fa fa-print" }),
+                      _vm._v(
+                        " " + _vm._s(_vm.$t("Print")) + "\n                "
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "moal-body" }, [
+                  _c(
+                    "div",
+                    { staticClass: "col-md-12 p-0 m-0 pdf-container" },
+                    [
+                      _c("vue-friendly-iframe", {
+                        attrs: { src: _vm.linkToPrintLiquidation }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ]
+            )
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.liquidations.length,
+            expression: "!liquidations.length"
+          }
+        ],
+        staticClass: "row"
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3"
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-10" }, [
+              _c(
+                "span",
+                {
+                  staticClass: "close pull-right",
+                  attrs: { "data-dismiss": "alert" }
+                },
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("h4", [_c("strong", [_vm._v(_vm._s(_vm.$t("Ups!")))])]),
+              _vm._v(" "),
+              _c("hr", { staticClass: "hr" }),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.$t("No registers found")) +
+                  "\n            "
+              )
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "col-md-2", staticStyle: { "padding-top": "10px" } },
+      [_c("i", { staticClass: "fa fa-3x fa-exclamation-circle" })]
+    )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.marks.length
+      ? _c("div", [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12 table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+                },
+                [
+                  _c("thead", [
+                    _c("tr", { staticClass: "inverse" }, [
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _c("th", { attrs: { width: "10%" } }, [
+                        _c("i", { staticClass: "fa fa-retweet text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Trajectory")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { attrs: { width: "15%" } }, [
+                        _c("i", { staticClass: "fa fa-clock-0 text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Time")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("BEA")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", [
+                        _c("i", { staticClass: "fa fa-users text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Passengers")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-dollar text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Taken")) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "col-md-1" }, [
+                        _c("i", { staticClass: "fa fa-rocket text-muted" }),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.$t("Actions")) +
+                            "\n                        "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.marks, function(mark) {
+                        return _c(
+                          "tr",
+                          {
+                            attrs: {
+                              set: (_vm.turn = _vm.getLiquidationTurn(mark))
+                            }
+                          },
+                          [
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(mark.number))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center hide" }, [
+                              _c("i", {
+                                staticClass: "tooltips",
+                                class:
+                                  mark.status.icon +
+                                  " font-" +
+                                  mark.status.class,
+                                attrs: {
+                                  "data-placement": "right",
+                                  "data-original-title": mark.status.name
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              mark.trajectory
+                                ? _c(
+                                    "small",
+                                    {
+                                      staticClass: "span-full badge badge-info"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                " +
+                                          _vm._s(mark.trajectory.name) +
+                                          "\n                            "
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "text-center",
+                                attrs: { width: "15%" }
+                              },
+                              [
+                                _c("small", [
+                                  _vm._v(
+                                    _vm._s(mark.initialTime) +
+                                      " - " +
+                                      _vm._s(mark.finalTime)
+                                  )
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("numberFormat")(mark.totalBEA, "$0,0")
+                                )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(_vm._s(mark.passengersBEA))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("numberFormat")(
+                                    _vm.turn.totalDispatch,
+                                    "$0,0"
+                                  )
+                                )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips",
+                                  attrs: {
+                                    title: _vm.$t("Process charge"),
+                                    "data-toggle": "modal",
+                                    "data-target": "#modal-charge-turn"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.processCharge(mark)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-user-secret" })]
+                              )
+                            ])
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c(
+                          "td",
+                          {
+                            staticClass: "text-right",
+                            attrs: { colspan: "3" }
+                          },
+                          [
+                            _c("i", { staticClass: "icon-layers" }),
+                            _vm._v(
+                              " " +
+                                _vm._s(_vm.$t("Total")) +
+                                "\n                        "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                _vm.totals.totalBea,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(_vm.totals.totalPassengersBea))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                _vm.totals.totalDispatch,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ])
+                      ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "modal fade",
+              attrs: {
+                id: "modal-charge-turn",
+                tabindex: "1",
+                "data-backdrop": "static"
+              }
+            },
+            [
+              _c("div", { staticClass: "modal-dialog" }, [
+                _vm.liquidationTurn
+                  ? _c(
+                      "form",
+                      {
+                        staticClass: "modal-content row ",
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                          }
+                        }
+                      },
+                      [
+                        _c("div", { staticClass: "portlet light m-0" }, [
+                          _c(
+                            "div",
+                            { staticClass: "portlet-title tabbable-line m-0" },
+                            [
+                              _c("div", { staticClass: "caption  col-md-12" }, [
+                                _c("i", { staticClass: "fa fa-user-secret" }),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass:
+                                      "caption-subject font-dark bold uppercase"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                " +
+                                        _vm._s(_vm.$t("Process charge")) +
+                                        "\n                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "strong",
+                                  {
+                                    staticClass: "pull-right",
+                                    staticStyle: {
+                                      "font-size": "1.2em !important"
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "Total recaudado " +
+                                        _vm._s(
+                                          _vm._f("numberFormat")(
+                                            _vm.liquidationTurn.totalDispatch,
+                                            "$0,0"
+                                          )
+                                        )
+                                    )
+                                  ]
+                                )
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "row portlet-body" }, [
+                            _c(
+                              "div",
+                              { staticClass: "col-md-12 text-left no-padding" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "col-md-6" },
+                                  [
+                                    _c(
+                                      "label",
+                                      { staticClass: "control-label" },
+                                      [_vm._v("Valor Conduce")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("multiselect", {
+                                      attrs: {
+                                        placeholder: _vm.$t("Select a vehicle"),
+                                        label: "name",
+                                        "track-by": "id",
+                                        options: _vm.driverCost
+                                      },
+                                      model: {
+                                        value: _vm.driverCostSelected,
+                                        callback: function($$v) {
+                                          _vm.driverCostSelected = $$v
+                                        },
+                                        expression: "driverCostSelected"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("hr", { staticClass: "col-md-12 no-padding" }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-md-12 table-responsive" },
+                              [
+                                _c(
+                                  "table",
+                                  {
+                                    staticClass:
+                                      "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report m-0"
+                                  },
+                                  [
+                                    _c("thead", [
+                                      _c("tr", { staticClass: "inverse" }, [
+                                        _c("th", { staticClass: "col-md-2" }, [
+                                          _c("i", {
+                                            staticClass: "fa fa-tag text-muted"
+                                          }),
+                                          _c("br"),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(_vm.$t("Name")) +
+                                              "\n                                        "
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("th", { staticClass: "col-md-2" }, [
+                                          _c("i", {
+                                            staticClass: "fa fa-tags text-muted"
+                                          }),
+                                          _c("br"),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(_vm.$t("Concept")) +
+                                              "\n                                        "
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("th", { staticClass: "col-md-2" }, [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-dollar text-muted"
+                                          }),
+                                          _c("br"),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(_vm.$t("Value")) +
+                                              "\n                                        "
+                                          )
+                                        ])
+                                      ])
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "tbody",
+                                      [
+                                        _vm._l(_vm.costs, function(cost) {
+                                          return _c("tr", [
+                                            _c(
+                                              "td",
+                                              { staticClass: "text-center" },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm._f("capitalize")(
+                                                      cost.name
+                                                    )
+                                                  )
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "td",
+                                              { staticClass: "text-center" },
+                                              [_vm._v(_vm._s(cost.concept))]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "td",
+                                              { staticClass: "text-center" },
+                                              [
+                                                _vm._v(
+                                                  "\n                                            " +
+                                                    _vm._s(
+                                                      _vm._f("numberFormat")(
+                                                        cost.value,
+                                                        "$0,0"
+                                                      )
+                                                    ) +
+                                                    "\n                                        "
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        }),
+                                        _vm._v(" "),
+                                        _c("tr", [
+                                          _c(
+                                            "td",
+                                            {
+                                              staticClass: "text-right",
+                                              attrs: { colspan: "2" }
+                                            },
+                                            [_vm._v(_vm._s(_vm.$t("Total")))]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "td",
+                                            { staticClass: "text-center" },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm._f("numberFormat")(
+                                                    _vm.totalCosts,
+                                                    "$0,0"
+                                                  )
+                                                )
+                                              )
+                                            ]
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _vm._m(1)
+                                      ],
+                                      2
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "modal-footer col-md-12 text-center" },
+                          [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                                attrs: {
+                                  type: "button",
+                                  title: _vm.$t("Cancel"),
+                                  "data-dismiss": "modal"
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-times" })]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn btn-success btn-outline sbold uppercase btn-circle tooltips",
+                                attrs: { title: _vm.$t("Save") }
+                              },
+                              [_c("i", { staticClass: "fa fa-save" })]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  : _vm._e()
+              ])
+            ]
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("th", { attrs: { width: "2%" } }, [
+      _c("i", { staticClass: "fa fa-list-ol text-muted" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", {
+        staticStyle: {
+          height: "3px !important",
+          background: "gray",
+          "text-align": "center",
+          padding: "0"
+        },
+        attrs: { colspan: "11" }
+      })
     ])
   }
 ]
@@ -31970,6 +34061,249 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue":
+/*!**********************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue ***!
+  \**********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RoadSafetyTakingsComponent_vue_vue_type_template_id_f31c81bc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc&");
+/* harmony import */ var _RoadSafetyTakingsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoadSafetyTakingsComponent.vue?vue&type=script&lang=js& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _RoadSafetyTakingsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _RoadSafetyTakingsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RoadSafetyTakingsComponent_vue_vue_type_template_id_f31c81bc___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RoadSafetyTakingsComponent_vue_vue_type_template_id_f31c81bc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css&":
+/*!*******************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \*******************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/style-loader!../../../../../../../node_modules/css-loader??ref--6-1!../../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc&":
+/*!*****************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc& ***!
+  \*****************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_template_id_f31c81bc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue?vue&type=template&id=f31c81bc&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_template_id_f31c81bc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsComponent_vue_vue_type_template_id_f31c81bc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue ***!
+  \***************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RoadSafetyTakingsTurnsComponent_vue_vue_type_template_id_31c33732___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732&");
+/* harmony import */ var _RoadSafetyTakingsTurnsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _RoadSafetyTakingsTurnsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _RoadSafetyTakingsTurnsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RoadSafetyTakingsTurnsComponent_vue_vue_type_template_id_31c33732___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RoadSafetyTakingsTurnsComponent_vue_vue_type_template_id_31c33732___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css&":
+/*!************************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/style-loader!../../../../../../../node_modules/css-loader??ref--6-1!../../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732&":
+/*!**********************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732& ***!
+  \**********************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_template_id_31c33732___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue?vue&type=template&id=31c33732&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_template_id_31c33732___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsComponent_vue_vue_type_template_id_31c33732___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue":
+/*!********************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue ***!
+  \********************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RoadSafetyTakingsTurnsTableComponent_vue_vue_type_template_id_5daf37ea_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true&");
+/* harmony import */ var _RoadSafetyTakingsTurnsTableComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js& */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RoadSafetyTakingsTurnsTableComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RoadSafetyTakingsTurnsTableComponent_vue_vue_type_template_id_5daf37ea_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RoadSafetyTakingsTurnsTableComponent_vue_vue_type_template_id_5daf37ea_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "5daf37ea",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsTableComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsTableComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true&":
+/*!***************************************************************************************************************************************************************!*\
+  !*** ./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true& ***!
+  \***************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsTableComponent_vue_vue_type_template_id_5daf37ea_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsTableComponent.vue?vue&type=template&id=5daf37ea&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsTableComponent_vue_vue_type_template_id_5daf37ea_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoadSafetyTakingsTurnsTableComponent_vue_vue_type_template_id_5daf37ea_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/takings/passengers/liquidation/main.js":
 /*!*************************************************************!*\
   !*** ./resources/js/takings/passengers/liquidation/main.js ***!
@@ -31989,12 +34323,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_TakingsComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/TakingsComponent */ "./resources/js/takings/passengers/liquidation/components/TakingsComponent.vue");
 /* harmony import */ var _components_TakingsListComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/TakingsListComponent */ "./resources/js/takings/passengers/liquidation/components/TakingsListComponent.vue");
 /* harmony import */ var _components_reports_DailyReportComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/reports/DailyReportComponent */ "./resources/js/takings/passengers/liquidation/components/reports/DailyReportComponent.vue");
-/* harmony import */ var _lang_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../lang/i18n */ "./resources/js/lang/i18n.js");
-/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
-/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.min */ "./node_modules/sweetalert2/dist/sweetalert2.min.js");
-/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! sweetalert2/src/sweetalert2.scss */ "./node_modules/sweetalert2/src/sweetalert2.scss");
-/* harmony import */ var sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _components_roadSafety_RoadSafetyTakingsComponent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/roadSafety/RoadSafetyTakingsComponent */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsComponent.vue");
+/* harmony import */ var _components_roadSafety_RoadSafetyTakingsTurnsComponent__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/roadSafety/RoadSafetyTakingsTurnsComponent */ "./resources/js/takings/passengers/liquidation/components/roadSafety/RoadSafetyTakingsTurnsComponent.vue");
+/* harmony import */ var _lang_i18n__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../lang/i18n */ "./resources/js/lang/i18n.js");
+/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.min */ "./node_modules/sweetalert2/dist/sweetalert2.min.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! sweetalert2/src/sweetalert2.scss */ "./node_modules/sweetalert2/src/sweetalert2.scss");
+/* harmony import */ var sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_13__);
 
 
 
@@ -32007,7 +34343,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-Vue.use(vue_i18n__WEBPACK_IMPORTED_MODULE_9__["default"]);
+
+
+Vue.use(vue_i18n__WEBPACK_IMPORTED_MODULE_11__["default"]);
 Vue.filter('numberFormat', vue_filter_number_format__WEBPACK_IMPORTED_MODULE_0___default()(numeral__WEBPACK_IMPORTED_MODULE_1___default.a));
 Vue.filter('capitalize', function (value) {
   if (!value) return '';
@@ -32024,14 +34362,16 @@ window.ml = {
 };
 var liquidationView = new Vue({
   el: '#liquidation',
-  i18n: _lang_i18n__WEBPACK_IMPORTED_MODULE_8__["default"],
+  i18n: _lang_i18n__WEBPACK_IMPORTED_MODULE_10__["default"],
   components: {
     SearchComponent: _components_SearchComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
     AdminComponent: _components_admin_AdminComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
     LiquidationComponent: _components_LiquidationComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
     TakingsComponent: _components_TakingsComponent__WEBPACK_IMPORTED_MODULE_5__["default"],
     TakingsListComponent: _components_TakingsListComponent__WEBPACK_IMPORTED_MODULE_6__["default"],
-    DailyReportComponent: _components_reports_DailyReportComponent__WEBPACK_IMPORTED_MODULE_7__["default"]
+    DailyReportComponent: _components_reports_DailyReportComponent__WEBPACK_IMPORTED_MODULE_7__["default"],
+    RoadSafetyTakingsComponent: _components_roadSafety_RoadSafetyTakingsComponent__WEBPACK_IMPORTED_MODULE_8__["default"],
+    RoadSafetyTakingsTurnsComponent: _components_roadSafety_RoadSafetyTakingsTurnsComponent__WEBPACK_IMPORTED_MODULE_9__["default"]
   },
   data: {
     flag: false,
@@ -32166,7 +34506,7 @@ var liquidationView = new Vue({
           _this2.liquidation.otherDiscounts = [];
           _this2.liquidation.observations = "";
         })["catch"](function (error) {
-          sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_10___default.a.fire({
+          sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_12___default.a.fire({
             title: 'Error!',
             text: _this2.$t('An error occurred in the process. Contact your administrator'),
             icon: 'error',
@@ -32321,10 +34661,10 @@ $(document).ready(function () {
 /*!********************************!*\
   !*** ./resources/lang/es.json ***!
   \********************************/
-/*! exports provided: Home, Create, Update, Save, save, Delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Penalty, Daily report taking, Net to car, Processing, Please wait, default */
+/*! exports provided: Home, Create, Update, Save, save, Delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Penalty, Daily report taking, Net to car, Processing, Please wait, Read safety, Concept, Charge, Process, Process charge, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\"}");
+module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\",\"Read safety\":\"Seguridad vial\",\"Concept\":\"Concepto\",\"Charge\":\"Cobrar\",\"Process\":\"Procesar\",\"Process charge\":\"Procesar cobro\"}");
 
 /***/ }),
 

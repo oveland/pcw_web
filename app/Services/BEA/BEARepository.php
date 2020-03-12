@@ -90,10 +90,15 @@ class BEARepository
     }
 
     /**
-     * @return ManagementCost[]| Collection
+     * @param Vehicle|null $vehicle
+     * @return ManagementCost[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getManagementCosts()
+    public function getManagementCosts(Vehicle $vehicle = null)
     {
-        return ManagementCost::whereIn('vehicle_id', $this->getAllVehicles()->pluck('id'))->orderBy('uid')->get();
+        $vehicles = $this->getAllVehicles();
+
+        if ($vehicle) $vehicles = $vehicles->where('id', $vehicle->id);
+
+        return ManagementCost::whereIn('vehicle_id', $vehicles->pluck('id'))->orderBy('uid')->get();
     }
 }

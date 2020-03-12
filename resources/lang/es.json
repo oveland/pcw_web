@@ -615,7 +615,7 @@
   "Total vehicles": "Total vehículos",
   "Completed turns": "Turnos completos",
   "Total round trips": "Total vueltas",
-  "Export grouped report":"Exportar reporte agrupado",
+  "Export grouped report": "Exportar reporte agrupado",
   "Export ungrouped report": "Exportar reporte desagrupado",
   "Route dispatches": "Despachos de ruta",
   "Without GPS Signal": "Sin Señal GPS",
@@ -710,5 +710,10 @@
   "Daily report taking": "Informe de recaudo diario",
   "Net to car": "Neto al carro",
   "Processing": "Procesando",
-  "Please wait": "Porfavor espere"
+  "Please wait": "Porfavor espere",
+  "Read safety": "Seguridad vial",
+  "Concept": "Concepto",
+  "Charge": "Cobrar",
+  "Process": "Procesar",
+  "Process charge": "Procesar cobro"
 }

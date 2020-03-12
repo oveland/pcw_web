@@ -8,6 +8,9 @@ import TakingsComponent from './components/TakingsComponent';
 import TakingsListComponent from './components/TakingsListComponent';
 import DailyReportComponent from './components/reports/DailyReportComponent';
 
+import RoadSafetyTakingsComponent from './components/roadSafety/RoadSafetyTakingsComponent';
+import RoadSafetyTakingsTurnsComponent from './components/roadSafety/RoadSafetyTakingsTurnsComponent';
+
 import i18n from "../../../lang/i18n";
 import VueI18n from 'vue-i18n'
 
@@ -42,7 +45,9 @@ let liquidationView = new Vue({
         LiquidationComponent,
         TakingsComponent,
         TakingsListComponent,
-        DailyReportComponent
+        DailyReportComponent,
+        RoadSafetyTakingsComponent,
+        RoadSafetyTakingsTurnsComponent
     },
     data: {
         flag: false,

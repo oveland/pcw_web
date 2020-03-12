@@ -149,6 +149,9 @@ class TakingsPassengersLiquidationController extends Controller
 
     public function test(Request $request)
     {
+        $company = Company::find(14);
+        dd($company->configBEA('withPayRoll'));
+
 
         $this->searchMarksBEA($request);
         $date = Carbon::now()->toDateString();
@@ -313,6 +316,15 @@ class TakingsPassengersLiquidationController extends Controller
                 $this->beaService->sync->checkDiscountsFor($vehicle);
 
                 return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory));
+                break;
+            case __('costs'):
+                $vehicle = Vehicle::find($request->get('vehicle'));
+
+                $this->beaService->sync->checkManagementCostsFor($vehicle);
+
+                $costs = $this->beaService->repository->getManagementCosts($vehicle);
+
+                return response()->json($costs->where('uid', '<>', ManagementCost::PAYROLL_ID)->values()->toArray());
                 break;
             default:
                 return response()->json($this->beaService->getLiquidationParams());
@@ -486,7 +498,7 @@ class TakingsPassengersLiquidationController extends Controller
 
                 if ($cost) {
                     $cost->name = $costToEdit->name;
-                    $cost->description = $costToEdit->description;
+                    $cost->concept = $costToEdit->concept;
                     $cost->value = $costToEdit->value;
 
                     if (!$cost->save()) {

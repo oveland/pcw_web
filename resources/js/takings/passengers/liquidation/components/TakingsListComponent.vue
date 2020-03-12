@@ -51,12 +51,6 @@
                                     {{ liquidation.marks.length }} turns
                                 </a>
                             </td>
-
-                            <td class="text-center hide">
-                                <pre class="language-json">
-                                    <code>{{ liquidation.totals }}</code>
-                                </pre>
-                            </td>
                             <td class="text-center">
                                 {{ liquidation.liquidationUser.name }}<br>
                                 <small><i class="fa fa-calendar"></i> {{ liquidation.liquidationDate }}</small>
