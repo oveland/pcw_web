@@ -128,6 +128,14 @@ class TrackMapCommand extends Command
                     }
                 }
             }
+
+            if( $this->company->id != Company::MONTEBELLO ){
+                $track = collect($this->trackMapService->track($this->company->id, 0));
+                if ($this->driver == 'echo') {
+                    $this->logData("Sending data for all routes");
+                    event(new TrackingMapEvent($this->company->id, 0, $track->values()));
+                }
+            }
         } else {
             $this->logData("Company does'nt exists in DB!");
         }
@@ -140,7 +148,7 @@ class TrackMapCommand extends Command
     public function logData($message, $level = 'info')
     {
         $infoCompany = $this->company ? $this->company->short_name : $this->option('company');
-        $message = "TRACK MAP ($infoCompany): $message";
+        $message = date('H:i:s')." >> ($infoCompany): $message";
         $this->info($message);
         switch ($level) {
             case 'warning':
