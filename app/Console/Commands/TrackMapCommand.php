@@ -148,7 +148,7 @@ class TrackMapCommand extends Command
     public function logData($message, $level = 'info')
     {
         $infoCompany = $this->company ? $this->company->short_name : $this->option('company');
-        $message = date('H:i:s')." >> ($infoCompany): $message";
+        $message = "$infoCompany: $message";
         $this->info($message);
         switch ($level) {
             case 'warning':
