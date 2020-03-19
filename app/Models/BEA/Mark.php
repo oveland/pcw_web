@@ -351,7 +351,7 @@ class Mark extends Model
     {
         return (object)[
             'id' => $this->id,
-            'turn' => $this->turn,
+            'turn' => $this->turn->getAPIFields(),
             'number' => $this->number,
             'date' => $this->date->toDateString(),
             'initialTime' => $this->initial_time->toTimeString(),

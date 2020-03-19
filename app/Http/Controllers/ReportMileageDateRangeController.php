@@ -56,7 +56,7 @@ class ReportMileageDateRangeController extends Controller
 
         $mileageReport = $this->buildMileageReport($company, $vehicleReport, $initialDateReport, $finalDateReport);
 
-        if ($request->get('export')) return $this->pcwExporterService->exportMileageDateRange($mileageReport);
+        if ($request->get('export') == "true") return $this->pcwExporterService->exportMileageDateRange($mileageReport);
 
         return view('reports.vehicles.mileage.dates.show', compact(['mileageReport']));
     }

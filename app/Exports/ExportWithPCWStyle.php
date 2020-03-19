@@ -28,7 +28,20 @@ trait ExportWithPCWStyle
      * It's required to define the fileName within
      * the export class when making use of Responsable.
      */
-    private $fileName = "export.".Extension::XLSX;
+    public $fileName = "export.".Extension::XLSX;
+
+
+    /**
+     * Optional headers
+     */
+    private $headers = [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ];
+
+    /**
+     * Optional Writer Type
+     */
+    private $writerType = Extension::XLSX;
 
     private static $fillColorTitle = 'ff01142c';
     private static $fillColorSubTitle = 'ff01042c';

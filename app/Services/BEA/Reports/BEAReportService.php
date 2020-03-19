@@ -4,17 +4,87 @@
 namespace App\Services\BEA\Reports;
 
 
+use App\Exports\BEA\DailyReportExport;
+use App\Models\BEA\Mark;
+use App\Models\BEA\Turn;
+use App\Models\Company\Company;
+use Exception;
+use Illuminate\Foundation\Bus\PendingDispatch;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BEAReportService
 {
+    /**
+     * @param Company $company
+     * @param $date
+     * @return object
+     */
+    public function buildConsolidatedDailyReport(Company $company, $date)
+    {
+        $vehicles = $company->vehicles;
+
+        $vehicleTurns = Turn::whereIn('vehicle_id', $vehicles->pluck('id'))->get();
+
+        $marks = Mark::enabled()
+            ->whereIn('turn_id', $vehicleTurns->pluck('id'))
+            ->where('liquidated', true)
+            //->where('taken', false)
+            ->whereDate('date', $date)
+            ->with(['turn.vehicle', 'turn.route', 'turn.vehicle', 'turn.driver', 'trajectory', 'liquidation'])
+            ->orderBy('initial_time')
+            ->get();
+
+        $data = collect([]);
+        foreach ($marks as $index => $mark) {
+            $liquidation = $mark->liquidation;
+            $liquidationDetails = $liquidation->liquidation;
+            $liquidationTurns = collect($liquidationDetails->byTurns);
+            $liquidationTurn = (object)$liquidationTurns->where('markId', $mark->id)->first();
+
+            $data->push((object)[
+                'mark' => $mark->getAPIFields(),
+                'liquidationDetails' => $liquidationDetails,
+                'liquidationTurn' => $liquidationTurn,
+                'liquidation' => $liquidation->toArray(),
+            ]);
+        }
+
+        return (object)[
+            'date' => $date,
+            'company' => $company,
+            'data' => $data
+        ];
+    }
+
+    /**
+     * @param $report
+     * @param bool $store
+     * @return Response|BinaryFileResponse
+     * @throws Exception
+     */
+    public function exportConsolidatedDailyReport($report, $store = false)
+    {
+        $file = new DailyReportExport($report);
+
+        if ($store) {
+            $path = "BEA/$file->fileName";
+            Excel::store($file, $path);
+            return collect()->push($path);
+        }
+
+        return $file->download();
+    }
+
     /**
      * @param Collection $liquidations
      * @return Collection
      */
     public function buildDailyReport($liquidations)
     {
-
         if ($liquidations->isEmpty()) {
             return collect([
                 'empty' => true
@@ -37,7 +107,7 @@ class BEAReportService
      * @param Collection $marksGroup
      * @return object
      */
-    public function mergeMarks($marksGroup)
+    private function mergeMarks($marksGroup)
     {
         $marks = collect([]);
 
@@ -54,7 +124,7 @@ class BEAReportService
      * @param Collection $detailGroup
      * @return object
      */
-    public function mergeDetails($detailGroup)
+    private function mergeDetails($detailGroup)
     {
         $details = collect([]);
 
@@ -79,7 +149,7 @@ class BEAReportService
      * @param Collection $totalsGroup
      * @return object
      */
-    public function mergeTotals($totalsGroup)
+    private function mergeTotals($totalsGroup)
     {
         $totals = collect([]);
         foreach ($totalsGroup->first() as $key => $value) {
