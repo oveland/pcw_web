@@ -36,8 +36,12 @@ class TakingsPassengersLiquidationController extends Controller
      * @var BEAService
      */
     private $beaService;
+    /**
+     * @var App\Services\PCWExporterService
+     */
+    private $exporter;
 
-    public function __construct(PCWAuthService $auth)
+    public function __construct(PCWAuthService $auth, App\Services\PCWExporterService $exporter)
     {
         $this->auth = $auth;
 
@@ -45,13 +49,17 @@ class TakingsPassengersLiquidationController extends Controller
             $this->beaService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)]);
             return $next($request);
         });
+
+        $this->exporter = $exporter;
     }
 
-    function asDollars($value) {
+    function asDollars($value)
+    {
         return '$' . number_format($value, 0);
     }
 
-    private function paintTable($marks) {
+    private function paintTable($marks)
+    {
         $str = "
             <style>
                 table {
@@ -97,39 +105,39 @@ class TakingsPassengersLiquidationController extends Controller
                 <th style='background: #234c5b;color: white'>TOTAL BEA PCW</th>
             </tr></thead>
             <tbody>";
-                $turn = 1;
-                foreach ($marks as $m){
-                    $str .= "<tr>";
-                    $passengersUp = $m->AMR_SUBIDAS;
-                    $passengersDown = $m->AMR_BAJADAS;
+        $turn = 1;
+        foreach ($marks as $m) {
+            $str .= "<tr>";
+            $passengersUp = $m->AMR_SUBIDAS;
+            $passengersDown = $m->AMR_BAJADAS;
 
-                    $imBeaMax = $m->AMR_IMEBEAMAX;
-                    $imBeaMin = $m->AMR_IMEBEAMIN;
+            $imBeaMax = $m->AMR_IMEBEAMAX;
+            $imBeaMin = $m->AMR_IMEBEAMIN;
 
-                    $passengersBoarding = $passengersUp > $passengersDown ? ($passengersUp - $passengersDown) : 0;
-                    $passengersBEA = $passengersUp > $passengersDown ? $passengersUp : $passengersDown;
+            $passengersBoarding = $passengersUp > $passengersDown ? ($passengersUp - $passengersDown) : 0;
+            $passengersBEA = $passengersUp > $passengersDown ? $passengersUp : $passengersDown;
 
-                    $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 1000;
+            $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 1000;
 
-                    $str .= "<td>$m->AMR_IDMARCA</td>";
-                    $str .= "<td>$turn</td>";
-                    $str .= "<td>$m->AMR_FHINICIO</td>";
-                    $str .= "<td>$m->AMR_FHFINAL</td>";
-                    $str .= "<td>$passengersUp</td>";
-                    $str .= "<td>$passengersDown</td>";
-                    $str .= "<td>$m->AMR_PASBEA</td>";
-                    $str .= "<td>$passengersBEA</td>";
-                    $str .= "<td>$m->AMR_BLOQUEOS</td>";
-                    $str .= "<td>$m->AMR_AUXILIARES</td>";
-                    $str .= "<td>$passengersBoarding</td>";
-                    $str .= "<td>".number_format($imBeaMax, 2)."</td>";
-                    $str .= "<td>".number_format($imBeaMin, 2)."</td>";
-                    $str .= "<td>".$this->asDollars($totalBEA)."</td>";
-                    $str .= "<td>???</td>";
-                    $str .= "</tr>";
+            $str .= "<td>$m->AMR_IDMARCA</td>";
+            $str .= "<td>$turn</td>";
+            $str .= "<td>$m->AMR_FHINICIO</td>";
+            $str .= "<td>$m->AMR_FHFINAL</td>";
+            $str .= "<td>$passengersUp</td>";
+            $str .= "<td>$passengersDown</td>";
+            $str .= "<td>$m->AMR_PASBEA</td>";
+            $str .= "<td>$passengersBEA</td>";
+            $str .= "<td>$m->AMR_BLOQUEOS</td>";
+            $str .= "<td>$m->AMR_AUXILIARES</td>";
+            $str .= "<td>$passengersBoarding</td>";
+            $str .= "<td>" . number_format($imBeaMax, 2) . "</td>";
+            $str .= "<td>" . number_format($imBeaMin, 2) . "</td>";
+            $str .= "<td>" . $this->asDollars($totalBEA) . "</td>";
+            $str .= "<td>???</td>";
+            $str .= "</tr>";
 
-                    $turn += 1;
-                }
+            $turn += 1;
+        }
         $str .= "</tbody></table>";
 
         return $str;
@@ -149,35 +157,7 @@ class TakingsPassengersLiquidationController extends Controller
 
     public function test(Request $request)
     {
-        $company = Company::find(14);
-        dd($company->configBEA('withPayRoll'));
-
-
         $this->searchMarksBEA($request);
-        $date = Carbon::now()->toDateString();
-        $date = '2019-12-14';
-        $vehicle = Vehicle::find($request->get('vehicle'));
-        dump("BEA ID > $vehicle->bea_id");
-
-
-        dump("Check for BEA TURNS");
-
-        $lastIdMigrated = Turn::where('vehicle_id', $vehicle->id)->max('id');
-        $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $turns = BEADB::select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
-        dump($turns);
-
-        dump("Check for BEA MARKS ");
-
-        $lastIdMigrated = Mark::whereIn('turn_id', Turn::where('vehicle_id', $vehicle->id)->get()->pluck('id'))->max('id');
-        $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        dump("Last Id Migrated > $lastIdMigrated");
-
-        $marks = BEADB::select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO >= '$date 00:00:00' AND AMR_FHINICIO <= '$date 23:59:59') AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . $vehicle->bea_id . ")");
-        $marks = $marks->where('AMR_IDDERROTERO', '<>', null)->sortBy('AMR_FHINICIO');
-        foreach ($marks as $markBEA) {
-            dump("$markBEA->AMR_IDMARCA > $markBEA->AMR_FHINICIO - $markBEA->AMR_FHFINAL turn: $markBEA->AMR_IDTURNO");
-        }
     }
 
     /**

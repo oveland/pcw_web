@@ -71,7 +71,7 @@ class BEAService
     {
         $vehicles = $this->repository->getAllVehicles();
 
-        foreach ($vehicles as $vehicle){
+        foreach ($vehicles as $vehicle) {
             $this->sync->checkPenaltiesFor($vehicle);
             $this->sync->checkManagementCostsFor($vehicle);
         }
@@ -154,6 +154,16 @@ class BEAService
     }
 
     /**
+     * @param $date
+     * @param $type
+     * @return object
+     */
+    function getConsolidatedDailyReport($date, $type)
+    {
+        return $this->report->buildConsolidatedDailyReport($this->repository->company, $date);
+    }
+
+    /**
      * @param $vehicleId
      * @param $date
      * @return Collection
@@ -161,7 +171,7 @@ class BEAService
     function getBEAMarks($vehicleId, $date)
     {
         $this->sync->for($vehicleId, $date)->last();
-        
+
         $vehicle = Vehicle::find($vehicleId);
         $this->sync->checkDiscountsFor($vehicle);
         $this->sync->checkPenaltiesFor($vehicle);

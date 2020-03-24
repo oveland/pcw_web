@@ -72,12 +72,12 @@ class Turn extends Model
         return $this->belongsTo(Driver::class);
     }
 
-    function getAPIAttribute()
+    function getAPIFields()
     {
-        return collect([
+        return (object)[
             'route' => $this->route->toArray(),
             'vehicle' => $this->vehicle->toArray(),
             'driver' => $this->driver ? $this->driver->toArray() : [],
-        ]);
+        ];
     }
 }

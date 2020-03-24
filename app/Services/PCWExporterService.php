@@ -8,11 +8,13 @@
 
 namespace App\Services;
 
+use App\Exports\BEA\DailyReportExport;
 use App\Exports\HistoricRouteExport;
 use App\Exports\MileageDateRangeExport;
 use App\Exports\RouteRoundTripsExport;
 use App\Exports\SpeedingExport;
 use Excel;
+use Exception;
 use Maatwebsite\Excel\Exporter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -40,6 +42,17 @@ class PCWExporterService
     public function export($exporter)
     {
         return Excel::download($exporter, $exporter->getFileName());
+    }
+
+    /**
+     * @param $report
+     * @param bool $store
+     * @return DailyReportExport
+     * @throws Exception
+     */
+    function exportDailyBEA($report, $store = false)
+    {
+        return new DailyReportExport($report, $store);
     }
 
 
