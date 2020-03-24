@@ -36,6 +36,7 @@ class BEAReportService
             ->whereDate('date', $date)
             ->with(['turn.vehicle', 'turn.route', 'turn.vehicle', 'turn.driver', 'trajectory', 'liquidation'])
             ->orderBy('initial_time')
+            //->limit(5)
             ->get();
 
         $data = collect([]);

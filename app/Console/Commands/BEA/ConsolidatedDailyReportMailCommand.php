@@ -101,6 +101,13 @@ class ConsolidatedDailyReportMailCommand extends Command
         switch ($company->id) {
             case Company::COODETRANS:
                 if ($production) {
+                    /*$mailTo = [
+                        'diegope_2008@hotmail.com',
+                        'director_operativo@coodettranspalmira.com',
+                        'auxiliar_sensores@coodetranspalmira.com',
+                        'olatorre22@hotmail.com',
+                        'oiva.pcw@gmail.com'
+                    ];*/
                     $mailTo = ['oiva.pcw@gmail.com'];
                 } else {
                     $mailTo = ['oiva.pcw@gmail.com'];

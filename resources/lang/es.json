@@ -582,6 +582,7 @@
   "Printed at": "Impreso en",
   "Liquidated at": "Liquidado en",
   "Total liquidation": "Total Liquidación",
+  "Total taken": "Total recaudado",
   "Discount :name unable to update": "El descuento :name no fue actualizado",
   "Discount :name unable to update for vehicle :vehicle on trajectory :trajectory": "El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory",
   "Discount :name doesn't exists in the system": "El descuento :name no existe en el sistema",
@@ -666,6 +667,7 @@
   "Falls": "Caídas",
   "Add": "Agregar",
   "Total turns": "Total turnos",
+  "Total turn": "Total turno",
   "Total pay fall": "Total pago caídas",
   "Total get fall": "Total recibe caídas",
   "Subtotal": "Subtotal",
@@ -710,5 +712,6 @@
   "Daily report taking": "Informe de recaudo diario",
   "Net to car": "Neto al carro",
   "Processing": "Procesando",
-  "Please wait": "Porfavor espere"
+  "Please wait": "Porfavor espere",
+  "Total liquidated": "Total liquidado"
 }

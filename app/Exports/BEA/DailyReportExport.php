@@ -24,7 +24,7 @@ class DailyReportExport implements FromCollection, ShouldAutoSize, Responsable, 
         $data = $report->data;
         $dataExcel = collect([]);
 
-        if( $data->isEmpty() ){
+        if ($data->isEmpty()) {
             throw new \Exception("Report data is empty");
         }
 
@@ -36,15 +36,17 @@ class DailyReportExport implements FromCollection, ShouldAutoSize, Responsable, 
             $liquidationTurn = $d->liquidationTurn;
             $liquidationDetails = $d->liquidationDetails;
             $turn = $mark->turn;
-            $vehicle = (object) $turn->vehicle;
+            $vehicle = (object)$turn->vehicle;
 
             $otherDiscounts = collect($liquidationDetails->otherDiscounts)->sum('value');
 
-            if($markWithOtherDiscounts->get($mark->liquidation_id)){
+            if ($markWithOtherDiscounts->get($mark->liquidation_id)) {
                 $otherDiscounts = 0;
-            }else{
+            } else {
                 $markWithOtherDiscounts->put($mark->liquidation_id, $otherDiscounts);
             }
+
+            $totalTaken = $mark->taken ? $liquidationTurn->totalDispatch - $otherDiscounts : 0;
 
             $dataExcel->push([
                 __('N°') => count($dataExcel) + 1,                                                                      # A CELL
@@ -53,18 +55,18 @@ class DailyReportExport implements FromCollection, ShouldAutoSize, Responsable, 
                 __('Vehicle') => $vehicle->number,                                                                      # D CELL
                 __('Total Gross BEA') => $mark->totalGrossBEA,                                                          # E CELL
                 __('Passengers') => $mark->passengersBEA,                                                               # F CELL
-                __('Total turn') => $liquidationTurn->totalTurn,                                                        # G CELL
+                __('Total liquidated') => $liquidationTurn->totalDispatch,                                              # G CELL
                 __('Other discounts') => $otherDiscounts,                                                               # H CELL
-                __('Total dispatch') => $liquidationTurn->totalDispatch,                                                # I CELL
-                __('Difference') => $liquidationTurn->totalTurn - $otherDiscounts - $liquidationTurn->totalDispatch,    # J CELL
+                __('Total taken') => $totalTaken,                                                                       # I CELL
+                __('Difference') => $liquidationTurn->totalDispatch - $otherDiscounts - $totalTaken,                    # J CELL
             ]);
         }
 
         $this->report = (object)[
             'fileName' => __('ML') . "_$report->date",
-            'title' => __('ML') . " $report->date",
-            'subTitle' => __('ML') . " $report->date",
-            'sheetTitle' => __('ML') . " $report->date",
+            'title' => __('Consolidated daily'),
+            'subTitle' => $report->date,
+            'sheetTitle' => $report->date,
             'data' => $dataExcel
         ];
 
@@ -77,16 +79,30 @@ class DailyReportExport implements FromCollection, ShouldAutoSize, Responsable, 
      */
     public function setStyleSheet(Sheet $spreadsheet)
     {
+        $this->setStyleSheetWithFooter($spreadsheet);
+
         $config = $this->getConfig();
         $totalLetter = $config->letter->end;
         $workSheet = $spreadsheet->getDelegate();
 
-        $workSheet->getStyle('B' . $config->row->data->start . ":" . $totalLetter . $config->row->data->end)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $workSheet->getStyle('B' . $config->row->data->start . ":" . $totalLetter . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $workSheet->getStyle('E' . $config->row->data->start . ":" . "E" . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $workSheet->getStyle('G' . $config->row->data->start . ":" . $totalLetter . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
-        $workSheet->getStyle('E' . $config->row->data->start . ":" . "E" . $config->row->data->end)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        $workSheet->getStyle('G' . $config->row->data->start . ":" . $totalLetter . $config->row->data->end)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        foreach (range($config->row->data->start, $config->row->data->end) as $row) {
+            $workSheet->setCellValue("J$row", "=G$row-H$row-I$row");
+        }
 
-        $this->setStyleSheetWithFooter($spreadsheet);
+        $workSheet->setCellValue('D' . $config->row->data->next, 'TOTAL');
+        $workSheet->setCellValue("E" . $config->row->data->next, '=SUM(' . "E" . $config->row->data->start . ':' . "E" . $config->row->data->end . ')');
+        $workSheet->setCellValue("F" . $config->row->data->next, '=SUM(' . "F" . $config->row->data->start . ':' . "F" . $config->row->data->end . ')');
+        $workSheet->setCellValue("G" . $config->row->data->next, '=SUM(' . "G" . $config->row->data->start . ':' . "G" . $config->row->data->end . ')');
+        $workSheet->setCellValue("H" . $config->row->data->next, '=SUM(' . "H" . $config->row->data->start . ':' . "H" . $config->row->data->end . ')');
+        $workSheet->setCellValue("I" . $config->row->data->next, '=SUM(' . "I" . $config->row->data->start . ':' . "I" . $config->row->data->end . ')');
+        $workSheet->setCellValue("J" . $config->row->data->next, '=SUM(' . "J" . $config->row->data->start . ':' . "J" . $config->row->data->end . ')');
+
+        $workSheet->getStyle('E' . $config->row->data->next . ":" . "E" . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD);
+        $workSheet->getStyle('G' . $config->row->data->next . ":" . $totalLetter . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD);
     }
 
     /**
@@ -94,6 +110,7 @@ class DailyReportExport implements FromCollection, ShouldAutoSize, Responsable, 
      */
     public function columnFormats(): array
     {
+        $config = $this->getConfig();
         return [
             'E' => NumberFormat::FORMAT_CURRENCY_USD,
             'G' => NumberFormat::FORMAT_CURRENCY_USD,
