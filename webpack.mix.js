@@ -11,11 +11,13 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css');
+mix.js('resources/js/app.js', 'public/js').sass('resources/sass/app.scss', 'public/css');
+
+mix.js('resources/js/example/main.js', 'resources/js/example/');
 
 mix.js('resources/js/takings/passengers/liquidation/main.js', 'resources/js/takings/passengers/liquidation/');
 mix.js('resources/js/reports/passengers/sensors/cameras/main.js', 'resources/js/reports/passengers/sensors/cameras/');
+mix.js('resources/js/reports/apps/main.js', 'resources/js/reports/apps/');
 
 
 if (mix.inProduction()) {

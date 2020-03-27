@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1711,7 +1711,7 @@ var camerasReportView = new Vue({
 
 /***/ }),
 
-/***/ 2:
+/***/ 3:
 /*!***********************************************************************!*\
   !*** multi ./resources/js/reports/passengers/sensors/cameras/main.js ***!
   \***********************************************************************/

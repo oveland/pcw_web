@@ -15,10 +15,6 @@ use App\Models\Users\User;
 
 Auth::routes();
 
-Route::get('/metronic', function(){
-    return view('metronic');
-})->name('metronic');
-
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect(route('report-route'));
@@ -27,6 +23,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', function () {
         return redirect(route('report-route'));
     })->name('index');
+
+
+    /* Example routes for vue development */
+    Route::prefix(__('example'))->group(function () {
+        Route::get('/', 'Example\ExampleController@index')->name('example');
+
+        Route::prefix(__('search'))->group(function () {
+            Route::get(__('/'), 'Example\ExampleController@search')->name('example.search');
+        });
+
+        Route::prefix(__('url-params'))->group(function () {
+            Route::get('/{name}', 'Example\ExampleController@getParams')->name('example.params.get');
+            Route::any('/{name}/'.__('save'), 'Example\ExampleController@setParams')->name('example.params.set');
+        });
+    });
 
     /* Routes for general actions */
     Route::prefix(__('general'))->group(function () {
@@ -103,6 +114,21 @@ Route::group(['middleware' => ['auth']], function () {
     /* Routes for route report */
     Route::prefix(__('reports'))->group(function () {
         /* General reports */
+
+        /* Apps reports */
+        Route::prefix(__('app'))->group(function () {
+            Route::get('/', 'Apps\AppsReportController@index')->name('report.app');
+
+            Route::prefix(__('search'))->group(function () {
+                Route::get(__('/'), 'Apps\AppsReportController@search')->name('report.app.search');
+            });
+
+            Route::prefix(__('url-params'))->group(function () {
+                Route::get('/{name}', 'Apps\AppsReportController@getParams')->name('report.app.params.get');
+                Route::any('/{name}/'.__('save'), 'Apps\AppsReportController@setParams')->name('report.app.params.set');
+            });
+        });
+
         Route::prefix(__('routes'))->group(function () {
             /* Route report */
             Route::prefix(__('route-report'))->group(function () {
