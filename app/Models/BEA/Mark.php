@@ -95,6 +95,12 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereDuplicated($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereDuplicatedMarkId($value)
+ * @property bool|null $ignore_trigger
+ * @property-read mixed $pay_roll_cost
+ * @property-read int|null $mark_commissions_count
+ * @property-read int|null $mark_discounts_count
+ * @property-read int|null $mark_penalties_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereIgnoreTrigger($value)
  */
 class Mark extends Model
 {

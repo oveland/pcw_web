@@ -1,9 +1,27 @@
 <template>
-    <div class="panel panel-inverse">
+    <div class="panel panel-default">
         <div class="panel-heading">
-            <button type="button" class="btn btn-success btn-sm btn-search-report" @click="searchReport()">
+            <button type="button" class="btn btn-success btn-search-report pull-left" @click="searchReport()">
                 <i class="fa fa-search"></i> <span class="hidden-xs">{{ $t('Search')}}</span>
             </button>
+
+            <ul class="nav nav-tabs tabs-reversed">
+                <li>
+                    <a onclick="$('#modal-params-manager').modal('show')">
+                        <i class="fa fa-cogs"></i> {{ $t('Admin') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#tab-road-safety" data-toggle="tab">
+                        <i class="fa fa-user-secret"></i> {{ $t('Read safety') }}
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#tab-takings" data-toggle="tab">
+                        <i class="fa fa-briefcase"></i> {{ $t('Takings') }}
+                    </a>
+                </li>
+            </ul>
         </div>
         <div class="panel-body p-b-15">
             <div class="form-input-flat">
@@ -59,8 +77,9 @@
                 mainContainer.fadeIn();
 
                 this.search.date = moment().format("YYYY-MM-DD");
-                //this.search.date = '2020-01-09';
-                const companySearch = this.search.company;
+                this.search.date = '2020-02-27';
+                let companySearch = this.search.company;
+                companySearch = {id:30};
                 axios.get(this.urlParams, {
                     params: {
                         company: companySearch ? companySearch.id : null,
@@ -71,10 +90,15 @@
                         this.search.companies = data.companies;
 
                         this.search.company = _.find(this.search.companies, function(c){
-                            return c.id === data.company.id;
+                            //return c.id === data.company.id;
+                            return c.id === 30;
                         });
 
-                        //this.searchReport();
+                        this.search.vehicle = _.find(this.search.vehicles, function(c){
+                            return c.id === 1953;
+                        });
+
+                        this.searchReport();
                     })
                     .catch(function (error) {
                         console.log(error);

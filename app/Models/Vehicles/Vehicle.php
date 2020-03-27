@@ -2,6 +2,7 @@
 
 namespace App\Models\Vehicles;
 
+use App\Models\BEA\ManagementCost;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
 use App\Services\Reports\Passengers\SeatDistributionService;
@@ -11,6 +12,8 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Sofa\Eloquence\Eloquence;
 use Sofa\Eloquence\Mappable;
@@ -59,6 +62,10 @@ use Sofa\Eloquence\Mappable;
  * @method static Builder|Vehicle whereObservations($value)
  * @method static Builder|Vehicle whereProprietaryId($value)
  * @method static Builder|Vehicle whereTags($value)
+ * @property-read Collection|ManagementCost[] $costsBEA
+ * @property-read int|null $costs_b_e_a_count
+ * @property-read int|null $maintenance_count
+ * @property-read int|null $peak_and_plate_count
  */
 class Vehicle extends Model
 {
@@ -69,6 +76,9 @@ class Vehicle extends Model
         return config('app.simple_date_time_format');
     }
 
+    /**
+     * @return BelongsTo | Company
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -181,5 +191,13 @@ class Vehicle extends Model
     {
         $seatDistribution = new SeatDistributionService($this->seatDistribution);
         return $seatDistribution->getTopology();
+    }
+
+    /**
+     * @return HasMany | ManagementCost[]
+     */
+    public function costsBEA()
+    {
+        return $this->hasMany(ManagementCost::class);
     }
 }

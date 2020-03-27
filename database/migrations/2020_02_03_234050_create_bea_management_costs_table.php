@@ -15,7 +15,7 @@ class CreateBeaManagementCostsTable extends Migration
     {
         Schema::create('bea_management_costs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('vehicle_id')->unique();
+            $table->unsignedBigInteger('vehicle_id');
             $table->string('name', 50);
             $table->string('description', 255)->nullable();
             $table->integer('value');

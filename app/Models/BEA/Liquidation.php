@@ -49,6 +49,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $takingUser
  * @method static Builder|Liquidation whereTakingDate($value)
  * @method static Builder|Liquidation whereTakingUserId($value)
+ * @property-read int|null $marks_count
  */
 class Liquidation extends Model
 {

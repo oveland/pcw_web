@@ -3,6 +3,7 @@
 namespace App\Services\BEA;
 
 use App\Facades\BEADB;
+use App\Models\BEA\Costs;
 use App\Models\BEA\Discount;
 use App\Models\BEA\ManagementCost;
 use App\Models\BEA\Mark;
@@ -181,7 +182,7 @@ class BEASyncService
         $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
 
         foreach ($marks as $markBEA) {
-            DB::transaction(function () use ($markBEA){
+            DB::transaction(function () use ($markBEA) {
                 $this->validateMark($markBEA);
             });
         }
@@ -197,7 +198,7 @@ class BEASyncService
                 ->get()->pluck('bea_id');
 
             $duplicatedIdsPCW = $marksIdsPCW->diff($markIdsBEA)->implode(',');
-            if($duplicatedIdsPCW){
+            if ($duplicatedIdsPCW) {
                 $companyId = $this->company->id;
                 DB::statement("UPDATE bea_marks SET duplicated = TRUE WHERE company_id = $companyId AND bea_id IN ($duplicatedIdsPCW)");
             }
@@ -482,16 +483,23 @@ class BEASyncService
 
     public function checkManagementCostsFor(Vehicle $vehicle)
     {
-        $exists = ManagementCost::where('vehicle_id', $vehicle->id)->first();
+        $vehicleCosts = $vehicle->costsBEA;
+        $allCosts = Costs::whereCompany($vehicle->company)->get();
 
-        if (!$exists) {
-            ManagementCost::create([
-                'uid' => ManagementCost::PAYROLL_ID,
-                'vehicle_id' => $vehicle->id,
-                'name' => __('Payroll cost'),
-                'description' => __('Payroll cost'),
-                'value' => ManagementCost::PAYROLL_DEFAULT,
-            ]);
+        foreach ($allCosts as $cost) {
+            if (($cost->uid == ManagementCost::PAYROLL_ID && $vehicle->company->configBEA('withPayRoll') || $cost->uid != ManagementCost::PAYROLL_ID)) {
+                $exists = $vehicleCosts->where('uid', $cost->uid)->first();
+                if (!$exists) {
+                    ManagementCost::create([
+                        'uid' => $cost->uid,
+                        'vehicle_id' => $vehicle->id,
+                        'name' => $cost->name,
+                        'concept' => $cost->concept,
+                        'description' => $cost->description,
+                        'value' => $cost->value,
+                    ]);
+                }
+            }
         }
     }
 

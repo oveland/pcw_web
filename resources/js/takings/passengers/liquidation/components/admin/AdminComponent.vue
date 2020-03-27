@@ -31,7 +31,7 @@
                     <li class="divider-menu hidden-sm hidden-xs"></li>
 
                     <li>
-                        <a href="#management-costs-tab" data-toggle="tab">
+                        <a href="#management-costs-tab" class=".management-costs-tab" data-toggle="tab">
                             <i class="fa fa-dollar"></i> {{ $t('Costs') }}
                         </a>
                     </li>
