@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
-use App\Models\Routes\Route;
-use App\Services\PCWExporterService;
 use App\Services\Reports\Passengers\PassengersService as PassengersReporter;
-use App\Models\Vehicles\Vehicle;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 
 class ReportPassengerRecorderConsolidatedDailyController extends Controller
@@ -29,7 +28,7 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
 
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -42,7 +41,7 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function show(Request $request)
     {
@@ -58,6 +57,7 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
      * Export report to excel format
      *
      * @param Request $request
+     * @return string
      */
     public function export(Request $request)
     {
@@ -66,6 +66,6 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
 
         $passengerReports = $this->passengersReporter->consolidated->buildDailyReport($company, $dateReport);
 
-        $this->passengersReporter->consolidated->exportDailyReportFiles($passengerReports);
+        return $this->passengersReporter->consolidated->exportDailyReportFiles($passengerReports);
     }
 }

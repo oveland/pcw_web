@@ -76,7 +76,7 @@ trait ExportWithPCWStyle
      */
     public function collection()
     {
-        return $this->report->data;
+        return collect($this->report->data);
     }
 
     /**

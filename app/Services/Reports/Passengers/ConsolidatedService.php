@@ -9,16 +9,13 @@
 namespace App\Services\Reports\Passengers;
 
 
+use App\Exports\Passengers\ConsolidatedDailyExport;
 use App\Models\Company\Company;
-use App\Models\Vehicles\Vehicle;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Route;
 
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
-
-use App\Services\PCWExporterService;
-use Carbon\Carbon;
 
 class ConsolidatedService
 {
@@ -48,6 +45,7 @@ class ConsolidatedService
 
             $reports->push((object)[
                 'vehicle_id' => $vehicleId,
+                'vehicle' => $sensor->vehicle->getAPIFields(),
                 'date' => $dateReport,
                 'passengers' => (object)[
                     'sensor' => $sensor->passengersBySensor,
@@ -84,45 +82,14 @@ class ConsolidatedService
      */
     function exportDailyReportFiles($passengerReports, $download = true)
     {
-        $dateReport = $passengerReports->date;
+        $file = new ConsolidatedDailyExport($passengerReports);
 
-        $dataExcel = array();
-        foreach ($passengerReports->reports as $report) {
-            $vehicle = Vehicle::find($report->vehicle_id);
-            $sensor = $report->passengers->sensor;
-            $recorder = $report->passengers->recorder;
-            $sensorRecorder = $report->passengers->sensorRecorder;
+        if ($download) return $file->download();
 
-            $totalRoundTrips = 0;
-            $detailedRoutes = "";
-            foreach ($report->historyRoutesByRecorder as $routeId => $historyRecorder) {
-                $ln = $totalRoundTrips > 0 ? "\n" : "";
-                $lastHistory = $historyRecorder->last();
-                $totalRoundTrips += $lastHistory->roundTrip;
-                $detailedRoutes .= "$ln$lastHistory->routeName : $lastHistory->roundTrip " . __('round trips');
-            }
 
-            $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                      # A CELL
-                __('Vehicle') => intval($vehicle->number),                              # B CELL
-                __('Plate') => $vehicle->plate,                                         # C CELL
-                __('Routes') => $detailedRoutes,                                        # D CELL
-                __('Round trips') => $totalRoundTrips,                                  # E CELL
-                __('Sensor recorder') => intval($sensorRecorder),                       # F CELL
-                __('Recorder') => intval($recorder),                                    # G CELL
-                __('Sensor') => intval($sensor),                                        # H CELL
-            ];
-        }
+        $path = "exports/passengers/$file->fileName";
+        $file->store($path);
 
-        $fileData = [
-            'fileName' => __('Passengers report') . " $dateReport",
-            'title' => __('Passengers')."\n".__('Consolidated per day'),
-            'subTitle' => Carbon::createFromFormat('Y-m-d', $passengerReports->date)->format('d-m-Y'),
-            'data' => $dataExcel,
-            'type' => 'passengerReportTotalFooter'
-        ];
-
-        if ($download) PCWExporterService::excel($fileData);
-        else return PCWExporterService::store($fileData);
+        return $path;
     }
 }
