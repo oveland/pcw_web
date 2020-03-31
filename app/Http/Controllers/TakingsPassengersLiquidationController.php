@@ -267,6 +267,8 @@ class TakingsPassengersLiquidationController extends Controller
 
         $beaLiquidations = $this->beaService->getBEATakingsList($vehicleReport, $dateReport)->values()->toArray();
 
+        Carbon::now();
+
         return response()->json($beaLiquidations);
     }
 
