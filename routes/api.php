@@ -2,6 +2,19 @@
 
 use Illuminate\Http\Request;
 
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('login', 'API\AuthController@login');
+    Route::post('register', 'API\AuthController@register');
+    Route::group([
+        'middleware' => 'auth:api'
+    ], function () {
+        Route::get('logout', 'API\AuthController@logout');
+        Route::get('user', 'API\AuthController@user');
+    });
+});
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
