@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Session;
 use View;
 
 class VerifyCsrfToken extends BaseVerifier
@@ -23,17 +24,24 @@ class VerifyCsrfToken extends BaseVerifier
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if($request->ajax() && Auth::guest()) {
+        $user = Auth::user();
+
+        if ($request->ajax() && Auth::guest()) {
             return response('Unauthorized', 401);
         }
 
-        View::share('baseMenu',Url::getBaseMenu($request));
+        View::share('baseMenu', Url::getBaseMenu($request));
+
+        if ($user && !$user->company->active) {
+            Session::flash('message', 'Suspensión de Contrato por motivos de cuarentena. Por favor comuníquese con su respectiva empresa. Gracias');
+            return abort(403);
+        }
 
         return $next($request);
     }

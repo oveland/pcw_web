@@ -132,17 +132,24 @@ class MigrationController extends Controller
     }
 
 
-    public function migrateCompanies(Request $request)
+    public function migrateCompanies(Request $request, $exit = true)
     {
-        if ($request->get('delete')) {
+        /*if ($request->get('delete')) {
             $deleted = DB::delete('DELETE FROM companies');
             dd($deleted . ' registers has ben deleted!');;
-        }
+        }*/
 
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
         $companies = DB::table(self::OLD_TABLES['companies'])->get();
+
+        $migrateCompany = $request->get('company');
+
+        if ($migrateCompany) {
+            $companies = $companies->where('id_empresa', $migrateCompany);
+        }
+
         foreach ($companies as $companyOLD) {
             $new = false;
             $company = Company::find($companyOLD->id_empresa);
@@ -157,7 +164,7 @@ class MigrationController extends Controller
             $company->address = $companyOLD->direccion;
             $company->link = $companyOLD->url;
             $company->timezone = $companyOLD->timezone;
-            $company->active = $companyOLD->estado;
+            $company->active = $companyOLD->estado && !$companyOLD->observaciones;
             $company->default_kmz_url = $companyOLD->default_kmz_url;
 
             try {
@@ -172,19 +179,24 @@ class MigrationController extends Controller
             }
         }
 
-        dd([
-            'Total Created' => $totalCreated,
-            'Total Updated' => $totalUpdated,
-            'Total Errors' => $totalErrors
-        ]);
+        if ($exit) {
+            dd([
+                'Total Created' => $totalCreated,
+                'Total Updated' => $totalUpdated,
+                'Total Errors' => $totalErrors
+            ]);
+        }
     }
 
     public function migrateRoutes(Request $request)
     {
-        if ($request->get('delete')) {
+        /*if ($request->get('delete')) {
             $deleted = DB::delete('DELETE FROM routes');
             dd($deleted . ' registers has ben deleted!');;
-        }
+        }*/
+
+        $this->migrateCompanies($request, false);
+        $this->migrateDispatches($request, false);
 
         DB::statement("
             UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER 
@@ -196,6 +208,13 @@ class MigrationController extends Controller
         $totalUpdated = 0;
         $totalErrors = 0;
         $routes = DB::table(self::OLD_TABLES['routes'])->whereIn('id_rutas', $this->getRoutesForMigrate($request))->get();
+
+        $migrateCompany = $request->get('company');
+
+        if ($migrateCompany) {
+            $routes = $routes->where('id_empresa', $migrateCompany);
+        }
+
         foreach ($routes as $routeOLD) {
             $new = false;
             $route = Route::find($routeOLD->id_rutas);
@@ -235,7 +254,7 @@ class MigrationController extends Controller
         ]);
     }
 
-    public function migrateDispatches(Request $request)
+    public function migrateDispatches(Request $request, $exit = true)
     {
         if ($request->get('delete')) {
             $deleted = DB::delete('DELETE FROM dispatches');
@@ -246,6 +265,13 @@ class MigrationController extends Controller
         $totalUpdated = 0;
         $totalErrors = 0;
         $dispatches = DB::table(self::OLD_TABLES['dispatches'])->get();
+
+        $migrateCompany = $request->get('company');
+
+        if ($migrateCompany) {
+            $dispatches = $dispatches->where('id_empresa', $migrateCompany);
+        }
+
         foreach ($dispatches as $dispatchOLD) {
             $new = false;
             $dispatch = Dispatch::find($dispatchOLD->id_despachos);
@@ -272,12 +298,13 @@ class MigrationController extends Controller
                 dump($e->getMessage());
             }
         }
-
-        dd([
-            'Total Created' => $totalCreated,
-            'Total Updated' => $totalUpdated,
-            'Total Errors' => $totalErrors
-        ]);
+        if ($exit) {
+            dd([
+                'Total Created' => $totalCreated,
+                'Total Updated' => $totalUpdated,
+                'Total Errors' => $totalErrors
+            ]);
+        }
     }
 
     public function migrateUsers(Request $request)
@@ -362,7 +389,6 @@ class MigrationController extends Controller
         if ($migrateVehicle) {
             $vehicles = $vehicles->where('id_crear_vehiculo', $migrateVehicle);
         }
-
 
 
         foreach ($vehicles as $vehicleOLD) {

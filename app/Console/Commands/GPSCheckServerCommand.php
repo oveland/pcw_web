@@ -4,11 +4,19 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\API\SMS;
 use Carbon\Carbon;
+use DB;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
 class GPSCheckServerCommand extends Command
 {
+    const ALERT_SMS_NUMBERS = [
+        3145224312
+    ];
+
+    private $issues = [];
+    private $now = '';
+
     /**
      * The name and signature of the console command.
      *
@@ -31,6 +39,8 @@ class GPSCheckServerCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->issues = collect([]);
+        $this->now = Carbon::now()->toDateTimeString();
     }
 
     /**
@@ -40,7 +50,10 @@ class GPSCheckServerCommand extends Command
      */
     public function handle()
     {
+        $this->issues = collect([]);
         $this->checkGPSServer();
+        $this->checkDatabaseServer();
+        $this->sendAlerts();
     }
 
     public function checkGPSServer()
@@ -55,10 +68,39 @@ class GPSCheckServerCommand extends Command
         }
 
         if (!$isServerOK) {
-            $now = Carbon::now();
-            $alertMessage = "GPS server id down! " . $now->toDateTimeString();
-            $this->info($alertMessage);
-            SMS::sendCommand($alertMessage, "3145224312");
+            $this->issues->push("GPS server id down! $this->now");
+        }
+    }
+
+    public function checkDatabaseServer()
+    {
+        $dbOK = false;
+        $dbSize = null;
+        $ssdSize = 400;
+        $usagePercent = 0;
+        try {
+            $dbSizeQuery = collect(DB::select("SELECT pg_size_pretty(pg_database_size('GPS')) db_size"))->first()->db_size;
+            if ($dbSizeQuery) {
+                $dbSize = intval(explode(' ', $dbSizeQuery)[0]);
+                $usagePercent = ($dbSize * 100 / $ssdSize);
+                if ($usagePercent <= 60) $dbOK = true;
+            }
+
+            if (!$dbOK) {
+                $this->issues->push("DB size is $dbSize GB. Usage $usagePercent% $this->now");
+            }
+        } catch (\Exception $e) {
+            $this->issues->push("Database server is down! $this->now");
+        }
+    }
+
+    public function sendAlerts()
+    {
+        foreach ($this->issues as $issue){
+            foreach (self::ALERT_SMS_NUMBERS as $number) {
+                $this->info($issue);
+                SMS::sendCommand($issue, $number);
+            }
         }
     }
 }

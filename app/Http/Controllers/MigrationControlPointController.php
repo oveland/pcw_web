@@ -28,7 +28,7 @@ class MigrationControlPointController extends Controller
         $company = $request->get('company');
         $route = $request->get('route');
 
-        if (Auth::user()->isAdmin()) $companies = Company::whereActive(true)->orderBy('short_name')->get();
+        if (Auth::user()->isAdmin()) $companies = Company::orderBy('short_name')->get();
         else abort(403);
 
         if ($company) $companies = $companies->where('id', $company);
