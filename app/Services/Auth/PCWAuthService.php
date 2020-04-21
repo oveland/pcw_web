@@ -6,6 +6,7 @@ namespace App\Services\Auth;
 use App\Http\Controllers\GeneralController;
 use App\Models\Company\Company;
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -56,6 +57,23 @@ class PCWAuthService
     public function getCompanyFromRequest(Request $request)
     {
         return $this->generalController->getCompany($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return Vehicle|null
+     */
+    public function getVehicleFromRequest(Request $request)
+    {
+        $company = $this->getCompanyFromRequest($request);
+        $vehicle = null;
+        $requestVehicle = $request->get('vehicle') ?? $request->get('vehicle-report');
+        if ($requestVehicle) {
+            $vehicle = Vehicle::find($requestVehicle);
+            if (!$vehicle->belongsToCompany($company)) abort(302);
+        }
+
+        return $vehicle;
     }
 
     /**

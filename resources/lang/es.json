@@ -657,5 +657,10 @@
   "The vehicle will activate": "El vehículo se activará",
   "The vehicle will inactivate": "El vehículo se inactivará",
   "Inactivated": "Desactivado",
-  "Activated": "Activado"
+  "Activated": "Activado",
+  "Booths": "Cabinas",
+  "booths": "cabinas",
+  "Booths report": "Reporte de cabinas",
+  "Booths historic report": "Reporte histórico de cabinas",
+  "Liquid level": "Nivel de líquido"
 }

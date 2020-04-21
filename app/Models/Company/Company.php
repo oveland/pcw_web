@@ -71,6 +71,7 @@ class Company extends Model
     const TUPAL = 28;
     const YUMBENOS = 17;
     const COODETRANS = 30;
+    const BOOTHS = 34;
 
     /**
      * @return mixed|string

@@ -324,6 +324,15 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/{date}', 'AccessLogController@report')->name('report-user-access-log-export');
             });
         });
+
+        /* Booths report */
+        Route::prefix(__('booths'))->group(function () {
+            Route::prefix(__('historic'))->group(function () {
+                /* Routes for logs */
+                Route::get('/', 'Booths\BoothsHistoricReportController@index')->name('report-booths-historic');
+                Route::get('/search', 'Booths\BoothsHistoricReportController@search')->name('report-booths-search');
+            });
+        });
     });
 
     /* Routes for operation pages */

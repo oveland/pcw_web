@@ -704,6 +704,24 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </ul>
                             </li>
                         @endif
+
+                        @if( Auth::user() && (Auth::user()->isAdmin() || Auth::user()->comany->id == \App\Models\Company\Company::BOOTHS) )
+                            <li class="nav-item menu-booths">
+                                <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
+                                    <i class="fa fa-shield faa-vertical"></i>
+                                    @lang('Booths')
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item menu-booths-historic">
+                                        <a href="{{ route('report-booths-historic')  }}">
+                                            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                            @lang('Historic')
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
                     </ul>
                 </li>
 
