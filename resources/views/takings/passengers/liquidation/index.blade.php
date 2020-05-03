@@ -113,7 +113,14 @@
                             <div class="portlet-body">
                                 <div class="tab-content panel p-0">
                                     <div id="table-rf-takings-list" class="tab-pane fade active in">
-                                        <road-safety-takings-turns-component :search-params="searchParams" :search="search" url-report="{{ route('takings-passengers-report-daily') }}" url-list="{{ route('takings-passengers-search-takings-list') }}" url-costs="{{  route('takings-passengers-liquidation-params',['name' => __('costs')]) }}" url-export="{{ route('takings-passengers-report-daily-export') }}"></road-safety-takings-turns-component>
+                                        <road-safety-takings-turns-component
+                                                :search-params="searchParams"
+                                                :search="search"
+                                                url-report="{{ route('takings-passengers-report-daily') }}"
+                                                url-list="{{ route('takings-passengers-search-takings-list') }}"
+                                                url-costs="{{  route('takings-passengers-liquidation-params',['name' => __('costs')]) }}"
+                                                url-export="{{ route('takings-passengers-report-daily-export') }}"
+                                        ></road-safety-takings-turns-component>
                                         <div class="hide">
                                             <road-safety-takings-component :search-params="searchParams" :search="search" url-list="{{ route('takings-passengers-search-takings-list') }}" url-costs="{{  route('takings-passengers-liquidation-params',['name' => __('costs')]) }}"></road-safety-takings-component>
                                         </div>

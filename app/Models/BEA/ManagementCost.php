@@ -11,9 +11,6 @@ use Illuminate\Support\Carbon;
 /**
  * App\Models\BEA\ManagementCost
  *
- * @method static Builder|ManagementCost newModelQuery()
- * @method static Builder|ManagementCost newQuery()
- * @method static Builder|ManagementCost query()
  * @mixin Eloquent
  * @property int $id
  * @property int $vehicle_id
@@ -21,8 +18,16 @@ use Illuminate\Support\Carbon;
  * @property string|null $description
  * @property int $value
  * @property int $uid
+ * @property string|null $concept
+ * @property int|null $priority
+ * @property bool $global
+ * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Vehicle $vehicle
+ * @method static Builder|ManagementCost newModelQuery()
+ * @method static Builder|ManagementCost newQuery()
+ * @method static Builder|ManagementCost query()
  * @method static Builder|ManagementCost whereCreatedAt($value)
  * @method static Builder|ManagementCost whereDescription($value)
  * @method static Builder|ManagementCost whereId($value)
@@ -31,7 +36,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|ManagementCost whereUpdatedAt($value)
  * @method static Builder|ManagementCost whereValue($value)
  * @method static Builder|ManagementCost whereVehicleId($value)
- * @property-read Vehicle $vehicle
+ * @method static Builder|ManagementCost whereActive($value)
+ * @method static Builder|ManagementCost whereConcept($value)
+ * @method static Builder|ManagementCost whereGlobal($value)
+ * @method static Builder|ManagementCost wherePriority($value)
  */
 class ManagementCost extends Model
 {
@@ -48,7 +56,7 @@ class ManagementCost extends Model
 
     protected $table = 'bea_management_costs';
 
-    protected $fillable = ['uid', 'name', 'concept','description', 'value', 'vehicle_id'];
+    protected $fillable = ['uid', 'name', 'concept', 'description', 'value', 'priority', 'global', 'active', 'vehicle_id'];
 
     public function getDateFormat()
     {

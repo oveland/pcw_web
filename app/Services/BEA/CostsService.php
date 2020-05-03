@@ -2,9 +2,11 @@
 
 namespace App\Services\BEA;
 
-use App\Models\BEA\Penalty;
+use App\Models\BEA\Builder;
+use App\Models\BEA\GlobalCosts;
+use Illuminate\Database\Eloquent\Collection;
 
-class PenaltyService
+class CostsService
 {
     /**
      * @var BEARepository
@@ -17,15 +19,10 @@ class PenaltyService
     }
 
     /**
-     * @return Penalty[]|
+     * @return Builder[]|GlobalCosts[]|\Illuminate\Database\Eloquent\Builder[]|Collection
      */
-    function all()
+    function globalCosts()
     {
-        return Penalty::with(['route', 'vehicle'])
-            ->whereIn('route_id', $this->repository->getAllRoutes()->pluck('id'))
-            ->whereIn('vehicle_id', $this->repository->getAllVehicles()->pluck('id'))
-            ->get()->sortBy(function ($p){
-            return intval($p->vehicle->number);
-        })->values();
+        return GlobalCosts::whereCompany($this->repository->company)->get()->values();
     }
 }

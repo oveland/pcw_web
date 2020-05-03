@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBeaCostsTable extends Migration
+class CreateBeaGlobalCostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateBeaCostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bea_costs', function (Blueprint $table) {
+        Schema::create('bea_global_costs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('uid');
             $table->string('name', 64);
             $table->string('description', 256)->nullable();
             $table->integer('value')->default(0);
             $table->string('concept', 128)->nullable();
+            $table->integer('uid');
             $table->integer('priority')->nullable();
             $table->integer('company_id');
 
@@ -30,9 +30,11 @@ class CreateBeaCostsTable extends Migration
 
         Schema::table('bea_management_costs', function (Blueprint $table) {
             $table->string('concept', 128)->nullable();
+            $table->integer('priority')->nullable();
+            $table->boolean('global')->default(false);
+            $table->boolean('active')->default(true);
             $table->unique(['vehicle_id', 'uid']);
         });
-
 
         DB::statement("UPDATE bea_management_costs SET uid = 0 WHERE uid = 1");
     }
@@ -45,10 +47,14 @@ class CreateBeaCostsTable extends Migration
     public function down()
     {
         Schema::table('bea_management_costs', function (Blueprint $table) {
-            $table->dropColumn('concept');
             $table->dropUnique(['vehicle_id', 'uid']);
+
+            $table->dropColumn('active');
+            $table->dropColumn('global');
+            $table->dropColumn('priority');
+            $table->dropColumn('concept');
         });
 
-        Schema::dropIfExists('bea_costs');
+        Schema::dropIfExists('bea_global_costs');
     }
 }

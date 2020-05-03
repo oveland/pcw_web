@@ -139,6 +139,9 @@ return [
         'time'                  => 'hora',
         'subject'               => 'asunto',
         'message'               => 'mensaje',
+        'value'                 => 'valor',
+        'concept'               => 'concepto',
+        'priority'              => 'prioridad',
     ],
 
 ];

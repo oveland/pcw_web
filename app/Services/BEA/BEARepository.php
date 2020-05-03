@@ -10,6 +10,7 @@ use App\Models\Company\Company;
 use App\Models\Drivers\Drivers;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class BEARepository
@@ -31,7 +32,7 @@ class BEARepository
 
     /**
      * @param $routeId
-     * @return Trajectory[]
+     * @return Trajectory[] | Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     function getTrajectoriesByRoute($routeId)
     {
@@ -42,7 +43,7 @@ class BEARepository
     }
 
     /**
-     * @return Trajectory[]
+     * @return Trajectory[] | Collection
      */
     function getAllTrajectories()
     {
@@ -82,7 +83,7 @@ class BEARepository
     }
 
     /**
-     * @return DiscountType[]
+     * @return DiscountType[] | Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     function getAllDiscountTypes()
     {
@@ -91,7 +92,7 @@ class BEARepository
 
     /**
      * @param Vehicle|null $vehicle
-     * @return ManagementCost[]|\Illuminate\Database\Eloquent\Collection
+     * @return Collection | ManagementCost []
      */
     public function getManagementCosts(Vehicle $vehicle = null)
     {

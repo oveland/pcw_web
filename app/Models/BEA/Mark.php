@@ -267,7 +267,7 @@ class Mark extends Model
     }
 
     /**
-     * @return Commission[]|Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Commission|Builder|Model|mixed|object|null
      */
     public function getCommissionByRoute()
     {
@@ -295,17 +295,15 @@ class Mark extends Model
                 break;
         }
 
-        $commission = (object)[
+        return (object)[
             'value' => $commissionValue,
             'type' => $commissionByRoute->type,
             'baseValue' => $commissionByRoute->value,
         ];
-
-        return $commission;
     }
 
     /**
-     * @return Commission[]|Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Penalty|Builder|Model|mixed|object|null
      */
     public function getPenaltyByRoute()
     {

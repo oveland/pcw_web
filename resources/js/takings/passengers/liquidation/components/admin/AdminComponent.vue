@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="admin-component">
         <div class="portlet light bordered">
             <div class="portlet-title tabbable-line">
                 <div class="text-center col-md-12" style="position: absolute">

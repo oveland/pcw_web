@@ -11,6 +11,7 @@ npm-debug.log
 .env
 .phpstorm.meta.php
 _ide_helper.php
+_ide_helper_models.php
 /public/assets
 /storage/exports
 /public/tmp.jpeg

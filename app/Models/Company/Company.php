@@ -245,9 +245,9 @@ class Company extends Model
      */
     public function configBEA($key, $returnValue = false)
     {
-        $config =$this->hasMany(Config::class)->where('key', $key)->first();
+        $config = $this->hasMany(Config::class)->where('key', $key)->first();
 
-        if(!$config) return false;
+        if (!$config) return false;
 
         return $returnValue ? $config->value : $config->active;
     }

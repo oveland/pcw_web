@@ -3,7 +3,7 @@
 namespace App\Services\BEA;
 
 use App\Facades\BEADB;
-use App\Models\BEA\Costs;
+use App\Models\BEA\GlobalCosts;
 use App\Models\BEA\Discount;
 use App\Models\BEA\ManagementCost;
 use App\Models\BEA\Mark;
@@ -484,21 +484,21 @@ class BEASyncService
     public function checkManagementCostsFor(Vehicle $vehicle)
     {
         $vehicleCosts = $vehicle->costsBEA;
-        $allCosts = Costs::whereCompany($vehicle->company)->get();
+        $globalCosts = GlobalCosts::whereCompany($vehicle->company)->get();
 
-        foreach ($allCosts as $cost) {
-            if (($cost->uid == ManagementCost::PAYROLL_ID && $vehicle->company->configBEA('withPayRoll') || $cost->uid != ManagementCost::PAYROLL_ID)) {
-                $exists = $vehicleCosts->where('uid', $cost->uid)->first();
-                if (!$exists) {
-                    ManagementCost::create([
-                        'uid' => $cost->uid,
-                        'vehicle_id' => $vehicle->id,
-                        'name' => $cost->name,
-                        'concept' => $cost->concept,
-                        'description' => $cost->description,
-                        'value' => $cost->value,
-                    ]);
-                }
+        foreach ($globalCosts as $cost) {
+            $exists = $vehicleCosts->where('uid', $cost->uid)->first();
+            if (!$exists) {
+                ManagementCost::create([
+                    'uid' => $cost->uid,
+                    'vehicle_id' => $vehicle->id,
+                    'name' => $cost->name,
+                    'concept' => $cost->concept,
+                    'description' => $cost->description,
+                    'value' => $cost->value,
+                    'priority' => $cost->priority,
+                    'global' => true,
+                ]);
             }
         }
     }

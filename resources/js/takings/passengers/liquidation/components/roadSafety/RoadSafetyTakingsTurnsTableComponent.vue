@@ -197,6 +197,9 @@
             processCharge(mark) {
                 this.liquidationTurn = this.getLiquidationTurn(mark);
             },
+            saveCharge(mark) {
+                this.liquidationTurn = this.getLiquidationTurn(mark);
+            },
             getLiquidationTurn: function (mark) {
                 return _.find(this.liquidation.byTurns, {markId: mark.id});
             },

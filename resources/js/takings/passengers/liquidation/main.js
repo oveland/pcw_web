@@ -28,7 +28,7 @@ Vue.filter('capitalize', function (value) {
 });
 
 window.ml = {
-    discountTypes : {
+    discountTypes: {
         auxiliary: 1,
         fuel: 2,
         operative: 3,
@@ -62,7 +62,7 @@ let liquidationView = new Vue({
         },
         marks: [],
         liquidation: {
-            byTurns:[],
+            byTurns: [],
             otherDiscounts: [],
             discountsByTurns: [],
             observations: ""
@@ -85,7 +85,7 @@ let liquidationView = new Vue({
             /***************** LIQUIDATION BY TURN (MARK) ********************/
             this.liquidation.byTurns = [];
             _.forEach(this.marks, (mark) => {
-                this.liquidation.byTurns.push( this.liquidationByTurn(mark) );
+                this.liquidation.byTurns.push(this.liquidationByTurn(mark));
             });
 
             const totalGrossBea = _.sumBy(this.marks, 'totalGrossBEA');
@@ -94,7 +94,7 @@ let liquidationView = new Vue({
             const totalOtherDiscounts = _.sumBy(this.liquidation.otherDiscounts, function (other) {
                 return (other.value ? other.value : 0);
             });
-            
+
             const totalDiscounts = totalDiscountsByTurns + totalOtherDiscounts;
             const totalDiscountByFuel = this.totalDiscountByFuel();
             const totalDiscountByMobilityAuxilio = this.totalDiscountByMobilityAuxilio();
@@ -164,16 +164,16 @@ let liquidationView = new Vue({
             this.marks = [];
             const mainContainer = $('.report-container');
             if (this.searchParams.valid) {
-                App.blockUI({target: '.report-container', animate: true});
+                App.blockUI({target: '.report-container, .admin-component .tab-pane', animate: true});
                 this.flag = !this.searchParams.flag;
-                const form = $('.form-search-report');
+                const form = $('.form-search-report, #discounts-params-tab');
                 form.find('.btn-search-report').addClass(loadingClass);
 
                 axios.get(this.urlList, {params: this.searchParams}).then(data => {
                     this.marks = data.data;
                     this.liquidation.otherDiscounts = [];
                     this.liquidation.observations = "";
-                }).catch( (error) => {
+                }).catch((error) => {
                     Swal.fire({
                         title: 'Error!',
                         text: this.$t('An error occurred in the process. Contact your administrator'),
@@ -184,9 +184,9 @@ let liquidationView = new Vue({
                 }).then(function () {
                     mainContainer.hide().fadeIn();
                     form.find('.btn-search-report').removeClass(loadingClass);
-                    App.unblockUI('.report-container');
+                    App.unblockUI('.report-container, .admin-component .tab-pane');
                 });
-            }else{
+            } else {
                 mainContainer.slideUp();
             }
         },
@@ -224,7 +224,7 @@ let liquidationView = new Vue({
         },
 
         /***************** LIQUIDATION BY TURN (MARK) ********************/
-        liquidationByTurn: function(mark){
+        liquidationByTurn: function (mark) {
             const penalty = mark.penalty;
             const commission = mark.commission;
 
@@ -232,9 +232,9 @@ let liquidationView = new Vue({
             const getFall = (Number.isInteger(mark.getFall) ? mark.getFall : 0);
             const turnDiscounts = this.turnDiscounts(mark);
             const totalTurn = mark.totalGrossBEA + (penalty ? penalty.value : 0);
-            const subTotalTurn = totalTurn - payFall  + getFall;
-            const totalDispatch = totalTurn - ( turnDiscounts.total - turnDiscounts.byFuel - turnDiscounts.byMobilityAuxilio) - (commission ? commission.value : 0);
-            const balance = totalDispatch - payFall  + getFall - turnDiscounts.byFuel;
+            const subTotalTurn = totalTurn - payFall + getFall;
+            const totalDispatch = totalTurn - (turnDiscounts.total - turnDiscounts.byFuel - turnDiscounts.byMobilityAuxilio) - (commission ? commission.value : 0);
+            const balance = totalDispatch - payFall + getFall - turnDiscounts.byFuel;
 
             return {
                 markId: mark.id,
@@ -278,11 +278,11 @@ let liquidationView = new Vue({
             return discounts;
         },
     },
-    watch:{
+    watch: {
         marks: function () {
             let discountsByTurns = [];
 
-            if(this.marks.length){
+            if (this.marks.length) {
                 const markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
                     return Object.keys(mark.discounts).length;
                 });
