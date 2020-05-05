@@ -705,7 +705,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                         @endif
 
-                        @if( Auth::user() && (Auth::user()->isAdmin() || Auth::user()->comany->id == \App\Models\Company\Company::BOOTHS) )
+                        @if( Auth::user() && (Auth::user()->isAdmin() || Auth::user()->company->id == \App\Models\Company\Company::BOOTHS) )
                             <li class="nav-item menu-booths">
                                 <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                     <i class="fa fa-shield faa-vertical"></i>
