@@ -8,6 +8,8 @@ use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
 use App\Services\API\Web\Reports\APIReportService;
 use App\Services\API\Web\PCWPassengersService;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -33,7 +35,7 @@ class APIController extends Controller
      *
      * @param $appName
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function app($appName, Request $request)
     {
@@ -49,10 +51,27 @@ class APIController extends Controller
             case 'app-pcw-proprietary':
                 return PCWProprietaryService::serve($request);
                 break;
+
+            case 'photo':
+                return $this->photoService($request);
             default:
                 abort(403);
                 break;
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function photoService(Request $request)
+    {
+        $img = $request->get('img');
+        $data = collect(['success' => true]);
+
+        \Storage::disk('local')->append('photo.log', "\n$img\n".Carbon::now());
+
+        return response()->json($data->toArray());
     }
 
     /**
@@ -61,7 +80,7 @@ class APIController extends Controller
      * @param $api
      * @param $service
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function web($api, $service, Request $request)
     {

@@ -27,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 |
 */
 
-Route::get('/{appName}', 'API\APIController@app');
+Route::any('/{appName}', 'API\APIController@app');
 
 
 
