@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Location $location
  * @property-read Collection|CobanPhotoPackage[] $packages
  * @property-read Vehicle $vehicle
+ * @property-read int|null $packages_count
  */
 class CobanPhoto extends Model
 {

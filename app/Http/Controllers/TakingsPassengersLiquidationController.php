@@ -11,20 +11,23 @@ use App\Models\BEA\ManagementCost;
 use App\Models\BEA\Mark;
 use App\Models\BEA\Penalty;
 use App\Models\BEA\Trajectory;
-use App\Models\BEA\Turn;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\BEA\BEAService;
+use App\Services\PCWExporterService;
 use Auth;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use PDF;
 use Storage;
+use Validator;
 
 class TakingsPassengersLiquidationController extends Controller
 {
@@ -37,20 +40,19 @@ class TakingsPassengersLiquidationController extends Controller
      */
     private $beaService;
     /**
-     * @var App\Services\PCWExporterService
+     * @var PCWExporterService
      */
     private $exporter;
 
-    public function __construct(PCWAuthService $auth, App\Services\PCWExporterService $exporter)
+    public function __construct(PCWAuthService $auth, PCWExporterService $exporter)
     {
         $this->auth = $auth;
+        $this->exporter = $exporter;
 
         $this->middleware(function ($request, $next) {
             $this->beaService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)]);
             return $next($request);
         });
-
-        $this->exporter = $exporter;
     }
 
     function asDollars($value)
@@ -162,7 +164,7 @@ class TakingsPassengersLiquidationController extends Controller
 
     /**
      * @param Request $request
-     * @return View
+     * @return Factory|View
      */
     public function index(Request $request)
     {
@@ -267,6 +269,8 @@ class TakingsPassengersLiquidationController extends Controller
 
         $beaLiquidations = $this->beaService->getBEATakingsList($vehicleReport, $dateReport)->values()->toArray();
 
+        Carbon::now();
+
         return response()->json($beaLiquidations);
     }
 
@@ -296,6 +300,15 @@ class TakingsPassengersLiquidationController extends Controller
                 $this->beaService->sync->checkDiscountsFor($vehicle);
 
                 return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory));
+                break;
+            case __('costs'):
+                $vehicle = Vehicle::find($request->get('vehicle'));
+
+                $this->beaService->sync->checkManagementCostsFor($vehicle);
+
+                $costs = $this->beaService->repository->getManagementCosts($vehicle);
+
+                return response()->json($costs->where('uid', '<>', ManagementCost::PAYROLL_ID)->values()->toArray());
                 break;
             default:
                 return response()->json($this->beaService->getLiquidationParams());
@@ -463,22 +476,44 @@ class TakingsPassengersLiquidationController extends Controller
                     'error' => false,
                     'message' => __('Cost edited successfully'),
                 ];
+                $newCost = (object)$request->get('cost');
+                $validator = Validator::make(collect($newCost)->toArray(), [
+                    'name' => 'required|max:255',
+                    'concept' => 'required',
+                    'value' => 'required|numeric',
+                    'priority' => 'required|numeric',
+                ], [
+                    'required' => __('The :attribute field is required'),
+                ]);
 
-                $costToEdit = (object)$request->get('cost');
-                $cost = ManagementCost::find($costToEdit->id);
-
-                if ($cost) {
-                    $cost->name = $costToEdit->name;
-                    $cost->description = $costToEdit->description;
-                    $cost->value = $costToEdit->value;
-
-                    if (!$cost->save()) {
-                        $response->error = true;
-                        $response->message .= "<br> - " . __("Cost unable to update");
-                    }
-                } else {
+                if ($validator->errors()->count()) {
                     $response->error = true;
-                    $response->message .= "<br> - " . __("Cost register doesn't exists in the system");
+                    $response->message = '<hr> ✗ '.collect($validator->errors())->flatten()->implode('<br> ✗ ');
+                } else {
+                    if ($newCost->create ?? null) {
+                        $cost = new ManagementCost([
+                            'vehicle_id' => $newCost->vehicleId,
+                            'uid' => intval(ManagementCost::where('vehicle_id', $newCost->vehicleId)->max('uid')) + 1,
+                        ]);
+                    } else {
+                        $cost = ManagementCost::find($newCost->id);
+                    }
+
+                    if ($cost) {
+                        $cost->name = $newCost->name;
+                        $cost->concept = $newCost->concept;
+                        $cost->value = $newCost->value;
+                        $cost->active = $newCost->active;
+                        $cost->priority = $newCost->priority;
+
+                        if (!$cost->save()) {
+                            $response->error = true;
+                            $response->message .= "<br> - " . __("Error saving cost register");
+                        }
+                    } else {
+                        $response->error = true;
+                        $response->message .= "<br> - " . __("Cost register doesn't exists in the system");
+                    }
                 }
 
                 return response()->json($response);

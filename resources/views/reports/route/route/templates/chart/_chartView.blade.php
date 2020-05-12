@@ -212,7 +212,7 @@
             </a>
             <ul class="dropdown-menu pull-right">
                 <li>
-                    <a href="{{ route('report-route-off-road-is-fake', ['location' => '']) }}" class="text-danger btn-fake-off-road">
+                    <a href="{{ route('report-route-off-road-is-fake', ['location' => 0]) }}" class="text-danger btn-fake-off-road">
                         <i class="fa fa-thumbs-down"></i> @lang('Mark as fake')
                     </a>
                 </li>

@@ -58,6 +58,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $sampling_radius
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereDistanceThreshold($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereSamplingRadius($value)
+ * @property-read int|null $control_points_count
+ * @property-read int|null $current_dispatch_registers_count
+ * @property-read int|null $sub_routes_count
  */
 class Route extends Model
 {

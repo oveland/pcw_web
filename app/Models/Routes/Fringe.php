@@ -46,6 +46,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $time_to
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereTimeFrom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Fringe whereTimeTo($value)
+ * @property-read int|null $control_point_times_count
  */
 class Fringe extends Model
 {

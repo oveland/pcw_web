@@ -34,6 +34,12 @@
     </div>
 </template>
 
+<template id="animated-loading">
+    <div class="col-md-12 text-center">
+        <img class="" alt="@lang('Loading')..." src="{{ asset('img/loading.gif') }}">
+    </div>
+</template>
+
 <template id="select-loading">
     <option value=""><i class="fa fa-spinner fa-pulse fa-fw"></i> @lang('Loading...')</option>
 </template>

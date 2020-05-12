@@ -67,6 +67,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|\App\LastLocation whereTotalLocations($value)
  * @method static Builder|\App\LastLocation whereVehicleActive($value)
  * @method static Builder|\App\LastLocation whereVehicleInRepair($value)
+ * @property-read int|null $report_vehicle_status_count
  */
 class LastLocation extends Model
 {

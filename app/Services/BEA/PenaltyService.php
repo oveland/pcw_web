@@ -3,6 +3,8 @@
 namespace App\Services\BEA;
 
 use App\Models\BEA\Penalty;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class PenaltyService
 {
@@ -17,7 +19,7 @@ class PenaltyService
     }
 
     /**
-     * @return Penalty[]|
+     * @return Penalty[]|Builder[]|Collection
      */
     function all()
     {

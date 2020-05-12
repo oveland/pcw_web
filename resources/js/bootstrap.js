@@ -62,7 +62,7 @@ window.axios.interceptors.response.use(
 //     key: 'your-pusher-key'
 // });
 
-
+/*
 import Echo from "laravel-echo"
 
 window.Pusher = require('pusher-js');
@@ -80,5 +80,4 @@ window.Echo.channel('map')
         console.log('Arrived WS!!!!');
         console.log(e);
     });
-
-console.log('Init WS');
+*/

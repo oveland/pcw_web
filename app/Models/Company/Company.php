@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Models\BEA\Config;
 use App\Models\Drivers\Driver;
 use App\Models\Drivers\Drivers;
 use App\Models\Proprietaries\Proprietary;
@@ -60,6 +61,14 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder|Company whereSpeedingThreshold($value)
  * @property string|null $default_kmz_url
  * @method static Builder|Company whereDefaultKmzUrl($value)
+ * @property-read int|null $active_drivers_count
+ * @property-read int|null $active_routes_count
+ * @property-read int|null $active_vehicles_count
+ * @property-read int|null $dispatches_count
+ * @property-read int|null $drivers_count
+ * @property-read int|null $proprietaries_count
+ * @property-read int|null $routes_count
+ * @property-read int|null $vehicles_count
  */
 class Company extends Model
 {
@@ -227,5 +236,19 @@ class Company extends Model
     public function hasADD()
     {
         return collect([self::MONTEBELLO])->contains($this->id);
+    }
+
+    /**
+     * @param $key
+     * @param bool $returnValue
+     * @return mixed
+     */
+    public function configBEA($key, $returnValue = false)
+    {
+        $config = $this->hasMany(Config::class)->where('key', $key)->first();
+
+        if (!$config) return false;
+
+        return $returnValue ? $config->value : $config->active;
     }
 }

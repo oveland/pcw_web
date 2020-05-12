@@ -46,6 +46,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|Proprietary query()
  * @property string|null $identity
  * @method static Builder|Proprietary whereIdentity($value)
+ * @property int|null $user_id
+ * @property-read int|null $assigned_vehicles_count
+ * @property-read \App\Models\Users\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Proprietaries\Proprietary whereUserId($value)
  */
 class Proprietary extends Model
 {

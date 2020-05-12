@@ -4,9 +4,13 @@ namespace App\Models\Vehicles;
 
 use App\Models\Routes\CurrentDispatchRegister;
 use Carbon\Carbon;
+use Dompdf\Exception;
 use Eloquent;
+use Facade\Ignition\Exceptions\ViewException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * App\Models\Vehicles\CurrentLocation
@@ -79,7 +83,7 @@ class CurrentLocation extends Model
 
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',$date)[0]);
+        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',Str::replaceArray('T', [' '], $date))[0]);
     }
 
     public function dispatchRegister()

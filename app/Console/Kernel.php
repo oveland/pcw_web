@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
             //$schedule->command('track:map --company=17')->everyFiveMinutes()->between('22:00', '23:59');
             //$schedule->command('track:map --company=17')->everyFiveMinutes()->between('00:00', '04:00');
 
+
+            $schedule->command('telescope:prune')->daily();
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
 

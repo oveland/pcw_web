@@ -5,11 +5,13 @@ namespace App\Models\Users;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * App\Models\Users\User
@@ -38,7 +40,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static Builder|User whereRole($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereUsername($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  * @property int $role_id
  * @method static Builder|User whereRoleId($value)
  * @method static Builder|User newModelQuery()
@@ -46,6 +48,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static Builder|User query()
  * @property string|null $vehicle_tags
  * @method static Builder|User whereVehicleTags($value)
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
+ * @property-read int|null $clients_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
+ * @property-read int|null $tokens_count
  */
 class User extends Authenticatable
 {
@@ -55,7 +62,7 @@ class User extends Authenticatable
     const DISPATCHER_ROLE = 4;
     const ANALYST_ML_ROLE = 5;
 
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
