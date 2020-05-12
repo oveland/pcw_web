@@ -1,33 +1,28 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\App;
 
+use App\Models\Vehicles\Vehicle;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TrackingMapEvent implements ShouldBroadcast
+class RocketAppEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private $trackingLocations;
-    private $company;
-    private $route;
-
     /**
-     * Create a new event instance.
-     *
-     * @param $company
-     * @param $route
-     * @param $trackingLocations
+     * @var Vehicle
      */
-    public function __construct($company, $route, $trackingLocations)
+    private $vehicle;
+    private $type;
+
+    public function __construct(Vehicle $vehicle, $type)
     {
-        $this->trackingLocations = $trackingLocations;
-        $this->company = $company;
-        $this->route = $route;
+        $this->vehicle = $vehicle;
+        $this->type = $type;
     }
 
     /**
@@ -37,7 +32,7 @@ class TrackingMapEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel("gps");
+        return new Channel("app-rocket");
     }
 
     /**
@@ -47,7 +42,7 @@ class TrackingMapEvent implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return __NAMESPACE__."\\track-route-$this->route";
+        return "request-photo-".$this->vehicle->plate;
     }
 
     /**
@@ -57,6 +52,6 @@ class TrackingMapEvent implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        return $this->trackingLocations->toArray();
+        return ['type' => $this->type];
     }
 }
