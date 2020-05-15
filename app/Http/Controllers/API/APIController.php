@@ -52,8 +52,8 @@ class APIController extends Controller
                 return PCWProprietaryService::serve($request);
                 break;
 
-            case 'photo':
-                return $this->photoService($request);
+            case 'app-rocket':
+                return $this->rocketService($request);
             default:
                 abort(403);
                 break;
@@ -64,12 +64,31 @@ class APIController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function photoService(Request $request)
+    public function rocketService(Request $request)
     {
-        $img = $request->get('img');
         $data = collect(['success' => true]);
+        $vehicle = $request->get('vehicle');
+        switch ($request->get('action')) {
+            case 'save-photo':
+                $type = $request->get('type');
+                $side = $request->get('side');
+                $img = $request->get('img');
+                $data = collect(['success' => true]);
 
-        \Storage::disk('local')->append('photo.log', "\n$img\n".Carbon::now());
+                \Storage::disk('local')->append('photo.log', "$img\n" . Carbon::now()."\n$side: $type\n$vehicle:\n");
+                break;
+
+            case 'save-battery':
+                $payload = collect($request->only([
+                    'level',
+                    'charging',
+                    'dateChanged',
+                    'date'
+                ]));
+
+                \Storage::disk('local')->append('battery.log', $payload->toJson()."\n$vehicle: \n");
+                break;
+        }
 
         return response()->json($data->toArray());
     }

@@ -17,12 +17,12 @@ class RocketAppEvent implements ShouldBroadcast
      * @var Vehicle
      */
     private $vehicle;
-    private $type;
+    private $data;
 
-    public function __construct(Vehicle $vehicle, $type)
+    public function __construct(Vehicle $vehicle, $data)
     {
         $this->vehicle = $vehicle;
-        $this->type = $type;
+        $this->data = $data;
     }
 
     /**
@@ -42,7 +42,7 @@ class RocketAppEvent implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return "request-photo-".$this->vehicle->plate;
+        return "device-".$this->vehicle->plate;
     }
 
     /**
@@ -52,6 +52,6 @@ class RocketAppEvent implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        return ['type' => $this->type];
+        return $this->data;
     }
 }
