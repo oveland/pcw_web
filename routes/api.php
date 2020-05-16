@@ -40,9 +40,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 |
 */
 
-Route::any('/{appName}', 'API\APIController@app');
-
-
+Route::any('/{name}', 'API\APIController@app');
 
 
 /*
@@ -57,7 +55,14 @@ Route::any('/{appName}', 'API\APIController@app');
 /* General route */
 Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
 
-Route::get('/info/php', function(){
-    phpinfo();
-});
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Version 2 for API integrates only one controller and global method serve
+|--------------------------------------------------------------------------
+|
+*/
+Route::get('/v2/{api}/{name}/{service}', 'API\APIController@serve');
 

@@ -17,41 +17,52 @@ use Illuminate\Http\Request;
 
 class PCWProprietaryService implements APIAppsInterface
 {
-    //
-    public static function serve(Request $request): JsonResponse
+
+    /**
+     * @var Request
+     */
+    private $request;
+    private $service;
+
+    public function __construct($service)
     {
-        $action = $request->get('action');
-        if ($action) {
-            switch ($action) {
+        $this->request = request();
+        $this->service = $service ?? $this->request->get('action');
+    }
+
+    public function serve(): JsonResponse
+    {
+        if ($this->service) {
+            switch ($this->service) {
                 case 'get-taking-daily-report':
                 case 'get-daily-taking-report':
-                    return self::getDailyTakingReport($request);
+                    return self::getDailyTakingReport();
                     break;
                 case 'get-consolidated-daily-report':
-                    return self::getConsolidatedDailyReport($request);
+                    return self::getConsolidatedDailyReport();
                     break;
                 default:
                     return response()->json([
                         'error' => true,
-                        'message' => 'Invalid action serve'
+                        'message' => 'Invalid request service'
                     ]);
                     break;
             }
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'No action found!'
+                'message' => 'No service found!'
             ]);
         }
     }
 
-    public static function getDailyTakingReport(Request $request)
+    public function getDailyTakingReport()
     {
         $data = collect(['success' => true, 'message' => '']);
-        $proprietary = Proprietary::find($request->get('proprietary'));
-        self::checkSession($proprietary);
-        $vehicleId = $request->get('vehicle');
-        $date = $request->get('date');
+        $proprietary = Proprietary::find($this->request->get('proprietary'));
+        $this->checkSession($proprietary);
+        $vehicleId = $this->request->get('vehicle');
+        $date = $this->request->get('date');
         $beaService = App::makeWith('bea.service', ['company' => $proprietary->company_id]);
 
         $data->put('report', $beaService->getDailyReport($vehicleId, $date));
@@ -59,13 +70,13 @@ class PCWProprietaryService implements APIAppsInterface
         return response()->json($data);
     }
 
-    public static function getConsolidatedDailyReport(Request $request)
+    public function getConsolidatedDailyReport()
     {
         $data = collect(['success' => true, 'message' => '']);
-        $proprietary = Proprietary::find($request->get('proprietary'));
-        self::checkSession($proprietary);
-        $date = $request->get('date');
-        $type = $request->get('type');
+        $proprietary = Proprietary::find($this->request->get('proprietary'));
+        $this->checkSession($proprietary);
+        $date = $this->request->get('date');
+        $type = $this->request->get('type');
         $beaService = App::makeWith('bea.service', ['company' => $proprietary->company_id]);
 
         $reportComplete = $beaService->getConsolidatedDailyReport($date, $type);

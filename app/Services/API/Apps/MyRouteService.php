@@ -15,13 +15,24 @@ use Illuminate\Http\Request;
 
 class MyRouteService implements APIAppsInterface
 {
-    public static function serve(Request $request): JsonResponse
+    /**
+     * @var Request
+     */
+    private $request;
+    private $service;
+
+    public function __construct($service)
     {
-        $action = $request->get('action');
-        if ($action) {
-            switch ($action) {
+        $this->request = request();
+        $this->service = $service ?? $this->request->get('action');
+    }
+
+    public function serve(): JsonResponse
+    {
+        if ($this->service) {
+            switch ($this->service) {
                 case 'track-route-vehicles':
-                    return self::trackVehicles($request);
+                    return self::trackVehicles();
                     break;
                 default:
                     return response()->json([
@@ -33,15 +44,15 @@ class MyRouteService implements APIAppsInterface
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'No action found!'
+                'message' => 'No service found!'
             ]);
         }
     }
 
-    public static function trackVehicles(Request $request): JsonResponse
+    public function trackVehicles(): JsonResponse
     {
         $data = collect(['success' => true, 'message' => '']);
-        $route = Route::find(intval($request->get('route')));
+        $route = Route::find(intval($this->request->get('route')));
         if ($route) {
             # Info Route
             $infoRoute = [

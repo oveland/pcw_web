@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use App;
 use App\Http\Controllers\MigrationController;
-use App\Services\API\Apps\MyRouteService;
-use App\Services\API\Apps\PCWProprietaryService;
-use App\Services\API\Apps\PCWTrackService;
 use App\Services\API\Web\Reports\APIReportService;
 use App\Services\API\Web\PCWPassengersService;
 use Carbon\Carbon;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -31,69 +30,41 @@ class APIController extends Controller
 
 
     /**
+     * @api v2.0
+     *
+     * Serve API on Version 2.0
+     *
+     * @example For API Web:    /v2/web/reports/control-points?foo=bar
+     * @example For API Apps:   /v2/app/rocket?foo=bar
+     *
+     * @param $api
+     * @param $name
+     * @param $service
+     * @return mixed
+     * @throws BindingResolutionException
+     */
+    public function serve($api, $name, $service)
+    {
+        return App::makeWith("api.$api", compact(['name', 'service']))->serve();
+    }
+
+    /**
+     * @api v1.0
+     *
      * API for mobile apps
      *
-     * @param $appName
-     * @param Request $request
-     * @return JsonResponse
+     * @param $name
+     * @return mixed|api.app
+     * @throws BindingResolutionException
      */
-    public function app($appName, Request $request)
+    public function app($name)
     {
-        switch ($appName) {
-            case 'app-my-route':
-                return MyRouteService::serve($request);
-                break;
-
-            case 'app-pcw-track':
-                return PCWTrackService::serve($request);
-                break;
-
-            case 'app-pcw-proprietary':
-                return PCWProprietaryService::serve($request);
-                break;
-
-            case 'app-rocket':
-                return $this->rocketService($request);
-            default:
-                abort(403);
-                break;
-        }
+        return App::makeWith('api.app', compact('name'))->serve();
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function rocketService(Request $request)
-    {
-        $data = collect(['success' => true]);
-        $vehicle = $request->get('vehicle');
-        switch ($request->get('action')) {
-            case 'save-photo':
-                $type = $request->get('type');
-                $side = $request->get('side');
-                $img = $request->get('img');
-                $data = collect(['success' => true]);
-
-                \Storage::disk('local')->append('photo.log', "$img\n" . Carbon::now()."\n$side: $type\n$vehicle:\n");
-                break;
-
-            case 'save-battery':
-                $payload = collect($request->only([
-                    'level',
-                    'charging',
-                    'dateChanged',
-                    'date'
-                ]));
-
-                \Storage::disk('local')->append('battery.log', $payload->toJson()."\n$vehicle: \n");
-                break;
-        }
-
-        return response()->json($data->toArray());
-    }
-
-    /**
+     * TODO: Migrate to provider strategy and version 2.0
+     *
      * API for web process
      *
      * @param $api

@@ -11,22 +11,33 @@ namespace App\Services\API\Apps;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\PCWTime;
 use App\Models\Vehicles\Vehicle;
-use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Log;
 
 class PCWTrackService implements APIAppsInterface
 {
-    //
-    public static function serve(Request $request): JsonResponse
+    /**
+     * @var Request
+     */
+    private $request;
+    private $service;
+
+    public function __construct($service)
     {
-        $action = $request->get('action');
-        if ($action) {
-            switch ($action) {
+        $this->request = request();
+        $this->service = $service ?? $this->request->get('action');
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function serve(): JsonResponse
+    {
+        if ($this->service) {
+            switch ($this->service) {
                 case 'track-route-times':
-                    return self::trackRouteTime($request);
+                    return self::trackRouteTime();
                     break;
                 default:
                     return response()->json([
@@ -38,18 +49,18 @@ class PCWTrackService implements APIAppsInterface
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'No action found!'
+                'message' => 'No service found!'
             ]);
         }
     }
 
-    public static function trackRouteTime(Request $request): JsonResponse
+    public function trackRouteTime(): JsonResponse
     {
         $data = collect(['success' => true, 'message' => '']);
 
-        $vehicle = Vehicle::where('plate',$request->get('plate'))->get()->first();
+        $vehicle = Vehicle::where('plate', $this->request->get('plate'))->get()->first();
 
-        if( $vehicle ){
+        if ($vehicle) {
             $report = DB::select("
                 SELECT v.plate vehicle_plate, v.number vehicle_number, r.name route_name, dr.round_trip round_trip, dr.turn, cr.date, cr.timed, cr.timep, cr.timem, dr.departure_time, (cr.timem::INTERVAL +dr.departure_time)::TIME time_m, (cr.timep::INTERVAL+dr.departure_time)::TIME time_p, 
                 CASE WHEN ( abs(cr.status_in_minutes) <= 1 ) THEN 'ok' ELSE cr.status END status
@@ -60,7 +71,7 @@ class PCWTrackService implements APIAppsInterface
                 WHERE v.plate = '$vehicle->plate' AND (current_timestamp - cr.date)::INTERVAL < '00:01:00'::INTERVAL
             ");
 
-            if( count($report) && $report = $report[0] ){
+            if (count($report) && $report = $report[0]) {
                 //Log::useDailyFiles(storage_path().'/logs/api/pcw-track-report.log',2);
 
                 $dataMessage = collect([
@@ -78,12 +89,11 @@ class PCWTrackService implements APIAppsInterface
 
                 $data->put('data', $dataMessage);
                 //Log::info( $dataMessage->toJson() );
-            }else{
+            } else {
                 $data->put('success', false);
                 $data->put('message', __('No registers found'));
             }
-        }
-        else{
+        } else {
             $data->put('success', false);
             $data->put('message', __('Vehicle not found in platform'));
         }

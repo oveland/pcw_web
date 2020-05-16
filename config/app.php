@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\APIProvider;
 use App\Providers\BEAServiceProvider;
 use App\Providers\ReportsServiceProvider;
 
@@ -194,6 +195,7 @@ return [
          */
         ReportsServiceProvider::class,
         BEAServiceProvider::class,
+        APIProvider::class
     ],
 
     /*
