@@ -40,7 +40,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 |
 */
 
-Route::any('/{name}', 'API\APIController@app');
+Route::any('/{resource}', 'API\APIController@app');
 
 
 /*
@@ -53,9 +53,7 @@ Route::any('/{name}', 'API\APIController@app');
 */
 
 /* General route */
-Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
-
-
+Route::any('/v1/{resource}/{service}', 'API\APIController@web');
 
 
 /*
@@ -64,5 +62,5 @@ Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
 |--------------------------------------------------------------------------
 |
 */
-Route::get('/v2/{api}/{name}/{service}', 'API\APIController@serve');
+Route::any('/v2/{platform}/{resource}/{service}', 'API\APIController@serve');
 

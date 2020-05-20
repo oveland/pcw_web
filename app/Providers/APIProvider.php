@@ -5,7 +5,10 @@ namespace App\Providers;
 use App\Services\API\Apps\MyRouteService;
 use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
-use App\Services\API\Apps\RocketService;
+use App\Services\API\Apps\APIRocketService;
+use App\Services\API\Web\APIPassengersService;
+use App\Services\API\Web\DB\APIMigrationsService;
+use App\Services\API\Web\Reports\APIReportService;
 use Illuminate\Support\ServiceProvider;
 
 class APIProvider extends ServiceProvider
@@ -27,34 +30,59 @@ class APIProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->bind('api', function ($app, $params) {
+            $platform = $params['platform'];
+            return app("api.$platform", $params);
+        });
+
         $this->app->bind('api.app', function ($app, $params) {
-            $name = $params['name'];
+            $resource = $params['resource'];
             $service = $params['service'] ?? null;
 
-            switch ($name) {
-                case 'app-my-route':
+            switch ($resource) {
+                case 'my-route':
+                case 'app-my-route':        // TODO: migrate/delete in client implementation
                     return new MyRouteService($service);
                     break;
 
-                case 'app-pcw-track':
+                case 'track':
+                case 'app-pcw-track':       // TODO: migrate/delete in client implementation
                     return new PCWTrackService($service);
                     break;
 
-                case 'app-pcw-proprietary':
+                case 'proprietary':
+                case 'app-pcw-proprietary': // TODO: migrate/delete in client implementation
                     return new PCWProprietaryService($service);
                     break;
 
                 case 'rocket':
                 case 'app-rocket':
-                    return new RocketService($service);
+                    return new APIRocketService($service);
                 default:
-                    abort(403);
+                    return abort(403);
                     break;
             }
         });
 
         $this->app->bind('pcw.web', function ($app, $params) {
-            // TODO: Migrate hers ths 'web method' of API Controller ;)
+            $resource = $params['resource'];
+            $service = $params['service'] ?? null;
+
+            switch ($resource) {
+                case 'passengers':
+                    return new APIPassengersService($service);
+                    break;
+
+                case 'reports':
+                    return new APIReportService($service);
+                    break;
+
+                case 'migrations':
+                    return new APIMigrationsService($service);
+                default:
+                    return abort(403);
+                    break;
+            }
         });
     }
 }

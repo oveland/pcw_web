@@ -8,7 +8,6 @@
 
 namespace App\Services\API\Web\Contracts;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -18,9 +17,7 @@ use Illuminate\Http\JsonResponse;
 interface APIWebInterface
 {
     /**
-     * @param $service
-     * @param Request $request
      * @return JsonResponse
      */
-    public function serve($service, Request $request): JsonResponse;
+    public function serve(): JsonResponse;
 }

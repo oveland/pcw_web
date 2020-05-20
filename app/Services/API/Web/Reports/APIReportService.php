@@ -8,57 +8,32 @@
 
 namespace App\Services\API\Web\Reports;
 
-use App\Models\Company\Company;
-use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Routes\DispatchRegister;
 use App\Services\API\Web\Contracts\APIWebInterface;
 use App\Services\Reports\Routes\ControlPointService;
-use App\Traits\CounterByRecorder;
-use App\Traits\CounterBySensor;
-use App\Models\Vehicles\Vehicle;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class APIReportService implements APIWebInterface
 {
-    public $controlPointService;
     /**
      * APIReportService constructor.
-     * @param ControlPointService $controlPointService
+     * @param $service
      */
-    public function __construct(ControlPointService $controlPointService)
+    public function __construct($service)
     {
-        $this->controlPointService = $controlPointService;
+        $this->request = request();
+        $this->service = $service ?? $this->request->get('action');
     }
 
 
     /**
-     * @param $service
-     * @param Request $request
      * @return JsonResponse
      */
-    public function serve($service, Request $request): JsonResponse
+    public function serve(): JsonResponse
     {
-        switch ($service) {
+        switch ($this->service) {
             case 'control-points':
-                $dispatchRegister = DispatchRegister::find($request->get('dispatch-register'));
-
-                if( $dispatchRegister ){
-                    $response = [
-                        'error' => false,
-                        'report' => $this->build($dispatchRegister)
-                    ];
-                }else{
-                    $response = [
-                        'error' => true,
-                        'message' => 'Dispatch register not found'
-                    ];
-                }
-
-
-                return response()->json($response);
-
+                return $this->buildControlPointReport();
                 break;
             default:
                 return response()->json([
@@ -71,20 +46,30 @@ class APIReportService implements APIWebInterface
     }
 
     /**
-     * Build control point report from dispatch register
-     *
-     * @param $dispatchRegister
-     * @return object
+     * @return JsonResponse
      */
-    public function build(DispatchRegister $dispatchRegister)
+    public function buildControlPointReport()
     {
-        $controlPointReportsByDispatchRegister = $this->controlPointService->buildControlPointReportsByDispatchRegister($dispatchRegister, $dispatchRegister->controlPointTimeReports);
+        $controlPointService = new ControlPointService();
+        $dispatchRegister = DispatchRegister::find($this->request->get('dispatch-register'));
+        $controlPointReportsByDispatchRegister = $controlPointService->buildControlPointReportsByDispatchRegister($dispatchRegister, $dispatchRegister->controlPointTimeReports);
 
         $report = collect([]);
         $report->put('dispatchRegister', $dispatchRegister->getAPIFields());
         $report->put('reportsByControlPoint', $controlPointReportsByDispatchRegister->reportsByControlPoint);
 
-        return $report;
-    }
+        if ($dispatchRegister) {
+            $response = [
+                'error' => false,
+                'report' => $report
+            ];
+        } else {
+            $response = [
+                'error' => true,
+                'message' => 'Dispatch register not found'
+            ];
+        }
 
+        return response()->json($response);
+    }
 }

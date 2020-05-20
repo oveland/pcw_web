@@ -20,26 +20,28 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
-class PCWPassengersService implements APIWebInterface
+class APIPassengersService implements APIWebInterface
 {
     /**
-     * @param $service
-     * @param Request $request
+     * @var Request
+     */
+    private $request;
+    private $service;
+
+    public function __construct($service)
+    {
+        $this->request = request();
+        $this->service = $service ?? $this->request->get('action');
+    }
+
+    /**
      * @return JsonResponse
      */
-    public function serve($service, Request $request): JsonResponse
+    public function serve(): JsonResponse
     {
-        switch ($service) {
+        switch ($this->service) {
             case 'report':
-                $company = Company::find($request->get('company'));
-                $dateReport = $request->get('date');
-                $dateReport = $dateReport ? $dateReport : Carbon::now()->toDateString();
-
-                return response()->json([
-                    'error' => false,
-                    'passengersReport' => $this->buildPassengersReport($company, $dateReport)
-                ]);
-
+                return $this->buildPassengersReport();
                 break;
             default:
                 return response()->json([
@@ -52,14 +54,14 @@ class PCWPassengersService implements APIWebInterface
     }
 
     /**
-     * Build passenger report from company and date
-     *
-     * @param $company
-     * @param $dateReport
-     * @return object
+     * @return JsonResponse
      */
-    public function buildPassengersReport(Company $company, $dateReport)
+    public function buildPassengersReport()
     {
+        $company = Company::find($this->request->get('company'));
+        $dateReport = $this->request->get('date');
+        $dateReport = $dateReport ? $dateReport : Carbon::now()->toDateString();
+
         $routes = $company->routes;
         $allDispatchRegisters = DispatchRegister::active()
             ->whereIn('route_id', $routes->pluck('id'))
@@ -95,22 +97,24 @@ class PCWPassengersService implements APIWebInterface
             ];
         }
 
-        $passengerReport = (object)[
-            'date' => $dateReport,
-            'companyId' => $company->id,
-            'reports' => $reports
-        ];
-
-        return $passengerReport;
+        return response()->json([
+            'error' => false,
+            'passengersReport' => (object)[
+                'date' => $dateReport,
+                'companyId' => $company->id,
+                'reports' => $reports
+            ]
+        ]);
     }
 
     /**
      * @param $history
      * @return Collection
      */
-    function getRecorderHistory($history){
+    private function getRecorderHistory($history)
+    {
         $recorderHistory = collect([]);
-        foreach ($history as $item){
+        foreach ($history as $item) {
             $recorderHistory->push([
                 'routeId' => $item->routeId,
                 'routeName' => $item->routeName,

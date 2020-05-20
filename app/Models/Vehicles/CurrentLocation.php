@@ -71,6 +71,7 @@ use Psr\Log\InvalidArgumentException;
  * @method static Builder|CurrentLocation whereJumps($value)
  * @method static Builder|CurrentLocation whereLocationId($value)
  * @method static Builder|CurrentLocation whereTotalLocations($value)
+ * @method static Builder|CurrentLocation findByVehicle(Vehicle $vehicle)
  */
 class CurrentLocation extends Model
 {
@@ -83,7 +84,7 @@ class CurrentLocation extends Model
 
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'),explode('.',Str::replaceArray('T', [' '], $date))[0]);
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', Str::replaceArray('T', [' '], $date))[0]);
     }
 
     public function dispatchRegister()
@@ -103,7 +104,7 @@ class CurrentLocation extends Model
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'orientation' => $this->orientation,
-            'current_mileage' => number_format($this->current_mileage/1000, 2, ',', '.'),
+            'current_mileage' => number_format($this->current_mileage / 1000, 2, ',', '.'),
             'speed' => $this->speed,
         ];
     }
@@ -115,6 +116,16 @@ class CurrentLocation extends Model
 
     public function scopeWhereVehicle($query, Vehicle $vehicle)
     {
-        return $query->where('vehicle_id', $vehicle->id)->get()->first();
+        return $this->scopeFindByVehicle($query, $vehicle);
+    }
+
+    /**
+     * @param Builder $query
+     * @param Vehicle $vehicle
+     * @return Builder
+     */
+    function scopeFindByVehicle(Builder $query, Vehicle $vehicle)
+    {
+        return $query->where('vehicle_id', $vehicle->id)->first();
     }
 }
