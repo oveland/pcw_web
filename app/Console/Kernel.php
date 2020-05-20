@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
 
 
             $schedule->command('telescope:prune')->daily();
+
+            $schedule->command('rocket:event')->everyFiveMinutes()->between('06:00', '19:00');
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
 
