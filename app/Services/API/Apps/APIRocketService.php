@@ -40,6 +40,11 @@ class APIRocketService implements APIAppsInterface
     public function __construct($service)
     {
         $this->request = request();
+        if ($this->request->get('vehicle') == 'DEM-003') {
+            $this->request = collect($this->request->all());
+            $this->request->put('vehicle', 'VCK-542');
+        }
+
         $this->service = $service ?? $this->request->get('action');
         $this->vehicle = Vehicle::where('plate', $this->request->get('vehicle'))->first();
         $this->vehicle = $this->vehicle ? $this->vehicle : Vehicle::find($this->request->get('vehicle'));
@@ -60,6 +65,10 @@ class APIRocketService implements APIAppsInterface
                     break;
 
                 case 'event':
+                    if ($this->vehicle->plate == 'VCK-542') {
+                        $this->vehicle = Vehicle::where('plate', 'DEM-003')->first();
+                    }
+
                     return $this->event();
                     break;
                 case 'save-battery':
@@ -135,7 +144,9 @@ class APIRocketService implements APIAppsInterface
 
             if ($battery->save()) {
                 $currentBattery = CurrentBattery::findByVehicle($this->vehicle);
-                $currentBattery->fill($battery->toArray());
+                $currentBattery->fill($this->request->all());
+                $currentBattery->date_changed = $battery->date_changed;
+
                 $success = $currentBattery->save();
                 if ($success) $message = "Photo saved successfully";
             }

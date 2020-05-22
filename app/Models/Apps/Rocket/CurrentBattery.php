@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use IlluminateDatabaseEloquentBuilder;
 use IlluminateDatabaseEloquentModel;
 use IlluminateDatabaseEloquentRelationsBelongsTo;
@@ -52,6 +53,10 @@ class CurrentBattery extends Model
 
     public function getDateAttribute($date)
     {
+        if (Str::contains($date, '-')) {
+            return $date = Carbon::createFromFormat('Y-m-d H:i:s', $date);
+        }
+
         return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
     }
 

@@ -51,6 +51,10 @@ class Photo extends Model
 
     public function getDateAttribute($date)
     {
+        if(Str::contains($date, '-')){
+            return $date = Carbon::createFromFormat('Y-m-d H:i:s', $date);
+        }
+
         return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
     }
 

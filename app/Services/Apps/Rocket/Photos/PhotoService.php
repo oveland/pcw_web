@@ -61,7 +61,12 @@ class PhotoService
 
             if ($photo->save()) {
                 $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
-                $currentPhoto->fill($photo->toArray());
+                $currentPhoto->fill($data->toArray());
+                $currentPhoto->date = $photo->date;
+                $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
+                $currentPhoto->location_id = $photo->location_id;
+                $currentPhoto->path = $path;
+
                 $success = $currentPhoto->save();
                 if ($success) $message = "Photo saved successfully";
 
@@ -154,11 +159,19 @@ class PhotoService
         $historic = collect([]);
         $photos = Photo::where('vehicle_id', $vehicle->id)->orderByDesc('date')->get();
 
-        foreach ($photos as $photo) {
-            $historic->push([
-                'url' => $photo->encode('url'),
-                'details' => $photo->getAPIFields(),
-            ]);
+        if($photos->isNotEmpty()){
+            $prev = $photos->first();
+            foreach ($photos as $photo) {
+//                $photo->date = Carbon::now();
+                if (($prev->id == $photo-> id) || $photo->date->diffInSeconds($prev->date) > 20 ) {
+                    $historic->push([
+                        'url' => $photo->encode('url'),
+                        'details' => $photo->getAPIFields(),
+                        'size' => Storage::size($photo->path)
+                    ]);
+                }
+                $prev = $photo;
+            }
         }
 
         $data = [
@@ -197,9 +210,9 @@ class PhotoService
      */
     public function getPhoto(Photo $photo, $encode = "webp")
     {
-        if(Storage::exists($photo->path)) {
+        if (Storage::exists($photo->path)) {
             return Image::make(Storage::get($photo->path))->encode($encode);
-        }else{
+        } else {
             return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->encode($encode);
         }
     }

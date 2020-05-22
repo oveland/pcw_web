@@ -40,6 +40,12 @@ class APIRocketFilesService implements APIFilesInterface
     public function __construct($service)
     {
         $this->request = request();
+
+        if ($this->request->get('vehicle') == 'DEM-003') {
+            $this->request = collect($this->request->all());
+            $this->request->put('vehicle', 'VCK-542');
+        }
+
         $this->service = $service ?? $this->request->get('action');
         $this->vehicle = Vehicle::find($this->request->get('vehicle'));
         if ($this->vehicle) $this->currentLocation = CurrentLocation::findByVehicle($this->vehicle);
