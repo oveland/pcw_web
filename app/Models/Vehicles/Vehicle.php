@@ -22,7 +22,7 @@ use Sofa\Eloquence\Mappable;
  * App\Models\Vehicles\Vehicle
  *
  * @property int $id
- * @property string $plate
+ * @property strin
  * @property string $number
  * @property int $company_id
  * @property bool $active

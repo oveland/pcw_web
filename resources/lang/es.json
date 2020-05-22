@@ -729,5 +729,7 @@
   "Error saving cost register": "Error al guardar el registro de Costo",
   "Priority": "Prioridad",
   "There are fields empty": "Algunos campos están vacíos",
-  "The :attribute field is required": "El campo <em class='text-capitalize'>:attribute</em> es requerido"
+  "The :attribute field is required": "El campo <em class='text-capitalize'>:attribute</em> es requerido",
+  "rear": "atrás",
+  "front": "frente"
 }

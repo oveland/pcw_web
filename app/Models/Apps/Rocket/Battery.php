@@ -40,11 +40,19 @@ class Battery extends Model
 
     protected $fillable = ['level', 'charging', 'date', 'date_changed', 'vehicle_id'];
 
-    protected $dates = ['date', 'date_changed'];
-
     public function getDateFormat()
     {
         return config('app.simple_date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
+    }
+
+    public function getDateChangedAttribute($dateChanged)
+    {
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $dateChanged)[0]);
     }
 
     /**

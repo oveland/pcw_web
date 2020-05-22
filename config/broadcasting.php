@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => true,
-                'host' => 'www.pcwserviciosgps.com',
+                'host' => env('LARAVEL_WEBSOCKETS_HOST', 'www.pcwserviciosgps.com'),
                 'port' => env('LARAVEL_WEBSOCKETS_PORT', 6001),
                 'scheme' => 'http'
             ],

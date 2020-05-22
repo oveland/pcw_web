@@ -10,14 +10,13 @@ namespace App\Services\API\Apps;
 
 use App\Models\Apps\Rocket\Battery;
 use App\Models\Apps\Rocket\CurrentBattery;
-use App\Models\Apps\Rocket\CurrentPhoto;
-use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\CurrentLocation;
 use App\Models\Vehicles\Vehicle;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
+use App\Services\API\Apps\Contracts\APIFilesInterface;
+use App\Services\Apps\Rocket\Photos\PhotoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Storage;
 use Validator;
 
@@ -36,12 +35,17 @@ class APIRocketService implements APIAppsInterface
 
     private $currentLocation;
 
+    private $photoService;
+
     public function __construct($service)
     {
         $this->request = request();
         $this->service = $service ?? $this->request->get('action');
         $this->vehicle = Vehicle::where('plate', $this->request->get('vehicle'))->first();
+        $this->vehicle = $this->vehicle ? $this->vehicle : Vehicle::find($this->request->get('vehicle'));
         if ($this->vehicle) $this->currentLocation = CurrentLocation::findByVehicle($this->vehicle);
+
+        $this->photoService = new PhotoService();
     }
 
     /**
@@ -55,6 +59,9 @@ class APIRocketService implements APIAppsInterface
                     return $this->savePhoto();
                     break;
 
+                case 'event':
+                    return $this->event();
+                    break;
                 case 'save-battery':
                     return $this->saveBattery();
                     break;
@@ -72,62 +79,41 @@ class APIRocketService implements APIAppsInterface
         ]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function savePhoto()
     {
-        $success = false;
-        $message = "";
+        $imageData = $this->request->get('img');
+        $process = $this->photoService->saveImageData($this->vehicle, $this->request->all());
+        $photo = $process->photo;
+        Storage::disk('local')->append('photo.log', "$imageData\n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
 
-        $validator = Validator::make($this->request->all(), [
-            'date' => 'required',
-            'img' => 'required',
-            'type' => 'required',
-            'side' => 'required',
-        ]);
-
-        if ($validator->passes()) {
-            $photo = new Photo();
-            $photo->fill($this->request->all());
-            $photo->vehicle()->associate($this->vehicle);
-
-            $currentLocation = $this->vehicle->currentLocation;
-            $photo->dispatch_register_id = $currentLocation->dispatch_register_id;
-            $photo->location_id = $currentLocation->location_id;
-
-            $imageData = $this->request->get('img');
-            $image = $this->decodeImageData($imageData);
-            $imageName = $photo->date->format('YmdHis') . ".jpeg";
-            $path = "/Apps/Rocket/Photo/" . $this->vehicle->id . "/$imageName";
-
-            $photo->path = $path;
-            Storage::disk('local')->put($photo->path, $image);
-
-            Storage::disk('local')->append('photo.log', "$imageData\n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
-
-            if ($photo->save()) {
-                $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
-                $currentPhoto->fill($photo->toArray());
-                $success = $currentPhoto->save();
-                if ($success) $message = "Photo saved successfully";
-            }
-        } else {
-            $message = collect($validator->errors())->flatten()->implode(' ');
-        }
-
-        return response()->json([
-            'success' => $success,
-            'message' => $message
-        ]);
+        return response()->json($process->response);
     }
 
-    private function decodeImageData($base64)
+    /**
+     * @return JsonResponse
+     */
+    public function event()
     {
-        $image_parts = explode(";base64,", $base64);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        return base64_decode($image_parts[1]);
+        switch ($this->request->get('action')) {
+            case 'take-photo':
+                return response()->json($this->photoService->takePhoto($this->vehicle, $this->request->get('side'), $this->request->get('quality')));
+                break;
+            default:
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Action for event not found'
+                ]);
+                break;
+        }
     }
 
-    public
-    function saveBattery()
+    /**
+     * @return JsonResponse
+     */
+    public function saveBattery()
     {
         $success = false;
         $message = "";

@@ -1,28 +1,34 @@
 <?php
 
-namespace App\Events\App;
+namespace App\Events\App\Rocket;
 
 use App\Models\Vehicles\Vehicle;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
-class RocketAppEvent implements ShouldBroadcast
+class PhotoMapEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    private $data;
     /**
      * @var Vehicle
      */
     private $vehicle;
-    private $data;
 
+    /**
+     * Create a new event instance.
+     *
+     * @param Vehicle $vehicle
+     * @param $data
+     */
     public function __construct(Vehicle $vehicle, $data)
     {
-        $this->vehicle = $vehicle;
         $this->data = $data;
+        $this->vehicle = $vehicle;
     }
 
     /**
@@ -32,7 +38,7 @@ class RocketAppEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel("app-rocket");
+        return new Channel("photo");
     }
 
     /**
@@ -42,7 +48,7 @@ class RocketAppEvent implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return "device-".$this->vehicle->plate;
+        return "track-" . $this->vehicle->company_id;
     }
 
     /**

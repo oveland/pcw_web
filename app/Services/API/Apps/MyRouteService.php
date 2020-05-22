@@ -9,11 +9,11 @@
 namespace App\Services\API\Apps;
 
 use App\Models\Routes\Route;
-use App\Services\API\Apps\Contracts\APIAppsInterface;
+use App\Services\API\Apps\Contracts\APIFilesInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class MyRouteService implements APIAppsInterface
+class MyRouteService implements APIFilesInterface
 {
     /**
      * @var Request

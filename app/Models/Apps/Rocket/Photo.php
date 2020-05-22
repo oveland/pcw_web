@@ -2,12 +2,17 @@
 
 namespace App\Models\Apps\Rocket;
 
+use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use File;
+use Image;
+use Storage;
 
 /**
  * App\Models\Apps\Rocket\Photo
@@ -44,7 +49,10 @@ class Photo extends Model
 {
     protected $table = 'app_photos';
 
-    protected $dates = ['date'];
+    public function getDateAttribute($date)
+    {
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
+    }
 
     public function getDateFormat()
     {
@@ -59,5 +67,44 @@ class Photo extends Model
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    /**
+     * @return BelongsTo | DispatchRegister
+     */
+    public function dispatchRegister()
+    {
+        return $this->belongsTo(DispatchRegister::class);
+    }
+
+    public function getAPIFields()
+    {
+        $dispatchRegister = $this->dispatchRegister;
+
+        return (object)[
+            'date' => $this->date->toDateTimeString(),
+            'side' => Str::ucfirst(__($this->side)),
+            'type' => Str::ucfirst(__($this->type)),
+            'vehicle_id' => $this->vehicle_id,
+            'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
+            'data' => json_decode($this->side ?? "{}"),
+        ];
+    }
+
+    /**
+     * @param string $encode
+     * @return string
+     */
+    public function encode($encode = "webp")
+    {
+        if($encode == "url"){
+            return config('app.url')."/api/v2/files/rocket/get-photo?id=$this->id";
+        }
+
+        if ($this->vehicle && Storage::exists($this->path)) {
+            return Image::make(Storage::get($this->path))->encode($encode);
+        } else {
+            return Image::make(File::get('img/image-404.jpg'))->resize(300,300)->encode($encode);
+        }
     }
 }
