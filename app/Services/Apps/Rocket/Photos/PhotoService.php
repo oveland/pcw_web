@@ -15,6 +15,8 @@ use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use File;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Collection;
 use Image;
 use Storage;
 use Validator;
@@ -27,6 +29,7 @@ class PhotoService
      * @param Vehicle $vehicle
      * @param $data
      * @return object
+     * @throws FileNotFoundException
      */
     public function saveImageData(Vehicle $vehicle, $data)
     {
@@ -48,7 +51,7 @@ class PhotoService
             $photo->vehicle()->associate($vehicle);
 
             $currentLocation = $vehicle->currentLocation;
-            $photo->dispatch_register_id = $currentLocation->dispatch_register_id;
+            $photo->dispatch_register_id = 1183603; //$currentLocation->dispatch_register_id;
             $photo->location_id = $currentLocation->location_id;
 
             $imageData = $data->get('img');
@@ -63,6 +66,7 @@ class PhotoService
                 $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
                 $currentPhoto->fill($data->toArray());
                 $currentPhoto->date = $photo->date;
+                $currentPhoto->data = $photo->data;
                 $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
                 $currentPhoto->location_id = $photo->location_id;
                 $currentPhoto->path = $path;
@@ -70,19 +74,18 @@ class PhotoService
                 $success = $currentPhoto->save();
                 if ($success) $message = "Photo saved successfully";
 
-                $this->notifyNewPhoto($vehicle);
-                $this->notifyHistoric($vehicle);
+                $this->notifyToMap($vehicle);
             }
         } else {
             $message = collect($validator->errors())->flatten()->implode(' ');
         }
 
         return (object)[
-            'response' => [
+            'response' => (object)[
                 'success' => $success,
                 'message' => $message,
             ],
-            'photo' => $photo
+            'photo' => $success ? $photo->getAPIFields() : null
         ];
     }
 
@@ -130,62 +133,130 @@ class PhotoService
     /**
      * @param Vehicle $vehicle
      * @return object
+     * @throws FileNotFoundException
      */
-    public function notifyNewPhoto(Vehicle $vehicle)
+    public function notifyToMap(Vehicle $vehicle)
     {
         $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
+        $historic = $this->getHistoric($vehicle);
 
-        $data = [
-            'type' => 'new',
-            'url' => $currentPhoto ? $currentPhoto->encode('data-url') : "",
-            'vehicle' => $vehicle->getAPIFields(),
-            'details' => $currentPhoto->getAPIFields()
-        ];
+        event(new PhotoMapEvent($vehicle,
+            [
+                'type' => 'historic',
+                'vehicle' => $vehicle->getAPIFields(),
+                'historic' => $historic->sortByDesc('id')->values()->toArray(),
+            ]
+        ));
 
-        event(new PhotoMapEvent($vehicle, $data));
+        $photo = null;
+        if ($currentPhoto) {
+            $currentPhoto = $currentPhoto->getAPIFields('data-url');
+
+            $personsByRoundTrips = collect([]);
+            $historicByTurns = $historic->groupBy('dr');
+            foreach ($historicByTurns as $dr => $historicByTurn) {
+                $lastHistoricByTurn = $historicByTurn->last();
+                $dispatchRegister = $lastHistoricByTurn->details->dispatchRegister;
+                if ($dispatchRegister) {
+                    $personsByRoundTrips->push((object)[
+                        'id' => $dr,
+                        'number' => $dispatchRegister->round_trip,
+                        'route' => $dispatchRegister->route->name,
+                        'count' => $lastHistoricByTurn->passengers->totalInRoundTrip
+                    ]);
+                }
+            }
+
+            $photo = (object)[
+                'id' => $currentPhoto->id,
+                'details' => $currentPhoto,
+                'passengers' => (object)[
+                    'byRoundTrips' => $personsByRoundTrips,
+                    'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
+                ],
+            ];
+        }
+
+        event(new PhotoMapEvent($vehicle,
+            [
+                'type' => 'new',
+                'vehicle' => $vehicle->getAPIFields(),
+                'photo' => $photo
+            ]
+        ));
 
         return (object)[
             'success' => true,
-            'message' => "Notify for new photo send. Vehicle $vehicle->number"
+            'message' => "Notify to map send. Vehicle $vehicle->number"
         ];
     }
 
+
     /**
      * @param Vehicle $vehicle
-     * @return object
+     * @param null $date
+     * @return Collection
+     * @throws FileNotFoundException
      */
-    public function notifyHistoric(Vehicle $vehicle)
+    public function getHistoric(Vehicle $vehicle, $date = null)
     {
         $historic = collect([]);
-        $photos = Photo::where('vehicle_id', $vehicle->id)->orderByDesc('date')->get();
+        $photos = Photo::where('vehicle_id', $vehicle->id)->whereDate('date', $date ? $date : Carbon::now())->orderBy('date')->get();
 
-        if($photos->isNotEmpty()){
+        if ($photos->isNotEmpty()) {
             $prev = $photos->first();
+
+            $personsByRoundTrip = 0;
+            $totalPersons = 0;
+
             foreach ($photos as $photo) {
-//                $photo->date = Carbon::now();
-                if (($prev->id == $photo-> id) || $photo->date->diffInSeconds($prev->date) > 20 ) {
-                    $historic->push([
-                        'url' => $photo->encode('url'),
-                        'details' => $photo->getAPIFields(),
-                        'size' => Storage::size($photo->path)
+                if (($prev->id == $photo->id) || $photo->date->diffInSeconds($prev->date) > 20) {
+                    $dr = $photo->dispatchRegister;
+                    $currentCount = $photo->data ? $photo->data->count : 0;
+                    $prevCount = $prev->data ? $prev->data->count : 0;
+                    $difference = $currentCount - $prevCount;
+                    $newPersons = $difference > 0 ? $difference : 0;
+
+                    $roundTrip = null;
+                    $routeName = null;
+
+                    $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prev->dispatch_register_id || $prev->id == $photo->id;
+
+                    if ($firstPhotoInRoundTrip) {
+                        $personsByRoundTrip = $currentCount;
+                    } else {
+                        $personsByRoundTrip += $newPersons;
+                    }
+
+                    if ($dr) {
+                        $roundTrip = $dr->round_trip;
+                        $routeName = $dr->route->name;
+                        $totalPersons += $firstPhotoInRoundTrip ? $currentCount : $newPersons;
+                    }
+
+                    $personsByRoundTrips = collect([])->push((object)[
+                        'id' => $dr ? $dr->id : null,
+                        'number' => $roundTrip,
+                        'route' => $routeName,
+                        'count' => $personsByRoundTrip
+                    ]);
+
+                    $historic->push((object)[
+                        'id' => $photo->id,
+                        'dr' => $photo->dispatch_register_id,
+                        'details' => $photo->getAPIFields('url'),
+                        'passengers' => (object)[
+                            'byRoundTrips' => $personsByRoundTrips,
+                            'totalInRoundTrip' => $personsByRoundTrip,
+                            'total' => $totalPersons,
+                        ]
                     ]);
                 }
                 $prev = $photo;
             }
         }
 
-        $data = [
-            'type' => 'historic',
-            'vehicle' => $vehicle->getAPIFields(),
-            'historic' => $historic->toArray()
-        ];
-
-        event(new PhotoMapEvent($vehicle, $data));
-
-        return (object)[
-            'success' => true,
-            'message' => "Notify for historic photo send. Vehicle $vehicle->number"
-        ];
+        return $historic;
     }
 
     /**
@@ -211,10 +282,16 @@ class PhotoService
     public function getPhoto(Photo $photo, $encode = "webp")
     {
         if (Storage::exists($photo->path)) {
-            return Image::make(Storage::get($photo->path))->encode($encode);
+            $image = Image::make(Storage::get($photo->path));
         } else {
-            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->encode($encode);
+            $image = Image::make(File::get('img/image-404.jpg'))->resize(300, 300);
         }
+
+        if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
+            return $image->response($encode);
+        }
+
+        return $image->encode($encode);
     }
 
     /**
@@ -224,7 +301,6 @@ class PhotoService
     private function decodeImageData($base64)
     {
         $image_parts = explode(";base64,", $base64);
-        $image_type_aux = explode("image/", $image_parts[0]);
         return base64_decode($image_parts[1]);
     }
 }

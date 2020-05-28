@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.2.5",
         "ext-interbase": "*",
-        "aws/aws-sdk-php": "~3.0",
+        "aws/aws-sdk-php": "^3.138",
         "barryvdh/laravel-dompdf": "^0.8.4",
         "beyondcode/laravel-websockets": "^1.3",
         "fideloper/proxy": "^4.0",

@@ -5,6 +5,7 @@ namespace App\Models\Apps\Rocket;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use Eloquent;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -95,34 +96,52 @@ class CurrentPhoto extends Model
         return $currentPhoto;
     }
 
-    public function getAPIFields()
+    /**
+     * @param string $encodeImage
+     * @return object
+     * @throws FileNotFoundException
+     */
+    public function getAPIFields($encodeImage = 'url')
     {
         $dispatchRegister = $this->dispatchRegister;
 
         return (object)[
+            'id' => $this->id,
+            'url' => $this->encode($encodeImage),
             'date' => $this->date->toDateTimeString(),
-            'side' => $this->side,
+            'side' => Str::ucfirst(__($this->side)),
             'type' => Str::ucfirst(__($this->type)),
             'vehicle_id' => $this->vehicle_id,
             'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
-            'data' => json_decode($this->side ?? "{}"),
+            'persons' => $this->data,
         ];
     }
+
 
     /**
      * @param string $encode
      * @return \Intervention\Image\Image
+     * @throws FileNotFoundException
      */
     public function encode($encode = "webp")
     {
-        if($encode == "url"){
-//            return config('app.url')."/api/v2/files/rocket/get-photo?id=$this->id";
-        }
-
         if ($this->vehicle && Storage::exists($this->path)) {
             return Image::make(Storage::get($this->path))->encode($encode);
         } else {
-            return Image::make(File::get('img/image-404.jpg'))->resize(300,300)->encode($encode);
+            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->encode($encode);
         }
+    }
+
+    public function setDataAttribute($data)
+    {
+        $this->attributes['data'] = collect($data)->toJson();
+    }
+
+    /**
+     * @return object
+     */
+    function getDataAttribute($data)
+    {
+        return $data ? (object)json_decode($data, true) : (object)[];
     }
 }

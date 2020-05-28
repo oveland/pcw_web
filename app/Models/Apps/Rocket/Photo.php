@@ -5,6 +5,7 @@ namespace App\Models\Apps\Rocket;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use Eloquent;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,9 +50,19 @@ class Photo extends Model
 {
     protected $table = 'app_photos';
 
+    use PhotoRekognition;
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function (Photo $photo) {
+            $photo->processRekognition();
+        });
+    }
+
     public function getDateAttribute($date)
     {
-        if(Str::contains($date, '-')){
+        if (Str::contains($date, '-')) {
             return $date = Carbon::createFromFormat('Y-m-d H:i:s', $date);
         }
 
@@ -81,34 +92,53 @@ class Photo extends Model
         return $this->belongsTo(DispatchRegister::class);
     }
 
-    public function getAPIFields()
+    /**
+     * @param string $encodeImage
+     * @return object
+     */
+    public function getAPIFields($encodeImage = 'url')
     {
         $dispatchRegister = $this->dispatchRegister;
 
         return (object)[
+            'id' => $this->id,
+            'url' => $this->encode($encodeImage),
             'date' => $this->date->toDateTimeString(),
             'side' => Str::ucfirst(__($this->side)),
             'type' => Str::ucfirst(__($this->type)),
             'vehicle_id' => $this->vehicle_id,
             'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
-            'data' => json_decode($this->side ?? "{}"),
+            'persons' => $this->data,
         ];
     }
 
     /**
      * @param string $encode
-     * @return string
+     * @return \Intervention\Image\Image|string
      */
     public function encode($encode = "webp")
     {
-        if($encode == "url"){
-            return config('app.url')."/api/v2/files/rocket/get-photo?id=$this->id";
+        if ($encode == "url") {
+            return config('app.url') . "/api/v2/files/rocket/get-photo?id=$this->id";
         }
 
         if ($this->vehicle && Storage::exists($this->path)) {
             return Image::make(Storage::get($this->path))->encode($encode);
         } else {
-            return Image::make(File::get('img/image-404.jpg'))->resize(300,300)->encode($encode);
+            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->encode($encode);
         }
+    }
+
+    public function setDataAttribute($data)
+    {
+        $this->attributes['data'] = collect($data)->toJson();
+    }
+
+    /**
+     * @return object
+     */
+    function getDataAttribute($data)
+    {
+        return $data ? (object)json_decode($data, true) : (object)[];
     }
 }

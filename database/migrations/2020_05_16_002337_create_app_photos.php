@@ -22,7 +22,7 @@ class CreateAppPhotos extends Migration
             $table->string('path', 64);
             $table->string('side', 20);
             $table->string('type', 20);
-            $table->string('data',255)->nullable();
+            $table->text('data')->nullable();
             $table->timestamps();
 
             $table->index('vehicle_id');
@@ -41,7 +41,7 @@ class CreateAppPhotos extends Migration
             $table->string('path', 64);
             $table->string('side', 20);
             $table->string('type', 20);
-            $table->string('data',255)->nullable();
+            $table->text('data')->nullable();
             $table->timestamps();
 
             $table->unique('vehicle_id');

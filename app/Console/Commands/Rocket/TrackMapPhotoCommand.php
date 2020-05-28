@@ -50,7 +50,7 @@ class TrackMapPhotoCommand extends Command
         $vehicle = Vehicle::where('plate', $plate)->first();
 
         if ($vehicle) {
-            $response = $this->photoService->notifyNewPhoto($vehicle);
+            $response = $this->photoService->notifyToMap($vehicle);
 
             $this->info($response->message);
         } else {

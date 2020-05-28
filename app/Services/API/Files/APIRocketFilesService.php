@@ -84,7 +84,7 @@ class APIRocketFilesService implements APIFilesInterface
         $photo = Photo::find($this->request->get('id'));
 
         if ($photo) {
-            return $this->photoService->getPhoto($photo);
+            return $this->photoService->getPhoto($photo, $this->request->get('encode'));
         } else {
             return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->response();
         }
