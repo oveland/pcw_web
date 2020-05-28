@@ -4,6 +4,7 @@
 namespace App\Services\AWS;
 
 
+use Aws\Credentials\Credentials;
 use Aws\Rekognition\RekognitionClient;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
@@ -18,10 +19,7 @@ class RekognitionService
     public function __construct()
     {
         $options = [
-            'credentials' => [
-                'key' => config('aws.credentials.rekognition.key'),
-                'secret' => config('aws.credentials.rekognition.secret'),
-            ],
+            'credentials' => new Credentials(config('aws.credentials.rekognition.key'), config('aws.credentials.rekognition.secret')),
 //            'profile' => 'pcw-rekognition', // Profile configured on ~/.aws/credentials file for a user with access and Rekognition permissions
             'region' => 'us-west-2',
             'version' => 'latest'
