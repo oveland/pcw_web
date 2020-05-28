@@ -18,7 +18,11 @@ class RekognitionService
     public function __construct()
     {
         $options = [
-            'profile' => 'pcw-rekognition', // Profile configured on ~/.aws/credentials file for a user with access and Rekognition permissions
+            'credentials' => [
+                'key' => config('aws.credentials.rekognition.key'),
+                'secret' => config('aws.credentials.rekognition.secret'),
+            ],
+//            'profile' => 'pcw-rekognition', // Profile configured on ~/.aws/credentials file for a user with access and Rekognition permissions
             'region' => 'us-west-2',
             'version' => 'latest'
         ];
