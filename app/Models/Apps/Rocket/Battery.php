@@ -49,7 +49,7 @@ class Battery extends Model
     public function getDateAttribute($date)
     {
         if (Str::contains($date, '-')) {
-            return $date = Carbon::createFromFormat('Y-m-d H:i:s', $date);
+            return Carbon::createFromFormat('Y-m-d H:i:s', $date);
         }
 
         return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
@@ -57,6 +57,10 @@ class Battery extends Model
 
     public function getDateChangedAttribute($dateChanged)
     {
+        if (Str::contains($dateChanged, '-')) {
+            return Carbon::createFromFormat('Y-m-d H:i:s', $dateChanged);
+        }
+
         return Carbon::createFromFormat($this->getDateFormat(), explode('.', $dateChanged)[0]);
     }
 
