@@ -45,7 +45,7 @@ class ImageRekognitionCommand extends Command
      */
     public function handle()
     {
-        $data = $this->rekognition->sefFile('Apps/Rocket/Photos/1245/20200526022537.jpeg')->person();
+        $data = $this->rekognition->sefFile('Apps/Rocket/Photos/1245/20200522080634.jpeg')->person();
         dd($data);
     }
 }

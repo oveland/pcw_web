@@ -51,7 +51,7 @@ class PhotoService
             $photo->vehicle()->associate($vehicle);
 
             $currentLocation = $vehicle->currentLocation;
-            $photo->dispatch_register_id = 1183603; //$currentLocation->dispatch_register_id;
+            $photo->dispatch_register_id = $currentLocation->dispatch_register_id;
             $photo->location_id = $currentLocation->location_id;
 
             $imageData = $data->get('img');
@@ -196,7 +196,6 @@ class PhotoService
      * @param Vehicle $vehicle
      * @param null $date
      * @return Collection
-     * @throws FileNotFoundException
      */
     public function getHistoric(Vehicle $vehicle, $date = null)
     {

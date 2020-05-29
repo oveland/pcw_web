@@ -139,6 +139,6 @@ class Photo extends Model
      */
     function getDataAttribute($data)
     {
-        return $data ? (object)json_decode($data, true) : (object)[];
+        return $data && Str::of($data)->startsWith('{') && Str::of($data)->endsWith('}') ? (object)json_decode($data, true) : null;
     }
 }
