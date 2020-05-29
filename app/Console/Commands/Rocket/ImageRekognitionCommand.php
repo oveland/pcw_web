@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Rocket;
 
+use App\Models\Apps\Rocket\Photo;
 use App\Services\AWS\RekognitionService;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -45,7 +46,15 @@ class ImageRekognitionCommand extends Command
      */
     public function handle()
     {
-        $data = $this->rekognition->sefFile('Apps/Rocket/Photos/1245/20200522080634.jpeg')->person();
-        dd($data);
+        $photos = Photo::where('dispatch_register_id', 1202190)->get();
+
+        foreach ($photos as $photo) {
+            $photo->size = \Storage::disk('local')->size($photo->path);
+            $this->info("$photo->path >>> $photo->size bytes");
+            $photo->save();
+        }
+
+        //$data = $this->rekognition->sefFile('Apps/Rocket/Photos/1245/20200522080634.jpeg')->person();
+        //dd($data);
     }
 }
