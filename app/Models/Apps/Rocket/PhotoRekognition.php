@@ -18,7 +18,7 @@ trait PhotoRekognition
         if ($force || collect($this->data)->isEmpty()) {
             if ($this->path) {
                 $rekognition = new RekognitionService();
-                $this->data = $rekognition->sefFile($this->path)->person();
+                $this->data = $rekognition->sefFile($this->path)->process();
             }
         }
     }

@@ -13,7 +13,7 @@ class ImageRekognitionCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:image:rekognition';
+    protected $signature = 'rocket:image:rekognition {--type=persons}';
 
     /**
      * The console command description.
@@ -45,7 +45,11 @@ class ImageRekognitionCommand extends Command
      */
     public function handle()
     {
-        $data = $this->rekognition->sefFile('Apps/Rocket/Photos/1245/20200522080634.jpeg')->person();
+        $data = null;
+        $type = $this->option('type');
+
+        $data = $this->rekognition->sefFile('Apps/Rocket/Photos/1908/20200526015304.jpeg')->process($type);
+
         dd($data);
     }
 }

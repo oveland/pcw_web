@@ -40,6 +40,21 @@ class RekognitionService
         return $this;
     }
 
+    public function process($type = 'persons')
+    {
+        switch ($type) {
+            case 'persons':
+                return $this->persons();
+                break;
+            case 'faces':
+                return $this->faces();
+                break;
+            default:
+                return null;
+                break;
+        }
+    }
+
     public function faces()
     {
         $result = $this->rekognition->detectFaces(array(
@@ -50,13 +65,13 @@ class RekognitionService
             )
         );
 
-        return collect($result);
+        return $this->castFacesResponse($result);
     }
 
     /**
      * @return object
      */
-    public function person()
+    public function persons()
     {
         $result = collect($this->rekognition->detectLabels(array(
                 'Image' => array(
@@ -70,39 +85,77 @@ class RekognitionService
     }
 
     /**
-     * @param $data
+     * @param $result
      * @return object
      */
-    private function castPersonResponse($data)
+    private function castFacesResponse($result)
     {
-        $data = (object)collect($data->get('Labels'))->where('Name', 'Person')->first();
+        $faces = collect($result)->get('FaceDetails');
 
-        if ($data && isset($data->Instances)) {
-            $count = count($data->Instances);
+        $draws = [];
+        $count = count($faces);
 
-            $draws = [];
-
-            foreach ($data->Instances as $person) {
-                $boundingBox = $person['BoundingBox'];
-                $draws[] = (object)[
-                    'box' => (object)[
-                        'width' => $boundingBox['Width'] * 100,
-                        'height' => $boundingBox['Height'] * 100,
-                        'left' => $boundingBox['Left'] * 100,
-                        'top' => $boundingBox['Top'] * 100,
-                    ],
-                    'confidence' => floatval(number_format($person['Confidence'], 1)),
-                ];
-            }
-
-            $data = (object)[
-                'name' => Str::lower($data->Name),
-                'confidence' => floatval(number_format($data->Confidence * 100, 1)),
-                'draws' => $draws,
-                'count' => $count,
-            ];
+        foreach ($faces as $face) {
+            $draws[] = $this->fillBox($face);
         }
 
-        return $data;
+        return (object)[
+            'type' => 'faces',
+            'draws' => $draws,
+            'count' => $count,
+        ];
+    }
+
+    /**
+     * @param $result
+     * @return object
+     */
+    private function castPersonResponse($result)
+    {
+        $persons = (object)collect($result->get('Labels'))->where('Name', 'Person')->first();
+
+        $count = 0;
+        $draws = [];
+
+        if (isset($persons->Instances)) {
+            $count = count($persons->Instances);
+            foreach ($persons->Instances as $person) {
+                $draws[] = $this->fillBox($person);
+            }
+        }
+
+        return (object)[
+            'type' => 'persons',
+            'draws' => $draws,
+            'count' => $count,
+        ];;
+    }
+
+    /**
+     * @param array $data
+     * @return object
+     */
+    private function fillBox($data)
+    {
+        $boundingBox = $data['BoundingBox'];
+
+        $width = $boundingBox['Width'] * 100;
+        $height = $boundingBox['Height'] * 100;
+        $left = $boundingBox['Left'] * 100;
+        $top = $boundingBox['Top'] * 100;
+
+        return (object)[
+            'box' => (object)[
+                'width' => $width,
+                'height' => $height,
+                'left' => $left,
+                'top' => $top,
+                'center' => (object)[
+                    'left' => $left + $width / 2,
+                    'top' => $top + $height / 2,
+                ],
+            ],
+            'confidence' => floatval(number_format($data['Confidence'], 1)),
+        ];
     }
 }
