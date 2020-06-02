@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('telescope:prune')->daily();
 
-            $schedule->command('rocket:take-photo')->cron('*/5 * * * *')->between('05:00', '19:00');
+            $schedule->command('rocket:take-photo --vehicle-plate=VCK-542')->cron('*/5 * * * *')->between('05:00', '19:00');
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
 
