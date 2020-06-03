@@ -46,6 +46,9 @@ use Storage;
  * @method static Builder|Photo whereVehicleId($value)
  * @property-read Vehicle $vehicle
  * @method static Builder|CurrentPhoto findByVehicle(Vehicle $vehicle)
+ * @property int|null $persons
+ * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Apps\Rocket\CurrentPhoto wherePersons($value)
  */
 class CurrentPhoto extends Model
 {

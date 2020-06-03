@@ -8,14 +8,14 @@
 
 namespace App\Services\API\Apps;
 
-use App\Services\API\Apps\Contracts\APIFilesInterface;
+use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\PCWTime;
 use App\Models\Vehicles\Vehicle;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PCWTrackService implements APIFilesInterface
+class PCWTrackService implements APIAppsInterface
 {
     /**
      * @var Request

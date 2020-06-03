@@ -5,7 +5,6 @@ namespace App\Models\Apps\Rocket;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use Eloquent;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +44,9 @@ use Storage;
  * @method static Builder|Photo whereVehicleId($value)
  * @property-read Vehicle $vehicle
  * @method static Builder|Photo whereDate($value)
+ * @property int|null $persons
+ * @property-read DispatchRegister|null $dispatchRegister
+ * @method static Builder|Photo wherePersons($value)
  */
 class Photo extends Model
 {

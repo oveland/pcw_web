@@ -67,6 +67,7 @@ class PhotoService
                 $currentPhoto->fill($data->toArray());
                 $currentPhoto->date = $photo->date;
                 $currentPhoto->data = $photo->data;
+                $currentPhoto->persons = $photo->persons;
                 $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
                 $currentPhoto->location_id = $photo->location_id;
                 $currentPhoto->path = $path;
@@ -96,6 +97,7 @@ class PhotoService
      * @param $side
      * @param $quality
      * @return object
+     * @throws FileNotFoundException
      */
     public function takePhoto(Vehicle $vehicle, $side, $quality)
     {
@@ -113,6 +115,8 @@ class PhotoService
                 event(new AppEvent($vehicle, $options->toArray()));
                 $success = true;
                 $message = "Photo has been requested to vehicle $vehicle->number";
+
+                $this->notifyToMap($vehicle);
 
                 $params = $options;
                 $params->put('date', Carbon::now()->toDateTimeString());
@@ -144,7 +148,7 @@ class PhotoService
             [
                 'type' => 'historic',
                 'vehicle' => $vehicle->getAPIFields(),
-                'historic' => $historic->sortByDesc('id')->values()->toArray(),
+                'historic' => $historic->sortByDesc('time')->values()->toArray(),
             ]
         ));
 
@@ -155,14 +159,19 @@ class PhotoService
             $personsByRoundTrips = collect([]);
             $historicByTurns = $historic->groupBy('dr');
             foreach ($historicByTurns as $dr => $historicByTurn) {
-                $lastHistoricByTurn = $historicByTurn->last();
+                $firstHistoricByTurn = $historicByTurn->sortBy('time')->first();
+                $lastHistoricByTurn = $historicByTurn->sortBy('time')->last();
                 $dispatchRegister = $lastHistoricByTurn->details->dispatchRegister;
                 if ($dispatchRegister) {
                     $personsByRoundTrips->push((object)[
                         'id' => $dr,
                         'number' => $dispatchRegister->round_trip,
                         'route' => $dispatchRegister->route->name,
-                        'count' => $lastHistoricByTurn->passengers->totalInRoundTrip
+                        'count' => $lastHistoricByTurn->passengers->totalInRoundTrip,
+
+                        'prevCount' => $firstHistoricByTurn->passengers->totalInRoundTrip,
+                        'currentCount' => $lastHistoricByTurn->passengers->totalInRoundTrip,
+                        'newPersons' => intval($lastHistoricByTurn->passengers->totalInRoundTrip) - intval($firstHistoricByTurn->passengers->totalInRoundTrip),
                     ]);
                 }
             }
@@ -209,12 +218,18 @@ class PhotoService
             $totalPersons = 0;
 
             foreach ($photos as $photo) {
-                if (($prev->id == $photo->id) || $photo->date->diffInSeconds($prev->date) > 20) {
+//                if (($prev->id == $photo->id) || $photo->date->diffInSeconds($prev->date) > 20) {
+                if (true) {
                     $dr = $photo->dispatchRegister;
                     $currentCount = $photo->data ? $photo->data->count : 0;
                     $prevCount = $prev->data ? $prev->data->count : 0;
                     $difference = $currentCount - $prevCount;
                     $newPersons = $difference > 0 ? $difference : 0;
+
+                    if($photo->persons === null){
+                        $photo->persons = $currentCount;
+                        $photo->save();
+                    }
 
                     $roundTrip = null;
                     $routeName = null;
@@ -223,7 +238,7 @@ class PhotoService
 
                     if ($firstPhotoInRoundTrip) {
                         $personsByRoundTrip = $currentCount;
-                    } else {
+                    } else if ($dr) {
                         $personsByRoundTrip += $newPersons;
                     }
 
@@ -237,11 +252,17 @@ class PhotoService
                         'id' => $dr ? $dr->id : null,
                         'number' => $roundTrip,
                         'route' => $routeName,
-                        'count' => $personsByRoundTrip
+                        'count' => $personsByRoundTrip,
+
+                        'prevCount' => $prevCount,
+                        'currentCount' => $currentCount,
+                        'newPersons' => $newPersons,
+                        'prevId' => $prev->id,
                     ]);
 
                     $historic->push((object)[
                         'id' => $photo->id,
+                        'time' => $photo->date->format('H:i:s').''.$photo->id,
                         'dr' => $photo->dispatch_register_id,
                         'details' => $photo->getAPIFields('url'),
                         'passengers' => (object)[

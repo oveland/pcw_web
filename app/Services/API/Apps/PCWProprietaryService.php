@@ -10,12 +10,12 @@ namespace App\Services\API\Apps;
 
 use App;
 use App\Models\Proprietaries\Proprietary;
-use App\Services\API\Apps\Contracts\APIFilesInterface;
+use App\Services\API\Apps\Contracts\APIAppsInterface;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PCWProprietaryService implements APIFilesInterface
+class PCWProprietaryService implements APIAppsInterface
 {
 
     /**

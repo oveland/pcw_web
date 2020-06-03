@@ -43,8 +43,8 @@ class APIRocketService implements APIAppsInterface
     {
         $this->request = request();
         if ($this->request->get('vehicle') == 'DEM-003') {
-            $this->request = collect($this->request->all());
-            $this->request->put('vehicle', 'VCK-542');
+//            $this->request = collect($this->request->all());
+//            $this->request->put('vehicle', 'VCK-542');
         }
 
         $this->service = $service ?? $this->request->get('action');
@@ -68,7 +68,7 @@ class APIRocketService implements APIAppsInterface
 
                 case 'event':
                     if ($this->vehicle->plate == 'VCK-542') {
-                        $this->vehicle = Vehicle::where('plate', 'DEM-003')->first();
+//                        $this->vehicle = Vehicle::where('plate', 'DEM-003')->first();
                     }
                     return $this->event();
                     break;

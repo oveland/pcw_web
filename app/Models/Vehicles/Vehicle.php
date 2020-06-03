@@ -66,6 +66,7 @@ use Sofa\Eloquence\Mappable;
  * @property-read int|null $costs_b_e_a_count
  * @property-read int|null $maintenance_count
  * @property-read int|null $peak_and_plate_count
+ * @property string $plate
  */
 class Vehicle extends Model
 {
