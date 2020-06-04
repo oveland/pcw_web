@@ -53,7 +53,7 @@ use phpDocumentor\Reflection\Types\This;
  * @property-read mixed $user_routes
  * @property-read Collection $userRoutes
  * @method static Builder|User whereVehicleTags($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\UserVehicle[] $userVehicles
+ * @property-read \Illuminate\Database\Eloquent\Collection|UserVehicle[] $userVehicles
  */
 class User extends Authenticatable
 {
@@ -194,8 +194,6 @@ class User extends Authenticatable
 
     public function canSendSMS($onlyReset = false)
     {
-        if($onlyReset)return $this->isSuperAdmin();
-
         $usersCanSendSMS = [
             // VICENTE
             623994798,

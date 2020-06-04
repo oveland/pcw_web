@@ -49,7 +49,7 @@ class ManagerGPSController extends Controller
             if ($activeVehicles) $vehiclesCompany = $company->activeVehicles;
             else $vehiclesCompany = $company->vehicles;
 
-            if($excludeInRepair)$vehiclesCompany = $vehiclesCompany->where('in_repair', false);
+            if ($excludeInRepair) $vehiclesCompany = $vehiclesCompany->where('in_repair', false);
 
             $simGPSList = SimGPS::whereIn('vehicle_id', $vehiclesCompany->pluck('id'));
 
@@ -65,7 +65,6 @@ class ManagerGPSController extends Controller
             $simGPSList = $simGPSList->sortBy(function ($simGPS) {
                 return $simGPS->vehicle->number ?? true;
             });
-
 
 
             $unAssignedVehicles = $vehiclesCompany
@@ -137,7 +136,7 @@ class ManagerGPSController extends Controller
                         }
                     }
                     break;
-                  case 'parked':
+                case 'parked':
 
                     foreach ($simGPSList as $simGPS) {
                         $vehicle = $simGPS->vehicle;
@@ -229,7 +228,7 @@ class ManagerGPSController extends Controller
 
                     $allPendingArray = explode(",", str_replace("\n", ",", str_replace(" ", "", trim($allPending))));
 
-                    $simGPSList = $simGPSList->filter(function($sg) use ($allPendingArray){
+                    $simGPSList = $simGPSList->filter(function ($sg) use ($allPendingArray) {
                         return in_array($sg->vehicle->number, $allPendingArray);
                     });
 
@@ -365,7 +364,7 @@ class ManagerGPSController extends Controller
                                             $gpsVehicle = GpsVehicle::findByVehicleId($vehicle->id);
 
                                             $gpsId = $vehicle->plate;
-                                            if($gpsVehicle){
+                                            if ($gpsVehicle) {
                                                 $gpsId = $gpsVehicle->imei;
                                             }
 
@@ -381,7 +380,7 @@ class ManagerGPSController extends Controller
                                     }
                                 }
 
-                                if(str_contains($individualCommand, "TTSTOCMD=12"))$individualCommand = 'AT$TTSTOCMD=12,AT$RESET';
+                                if (str_contains($individualCommand, "TTSTOCMD=12")) $individualCommand = 'AT$TTSTOCMD=12,AT$RESET';
 
                                 if ($individualCommand) {
                                     if (strlen($totalCMD) + strlen($individualCommand) + 2 < config('sms.sms_max_length_for_gps')) {
@@ -499,6 +498,9 @@ class ManagerGPSController extends Controller
 
     public function updateSIMGPS(SimGPS $simGPS, Request $request)
     {
+
+//return response()->json(['message'=>'Acceso restringido']);
+
         $transaction = \DB::transaction(function () use ($request, $simGPS) {
             $sim = $request->get('sim');
             $gpsType = $request->get('gps_type');
@@ -556,20 +558,26 @@ class ManagerGPSController extends Controller
 
     public function deleteSIMGPS(SimGPS $simGPS, Request $request)
     {
-        $deleted = false;
-        try {
-            $vehicle = $simGPS->vehicle;
-            $gpsVehicle = $vehicle->gpsVehicle;
-            $deleted = ($simGPS->delete() > 0);
-            if ($gpsVehicle) {
-                $deleted = ($gpsVehicle->delete() > 0);
+        $user = Auth::user();
+        if ($user->isSuperAdmin() || $user->id == 2018101054) {
+            $deleted = false;
+            try {
+//                $vehicle = $simGPS->vehicle;
+//                $gpsVehicle = $vehicle->gpsVehicle;
+                $deleted = ($simGPS->delete() > 0);
+//                if ($gpsVehicle) {
+//                    $deleted = ($gpsVehicle->delete() > 0);
+//                }
+                if ($deleted) $message = __('Register deleted successfully');
+                else $message = __('Error');
+            } catch (Exception $exception) {
+                $message = $exception->getMessage();
             }
-            if ($deleted) $message = __('Register deleted successfully');
-            else $message = __('Error');
-        } catch (Exception $exception) {
-            $message = $exception->getMessage();
+            return response()->json(['success' => $deleted, 'message' => $message]);
+        } else {
+            return response()->json(['message' => 'Acceso restringido']);
         }
-        return response()->json(['success' => $deleted, 'message' => $message]);
+
     }
 
     public function getScript($device)

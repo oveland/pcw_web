@@ -2,6 +2,10 @@
 
 namespace App\Models\Vehicles;
 
+use App\Models\Users\User;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,23 +17,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $gps_type
  * @property int $vehicle_id
  * @property bool $active
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Vehicles\Vehicle $vehicle
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS findByVehicleId($vehicle_id)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS findBySim($sim)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereGpsType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereOperator($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereSim($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereVehicleId($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Vehicle $vehicle
+ * @method static Builder|SimGPS findByVehicleId($vehicle_id)
+ * @method static Builder|SimGPS findBySim($sim)
+ * @method static Builder|SimGPS whereActive($value)
+ * @method static Builder|SimGPS whereCreatedAt($value)
+ * @method static Builder|SimGPS whereGpsType($value)
+ * @method static Builder|SimGPS whereId($value)
+ * @method static Builder|SimGPS whereOperator($value)
+ * @method static Builder|SimGPS whereSim($value)
+ * @method static Builder|SimGPS whereUpdatedAt($value)
+ * @method static Builder|SimGPS whereVehicleId($value)
+ * @mixin Eloquent
  * @property-read mixed $date
- * @property-read \App\Models\Vehicles\GpsVehicle $gps
- * @property-read \App\Models\Vehicles\GPSType $type
+ * @property-read GpsVehicle $gps
+ * @property-read GPSType $type
  */
 class SimGPS extends Model
 {
@@ -78,6 +82,20 @@ class SimGPS extends Model
         self::ANTARES => 'info',
         self::ANDROID => 'success',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function (SimGPS $sim) {
+            $user = \Auth::user();
+            if ($user) $sim->user()->associate($user);
+        });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     const DEVICES = [self::SKYPATROL, self::SKYPATROL_OLD, self::COBAN, self::RUPTELA, self::MEITRACK, self::ANTARES, self::ANDROID];
 

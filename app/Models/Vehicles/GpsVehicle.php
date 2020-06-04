@@ -2,8 +2,10 @@
 
 namespace App\Models\Vehicles;
 
+use App\Models\Users\User;
 use Carbon\Carbon;
 use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,28 +17,42 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $imei
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle findBySim($sim)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereImei($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereVehicleId($value)
+ * @method static Builder|GpsVehicle findBySim($sim)
+ * @method static Builder|GpsVehicle whereCreatedAt($value)
+ * @method static Builder|GpsVehicle whereId($value)
+ * @method static Builder|GpsVehicle whereImei($value)
+ * @method static Builder|GpsVehicle whereUpdatedAt($value)
+ * @method static Builder|GpsVehicle whereVehicleId($value)
  * @property-read Vehicle $vehicle
  * @property int|null $gps_type_id
  * @property int|null $report_period
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereGpsTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereReportPeriod($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle query()
+ * @method static Builder|GpsVehicle whereGpsTypeId($value)
+ * @method static Builder|GpsVehicle whereReportPeriod($value)
+ * @method static Builder|GpsVehicle newModelQuery()
+ * @method static Builder|GpsVehicle newQuery()
+ * @method static Builder|GpsVehicle query()
  * @property-read GPSType|null $type
  * @property string|null $tags
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle findByVehicleId($vehicle_id)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereTags($value)
+ * @method static Builder|GpsVehicle findByVehicleId($vehicle_id)
+ * @method static Builder|GpsVehicle whereTags($value)
  */
 class GpsVehicle extends Model
 {
     protected $fillable = ['imei'];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function (GpsVehicle $gps) {
+            $user = \Auth::user();
+            if ($user) $gps->user()->associate($user);
+        });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     function getDateFormat()
     {
