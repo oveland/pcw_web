@@ -144,11 +144,11 @@ class PassengersReportDateRangeController extends Controller
             $data = collect([
                 __('N°') => count($dataExcel) + 1,                          # A CELL
                 __('Date') => $date,                                        # B CELL
-                __('Driver') => $report->driverProcessed,                                        # B CELL
-                __('Vehicle') => $report->vehicleProcessed,                                        # B CELL
-                __('Sensor recorder') => $report->totalBySensorRecorder,    # C CELL
-                __('Recorder') => $report->totalByRecorder,                 # D CELL
-                __('Sensor') => $report->totalBySensor,                     # E CELL
+                __('Vehicle') => $report->vehicleProcessed,                 # C CELL
+                __('Driver') => $report->driverProcessed,                   # D CELL
+                __('Sensor recorder') => $report->totalBySensorRecorder,    # E CELL
+                __('Recorder') => $report->totalByRecorder,                 # F CELL
+                __('Sensor') => $report->totalBySensor,                     # G CELL
             ]);
             if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
 

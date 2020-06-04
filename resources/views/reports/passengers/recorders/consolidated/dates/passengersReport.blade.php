@@ -117,8 +117,8 @@
                         <tr class="text-center click" data-toggle="collapse" data-target="#collapse-{{ $date }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $date }} </td>
-                            <td>{{ $report->driverProcessed }} </td>
                             <td>{{ $report->vehicleProcessed }} </td>
+                            <td>{{ $report->driverProcessed }} </td>
                             <td class="sensor recorder">{{ $sensorRecorder }}</td>
                             <td class="recorder text-center">
                                 <span class="{{ count($issuesByVehicles) ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"

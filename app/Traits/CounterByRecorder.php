@@ -37,8 +37,8 @@ trait CounterByRecorder
                 return $report->vehicle->number;
             }),
             'issues' => collect($issues),
-            'lastVehicleNumber' => $lastDispatchRegister->vehicle->number,
-            'lastDriverName' => $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | '.$lastDispatchRegister->driver->fullName() : ''),
+            'lastVehicleNumber' => $lastDispatchRegister ? $lastDispatchRegister->vehicle->number : '',
+            'lastDriverName' => $lastDispatchRegister ? $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | '.$lastDispatchRegister->driver->fullName() : '') : '',
         ];
     }
 

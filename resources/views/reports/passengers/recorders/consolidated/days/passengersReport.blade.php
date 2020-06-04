@@ -60,8 +60,11 @@
                         <th class="text-center">
                             <i class="fa fa-car" aria-hidden="true"></i> @lang('Vehicle')
                         </th>
+                        <th class="text-center">
+                            <i class="fa fa-user" aria-hidden="true"></i> @lang('Driver')
+                        </th>
                         <th class="text-center recorder">
-                            <i class="fa fa-compass" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i> <i class="fa fa-microchip" aria-hidden="true"></i> @lang('Sensor recorder')
+                            <i class="fa fa-compass" aria-hidden="true"></i> <i class="fa fa-microchip" aria-hidden="true"></i> @lang('Sensor recorder')
                         </th>
                         <th class="text-center recorder">
                             <i class="fa fa-compass" aria-hidden="true"></i> @lang('Recorder')
@@ -96,7 +99,8 @@
                         @endphp
                         <tr class="text-center">
                             <td >{{ $loop->iteration }}</td>
-                            <td>{{ $vehicle->number }} <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{  $vehicle->plate }}</td>
+                            <td>{{ $vehicle->number }}</td>
+                            <td>{{ $report->driverProcessed }} </td>
                             <td class="sensor">{{ $sensorRecorder }}</td>
                             <td class="recorder">
                                 <span class="text-center {{ $recorderIssue ? 'text-danger tooltips click':'' }}" data-title="@lang('Error in') {{ $recorderIssue->field ?? '' }}"
@@ -133,14 +137,14 @@
                         </tr>
                     @endforeach
                     <tr class="inverse bg-inverse-light text-white">
-                        <td colspan="2" class="text-right">@lang('Total passengers')</td>
+                        <td colspan="3" class="text-right">@lang('Total passengers')</td>
                         <td class="text-center recorder">{{ $totalSensorRecorder->sum() }}</td>
                         <td class="text-center recorder">{{ $totalRecorder->sum() }}</td>
                         <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
                         <td rowspan="2" class="text-center sensor"></td>
                     </tr>
                     <tr class="inverse bg-inverse text-white">
-                        <td colspan="2" class="text-right">@lang('Average per vehicle')</td>
+                        <td colspan="3" class="text-right">@lang('Average per vehicle')</td>
                         <td class="text-center sensor">{{ number_format($totalSensorRecorder->average(),1) }}</td>
                         <td class="text-center recorder">{{ number_format($totalRecorder->average(),1) }}</td>
                         <td class="text-center sensor">{{ number_format($totalSensor->average(),1) }}</td>

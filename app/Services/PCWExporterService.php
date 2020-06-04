@@ -152,7 +152,7 @@ class PCWExporterService
         switch ($config->type) {
             case 'passengerReportTotalFooter':
                 // Set general formulas
-                foreach (['E', 'F', 'G', 'H'] as $totalLetterPosition) {
+                foreach (['F', 'G', 'H', 'I'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 

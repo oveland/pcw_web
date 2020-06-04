@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
+use App\Models\Drivers\Driver;
 use App\Models\Routes\Route;
 use App\Services\PCWExporterService;
 use App\Services\Reports\Passengers\PassengersService as PassengersReporter;
@@ -48,6 +49,8 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
     {
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $dateReport = $request->get('date-report');
+        $vehicle = Vehicle::find(intval($request->get('vehicle-report')));
+        $driver = Driver::find(intval($request->get('driver-report')));
 
         $passengerReport = $this->passengersReporter->consolidated->buildDailyReport($company, $dateReport);
 

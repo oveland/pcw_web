@@ -10,6 +10,7 @@ namespace App\Services\Reports\Passengers;
 
 
 use App\Models\Company\Company;
+use App\Models\Drivers\Driver;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Route;
@@ -27,12 +28,16 @@ class ConsolidatedService
      *
      * @param Company $company
      * @param $dateReport
+     * @param Vehicle|null $vehicle
+     * @param Driver|null $driver
      * @return object
      */
-    public function buildDailyReport(Company $company, $dateReport)
+    public function buildDailyReport(Company $company, $dateReport, Vehicle $vehicle = null, Driver $driver = null)
     {
         $routes = Route::where('company_id', $company->id)->get();
         $dispatchRegisters = DispatchRegister::active()
+            ->whereVehicle($vehicle)
+            ->whereDriver($driver)
             ->whereIn('route_id', $routes->pluck('id'))
             ->where('date', $dateReport)
             ->get()
@@ -58,6 +63,8 @@ class ConsolidatedService
                 ],
                 'historyRoutesByRecorder' => $recorder->history->sortBy('routeName')->groupBy('routeId'),
                 'historyRoutesBySensor' => $sensor->history->sortBy('routeName')->groupBy('routeId'),
+                'driverProcessed' => $driver ? $driver->fullName() : ($vehicleId ? ($passengerByRecorder->lastDriverName ?? '') : __('All')),
+                'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All'))
             ]);
         }
 
@@ -105,12 +112,13 @@ class ConsolidatedService
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                      # A CELL
                 __('Vehicle') => intval($vehicle->number),                              # B CELL
-                __('Plate') => $vehicle->plate,                                         # C CELL
-                __('Routes') => $detailedRoutes,                                        # D CELL
-                __('Round trips') => $totalRoundTrips,                                  # E CELL
-                __('Sensor recorder') => intval($sensorRecorder),                       # F CELL
-                __('Recorder') => intval($recorder),                                    # G CELL
-                __('Sensor') => intval($sensor),                                        # H CELL
+                __('Driver') => $report->driverProcessed,                                # C CELL
+                __('Plate') => $vehicle->plate,                                         # D CELL
+                __('Routes') => $detailedRoutes,                                        # E CELL
+                __('Round trips') => $totalRoundTrips,                                  # F CELL
+                __('Sensor recorder') => intval($sensorRecorder),                       # G CELL
+                __('Recorder') => intval($recorder),                                    # H CELL
+                __('Sensor') => intval($sensor),                                        # I CELL
             ];
         }
 
