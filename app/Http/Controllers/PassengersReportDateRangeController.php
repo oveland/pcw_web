@@ -105,7 +105,7 @@ class PassengersReportDateRangeController extends Controller
                 'totalBySensorRecorder' => $sensor->totalBySensorRecorder ?? 0,
                 'issues' => collect($recorder ? $recorder->issues : []),
                 'frame' => '',
-                'driverProcessed' => $driver ? $driver->fullName() : ($vehicle ? ($recorder->lastDriverName ?? '') : __('All')),
+                'driverProcessed' => $driver ? $driver->code.' | '.$driver->fullName() : ($vehicle ? ($recorder->lastDriverName ?? '') : __('All')),
                 'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All'))
             ]);
         }
