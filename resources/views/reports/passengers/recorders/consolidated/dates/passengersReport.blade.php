@@ -63,10 +63,10 @@
                             <i class="fa fa-calendar" aria-hidden="true"></i> @lang('Date')
                         </th>
                         <th class="text-center">
-                            <i class="fa fa-user" aria-hidden="true"></i> @lang('Driver')
+                            <i class="fa fa-bus" aria-hidden="true"></i> @lang('Vehicle')
                         </th>
                         <th class="text-center">
-                            <i class="fa fa-bus" aria-hidden="true"></i> @lang('Vehicle')
+                            <i class="fa fa-user" aria-hidden="true"></i> @lang('Driver')
                         </th>
                         <th class="text-center sensor recorder">
                             <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i> @lang('Sensor recorder')
