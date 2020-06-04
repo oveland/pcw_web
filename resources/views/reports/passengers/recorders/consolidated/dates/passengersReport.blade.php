@@ -28,7 +28,7 @@
                 @endif
                 @if($passengerReport->vehicle)
                 <small class="text-white" style="font-size: 1em">
-                    | <i class="fa fa-car" aria-hidden="true"></i> {{ $passengerReport->vehicle->number }}
+                    | <i class="fa fa-bus" aria-hidden="true"></i> {{ $passengerReport->vehicle->number }}
                 </small>
                 @endif
                 <br>
@@ -61,6 +61,12 @@
                         <th class="text-center">N°</th>
                         <th class="text-center">
                             <i class="fa fa-calendar" aria-hidden="true"></i> @lang('Date')
+                        </th>
+                        <th class="text-center">
+                            <i class="fa fa-user" aria-hidden="true"></i> @lang('Driver')
+                        </th>
+                        <th class="text-center">
+                            <i class="fa fa-bus" aria-hidden="true"></i> @lang('Vehicle')
                         </th>
                         <th class="text-center sensor recorder">
                             <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i> @lang('Sensor recorder')
@@ -111,6 +117,8 @@
                         <tr class="text-center click" data-toggle="collapse" data-target="#collapse-{{ $date }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $date }} </td>
+                            <td>{{ $report->driverProcessed }} </td>
+                            <td>{{ $report->vehicleProcessed }} </td>
                             <td class="sensor recorder">{{ $sensorRecorder }}</td>
                             <td class="recorder text-center">
                                 <span class="{{ count($issuesByVehicles) ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
@@ -150,13 +158,13 @@
                         @endif
                     @endforeach
                     <tr class="inverse bg-inverse text-white">
-                        <td colspan="2" class="text-right">@lang('Total passengers')</td>
+                        <td colspan="4" class="text-right">@lang('Total passengers')</td>
                         <td class="text-center sensor recorder">{{ $totalSensorRecorder->sum() }}</td>
                         <td class="text-center recorder">{{ $totalRecorder->sum() }}</td>
                         <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
                     </tr>
                     <tr class="inverse bg-inverse text-white">
-                        <td colspan="2" class="text-right">@lang('Average')</td>
+                        <td colspan="4" class="text-right">@lang('Average')</td>
                         <td class="text-center sensor recorder">{{ number_format($totalSensorRecorder->average(),1) }}</td>
                         <td class="text-center recorder">{{ number_format($totalRecorder->average(),1) }}</td>
                         <td class="text-center sensor">{{ number_format($totalSensor->average(),1) }}</td>

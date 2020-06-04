@@ -10,15 +10,22 @@ namespace App\Traits;
 
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
+use Illuminate\Support\Collection;
 
 trait CounterByRecorder
 {
+    /**
+     * @param Collection $dispatchRegisters
+     * @param null $classifyByRoute
+     * @return object
+     */
     static function report($dispatchRegisters, $classifyByRoute = null)
     {
         $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
 
         $report = array();
         $issues = array();
+        $lastDispatchRegister = $dispatchRegisters->sortBy('date')->last();
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
             $totalByVehicle = self::totalByVehicle($vehicleId, $dispatchRegisters, $dispatchRegistersByVehicle, $classifyByRoute);
             $report[$vehicleId] = $totalByVehicle->report;
@@ -29,7 +36,9 @@ trait CounterByRecorder
             'report' => collect($report)->sortBy(function ($report) {
                 return $report->vehicle->number;
             }),
-            'issues' => collect($issues)
+            'issues' => collect($issues),
+            'lastVehicleNumber' => $lastDispatchRegister->vehicle->number,
+            'lastDriverName' => $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | '.$lastDispatchRegister->driver->fullName() : ''),
         ];
     }
 

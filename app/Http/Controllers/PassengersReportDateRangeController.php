@@ -11,9 +11,12 @@ use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Company\Company;
+use Illuminate\View\View;
 
 class PassengersReportDateRangeController extends Controller
 {
@@ -31,20 +34,20 @@ class PassengersReportDateRangeController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
         $accessProperties = $this->pcwAuthService->getAccessProperties();
         $companies = $accessProperties->companies;
-        $drivers = $accessProperties->drivers;
+        $drivers = $accessProperties->company->drivers;
 
         return view('reports.passengers.recorders.consolidated.dates.index', compact(['companies', 'drivers']));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|Application|View|void
      */
     public function show(Request $request)
     {
@@ -58,7 +61,7 @@ class PassengersReportDateRangeController extends Controller
 
         $passengerReport = $this->buildPassengerReport($company, $driver, $vehicle, $initialDate, $finalDate);
 
-        if( $request->get('export') )return $this->export($passengerReport);
+        if ($request->get('export')) return $this->export($passengerReport);
 
         return view('reports.passengers.recorders.consolidated.dates.passengersReport', compact('passengerReport'));
     }
@@ -67,8 +70,8 @@ class PassengersReportDateRangeController extends Controller
      * Build passenger report from company and date
      *
      * @param Company $company
-     * @param Driver $driver
-     * @param Vehicle $vehicle
+     * @param Driver|null $driver
+     * @param Vehicle|null $vehicle
      * @param $initialDate
      * @param $finalDate
      * @return object
@@ -77,9 +80,9 @@ class PassengersReportDateRangeController extends Controller
     {
         $dateRange = PCWTime::dateRange(Carbon::parse($initialDate), Carbon::parse($finalDate));
 
-        $dispatchRegisters = DispatchRegister::whereIn('route_id', $company->routes->pluck('id'));
-        if ($vehicle) $dispatchRegisters = $dispatchRegisters->where('vehicle_id', $vehicle->id);
-        if ($driver) $dispatchRegisters = $dispatchRegisters->where('driver_code', $driver->code);
+        $dispatchRegisters = DispatchRegister::whereIn('route_id', $company->routes->pluck('id'))
+            ->whereDriver($driver)
+            ->whereVehicle($vehicle);
 
         $dispatchRegisters = $dispatchRegisters
             ->whereBetween('date', [$initialDate, $finalDate])
@@ -101,7 +104,9 @@ class PassengersReportDateRangeController extends Controller
                 'totalBySensor' => $sensor->totalBySensor ?? 0,
                 'totalBySensorRecorder' => $sensor->totalBySensorRecorder ?? 0,
                 'issues' => collect($recorder ? $recorder->issues : []),
-                'frame' => ''
+                'frame' => '',
+                'driverProcessed' => $driver ? $driver->fullName() : ($vehicle ? ($recorder->lastDriverName ?? '') : __('All')),
+                'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All'))
             ]);
         }
 
@@ -139,6 +144,8 @@ class PassengersReportDateRangeController extends Controller
             $data = collect([
                 __('N°') => count($dataExcel) + 1,                          # A CELL
                 __('Date') => $date,                                        # B CELL
+                __('Driver') => $report->driverProcessed,                                        # B CELL
+                __('Vehicle') => $report->vehicleProcessed,                                        # B CELL
                 __('Sensor recorder') => $report->totalBySensorRecorder,    # C CELL
                 __('Recorder') => $report->totalByRecorder,                 # D CELL
                 __('Sensor') => $report->totalBySensor,                     # E CELL
@@ -152,9 +159,9 @@ class PassengersReportDateRangeController extends Controller
         $infoDriver = $driver ? "C$driver->code: $driver->fullName" : "";
 
         PCWExporterService::excel([
-            'fileName' => str_limit(str_limit($infoDriver,3)." $infoVehicle" . __('Passengers per dates'), 28),
-            'title' => str_limit(($infoDriver ? "$infoDriver\n":"").($infoVehicle ? "$infoVehicle | ":"" )." $initialDate - $finalDate",100),
-            'subTitle' => str_limit( __("Passengers per dates"), 28),
+            'fileName' => str_limit(str_limit($infoDriver, 3) . " $infoVehicle" . __('Passengers per dates'), 28),
+            'title' => str_limit(($infoDriver ? "$infoDriver\n" : "") . ($infoVehicle ? "$infoVehicle | " : "") . " $initialDate - $finalDate", 100),
+            'subTitle' => str_limit(__("Passengers per dates"), 28),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
         ]);
@@ -200,6 +207,8 @@ class PassengersReportDateRangeController extends Controller
                 'date' => $date,
                 'totalByRecorder' => $report->report->sum('passengers'),
                 'issues' => $report->issues,
+                'lastVehicleNumber' => $report->lastVehicleNumber,
+                'lastDriverName' => $report->lastDriverName,
             ]);
         }
 

@@ -168,7 +168,7 @@ class PCWExporterService
                 break;
 
             case 'passengerReportByRangeTotalFooter':
-                foreach (['C', 'D', 'E'] as $totalLetterPosition) {
+                foreach (['E', 'F', 'G'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 

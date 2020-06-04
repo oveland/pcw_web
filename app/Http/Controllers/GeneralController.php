@@ -33,7 +33,8 @@ class GeneralController extends Controller
     {
         $company = $this->getCompany($request);
         $withAll = $request->get('withAll');
-        $drivers = $company->activeDrivers;
+//        $drivers = $company->activeDrivers;
+        $drivers = $company->drivers;
 
         return view('partials.selects.drivers', compact(['drivers', 'withAll']));
     }

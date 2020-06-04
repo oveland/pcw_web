@@ -201,6 +201,18 @@ class DispatchRegister extends Model
         return Carbon::createFromFormat(config('app.date_format'), $this->date);
     }
 
+    public function scopeWhereVehicle($query, Vehicle $vehicle = null)
+    {
+        if ($vehicle) $query = $query->where('vehicle_id', $vehicle->id);
+        return $query;
+    }
+
+    public function scopeWhereDriver($query, Driver $driver = null)
+    {
+        if ($driver) $query = $query->where('driver_code', $driver->code);
+        return $query;
+    }
+
     public function driver()
     {
         return $this->belongsTo(Driver::class, 'driver_code', 'code');
@@ -433,20 +445,20 @@ class DispatchRegister extends Model
         $query->where('date', explode(' ', $date)[0])
             ->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'))
             ->where(function ($query) use ($company, $routeId, $vehicleId) {
-            if ($vehicleId == 'all') {
-                $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
-            } else if ($vehicleId) {
-                $query = $query->where('vehicle_id', $vehicleId);
-            }
+                if ($vehicleId == 'all') {
+                    $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+                } else if ($vehicleId) {
+                    $query = $query->where('vehicle_id', $vehicleId);
+                }
 
-            if ($company->hasADD() && $vehicleId == 'all') {
-                $query = $query->orWhere('route_id', intval($routeId));
-            } else if ($routeId != 'all') {
-                $query = $query->where('route_id', intval($routeId));
-            }
+                if ($company->hasADD() && $vehicleId == 'all') {
+                    $query = $query->orWhere('route_id', intval($routeId));
+                } else if ($routeId != 'all') {
+                    $query = $query->where('route_id', intval($routeId));
+                }
 
-            return $query;
-        });
+                return $query;
+            });
     }
 
     public function getOffRoadPercent()
@@ -479,7 +491,8 @@ class DispatchRegister extends Model
         return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
-    public function getTotalOffRoadAttribute(){
+    public function getTotalOffRoadAttribute()
+    {
         return $this->getTotalOffRoad();
     }
 
