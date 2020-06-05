@@ -15,19 +15,20 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
-use App\Services\AWS\RekognitionService;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Storage;
 use Validator;
 
 class APIRocketService implements APIAppsInterface
 {
     /**
-     * @var Request
+     * @var Request | Collection
      */
     private $request;
+
     private $service;
 
     /**
@@ -42,11 +43,6 @@ class APIRocketService implements APIAppsInterface
     public function __construct($service)
     {
         $this->request = request();
-        if ($this->request->get('vehicle') == 'DEM-003') {
-//            $this->request = collect($this->request->all());
-//            $this->request->put('vehicle', 'VCK-542');
-        }
-
         $this->service = $service ?? $this->request->get('action');
         $this->vehicle = Vehicle::where('plate', $this->request->get('vehicle'))->first();
         $this->vehicle = $this->vehicle ? $this->vehicle : Vehicle::find($this->request->get('vehicle'));
@@ -57,6 +53,7 @@ class APIRocketService implements APIAppsInterface
 
     /**
      * @return JsonResponse
+     * @throws FileNotFoundException
      */
     public function serve(): JsonResponse
     {
@@ -67,14 +64,17 @@ class APIRocketService implements APIAppsInterface
                     break;
 
                 case 'event':
-                    if ($this->vehicle->plate == 'VCK-542') {
-//                        $this->vehicle = Vehicle::where('plate', 'DEM-003')->first();
-                    }
                     return $this->event();
                     break;
+
                 case 'save-battery':
                     return $this->saveBattery();
                     break;
+
+                case 'log':
+                    return $this->log();
+                    break;
+
                 default:
                     return response()->json([
                         'success' => false,
@@ -95,13 +95,12 @@ class APIRocketService implements APIAppsInterface
      */
     public function savePhoto()
     {
-        $imageData = $this->request->get('img');
         $process = $this->photoService->saveImageData($this->vehicle, $this->request->all());
-        if($process->response->success){
+        if ($process->response->success) {
             $photo = $process->photo;
-            Storage::disk('local')->append('photo.log', "$photo->url&encode=png \n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
-        }else{
-            Storage::disk('local')->append('photo.log', "Error saving photo: ".$process->response->message.". Data > ".($this->request->except('img')->toJson()));
+            Storage::disk('local')->append('photo.log', $photo->encode('url') . " \n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
+        } else {
+            Storage::disk('local')->append('photo.log', "Error saving photo: " . $process->response->message . ". Data > " . $this->request->except('img')->toJson());
         }
 
         return response()->json($process->response);
@@ -109,6 +108,7 @@ class APIRocketService implements APIAppsInterface
 
     /**
      * @return JsonResponse
+     * @throws FileNotFoundException
      */
     public function event()
     {
@@ -146,7 +146,7 @@ class APIRocketService implements APIAppsInterface
             $battery->vehicle()->associate($this->vehicle);
             $battery->date_changed = $this->request->get('dateChanged');
 
-            Storage::disk('local')->append('battery.log', $this->vehicle->plate . ": $battery->level%, charging: ".($battery->charging ? "yes": "no").", changed: $battery->date_changed, sent: $battery->date");
+            Storage::disk('local')->append('battery.log', $this->vehicle->plate . ": $battery->level%, charging: " . ($battery->charging ? "yes" : "no") . ", changed: $battery->date_changed, sent: $battery->date");
 
             if ($battery->save()) {
                 $currentBattery = CurrentBattery::findByVehicle($this->vehicle);
@@ -156,6 +156,27 @@ class APIRocketService implements APIAppsInterface
                 $success = $currentBattery->save();
                 if ($success) $message = "Photo saved successfully";
             }
+        } else {
+            $message = collect($validator->errors())->flatten()->implode(' ');
+        }
+
+        return response()->json([
+            'success' => $success,
+            'message' => $message
+        ]);
+    }
+
+    public function log()
+    {
+        $success = false;
+        $message = "";
+
+        $validator = Validator::make($this->request->all(), [
+            'data' => 'required',
+        ]);
+
+        if ($validator->passes()) {
+            Storage::disk('local')->append('rocket.log', $this->request->get('data'));
         } else {
             $message = collect($validator->errors())->flatten()->implode(' ');
         }

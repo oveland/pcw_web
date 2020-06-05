@@ -5,6 +5,7 @@ namespace App\Models\Apps\Rocket;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use Eloquent;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -117,6 +118,7 @@ class Photo extends Model
     /**
      * @param string $encode
      * @return \Intervention\Image\Image|string
+     * @throws FileNotFoundException
      */
     public function encode($encode = "webp")
     {
@@ -137,6 +139,7 @@ class Photo extends Model
     }
 
     /**
+     * @param $data
      * @return object
      */
     function getDataAttribute($data)
