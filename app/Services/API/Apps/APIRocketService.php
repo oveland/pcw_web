@@ -176,6 +176,8 @@ class APIRocketService implements APIAppsInterface
         ]);
 
         if ($validator->passes()) {
+            $success = true;
+            $message = 'Message logged!';
             Storage::disk('local')->append('rocket.log', $this->request->get('data'));
         } else {
             $message = collect($validator->errors())->flatten()->implode(' ');
