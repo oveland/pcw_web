@@ -13,7 +13,7 @@ class CreateSamplesForRekognitionCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:s3:create-samples-for-rekognition {--date}';
+    protected $signature = 'rocket:s3:create-samples-for-rekognition {--date=}';
 
     /**
      * The console command description.
