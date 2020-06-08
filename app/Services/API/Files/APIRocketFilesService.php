@@ -14,6 +14,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\API\Files\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use File;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Image;
 
@@ -53,6 +54,10 @@ class APIRocketFilesService implements APIFilesInterface
         $this->photoService = new PhotoService();
     }
 
+    /**
+     * @return \Intervention\Image\Image|mixed|null
+     * @throws FileNotFoundException
+     */
     public function serve()
     {
         switch ($this->service) {
@@ -69,7 +74,10 @@ class APIRocketFilesService implements APIFilesInterface
         return null;
     }
 
-
+    /**
+     * @return \Intervention\Image\Image|mixed
+     * @throws FileNotFoundException
+     */
     public function getLastPhoto()
     {
         if ($this->vehicle) {
@@ -79,6 +87,10 @@ class APIRocketFilesService implements APIFilesInterface
         }
     }
 
+    /**
+     * @return \Intervention\Image\Image|mixed
+     * @throws FileNotFoundException
+     */
     public function getPhoto()
     {
         $photo = Photo::find($this->request->get('id'));

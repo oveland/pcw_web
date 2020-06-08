@@ -205,6 +205,7 @@ class PhotoService
      * @param Vehicle $vehicle
      * @param null $date
      * @return Collection
+     * @throws FileNotFoundException
      */
     public function getHistoric(Vehicle $vehicle, $date = null)
     {
@@ -283,6 +284,7 @@ class PhotoService
      * @param Vehicle $vehicle
      * @param string $encode
      * @return \Intervention\Image\Image
+     * @throws FileNotFoundException
      */
     public function getLastPhoto(Vehicle $vehicle, $encode = "webp")
     {
@@ -297,7 +299,8 @@ class PhotoService
     /**
      * @param Photo $photo
      * @param string $encode
-     * @return \Intervention\Image\Image
+     * @return \Intervention\Image\Image|mixed
+     * @throws FileNotFoundException
      */
     public function getPhoto(Photo $photo, $encode = "webp")
     {

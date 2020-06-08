@@ -98,6 +98,7 @@ class Photo extends Model
     /**
      * @param string $encodeImage
      * @return object
+     * @throws FileNotFoundException
      */
     public function getAPIFields($encodeImage = 'url')
     {
@@ -118,6 +119,7 @@ class Photo extends Model
     /**
      * @param string $encode
      * @return \Intervention\Image\Image|string
+     * @throws FileNotFoundException
      */
     public function encode($encode = "webp")
     {
