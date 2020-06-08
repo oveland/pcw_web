@@ -13,7 +13,7 @@ class S3ConnectionTest extends TestCase
     public function testAppsDirectory()
     {
         $allDirectories =  \Storage::disk('s3')->allDirectories();
-        $this->assertTrue( collect($allDirectories)->contains('apps') );
+        $this->assertTrue( collect($allDirectories)->contains('Apps') );
     }
 }
 
