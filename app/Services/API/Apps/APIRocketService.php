@@ -98,7 +98,7 @@ class APIRocketService implements APIAppsInterface
         $process = $this->photoService->saveImageData($this->vehicle, $this->request->all());
         if ($process->response->success) {
             $photo = $process->photo;
-            Storage::disk('local')->append('photo.log', $photo->encode('url') . " \n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
+            Storage::disk('local')->append('photo.log', "$photo->url&encode=jpg \n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
         } else {
             Storage::disk('local')->append('photo.log', "Error saving photo: " . $process->response->message . ". Data > " . $this->request->except('img')->toJson());
         }
