@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Console\Commands\Rocket;
+namespace App\Console\Commands\Rocket\S3;
 
+use App\Models\Apps\Rocket\Photo;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Storage;
 
-class MigratePhotosToS3Command extends Command
+class CreateSamplesForRekognitionCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'rocket:migrate-to-s3';
+    protected $signature = 'rocket:s3:create-samples-for-rekognition';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Migrate photos to S3 Bucket';
+    protected $description = 'Create a folder with photos associated to a dispatch register. This folder is used by AWS Custom Labels for training a rekognition model';
 
     /**
      * Create a new command instance.
@@ -41,7 +41,7 @@ class MigratePhotosToS3Command extends Command
     public function handle()
     {
         $localPath = '/Apps/Rocket/Photos/';
-        $remotePath = '/Apps/Rocket/Photos/';
+        $remotePath = '/Apps/Rocket/Models/';
 
         $s3 = Storage::disk('s3');
         $local = Storage::disk('local');
@@ -57,13 +57,15 @@ class MigratePhotosToS3Command extends Command
             $dateString = $dateTime->format('Ymd');
             $timeString = $dateTime->format('His');
 
-            $s3FilePath = "$remotePath/$vehicleId/$dateString/$timeString.jpeg";
+            $photo = Photo::where('vehicle_id', $vehicleId)->where('path', $pathFile)->first();
 
-            if (!$s3->exists($s3FilePath)) {
+            if ($photo->dispatch_register_id && $photo->persons) {
+                $dr = $photo->dispatchRegister;
+                $route = $dr->route;
+
+                $s3FilePath = "$remotePath/$vehicleId/$dateString/$timeString.jpeg";
                 $response = $s3->put($s3FilePath, Storage::get($pathFile));
-                dump("$vehicleId, $dateString/$timeString.jpeg: Put " . $fileName . " >> $response");
-            } else {
-                dump("$s3FilePath exists!");
+                dump("$vehicleId, $route->name, RT: $dr->round_trip | $dateString/$timeString.jpeg >> $photo->persons persons");
             }
         }
     }
