@@ -5,7 +5,6 @@ namespace App\Console\Commands\Rocket\S3;
 use App\Models\Apps\Rocket\Photo;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class CreateSamplesForRekognitionCommand extends Command
 {
@@ -14,7 +13,7 @@ class CreateSamplesForRekognitionCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:s3:create-samples-for-rekognition';
+    protected $signature = 'rocket:s3:create-samples-for-rekognition {--date}';
 
     /**
      * The console command description.
@@ -40,33 +39,40 @@ class CreateSamplesForRekognitionCommand extends Command
      */
     public function handle()
     {
-        $localPath = '/Apps/Rocket/Photos/';
-        $remotePath = '/Apps/Rocket/Models/';
+        $date = $this->option('date');
+        if ($date) {
+            $localPath = '/Apps/Rocket/Photos/';
+            $remotePath = '/Apps/Rocket/Datasets/';
 
-        $s3 = Storage::disk('s3');
-        $local = Storage::disk('local');
+            $s3 = Storage::disk('s3');
+            $local = Storage::disk('local');
 
-        $localFiles = collect($local->allFiles($localPath))->take(2);
+            $localFiles = collect($local->allFiles($localPath));
 
-        foreach ($localFiles as $pathFile) {
-            $data = collect(explode('/', $pathFile));
+            foreach ($localFiles as $pathFile) {
+                $data = collect(explode('/', $pathFile));
 
-            $fileName = $data->get(4);
-            $vehicleId = $data->get(3);
-            $dateTime = Carbon::parse(explode('.', $fileName)[0]);
-            $dateString = $dateTime->format('Ymd');
-            $timeString = $dateTime->format('His');
+                $fileName = $data->get(4);
+                $vehicleId = $data->get(3);
+                $dateTime = Carbon::parse(explode('.', $fileName)[0]);
+                $dateString = $dateTime->format('Ymd');
+                $timeString = $dateTime->format('His');
 
-            $photo = Photo::where('vehicle_id', $vehicleId)->where('path', $pathFile)->first();
+                $photo = Photo::where('vehicle_id', $vehicleId)
+                    ->whereDate('date', $date)
+                    ->where('path', $pathFile)->first();
 
-            if ($photo->dispatch_register_id && $photo->persons) {
-                $dr = $photo->dispatchRegister;
-                $route = $dr->route;
+                if ($photo->dispatch_register_id && $photo->persons) {
+                    $dr = $photo->dispatchRegister;
+                    $route = $dr->route;
 
-                $s3FilePath = "$remotePath/$vehicleId/$dateString/$timeString.jpeg";
-                $response = $s3->put($s3FilePath, Storage::get($pathFile));
-                dump("$vehicleId, $route->name, RT: $dr->round_trip | $dateString/$timeString.jpeg >> $photo->persons persons");
+                    $s3FilePath = "$remotePath/$vehicleId/$dateString/$timeString-$photo->persons.jpeg";
+                    $response = $s3->put($s3FilePath, Storage::get($pathFile));
+                    $this->info("$vehicleId, $route->name, RT: $dr->round_trip | $dateString/$timeString.jpeg >> $photo->persons persons");
+                }
             }
+        } else {
+            $this->info('No date specified yet!');
         }
     }
 }

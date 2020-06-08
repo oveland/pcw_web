@@ -61,9 +61,9 @@ class MigratePhotosToS3Command extends Command
 
             if (!$s3->exists($s3FilePath)) {
                 $response = $s3->put($s3FilePath, Storage::get($pathFile));
-                dump("$vehicleId, $dateString/$timeString.jpeg: Put " . $fileName . " >> $response");
+                $this->info("$vehicleId, $dateString/$timeString.jpeg: Put " . $fileName . " >> $response");
             } else {
-                dump("$s3FilePath exists!");
+                $this->info("$s3FilePath exists!");
             }
         }
     }
