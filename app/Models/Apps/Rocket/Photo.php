@@ -118,7 +118,6 @@ class Photo extends Model
     /**
      * @param string $encode
      * @return \Intervention\Image\Image|string
-     * @throws FileNotFoundException
      */
     public function encode($encode = "webp")
     {
