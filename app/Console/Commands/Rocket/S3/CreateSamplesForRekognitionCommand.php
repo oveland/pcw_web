@@ -63,7 +63,7 @@ class CreateSamplesForRekognitionCommand extends Command
                     ->whereDate('date', $date)
                     ->where('path', $pathFile)->first();
 
-                if ($photo->dispatch_register_id && $photo->persons) {
+                if ($photo && $photo->dispatch_register_id && $photo->persons) {
                     $dr = $photo->dispatchRegister;
                     $route = $dr->route;
 
