@@ -46,7 +46,7 @@ class MigratePhotosToS3Command extends Command
         $s3 = Storage::disk('s3');
         $local = Storage::disk('local');
 
-        $localFiles = collect($local->allFiles($localPath))->take(2);
+        $localFiles = collect($local->allFiles($localPath));
 
         foreach ($localFiles as $pathFile) {
             $data = collect(explode('/', $pathFile));
