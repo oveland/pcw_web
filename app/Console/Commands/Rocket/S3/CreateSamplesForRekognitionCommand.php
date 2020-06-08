@@ -5,6 +5,7 @@ namespace App\Console\Commands\Rocket\S3;
 use App\Models\Apps\Rocket\Photo;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Storage;
 
 class CreateSamplesForRekognitionCommand extends Command
 {
