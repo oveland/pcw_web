@@ -159,7 +159,6 @@ trait CounterByRecorder
             }
         }
 
-
         $totalByVehicle = (object)[
             'report' => (object)[
                 'vehicle' => $vehicle,
@@ -173,7 +172,9 @@ trait CounterByRecorder
 
                 'timeRecorder' => $lastDispatchRegister ? $lastDispatchRegister->arrival_time : '--:--:--',
                 'history' => $history,
-                'issue' => $issues->first()
+                'issue' => $issues->first(),
+
+                'lastDriverName' => $lastDispatchRegister ? $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | '.$lastDispatchRegister->driver->fullName() : '') : '',
             ],
             'issues' => $issues
         ];

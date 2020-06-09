@@ -63,7 +63,7 @@ class ConsolidatedService
                 ],
                 'historyRoutesByRecorder' => $recorder->history->sortBy('routeName')->groupBy('routeId'),
                 'historyRoutesBySensor' => $sensor->history->sortBy('routeName')->groupBy('routeId'),
-                'driverProcessed' => $driver ? $driver->fullName() : ($vehicleId ? ($passengerByRecorder->lastDriverName ?? '') : __('All')),
+                'driverProcessed' => $driver ? $driver->fullName() : ($vehicleId ? ($recorder->lastDriverName ?? '') : __('All')),
                 'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All'))
             ]);
         }
