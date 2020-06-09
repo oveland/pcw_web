@@ -100,7 +100,7 @@
                         <tr class="text-center">
                             <td >{{ $loop->iteration }}</td>
                             <td>{{ $vehicle->number }}</td>
-                            <td>{{ $report->driverProcessed }} </td>
+                            <td class="text-left">{{ $report->driverProcessed }} </td>
                             <td class="sensor">{{ $sensorRecorder }}</td>
                             <td class="recorder">
                                 <span class="text-center {{ $recorderIssue ? 'text-danger tooltips click':'' }}" data-title="@lang('Error in') {{ $recorderIssue->field ?? '' }}"
