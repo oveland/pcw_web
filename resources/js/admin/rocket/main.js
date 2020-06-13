@@ -1,12 +1,12 @@
 import SearchComponent from './components/SearchComponent';
 import VueJsonPretty from 'vue-json-pretty'
 
-import i18n from "../lang/i18n";
-import VueI18n from 'vue-i18n'
+import i18n from "../../lang/i18n";
+import VueI18n from 'vue-i18n';
 
 Vue.use(VueI18n);
 
-let camerasReportView = new Vue({
+let adminRocketView = new Vue({
     el: '#vue-container',
     i18n,
     components: {
@@ -28,7 +28,7 @@ let camerasReportView = new Vue({
         searchParams: function () {
             return {
                 date: this.search.date,
-                vehicle: this.search.vehicle.id,
+                vehicle: this.search.vehicle.id
             }
         },
     },

@@ -91,6 +91,20 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/', 'ProprietaryController@index')->name('admin-proprietaries-manage');
             Route::get('/show', 'ProprietaryController@show')->name('admin-proprietaries-show');
         });
+
+        /* Example routes for vue development */
+        Route::prefix(__('rocket'))->group(function () {
+            Route::get('/', 'Rocket\RocketController@index')->name('admin.rocket');
+
+            Route::prefix(__('search'))->group(function () {
+                Route::get(__('/'), 'Rocket\RocketController@search')->name('admin.rocket.search');
+            });
+
+            Route::prefix(__('url-params'))->group(function () {
+                Route::get('/{name}', 'Rocket\RocketController@getParams')->name('admin.rocket.params.get');
+                Route::any('/{name}/'.__('save'), 'Rocket\RocketController@setParams')->name('admin.rocket.params.set');
+            });
+        });
     });
 
     /* Routes for operation pages */

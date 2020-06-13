@@ -19,6 +19,8 @@ mix.js('resources/js/takings/passengers/liquidation/main.js', 'resources/js/taki
 mix.js('resources/js/reports/passengers/sensors/cameras/main.js', 'resources/js/reports/passengers/sensors/cameras/');
 mix.js('resources/js/reports/apps/main.js', 'resources/js/reports/apps/');
 
+mix.js('resources/js/admin/rocket/main.js', 'resources/js/admin/rocket/');
+
 
 if (mix.inProduction()) {
     mix.version();
