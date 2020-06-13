@@ -72,7 +72,7 @@ class CreateSamplesForRekognitionCommand extends Command
 
                         $s3FilePath = "$remotePath/$vehicleId/$dateString/$timeString-$photo->persons.jpeg";
                         $response = $s3->put($s3FilePath, Storage::get($photo->path));
-                        $this->info("$vehicleId, $route->name, RT: $dr->round_trip | $dateString/$timeString.jpeg >> $photo->persons persons = $response");
+                        $this->info("$vehicleId, $route->name, RT: $dr->round_trip | $dateString/$timeString-$photo->persons.jpeg >> Persons: $photo->persons");
                     }
                 }
             } else {

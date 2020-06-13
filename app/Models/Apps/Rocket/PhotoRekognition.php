@@ -5,20 +5,26 @@ namespace App\Models\Apps\Rocket;
 
 
 use App\Services\AWS\RekognitionService;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 trait PhotoRekognition
 {
     /**
      * @param bool $force
-     * @throws FileNotFoundException
+     * @param string $type
      */
-    public function processRekognition($force = false)
+    public function processRekognition($force = false, $type = 'persons')
     {
         if ($force || (collect($this->data)->isEmpty() && !$this->id)) {
             if ($this->path) {
+                $this->effects = [
+                    'brightness' => 10,
+                    'contrast' => 5,
+                    'gamma' => 2,
+                    'sharpen' => 12
+                ];
+
                 $rekognition = new RekognitionService();
-                $this->data = $rekognition->sefFile($this->path)->process();
+                $this->data = $rekognition->sefFile($this->getImage('png', true))->process($type);
                 $this->persons = $this->data ? $this->data->count : 0;
             }
         }

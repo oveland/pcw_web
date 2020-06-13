@@ -48,6 +48,8 @@ use Storage;
  * @property int|null $persons
  * @property-read DispatchRegister|null $dispatchRegister
  * @method static Builder|Photo wherePersons($value)
+ * @property object $effects
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Apps\Rocket\Photo whereEffects($value)
  */
 class Photo extends Model
 {
@@ -124,7 +126,7 @@ class Photo extends Model
     public function encode($encode = "webp")
     {
         if ($encode == "url") {
-            return config('app.url') . "/api/v2/files/rocket/get-photo?id=$this->id";
+            return config('app.url') . "/api/v2/files/rocket/get-photo?id=$this->id" . ($this->effects ? "&with-effect=true&t=" . date('H.i.s.u') : "");
         }
 
         if ($this->vehicle && Storage::exists($this->path)) {
@@ -139,6 +141,11 @@ class Photo extends Model
         $this->attributes['data'] = collect($data)->toJson();
     }
 
+    public function setEffectsAttribute($effects)
+    {
+        $this->attributes['effects'] = collect($effects)->toJson();
+    }
+
     /**
      * @param $data
      * @return object
@@ -146,5 +153,96 @@ class Photo extends Model
     function getDataAttribute($data)
     {
         return $data && Str::of($data)->startsWith('{') && Str::of($data)->endsWith('}') ? (object)json_decode($data, true) : null;
+    }
+
+    /**
+     * @param $effects
+     * @return object
+     */
+    function getEffectsAttribute($effects)
+    {
+        return $effects && Str::of($effects)->startsWith('{') && Str::of($effects)->endsWith('}') ? (object)json_decode($effects, true) : null;
+    }
+
+    /**
+     * @param null $encode
+     * @param bool $withEffects
+     * @return \Intervention\Image\Image
+     * @throws FileNotFoundException
+     */
+    public function getImage($encode = null, $withEffects = false)
+    {
+        if (Storage::exists($this->path)) {
+            $image = Image::make(Storage::disk('local')->get($this->path));
+            if ($withEffects && $this->effects) {
+                $image->contrast(intval($this->effects->contrast))
+                    ->gamma($this->effects->gamma)
+                    ->brightness(10)
+                    ->sharpen(intval($this->effects->sharpen));
+
+                $image->text('Contrast ' . intval($this->effects->contrast), 5, 430, function ($font) {
+                    $font->color('#00ff00');
+                })->text('Gamma ' . intval($this->effects->gamma), 5, 440, function ($font) {
+                    $font->color('#00ff00');
+                })->text('Sharpen ' . intval($this->effects->sharpen), 5, 460, function ($font) {
+                    $font->color('#00ff00');
+                });
+            }
+        } else {
+            $image = Image::make(File::get('img/image-404.jpg'))->resize(300, 300);
+        }
+
+        $luminance = $this->getAvgLuminance($image);
+
+        $image->text('Brightness ' . ($this->effects->brightness ?? '') . '| Av: ' . $luminance, 5, 450, function ($font) {
+            $font->color('#00ff00');
+        });
+
+        $image->text('PCW @ ' . Carbon::now()->format('Y'), 5, 475, function ($font) {
+            $font->color('#00ff00');
+        });
+
+        return $encode ? $image->encode($encode) : $image;
+    }
+
+    /**
+     * @param \Intervention\Image\Image $image
+     * @param int $num_samples
+     * @return int
+     */
+    function getAvgLuminance($image, $num_samples = 2)
+    {
+        $img = imagecreatefromjpeg($image->encode('data-url'));
+
+        $width = imagesx($img);
+        $height = imagesy($img);
+
+        $x_step = intval($width / $num_samples);
+        $y_step = intval($height / $num_samples);
+
+        $total_lum = 0;
+        $sample_no = 1;
+
+        for ($x = 0; $x < $width; $x += $x_step) {
+            for ($y = 0; $y < $height; $y += $y_step) {
+
+                $rgb = imagecolorat($img, $x, $y);
+                $r = ($rgb >> 16) & 0xFF;
+                $g = ($rgb >> 8) & 0xFF;
+                $b = $rgb & 0xFF;
+
+                // choose a simple luminance formula from here
+                // http://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color
+                $lum = ($r + $r + $b + $g + $g + $g) / 6;
+
+                $total_lum += $lum;
+                $sample_no++;
+            }
+        }
+
+        // work out the average
+        $avg_lum = $total_lum / $sample_no;
+
+        return intval(($avg_lum / 255) * 100 * 2);
     }
 }

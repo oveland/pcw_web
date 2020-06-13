@@ -136,13 +136,14 @@ class PhotoService
 
     /**
      * @param Vehicle $vehicle
+     * @param null $date
      * @return object
      * @throws FileNotFoundException
      */
-    public function notifyToMap(Vehicle $vehicle)
+    public function notifyToMap(Vehicle $vehicle, $date = null)
     {
         $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
-        $historic = $this->getHistoric($vehicle);
+        $historic = $this->getHistoric($vehicle, $date);
 
         event(new PhotoMapEvent($vehicle,
             [
@@ -219,60 +220,58 @@ class PhotoService
             $totalPersons = 0;
 
             foreach ($photos as $photo) {
-//                if (($prev->id == $photo->id) || $photo->date->diffInSeconds($prev->date) > 20) {
-                if (true) {
-                    $dr = $photo->dispatchRegister;
-                    $currentCount = $photo->data ? $photo->data->count : 0;
-                    $prevCount = $prev->data ? $prev->data->count : 0;
-                    $difference = $currentCount - $prevCount;
-                    $newPersons = $difference > 0 ? $difference : 0;
+                $dr = $photo->dispatchRegister;
+                $currentCount = $photo->data ? $photo->data->count : 0;
+                $prevCount = $prev->data ? $prev->data->count : 0;
+                $difference = $currentCount - $prevCount;
+                $newPersons = $difference > 0 ? $difference : 0;
 
-                    if($photo->persons === null){
-                        $photo->persons = $currentCount;
-                        $photo->save();
-                    }
-
-                    $roundTrip = null;
-                    $routeName = null;
-
-                    $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prev->dispatch_register_id || $prev->id == $photo->id;
-
-                    if ($firstPhotoInRoundTrip) {
-                        $personsByRoundTrip = $currentCount;
-                    } else if ($dr) {
-                        $personsByRoundTrip += $newPersons;
-                    }
-
-                    if ($dr) {
-                        $roundTrip = $dr->round_trip;
-                        $routeName = $dr->route->name;
-                        $totalPersons += $firstPhotoInRoundTrip ? $currentCount : $newPersons;
-                    }
-
-                    $personsByRoundTrips = collect([])->push((object)[
-                        'id' => $dr ? $dr->id : null,
-                        'number' => $roundTrip,
-                        'route' => $routeName,
-                        'count' => $personsByRoundTrip,
-
-                        'prevCount' => $prevCount,
-                        'currentCount' => $currentCount,
-                        'newPersons' => $newPersons,
-                        'prevId' => $prev->id,
-                    ]);
-
-                    $historic->push((object)[
-                        'id' => $photo->id,
-                        'time' => $photo->date->format('H:i:s').''.$photo->id,
-                        'dr' => $photo->dispatch_register_id,
-                        'details' => $photo->getAPIFields('url'),
-                        'passengers' => (object)[
-                            'byRoundTrips' => $personsByRoundTrips,
-                            'totalInRoundTrip' => $personsByRoundTrip,
-                            'total' => $totalPersons,
-                        ]
-                    ]);
+                if ($photo->persons === null) {
+                    $photo->persons = $currentCount;
+                    $photo->save();
                 }
+
+                $roundTrip = null;
+                $routeName = null;
+
+                $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prev->dispatch_register_id || $prev->id == $photo->id;
+
+                if ($firstPhotoInRoundTrip) {
+                    $personsByRoundTrip = $currentCount;
+                } else if ($dr) {
+                    $personsByRoundTrip += $newPersons;
+                }
+
+                if ($dr) {
+                    $roundTrip = $dr->round_trip;
+                    $routeName = $dr->route->name;
+                    $totalPersons += $firstPhotoInRoundTrip ? $currentCount : $newPersons;
+                }
+
+                $personsByRoundTrips = collect([])->push((object)[
+                    'id' => $dr ? $dr->id : null,
+                    'number' => $roundTrip,
+                    'route' => $routeName,
+                    'count' => $personsByRoundTrip,
+
+                    'prevCount' => $prevCount,
+                    'currentCount' => $currentCount,
+                    'newPersons' => $newPersons,
+                    'prevId' => $prev->id,
+                ]);
+
+                $historic->push((object)[
+                    'id' => $photo->id,
+                    'time' => $photo->date->format('H:i:s') . '' . $photo->id,
+                    'dr' => $photo->dispatch_register_id,
+                    'details' => $photo->getAPIFields('url'),
+                    'passengers' => (object)[
+                        'byRoundTrips' => $personsByRoundTrips,
+                        'totalInRoundTrip' => $personsByRoundTrip,
+                        'total' => $totalPersons,
+                    ]
+                ]);
+
                 $prev = $photo;
             }
         }
@@ -299,16 +298,13 @@ class PhotoService
     /**
      * @param Photo $photo
      * @param string $encode
+     * @param bool $withEffect
      * @return \Intervention\Image\Image|mixed
      * @throws FileNotFoundException
      */
-    public function getPhoto(Photo $photo, $encode = "webp")
+    public function getFile(Photo $photo, $encode = "webp", $withEffect = false)
     {
-        if (Storage::exists($photo->path)) {
-            $image = Image::make(Storage::get($photo->path));
-        } else {
-            $image = Image::make(File::get('img/image-404.jpg'))->resize(300, 300);
-        }
+        $image = $photo->getImage($encode, $withEffect);
 
         if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
             return $image->response($encode);
