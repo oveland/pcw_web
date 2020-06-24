@@ -35,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $tags
  * @method static Builder|GpsVehicle findByVehicleId($vehicle_id)
  * @method static Builder|GpsVehicle whereTags($value)
+ * @property int|null $user_id
+ * @property-read \App\Models\Users\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereUserId($value)
  */
 class GpsVehicle extends Model
 {

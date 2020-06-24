@@ -83,14 +83,14 @@ class ParkedVehiclesReportController extends Controller
             $vehicle = $parkedReport->vehicle;
             $dispatchRegister = $parkedReport->dispatchRegister;
             $route = $dispatchRegister ? $dispatchRegister->route : null;
-            $driver = $dispatchRegister ? $dispatchRegister->driver : null;
+            $driverName = $dispatchRegister ? $dispatchRegister->driverName() : null;
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                       # A CELL
                 __('Parked date') => $parkedReport->date,                                # B CELL
                 __('Vehicle') => intval($vehicle->number),                               # C CELL
                 __('Plate') => $vehicle->plate,                                          # D CELL
                 __('Route') => $route->name ?? __('Without assigned route'),        # E CELL
-                __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),     # F CELL
+                __('Driver') => $driverName,                                             # F CELL
                 __('Status') => $parkedReport->timed,                                    # G CELL
             ];
         }

@@ -96,7 +96,6 @@ class PassengersMixedReportController extends Controller
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
-                    $driver = $dispatchRegister->driver;
 
                     $endRecorder = $historyCounter->endRecorder;
                     $startRecorder = $historyCounter->startRecorder;
@@ -109,7 +108,7 @@ class PassengersMixedReportController extends Controller
                         __('Route') => $route->name,                                                                    # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
                         __('Turn') => $dispatchRegister->turn,                                                          # C CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # D CELL
+                        __('Driver') => $dispatchRegister->driverName(),                                                # D CELL
                         __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # E CELL
                         __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # F CELL
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # G CELL

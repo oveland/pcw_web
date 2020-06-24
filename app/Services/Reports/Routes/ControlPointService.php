@@ -59,6 +59,7 @@ class ControlPointService
         $controlPoints = $dispatchRegister->route->controlPoints;
         $vehicle = $dispatchRegister->vehicle;
         $driver = $dispatchRegister->driver;
+        $driverName = $dispatchRegister->driverName();
 
         $departureTime = $dispatchRegister->departure_time;
         $arrivalTime = $dispatchRegister->arrival_time;
@@ -156,6 +157,7 @@ class ControlPointService
             'dispatchRegister' => $dispatchRegister,
             'vehicle' => $vehicle,
             'driver' => $driver,
+            'driverName' => $driverName,
             'reportsByControlPoint' => $reportsByControlPoint,
         ];
     }

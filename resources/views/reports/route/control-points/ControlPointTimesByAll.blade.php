@@ -100,7 +100,7 @@
                                         {{ $vehicle->number }}
                                     </th>
                                     <th class="bg-inverse text-uppercase text-muted">
-                                        {{ $driver?$driver->fullName():__('Not assigned') }}
+                                        {{ $dispatchRegister->driverName() }}
                                     </th>
                                     <th class="bg-inverse text-uppercase text-muted">
                                         @if( $dispatchRegister->complete() )

@@ -348,7 +348,10 @@ class DispatchRouteService
             $totalSpeeding = $eventsVehicleReports->sum('totalSpeeding');
 
             $company = $vehicle->company;
-            $driver = $dispatchRegistersByVehicle->last()->driver;
+
+            $lastDr = $dispatchRegistersByVehicle->last();
+            $driver = $lastDr->driver;
+            $driverName = $lastDr->driverName();
 
             $totalRouteTime = $dispatchRegistersByVehicle->pluck('routeTime')->reduce(function ($carry, $item) use (&$cont) {
                 return StrTime::addStrTime($carry ? $carry : "00:00:00", $item);
@@ -368,7 +371,8 @@ class DispatchRouteService
                 'maxSpeed' => $consolidatedWithMaxSpeed->maxSpeed ?? '',
                 'maxSpeedTime' => $consolidatedWithMaxSpeed->maxSpeedTime ?? '',
                 'mileage' => $lastLocation->current_mileage ?? 0,
-                'driver' => $driver
+                'driver' => $driver,
+                'driverName' => $driverName,
             ]);
         }
         return $managementReport;

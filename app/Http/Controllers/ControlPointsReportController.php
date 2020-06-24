@@ -116,7 +116,6 @@ class ControlPointsReportController extends Controller
         $dataExcel = array();
         foreach ($reportsByControlPoints as $report) {
             $vehicle = $report->vehicle;
-            $driver = $report->driver;
 
             $dispatchRegister = $report->dispatchRegister;
             $reportsByControlPoint = $report->reportsByControlPoint;
@@ -136,7 +135,7 @@ class ControlPointsReportController extends Controller
                 __('N°') => count($dataExcel) + 1,                                          # A CELL
                 __('Vehicle') => intval($vehicle->number),                                  # B CELL
                 __('Plate') => $vehicle->plate,                                             # C CELL
-                __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),    # D CELL
+                __('Driver') => $report->driverName,                                        # D CELL
                 __('Route time') => $routeTimes,                                            # E CELL
             ])->merge($controlPointsReport)->toArray();
         }

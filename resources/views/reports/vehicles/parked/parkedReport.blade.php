@@ -106,7 +106,7 @@
                                                 <br>
                                                 <span class="f-s-10 text-capitalize tooltips" data-title="@lang('Driver')" data-placement="right">
                                                     <i class="fa fa-user"></i>
-                                                    {{ $driver?$driver->fullName():__('Not assigned') }}
+                                                    {{ $dispatchRegister->driverName() }}
                                                 </span>
                                             </div>
                                         </div>

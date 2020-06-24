@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereUpdatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereVehicleId($value)
  * @mixin \Eloquent
+ * @property int|null $updated_user_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereUpdatedUserId($value)
  */
 class ReportVehicleStatus extends Model
 {

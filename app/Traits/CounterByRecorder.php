@@ -143,7 +143,7 @@ trait CounterByRecorder
                     'arrivalTime' => $dispatchRegister->arrival_time,
                     'statusDispatchRegister' => $dispatchRegister->status,
                     'dispatchRegisterIsComplete' => $dispatchRegister->complete(),
-                    'driver' => $driver ? $driver->fullName() : __('Not assigned'),
+                    'driver' => $dispatchRegister->driverName(),
                     'departureFringe' => $dispatchRegister->departureFringe,
                     'arrivalFringe' => $dispatchRegister->arrivalFringe,
 

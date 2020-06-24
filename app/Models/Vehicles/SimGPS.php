@@ -34,6 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $date
  * @property-read GpsVehicle $gps
  * @property-read GPSType $type
+ * @property int|null $user_id
+ * @property-read \App\Models\Users\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereUserId($value)
  */
 class SimGPS extends Model
 {

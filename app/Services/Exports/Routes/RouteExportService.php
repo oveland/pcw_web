@@ -36,7 +36,6 @@ class RouteExportService
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
-                    $driver = $dispatchRegister->driver;
 
                     $endRecorder = $historyCounter->endRecorder;
                     $startRecorder = $historyCounter->startRecorder;
@@ -48,7 +47,7 @@ class RouteExportService
                     $dataExcel[] = [
                         __('Route') => $route->name,                                                                    # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # C CELL
+                        __('Driver') => $dispatchRegister->driverName(),                        # C CELL
                         __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
                         __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # E CELL
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # F CELL
@@ -113,7 +112,6 @@ class RouteExportService
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
-                    $driver = $dispatchRegister->driver;
 
                     $endRecorder = $historyCounter->endRecorder;
                     $startRecorder = $historyCounter->startRecorder;
@@ -134,7 +132,7 @@ class RouteExportService
                         __('Route') => $route->name,                                                                    # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
                         __('Status') => $dispatchRegister->status,                                                     # J CELL
-                        __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # D CELL
+                        __('Driver') => $dispatchRegister->driverName(),                        # D CELL
                     ]);
 
                     if ($company->hasRecorderCounter()) {
@@ -220,7 +218,6 @@ class RouteExportService
                     foreach ($reportVehicleByRoute as $reportByVehicle) {
                         $vehicle = $reportByVehicle->vehicle;
                         $dispatchRegister = $reportByVehicle->dispatchRegister;
-                        $driver = $dispatchRegister->driver;
 
                         $details = $this->buildStringDetails($reportByVehicle);
 
@@ -231,7 +228,7 @@ class RouteExportService
                             __('Turn') => $dispatchRegister->turn,                                                          # A CELL
                             __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
                             __('Vehicle') => $vehicle->number,                                                              # C CELL
-                            __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                        # D CELL
+                            __('Driver') => $dispatchRegister->driverName(),                                                # D CELL
                             __('Off Roads') => $reportByVehicle->totalOffRoads,                                             # E CELL
                             __('Off roads details') => "$details->offRoadReportString",                                     # F CELL
                             __('Speeding') => $reportByVehicle->totalSpeeding,                                              # G CELL
@@ -344,7 +341,7 @@ class RouteExportService
 
             foreach ($managementReports as $vehicleId => $managementReport) {
                 $vehicle = $managementReport->vehicle;
-                $driver = $managementReport->driver;
+//                $driver = $managementReport->driver;
                 $company = $vehicle->company;
                 $dispatchRoutes = $managementReport->dispatchRoutes;
 
@@ -368,7 +365,7 @@ class RouteExportService
                     __('Max speed') => $managementReport->maxSpeed ? $managementReport->maxSpeed : '',                  # G CELL
                     __('Max speed time') => $managementReport->maxSpeedTime,                                            # H CELL
                     __('Mileage') => $managementReport->mileage ? number_format($managementReport->mileage/1000, 2, ',', '.') : '',                                                        # I CELL
-                    __('Driver') => $driver ? $driver->fullName() : __('Not assigned'),                            # J CELL
+                    __('Driver') => $managementReport->driverName,                            # J CELL
                 ]);
 
                 $dataExcel->push($data->toArray());
