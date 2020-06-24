@@ -20,14 +20,14 @@ class Kernel extends ConsoleKernel
             //$schedule->command('track:map --company=21')->everyFiveMinutes()->between('22:00', '23:59');
             //$schedule->command('track:map --company=21')->everyFiveMinutes()->between('00:00', '04:00');
 
-            $schedule->command('track:map --company=17')->everyMinute()->between('04:00', '22:00');
+            $schedule->command('track:map --company=17')->everyMinute()->between('04:30', '21:00');
             //$schedule->command('track:map --company=17')->everyFiveMinutes()->between('22:00', '23:59');
             //$schedule->command('track:map --company=17')->everyFiveMinutes()->between('00:00', '04:00');
 
 
             $schedule->command('telescope:prune')->daily();
 
-//            $schedule->command('rocket:take-photo --vehicle-plate=VCK-542')->cron('*/5 * * * *')->between('05:00', '19:00');
+            $schedule->command('rocket:take-photo --vehicle-plate=VCK-542')->cron('*/5 * * * *')->between('05:00', '19:00');
 //            $schedule->command('rocket:take-photo --vehicle-plate=VQA-312')->cron('*/5 * * * *')->between('05:00', '19:00');
 
 //            $schedule->command('rocket:take-photo --vehicle-plate=DEM-002')->cron('*/2 * * * *')->between('05:00', '19:00');

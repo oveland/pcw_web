@@ -53,15 +53,15 @@ class CreateSamplesForRekognitionCommand extends Command
 
                 $photos = Photo::where('vehicle_id', $vehicle->id)
                     ->whereDate('date', $date)
-                    ->whereDate('dispatch_register_id', '<>', null)
-                    ->whereDate('persons', '>', 0)
+                    ->where('dispatch_register_id', '<>', null)
+                    ->where('persons', '>', 2)
                     ->get();
 
+                $index = 1;
                 foreach ($photos as $photo) {
                     $data = collect(explode('/', $photo->path));
-
-                    $fileName = $data->get(4);
-                    $vehicleId = $data->get(3);
+                    $vehicleId = $data->get(4);
+                    $fileName = $data->get(5);
                     $dateTime = Carbon::parse(explode('.', $fileName)[0]);
                     $dateString = $dateTime->format('Ymd');
                     $timeString = $dateTime->format('His');
@@ -72,8 +72,9 @@ class CreateSamplesForRekognitionCommand extends Command
 
                         $s3FilePath = "$remotePath/$vehicleId/$dateString/$timeString-$photo->persons.jpeg";
                         $response = $s3->put($s3FilePath, Storage::get($photo->path));
-                        $this->info("$vehicleId, $route->name, RT: $dr->round_trip | $dateString/$timeString.jpeg >> $photo->persons persons = $response");
+                        $this->info("$index. $vehicleId, $route->name, RT: $dr->round_trip | $dateString/$timeString.jpeg >> $photo->persons persons = $response");
                     }
+                    $index++;
                 }
             } else {
                 $this->info("Plate $vehiclePlate doesnt associated with a vehicle!");
