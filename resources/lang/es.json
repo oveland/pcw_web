@@ -731,5 +731,11 @@
   "There are fields empty": "Algunos campos están vacíos",
   "The :attribute field is required": "El campo <em class='text-capitalize'>:attribute</em> es requerido",
   "rear": "atrás",
-  "front": "frente"
+  "front": "frente",
+  "Profile seating save successfully": "Perfil de asientos guardado correctamente",
+  "Overlap": "Traslape",
+  "Loading": "Cargando",
+  "Occupation": "Ocupación",
+  "Counts": "Conteos",
+  "Total": "Total"
 }

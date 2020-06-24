@@ -96,13 +96,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('rocket'))->group(function () {
             Route::get('/', 'Rocket\RocketController@index')->name('admin.rocket');
 
-            Route::prefix(__('search'))->group(function () {
-                Route::get(__('/'), 'Rocket\RocketController@search')->name('admin.rocket.search');
+            Route::prefix('report')->group(function () {
+                Route::get('/{name}', 'Rocket\RocketController@report')->name('admin.rocket.report');
             });
 
-            Route::prefix(__('url-params'))->group(function () {
-                Route::get('/{name}', 'Rocket\RocketController@getParams')->name('admin.rocket.params.get');
-                Route::any('/{name}/'.__('save'), 'Rocket\RocketController@setParams')->name('admin.rocket.params.set');
+            Route::prefix('params')->group(function () {
+                Route::get('/{name}/get', 'Rocket\RocketController@getParams')->name('admin.rocket.params.get');
+                Route::any('/{name}/save', 'Rocket\RocketController@setParams')->name('admin.rocket.params.set');
             });
         });
     });

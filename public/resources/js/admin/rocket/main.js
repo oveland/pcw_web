@@ -86,6 +86,489 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PhotoDetailsComponent",
+  props: {
+    photo: Object
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SeatComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SeatComponent */ "./resources/js/admin/rocket/components/SeatComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PhotoPersonsComponent",
+  components: {
+    SeatComponent: _SeatComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: {
+    photo: Object,
+    seating: Array,
+    fixedSeating: Boolean,
+    styleSeating: Object
+  },
+  data: function data() {
+    return {
+      busySeating: [],
+      seatOccupied: {},
+      image: {
+        size: {
+          width: 1000,
+          height: 700
+        }
+      }
+    };
+  },
+  methods: {
+    setBusySeating: function setBusySeating(draw) {
+      if (draw.profile) {
+        this.busySeating = draw.profile.seating;
+        this.seatOccupied = draw.profile.seatOccupied;
+      }
+    },
+    clearBusySeating: function clearBusySeating() {
+      this.busySeating = [];
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_json_pretty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-json-pretty */ "./node_modules/vue-json-pretty/vue-json-pretty.js");
+/* harmony import */ var vue_json_pretty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_json_pretty__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _PhotoDetailsComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PhotoDetailsComponent */ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue");
+/* harmony import */ var _PhotoPersonsComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PhotoPersonsComponent */ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue");
+/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.min */ "./node_modules/sweetalert2/dist/sweetalert2.min.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vue_range_slider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-range-slider */ "./node_modules/vue-range-slider/dist/vue-range-slider.cjs.js");
+/* harmony import */ var vue_range_slider__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-range-slider/dist/vue-range-slider.css */ "./node_modules/vue-range-slider/dist/vue-range-slider.css");
+/* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ProfileSeatingComponent",
+  components: {
+    PhotoDetailsComponent: _PhotoDetailsComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
+    PhotoPersonsComponent: _PhotoPersonsComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
+    VueJsonPretty: vue_json_pretty__WEBPACK_IMPORTED_MODULE_0___default.a,
+    RangeSlider: vue_range_slider__WEBPACK_IMPORTED_MODULE_4___default.a
+  },
+  props: {
+    searchParams: Object,
+    apiUrl: String
+  },
+  watch: {
+    searchParams: function searchParams() {
+      this.load();
+    }
+  },
+  data: function data() {
+    return {
+      styleSeating: {
+        show: Boolean,
+        opacity: 100
+      },
+      image: {
+        size: {
+          width: 1000,
+          height: 700
+        }
+      },
+      photo: Object,
+      seating: []
+    };
+  },
+  computed: {
+    selected: function selected() {
+      return _.find(this.seating, function (seat) {
+        return seat.selected;
+      });
+    }
+  },
+  methods: {
+    addSeat: function addSeat() {
+      this.seating.push({
+        id: Date.now(),
+        number: null,
+        selected: false,
+        top: this.selected ? this.selected.top + 10 : 300,
+        left: this.selected ? this.selected.left + 10 : 300,
+        width: this.selected ? this.selected.width : 100,
+        height: this.selected ? this.selected.height : 50,
+        center: {
+          left: 450 + 100 / 2,
+          top: 300 + 50 / 2
+        }
+      });
+    },
+    deleteSeating: function deleteSeating() {
+      var _this = this;
+
+      if (this.selected) {
+        this.seating = _.filter(this.seating, function (seat) {
+          return seat.id !== _this.selected.id;
+        });
+      }
+    },
+    load: function load() {
+      var _this2 = this;
+
+      sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+        title: this.$t('Loading'),
+        text: this.$t('Please wait'),
+        target: '.tab-profile-seating',
+        onBeforeOpen: function onBeforeOpen() {
+          sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.showLoading();
+        },
+        heightAuto: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false
+      });
+      axios.get("".concat(this.apiUrl, "/params/occupation/get"), {
+        params: this.searchParams
+      }).then(function (response) {
+        var data = response.data;
+
+        if (data.success) {
+          _this2.seating = data.seating;
+          _this2.photo = data.photo;
+        } else {
+          gerror(data.message);
+        }
+      })["catch"](function (error) {
+        gerror(_this2.$t('An error occurred in the process. Contact your administrator') + '!');
+        console.log(error);
+      }).then(function () {
+        sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.close();
+      });
+    },
+    save: function save() {
+      var _this3 = this;
+
+      sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+        title: this.$t('Processing'),
+        text: this.$t('Please wait'),
+        target: '.tab-profile-seating',
+        onBeforeOpen: function onBeforeOpen() {
+          sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.showLoading();
+        },
+        heightAuto: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false
+      });
+      axios.post("".concat(this.apiUrl, "/params/occupation/save"), {
+        vehicle: this.searchParams.vehicle,
+        seating: this.seating
+      }).then(function (response) {
+        var data = response.data;
+
+        if (data.success) {
+          gsuccess(data.message);
+        } else {
+          gerror(data.message);
+        }
+      })["catch"](function (error) {
+        gerror(_this3.$t('An error occurred in the process. Contact your administrator') + '!');
+        console.log(error);
+      }).then(function () {
+        sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.close();
+      });
+    }
+  },
+  created: function created() {
+    this.photo = null;
+    this.load();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.min */ "./node_modules/sweetalert2/dist/sweetalert2.min.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _PhotoDetailsComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PhotoDetailsComponent */ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue");
+/* harmony import */ var _PhotoPersonsComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PhotoPersonsComponent */ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue");
+/* harmony import */ var vue_range_slider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-range-slider */ "./node_modules/vue-range-slider/dist/vue-range-slider.cjs.js");
+/* harmony import */ var vue_range_slider__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-range-slider/dist/vue-range-slider.css */ "./node_modules/vue-range-slider/dist/vue-range-slider.css");
+/* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_4__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ReportPhotoComponent",
+  components: {
+    Swal: sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default.a,
+    PhotoDetailsComponent: _PhotoDetailsComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
+    PhotoPersonsComponent: _PhotoPersonsComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
+    RangeSlider: vue_range_slider__WEBPACK_IMPORTED_MODULE_3___default.a
+  },
+  props: {
+    searchParams: Object,
+    apiUrl: String
+  },
+  data: function data() {
+    return {
+      photos: Array,
+      seating: [],
+      image: {
+        size: {
+          width: 1000,
+          height: 700
+        }
+      },
+      styleSeating: {
+        show: false,
+        opacity: 100
+      }
+    };
+  },
+  watch: {
+    searchParams: function searchParams() {
+      this.load();
+    }
+  },
+  methods: {
+    load: function load() {
+      var _this = this;
+
+      sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
+        title: this.$t('Loading'),
+        text: this.$t('Please wait'),
+        target: '.tab-report-photos',
+        onBeforeOpen: function onBeforeOpen() {
+          sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default.a.showLoading();
+        },
+        heightAuto: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false
+      });
+      axios.get("".concat(this.apiUrl, "/report/historic"), {
+        params: this.searchParams
+      }).then(function (response) {
+        var data = response.data;
+
+        if (data.success) {
+          _this.seating = data.seating;
+          _this.photos = data.photos;
+        } else {
+          gerror(data.message);
+        }
+      })["catch"](function (error) {
+        gerror(_this.$t('An error occurred in the process. Contact your administrator') + '!');
+        console.log(error);
+      }).then(function () {
+        sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default.a.close();
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SearchComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/SearchComponent.vue?vue&type=script&lang=js& ***!
@@ -99,6 +582,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/lib/index.js");
 /* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -175,9 +668,9 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       }).then(function () {});
     },
-    searchReport: function searchReport() {
+    setSearch: function setSearch() {
       if (this.search.vehicle && this.search.vehicle.id) {
-        this.$emit('search-report');
+        this.$emit('set-search');
       } else {
         gerror("Select a vehicle");
       }
@@ -191,6 +684,277 @@ __webpack_require__.r(__webpack_exports__);
     this.getSearchParams();
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_draggable_resizable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-draggable-resizable */ "./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.umd.min.js");
+/* harmony import */ var vue_draggable_resizable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_draggable_resizable__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_draggable_resizable_dist_VueDraggableResizable_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-draggable-resizable/dist/VueDraggableResizable.css */ "./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.css");
+/* harmony import */ var vue_draggable_resizable_dist_VueDraggableResizable_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_draggable_resizable_dist_VueDraggableResizable_css__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "SeatComponent",
+  components: {
+    VueDraggableResizable: vue_draggable_resizable__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
+  props: {
+    seat: Object,
+    image: Object,
+    fixed: Boolean
+  },
+  data: function data() {
+    return {
+      active: false,
+      resizing: false,
+      dragging: false
+    };
+  },
+  computed: {
+    position: function position() {
+      var w = this.image.size.width * this.seat.width / 100;
+      var h = this.image.size.height * this.seat.height / 100;
+
+      if (this.fixed === true) {// w = w > 0 ? w : 1;
+        // h = h > 0 ? h : 1;
+      }
+
+      return {
+        left: this.image.size.width * this.seat.left / 100,
+        top: this.image.size.height * this.seat.top / 100,
+        width: w,
+        height: h,
+        center: {
+          left: w / 2,
+          top: h / 2
+        }
+      };
+    }
+  },
+  methods: {
+    onActivated: function onActivated() {
+      this.seat.selected = true;
+    },
+    onDeactivated: function onDeactivated() {
+      var _this = this;
+
+      setTimeout(function () {
+        _this.seat.selected = false;
+      }, 300);
+    },
+    onResize: function onResize(x, y, w, h) {
+      if (!this.fixed) {
+        this.resizing = true;
+        this.setRelativePosition(x, y, w, h);
+      }
+    },
+    onResizeStop: function onResizeStop() {
+      this.resizing = false;
+    },
+    onDrag: function onDrag(x, y) {
+      if (!this.fixed) {
+        this.dragging = true;
+        this.setRelativePosition(x, y, null, null);
+      }
+    },
+    onDragStop: function onDragStop() {
+      this.dragging = false;
+    },
+    setRelativePosition: function setRelativePosition(x, y, w, h) {
+      this.seat.left = 100 * (x >= 0 ? x : 0) / this.image.size.width;
+      this.seat.top = 100 * (y >= 0 ? y : 0) / this.image.size.height;
+      if (w !== null) this.seat.width = 100 * (w > 0 ? w : 0) / this.image.size.width;
+      if (h !== null) this.seat.height = 100 * (h > 0 ? h : 0) / this.image.size.height;
+      this.centerPoint();
+    },
+    centerPoint: function centerPoint() {
+      this.seat.center = {
+        left: this.seat.left + this.seat.width / 2,
+        top: this.seat.top + this.seat.height / 2
+      };
+    }
+  },
+  created: function created() {
+    this.centerPoint();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/sweetalert2/src/sweetalert2.scss":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/sweetalert2/src/sweetalert2.scss ***!
+  \********************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".swal2-popup.swal2-toast {\n  flex-direction: row;\n  align-items: center;\n  width: auto;\n  padding: 0.625em;\n  overflow-y: hidden;\n  background: #fff;\n  box-shadow: 0 0 0.625em #d9d9d9;\n}\n.swal2-popup.swal2-toast .swal2-header {\n  flex-direction: row;\n}\n.swal2-popup.swal2-toast .swal2-title {\n  flex-grow: 1;\n  justify-content: flex-start;\n  margin: 0 0.6em;\n  font-size: 1em;\n}\n.swal2-popup.swal2-toast .swal2-footer {\n  margin: 0.5em 0 0;\n  padding: 0.5em 0 0;\n  font-size: 0.8em;\n}\n.swal2-popup.swal2-toast .swal2-close {\n  position: static;\n  width: 0.8em;\n  height: 0.8em;\n  line-height: 0.8;\n}\n.swal2-popup.swal2-toast .swal2-content {\n  justify-content: flex-start;\n  font-size: 1em;\n}\n.swal2-popup.swal2-toast .swal2-icon {\n  width: 2em;\n  min-width: 2em;\n  height: 2em;\n  margin: 0;\n}\n.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content {\n  display: flex;\n  align-items: center;\n  font-size: 1.8em;\n  font-weight: bold;\n}\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  .swal2-popup.swal2-toast .swal2-icon .swal2-icon-content {\n    font-size: 0.25em;\n  }\n}\n.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring {\n  width: 2em;\n  height: 2em;\n}\n.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line] {\n  top: 0.875em;\n  width: 1.375em;\n}\n.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left] {\n  left: 0.3125em;\n}\n.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right] {\n  right: 0.3125em;\n}\n.swal2-popup.swal2-toast .swal2-actions {\n  flex-basis: auto !important;\n  width: auto;\n  height: auto;\n  margin: 0 0.3125em;\n}\n.swal2-popup.swal2-toast .swal2-styled {\n  margin: 0 0.3125em;\n  padding: 0.3125em 0.625em;\n  font-size: 1em;\n}\n.swal2-popup.swal2-toast .swal2-styled:focus {\n  box-shadow: 0 0 0 1px #fff, 0 0 0 3px rgba(50, 100, 150, 0.4);\n}\n.swal2-popup.swal2-toast .swal2-success {\n  border-color: #a5dc86;\n}\n.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line] {\n  position: absolute;\n  width: 1.6em;\n  height: 3em;\n  -webkit-transform: rotate(45deg);\n          transform: rotate(45deg);\n  border-radius: 50%;\n}\n.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left] {\n  top: -0.8em;\n  left: -0.5em;\n  -webkit-transform: rotate(-45deg);\n          transform: rotate(-45deg);\n  -webkit-transform-origin: 2em 2em;\n          transform-origin: 2em 2em;\n  border-radius: 4em 0 0 4em;\n}\n.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right] {\n  top: -0.25em;\n  left: 0.9375em;\n  -webkit-transform-origin: 0 1.5em;\n          transform-origin: 0 1.5em;\n  border-radius: 0 4em 4em 0;\n}\n.swal2-popup.swal2-toast .swal2-success .swal2-success-ring {\n  width: 2em;\n  height: 2em;\n}\n.swal2-popup.swal2-toast .swal2-success .swal2-success-fix {\n  top: 0;\n  left: 0.4375em;\n  width: 0.4375em;\n  height: 2.6875em;\n}\n.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line] {\n  height: 0.3125em;\n}\n.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip] {\n  top: 1.125em;\n  left: 0.1875em;\n  width: 0.75em;\n}\n.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long] {\n  top: 0.9375em;\n  right: 0.1875em;\n  width: 1.375em;\n}\n.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip {\n  -webkit-animation: swal2-toast-animate-success-line-tip 0.75s;\n          animation: swal2-toast-animate-success-line-tip 0.75s;\n}\n.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long {\n  -webkit-animation: swal2-toast-animate-success-line-long 0.75s;\n          animation: swal2-toast-animate-success-line-long 0.75s;\n}\n.swal2-popup.swal2-toast.swal2-show {\n  -webkit-animation: swal2-toast-show 0.5s;\n          animation: swal2-toast-show 0.5s;\n}\n.swal2-popup.swal2-toast.swal2-hide {\n  -webkit-animation: swal2-toast-hide 0.1s forwards;\n          animation: swal2-toast-hide 0.1s forwards;\n}\n\n.swal2-container {\n  display: flex;\n  position: fixed;\n  z-index: 1060;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  padding: 0.625em;\n  overflow-x: hidden;\n  transition: background-color 0.1s;\n  -webkit-overflow-scrolling: touch;\n}\n.swal2-container.swal2-backdrop-show {\n  background: rgba(0, 0, 0, 0.4);\n}\n.swal2-container.swal2-backdrop-hide {\n  background: transparent !important;\n}\n.swal2-container.swal2-top {\n  align-items: flex-start;\n}\n.swal2-container.swal2-top-start, .swal2-container.swal2-top-left {\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.swal2-container.swal2-top-end, .swal2-container.swal2-top-right {\n  align-items: flex-start;\n  justify-content: flex-end;\n}\n.swal2-container.swal2-center {\n  align-items: center;\n}\n.swal2-container.swal2-center-start, .swal2-container.swal2-center-left {\n  align-items: center;\n  justify-content: flex-start;\n}\n.swal2-container.swal2-center-end, .swal2-container.swal2-center-right {\n  align-items: center;\n  justify-content: flex-end;\n}\n.swal2-container.swal2-bottom {\n  align-items: flex-end;\n}\n.swal2-container.swal2-bottom-start, .swal2-container.swal2-bottom-left {\n  align-items: flex-end;\n  justify-content: flex-start;\n}\n.swal2-container.swal2-bottom-end, .swal2-container.swal2-bottom-right {\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.swal2-container.swal2-bottom > :first-child, .swal2-container.swal2-bottom-start > :first-child, .swal2-container.swal2-bottom-left > :first-child, .swal2-container.swal2-bottom-end > :first-child, .swal2-container.swal2-bottom-right > :first-child {\n  margin-top: auto;\n}\n.swal2-container.swal2-grow-fullscreen > .swal2-modal {\n  display: flex !important;\n  flex: 1;\n  align-self: stretch;\n  justify-content: center;\n}\n.swal2-container.swal2-grow-row > .swal2-modal {\n  display: flex !important;\n  flex: 1;\n  align-content: center;\n  justify-content: center;\n}\n.swal2-container.swal2-grow-column {\n  flex: 1;\n  flex-direction: column;\n}\n.swal2-container.swal2-grow-column.swal2-top, .swal2-container.swal2-grow-column.swal2-center, .swal2-container.swal2-grow-column.swal2-bottom {\n  align-items: center;\n}\n.swal2-container.swal2-grow-column.swal2-top-start, .swal2-container.swal2-grow-column.swal2-center-start, .swal2-container.swal2-grow-column.swal2-bottom-start, .swal2-container.swal2-grow-column.swal2-top-left, .swal2-container.swal2-grow-column.swal2-center-left, .swal2-container.swal2-grow-column.swal2-bottom-left {\n  align-items: flex-start;\n}\n.swal2-container.swal2-grow-column.swal2-top-end, .swal2-container.swal2-grow-column.swal2-center-end, .swal2-container.swal2-grow-column.swal2-bottom-end, .swal2-container.swal2-grow-column.swal2-top-right, .swal2-container.swal2-grow-column.swal2-center-right, .swal2-container.swal2-grow-column.swal2-bottom-right {\n  align-items: flex-end;\n}\n.swal2-container.swal2-grow-column > .swal2-modal {\n  display: flex !important;\n  flex: 1;\n  align-content: center;\n  justify-content: center;\n}\n.swal2-container:not(.swal2-top):not(.swal2-top-start):not(.swal2-top-end):not(.swal2-top-left):not(.swal2-top-right):not(.swal2-center-start):not(.swal2-center-end):not(.swal2-center-left):not(.swal2-center-right):not(.swal2-bottom):not(.swal2-bottom-start):not(.swal2-bottom-end):not(.swal2-bottom-left):not(.swal2-bottom-right):not(.swal2-grow-fullscreen) > .swal2-modal {\n  margin: auto;\n}\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  .swal2-container .swal2-modal {\n    margin: 0 !important;\n  }\n}\n\n.swal2-popup {\n  display: none;\n  position: relative;\n  box-sizing: border-box;\n  flex-direction: column;\n  justify-content: center;\n  width: 32em;\n  max-width: 100%;\n  padding: 1.25em;\n  border: none;\n  border-radius: 0.3125em;\n  background: #fff;\n  font-family: inherit;\n  font-size: 1rem;\n}\n.swal2-popup:focus {\n  outline: none;\n}\n.swal2-popup.swal2-loading {\n  overflow-y: hidden;\n}\n\n.swal2-header {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.swal2-title {\n  position: relative;\n  max-width: 100%;\n  margin: 0 0 0.4em;\n  padding: 0;\n  color: #595959;\n  font-size: 1.875em;\n  font-weight: 600;\n  text-align: center;\n  text-transform: none;\n  word-wrap: break-word;\n}\n\n.swal2-actions {\n  display: flex;\n  z-index: 1;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  margin: 1.25em auto 0;\n}\n.swal2-actions:not(.swal2-loading) .swal2-styled[disabled] {\n  opacity: 0.4;\n}\n.swal2-actions:not(.swal2-loading) .swal2-styled:hover {\n  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));\n}\n.swal2-actions:not(.swal2-loading) .swal2-styled:active {\n  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));\n}\n.swal2-actions.swal2-loading .swal2-styled.swal2-confirm {\n  box-sizing: border-box;\n  width: 2.5em;\n  height: 2.5em;\n  margin: 0.46875em;\n  padding: 0;\n  -webkit-animation: swal2-rotate-loading 1.5s linear 0s infinite normal;\n          animation: swal2-rotate-loading 1.5s linear 0s infinite normal;\n  border: 0.25em solid transparent;\n  border-radius: 100%;\n  border-color: transparent;\n  background-color: transparent !important;\n  color: transparent;\n  cursor: default;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.swal2-actions.swal2-loading .swal2-styled.swal2-cancel {\n  margin-right: 30px;\n  margin-left: 30px;\n}\n.swal2-actions.swal2-loading :not(.swal2-styled).swal2-confirm::after {\n  content: \"\";\n  display: inline-block;\n  width: 15px;\n  height: 15px;\n  margin-left: 5px;\n  -webkit-animation: swal2-rotate-loading 1.5s linear 0s infinite normal;\n          animation: swal2-rotate-loading 1.5s linear 0s infinite normal;\n  border: 3px solid #999999;\n  border-radius: 50%;\n  border-right-color: transparent;\n  box-shadow: 1px 1px 1px #fff;\n}\n\n.swal2-styled {\n  margin: 0.3125em;\n  padding: 0.625em 2em;\n  box-shadow: none;\n  font-weight: 500;\n}\n.swal2-styled:not([disabled]) {\n  cursor: pointer;\n}\n.swal2-styled.swal2-confirm {\n  border: 0;\n  border-radius: 0.25em;\n  background: initial;\n  background-color: #3085d6;\n  color: #fff;\n  font-size: 1.0625em;\n}\n.swal2-styled.swal2-cancel {\n  border: 0;\n  border-radius: 0.25em;\n  background: initial;\n  background-color: #aaa;\n  color: #fff;\n  font-size: 1.0625em;\n}\n.swal2-styled:focus {\n  outline: none;\n  box-shadow: 0 0 0 1px #fff, 0 0 0 3px rgba(50, 100, 150, 0.4);\n}\n.swal2-styled::-moz-focus-inner {\n  border: 0;\n}\n\n.swal2-footer {\n  justify-content: center;\n  margin: 1.25em 0 0;\n  padding: 1em 0 0;\n  border-top: 1px solid #eee;\n  color: #545454;\n  font-size: 1em;\n}\n\n.swal2-timer-progress-bar {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n  height: 0.25em;\n  background: rgba(0, 0, 0, 0.2);\n}\n\n.swal2-image {\n  max-width: 100%;\n  margin: 1.25em auto;\n}\n\n.swal2-close {\n  position: absolute;\n  z-index: 2;\n  /* 1617 */\n  top: 0;\n  right: 0;\n  justify-content: center;\n  width: 1.2em;\n  height: 1.2em;\n  padding: 0;\n  overflow: hidden;\n  transition: color 0.1s ease-out;\n  border: none;\n  border-radius: 0;\n  outline: initial;\n  background: transparent;\n  color: #cccccc;\n  font-family: serif;\n  font-size: 2.5em;\n  line-height: 1.2;\n  cursor: pointer;\n}\n.swal2-close:hover {\n  -webkit-transform: none;\n          transform: none;\n  background: transparent;\n  color: #f27474;\n}\n.swal2-close::-moz-focus-inner {\n  border: 0;\n}\n\n.swal2-content {\n  z-index: 1;\n  justify-content: center;\n  margin: 0;\n  padding: 0;\n  color: #545454;\n  font-size: 1.125em;\n  font-weight: normal;\n  line-height: normal;\n  text-align: center;\n  word-wrap: break-word;\n}\n\n.swal2-input,\n.swal2-file,\n.swal2-textarea,\n.swal2-select,\n.swal2-radio,\n.swal2-checkbox {\n  margin: 1em auto;\n}\n\n.swal2-input,\n.swal2-file,\n.swal2-textarea {\n  box-sizing: border-box;\n  width: 100%;\n  transition: border-color 0.3s, box-shadow 0.3s;\n  border: 1px solid #d9d9d9;\n  border-radius: 0.1875em;\n  background: inherit;\n  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06);\n  color: inherit;\n  font-size: 1.125em;\n}\n.swal2-input.swal2-inputerror,\n.swal2-file.swal2-inputerror,\n.swal2-textarea.swal2-inputerror {\n  border-color: #f27474 !important;\n  box-shadow: 0 0 2px #f27474 !important;\n}\n.swal2-input:focus,\n.swal2-file:focus,\n.swal2-textarea:focus {\n  border: 1px solid #b4dbed;\n  outline: none;\n  box-shadow: 0 0 3px #c4e6f5;\n}\n.swal2-input::-webkit-input-placeholder,\n.swal2-file::-webkit-input-placeholder,\n.swal2-textarea::-webkit-input-placeholder {\n  color: #cccccc;\n}\n.swal2-input::-moz-placeholder,\n.swal2-file::-moz-placeholder,\n.swal2-textarea::-moz-placeholder {\n  color: #cccccc;\n}\n.swal2-input:-ms-input-placeholder,\n.swal2-file:-ms-input-placeholder,\n.swal2-textarea:-ms-input-placeholder {\n  color: #cccccc;\n}\n.swal2-input::-ms-input-placeholder,\n.swal2-file::-ms-input-placeholder,\n.swal2-textarea::-ms-input-placeholder {\n  color: #cccccc;\n}\n.swal2-input::placeholder,\n.swal2-file::placeholder,\n.swal2-textarea::placeholder {\n  color: #cccccc;\n}\n\n.swal2-range {\n  margin: 1em auto;\n  background: #fff;\n}\n.swal2-range input {\n  width: 80%;\n}\n.swal2-range output {\n  width: 20%;\n  color: inherit;\n  font-weight: 600;\n  text-align: center;\n}\n.swal2-range input,\n.swal2-range output {\n  height: 2.625em;\n  padding: 0;\n  font-size: 1.125em;\n  line-height: 2.625em;\n}\n\n.swal2-input {\n  height: 2.625em;\n  padding: 0 0.75em;\n}\n.swal2-input[type=number] {\n  max-width: 10em;\n}\n\n.swal2-file {\n  background: inherit;\n  font-size: 1.125em;\n}\n\n.swal2-textarea {\n  height: 6.75em;\n  padding: 0.75em;\n}\n\n.swal2-select {\n  min-width: 50%;\n  max-width: 100%;\n  padding: 0.375em 0.625em;\n  background: inherit;\n  color: inherit;\n  font-size: 1.125em;\n}\n\n.swal2-radio,\n.swal2-checkbox {\n  align-items: center;\n  justify-content: center;\n  background: #fff;\n  color: inherit;\n}\n.swal2-radio label,\n.swal2-checkbox label {\n  margin: 0 0.6em;\n  font-size: 1.125em;\n}\n.swal2-radio input,\n.swal2-checkbox input {\n  margin: 0 0.4em;\n}\n\n.swal2-validation-message {\n  display: none;\n  align-items: center;\n  justify-content: center;\n  padding: 0.625em;\n  overflow: hidden;\n  background: #f0f0f0;\n  color: #666666;\n  font-size: 1em;\n  font-weight: 300;\n}\n.swal2-validation-message::before {\n  content: \"!\";\n  display: inline-block;\n  width: 1.5em;\n  min-width: 1.5em;\n  height: 1.5em;\n  margin: 0 0.625em;\n  border-radius: 50%;\n  background-color: #f27474;\n  color: #fff;\n  font-weight: 600;\n  line-height: 1.5em;\n  text-align: center;\n}\n\n.swal2-icon {\n  position: relative;\n  box-sizing: content-box;\n  justify-content: center;\n  width: 5em;\n  height: 5em;\n  margin: 1.25em auto 1.875em;\n  border: 0.25em solid transparent;\n  border-radius: 50%;\n  font-family: inherit;\n  line-height: 5em;\n  cursor: default;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.swal2-icon .swal2-icon-content {\n  display: flex;\n  align-items: center;\n  font-size: 3.75em;\n}\n.swal2-icon.swal2-error {\n  border-color: #f27474;\n  color: #f27474;\n}\n.swal2-icon.swal2-error .swal2-x-mark {\n  position: relative;\n  flex-grow: 1;\n}\n.swal2-icon.swal2-error [class^=swal2-x-mark-line] {\n  display: block;\n  position: absolute;\n  top: 2.3125em;\n  width: 2.9375em;\n  height: 0.3125em;\n  border-radius: 0.125em;\n  background-color: #f27474;\n}\n.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left] {\n  left: 1.0625em;\n  -webkit-transform: rotate(45deg);\n          transform: rotate(45deg);\n}\n.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right] {\n  right: 1em;\n  -webkit-transform: rotate(-45deg);\n          transform: rotate(-45deg);\n}\n.swal2-icon.swal2-error.swal2-icon-show {\n  -webkit-animation: swal2-animate-error-icon 0.5s;\n          animation: swal2-animate-error-icon 0.5s;\n}\n.swal2-icon.swal2-error.swal2-icon-show .swal2-x-mark {\n  -webkit-animation: swal2-animate-error-x-mark 0.5s;\n          animation: swal2-animate-error-x-mark 0.5s;\n}\n.swal2-icon.swal2-warning {\n  border-color: #facea8;\n  color: #f8bb86;\n}\n.swal2-icon.swal2-info {\n  border-color: #9de0f6;\n  color: #3fc3ee;\n}\n.swal2-icon.swal2-question {\n  border-color: #c9dae1;\n  color: #87adbd;\n}\n.swal2-icon.swal2-success {\n  border-color: #a5dc86;\n  color: #a5dc86;\n}\n.swal2-icon.swal2-success [class^=swal2-success-circular-line] {\n  position: absolute;\n  width: 3.75em;\n  height: 7.5em;\n  -webkit-transform: rotate(45deg);\n          transform: rotate(45deg);\n  border-radius: 50%;\n}\n.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left] {\n  top: -0.4375em;\n  left: -2.0635em;\n  -webkit-transform: rotate(-45deg);\n          transform: rotate(-45deg);\n  -webkit-transform-origin: 3.75em 3.75em;\n          transform-origin: 3.75em 3.75em;\n  border-radius: 7.5em 0 0 7.5em;\n}\n.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right] {\n  top: -0.6875em;\n  left: 1.875em;\n  -webkit-transform: rotate(-45deg);\n          transform: rotate(-45deg);\n  -webkit-transform-origin: 0 3.75em;\n          transform-origin: 0 3.75em;\n  border-radius: 0 7.5em 7.5em 0;\n}\n.swal2-icon.swal2-success .swal2-success-ring {\n  position: absolute;\n  z-index: 2;\n  top: -0.25em;\n  left: -0.25em;\n  box-sizing: content-box;\n  width: 100%;\n  height: 100%;\n  border: 0.25em solid rgba(165, 220, 134, 0.3);\n  border-radius: 50%;\n}\n.swal2-icon.swal2-success .swal2-success-fix {\n  position: absolute;\n  z-index: 1;\n  top: 0.5em;\n  left: 1.625em;\n  width: 0.4375em;\n  height: 5.625em;\n  -webkit-transform: rotate(-45deg);\n          transform: rotate(-45deg);\n}\n.swal2-icon.swal2-success [class^=swal2-success-line] {\n  display: block;\n  position: absolute;\n  z-index: 2;\n  height: 0.3125em;\n  border-radius: 0.125em;\n  background-color: #a5dc86;\n}\n.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {\n  top: 2.875em;\n  left: 0.875em;\n  width: 1.5625em;\n  -webkit-transform: rotate(45deg);\n          transform: rotate(45deg);\n}\n.swal2-icon.swal2-success [class^=swal2-success-line][class$=long] {\n  top: 2.375em;\n  right: 0.5em;\n  width: 2.9375em;\n  -webkit-transform: rotate(-45deg);\n          transform: rotate(-45deg);\n}\n.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-tip {\n  -webkit-animation: swal2-animate-success-line-tip 0.75s;\n          animation: swal2-animate-success-line-tip 0.75s;\n}\n.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-long {\n  -webkit-animation: swal2-animate-success-line-long 0.75s;\n          animation: swal2-animate-success-line-long 0.75s;\n}\n.swal2-icon.swal2-success.swal2-icon-show .swal2-success-circular-line-right {\n  -webkit-animation: swal2-rotate-success-circular-line 4.25s ease-in;\n          animation: swal2-rotate-success-circular-line 4.25s ease-in;\n}\n\n.swal2-progress-steps {\n  align-items: center;\n  margin: 0 0 1.25em;\n  padding: 0;\n  background: inherit;\n  font-weight: 600;\n}\n.swal2-progress-steps li {\n  display: inline-block;\n  position: relative;\n}\n.swal2-progress-steps .swal2-progress-step {\n  z-index: 20;\n  width: 2em;\n  height: 2em;\n  border-radius: 2em;\n  background: #3085d6;\n  color: #fff;\n  line-height: 2em;\n  text-align: center;\n}\n.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step {\n  background: #3085d6;\n}\n.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step {\n  background: #add8e6;\n  color: #fff;\n}\n.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step-line {\n  background: #add8e6;\n}\n.swal2-progress-steps .swal2-progress-step-line {\n  z-index: 10;\n  width: 2.5em;\n  height: 0.4em;\n  margin: 0 -1px;\n  background: #3085d6;\n}\n\n[class^=swal2] {\n  -webkit-tap-highlight-color: transparent;\n}\n\n.swal2-show {\n  -webkit-animation: swal2-show 0.3s;\n          animation: swal2-show 0.3s;\n}\n\n.swal2-hide {\n  -webkit-animation: swal2-hide 0.15s forwards;\n          animation: swal2-hide 0.15s forwards;\n}\n\n.swal2-noanimation {\n  transition: none;\n}\n\n.swal2-scrollbar-measure {\n  position: absolute;\n  top: -9999px;\n  width: 50px;\n  height: 50px;\n  overflow: scroll;\n}\n\n.swal2-rtl .swal2-close {\n  right: auto;\n  left: 0;\n}\n.swal2-rtl .swal2-timer-progress-bar {\n  right: 0;\n  left: auto;\n}\n\n@supports (-ms-accelerator: true) {\n  .swal2-range input {\n    width: 100% !important;\n  }\n  .swal2-range output {\n    display: none;\n  }\n}\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  .swal2-range input {\n    width: 100% !important;\n  }\n  .swal2-range output {\n    display: none;\n  }\n}\n@-moz-document url-prefix() {\n  .swal2-close:focus {\n    outline: 2px solid rgba(50, 100, 150, 0.4);\n  }\n}\n@-webkit-keyframes swal2-toast-show {\n  0% {\n    -webkit-transform: translateY(-0.625em) rotateZ(2deg);\n            transform: translateY(-0.625em) rotateZ(2deg);\n  }\n  33% {\n    -webkit-transform: translateY(0) rotateZ(-2deg);\n            transform: translateY(0) rotateZ(-2deg);\n  }\n  66% {\n    -webkit-transform: translateY(0.3125em) rotateZ(2deg);\n            transform: translateY(0.3125em) rotateZ(2deg);\n  }\n  100% {\n    -webkit-transform: translateY(0) rotateZ(0deg);\n            transform: translateY(0) rotateZ(0deg);\n  }\n}\n@keyframes swal2-toast-show {\n  0% {\n    -webkit-transform: translateY(-0.625em) rotateZ(2deg);\n            transform: translateY(-0.625em) rotateZ(2deg);\n  }\n  33% {\n    -webkit-transform: translateY(0) rotateZ(-2deg);\n            transform: translateY(0) rotateZ(-2deg);\n  }\n  66% {\n    -webkit-transform: translateY(0.3125em) rotateZ(2deg);\n            transform: translateY(0.3125em) rotateZ(2deg);\n  }\n  100% {\n    -webkit-transform: translateY(0) rotateZ(0deg);\n            transform: translateY(0) rotateZ(0deg);\n  }\n}\n@-webkit-keyframes swal2-toast-hide {\n  100% {\n    -webkit-transform: rotateZ(1deg);\n            transform: rotateZ(1deg);\n    opacity: 0;\n  }\n}\n@keyframes swal2-toast-hide {\n  100% {\n    -webkit-transform: rotateZ(1deg);\n            transform: rotateZ(1deg);\n    opacity: 0;\n  }\n}\n@-webkit-keyframes swal2-toast-animate-success-line-tip {\n  0% {\n    top: 0.5625em;\n    left: 0.0625em;\n    width: 0;\n  }\n  54% {\n    top: 0.125em;\n    left: 0.125em;\n    width: 0;\n  }\n  70% {\n    top: 0.625em;\n    left: -0.25em;\n    width: 1.625em;\n  }\n  84% {\n    top: 1.0625em;\n    left: 0.75em;\n    width: 0.5em;\n  }\n  100% {\n    top: 1.125em;\n    left: 0.1875em;\n    width: 0.75em;\n  }\n}\n@keyframes swal2-toast-animate-success-line-tip {\n  0% {\n    top: 0.5625em;\n    left: 0.0625em;\n    width: 0;\n  }\n  54% {\n    top: 0.125em;\n    left: 0.125em;\n    width: 0;\n  }\n  70% {\n    top: 0.625em;\n    left: -0.25em;\n    width: 1.625em;\n  }\n  84% {\n    top: 1.0625em;\n    left: 0.75em;\n    width: 0.5em;\n  }\n  100% {\n    top: 1.125em;\n    left: 0.1875em;\n    width: 0.75em;\n  }\n}\n@-webkit-keyframes swal2-toast-animate-success-line-long {\n  0% {\n    top: 1.625em;\n    right: 1.375em;\n    width: 0;\n  }\n  65% {\n    top: 1.25em;\n    right: 0.9375em;\n    width: 0;\n  }\n  84% {\n    top: 0.9375em;\n    right: 0;\n    width: 1.125em;\n  }\n  100% {\n    top: 0.9375em;\n    right: 0.1875em;\n    width: 1.375em;\n  }\n}\n@keyframes swal2-toast-animate-success-line-long {\n  0% {\n    top: 1.625em;\n    right: 1.375em;\n    width: 0;\n  }\n  65% {\n    top: 1.25em;\n    right: 0.9375em;\n    width: 0;\n  }\n  84% {\n    top: 0.9375em;\n    right: 0;\n    width: 1.125em;\n  }\n  100% {\n    top: 0.9375em;\n    right: 0.1875em;\n    width: 1.375em;\n  }\n}\n@-webkit-keyframes swal2-show {\n  0% {\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n  45% {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n  }\n  80% {\n    -webkit-transform: scale(0.95);\n            transform: scale(0.95);\n  }\n  100% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n}\n@keyframes swal2-show {\n  0% {\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n  45% {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n  }\n  80% {\n    -webkit-transform: scale(0.95);\n            transform: scale(0.95);\n  }\n  100% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n}\n@-webkit-keyframes swal2-hide {\n  0% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n    opacity: 1;\n  }\n  100% {\n    -webkit-transform: scale(0.5);\n            transform: scale(0.5);\n    opacity: 0;\n  }\n}\n@keyframes swal2-hide {\n  0% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n    opacity: 1;\n  }\n  100% {\n    -webkit-transform: scale(0.5);\n            transform: scale(0.5);\n    opacity: 0;\n  }\n}\n@-webkit-keyframes swal2-animate-success-line-tip {\n  0% {\n    top: 1.1875em;\n    left: 0.0625em;\n    width: 0;\n  }\n  54% {\n    top: 1.0625em;\n    left: 0.125em;\n    width: 0;\n  }\n  70% {\n    top: 2.1875em;\n    left: -0.375em;\n    width: 3.125em;\n  }\n  84% {\n    top: 3em;\n    left: 1.3125em;\n    width: 1.0625em;\n  }\n  100% {\n    top: 2.8125em;\n    left: 0.875em;\n    width: 1.5625em;\n  }\n}\n@keyframes swal2-animate-success-line-tip {\n  0% {\n    top: 1.1875em;\n    left: 0.0625em;\n    width: 0;\n  }\n  54% {\n    top: 1.0625em;\n    left: 0.125em;\n    width: 0;\n  }\n  70% {\n    top: 2.1875em;\n    left: -0.375em;\n    width: 3.125em;\n  }\n  84% {\n    top: 3em;\n    left: 1.3125em;\n    width: 1.0625em;\n  }\n  100% {\n    top: 2.8125em;\n    left: 0.875em;\n    width: 1.5625em;\n  }\n}\n@-webkit-keyframes swal2-animate-success-line-long {\n  0% {\n    top: 3.375em;\n    right: 2.875em;\n    width: 0;\n  }\n  65% {\n    top: 3.375em;\n    right: 2.875em;\n    width: 0;\n  }\n  84% {\n    top: 2.1875em;\n    right: 0;\n    width: 3.4375em;\n  }\n  100% {\n    top: 2.375em;\n    right: 0.5em;\n    width: 2.9375em;\n  }\n}\n@keyframes swal2-animate-success-line-long {\n  0% {\n    top: 3.375em;\n    right: 2.875em;\n    width: 0;\n  }\n  65% {\n    top: 3.375em;\n    right: 2.875em;\n    width: 0;\n  }\n  84% {\n    top: 2.1875em;\n    right: 0;\n    width: 3.4375em;\n  }\n  100% {\n    top: 2.375em;\n    right: 0.5em;\n    width: 2.9375em;\n  }\n}\n@-webkit-keyframes swal2-rotate-success-circular-line {\n  0% {\n    -webkit-transform: rotate(-45deg);\n            transform: rotate(-45deg);\n  }\n  5% {\n    -webkit-transform: rotate(-45deg);\n            transform: rotate(-45deg);\n  }\n  12% {\n    -webkit-transform: rotate(-405deg);\n            transform: rotate(-405deg);\n  }\n  100% {\n    -webkit-transform: rotate(-405deg);\n            transform: rotate(-405deg);\n  }\n}\n@keyframes swal2-rotate-success-circular-line {\n  0% {\n    -webkit-transform: rotate(-45deg);\n            transform: rotate(-45deg);\n  }\n  5% {\n    -webkit-transform: rotate(-45deg);\n            transform: rotate(-45deg);\n  }\n  12% {\n    -webkit-transform: rotate(-405deg);\n            transform: rotate(-405deg);\n  }\n  100% {\n    -webkit-transform: rotate(-405deg);\n            transform: rotate(-405deg);\n  }\n}\n@-webkit-keyframes swal2-animate-error-x-mark {\n  0% {\n    margin-top: 1.625em;\n    -webkit-transform: scale(0.4);\n            transform: scale(0.4);\n    opacity: 0;\n  }\n  50% {\n    margin-top: 1.625em;\n    -webkit-transform: scale(0.4);\n            transform: scale(0.4);\n    opacity: 0;\n  }\n  80% {\n    margin-top: -0.375em;\n    -webkit-transform: scale(1.15);\n            transform: scale(1.15);\n  }\n  100% {\n    margin-top: 0;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n    opacity: 1;\n  }\n}\n@keyframes swal2-animate-error-x-mark {\n  0% {\n    margin-top: 1.625em;\n    -webkit-transform: scale(0.4);\n            transform: scale(0.4);\n    opacity: 0;\n  }\n  50% {\n    margin-top: 1.625em;\n    -webkit-transform: scale(0.4);\n            transform: scale(0.4);\n    opacity: 0;\n  }\n  80% {\n    margin-top: -0.375em;\n    -webkit-transform: scale(1.15);\n            transform: scale(1.15);\n  }\n  100% {\n    margin-top: 0;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n    opacity: 1;\n  }\n}\n@-webkit-keyframes swal2-animate-error-icon {\n  0% {\n    -webkit-transform: rotateX(100deg);\n            transform: rotateX(100deg);\n    opacity: 0;\n  }\n  100% {\n    -webkit-transform: rotateX(0deg);\n            transform: rotateX(0deg);\n    opacity: 1;\n  }\n}\n@keyframes swal2-animate-error-icon {\n  0% {\n    -webkit-transform: rotateX(100deg);\n            transform: rotateX(100deg);\n    opacity: 0;\n  }\n  100% {\n    -webkit-transform: rotateX(0deg);\n            transform: rotateX(0deg);\n    opacity: 1;\n  }\n}\n@-webkit-keyframes swal2-rotate-loading {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n@keyframes swal2-rotate-loading {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\nbody.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {\n  overflow: hidden;\n}\nbody.swal2-height-auto {\n  height: auto !important;\n}\nbody.swal2-no-backdrop .swal2-container {\n  top: auto;\n  right: auto;\n  bottom: auto;\n  left: auto;\n  max-width: calc(100% - 0.625em * 2);\n  background-color: transparent !important;\n}\nbody.swal2-no-backdrop .swal2-container > .swal2-modal {\n  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);\n}\nbody.swal2-no-backdrop .swal2-container.swal2-top {\n  top: 0;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\nbody.swal2-no-backdrop .swal2-container.swal2-top-start, body.swal2-no-backdrop .swal2-container.swal2-top-left {\n  top: 0;\n  left: 0;\n}\nbody.swal2-no-backdrop .swal2-container.swal2-top-end, body.swal2-no-backdrop .swal2-container.swal2-top-right {\n  top: 0;\n  right: 0;\n}\nbody.swal2-no-backdrop .swal2-container.swal2-center {\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\nbody.swal2-no-backdrop .swal2-container.swal2-center-start, body.swal2-no-backdrop .swal2-container.swal2-center-left {\n  top: 50%;\n  left: 0;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n}\nbody.swal2-no-backdrop .swal2-container.swal2-center-end, body.swal2-no-backdrop .swal2-container.swal2-center-right {\n  top: 50%;\n  right: 0;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n}\nbody.swal2-no-backdrop .swal2-container.swal2-bottom {\n  bottom: 0;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\nbody.swal2-no-backdrop .swal2-container.swal2-bottom-start, body.swal2-no-backdrop .swal2-container.swal2-bottom-left {\n  bottom: 0;\n  left: 0;\n}\nbody.swal2-no-backdrop .swal2-container.swal2-bottom-end, body.swal2-no-backdrop .swal2-container.swal2-bottom-right {\n  right: 0;\n  bottom: 0;\n}\n@media print {\n  body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {\n    overflow-y: scroll !important;\n  }\n  body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) > [aria-hidden=true] {\n    display: none;\n  }\n  body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container {\n    position: static !important;\n  }\n}\nbody.swal2-toast-shown .swal2-container {\n  background-color: transparent;\n}\nbody.swal2-toast-shown .swal2-container.swal2-top {\n  top: 0;\n  right: auto;\n  bottom: auto;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\nbody.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .swal2-container.swal2-top-right {\n  top: 0;\n  right: 0;\n  bottom: auto;\n  left: auto;\n}\nbody.swal2-toast-shown .swal2-container.swal2-top-start, body.swal2-toast-shown .swal2-container.swal2-top-left {\n  top: 0;\n  right: auto;\n  bottom: auto;\n  left: 0;\n}\nbody.swal2-toast-shown .swal2-container.swal2-center-start, body.swal2-toast-shown .swal2-container.swal2-center-left {\n  top: 50%;\n  right: auto;\n  bottom: auto;\n  left: 0;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n}\nbody.swal2-toast-shown .swal2-container.swal2-center {\n  top: 50%;\n  right: auto;\n  bottom: auto;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\nbody.swal2-toast-shown .swal2-container.swal2-center-end, body.swal2-toast-shown .swal2-container.swal2-center-right {\n  top: 50%;\n  right: 0;\n  bottom: auto;\n  left: auto;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n}\nbody.swal2-toast-shown .swal2-container.swal2-bottom-start, body.swal2-toast-shown .swal2-container.swal2-bottom-left {\n  top: auto;\n  right: auto;\n  bottom: 0;\n  left: 0;\n}\nbody.swal2-toast-shown .swal2-container.swal2-bottom {\n  top: auto;\n  right: auto;\n  bottom: 0;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\nbody.swal2-toast-shown .swal2-container.swal2-bottom-end, body.swal2-toast-shown .swal2-container.swal2-bottom-right {\n  top: auto;\n  right: 0;\n  bottom: 0;\n  left: auto;\n}\nbody.swal2-toast-column .swal2-toast {\n  flex-direction: column;\n  align-items: stretch;\n}\nbody.swal2-toast-column .swal2-toast .swal2-actions {\n  flex: 1;\n  align-self: stretch;\n  height: 2.2em;\n  margin-top: 0.3125em;\n}\nbody.swal2-toast-column .swal2-toast .swal2-loading {\n  justify-content: center;\n}\nbody.swal2-toast-column .swal2-toast .swal2-input {\n  height: 2em;\n  margin: 0.3125em auto;\n  font-size: 1em;\n}\nbody.swal2-toast-column .swal2-toast .swal2-validation-message {\n  font-size: 1em;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.css":
+/*!*************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.css ***!
+  \*************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".vdr{touch-action:none;border:1px dashed #000}.handle,.vdr{position:absolute;box-sizing:border-box}.handle{width:10px;height:10px;background:#eee;border:1px solid #333}.handle-tl{top:-10px;left:-10px;cursor:nw-resize}.handle-tm{top:-10px;left:50%;margin-left:-5px;cursor:n-resize}.handle-tr{top:-10px;right:-10px;cursor:ne-resize}.handle-ml{left:-10px;cursor:w-resize}.handle-ml,.handle-mr{top:50%;margin-top:-5px}.handle-mr{right:-10px;cursor:e-resize}.handle-bl{bottom:-10px;left:-10px;cursor:sw-resize}.handle-bm{bottom:-10px;left:50%;margin-left:-5px;cursor:s-resize}.handle-br{bottom:-10px;right:-10px;cursor:se-resize}@media only screen and (max-width:768px){[class*=handle-]:before{content:\"\";left:-10px;right:-10px;bottom:-10px;top:-10px;position:absolute}}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-range-slider/dist/vue-range-slider.css":
+/*!*************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-range-slider/dist/vue-range-slider.css ***!
+  \*************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".range-slider {\n  display: inline-block;\n  padding: 0 10px;\n  height: 20px;\n  width: 130px;\n}\n\n.range-slider.disabled {\n  opacity: 0.5;\n}\n\n.range-slider-inner {\n  display: inline-block;\n  position: relative;\n  height: 100%;\n  width: 100%;\n}\n\n.range-slider-rail,\n.range-slider-fill {\n  display: block;\n  position: absolute;\n  top: 50%;\n  left: 0;\n  height: 4px;\n  border-radius: 2px;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n}\n\n.range-slider-rail {\n  width: 100%;\n  background-color: #e2e2e2;\n}\n\n.range-slider-fill {\n  background-color: #21fb92;\n}\n\n.range-slider-knob {\n  display: block;\n  position: absolute;\n  top: 50%;\n  left: 0;\n  box-sizing: border-box;\n  height: 20px;\n  width: 20px;\n  border: 1px solid #f5f5f5;\n  border-radius: 50%;\n  background-color: #fff;\n  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  cursor: pointer;\n}\n\n.range-slider-hidden {\n  display: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.photo-details[data-v-79249e3e] {\n    display: flex;\n    position: relative;\n    height: 0;\n    width: 100%;\n    z-index: 100;\n}\n.photo-details > div[data-v-79249e3e] {\n    background: #1e2d3361;\n    padding: 10px;\n    height: 100px;\n}\n.photo-details p[data-v-79249e3e]{\n    margin: 0;\n}\n.photo-details .photo p[data-v-79249e3e] {\n    display: block;\n    color: white;\n    padding: 2px;\n    font-size: 0.9em !important;\n}\n.photo-details .route p[data-v-79249e3e] {\n    display: block;\n    color: white;\n    padding: 2px;\n    font-size: 0.8em !important;\n}\n.photo-details .passengers[data-v-79249e3e] {\n    padding: 0;\n}\n.photo-details .passengers p[data-v-79249e3e] {\n    color: white;\n    padding: 2px;\n    font-size: 0.8em !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.container-photo[data-v-8218c636] {\n    padding: 0 !important;\n    width: 1000px;\n    height: auto;\n}\n.container-photo .zone-detection[data-v-8218c636] {\n    position: absolute;\n    /*background: rgba(137, 138, 135, 0.54);*/\n    /*color: #9bef00;*/\n    border-width: 2px;\n    border-style: solid;\n    border-radius: 5px;\n    z-index: 200;\n    padding: 5px;\n}\n.container-photo .zone-detection.undetected[data-v-8218c636] {\n    border: 3px solid red !important;\n    border-radius: 4px;\n}\n.container-photo .zone-detection-center[data-v-8218c636] {\n    border-style: solid;\n    border-width: 2px;\n    position: absolute;\n    z-index: 100000 !important;\n}\n.container-photo .zone-detection small[data-v-8218c636] {\n    font-size: 0.5em;\n    color: #e2e1e1;\n    float: left;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.container-actions[data-v-4d1f7386] {\n    margin: auto;\n    width: 1000px;\n    text-align: center;\n}\n.btn-action[data-v-4d1f7386] {\n    margin: 5px;\n    display: inline;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.slider[data-v-5c5c5b3b]{\n    margin: 0;\n}\n.container-actions[data-v-5c5c5b3b]{\n    position: fixed;\n    z-index: 10000;\n    background: rgba(0, 0, 0, 0.05);\n    border-radius: 10px;\n    margin-left: 15%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.seat[data-v-c36d7ea8]{\n     text-align: center;\n     padding: 2px;\n     background-color: rgba(0, 233, 198, 0.38);\n     border-radius: 3px;\n     border-style: solid;\n     border-color: #00e1ff;\n     transition: ease background-color 1s;\n     z-index: 200 !important;\n}\n.seat.active[data-v-c36d7ea8]{\n     background-color: rgba(13, 208, 32, 0);\n     box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n     border-color: #ff0051;\n     border-width: 2px;\n     z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover{\n     cursor: move;\n}\n.seat .number[data-v-c36d7ea8]{\n     font-size: 0.7em !important;\n     color: white;\n     font-weight: bold;\n     z-index: 10000;\n}\n.seat .center[data-v-c36d7ea8]{\n     position: relative;\n     float: left;\n     border: 1px solid #00ceff;\n     height: 1px;\n     width: 1px;\n}\n.seat input[data-v-c36d7ea8]{\n     background: #0000006e !important;\n     color: white !important;\n     height: 15px !important;\n     font-size: 0.8em !important;\n     position: absolute;\n     top: -30px;\n}\n.seat .position[data-v-c36d7ea8]{\n     font-size: 0.7em !important;\n     color: white;\n     font-weight: bold;\n     background: rgba(10, 21, 32, 0.71);\n     padding: 2px;\n     position: absolute;\n     width: 120px;\n     bottom: -40px;\n     display: none;\n}\n.seat.active .position[data-v-c36d7ea8]{\n     display: block !important;\n}\n.draw[data-v-c36d7ea8]{\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
+
+// exports
+
 
 /***/ }),
 
@@ -296,6 +1060,1030 @@ function toComment(sourceMap) {
 
 	return '/*# ' + data + ' */';
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/numeral/numeral.js":
+/*!*****************************************!*\
+  !*** ./node_modules/numeral/numeral.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! @preserve
+ * numeral.js
+ * version : 2.0.6
+ * author : Adam Draper
+ * license : MIT
+ * http://adamwdraper.github.com/Numeral-js/
+ */
+
+(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+}(this, function () {
+    /************************************
+        Variables
+    ************************************/
+
+    var numeral,
+        _,
+        VERSION = '2.0.6',
+        formats = {},
+        locales = {},
+        defaults = {
+            currentLocale: 'en',
+            zeroFormat: null,
+            nullFormat: null,
+            defaultFormat: '0,0',
+            scalePercentBy100: true
+        },
+        options = {
+            currentLocale: defaults.currentLocale,
+            zeroFormat: defaults.zeroFormat,
+            nullFormat: defaults.nullFormat,
+            defaultFormat: defaults.defaultFormat,
+            scalePercentBy100: defaults.scalePercentBy100
+        };
+
+
+    /************************************
+        Constructors
+    ************************************/
+
+    // Numeral prototype object
+    function Numeral(input, number) {
+        this._input = input;
+
+        this._value = number;
+    }
+
+    numeral = function(input) {
+        var value,
+            kind,
+            unformatFunction,
+            regexp;
+
+        if (numeral.isNumeral(input)) {
+            value = input.value();
+        } else if (input === 0 || typeof input === 'undefined') {
+            value = 0;
+        } else if (input === null || _.isNaN(input)) {
+            value = null;
+        } else if (typeof input === 'string') {
+            if (options.zeroFormat && input === options.zeroFormat) {
+                value = 0;
+            } else if (options.nullFormat && input === options.nullFormat || !input.replace(/[^0-9]+/g, '').length) {
+                value = null;
+            } else {
+                for (kind in formats) {
+                    regexp = typeof formats[kind].regexps.unformat === 'function' ? formats[kind].regexps.unformat() : formats[kind].regexps.unformat;
+
+                    if (regexp && input.match(regexp)) {
+                        unformatFunction = formats[kind].unformat;
+
+                        break;
+                    }
+                }
+
+                unformatFunction = unformatFunction || numeral._.stringToNumber;
+
+                value = unformatFunction(input);
+            }
+        } else {
+            value = Number(input)|| null;
+        }
+
+        return new Numeral(input, value);
+    };
+
+    // version number
+    numeral.version = VERSION;
+
+    // compare numeral object
+    numeral.isNumeral = function(obj) {
+        return obj instanceof Numeral;
+    };
+
+    // helper functions
+    numeral._ = _ = {
+        // formats numbers separators, decimals places, signs, abbreviations
+        numberToFormat: function(value, format, roundingFunction) {
+            var locale = locales[numeral.options.currentLocale],
+                negP = false,
+                optDec = false,
+                leadingCount = 0,
+                abbr = '',
+                trillion = 1000000000000,
+                billion = 1000000000,
+                million = 1000000,
+                thousand = 1000,
+                decimal = '',
+                neg = false,
+                abbrForce, // force abbreviation
+                abs,
+                min,
+                max,
+                power,
+                int,
+                precision,
+                signed,
+                thousands,
+                output;
+
+            // make sure we never format a null value
+            value = value || 0;
+
+            abs = Math.abs(value);
+
+            // see if we should use parentheses for negative number or if we should prefix with a sign
+            // if both are present we default to parentheses
+            if (numeral._.includes(format, '(')) {
+                negP = true;
+                format = format.replace(/[\(|\)]/g, '');
+            } else if (numeral._.includes(format, '+') || numeral._.includes(format, '-')) {
+                signed = numeral._.includes(format, '+') ? format.indexOf('+') : value < 0 ? format.indexOf('-') : -1;
+                format = format.replace(/[\+|\-]/g, '');
+            }
+
+            // see if abbreviation is wanted
+            if (numeral._.includes(format, 'a')) {
+                abbrForce = format.match(/a(k|m|b|t)?/);
+
+                abbrForce = abbrForce ? abbrForce[1] : false;
+
+                // check for space before abbreviation
+                if (numeral._.includes(format, ' a')) {
+                    abbr = ' ';
+                }
+
+                format = format.replace(new RegExp(abbr + 'a[kmbt]?'), '');
+
+                if (abs >= trillion && !abbrForce || abbrForce === 't') {
+                    // trillion
+                    abbr += locale.abbreviations.trillion;
+                    value = value / trillion;
+                } else if (abs < trillion && abs >= billion && !abbrForce || abbrForce === 'b') {
+                    // billion
+                    abbr += locale.abbreviations.billion;
+                    value = value / billion;
+                } else if (abs < billion && abs >= million && !abbrForce || abbrForce === 'm') {
+                    // million
+                    abbr += locale.abbreviations.million;
+                    value = value / million;
+                } else if (abs < million && abs >= thousand && !abbrForce || abbrForce === 'k') {
+                    // thousand
+                    abbr += locale.abbreviations.thousand;
+                    value = value / thousand;
+                }
+            }
+
+            // check for optional decimals
+            if (numeral._.includes(format, '[.]')) {
+                optDec = true;
+                format = format.replace('[.]', '.');
+            }
+
+            // break number and format
+            int = value.toString().split('.')[0];
+            precision = format.split('.')[1];
+            thousands = format.indexOf(',');
+            leadingCount = (format.split('.')[0].split(',')[0].match(/0/g) || []).length;
+
+            if (precision) {
+                if (numeral._.includes(precision, '[')) {
+                    precision = precision.replace(']', '');
+                    precision = precision.split('[');
+                    decimal = numeral._.toFixed(value, (precision[0].length + precision[1].length), roundingFunction, precision[1].length);
+                } else {
+                    decimal = numeral._.toFixed(value, precision.length, roundingFunction);
+                }
+
+                int = decimal.split('.')[0];
+
+                if (numeral._.includes(decimal, '.')) {
+                    decimal = locale.delimiters.decimal + decimal.split('.')[1];
+                } else {
+                    decimal = '';
+                }
+
+                if (optDec && Number(decimal.slice(1)) === 0) {
+                    decimal = '';
+                }
+            } else {
+                int = numeral._.toFixed(value, 0, roundingFunction);
+            }
+
+            // check abbreviation again after rounding
+            if (abbr && !abbrForce && Number(int) >= 1000 && abbr !== locale.abbreviations.trillion) {
+                int = String(Number(int) / 1000);
+
+                switch (abbr) {
+                    case locale.abbreviations.thousand:
+                        abbr = locale.abbreviations.million;
+                        break;
+                    case locale.abbreviations.million:
+                        abbr = locale.abbreviations.billion;
+                        break;
+                    case locale.abbreviations.billion:
+                        abbr = locale.abbreviations.trillion;
+                        break;
+                }
+            }
+
+
+            // format number
+            if (numeral._.includes(int, '-')) {
+                int = int.slice(1);
+                neg = true;
+            }
+
+            if (int.length < leadingCount) {
+                for (var i = leadingCount - int.length; i > 0; i--) {
+                    int = '0' + int;
+                }
+            }
+
+            if (thousands > -1) {
+                int = int.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + locale.delimiters.thousands);
+            }
+
+            if (format.indexOf('.') === 0) {
+                int = '';
+            }
+
+            output = int + decimal + (abbr ? abbr : '');
+
+            if (negP) {
+                output = (negP && neg ? '(' : '') + output + (negP && neg ? ')' : '');
+            } else {
+                if (signed >= 0) {
+                    output = signed === 0 ? (neg ? '-' : '+') + output : output + (neg ? '-' : '+');
+                } else if (neg) {
+                    output = '-' + output;
+                }
+            }
+
+            return output;
+        },
+        // unformats numbers separators, decimals places, signs, abbreviations
+        stringToNumber: function(string) {
+            var locale = locales[options.currentLocale],
+                stringOriginal = string,
+                abbreviations = {
+                    thousand: 3,
+                    million: 6,
+                    billion: 9,
+                    trillion: 12
+                },
+                abbreviation,
+                value,
+                i,
+                regexp;
+
+            if (options.zeroFormat && string === options.zeroFormat) {
+                value = 0;
+            } else if (options.nullFormat && string === options.nullFormat || !string.replace(/[^0-9]+/g, '').length) {
+                value = null;
+            } else {
+                value = 1;
+
+                if (locale.delimiters.decimal !== '.') {
+                    string = string.replace(/\./g, '').replace(locale.delimiters.decimal, '.');
+                }
+
+                for (abbreviation in abbreviations) {
+                    regexp = new RegExp('[^a-zA-Z]' + locale.abbreviations[abbreviation] + '(?:\\)|(\\' + locale.currency.symbol + ')?(?:\\))?)?$');
+
+                    if (stringOriginal.match(regexp)) {
+                        value *= Math.pow(10, abbreviations[abbreviation]);
+                        break;
+                    }
+                }
+
+                // check for negative number
+                value *= (string.split('-').length + Math.min(string.split('(').length - 1, string.split(')').length - 1)) % 2 ? 1 : -1;
+
+                // remove non numbers
+                string = string.replace(/[^0-9\.]+/g, '');
+
+                value *= Number(string);
+            }
+
+            return value;
+        },
+        isNaN: function(value) {
+            return typeof value === 'number' && isNaN(value);
+        },
+        includes: function(string, search) {
+            return string.indexOf(search) !== -1;
+        },
+        insert: function(string, subString, start) {
+            return string.slice(0, start) + subString + string.slice(start);
+        },
+        reduce: function(array, callback /*, initialValue*/) {
+            if (this === null) {
+                throw new TypeError('Array.prototype.reduce called on null or undefined');
+            }
+
+            if (typeof callback !== 'function') {
+                throw new TypeError(callback + ' is not a function');
+            }
+
+            var t = Object(array),
+                len = t.length >>> 0,
+                k = 0,
+                value;
+
+            if (arguments.length === 3) {
+                value = arguments[2];
+            } else {
+                while (k < len && !(k in t)) {
+                    k++;
+                }
+
+                if (k >= len) {
+                    throw new TypeError('Reduce of empty array with no initial value');
+                }
+
+                value = t[k++];
+            }
+            for (; k < len; k++) {
+                if (k in t) {
+                    value = callback(value, t[k], k, t);
+                }
+            }
+            return value;
+        },
+        /**
+         * Computes the multiplier necessary to make x >= 1,
+         * effectively eliminating miscalculations caused by
+         * finite precision.
+         */
+        multiplier: function (x) {
+            var parts = x.toString().split('.');
+
+            return parts.length < 2 ? 1 : Math.pow(10, parts[1].length);
+        },
+        /**
+         * Given a variable number of arguments, returns the maximum
+         * multiplier that must be used to normalize an operation involving
+         * all of them.
+         */
+        correctionFactor: function () {
+            var args = Array.prototype.slice.call(arguments);
+
+            return args.reduce(function(accum, next) {
+                var mn = _.multiplier(next);
+                return accum > mn ? accum : mn;
+            }, 1);
+        },
+        /**
+         * Implementation of toFixed() that treats floats more like decimals
+         *
+         * Fixes binary rounding issues (eg. (0.615).toFixed(2) === '0.61') that present
+         * problems for accounting- and finance-related software.
+         */
+        toFixed: function(value, maxDecimals, roundingFunction, optionals) {
+            var splitValue = value.toString().split('.'),
+                minDecimals = maxDecimals - (optionals || 0),
+                boundedPrecision,
+                optionalsRegExp,
+                power,
+                output;
+
+            // Use the smallest precision value possible to avoid errors from floating point representation
+            if (splitValue.length === 2) {
+              boundedPrecision = Math.min(Math.max(splitValue[1].length, minDecimals), maxDecimals);
+            } else {
+              boundedPrecision = minDecimals;
+            }
+
+            power = Math.pow(10, boundedPrecision);
+
+            // Multiply up by precision, round accurately, then divide and use native toFixed():
+            output = (roundingFunction(value + 'e+' + boundedPrecision) / power).toFixed(boundedPrecision);
+
+            if (optionals > maxDecimals - boundedPrecision) {
+                optionalsRegExp = new RegExp('\\.?0{1,' + (optionals - (maxDecimals - boundedPrecision)) + '}$');
+                output = output.replace(optionalsRegExp, '');
+            }
+
+            return output;
+        }
+    };
+
+    // avaliable options
+    numeral.options = options;
+
+    // avaliable formats
+    numeral.formats = formats;
+
+    // avaliable formats
+    numeral.locales = locales;
+
+    // This function sets the current locale.  If
+    // no arguments are passed in, it will simply return the current global
+    // locale key.
+    numeral.locale = function(key) {
+        if (key) {
+            options.currentLocale = key.toLowerCase();
+        }
+
+        return options.currentLocale;
+    };
+
+    // This function provides access to the loaded locale data.  If
+    // no arguments are passed in, it will simply return the current
+    // global locale object.
+    numeral.localeData = function(key) {
+        if (!key) {
+            return locales[options.currentLocale];
+        }
+
+        key = key.toLowerCase();
+
+        if (!locales[key]) {
+            throw new Error('Unknown locale : ' + key);
+        }
+
+        return locales[key];
+    };
+
+    numeral.reset = function() {
+        for (var property in defaults) {
+            options[property] = defaults[property];
+        }
+    };
+
+    numeral.zeroFormat = function(format) {
+        options.zeroFormat = typeof(format) === 'string' ? format : null;
+    };
+
+    numeral.nullFormat = function (format) {
+        options.nullFormat = typeof(format) === 'string' ? format : null;
+    };
+
+    numeral.defaultFormat = function(format) {
+        options.defaultFormat = typeof(format) === 'string' ? format : '0.0';
+    };
+
+    numeral.register = function(type, name, format) {
+        name = name.toLowerCase();
+
+        if (this[type + 's'][name]) {
+            throw new TypeError(name + ' ' + type + ' already registered.');
+        }
+
+        this[type + 's'][name] = format;
+
+        return format;
+    };
+
+
+    numeral.validate = function(val, culture) {
+        var _decimalSep,
+            _thousandSep,
+            _currSymbol,
+            _valArray,
+            _abbrObj,
+            _thousandRegEx,
+            localeData,
+            temp;
+
+        //coerce val to string
+        if (typeof val !== 'string') {
+            val += '';
+
+            if (console.warn) {
+                console.warn('Numeral.js: Value is not string. It has been co-erced to: ', val);
+            }
+        }
+
+        //trim whitespaces from either sides
+        val = val.trim();
+
+        //if val is just digits return true
+        if (!!val.match(/^\d+$/)) {
+            return true;
+        }
+
+        //if val is empty return false
+        if (val === '') {
+            return false;
+        }
+
+        //get the decimal and thousands separator from numeral.localeData
+        try {
+            //check if the culture is understood by numeral. if not, default it to current locale
+            localeData = numeral.localeData(culture);
+        } catch (e) {
+            localeData = numeral.localeData(numeral.locale());
+        }
+
+        //setup the delimiters and currency symbol based on culture/locale
+        _currSymbol = localeData.currency.symbol;
+        _abbrObj = localeData.abbreviations;
+        _decimalSep = localeData.delimiters.decimal;
+        if (localeData.delimiters.thousands === '.') {
+            _thousandSep = '\\.';
+        } else {
+            _thousandSep = localeData.delimiters.thousands;
+        }
+
+        // validating currency symbol
+        temp = val.match(/^[^\d]+/);
+        if (temp !== null) {
+            val = val.substr(1);
+            if (temp[0] !== _currSymbol) {
+                return false;
+            }
+        }
+
+        //validating abbreviation symbol
+        temp = val.match(/[^\d]+$/);
+        if (temp !== null) {
+            val = val.slice(0, -1);
+            if (temp[0] !== _abbrObj.thousand && temp[0] !== _abbrObj.million && temp[0] !== _abbrObj.billion && temp[0] !== _abbrObj.trillion) {
+                return false;
+            }
+        }
+
+        _thousandRegEx = new RegExp(_thousandSep + '{2}');
+
+        if (!val.match(/[^\d.,]/g)) {
+            _valArray = val.split(_decimalSep);
+            if (_valArray.length > 2) {
+                return false;
+            } else {
+                if (_valArray.length < 2) {
+                    return ( !! _valArray[0].match(/^\d+.*\d$/) && !_valArray[0].match(_thousandRegEx));
+                } else {
+                    if (_valArray[0].length === 1) {
+                        return ( !! _valArray[0].match(/^\d+$/) && !_valArray[0].match(_thousandRegEx) && !! _valArray[1].match(/^\d+$/));
+                    } else {
+                        return ( !! _valArray[0].match(/^\d+.*\d$/) && !_valArray[0].match(_thousandRegEx) && !! _valArray[1].match(/^\d+$/));
+                    }
+                }
+            }
+        }
+
+        return false;
+    };
+
+
+    /************************************
+        Numeral Prototype
+    ************************************/
+
+    numeral.fn = Numeral.prototype = {
+        clone: function() {
+            return numeral(this);
+        },
+        format: function(inputString, roundingFunction) {
+            var value = this._value,
+                format = inputString || options.defaultFormat,
+                kind,
+                output,
+                formatFunction;
+
+            // make sure we have a roundingFunction
+            roundingFunction = roundingFunction || Math.round;
+
+            // format based on value
+            if (value === 0 && options.zeroFormat !== null) {
+                output = options.zeroFormat;
+            } else if (value === null && options.nullFormat !== null) {
+                output = options.nullFormat;
+            } else {
+                for (kind in formats) {
+                    if (format.match(formats[kind].regexps.format)) {
+                        formatFunction = formats[kind].format;
+
+                        break;
+                    }
+                }
+
+                formatFunction = formatFunction || numeral._.numberToFormat;
+
+                output = formatFunction(value, format, roundingFunction);
+            }
+
+            return output;
+        },
+        value: function() {
+            return this._value;
+        },
+        input: function() {
+            return this._input;
+        },
+        set: function(value) {
+            this._value = Number(value);
+
+            return this;
+        },
+        add: function(value) {
+            var corrFactor = _.correctionFactor.call(null, this._value, value);
+
+            function cback(accum, curr, currI, O) {
+                return accum + Math.round(corrFactor * curr);
+            }
+
+            this._value = _.reduce([this._value, value], cback, 0) / corrFactor;
+
+            return this;
+        },
+        subtract: function(value) {
+            var corrFactor = _.correctionFactor.call(null, this._value, value);
+
+            function cback(accum, curr, currI, O) {
+                return accum - Math.round(corrFactor * curr);
+            }
+
+            this._value = _.reduce([value], cback, Math.round(this._value * corrFactor)) / corrFactor;
+
+            return this;
+        },
+        multiply: function(value) {
+            function cback(accum, curr, currI, O) {
+                var corrFactor = _.correctionFactor(accum, curr);
+                return Math.round(accum * corrFactor) * Math.round(curr * corrFactor) / Math.round(corrFactor * corrFactor);
+            }
+
+            this._value = _.reduce([this._value, value], cback, 1);
+
+            return this;
+        },
+        divide: function(value) {
+            function cback(accum, curr, currI, O) {
+                var corrFactor = _.correctionFactor(accum, curr);
+                return Math.round(accum * corrFactor) / Math.round(curr * corrFactor);
+            }
+
+            this._value = _.reduce([this._value, value], cback);
+
+            return this;
+        },
+        difference: function(value) {
+            return Math.abs(numeral(this._value).subtract(value).value());
+        }
+    };
+
+    /************************************
+        Default Locale && Format
+    ************************************/
+
+    numeral.register('locale', 'en', {
+        delimiters: {
+            thousands: ',',
+            decimal: '.'
+        },
+        abbreviations: {
+            thousand: 'k',
+            million: 'm',
+            billion: 'b',
+            trillion: 't'
+        },
+        ordinal: function(number) {
+            var b = number % 10;
+            return (~~(number % 100 / 10) === 1) ? 'th' :
+                (b === 1) ? 'st' :
+                (b === 2) ? 'nd' :
+                (b === 3) ? 'rd' : 'th';
+        },
+        currency: {
+            symbol: '$'
+        }
+    });
+
+    
+
+(function() {
+        numeral.register('format', 'bps', {
+            regexps: {
+                format: /(BPS)/,
+                unformat: /(BPS)/
+            },
+            format: function(value, format, roundingFunction) {
+                var space = numeral._.includes(format, ' BPS') ? ' ' : '',
+                    output;
+
+                value = value * 10000;
+
+                // check for space before BPS
+                format = format.replace(/\s?BPS/, '');
+
+                output = numeral._.numberToFormat(value, format, roundingFunction);
+
+                if (numeral._.includes(output, ')')) {
+                    output = output.split('');
+
+                    output.splice(-1, 0, space + 'BPS');
+
+                    output = output.join('');
+                } else {
+                    output = output + space + 'BPS';
+                }
+
+                return output;
+            },
+            unformat: function(string) {
+                return +(numeral._.stringToNumber(string) * 0.0001).toFixed(15);
+            }
+        });
+})();
+
+
+(function() {
+        var decimal = {
+            base: 1000,
+            suffixes: ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+        },
+        binary = {
+            base: 1024,
+            suffixes: ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+        };
+
+    var allSuffixes =  decimal.suffixes.concat(binary.suffixes.filter(function (item) {
+            return decimal.suffixes.indexOf(item) < 0;
+        }));
+        var unformatRegex = allSuffixes.join('|');
+        // Allow support for BPS (http://www.investopedia.com/terms/b/basispoint.asp)
+        unformatRegex = '(' + unformatRegex.replace('B', 'B(?!PS)') + ')';
+
+    numeral.register('format', 'bytes', {
+        regexps: {
+            format: /([0\s]i?b)/,
+            unformat: new RegExp(unformatRegex)
+        },
+        format: function(value, format, roundingFunction) {
+            var output,
+                bytes = numeral._.includes(format, 'ib') ? binary : decimal,
+                suffix = numeral._.includes(format, ' b') || numeral._.includes(format, ' ib') ? ' ' : '',
+                power,
+                min,
+                max;
+
+            // check for space before
+            format = format.replace(/\s?i?b/, '');
+
+            for (power = 0; power <= bytes.suffixes.length; power++) {
+                min = Math.pow(bytes.base, power);
+                max = Math.pow(bytes.base, power + 1);
+
+                if (value === null || value === 0 || value >= min && value < max) {
+                    suffix += bytes.suffixes[power];
+
+                    if (min > 0) {
+                        value = value / min;
+                    }
+
+                    break;
+                }
+            }
+
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            return output + suffix;
+        },
+        unformat: function(string) {
+            var value = numeral._.stringToNumber(string),
+                power,
+                bytesMultiplier;
+
+            if (value) {
+                for (power = decimal.suffixes.length - 1; power >= 0; power--) {
+                    if (numeral._.includes(string, decimal.suffixes[power])) {
+                        bytesMultiplier = Math.pow(decimal.base, power);
+
+                        break;
+                    }
+
+                    if (numeral._.includes(string, binary.suffixes[power])) {
+                        bytesMultiplier = Math.pow(binary.base, power);
+
+                        break;
+                    }
+                }
+
+                value *= (bytesMultiplier || 1);
+            }
+
+            return value;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'currency', {
+        regexps: {
+            format: /(\$)/
+        },
+        format: function(value, format, roundingFunction) {
+            var locale = numeral.locales[numeral.options.currentLocale],
+                symbols = {
+                    before: format.match(/^([\+|\-|\(|\s|\$]*)/)[0],
+                    after: format.match(/([\+|\-|\)|\s|\$]*)$/)[0]
+                },
+                output,
+                symbol,
+                i;
+
+            // strip format of spaces and $
+            format = format.replace(/\s?\$\s?/, '');
+
+            // format the number
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            // update the before and after based on value
+            if (value >= 0) {
+                symbols.before = symbols.before.replace(/[\-\(]/, '');
+                symbols.after = symbols.after.replace(/[\-\)]/, '');
+            } else if (value < 0 && (!numeral._.includes(symbols.before, '-') && !numeral._.includes(symbols.before, '('))) {
+                symbols.before = '-' + symbols.before;
+            }
+
+            // loop through each before symbol
+            for (i = 0; i < symbols.before.length; i++) {
+                symbol = symbols.before[i];
+
+                switch (symbol) {
+                    case '$':
+                        output = numeral._.insert(output, locale.currency.symbol, i);
+                        break;
+                    case ' ':
+                        output = numeral._.insert(output, ' ', i + locale.currency.symbol.length - 1);
+                        break;
+                }
+            }
+
+            // loop through each after symbol
+            for (i = symbols.after.length - 1; i >= 0; i--) {
+                symbol = symbols.after[i];
+
+                switch (symbol) {
+                    case '$':
+                        output = i === symbols.after.length - 1 ? output + locale.currency.symbol : numeral._.insert(output, locale.currency.symbol, -(symbols.after.length - (1 + i)));
+                        break;
+                    case ' ':
+                        output = i === symbols.after.length - 1 ? output + ' ' : numeral._.insert(output, ' ', -(symbols.after.length - (1 + i) + locale.currency.symbol.length - 1));
+                        break;
+                }
+            }
+
+
+            return output;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'exponential', {
+        regexps: {
+            format: /(e\+|e-)/,
+            unformat: /(e\+|e-)/
+        },
+        format: function(value, format, roundingFunction) {
+            var output,
+                exponential = typeof value === 'number' && !numeral._.isNaN(value) ? value.toExponential() : '0e+0',
+                parts = exponential.split('e');
+
+            format = format.replace(/e[\+|\-]{1}0/, '');
+
+            output = numeral._.numberToFormat(Number(parts[0]), format, roundingFunction);
+
+            return output + 'e' + parts[1];
+        },
+        unformat: function(string) {
+            var parts = numeral._.includes(string, 'e+') ? string.split('e+') : string.split('e-'),
+                value = Number(parts[0]),
+                power = Number(parts[1]);
+
+            power = numeral._.includes(string, 'e-') ? power *= -1 : power;
+
+            function cback(accum, curr, currI, O) {
+                var corrFactor = numeral._.correctionFactor(accum, curr),
+                    num = (accum * corrFactor) * (curr * corrFactor) / (corrFactor * corrFactor);
+                return num;
+            }
+
+            return numeral._.reduce([value, Math.pow(10, power)], cback, 1);
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'ordinal', {
+        regexps: {
+            format: /(o)/
+        },
+        format: function(value, format, roundingFunction) {
+            var locale = numeral.locales[numeral.options.currentLocale],
+                output,
+                ordinal = numeral._.includes(format, ' o') ? ' ' : '';
+
+            // check for space before
+            format = format.replace(/\s?o/, '');
+
+            ordinal += locale.ordinal(value);
+
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            return output + ordinal;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'percentage', {
+        regexps: {
+            format: /(%)/,
+            unformat: /(%)/
+        },
+        format: function(value, format, roundingFunction) {
+            var space = numeral._.includes(format, ' %') ? ' ' : '',
+                output;
+
+            if (numeral.options.scalePercentBy100) {
+                value = value * 100;
+            }
+
+            // check for space before %
+            format = format.replace(/\s?\%/, '');
+
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            if (numeral._.includes(output, ')')) {
+                output = output.split('');
+
+                output.splice(-1, 0, space + '%');
+
+                output = output.join('');
+            } else {
+                output = output + space + '%';
+            }
+
+            return output;
+        },
+        unformat: function(string) {
+            var number = numeral._.stringToNumber(string);
+            if (numeral.options.scalePercentBy100) {
+                return number * 0.01;
+            }
+            return number;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'time', {
+        regexps: {
+            format: /(:)/,
+            unformat: /(:)/
+        },
+        format: function(value, format, roundingFunction) {
+            var hours = Math.floor(value / 60 / 60),
+                minutes = Math.floor((value - (hours * 60 * 60)) / 60),
+                seconds = Math.round(value - (hours * 60 * 60) - (minutes * 60));
+
+            return hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+        },
+        unformat: function(string) {
+            var timeArray = string.split(':'),
+                seconds = 0;
+
+            // turn hours and minutes into seconds and add them all up
+            if (timeArray.length === 3) {
+                // hours
+                seconds = seconds + (Number(timeArray[0]) * 60 * 60);
+                // minutes
+                seconds = seconds + (Number(timeArray[1]) * 60);
+                // seconds
+                seconds = seconds + Number(timeArray[2]);
+            } else if (timeArray.length === 2) {
+                // minutes
+                seconds = seconds + (Number(timeArray[0]) * 60);
+                // seconds
+                seconds = seconds + Number(timeArray[1]);
+            }
+            return Number(seconds);
+        }
+    });
+})();
+
+return numeral;
+}));
 
 
 /***/ }),
@@ -690,6 +2478,156 @@ process.umask = function() { return 0; };
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
 
 /***/ }),
 
@@ -1232,6 +3170,47 @@ module.exports = function (css) {
 
 /***/ }),
 
+/***/ "./node_modules/sweetalert2/dist/sweetalert2.min.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/sweetalert2/dist/sweetalert2.min.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(t,e){ true?module.exports=e():undefined}(this,function(){"use strict";function r(t){return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function o(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function i(t,e){for(var n=0;n<e.length;n++){var o=e[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(t,o.key,o)}}function a(t,e,n){return e&&i(t.prototype,e),n&&i(t,n),t}function c(){return(c=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var o in n)Object.prototype.hasOwnProperty.call(n,o)&&(t[o]=n[o])}return t}).apply(this,arguments)}function s(t){return(s=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}function u(t,e){return(u=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t,e,n){return(l=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}()?Reflect.construct:function(t,e,n){var o=[null];o.push.apply(o,e);var i=new(Function.bind.apply(t,o));return n&&u(i,n.prototype),i}).apply(null,arguments)}function d(t,e){return!e||"object"!=typeof e&&"function"!=typeof e?function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t):e}function p(t,e,n){return(p="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(t,e,n){var o=function(t,e){for(;!Object.prototype.hasOwnProperty.call(t,e)&&null!==(t=s(t)););return t}(t,e);if(o){var i=Object.getOwnPropertyDescriptor(o,e);return i.get?i.get.call(n):i.value}})(t,e,n||t)}function f(e){return Object.keys(e).map(function(t){return e[t]})}function m(t){return Array.prototype.slice.call(t)}function g(t){console.error("".concat(q," ").concat(t))}function h(t,e){var n;n='"'.concat(t,'" is deprecated and will be removed in the next major release. Please use "').concat(e,'" instead.'),-1===D.indexOf(n)&&(D.push(n),R(n))}function v(t){return t&&Promise.resolve(t)===t}function b(t){return t instanceof Element||"object"===r(e=t)&&e.jquery;var e}function t(t){var e={};for(var n in t)e[t[n]]="swal2-"+t[n];return e}function y(t){var e=z();return e?e.querySelector(t):null}function e(t){return y(".".concat(t))}function n(){var t=W();return m(t.querySelectorAll(".".concat(_.icon)))}function w(){var t=n().filter(function(t){return dt(t)});return t.length?t[0]:null}function C(){return e(_.title)}function k(){return e(_.content)}function x(){return e(_.image)}function P(){return e(_["progress-steps"])}function A(){return e(_["validation-message"])}function B(){return y(".".concat(_.actions," .").concat(_.confirm))}function E(){return y(".".concat(_.actions," .").concat(_.cancel))}function S(){return e(_.actions)}function T(){return e(_.header)}function L(){return e(_.footer)}function O(){return e(_["timer-progress-bar"])}function M(){return e(_.close)}function H(){var t=m(W().querySelectorAll('[tabindex]:not([tabindex="-1"]):not([tabindex="0"])')).sort(function(t,e){return t=parseInt(t.getAttribute("tabindex")),(e=parseInt(e.getAttribute("tabindex")))<t?1:t<e?-1:0}),e=m(W().querySelectorAll('\n  a[href],\n  area[href],\n  input:not([disabled]),\n  select:not([disabled]),\n  textarea:not([disabled]),\n  button:not([disabled]),\n  iframe,\n  object,\n  embed,\n  [tabindex="0"],\n  [contenteditable],\n  audio[controls],\n  video[controls],\n  summary\n')).filter(function(t){return"-1"!==t.getAttribute("tabindex")});return function(t){for(var e=[],n=0;n<t.length;n++)-1===e.indexOf(t[n])&&e.push(t[n]);return e}(t.concat(e)).filter(function(t){return dt(t)})}function I(){return!K()&&!document.body.classList.contains(_["no-backdrop"])}function j(t,e){if(!e)return!1;for(var n=e.split(/\s+/),o=0;o<n.length;o++)if(!t.classList.contains(n[o]))return!1;return!0}function V(t,e,n){var o,i;if(i=e,m((o=t).classList).forEach(function(t){-1===f(_).indexOf(t)&&-1===f(F).indexOf(t)&&-1===f(i.showClass).indexOf(t)&&o.classList.remove(t)}),e.customClass&&e.customClass[n]){if("string"!=typeof e.customClass[n]&&!e.customClass[n].forEach)return R("Invalid type of customClass.".concat(n,'! Expected string or iterable object, got "').concat(r(e.customClass[n]),'"'));st(t,e.customClass[n])}}var q="SweetAlert2:",R=function(t){console.warn("".concat(q," ").concat(t))},D=[],N=function(t){return"function"==typeof t?t():t},U=Object.freeze({cancel:"cancel",backdrop:"backdrop",close:"close",esc:"esc",timer:"timer"}),_=t(["container","shown","height-auto","iosfix","popup","modal","no-backdrop","toast","toast-shown","toast-column","show","hide","close","title","header","content","html-container","actions","confirm","cancel","footer","icon","icon-content","image","input","file","range","select","radio","checkbox","label","textarea","inputerror","validation-message","progress-steps","active-progress-step","progress-step","progress-step-line","loading","styled","top","top-start","top-end","top-left","top-right","center","center-start","center-end","center-left","center-right","bottom","bottom-start","bottom-end","bottom-left","bottom-right","grow-row","grow-column","grow-fullscreen","rtl","timer-progress-bar","scrollbar-measure","icon-success","icon-warning","icon-info","icon-question","icon-error"]),F=t(["success","warning","info","question","error"]),z=function(){return document.body.querySelector(".".concat(_.container))},W=function(){return e(_.popup)},K=function(){return document.body.classList.contains(_["toast-shown"])},Y={previousBodyPadding:null};function Z(t,e){if(!e)return null;switch(e){case"select":case"textarea":case"file":return lt(t,_[e]);case"checkbox":return t.querySelector(".".concat(_.checkbox," input"));case"radio":return t.querySelector(".".concat(_.radio," input:checked"))||t.querySelector(".".concat(_.radio," input:first-child"));case"range":return t.querySelector(".".concat(_.range," input"));default:return lt(t,_.input)}}function Q(t){if(t.focus(),"file"!==t.type){var e=t.value;t.value="",t.value=e}}function $(t,e,n){t&&e&&("string"==typeof e&&(e=e.split(/\s+/).filter(Boolean)),e.forEach(function(e){t.forEach?t.forEach(function(t){n?t.classList.add(e):t.classList.remove(e)}):n?t.classList.add(e):t.classList.remove(e)}))}function J(t,e,n){n||0===parseInt(n)?t.style[e]="number"==typeof n?"".concat(n,"px"):n:t.style.removeProperty(e)}function X(t,e){var n=1<arguments.length&&void 0!==e?e:"flex";t.style.opacity="",t.style.display=n}function G(t){t.style.opacity="",t.style.display="none"}function tt(t,e,n){e?X(t,n):G(t)}function et(t){var e=window.getComputedStyle(t),n=parseFloat(e.getPropertyValue("animation-duration")||"0"),o=parseFloat(e.getPropertyValue("transition-duration")||"0");return 0<n||0<o}function nt(t,e){var n=1<arguments.length&&void 0!==e&&e,o=O();dt(o)&&(n&&(o.style.transition="none",o.style.width="100%"),setTimeout(function(){o.style.transition="width ".concat(t/1e3,"s linear"),o.style.width="0%"},10))}function ot(){return"undefined"==typeof window||"undefined"==typeof document}function it(t){Xe.isVisible()&&ct!==t.target.value&&Xe.resetValidationMessage(),ct=t.target.value}function rt(t,e){t instanceof HTMLElement?e.appendChild(t):"object"===r(t)?mt(t,e):t&&(e.innerHTML=t)}function at(t,e){var n=S(),o=B(),i=E();e.showConfirmButton||e.showCancelButton||G(n),V(n,e,"actions"),vt(o,"confirm",e),vt(i,"cancel",e),e.buttonsStyling?function(t,e,n){st([t,e],_.styled),n.confirmButtonColor&&(t.style.backgroundColor=n.confirmButtonColor);n.cancelButtonColor&&(e.style.backgroundColor=n.cancelButtonColor);var o=window.getComputedStyle(t).getPropertyValue("background-color");t.style.borderLeftColor=o,t.style.borderRightColor=o}(o,i,e):(ut([o,i],_.styled),o.style.backgroundColor=o.style.borderLeftColor=o.style.borderRightColor="",i.style.backgroundColor=i.style.borderLeftColor=i.style.borderRightColor=""),e.reverseButtons&&o.parentNode.insertBefore(i,o)}var ct,st=function(t,e){$(t,e,!0)},ut=function(t,e){$(t,e,!1)},lt=function(t,e){for(var n=0;n<t.childNodes.length;n++)if(j(t.childNodes[n],e))return t.childNodes[n]},dt=function(t){return!(!t||!(t.offsetWidth||t.offsetHeight||t.getClientRects().length))},pt='\n <div aria-labelledby="'.concat(_.title,'" aria-describedby="').concat(_.content,'" class="').concat(_.popup,'" tabindex="-1">\n   <div class="').concat(_.header,'">\n     <ul class="').concat(_["progress-steps"],'"></ul>\n     <div class="').concat(_.icon," ").concat(F.error,'"></div>\n     <div class="').concat(_.icon," ").concat(F.question,'"></div>\n     <div class="').concat(_.icon," ").concat(F.warning,'"></div>\n     <div class="').concat(_.icon," ").concat(F.info,'"></div>\n     <div class="').concat(_.icon," ").concat(F.success,'"></div>\n     <img class="').concat(_.image,'" />\n     <h2 class="').concat(_.title,'" id="').concat(_.title,'"></h2>\n     <button type="button" class="').concat(_.close,'"></button>\n   </div>\n   <div class="').concat(_.content,'">\n     <div id="').concat(_.content,'" class="').concat(_["html-container"],'"></div>\n     <input class="').concat(_.input,'" />\n     <input type="file" class="').concat(_.file,'" />\n     <div class="').concat(_.range,'">\n       <input type="range" />\n       <output></output>\n     </div>\n     <select class="').concat(_.select,'"></select>\n     <div class="').concat(_.radio,'"></div>\n     <label for="').concat(_.checkbox,'" class="').concat(_.checkbox,'">\n       <input type="checkbox" />\n       <span class="').concat(_.label,'"></span>\n     </label>\n     <textarea class="').concat(_.textarea,'"></textarea>\n     <div class="').concat(_["validation-message"],'" id="').concat(_["validation-message"],'"></div>\n   </div>\n   <div class="').concat(_.actions,'">\n     <button type="button" class="').concat(_.confirm,'">OK</button>\n     <button type="button" class="').concat(_.cancel,'">Cancel</button>\n   </div>\n   <div class="').concat(_.footer,'"></div>\n   <div class="').concat(_["timer-progress-bar"],'"></div>\n </div>\n').replace(/(^|\n)\s*/g,""),ft=function(t){var e;if((e=z())&&(e.parentNode.removeChild(e),ut([document.documentElement,document.body],[_["no-backdrop"],_["toast-shown"],_["has-column"]])),ot())g("SweetAlert2 requires document to initialize");else{var n=document.createElement("div");n.className=_.container,n.innerHTML=pt;var o,i,r,a,c,s,u,l,d,p,f,m,h="string"==typeof(o=t.target)?document.querySelector(o):o;h.appendChild(n),i=t,(r=W()).setAttribute("role",i.toast?"alert":"dialog"),r.setAttribute("aria-live",i.toast?"polite":"assertive"),i.toast||r.setAttribute("aria-modal","true"),a=h,"rtl"===window.getComputedStyle(a).direction&&st(z(),_.rtl),c=k(),s=lt(c,_.input),u=lt(c,_.file),l=c.querySelector(".".concat(_.range," input")),d=c.querySelector(".".concat(_.range," output")),p=lt(c,_.select),f=c.querySelector(".".concat(_.checkbox," input")),m=lt(c,_.textarea),s.oninput=it,u.onchange=it,p.onchange=it,f.onchange=it,m.oninput=it,l.oninput=function(t){it(t),d.value=l.value},l.onchange=function(t){it(t),l.nextSibling.value=l.value}}},mt=function(t,e){t.jquery?ht(e,t):e.innerHTML=t.toString()},ht=function(t,e){if(t.innerHTML="",0 in e)for(var n=0;n in e;n++)t.appendChild(e[n].cloneNode(!0));else t.appendChild(e.cloneNode(!0))},gt=function(){if(ot())return!1;var t=document.createElement("div"),e={WebkitAnimation:"webkitAnimationEnd",OAnimation:"oAnimationEnd oanimationend",animation:"animationend"};for(var n in e)if(Object.prototype.hasOwnProperty.call(e,n)&&void 0!==t.style[n])return e[n];return!1}();function vt(t,e,n){var o;tt(t,n["show".concat((o=e).charAt(0).toUpperCase()+o.slice(1),"Button")],"inline-block"),t.innerHTML=n["".concat(e,"ButtonText")],t.setAttribute("aria-label",n["".concat(e,"ButtonAriaLabel")]),t.className=_[e],V(t,n,"".concat(e,"Button")),st(t,n["".concat(e,"ButtonClass")])}function bt(t,e){var n=z();if(n){var o,i,r,a;o=n,"string"==typeof(i=e.backdrop)?o.style.background=i:i||st([document.documentElement,document.body],_["no-backdrop"]),!e.backdrop&&e.allowOutsideClick&&R('"allowOutsideClick" parameter requires `backdrop` parameter to be set to `true`'),r=n,(a=e.position)in _?st(r,_[a]):(R('The "position" parameter is not valid, defaulting to "center"'),st(r,_.center)),function(t,e){if(e&&"string"==typeof e){var n="grow-".concat(e);n in _&&st(t,_[n])}}(n,e.grow),V(n,e,"container");var c=document.body.getAttribute("data-swal2-queue-step");c&&(n.setAttribute("data-queue-step",c),document.body.removeAttribute("data-swal2-queue-step"))}}function yt(t,e){t.placeholder&&!e.inputPlaceholder||(t.placeholder=e.inputPlaceholder)}var wt={promise:new WeakMap,innerParams:new WeakMap,domCache:new WeakMap},Ct=["input","file","range","select","radio","checkbox","textarea"],kt=function(t){if(!Bt[t.input])return g('Unexpected type of input! Expected "text", "email", "password", "number", "tel", "select", "radio", "checkbox", "textarea", "file" or "url", got "'.concat(t.input,'"'));var e=At(t.input),n=Bt[t.input](e,t);X(n),setTimeout(function(){Q(n)})},xt=function(t,e){var n=Z(k(),t);if(n)for(var o in!function(t){for(var e=0;e<t.attributes.length;e++){var n=t.attributes[e].name;-1===["type","value","style"].indexOf(n)&&t.removeAttribute(n)}}(n),e)"range"===t&&"placeholder"===o||n.setAttribute(o,e[o])},Pt=function(t){var e=At(t.input);t.customClass&&st(e,t.customClass.input)},At=function(t){var e=_[t]?_[t]:_.input;return lt(k(),e)},Bt={};Bt.text=Bt.email=Bt.password=Bt.number=Bt.tel=Bt.url=function(t,e){return"string"==typeof e.inputValue||"number"==typeof e.inputValue?t.value=e.inputValue:v(e.inputValue)||R('Unexpected type of inputValue! Expected "string", "number" or "Promise", got "'.concat(r(e.inputValue),'"')),yt(t,e),t.type=e.input,t},Bt.file=function(t,e){return yt(t,e),t},Bt.range=function(t,e){var n=t.querySelector("input"),o=t.querySelector("output");return n.value=e.inputValue,n.type=e.input,o.value=e.inputValue,t},Bt.select=function(t,e){if(t.innerHTML="",e.inputPlaceholder){var n=document.createElement("option");n.innerHTML=e.inputPlaceholder,n.value="",n.disabled=!0,n.selected=!0,t.appendChild(n)}return t},Bt.radio=function(t){return t.innerHTML="",t},Bt.checkbox=function(t,e){var n=Z(k(),"checkbox");return n.value=1,n.id=_.checkbox,n.checked=Boolean(e.inputValue),t.querySelector("span").innerHTML=e.inputPlaceholder,t},Bt.textarea=function(e,t){if(e.value=t.inputValue,yt(e,t),"MutationObserver"in window){var n=parseInt(window.getComputedStyle(W()).width),o=parseInt(window.getComputedStyle(W()).paddingLeft)+parseInt(window.getComputedStyle(W()).paddingRight);new MutationObserver(function(){var t=e.offsetWidth+o;W().style.width=n<t?"".concat(t,"px"):null}).observe(e,{attributes:!0,attributeFilter:["style"]})}return e};function Et(t,e){var n,o,i,r,a,c=k().querySelector("#".concat(_.content));e.html?(rt(e.html,c),X(c,"block")):e.text?(c.textContent=e.text,X(c,"block")):G(c),n=t,o=e,i=k(),r=wt.innerParams.get(n),a=!r||o.input!==r.input,Ct.forEach(function(t){var e=_[t],n=lt(i,e);xt(t,o.inputAttributes),n.className=e,a&&G(n)}),o.input&&(a&&kt(o),Pt(o)),V(k(),e,"content")}function St(){return z().getAttribute("data-queue-step")}function Tt(t,s){var u=P();if(!s.progressSteps||0===s.progressSteps.length)return G(u);X(u),u.innerHTML="";var l=parseInt(void 0===s.currentProgressStep?St():s.currentProgressStep);l>=s.progressSteps.length&&R("Invalid currentProgressStep parameter, it should be less than progressSteps.length (currentProgressStep like JS arrays starts from 0)"),s.progressSteps.forEach(function(t,e){var n,o,i,r,a=(n=t,o=document.createElement("li"),st(o,_["progress-step"]),o.innerHTML=n,o);if(u.appendChild(a),e===l&&st(a,_["active-progress-step"]),e!==s.progressSteps.length-1){var c=(i=t,r=document.createElement("li"),st(r,_["progress-step-line"]),i.progressStepsDistance&&(r.style.width=i.progressStepsDistance),r);u.appendChild(c)}})}function Lt(t,e){var n,o,i,r,a=T();V(a,e,"header"),Tt(0,e),function(t,e){var n=wt.innerParams.get(t);if(n&&e.icon===n.icon&&w())V(w(),e,"icon");else if(Ht(),e.icon)if(-1!==Object.keys(F).indexOf(e.icon)){var o=y(".".concat(_.icon,".").concat(F[e.icon]));X(o),jt(o,e),It(),V(o,e,"icon"),st(o,e.showClass.icon)}else g('Unknown icon! Expected "success", "error", "warning", "info" or "question", got "'.concat(e.icon,'"'))}(t,e),function(t){var e=x();if(!t.imageUrl)return G(e);X(e),e.setAttribute("src",t.imageUrl),e.setAttribute("alt",t.imageAlt),J(e,"width",t.imageWidth),J(e,"height",t.imageHeight),e.className=_.image,V(e,t,"image")}(e),n=e,o=C(),tt(o,n.title||n.titleText),n.title&&rt(n.title,o),n.titleText&&(o.innerText=n.titleText),V(o,n,"title"),i=e,(r=M()).innerHTML=i.closeButtonHtml,V(r,i,"closeButton"),tt(r,i.showCloseButton),r.setAttribute("aria-label",i.closeButtonAriaLabel)}function Ot(t,e){var n,o,i,r;n=e,o=W(),J(o,"width",n.width),J(o,"padding",n.padding),n.background&&(o.style.background=n.background),Rt(o,n),bt(0,e),Lt(t,e),Et(t,e),at(0,e),i=e,r=L(),tt(r,i.footer),i.footer&&rt(i.footer,r),V(r,i,"footer"),"function"==typeof e.onRender&&e.onRender(W())}function Mt(){return B()&&B().click()}var Ht=function(){for(var t=n(),e=0;e<t.length;e++)G(t[e])},It=function(){for(var t=W(),e=window.getComputedStyle(t).getPropertyValue("background-color"),n=t.querySelectorAll("[class^=swal2-success-circular-line], .swal2-success-fix"),o=0;o<n.length;o++)n[o].style.backgroundColor=e},jt=function(t,e){if(t.innerHTML="",e.iconHtml)t.innerHTML=Vt(e.iconHtml);else if("success"===e.icon)t.innerHTML='\n      <div class="swal2-success-circular-line-left"></div>\n      <span class="swal2-success-line-tip"></span> <span class="swal2-success-line-long"></span>\n      <div class="swal2-success-ring"></div> <div class="swal2-success-fix"></div>\n      <div class="swal2-success-circular-line-right"></div>\n    ';else if("error"===e.icon)t.innerHTML='\n      <span class="swal2-x-mark">\n        <span class="swal2-x-mark-line-left"></span>\n        <span class="swal2-x-mark-line-right"></span>\n      </span>\n    ';else{t.innerHTML=Vt({question:"?",warning:"!",info:"i"}[e.icon])}},Vt=function(t){return'<div class="'.concat(_["icon-content"],'">').concat(t,"</div>")},qt=[],Rt=function(t,e){t.className="".concat(_.popup," ").concat(dt(t)?e.showClass.popup:""),e.toast?(st([document.documentElement,document.body],_["toast-shown"]),st(t,_.toast)):st(t,_.modal),V(t,e,"popup"),"string"==typeof e.customClass&&st(t,e.customClass),e.icon&&st(t,_["icon-".concat(e.icon)])};function Dt(){var t=W();t||Xe.fire(),t=W();var e=S(),n=B();X(e),X(n,"inline-block"),st([t,e],_.loading),n.disabled=!0,t.setAttribute("data-loading",!0),t.setAttribute("aria-busy",!0),t.focus()}function Nt(){return new Promise(function(t){var e=window.scrollX,n=window.scrollY;Wt.restoreFocusTimeout=setTimeout(function(){Wt.previousActiveElement&&Wt.previousActiveElement.focus?(Wt.previousActiveElement.focus(),Wt.previousActiveElement=null):document.body&&document.body.focus(),t()},100),void 0!==e&&void 0!==n&&window.scrollTo(e,n)})}function Ut(){if(Wt.timeout)return function(){var t=O(),e=parseInt(window.getComputedStyle(t).width);t.style.removeProperty("transition"),t.style.width="100%";var n=parseInt(window.getComputedStyle(t).width),o=parseInt(e/n*100);t.style.removeProperty("transition"),t.style.width="".concat(o,"%")}(),Wt.timeout.stop()}function _t(){if(Wt.timeout){var t=Wt.timeout.start();return nt(t),t}}function Ft(t){return Object.prototype.hasOwnProperty.call(Kt,t)}function zt(t){return Zt[t]}var Wt={},Kt={title:"",titleText:"",text:"",html:"",footer:"",icon:void 0,iconHtml:void 0,toast:!1,animation:!0,showClass:{popup:"swal2-show",backdrop:"swal2-backdrop-show",icon:"swal2-icon-show"},hideClass:{popup:"swal2-hide",backdrop:"swal2-backdrop-hide",icon:"swal2-icon-hide"},customClass:void 0,target:"body",backdrop:!0,heightAuto:!0,allowOutsideClick:!0,allowEscapeKey:!0,allowEnterKey:!0,stopKeydownPropagation:!0,keydownListenerCapture:!1,showConfirmButton:!0,showCancelButton:!1,preConfirm:void 0,confirmButtonText:"OK",confirmButtonAriaLabel:"",confirmButtonColor:void 0,cancelButtonText:"Cancel",cancelButtonAriaLabel:"",cancelButtonColor:void 0,buttonsStyling:!0,reverseButtons:!1,focusConfirm:!0,focusCancel:!1,showCloseButton:!1,closeButtonHtml:"&times;",closeButtonAriaLabel:"Close this dialog",showLoaderOnConfirm:!1,imageUrl:void 0,imageWidth:void 0,imageHeight:void 0,imageAlt:"",timer:void 0,timerProgressBar:!1,width:void 0,padding:void 0,background:void 0,input:void 0,inputPlaceholder:"",inputValue:"",inputOptions:{},inputAutoTrim:!0,inputAttributes:{},inputValidator:void 0,validationMessage:void 0,grow:!1,position:"center",progressSteps:[],currentProgressStep:void 0,progressStepsDistance:void 0,onBeforeOpen:void 0,onOpen:void 0,onRender:void 0,onClose:void 0,onAfterClose:void 0,onDestroy:void 0,scrollbarPadding:!0},Yt=["title","titleText","text","html","icon","customClass","allowOutsideClick","allowEscapeKey","showConfirmButton","showCancelButton","confirmButtonText","confirmButtonAriaLabel","confirmButtonColor","cancelButtonText","cancelButtonAriaLabel","cancelButtonColor","buttonsStyling","reverseButtons","imageUrl","imageWidth","imageHeight","imageAlt","progressSteps","currentProgressStep"],Zt={animation:'showClass" and "hideClass'},Qt=["allowOutsideClick","allowEnterKey","backdrop","focusConfirm","focusCancel","heightAuto","keydownListenerCapture"],$t=Object.freeze({isValidParameter:Ft,isUpdatableParameter:function(t){return-1!==Yt.indexOf(t)},isDeprecatedParameter:zt,argsToParams:function(o){var i={};return"object"!==r(o[0])||b(o[0])?["title","html","icon"].forEach(function(t,e){var n=o[e];"string"==typeof n||b(n)?i[t]=n:void 0!==n&&g("Unexpected type of ".concat(t,'! Expected "string" or "Element", got ').concat(r(n)))}):c(i,o[0]),i},isVisible:function(){return dt(W())},clickConfirm:Mt,clickCancel:function(){return E()&&E().click()},getContainer:z,getPopup:W,getTitle:C,getContent:k,getHtmlContainer:function(){return e(_["html-container"])},getImage:x,getIcon:w,getIcons:n,getCloseButton:M,getActions:S,getConfirmButton:B,getCancelButton:E,getHeader:T,getFooter:L,getFocusableElements:H,getValidationMessage:A,isLoading:function(){return W().hasAttribute("data-loading")},fire:function(){for(var t=arguments.length,e=new Array(t),n=0;n<t;n++)e[n]=arguments[n];return l(this,e)},mixin:function(n){return function(t){function e(){return o(this,e),d(this,s(e).apply(this,arguments))}return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&u(t,e)}(e,t),a(e,[{key:"_main",value:function(t){return p(s(e.prototype),"_main",this).call(this,c({},n,t))}}]),e}(this)},queue:function(t){var r=this;qt=t;function a(t,e){qt=[],t(e)}var c=[];return new Promise(function(i){!function e(n,o){n<qt.length?(document.body.setAttribute("data-swal2-queue-step",n),r.fire(qt[n]).then(function(t){void 0!==t.value?(c.push(t.value),e(n+1,o)):a(i,{dismiss:t.dismiss})})):a(i,{value:c})}(0)})},getQueueStep:St,insertQueueStep:function(t,e){return e&&e<qt.length?qt.splice(e,0,t):qt.push(t)},deleteQueueStep:function(t){void 0!==qt[t]&&qt.splice(t,1)},showLoading:Dt,enableLoading:Dt,getTimerLeft:function(){return Wt.timeout&&Wt.timeout.getTimerLeft()},stopTimer:Ut,resumeTimer:_t,toggleTimer:function(){var t=Wt.timeout;return t&&(t.running?Ut():_t())},increaseTimer:function(t){if(Wt.timeout){var e=Wt.timeout.increase(t);return nt(e,!0),e}},isTimerRunning:function(){return Wt.timeout&&Wt.timeout.isRunning()}});function Jt(){var t=wt.innerParams.get(this);if(t){var e=wt.domCache.get(this);t.showConfirmButton||(G(e.confirmButton),t.showCancelButton||G(e.actions)),ut([e.popup,e.actions],_.loading),e.popup.removeAttribute("aria-busy"),e.popup.removeAttribute("data-loading"),e.confirmButton.disabled=!1,e.cancelButton.disabled=!1}}function Xt(){null===Y.previousBodyPadding&&document.body.scrollHeight>window.innerHeight&&(Y.previousBodyPadding=parseInt(window.getComputedStyle(document.body).getPropertyValue("padding-right")),document.body.style.paddingRight="".concat(Y.previousBodyPadding+function(){var t=document.createElement("div");t.className=_["scrollbar-measure"],document.body.appendChild(t);var e=t.getBoundingClientRect().width-t.clientWidth;return document.body.removeChild(t),e}(),"px"))}function Gt(){return!!window.MSInputMethodContext&&!!document.documentMode}function te(){var t=z(),e=W();t.style.removeProperty("align-items"),e.offsetTop<0&&(t.style.alignItems="flex-start")}var ee=function(){var n,o=z();o.ontouchstart=function(t){var e;n=t.target===o||!((e=o).scrollHeight>e.clientHeight)&&"INPUT"!==t.target.tagName},o.ontouchmove=function(t){n&&(t.preventDefault(),t.stopPropagation())}},ne={swalPromiseResolve:new WeakMap};function oe(t,e,n,o){n?ae(t,o):(Nt().then(function(){return ae(t,o)}),Wt.keydownTarget.removeEventListener("keydown",Wt.keydownHandler,{capture:Wt.keydownListenerCapture}),Wt.keydownHandlerAdded=!1),e.parentNode&&e.parentNode.removeChild(e),I()&&(null!==Y.previousBodyPadding&&(document.body.style.paddingRight="".concat(Y.previousBodyPadding,"px"),Y.previousBodyPadding=null),function(){if(j(document.body,_.iosfix)){var t=parseInt(document.body.style.top,10);ut(document.body,_.iosfix),document.body.style.top="",document.body.scrollTop=-1*t}}(),"undefined"!=typeof window&&Gt()&&window.removeEventListener("resize",te),m(document.body.children).forEach(function(t){t.hasAttribute("data-previous-aria-hidden")?(t.setAttribute("aria-hidden",t.getAttribute("data-previous-aria-hidden")),t.removeAttribute("data-previous-aria-hidden")):t.removeAttribute("aria-hidden")})),ut([document.documentElement,document.body],[_.shown,_["height-auto"],_["no-backdrop"],_["toast-shown"],_["toast-column"]])}function ie(t){var e=W();if(e){var n=wt.innerParams.get(this);if(n&&!j(e,n.hideClass.popup)){var o=ne.swalPromiseResolve.get(this);ut(e,n.showClass.popup),st(e,n.hideClass.popup);var i=z();ut(i,n.showClass.backdrop),st(i,n.hideClass.backdrop),function(t,e,n){var o=z(),i=gt&&et(e),r=n.onClose,a=n.onAfterClose;if(r!==null&&typeof r==="function"){r(e)}if(i){re(t,e,o,a)}else{oe(t,o,K(),a)}}(this,e,n),o(t||{})}}}var re=function(t,e,n,o){Wt.swalCloseEventFinishedCallback=oe.bind(null,t,n,K(),o),e.addEventListener(gt,function(t){t.target===e&&(Wt.swalCloseEventFinishedCallback(),delete Wt.swalCloseEventFinishedCallback)})},ae=function(t,e){setTimeout(function(){"function"==typeof e&&e(),t._destroy()})};function ce(t,e,n){var o=wt.domCache.get(t);e.forEach(function(t){o[t].disabled=n})}function se(t,e){if(!t)return!1;if("radio"===t.type)for(var n=t.parentNode.parentNode.querySelectorAll("input"),o=0;o<n.length;o++)n[o].disabled=e;else t.disabled=e}var ue=function(){function n(t,e){o(this,n),this.callback=t,this.remaining=e,this.running=!1,this.start()}return a(n,[{key:"start",value:function(){return this.running||(this.running=!0,this.started=new Date,this.id=setTimeout(this.callback,this.remaining)),this.remaining}},{key:"stop",value:function(){return this.running&&(this.running=!1,clearTimeout(this.id),this.remaining-=new Date-this.started),this.remaining}},{key:"increase",value:function(t){var e=this.running;return e&&this.stop(),this.remaining+=t,e&&this.start(),this.remaining}},{key:"getTimerLeft",value:function(){return this.running&&(this.stop(),this.start()),this.remaining}},{key:"isRunning",value:function(){return this.running}}]),n}(),le={email:function(t,e){return/^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,24}$/.test(t)?Promise.resolve():Promise.resolve(e||"Invalid email address")},url:function(t,e){return/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,63}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)$/.test(t)?Promise.resolve():Promise.resolve(e||"Invalid URL")}};function de(t){var e,n;(e=t).inputValidator||Object.keys(le).forEach(function(t){e.input===t&&(e.inputValidator=le[t])}),t.showLoaderOnConfirm&&!t.preConfirm&&R("showLoaderOnConfirm is set to true, but preConfirm is not defined.\nshowLoaderOnConfirm should be used together with preConfirm, see usage example:\nhttps://sweetalert2.github.io/#ajax-request"),t.animation=N(t.animation),(n=t).target&&("string"!=typeof n.target||document.querySelector(n.target))&&("string"==typeof n.target||n.target.appendChild)||(R('Target parameter is not valid, defaulting to "body"'),n.target="body"),"string"==typeof t.title&&(t.title=t.title.split("\n").join("<br />")),ft(t)}function pe(t){var e=z(),n=W();"function"==typeof t.onBeforeOpen&&t.onBeforeOpen(n),xe(e,n,t),Ce(e,n),I()&&ke(e,t.scrollbarPadding),K()||Wt.previousActiveElement||(Wt.previousActiveElement=document.activeElement),"function"==typeof t.onOpen&&setTimeout(function(){return t.onOpen(n)})}function fe(t){var e=W();if(t.target===e){var n=z();e.removeEventListener(gt,fe),n.style.overflowY="auto"}}function me(t,e){"select"===e.input||"radio"===e.input?Ee(t,e):-1!==["text","email","number","tel","textarea"].indexOf(e.input)&&v(e.inputValue)&&Se(t,e)}function he(t,e){t.disableButtons(),e.input?Oe(t,e):Me(t,e,!0)}function ge(t,e){t.disableButtons(),e(U.cancel)}function ve(t,e){t.closePopup({value:e})}function be(e,t,n,o){t.keydownTarget&&t.keydownHandlerAdded&&(t.keydownTarget.removeEventListener("keydown",t.keydownHandler,{capture:t.keydownListenerCapture}),t.keydownHandlerAdded=!1),n.toast||(t.keydownHandler=function(t){return je(e,t,o)},t.keydownTarget=n.keydownListenerCapture?window:W(),t.keydownListenerCapture=n.keydownListenerCapture,t.keydownTarget.addEventListener("keydown",t.keydownHandler,{capture:t.keydownListenerCapture}),t.keydownHandlerAdded=!0)}function ye(t,e,n){for(var o=H(),i=0;i<o.length;i++)return(e+=n)===o.length?e=0:-1===e&&(e=o.length-1),o[e].focus();W().focus()}function we(t,e,n){wt.innerParams.get(t).toast?Ne(t,e,n):(_e(e),Fe(e),ze(t,e,n))}var Ce=function(t,e){gt&&et(e)?(t.style.overflowY="hidden",e.addEventListener(gt,fe)):t.style.overflowY="auto"},ke=function(t,e){!function(){if((/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream||"MacIntel"===navigator.platform&&1<navigator.maxTouchPoints)&&!j(document.body,_.iosfix)){var t=document.body.scrollTop;document.body.style.top="".concat(-1*t,"px"),st(document.body,_.iosfix),ee()}}(),"undefined"!=typeof window&&Gt()&&(te(),window.addEventListener("resize",te)),m(document.body.children).forEach(function(t){t===z()||function(t,e){if("function"==typeof t.contains)return t.contains(e)}(t,z())||(t.hasAttribute("aria-hidden")&&t.setAttribute("data-previous-aria-hidden",t.getAttribute("aria-hidden")),t.setAttribute("aria-hidden","true"))}),e&&Xt(),setTimeout(function(){t.scrollTop=0})},xe=function(t,e,n){st(t,n.showClass.backdrop),X(e),st(e,n.showClass.popup),st([document.documentElement,document.body],_.shown),n.heightAuto&&n.backdrop&&!n.toast&&st([document.documentElement,document.body],_["height-auto"])},Pe=function(t){return t.checked?1:0},Ae=function(t){return t.checked?t.value:null},Be=function(t){return t.files.length?null!==t.getAttribute("multiple")?t.files:t.files[0]:null},Ee=function(e,n){function o(t){return Te[n.input](i,Le(t),n)}var i=k();v(n.inputOptions)?(Dt(),n.inputOptions.then(function(t){e.hideLoading(),o(t)})):"object"===r(n.inputOptions)?o(n.inputOptions):g("Unexpected type of inputOptions! Expected object, Map or Promise, got ".concat(r(n.inputOptions)))},Se=function(e,n){var o=e.getInput();G(o),n.inputValue.then(function(t){o.value="number"===n.input?parseFloat(t)||0:"".concat(t),X(o),o.focus(),e.hideLoading()}).catch(function(t){g("Error in inputValue promise: ".concat(t)),o.value="",X(o),o.focus(),e.hideLoading()})},Te={select:function(t,e,i){var r=lt(t,_.select);e.forEach(function(t){var e=t[0],n=t[1],o=document.createElement("option");o.value=e,o.innerHTML=n,i.inputValue.toString()===e.toString()&&(o.selected=!0),r.appendChild(o)}),r.focus()},radio:function(t,e,a){var c=lt(t,_.radio);e.forEach(function(t){var e=t[0],n=t[1],o=document.createElement("input"),i=document.createElement("label");o.type="radio",o.name=_.radio,o.value=e,a.inputValue.toString()===e.toString()&&(o.checked=!0);var r=document.createElement("span");r.innerHTML=n,r.className=_.label,i.appendChild(o),i.appendChild(r),c.appendChild(i)});var n=c.querySelectorAll("input");n.length&&n[0].focus()}},Le=function(e){var n=[];return"undefined"!=typeof Map&&e instanceof Map?e.forEach(function(t,e){n.push([e,t])}):Object.keys(e).forEach(function(t){n.push([t,e[t]])}),n},Oe=function(e,n){var o=function(t,e){var n=t.getInput();if(!n)return null;switch(e.input){case"checkbox":return Pe(n);case"radio":return Ae(n);case"file":return Be(n);default:return e.inputAutoTrim?n.value.trim():n.value}}(e,n);n.inputValidator?(e.disableInput(),Promise.resolve().then(function(){return n.inputValidator(o,n.validationMessage)}).then(function(t){e.enableButtons(),e.enableInput(),t?e.showValidationMessage(t):Me(e,n,o)})):e.getInput().checkValidity()?Me(e,n,o):(e.enableButtons(),e.showValidationMessage(n.validationMessage))},Me=function(e,t,n){(t.showLoaderOnConfirm&&Dt(),t.preConfirm)?(e.resetValidationMessage(),Promise.resolve().then(function(){return t.preConfirm(n,t.validationMessage)}).then(function(t){dt(A())||!1===t?e.hideLoading():ve(e,void 0===t?n:t)})):ve(e,n)},He=["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Left","Right","Up","Down"],Ie=["Escape","Esc"],je=function(t,e,n){var o=wt.innerParams.get(t);o.stopKeydownPropagation&&e.stopPropagation(),"Enter"===e.key?Ve(t,e,o):"Tab"===e.key?qe(e,o):-1!==He.indexOf(e.key)?Re():-1!==Ie.indexOf(e.key)&&De(e,o,n)},Ve=function(t,e,n){if(!e.isComposing&&e.target&&t.getInput()&&e.target.outerHTML===t.getInput().outerHTML){if(-1!==["textarea","file"].indexOf(n.input))return;Mt(),e.preventDefault()}},qe=function(t){for(var e=t.target,n=H(),o=-1,i=0;i<n.length;i++)if(e===n[i]){o=i;break}t.shiftKey?ye(0,o,-1):ye(0,o,1),t.stopPropagation(),t.preventDefault()},Re=function(){var t=B(),e=E();document.activeElement===t&&dt(e)?e.focus():document.activeElement===e&&dt(t)&&t.focus()},De=function(t,e,n){N(e.allowEscapeKey)&&(t.preventDefault(),n(U.esc))},Ne=function(e,t,n){t.popup.onclick=function(){var t=wt.innerParams.get(e);t.showConfirmButton||t.showCancelButton||t.showCloseButton||t.input||n(U.close)}},Ue=!1,_e=function(e){e.popup.onmousedown=function(){e.container.onmouseup=function(t){e.container.onmouseup=void 0,t.target===e.container&&(Ue=!0)}}},Fe=function(e){e.container.onmousedown=function(){e.popup.onmouseup=function(t){e.popup.onmouseup=void 0,t.target!==e.popup&&!e.popup.contains(t.target)||(Ue=!0)}}},ze=function(n,o,i){o.container.onclick=function(t){var e=wt.innerParams.get(n);Ue?Ue=!1:t.target===o.container&&N(e.allowOutsideClick)&&i(U.backdrop)}};var We=function(t,e,n){var o=O();G(o),e.timer&&(t.timeout=new ue(function(){n("timer"),delete t.timeout},e.timer),e.timerProgressBar&&(X(o),setTimeout(function(){nt(e.timer)})))},Ke=function(t,e){if(!e.toast)return N(e.allowEnterKey)?e.focusCancel&&dt(t.cancelButton)?t.cancelButton.focus():e.focusConfirm&&dt(t.confirmButton)?t.confirmButton.focus():void ye(0,-1,1):Ye()},Ye=function(){document.activeElement&&"function"==typeof document.activeElement.blur&&document.activeElement.blur()};var Ze,Qe=function(t){for(var e in t)t[e]=new WeakMap},$e=Object.freeze({hideLoading:Jt,disableLoading:Jt,getInput:function(t){var e=wt.innerParams.get(t||this),n=wt.domCache.get(t||this);return n?Z(n.content,e.input):null},close:ie,closePopup:ie,closeModal:ie,closeToast:ie,enableButtons:function(){ce(this,["confirmButton","cancelButton"],!1)},disableButtons:function(){ce(this,["confirmButton","cancelButton"],!0)},enableInput:function(){return se(this.getInput(),!1)},disableInput:function(){return se(this.getInput(),!0)},showValidationMessage:function(t){var e=wt.domCache.get(this);e.validationMessage.innerHTML=t;var n=window.getComputedStyle(e.popup);e.validationMessage.style.marginLeft="-".concat(n.getPropertyValue("padding-left")),e.validationMessage.style.marginRight="-".concat(n.getPropertyValue("padding-right")),X(e.validationMessage);var o=this.getInput();o&&(o.setAttribute("aria-invalid",!0),o.setAttribute("aria-describedBy",_["validation-message"]),Q(o),st(o,_.inputerror))},resetValidationMessage:function(){var t=wt.domCache.get(this);t.validationMessage&&G(t.validationMessage);var e=this.getInput();e&&(e.removeAttribute("aria-invalid"),e.removeAttribute("aria-describedBy"),ut(e,_.inputerror))},getProgressSteps:function(){return wt.domCache.get(this).progressSteps},_main:function(t){!function(t){for(var e in t)Ft(i=e)||R('Unknown parameter "'.concat(i,'"')),t.toast&&(o=e,-1!==Qt.indexOf(o)&&R('The parameter "'.concat(o,'" is incompatible with toasts'))),zt(n=e)&&h(n,zt(n));var n,o,i}(t),Wt.currentInstance&&Wt.currentInstance._destroy(),Wt.currentInstance=this;var e=function(t){var e=c({},Kt.showClass,t.showClass),n=c({},Kt.hideClass,t.hideClass),o=c({},Kt,t);if(o.showClass=e,o.hideClass=n,t.animation===false){o.showClass={popup:"",backdrop:"swal2-backdrop-show swal2-noanimation"};o.hideClass={}}return o}(t);de(e),Object.freeze(e),Wt.timeout&&(Wt.timeout.stop(),delete Wt.timeout),clearTimeout(Wt.restoreFocusTimeout);var n=function(t){var e={popup:W(),container:z(),content:k(),actions:S(),confirmButton:B(),cancelButton:E(),closeButton:M(),validationMessage:A(),progressSteps:P()};return wt.domCache.set(t,e),e}(this);return Ot(this,e),wt.innerParams.set(this,e),function(n,o,i){return new Promise(function(t){var e=function t(e){n.closePopup({dismiss:e})};ne.swalPromiseResolve.set(n,t);We(Wt,i,e);o.confirmButton.onclick=function(){return he(n,i)};o.cancelButton.onclick=function(){return ge(n,e)};o.closeButton.onclick=function(){return e(U.close)};we(n,o,e);be(n,Wt,i,e);if(i.toast&&(i.input||i.footer||i.showCloseButton)){st(document.body,_["toast-column"])}else{ut(document.body,_["toast-column"])}me(n,i);pe(i);Ke(o,i);o.container.scrollTop=0})}(this,n,e)},update:function(e){var t=W(),n=wt.innerParams.get(this);if(!t||j(t,n.hideClass.popup))return R("You're trying to update the closed or closing popup, that won't work. Use the update() method in preConfirm parameter or show a new popup.");var o={};Object.keys(e).forEach(function(t){Xe.isUpdatableParameter(t)?o[t]=e[t]:R('Invalid parameter to update: "'.concat(t,'". Updatable params are listed here: https://github.com/sweetalert2/sweetalert2/blob/master/src/utils/params.js'))});var i=c({},n,o);Ot(this,i),wt.innerParams.set(this,i),Object.defineProperties(this,{params:{value:c({},this.params,e),writable:!1,enumerable:!0}})},_destroy:function(){var t=wt.domCache.get(this),e=wt.innerParams.get(this);e&&(t.popup&&Wt.swalCloseEventFinishedCallback&&(Wt.swalCloseEventFinishedCallback(),delete Wt.swalCloseEventFinishedCallback),Wt.deferDisposalTimer&&(clearTimeout(Wt.deferDisposalTimer),delete Wt.deferDisposalTimer),"function"==typeof e.onDestroy&&e.onDestroy(),delete this.params,delete Wt.keydownHandler,delete Wt.keydownTarget,Qe(wt),Qe(ne))}});function Je(){if("undefined"!=typeof window){"undefined"==typeof Promise&&g("This package requires a Promise library, please include a shim to enable it in this browser (See: https://github.com/sweetalert2/sweetalert2/wiki/Migration-from-SweetAlert-to-SweetAlert2#1-ie-support)"),Ze=this;for(var t=arguments.length,e=new Array(t),n=0;n<t;n++)e[n]=arguments[n];var o=Object.freeze(this.constructor.argsToParams(e));Object.defineProperties(this,{params:{value:o,writable:!1,enumerable:!0,configurable:!0}});var i=this._main(this.params);wt.promise.set(this,i)}}Je.prototype.then=function(t){return wt.promise.get(this).then(t)},Je.prototype.finally=function(t){return wt.promise.get(this).finally(t)},c(Je.prototype,$e),c(Je,$t),Object.keys($e).forEach(function(t){Je[t]=function(){if(Ze)return Ze[t].apply(Ze,arguments)}}),Je.DismissReason=U,Je.version="9.7.0";var Xe=Je;return Xe.default=Xe}),void 0!==this&&this.Sweetalert2&&(this.swal=this.sweetAlert=this.Swal=this.SweetAlert=this.Sweetalert2);
+
+/***/ }),
+
+/***/ "./node_modules/sweetalert2/src/sweetalert2.scss":
+/*!*******************************************************!*\
+  !*** ./node_modules/sweetalert2/src/sweetalert2.scss ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../css-loader!../../postcss-loader/src??ref--7-2!../../sass-loader/lib/loader.js??ref--7-3!./sweetalert2.scss */ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/sweetalert2/src/sweetalert2.scss");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/timers-browserify/main.js":
 /*!************************************************!*\
   !*** ./node_modules/timers-browserify/main.js ***!
@@ -1304,6 +3283,60 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (this && this.clearImmediate);
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.css":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.css ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../css-loader??ref--6-1!../../postcss-loader/src??ref--6-2!./VueDraggableResizable.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.umd.min.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/vue-draggable-resizable/dist/VueDraggableResizable.umd.min.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(t,e){ true?module.exports=e():undefined})("undefined"!==typeof self?self:this,(function(){return function(t){var e={};function n(i){if(e[i])return e[i].exports;var r=e[i]={i:i,l:!1,exports:{}};return t[i].call(r.exports,r,r.exports,n),r.l=!0,r.exports}return n.m=t,n.c=e,n.d=function(t,e,i){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:i})},n.r=function(t){"undefined"!==typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"===typeof t&&t&&t.__esModule)return t;var i=Object.create(null);if(n.r(i),Object.defineProperty(i,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var r in t)n.d(i,r,function(e){return t[e]}.bind(null,r));return i},n.n=function(t){var e=t&&t.__esModule?function(){return t["default"]}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="",n(n.s="fb15")}({"0029":function(t,e){t.exports="constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf".split(",")},"0185":function(t,e,n){var i=n("e5fa");t.exports=function(t){return Object(i(t))}},"01f9":function(t,e,n){"use strict";var i=n("2d00"),r=n("5ca1"),o=n("2aba"),a=n("32e9"),c=n("84f2"),u=n("41a0"),s=n("7f20"),f=n("38fd"),h=n("2b4c")("iterator"),l=!([].keys&&"next"in[].keys()),d="@@iterator",p="keys",m="values",g=function(){return this};t.exports=function(t,e,n,v,b,y,x){u(n,e,v);var w,S,_,O=function(t){if(!l&&t in L)return L[t];switch(t){case p:return function(){return new n(this,t)};case m:return function(){return new n(this,t)}}return function(){return new n(this,t)}},E=e+" Iterator",T=b==m,P=!1,L=t.prototype,M=L[h]||L[d]||b&&L[b],R=M||O(b),j=b?T?O("entries"):R:void 0,k="Array"==e&&L.entries||M;if(k&&(_=f(k.call(new t)),_!==Object.prototype&&_.next&&(s(_,E,!0),i||"function"==typeof _[h]||a(_,h,g))),T&&M&&M.name!==m&&(P=!0,R=function(){return M.call(this)}),i&&!x||!l&&!P&&L[h]||a(L,h,R),c[e]=R,c[E]=g,b)if(w={values:T?R:O(m),keys:y?R:O(p),entries:j},x)for(S in w)S in L||o(L,S,w[S]);else r(r.P+r.F*(l||P),e,w);return w}},"02f4":function(t,e,n){var i=n("4588"),r=n("be13");t.exports=function(t){return function(e,n){var o,a,c=String(r(e)),u=i(n),s=c.length;return u<0||u>=s?t?"":void 0:(o=c.charCodeAt(u),o<55296||o>56319||u+1===s||(a=c.charCodeAt(u+1))<56320||a>57343?t?c.charAt(u):o:t?c.slice(u,u+2):a-56320+(o-55296<<10)+65536)}}},"0a49":function(t,e,n){var i=n("9b43"),r=n("626a"),o=n("4bf8"),a=n("9def"),c=n("cd1c");t.exports=function(t,e){var n=1==t,u=2==t,s=3==t,f=4==t,h=6==t,l=5==t||h,d=e||c;return function(e,c,p){for(var m,g,v=o(e),b=r(v),y=i(c,p,3),x=a(b.length),w=0,S=n?d(e,x):u?d(e,0):void 0;x>w;w++)if((l||w in b)&&(m=b[w],g=y(m,w,v),t))if(n)S[w]=g;else if(g)switch(t){case 3:return!0;case 5:return m;case 6:return w;case 2:S.push(m)}else if(f)return!1;return h?-1:s||f?f:S}}},"0a91":function(t,e,n){n("b42c"),n("93c4"),t.exports=n("b77f")},"0bfb":function(t,e,n){"use strict";var i=n("cb7c");t.exports=function(){var t=i(this),e="";return t.global&&(e+="g"),t.ignoreCase&&(e+="i"),t.multiline&&(e+="m"),t.unicode&&(e+="u"),t.sticky&&(e+="y"),e}},"0d58":function(t,e,n){var i=n("ce10"),r=n("e11e");t.exports=Object.keys||function(t){return i(t,r)}},"0f89":function(t,e,n){var i=n("6f8a");t.exports=function(t){if(!i(t))throw TypeError(t+" is not an object!");return t}},"103a":function(t,e,n){var i=n("da3c").document;t.exports=i&&i.documentElement},1169:function(t,e,n){var i=n("2d95");t.exports=Array.isArray||function(t){return"Array"==i(t)}},"11e9":function(t,e,n){var i=n("52a7"),r=n("4630"),o=n("6821"),a=n("6a99"),c=n("69a8"),u=n("c69a"),s=Object.getOwnPropertyDescriptor;e.f=n("9e1e")?s:function(t,e){if(t=o(t),e=a(e,!0),u)try{return s(t,e)}catch(n){}if(c(t,e))return r(!i.f.call(t,e),t[e])}},"12fd":function(t,e,n){var i=n("6f8a"),r=n("da3c").document,o=i(r)&&i(r.createElement);t.exports=function(t){return o?r.createElement(t):{}}},1495:function(t,e,n){var i=n("86cc"),r=n("cb7c"),o=n("0d58");t.exports=n("9e1e")?Object.defineProperties:function(t,e){r(t);var n,a=o(e),c=a.length,u=0;while(c>u)i.f(t,n=a[u++],e[n]);return t}},1938:function(t,e,n){var i=n("d13f");i(i.S,"Array",{isArray:n("b5aa")})},"1b55":function(t,e,n){var i=n("7772")("wks"),r=n("7b00"),o=n("da3c").Symbol,a="function"==typeof o,c=t.exports=function(t){return i[t]||(i[t]=a&&o[t]||(a?o:r)("Symbol."+t))};c.store=i},"1b8f":function(t,e,n){var i=n("a812"),r=Math.max,o=Math.min;t.exports=function(t,e){return t=i(t),t<0?r(t+e,0):o(t,e)}},"1c01":function(t,e,n){var i=n("5ca1");i(i.S+i.F*!n("9e1e"),"Object",{defineProperty:n("86cc").f})},"1fa8":function(t,e,n){var i=n("cb7c");t.exports=function(t,e,n,r){try{return r?e(i(n)[0],n[1]):e(n)}catch(a){var o=t["return"];throw void 0!==o&&i(o.call(t)),a}}},"230e":function(t,e,n){var i=n("d3f4"),r=n("7726").document,o=i(r)&&i(r.createElement);t.exports=function(t){return o?r.createElement(t):{}}},2312:function(t,e,n){t.exports=n("8ce0")},"23c6":function(t,e,n){var i=n("2d95"),r=n("2b4c")("toStringTag"),o="Arguments"==i(function(){return arguments}()),a=function(t,e){try{return t[e]}catch(n){}};t.exports=function(t){var e,n,c;return void 0===t?"Undefined":null===t?"Null":"string"==typeof(n=a(e=Object(t),r))?n:o?i(e):"Object"==(c=i(e))&&"function"==typeof e.callee?"Arguments":c}},2418:function(t,e,n){var i=n("6a9b"),r=n("a5ab"),o=n("1b8f");t.exports=function(t){return function(e,n,a){var c,u=i(e),s=r(u.length),f=o(a,s);if(t&&n!=n){while(s>f)if(c=u[f++],c!=c)return!0}else for(;s>f;f++)if((t||f in u)&&u[f]===n)return t||f||0;return!t&&-1}}},"245b":function(t,e){t.exports=function(t,e){return{value:e,done:!!t}}},2621:function(t,e){e.f=Object.getOwnPropertySymbols},2695:function(t,e,n){var i=n("43c8"),r=n("6a9b"),o=n("2418")(!1),a=n("5d8f")("IE_PROTO");t.exports=function(t,e){var n,c=r(t),u=0,s=[];for(n in c)n!=a&&i(c,n)&&s.push(n);while(e.length>u)i(c,n=e[u++])&&(~o(s,n)||s.push(n));return s}},"27ee":function(t,e,n){var i=n("23c6"),r=n("2b4c")("iterator"),o=n("84f2");t.exports=n("8378").getIteratorMethod=function(t){if(void 0!=t)return t[r]||t["@@iterator"]||o[i(t)]}},"2a4e":function(t,e,n){var i=n("a812"),r=n("e5fa");t.exports=function(t){return function(e,n){var o,a,c=String(r(e)),u=i(n),s=c.length;return u<0||u>=s?t?"":void 0:(o=c.charCodeAt(u),o<55296||o>56319||u+1===s||(a=c.charCodeAt(u+1))<56320||a>57343?t?c.charAt(u):o:t?c.slice(u,u+2):a-56320+(o-55296<<10)+65536)}}},"2aba":function(t,e,n){var i=n("7726"),r=n("32e9"),o=n("69a8"),a=n("ca5a")("src"),c="toString",u=Function[c],s=(""+u).split(c);n("8378").inspectSource=function(t){return u.call(t)},(t.exports=function(t,e,n,c){var u="function"==typeof n;u&&(o(n,"name")||r(n,"name",e)),t[e]!==n&&(u&&(o(n,a)||r(n,a,t[e]?""+t[e]:s.join(String(e)))),t===i?t[e]=n:c?t[e]?t[e]=n:r(t,e,n):(delete t[e],r(t,e,n)))})(Function.prototype,c,(function(){return"function"==typeof this&&this[a]||u.call(this)}))},"2aeb":function(t,e,n){var i=n("cb7c"),r=n("1495"),o=n("e11e"),a=n("613b")("IE_PROTO"),c=function(){},u="prototype",s=function(){var t,e=n("230e")("iframe"),i=o.length,r="<",a=">";e.style.display="none",n("fab2").appendChild(e),e.src="javascript:",t=e.contentWindow.document,t.open(),t.write(r+"script"+a+"document.F=Object"+r+"/script"+a),t.close(),s=t.F;while(i--)delete s[u][o[i]];return s()};t.exports=Object.create||function(t,e){var n;return null!==t?(c[u]=i(t),n=new c,c[u]=null,n[a]=t):n=s(),void 0===e?n:r(n,e)}},"2b4c":function(t,e,n){var i=n("5537")("wks"),r=n("ca5a"),o=n("7726").Symbol,a="function"==typeof o,c=t.exports=function(t){return i[t]||(i[t]=a&&o[t]||(a?o:r)("Symbol."+t))};c.store=i},"2d00":function(t,e){t.exports=!1},"2d95":function(t,e){var n={}.toString;t.exports=function(t){return n.call(t).slice(8,-1)}},"2ea1":function(t,e,n){var i=n("6f8a");t.exports=function(t,e){if(!i(t))return t;var n,r;if(e&&"function"==typeof(n=t.toString)&&!i(r=n.call(t)))return r;if("function"==typeof(n=t.valueOf)&&!i(r=n.call(t)))return r;if(!e&&"function"==typeof(n=t.toString)&&!i(r=n.call(t)))return r;throw TypeError("Can't convert object to primitive value")}},"2f21":function(t,e,n){"use strict";var i=n("79e5");t.exports=function(t,e){return!!t&&i((function(){e?t.call(null,(function(){}),1):t.call(null)}))}},"2fdb":function(t,e,n){"use strict";var i=n("5ca1"),r=n("d2c8"),o="includes";i(i.P+i.F*n("5147")(o),"String",{includes:function(t){return!!~r(this,t,o).indexOf(t,arguments.length>1?arguments[1]:void 0)}})},"32e9":function(t,e,n){var i=n("86cc"),r=n("4630");t.exports=n("9e1e")?function(t,e,n){return i.f(t,e,r(1,n))}:function(t,e,n){return t[e]=n,t}},"33a4":function(t,e,n){var i=n("84f2"),r=n("2b4c")("iterator"),o=Array.prototype;t.exports=function(t){return void 0!==t&&(i.Array===t||o[r]===t)}},3425:function(t,e,n){"use strict";var i=function(){var t,e=this,n=e.$createElement,i=e._self._c||n;return i("div",{class:[(t={},t[e.classNameActive]=e.enabled,t[e.classNameDragging]=e.dragging,t[e.classNameResizing]=e.resizing,t[e.classNameDraggable]=e.draggable,t[e.classNameResizable]=e.resizable,t),e.className],style:e.style,on:{mousedown:e.elementMouseDown,touchstart:e.elementTouchDown}},[e._l(e.actualHandles,(function(t){return i("div",{key:t,class:[e.classNameHandle,e.classNameHandle+"-"+t],style:{display:e.enabled?"block":"none"},on:{mousedown:function(n){n.stopPropagation(),n.preventDefault(),e.handleDown(t,n)},touchstart:function(n){n.stopPropagation(),n.preventDefault(),e.handleTouchDown(t,n)}}},[e._t(t)],2)})),e._v(" "),e._t("default")],2)},r=[],o=(n("1c01"),n("58b2"),n("8e6e"),n("f3e2"),n("456d"),n("85f2")),a=n.n(o);function c(t,e,n){return e in t?a()(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}n("3b2b");var u=n("a745"),s=n.n(u);function f(t){if(s()(t))return t}var h=n("5d73"),l=n.n(h),d=n("c8bb"),p=n.n(d);function m(t,e){if(p()(Object(t))||"[object Arguments]"===Object.prototype.toString.call(t)){var n=[],i=!0,r=!1,o=void 0;try{for(var a,c=l()(t);!(i=(a=c.next()).done);i=!0)if(n.push(a.value),e&&n.length===e)break}catch(u){r=!0,o=u}finally{try{i||null==c["return"]||c["return"]()}finally{if(r)throw o}}return n}}function g(){throw new TypeError("Invalid attempt to destructure non-iterable instance")}function v(t,e){return f(t)||m(t,e)||g()}n("6762"),n("2fdb"),n("d25f"),n("ac6a"),n("cadf"),n("5df3"),n("4f7f"),n("c5f6"),n("7514"),n("6b54"),n("87b3");function b(t){return"function"===typeof t||"[object Function]"===Object.prototype.toString.call(t)}function y(t,e,n){var i=arguments.length>3&&void 0!==arguments[3]?arguments[3]:1,r=Math.round(e/i/t[0])*t[0],o=Math.round(n/i/t[1])*t[1];return[r,o]}function x(t,e,n){return t-e-n}function w(t,e,n){return t-e-n}function S(t,e,n){return null!==e&&t<e?e:null!==n&&n<t?n:t}function _(t,e,n){var i=t,r=["matches","webkitMatchesSelector","mozMatchesSelector","msMatchesSelector","oMatchesSelector"].find((function(t){return b(i[t])}));if(!b(i[r]))return!1;do{if(i[r](e))return!0;if(i===n)return!1;i=i.parentNode}while(i);return!1}function O(t){var e=window.getComputedStyle(t);return[parseFloat(e.getPropertyValue("width"),10),parseFloat(e.getPropertyValue("height"),10)]}function E(t,e,n){t&&(t.attachEvent?t.attachEvent("on"+e,n):t.addEventListener?t.addEventListener(e,n,!0):t["on"+e]=n)}function T(t,e,n){t&&(t.detachEvent?t.detachEvent("on"+e,n):t.removeEventListener?t.removeEventListener(e,n,!0):t["on"+e]=null)}function P(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var i=Object.getOwnPropertySymbols(t);e&&(i=i.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),n.push.apply(n,i)}return n}function L(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?P(n,!0).forEach((function(e){c(t,e,n[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):P(n).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))}))}return t}var M={mouse:{start:"mousedown",move:"mousemove",stop:"mouseup"},touch:{start:"touchstart",move:"touchmove",stop:"touchend"}},R={userSelect:"none",MozUserSelect:"none",WebkitUserSelect:"none",MsUserSelect:"none"},j={userSelect:"auto",MozUserSelect:"auto",WebkitUserSelect:"auto",MsUserSelect:"auto"},k=M.mouse,A={replace:!0,name:"vue-draggable-resizable",props:{className:{type:String,default:"vdr"},classNameDraggable:{type:String,default:"draggable"},classNameResizable:{type:String,default:"resizable"},classNameDragging:{type:String,default:"dragging"},classNameResizing:{type:String,default:"resizing"},classNameActive:{type:String,default:"active"},classNameHandle:{type:String,default:"handle"},disableUserSelect:{type:Boolean,default:!0},enableNativeDrag:{type:Boolean,default:!1},preventDeactivation:{type:Boolean,default:!1},active:{type:Boolean,default:!1},draggable:{type:Boolean,default:!0},resizable:{type:Boolean,default:!0},lockAspectRatio:{type:Boolean,default:!1},w:{type:[Number,String],default:200,validator:function(t){return"number"===typeof t?t>0:"auto"===t}},h:{type:[Number,String],default:200,validator:function(t){return"number"===typeof t?t>0:"auto"===t}},minWidth:{type:Number,default:0,validator:function(t){return t>=0}},minHeight:{type:Number,default:0,validator:function(t){return t>=0}},maxWidth:{type:Number,default:null,validator:function(t){return t>=0}},maxHeight:{type:Number,default:null,validator:function(t){return t>=0}},x:{type:Number,default:0},y:{type:Number,default:0},z:{type:[String,Number],default:"auto",validator:function(t){return"string"===typeof t?"auto"===t:t>=0}},handles:{type:Array,default:function(){return["tl","tm","tr","mr","br","bm","bl","ml"]},validator:function(t){var e=new Set(["tl","tm","tr","mr","br","bm","bl","ml"]);return new Set(t.filter((function(t){return e.has(t)}))).size===t.length}},dragHandle:{type:String,default:null},dragCancel:{type:String,default:null},axis:{type:String,default:"both",validator:function(t){return["x","y","both"].includes(t)}},grid:{type:Array,default:function(){return[1,1]}},parent:{type:Boolean,default:!1},scale:{type:Number,default:1,validator:function(t){return t>0}},onDragStart:{type:Function,default:function(){return!0}},onDrag:{type:Function,default:function(){return!0}},onResizeStart:{type:Function,default:function(){return!0}},onResize:{type:Function,default:function(){return!0}}},data:function(){return{left:this.x,top:this.y,right:null,bottom:null,width:null,height:null,widthTouched:!1,heightTouched:!1,aspectFactor:null,parentWidth:null,parentHeight:null,minW:this.minWidth,minH:this.minHeight,maxW:this.maxWidth,maxH:this.maxHeight,handle:null,enabled:this.active,resizing:!1,dragging:!1,zIndex:this.z}},created:function(){this.maxWidth&&this.minWidth>this.maxWidth&&console.warn("[Vdr warn]: Invalid prop: minWidth cannot be greater than maxWidth"),this.maxWidth&&this.minHeight>this.maxHeight&&console.warn("[Vdr warn]: Invalid prop: minHeight cannot be greater than maxHeight"),this.resetBoundsAndMouseState()},mounted:function(){this.enableNativeDrag||(this.$el.ondragstart=function(){return!1});var t=this.getParentSize(),e=v(t,2),n=e[0],i=e[1];this.parentWidth=n,this.parentHeight=i;var r=O(this.$el),o=v(r,2),a=o[0],c=o[1];this.aspectFactor=("auto"!==this.w?this.w:a)/("auto"!==this.h?this.h:c),this.width="auto"!==this.w?this.w:a,this.height="auto"!==this.h?this.h:c,this.right=this.parentWidth-this.width-this.left,this.bottom=this.parentHeight-this.height-this.top,E(document.documentElement,"mousedown",this.deselect),E(document.documentElement,"touchend touchcancel",this.deselect),E(window,"resize",this.checkParentSize)},beforeDestroy:function(){T(document.documentElement,"mousedown",this.deselect),T(document.documentElement,"touchstart",this.handleUp),T(document.documentElement,"mousemove",this.move),T(document.documentElement,"touchmove",this.move),T(document.documentElement,"mouseup",this.handleUp),T(document.documentElement,"touchend touchcancel",this.deselect),T(window,"resize",this.checkParentSize)},methods:{resetBoundsAndMouseState:function(){this.mouseClickPosition={mouseX:0,mouseY:0,x:0,y:0,w:0,h:0},this.bounds={minLeft:null,maxLeft:null,minRight:null,maxRight:null,minTop:null,maxTop:null,minBottom:null,maxBottom:null}},checkParentSize:function(){if(this.parent){var t=this.getParentSize(),e=v(t,2),n=e[0],i=e[1];this.parentWidth=n,this.parentHeight=i}},getParentSize:function(){if(this.parent){var t=window.getComputedStyle(this.$el.parentNode,null);return[parseInt(t.getPropertyValue("width"),10),parseInt(t.getPropertyValue("height"),10)]}return[null,null]},elementTouchDown:function(t){k=M.touch,this.elementDown(t)},elementMouseDown:function(t){k=M.mouse,this.elementDown(t)},elementDown:function(t){if(!(t instanceof MouseEvent&&1!==t.which)){var e=t.target||t.srcElement;if(this.$el.contains(e)){if(!1===this.onDragStart(t))return;if(this.dragHandle&&!_(e,this.dragHandle,this.$el)||this.dragCancel&&_(e,this.dragCancel,this.$el))return void(this.dragging=!1);this.enabled||(this.enabled=!0,this.$emit("activated"),this.$emit("update:active",!0)),this.draggable&&(this.dragging=!0),this.mouseClickPosition.mouseX=t.touches?t.touches[0].pageX:t.pageX,this.mouseClickPosition.mouseY=t.touches?t.touches[0].pageY:t.pageY,this.mouseClickPosition.left=this.left,this.mouseClickPosition.right=this.right,this.mouseClickPosition.top=this.top,this.mouseClickPosition.bottom=this.bottom,this.parent&&(this.bounds=this.calcDragLimits()),E(document.documentElement,k.move,this.move),E(document.documentElement,k.stop,this.handleUp)}}},calcDragLimits:function(){return{minLeft:this.left%this.grid[0],maxLeft:Math.floor((this.parentWidth-this.width-this.left)/this.grid[0])*this.grid[0]+this.left,minRight:this.right%this.grid[0],maxRight:Math.floor((this.parentWidth-this.width-this.right)/this.grid[0])*this.grid[0]+this.right,minTop:this.top%this.grid[1],maxTop:Math.floor((this.parentHeight-this.height-this.top)/this.grid[1])*this.grid[1]+this.top,minBottom:this.bottom%this.grid[1],maxBottom:Math.floor((this.parentHeight-this.height-this.bottom)/this.grid[1])*this.grid[1]+this.bottom}},deselect:function(t){var e=t.target||t.srcElement,n=new RegExp(this.className+"-([trmbl]{2})","");this.$el.contains(e)||n.test(e.className)||(this.enabled&&!this.preventDeactivation&&(this.enabled=!1,this.$emit("deactivated"),this.$emit("update:active",!1)),T(document.documentElement,k.move,this.handleResize)),this.resetBoundsAndMouseState()},handleTouchDown:function(t,e){k=M.touch,this.handleDown(t,e)},handleDown:function(t,e){e instanceof MouseEvent&&1!==e.which||!1!==this.onResizeStart(t,e)&&(e.stopPropagation&&e.stopPropagation(),this.lockAspectRatio&&!t.includes("m")?this.handle="m"+t.substring(1):this.handle=t,this.resizing=!0,this.mouseClickPosition.mouseX=e.touches?e.touches[0].pageX:e.pageX,this.mouseClickPosition.mouseY=e.touches?e.touches[0].pageY:e.pageY,this.mouseClickPosition.left=this.left,this.mouseClickPosition.right=this.right,this.mouseClickPosition.top=this.top,this.mouseClickPosition.bottom=this.bottom,this.bounds=this.calcResizeLimits(),E(document.documentElement,k.move,this.handleResize),E(document.documentElement,k.stop,this.handleUp))},calcResizeLimits:function(){var t=this.minW,e=this.minH,n=this.maxW,i=this.maxH,r=this.aspectFactor,o=v(this.grid,2),a=o[0],c=o[1],u=this.width,s=this.height,f=this.left,h=this.top,l=this.right,d=this.bottom;this.lockAspectRatio&&(t/e>r?e=t/r:t=r*e,n&&i?(n=Math.min(n,r*i),i=Math.min(i,n/r)):n?i=n/r:i&&(n=r*i)),n-=n%a,i-=i%c;var p={minLeft:null,maxLeft:null,minTop:null,maxTop:null,minRight:null,maxRight:null,minBottom:null,maxBottom:null};return this.parent?(p.minLeft=f%a,p.maxLeft=f+Math.floor((u-t)/a)*a,p.minTop=h%c,p.maxTop=h+Math.floor((s-e)/c)*c,p.minRight=l%a,p.maxRight=l+Math.floor((u-t)/a)*a,p.minBottom=d%c,p.maxBottom=d+Math.floor((s-e)/c)*c,n&&(p.minLeft=Math.max(p.minLeft,this.parentWidth-l-n),p.minRight=Math.max(p.minRight,this.parentWidth-f-n)),i&&(p.minTop=Math.max(p.minTop,this.parentHeight-d-i),p.minBottom=Math.max(p.minBottom,this.parentHeight-h-i)),this.lockAspectRatio&&(p.minLeft=Math.max(p.minLeft,f-h*r),p.minTop=Math.max(p.minTop,h-f/r),p.minRight=Math.max(p.minRight,l-d*r),p.minBottom=Math.max(p.minBottom,d-l/r))):(p.minLeft=null,p.maxLeft=f+Math.floor((u-t)/a)*a,p.minTop=null,p.maxTop=h+Math.floor((s-e)/c)*c,p.minRight=null,p.maxRight=l+Math.floor((u-t)/a)*a,p.minBottom=null,p.maxBottom=d+Math.floor((s-e)/c)*c,n&&(p.minLeft=-(l+n),p.minRight=-(f+n)),i&&(p.minTop=-(d+i),p.minBottom=-(h+i)),this.lockAspectRatio&&n&&i&&(p.minLeft=Math.min(p.minLeft,-(l+n)),p.minTop=Math.min(p.minTop,-(i+d)),p.minRight=Math.min(p.minRight,-f-n),p.minBottom=Math.min(p.minBottom,-h-i))),p},move:function(t){this.resizing?this.handleResize(t):this.dragging&&this.handleDrag(t)},handleDrag:function(t){var e=this.axis,n=this.grid,i=this.bounds,r=this.mouseClickPosition,o=e&&"y"!==e?r.mouseX-(t.touches?t.touches[0].pageX:t.pageX):0,a=e&&"x"!==e?r.mouseY-(t.touches?t.touches[0].pageY:t.pageY):0,c=y(n,o,a,this.scale),u=v(c,2),s=u[0],f=u[1],h=S(r.left-s,i.minLeft,i.maxLeft),l=S(r.top-f,i.minTop,i.maxTop);if(!1!==this.onDrag(h,l)){var d=S(r.right+s,i.minRight,i.maxRight),p=S(r.bottom+f,i.minBottom,i.maxBottom);this.left=h,this.top=l,this.right=d,this.bottom=p,this.$emit("dragging",this.left,this.top)}},moveHorizontally:function(t){var e=y(this.grid,t,this.top,this.scale),n=v(e,2),i=n[0],r=(n[1],S(i,this.bounds.minLeft,this.bounds.maxLeft));this.left=r,this.right=this.parentWidth-this.width-r},moveVertically:function(t){var e=y(this.grid,this.left,t,this.scale),n=v(e,2),i=(n[0],n[1]),r=S(i,this.bounds.minTop,this.bounds.maxTop);this.top=r,this.bottom=this.parentHeight-this.height-r},handleResize:function(t){var e=this.left,n=this.top,i=this.right,r=this.bottom,o=this.mouseClickPosition,a=(this.lockAspectRatio,this.aspectFactor),c=o.mouseX-(t.touches?t.touches[0].pageX:t.pageX),u=o.mouseY-(t.touches?t.touches[0].pageY:t.pageY);!this.widthTouched&&c&&(this.widthTouched=!0),!this.heightTouched&&u&&(this.heightTouched=!0);var s=y(this.grid,c,u,this.scale),f=v(s,2),h=f[0],l=f[1];this.handle.includes("b")?(r=S(o.bottom+l,this.bounds.minBottom,this.bounds.maxBottom),this.lockAspectRatio&&this.resizingOnY&&(i=this.right-(this.bottom-r)*a)):this.handle.includes("t")&&(n=S(o.top-l,this.bounds.minTop,this.bounds.maxTop),this.lockAspectRatio&&this.resizingOnY&&(e=this.left-(this.top-n)*a)),this.handle.includes("r")?(i=S(o.right+h,this.bounds.minRight,this.bounds.maxRight),this.lockAspectRatio&&this.resizingOnX&&(r=this.bottom-(this.right-i)/a)):this.handle.includes("l")&&(e=S(o.left-h,this.bounds.minLeft,this.bounds.maxLeft),this.lockAspectRatio&&this.resizingOnX&&(n=this.top-(this.left-e)/a));var d=x(this.parentWidth,e,i),p=w(this.parentHeight,n,r);!1!==this.onResize(this.handle,e,n,d,p)&&(this.left=e,this.top=n,this.right=i,this.bottom=r,this.width=d,this.height=p,this.$emit("resizing",this.left,this.top,this.width,this.height))},changeWidth:function(t){var e=y(this.grid,t,0,this.scale),n=v(e,2),i=n[0],r=(n[1],S(this.parentWidth-i-this.left,this.bounds.minRight,this.bounds.maxRight)),o=this.bottom;this.lockAspectRatio&&(o=this.bottom-(this.right-r)/this.aspectFactor);var a=x(this.parentWidth,this.left,r),c=w(this.parentHeight,this.top,o);this.right=r,this.bottom=o,this.width=a,this.height=c},changeHeight:function(t){var e=y(this.grid,0,t,this.scale),n=v(e,2),i=(n[0],n[1]),r=S(this.parentHeight-i-this.top,this.bounds.minBottom,this.bounds.maxBottom),o=this.right;this.lockAspectRatio&&(o=this.right-(this.bottom-r)*this.aspectFactor);var a=x(this.parentWidth,this.left,o),c=w(this.parentHeight,this.top,r);this.right=o,this.bottom=r,this.width=a,this.height=c},handleUp:function(t){this.handle=null,this.resetBoundsAndMouseState(),this.resizing&&(this.resizing=!1,this.$emit("resizestop",this.left,this.top,this.width,this.height)),this.dragging&&(this.dragging=!1,this.$emit("dragstop",this.left,this.top)),T(document.documentElement,k.move,this.handleResize)}},computed:{style:function(){return L({transform:"translate(".concat(this.left,"px, ").concat(this.top,"px)"),width:this.computedWidth,height:this.computedHeight,zIndex:this.zIndex},this.dragging&&this.disableUserSelect?R:j)},actualHandles:function(){return this.resizable?this.handles:[]},computedWidth:function(){return"auto"!==this.w||this.widthTouched?this.width+"px":"auto"},computedHeight:function(){return"auto"!==this.h||this.heightTouched?this.height+"px":"auto"},resizingOnX:function(){return Boolean(this.handle)&&(this.handle.includes("l")||this.handle.includes("r"))},resizingOnY:function(){return Boolean(this.handle)&&(this.handle.includes("t")||this.handle.includes("b"))},isCornerHandle:function(){return Boolean(this.handle)&&["tl","tr","br","bl"].includes(this.handle)}},watch:{active:function(t){this.enabled=t,t?this.$emit("activated"):this.$emit("deactivated")},z:function(t){(t>=0||"auto"===t)&&(this.zIndex=t)},x:function(t){this.resizing||this.dragging||(this.parent&&(this.bounds=this.calcDragLimits()),this.moveHorizontally(t))},y:function(t){this.resizing||this.dragging||(this.parent&&(this.bounds=this.calcDragLimits()),this.moveVertically(t))},lockAspectRatio:function(t){this.aspectFactor=t?this.width/this.height:void 0},minWidth:function(t){t>0&&t<=this.width&&(this.minW=t)},minHeight:function(t){t>0&&t<=this.height&&(this.minH=t)},maxWidth:function(t){this.maxW=t},maxHeight:function(t){this.maxH=t},w:function(t){this.resizing||this.dragging||(this.parent&&(this.bounds=this.calcResizeLimits()),this.changeWidth(t))},h:function(t){this.resizing||this.dragging||(this.parent&&(this.bounds=this.calcResizeLimits()),this.changeHeight(t))}}},N=A;function z(t,e,n,i,r,o,a,c){var u,s="function"===typeof t?t.options:t;if(e&&(s.render=e,s.staticRenderFns=n,s._compiled=!0),i&&(s.functional=!0),o&&(s._scopeId="data-v-"+o),a?(u=function(t){t=t||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext,t||"undefined"===typeof __VUE_SSR_CONTEXT__||(t=__VUE_SSR_CONTEXT__),r&&r.call(this,t),t&&t._registeredComponents&&t._registeredComponents.add(a)},s._ssrRegister=u):r&&(u=c?function(){r.call(this,this.$root.$options.shadowRoot)}:r),u)if(s.functional){s._injectStyles=u;var f=s.render;s.render=function(t,e){return u.call(e),f(t,e)}}else{var h=s.beforeCreate;s.beforeCreate=h?[].concat(h,u):[u]}return{exports:t,options:s}}var D=z(N,i,r,!1,null,null,null);e["a"]=D.exports},3846:function(t,e,n){n("9e1e")&&"g"!=/./g.flags&&n("86cc").f(RegExp.prototype,"flags",{configurable:!0,get:n("0bfb")})},"38fd":function(t,e,n){var i=n("69a8"),r=n("4bf8"),o=n("613b")("IE_PROTO"),a=Object.prototype;t.exports=Object.getPrototypeOf||function(t){return t=r(t),i(t,o)?t[o]:"function"==typeof t.constructor&&t instanceof t.constructor?t.constructor.prototype:t instanceof Object?a:null}},"3adc":function(t,e,n){var i=n("0f89"),r=n("a47f"),o=n("2ea1"),a=Object.defineProperty;e.f=n("7d95")?Object.defineProperty:function(t,e,n){if(i(t),e=o(e,!0),i(n),r)try{return a(t,e,n)}catch(c){}if("get"in n||"set"in n)throw TypeError("Accessors not supported!");return"value"in n&&(t[e]=n.value),t}},"3b2b":function(t,e,n){var i=n("7726"),r=n("5dbc"),o=n("86cc").f,a=n("9093").f,c=n("aae3"),u=n("0bfb"),s=i.RegExp,f=s,h=s.prototype,l=/a/g,d=/a/g,p=new s(l)!==l;if(n("9e1e")&&(!p||n("79e5")((function(){return d[n("2b4c")("match")]=!1,s(l)!=l||s(d)==d||"/a/i"!=s(l,"i")})))){s=function(t,e){var n=this instanceof s,i=c(t),o=void 0===e;return!n&&i&&t.constructor===s&&o?t:r(p?new f(i&&!o?t.source:t,e):f((i=t instanceof s)?t.source:t,i&&o?u.call(t):e),n?this:h,s)};for(var m=function(t){t in s||o(s,t,{configurable:!0,get:function(){return f[t]},set:function(e){f[t]=e}})},g=a(f),v=0;g.length>v;)m(g[v++]);h.constructor=s,s.prototype=h,n("2aba")(i,"RegExp",s)}n("7a56")("RegExp")},"41a0":function(t,e,n){"use strict";var i=n("2aeb"),r=n("4630"),o=n("7f20"),a={};n("32e9")(a,n("2b4c")("iterator"),(function(){return this})),t.exports=function(t,e,n){t.prototype=i(a,{next:r(1,n)}),o(t,e+" Iterator")}},"43c8":function(t,e){var n={}.hasOwnProperty;t.exports=function(t,e){return n.call(t,e)}},"456d":function(t,e,n){var i=n("4bf8"),r=n("0d58");n("5eda")("keys",(function(){return function(t){return r(i(t))}}))},4588:function(t,e){var n=Math.ceil,i=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?i:n)(t)}},4630:function(t,e){t.exports=function(t,e){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:e}}},"4a59":function(t,e,n){var i=n("9b43"),r=n("1fa8"),o=n("33a4"),a=n("cb7c"),c=n("9def"),u=n("27ee"),s={},f={};e=t.exports=function(t,e,n,h,l){var d,p,m,g,v=l?function(){return t}:u(t),b=i(n,h,e?2:1),y=0;if("function"!=typeof v)throw TypeError(t+" is not iterable!");if(o(v)){for(d=c(t.length);d>y;y++)if(g=e?b(a(p=t[y])[0],p[1]):b(t[y]),g===s||g===f)return g}else for(m=v.call(t);!(p=m.next()).done;)if(g=r(m,b,p.value,e),g===s||g===f)return g};e.BREAK=s,e.RETURN=f},"4bf8":function(t,e,n){var i=n("be13");t.exports=function(t){return Object(i(t))}},"4f7f":function(t,e,n){"use strict";var i=n("c26b"),r=n("b39a"),o="Set";t.exports=n("e0b8")(o,(function(t){return function(){return t(this,arguments.length>0?arguments[0]:void 0)}}),{add:function(t){return i.def(r(this,o),t=0===t?0:t,t)}},i)},5147:function(t,e,n){var i=n("2b4c")("match");t.exports=function(t){var e=/./;try{"/./"[t](e)}catch(n){try{return e[i]=!1,!"/./"[t](e)}catch(r){}}return!0}},"52a7":function(t,e){e.f={}.propertyIsEnumerable},5537:function(t,e,n){var i=n("8378"),r=n("7726"),o="__core-js_shared__",a=r[o]||(r[o]={});(t.exports=function(t,e){return a[t]||(a[t]=void 0!==e?e:{})})("versions",[]).push({version:i.version,mode:n("2d00")?"pure":"global",copyright:"© 2018 Denis Pushkarev (zloirock.ru)"})},"58b2":function(t,e,n){var i=n("5ca1");i(i.S+i.F*!n("9e1e"),"Object",{defineProperties:n("1495")})},"5ca1":function(t,e,n){var i=n("7726"),r=n("8378"),o=n("32e9"),a=n("2aba"),c=n("9b43"),u="prototype",s=function(t,e,n){var f,h,l,d,p=t&s.F,m=t&s.G,g=t&s.S,v=t&s.P,b=t&s.B,y=m?i:g?i[e]||(i[e]={}):(i[e]||{})[u],x=m?r:r[e]||(r[e]={}),w=x[u]||(x[u]={});for(f in m&&(n=e),n)h=!p&&y&&void 0!==y[f],l=(h?y:n)[f],d=b&&h?c(l,i):v&&"function"==typeof l?c(Function.call,l):l,y&&a(y,f,l,t&s.U),x[f]!=l&&o(x,f,d),v&&w[f]!=l&&(w[f]=l)};i.core=r,s.F=1,s.G=2,s.S=4,s.P=8,s.B=16,s.W=32,s.U=64,s.R=128,t.exports=s},"5cc5":function(t,e,n){var i=n("2b4c")("iterator"),r=!1;try{var o=[7][i]();o["return"]=function(){r=!0},Array.from(o,(function(){throw 2}))}catch(a){}t.exports=function(t,e){if(!e&&!r)return!1;var n=!1;try{var o=[7],c=o[i]();c.next=function(){return{done:n=!0}},o[i]=function(){return c},t(o)}catch(a){}return n}},"5ce7":function(t,e,n){"use strict";var i=n("7108"),r=n("f845"),o=n("c0d8"),a={};n("8ce0")(a,n("1b55")("iterator"),(function(){return this})),t.exports=function(t,e,n){t.prototype=i(a,{next:r(1,n)}),o(t,e+" Iterator")}},"5d73":function(t,e,n){t.exports=n("0a91")},"5d8f":function(t,e,n){var i=n("7772")("keys"),r=n("7b00");t.exports=function(t){return i[t]||(i[t]=r(t))}},"5dbc":function(t,e,n){var i=n("d3f4"),r=n("8b97").set;t.exports=function(t,e,n){var o,a=e.constructor;return a!==n&&"function"==typeof a&&(o=a.prototype)!==n.prototype&&i(o)&&r&&r(t,o),t}},"5df3":function(t,e,n){"use strict";var i=n("02f4")(!0);n("01f9")(String,"String",(function(t){this._t=String(t),this._i=0}),(function(){var t,e=this._t,n=this._i;return n>=e.length?{value:void 0,done:!0}:(t=i(e,n),this._i+=t.length,{value:t,done:!1})}))},"5eda":function(t,e,n){var i=n("5ca1"),r=n("8378"),o=n("79e5");t.exports=function(t,e){var n=(r.Object||{})[t]||Object[t],a={};a[t]=e(n),i(i.S+i.F*o((function(){n(1)})),"Object",a)}},"613b":function(t,e,n){var i=n("5537")("keys"),r=n("ca5a");t.exports=function(t){return i[t]||(i[t]=r(t))}},"626a":function(t,e,n){var i=n("2d95");t.exports=Object("z").propertyIsEnumerable(0)?Object:function(t){return"String"==i(t)?t.split(""):Object(t)}},6762:function(t,e,n){"use strict";var i=n("5ca1"),r=n("c366")(!0);i(i.P,"Array",{includes:function(t){return r(this,t,arguments.length>1?arguments[1]:void 0)}}),n("9c6c")("includes")},"67ab":function(t,e,n){var i=n("ca5a")("meta"),r=n("d3f4"),o=n("69a8"),a=n("86cc").f,c=0,u=Object.isExtensible||function(){return!0},s=!n("79e5")((function(){return u(Object.preventExtensions({}))})),f=function(t){a(t,i,{value:{i:"O"+ ++c,w:{}}})},h=function(t,e){if(!r(t))return"symbol"==typeof t?t:("string"==typeof t?"S":"P")+t;if(!o(t,i)){if(!u(t))return"F";if(!e)return"E";f(t)}return t[i].i},l=function(t,e){if(!o(t,i)){if(!u(t))return!0;if(!e)return!1;f(t)}return t[i].w},d=function(t){return s&&p.NEED&&u(t)&&!o(t,i)&&f(t),t},p=t.exports={KEY:i,NEED:!1,fastKey:h,getWeak:l,onFreeze:d}},6821:function(t,e,n){var i=n("626a"),r=n("be13");t.exports=function(t){return i(r(t))}},"69a8":function(t,e){var n={}.hasOwnProperty;t.exports=function(t,e){return n.call(t,e)}},"6a99":function(t,e,n){var i=n("d3f4");t.exports=function(t,e){if(!i(t))return t;var n,r;if(e&&"function"==typeof(n=t.toString)&&!i(r=n.call(t)))return r;if("function"==typeof(n=t.valueOf)&&!i(r=n.call(t)))return r;if(!e&&"function"==typeof(n=t.toString)&&!i(r=n.call(t)))return r;throw TypeError("Can't convert object to primitive value")}},"6a9b":function(t,e,n){var i=n("8bab"),r=n("e5fa");t.exports=function(t){return i(r(t))}},"6b54":function(t,e,n){"use strict";n("3846");var i=n("cb7c"),r=n("0bfb"),o=n("9e1e"),a="toString",c=/./[a],u=function(t){n("2aba")(RegExp.prototype,a,t,!0)};n("79e5")((function(){return"/a/b"!=c.call({source:"a",flags:"b"})}))?u((function(){var t=i(this);return"/".concat(t.source,"/","flags"in t?t.flags:!o&&t instanceof RegExp?r.call(t):void 0)})):c.name!=a&&u((function(){return c.call(this)}))},"6e1f":function(t,e){var n={}.toString;t.exports=function(t){return n.call(t).slice(8,-1)}},"6f42":function(t,e,n){},"6f8a":function(t,e){t.exports=function(t){return"object"===typeof t?null!==t:"function"===typeof t}},7108:function(t,e,n){var i=n("0f89"),r=n("f568"),o=n("0029"),a=n("5d8f")("IE_PROTO"),c=function(){},u="prototype",s=function(){var t,e=n("12fd")("iframe"),i=o.length,r="<",a=">";e.style.display="none",n("103a").appendChild(e),e.src="javascript:",t=e.contentWindow.document,t.open(),t.write(r+"script"+a+"document.F=Object"+r+"/script"+a),t.close(),s=t.F;while(i--)delete s[u][o[i]];return s()};t.exports=Object.create||function(t,e){var n;return null!==t?(c[u]=i(t),n=new c,c[u]=null,n[a]=t):n=s(),void 0===e?n:r(n,e)}},7514:function(t,e,n){"use strict";var i=n("5ca1"),r=n("0a49")(5),o="find",a=!0;o in[]&&Array(1)[o]((function(){a=!1})),i(i.P+i.F*a,"Array",{find:function(t){return r(this,t,arguments.length>1?arguments[1]:void 0)}}),n("9c6c")(o)},7633:function(t,e,n){var i=n("2695"),r=n("0029");t.exports=Object.keys||function(t){return i(t,r)}},7726:function(t,e){var n=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=n)},7772:function(t,e,n){var i=n("a7d3"),r=n("da3c"),o="__core-js_shared__",a=r[o]||(r[o]={});(t.exports=function(t,e){return a[t]||(a[t]=void 0!==e?e:{})})("versions",[]).push({version:i.version,mode:n("b457")?"pure":"global",copyright:"© 2019 Denis Pushkarev (zloirock.ru)"})},"77f1":function(t,e,n){var i=n("4588"),r=Math.max,o=Math.min;t.exports=function(t,e){return t=i(t),t<0?r(t+e,0):o(t,e)}},"79e5":function(t,e){t.exports=function(t){try{return!!t()}catch(e){return!0}}},"7a56":function(t,e,n){"use strict";var i=n("7726"),r=n("86cc"),o=n("9e1e"),a=n("2b4c")("species");t.exports=function(t){var e=i[t];o&&e&&!e[a]&&r.f(e,a,{configurable:!0,get:function(){return this}})}},"7b00":function(t,e){var n=0,i=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++n+i).toString(36))}},"7d8a":function(t,e,n){var i=n("6e1f"),r=n("1b55")("toStringTag"),o="Arguments"==i(function(){return arguments}()),a=function(t,e){try{return t[e]}catch(n){}};t.exports=function(t){var e,n,c;return void 0===t?"Undefined":null===t?"Null":"string"==typeof(n=a(e=Object(t),r))?n:o?i(e):"Object"==(c=i(e))&&"function"==typeof e.callee?"Arguments":c}},"7d95":function(t,e,n){t.exports=!n("d782")((function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a}))},"7f20":function(t,e,n){var i=n("86cc").f,r=n("69a8"),o=n("2b4c")("toStringTag");t.exports=function(t,e,n){t&&!r(t=n?t:t.prototype,o)&&i(t,o,{configurable:!0,value:e})}},8378:function(t,e){var n=t.exports={version:"2.6.1"};"number"==typeof __e&&(__e=n)},"84f2":function(t,e){t.exports={}},"85f2":function(t,e,n){t.exports=n("ec5b")},"86cc":function(t,e,n){var i=n("cb7c"),r=n("c69a"),o=n("6a99"),a=Object.defineProperty;e.f=n("9e1e")?Object.defineProperty:function(t,e,n){if(i(t),e=o(e,!0),i(n),r)try{return a(t,e,n)}catch(c){}if("get"in n||"set"in n)throw TypeError("Accessors not supported!");return"value"in n&&(t[e]=n.value),t}},"87b3":function(t,e,n){var i=Date.prototype,r="Invalid Date",o="toString",a=i[o],c=i.getTime;new Date(NaN)+""!=r&&n("2aba")(i,o,(function(){var t=c.call(this);return t===t?a.call(this):r}))},8875:function(t,e,n){var i,r,o;(function(n,a){r=[],i=a,o="function"===typeof i?i.apply(e,r):i,void 0===o||(t.exports=o)})("undefined"!==typeof self&&self,(function(){function t(){if(document.currentScript)return document.currentScript;try{throw new Error}catch(h){var t,e,n,i=/.*at [^(]*\((.*):(.+):(.+)\)$/gi,r=/@([^@]*):(\d+):(\d+)\s*$/gi,o=i.exec(h.stack)||r.exec(h.stack),a=o&&o[1]||!1,c=o&&o[2]||!1,u=document.location.href.replace(document.location.hash,""),s=document.getElementsByTagName("script");a===u&&(t=document.documentElement.outerHTML,e=new RegExp("(?:[^\\n]+?\\n){0,"+(c-2)+"}[^<]*<script>([\\d\\D]*?)<\\/script>[\\d\\D]*","i"),n=t.replace(e,"$1").trim());for(var f=0;f<s.length;f++){if("interactive"===s[f].readyState)return s[f];if(s[f].src===a)return s[f];if(a===u&&s[f].innerHTML&&s[f].innerHTML.trim()===n)return s[f]}return null}}return t}))},"89ca":function(t,e,n){n("b42c"),n("93c4"),t.exports=n("d38f")},"8b97":function(t,e,n){var i=n("d3f4"),r=n("cb7c"),o=function(t,e){if(r(t),!i(e)&&null!==e)throw TypeError(e+": can't set as prototype!")};t.exports={set:Object.setPrototypeOf||("__proto__"in{}?function(t,e,i){try{i=n("9b43")(Function.call,n("11e9").f(Object.prototype,"__proto__").set,2),i(t,[]),e=!(t instanceof Array)}catch(r){e=!0}return function(t,n){return o(t,n),e?t.__proto__=n:i(t,n),t}}({},!1):void 0),check:o}},"8bab":function(t,e,n){var i=n("6e1f");t.exports=Object("z").propertyIsEnumerable(0)?Object:function(t){return"String"==i(t)?t.split(""):Object(t)}},"8ce0":function(t,e,n){var i=n("3adc"),r=n("f845");t.exports=n("7d95")?function(t,e,n){return i.f(t,e,r(1,n))}:function(t,e,n){return t[e]=n,t}},"8e6e":function(t,e,n){var i=n("5ca1"),r=n("990b"),o=n("6821"),a=n("11e9"),c=n("f1ae");i(i.S,"Object",{getOwnPropertyDescriptors:function(t){var e,n,i=o(t),u=a.f,s=r(i),f={},h=0;while(s.length>h)n=u(i,e=s[h++]),void 0!==n&&c(f,e,n);return f}})},9093:function(t,e,n){var i=n("ce10"),r=n("e11e").concat("length","prototype");e.f=Object.getOwnPropertyNames||function(t){return i(t,r)}},"93c4":function(t,e,n){"use strict";var i=n("2a4e")(!0);n("e4a9")(String,"String",(function(t){this._t=String(t),this._i=0}),(function(){var t,e=this._t,n=this._i;return n>=e.length?{value:void 0,done:!0}:(t=i(e,n),this._i+=t.length,{value:t,done:!1})}))},"990b":function(t,e,n){var i=n("9093"),r=n("2621"),o=n("cb7c"),a=n("7726").Reflect;t.exports=a&&a.ownKeys||function(t){var e=i.f(o(t)),n=r.f;return n?e.concat(n(t)):e}},"9b43":function(t,e,n){var i=n("d8e8");t.exports=function(t,e,n){if(i(t),void 0===e)return t;switch(n){case 1:return function(n){return t.call(e,n)};case 2:return function(n,i){return t.call(e,n,i)};case 3:return function(n,i,r){return t.call(e,n,i,r)}}return function(){return t.apply(e,arguments)}}},"9c6c":function(t,e,n){var i=n("2b4c")("unscopables"),r=Array.prototype;void 0==r[i]&&n("32e9")(r,i,{}),t.exports=function(t){r[i][t]=!0}},"9def":function(t,e,n){var i=n("4588"),r=Math.min;t.exports=function(t){return t>0?r(i(t),9007199254740991):0}},"9e1e":function(t,e,n){t.exports=!n("79e5")((function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a}))},a47f:function(t,e,n){t.exports=!n("7d95")&&!n("d782")((function(){return 7!=Object.defineProperty(n("12fd")("div"),"a",{get:function(){return 7}}).a}))},a5ab:function(t,e,n){var i=n("a812"),r=Math.min;t.exports=function(t){return t>0?r(i(t),9007199254740991):0}},a745:function(t,e,n){t.exports=n("d604")},a7d3:function(t,e){var n=t.exports={version:"2.6.9"};"number"==typeof __e&&(__e=n)},a812:function(t,e){var n=Math.ceil,i=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?i:n)(t)}},aa77:function(t,e,n){var i=n("5ca1"),r=n("be13"),o=n("79e5"),a=n("fdef"),c="["+a+"]",u="​",s=RegExp("^"+c+c+"*"),f=RegExp(c+c+"*$"),h=function(t,e,n){var r={},c=o((function(){return!!a[t]()||u[t]()!=u})),s=r[t]=c?e(l):a[t];n&&(r[n]=s),i(i.P+i.F*c,"String",r)},l=h.trim=function(t,e){return t=String(r(t)),1&e&&(t=t.replace(s,"")),2&e&&(t=t.replace(f,"")),t};t.exports=h},aae3:function(t,e,n){var i=n("d3f4"),r=n("2d95"),o=n("2b4c")("match");t.exports=function(t){var e;return i(t)&&(void 0!==(e=t[o])?!!e:"RegExp"==r(t))}},ac6a:function(t,e,n){for(var i=n("cadf"),r=n("0d58"),o=n("2aba"),a=n("7726"),c=n("32e9"),u=n("84f2"),s=n("2b4c"),f=s("iterator"),h=s("toStringTag"),l=u.Array,d={CSSRuleList:!0,CSSStyleDeclaration:!1,CSSValueList:!1,ClientRectList:!1,DOMRectList:!1,DOMStringList:!1,DOMTokenList:!0,DataTransferItemList:!1,FileList:!1,HTMLAllCollection:!1,HTMLCollection:!1,HTMLFormElement:!1,HTMLSelectElement:!1,MediaList:!0,MimeTypeArray:!1,NamedNodeMap:!1,NodeList:!0,PaintRequestList:!1,Plugin:!1,PluginArray:!1,SVGLengthList:!1,SVGNumberList:!1,SVGPathSegList:!1,SVGPointList:!1,SVGStringList:!1,SVGTransformList:!1,SourceBufferList:!1,StyleSheetList:!0,TextTrackCueList:!1,TextTrackList:!1,TouchList:!1},p=r(d),m=0;m<p.length;m++){var g,v=p[m],b=d[v],y=a[v],x=y&&y.prototype;if(x&&(x[f]||c(x,f,l),x[h]||c(x,h,v),u[v]=l,b))for(g in i)x[g]||o(x,g,i[g],!0)}},b22a:function(t,e){t.exports={}},b39a:function(t,e,n){var i=n("d3f4");t.exports=function(t,e){if(!i(t)||t._t!==e)throw TypeError("Incompatible receiver, "+e+" required!");return t}},b3e7:function(t,e){t.exports=function(){}},b42c:function(t,e,n){n("fa54");for(var i=n("da3c"),r=n("8ce0"),o=n("b22a"),a=n("1b55")("toStringTag"),c="CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,MediaList,MimeTypeArray,NamedNodeMap,NodeList,PaintRequestList,Plugin,PluginArray,SVGLengthList,SVGNumberList,SVGPathSegList,SVGPointList,SVGStringList,SVGTransformList,SourceBufferList,StyleSheetList,TextTrackCueList,TextTrackList,TouchList".split(","),u=0;u<c.length;u++){var s=c[u],f=i[s],h=f&&f.prototype;h&&!h[a]&&r(h,a,s),o[s]=o.Array}},b457:function(t,e){t.exports=!0},b5aa:function(t,e,n){var i=n("6e1f");t.exports=Array.isArray||function(t){return"Array"==i(t)}},b635:function(t,e,n){"use strict";(function(t){n.d(e,"b",(function(){return r}));n("6f42");var i=n("3425");function r(t){r.installed||(r.installed=!0,t.component("VueDraggableResizable",i["a"]))}var o={install:r},a=null;"undefined"!==typeof window?a=window.Vue:"undefined"!==typeof t&&(a=t.Vue),a&&a.use(o),e["a"]=i["a"]}).call(this,n("c8ba"))},b77f:function(t,e,n){var i=n("0f89"),r=n("f159");t.exports=n("a7d3").getIterator=function(t){var e=r(t);if("function"!=typeof e)throw TypeError(t+" is not iterable!");return i(e.call(t))}},bc25:function(t,e,n){var i=n("f2fe");t.exports=function(t,e,n){if(i(t),void 0===e)return t;switch(n){case 1:return function(n){return t.call(e,n)};case 2:return function(n,i){return t.call(e,n,i)};case 3:return function(n,i,r){return t.call(e,n,i,r)}}return function(){return t.apply(e,arguments)}}},be13:function(t,e){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},c0d8:function(t,e,n){var i=n("3adc").f,r=n("43c8"),o=n("1b55")("toStringTag");t.exports=function(t,e,n){t&&!r(t=n?t:t.prototype,o)&&i(t,o,{configurable:!0,value:e})}},c26b:function(t,e,n){"use strict";var i=n("86cc").f,r=n("2aeb"),o=n("dcbc"),a=n("9b43"),c=n("f605"),u=n("4a59"),s=n("01f9"),f=n("d53b"),h=n("7a56"),l=n("9e1e"),d=n("67ab").fastKey,p=n("b39a"),m=l?"_s":"size",g=function(t,e){var n,i=d(e);if("F"!==i)return t._i[i];for(n=t._f;n;n=n.n)if(n.k==e)return n};t.exports={getConstructor:function(t,e,n,s){var f=t((function(t,i){c(t,f,e,"_i"),t._t=e,t._i=r(null),t._f=void 0,t._l=void 0,t[m]=0,void 0!=i&&u(i,n,t[s],t)}));return o(f.prototype,{clear:function(){for(var t=p(this,e),n=t._i,i=t._f;i;i=i.n)i.r=!0,i.p&&(i.p=i.p.n=void 0),delete n[i.i];t._f=t._l=void 0,t[m]=0},delete:function(t){var n=p(this,e),i=g(n,t);if(i){var r=i.n,o=i.p;delete n._i[i.i],i.r=!0,o&&(o.n=r),r&&(r.p=o),n._f==i&&(n._f=r),n._l==i&&(n._l=o),n[m]--}return!!i},forEach:function(t){p(this,e);var n,i=a(t,arguments.length>1?arguments[1]:void 0,3);while(n=n?n.n:this._f){i(n.v,n.k,this);while(n&&n.r)n=n.p}},has:function(t){return!!g(p(this,e),t)}}),l&&i(f.prototype,"size",{get:function(){return p(this,e)[m]}}),f},def:function(t,e,n){var i,r,o=g(t,e);return o?o.v=n:(t._l=o={i:r=d(e,!0),k:e,v:n,p:i=t._l,n:void 0,r:!1},t._f||(t._f=o),i&&(i.n=o),t[m]++,"F"!==r&&(t._i[r]=o)),t},getEntry:g,setStrong:function(t,e,n){s(t,e,(function(t,n){this._t=p(t,e),this._k=n,this._l=void 0}),(function(){var t=this,e=t._k,n=t._l;while(n&&n.r)n=n.p;return t._t&&(t._l=n=n?n.n:t._t._f)?f(0,"keys"==e?n.k:"values"==e?n.v:[n.k,n.v]):(t._t=void 0,f(1))}),n?"entries":"values",!n,!0),h(e)}}},c366:function(t,e,n){var i=n("6821"),r=n("9def"),o=n("77f1");t.exports=function(t){return function(e,n,a){var c,u=i(e),s=r(u.length),f=o(a,s);if(t&&n!=n){while(s>f)if(c=u[f++],c!=c)return!0}else for(;s>f;f++)if((t||f in u)&&u[f]===n)return t||f||0;return!t&&-1}}},c5f6:function(t,e,n){"use strict";var i=n("7726"),r=n("69a8"),o=n("2d95"),a=n("5dbc"),c=n("6a99"),u=n("79e5"),s=n("9093").f,f=n("11e9").f,h=n("86cc").f,l=n("aa77").trim,d="Number",p=i[d],m=p,g=p.prototype,v=o(n("2aeb")(g))==d,b="trim"in String.prototype,y=function(t){var e=c(t,!1);if("string"==typeof e&&e.length>2){e=b?e.trim():l(e,3);var n,i,r,o=e.charCodeAt(0);if(43===o||45===o){if(n=e.charCodeAt(2),88===n||120===n)return NaN}else if(48===o){switch(e.charCodeAt(1)){case 66:case 98:i=2,r=49;break;case 79:case 111:i=8,r=55;break;default:return+e}for(var a,u=e.slice(2),s=0,f=u.length;s<f;s++)if(a=u.charCodeAt(s),a<48||a>r)return NaN;return parseInt(u,i)}}return+e};if(!p(" 0o1")||!p("0b1")||p("+0x1")){p=function(t){var e=arguments.length<1?0:t,n=this;return n instanceof p&&(v?u((function(){g.valueOf.call(n)})):o(n)!=d)?a(new m(y(e)),n,p):y(e)};for(var x,w=n("9e1e")?s(m):"MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger".split(","),S=0;w.length>S;S++)r(m,x=w[S])&&!r(p,x)&&h(p,x,f(m,x));p.prototype=g,g.constructor=p,n("2aba")(i,d,p)}},c69a:function(t,e,n){t.exports=!n("9e1e")&&!n("79e5")((function(){return 7!=Object.defineProperty(n("230e")("div"),"a",{get:function(){return 7}}).a}))},c8ba:function(t,e){var n;n=function(){return this}();try{n=n||new Function("return this")()}catch(i){"object"===typeof window&&(n=window)}t.exports=n},c8bb:function(t,e,n){t.exports=n("89ca")},ca5a:function(t,e){var n=0,i=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++n+i).toString(36))}},cadf:function(t,e,n){"use strict";var i=n("9c6c"),r=n("d53b"),o=n("84f2"),a=n("6821");t.exports=n("01f9")(Array,"Array",(function(t,e){this._t=a(t),this._i=0,this._k=e}),(function(){var t=this._t,e=this._k,n=this._i++;return!t||n>=t.length?(this._t=void 0,r(1)):r(0,"keys"==e?n:"values"==e?t[n]:[n,t[n]])}),"values"),o.Arguments=o.Array,i("keys"),i("values"),i("entries")},cb7c:function(t,e,n){var i=n("d3f4");t.exports=function(t){if(!i(t))throw TypeError(t+" is not an object!");return t}},cd1c:function(t,e,n){var i=n("e853");t.exports=function(t,e){return new(i(t))(e)}},ce10:function(t,e,n){var i=n("69a8"),r=n("6821"),o=n("c366")(!1),a=n("613b")("IE_PROTO");t.exports=function(t,e){var n,c=r(t),u=0,s=[];for(n in c)n!=a&&i(c,n)&&s.push(n);while(e.length>u)i(c,n=e[u++])&&(~o(s,n)||s.push(n));return s}},d13f:function(t,e,n){var i=n("da3c"),r=n("a7d3"),o=n("bc25"),a=n("8ce0"),c=n("43c8"),u="prototype",s=function(t,e,n){var f,h,l,d=t&s.F,p=t&s.G,m=t&s.S,g=t&s.P,v=t&s.B,b=t&s.W,y=p?r:r[e]||(r[e]={}),x=y[u],w=p?i:m?i[e]:(i[e]||{})[u];for(f in p&&(n=e),n)h=!d&&w&&void 0!==w[f],h&&c(y,f)||(l=h?w[f]:n[f],y[f]=p&&"function"!=typeof w[f]?n[f]:v&&h?o(l,i):b&&w[f]==l?function(t){var e=function(e,n,i){if(this instanceof t){switch(arguments.length){case 0:return new t;case 1:return new t(e);case 2:return new t(e,n)}return new t(e,n,i)}return t.apply(this,arguments)};return e[u]=t[u],e}(l):g&&"function"==typeof l?o(Function.call,l):l,g&&((y.virtual||(y.virtual={}))[f]=l,t&s.R&&x&&!x[f]&&a(x,f,l)))};s.F=1,s.G=2,s.S=4,s.P=8,s.B=16,s.W=32,s.U=64,s.R=128,t.exports=s},d25f:function(t,e,n){"use strict";var i=n("5ca1"),r=n("0a49")(2);i(i.P+i.F*!n("2f21")([].filter,!0),"Array",{filter:function(t){return r(this,t,arguments[1])}})},d2c8:function(t,e,n){var i=n("aae3"),r=n("be13");t.exports=function(t,e,n){if(i(e))throw TypeError("String#"+n+" doesn't accept regex!");return String(r(t))}},d38f:function(t,e,n){var i=n("7d8a"),r=n("1b55")("iterator"),o=n("b22a");t.exports=n("a7d3").isIterable=function(t){var e=Object(t);return void 0!==e[r]||"@@iterator"in e||o.hasOwnProperty(i(e))}},d3f4:function(t,e){t.exports=function(t){return"object"===typeof t?null!==t:"function"===typeof t}},d53b:function(t,e){t.exports=function(t,e){return{value:e,done:!!t}}},d604:function(t,e,n){n("1938"),t.exports=n("a7d3").Array.isArray},d782:function(t,e){t.exports=function(t){try{return!!t()}catch(e){return!0}}},d8e8:function(t,e){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},da3c:function(t,e){var n=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=n)},dcbc:function(t,e,n){var i=n("2aba");t.exports=function(t,e,n){for(var r in e)i(t,r,e[r],n);return t}},e0b8:function(t,e,n){"use strict";var i=n("7726"),r=n("5ca1"),o=n("2aba"),a=n("dcbc"),c=n("67ab"),u=n("4a59"),s=n("f605"),f=n("d3f4"),h=n("79e5"),l=n("5cc5"),d=n("7f20"),p=n("5dbc");t.exports=function(t,e,n,m,g,v){var b=i[t],y=b,x=g?"set":"add",w=y&&y.prototype,S={},_=function(t){var e=w[t];o(w,t,"delete"==t||"has"==t?function(t){return!(v&&!f(t))&&e.call(this,0===t?0:t)}:"get"==t?function(t){return v&&!f(t)?void 0:e.call(this,0===t?0:t)}:"add"==t?function(t){return e.call(this,0===t?0:t),this}:function(t,n){return e.call(this,0===t?0:t,n),this})};if("function"==typeof y&&(v||w.forEach&&!h((function(){(new y).entries().next()})))){var O=new y,E=O[x](v?{}:-0,1)!=O,T=h((function(){O.has(1)})),P=l((function(t){new y(t)})),L=!v&&h((function(){var t=new y,e=5;while(e--)t[x](e,e);return!t.has(-0)}));P||(y=e((function(e,n){s(e,y,t);var i=p(new b,e,y);return void 0!=n&&u(n,g,i[x],i),i})),y.prototype=w,w.constructor=y),(T||L)&&(_("delete"),_("has"),g&&_("get")),(L||E)&&_(x),v&&w.clear&&delete w.clear}else y=m.getConstructor(e,t,g,x),a(y.prototype,n),c.NEED=!0;return d(y,t),S[t]=y,r(r.G+r.W+r.F*(y!=b),S),v||m.setStrong(y,t,g),y}},e11e:function(t,e){t.exports="constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf".split(",")},e341:function(t,e,n){var i=n("d13f");i(i.S+i.F*!n("7d95"),"Object",{defineProperty:n("3adc").f})},e4a9:function(t,e,n){"use strict";var i=n("b457"),r=n("d13f"),o=n("2312"),a=n("8ce0"),c=n("b22a"),u=n("5ce7"),s=n("c0d8"),f=n("ff0c"),h=n("1b55")("iterator"),l=!([].keys&&"next"in[].keys()),d="@@iterator",p="keys",m="values",g=function(){return this};t.exports=function(t,e,n,v,b,y,x){u(n,e,v);var w,S,_,O=function(t){if(!l&&t in L)return L[t];switch(t){case p:return function(){return new n(this,t)};case m:return function(){return new n(this,t)}}return function(){return new n(this,t)}},E=e+" Iterator",T=b==m,P=!1,L=t.prototype,M=L[h]||L[d]||b&&L[b],R=M||O(b),j=b?T?O("entries"):R:void 0,k="Array"==e&&L.entries||M;if(k&&(_=f(k.call(new t)),_!==Object.prototype&&_.next&&(s(_,E,!0),i||"function"==typeof _[h]||a(_,h,g))),T&&M&&M.name!==m&&(P=!0,R=function(){return M.call(this)}),i&&!x||!l&&!P&&L[h]||a(L,h,R),c[e]=R,c[E]=g,b)if(w={values:T?R:O(m),keys:y?R:O(p),entries:j},x)for(S in w)S in L||o(L,S,w[S]);else r(r.P+r.F*(l||P),e,w);return w}},e5fa:function(t,e){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},e853:function(t,e,n){var i=n("d3f4"),r=n("1169"),o=n("2b4c")("species");t.exports=function(t){var e;return r(t)&&(e=t.constructor,"function"!=typeof e||e!==Array&&!r(e.prototype)||(e=void 0),i(e)&&(e=e[o],null===e&&(e=void 0))),void 0===e?Array:e}},ec5b:function(t,e,n){n("e341");var i=n("a7d3").Object;t.exports=function(t,e,n){return i.defineProperty(t,e,n)}},f159:function(t,e,n){var i=n("7d8a"),r=n("1b55")("iterator"),o=n("b22a");t.exports=n("a7d3").getIteratorMethod=function(t){if(void 0!=t)return t[r]||t["@@iterator"]||o[i(t)]}},f1ae:function(t,e,n){"use strict";var i=n("86cc"),r=n("4630");t.exports=function(t,e,n){e in t?i.f(t,e,r(0,n)):t[e]=n}},f2fe:function(t,e){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},f3e2:function(t,e,n){"use strict";var i=n("5ca1"),r=n("0a49")(0),o=n("2f21")([].forEach,!0);i(i.P+i.F*!o,"Array",{forEach:function(t){return r(this,t,arguments[1])}})},f568:function(t,e,n){var i=n("3adc"),r=n("0f89"),o=n("7633");t.exports=n("7d95")?Object.defineProperties:function(t,e){r(t);var n,a=o(e),c=a.length,u=0;while(c>u)i.f(t,n=a[u++],e[n]);return t}},f605:function(t,e){t.exports=function(t,e,n,i){if(!(t instanceof e)||void 0!==i&&i in t)throw TypeError(n+": incorrect invocation!");return t}},f845:function(t,e){t.exports=function(t,e){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:e}}},fa54:function(t,e,n){"use strict";var i=n("b3e7"),r=n("245b"),o=n("b22a"),a=n("6a9b");t.exports=n("e4a9")(Array,"Array",(function(t,e){this._t=a(t),this._i=0,this._k=e}),(function(){var t=this._t,e=this._k,n=this._i++;return!t||n>=t.length?(this._t=void 0,r(1)):r(0,"keys"==e?n:"values"==e?t[n]:[n,t[n]])}),"values"),o.Arguments=o.Array,i("keys"),i("values"),i("entries")},fab2:function(t,e,n){var i=n("7726").document;t.exports=i&&i.documentElement},fb15:function(t,e,n){"use strict";if(n.r(e),n.d(e,"install",(function(){return a["b"]})),"undefined"!==typeof window){var i=window.document.currentScript,r=n("8875");i=r(),"currentScript"in document||Object.defineProperty(document,"currentScript",{get:r});var o=i&&i.src.match(/(.+\/)[^/]+\.js(\?.*)?$/);o&&(n.p=o[1])}var a=n("b635");e["default"]=a["a"]},fdef:function(t,e){t.exports="\t\n\v\f\r   ᠎             　\u2028\u2029\ufeff"},ff0c:function(t,e,n){var i=n("43c8"),r=n("0185"),o=n("5d8f")("IE_PROTO"),a=Object.prototype;t.exports=Object.getPrototypeOf||function(t){return t=r(t),i(t,o)?t[o]:"function"==typeof t.constructor&&t instanceof t.constructor?t.constructor.prototype:t instanceof Object?a:null}}})["default"]}));
+//# sourceMappingURL=VueDraggableResizable.umd.min.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vue-filter-number-format/dist/vue-filter-number-format.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/vue-filter-number-format/dist/vue-filter-number-format.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,t){if(true)module.exports=t();else { var r, n; }}("undefined"!=typeof self?self:this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="/dist/",t(t.s=0)}([function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=function(e){return function(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"0,0";return e(t).format(n)}}}])});
+//# sourceMappingURL=vue-filter-number-format.js.map
 
 /***/ }),
 
@@ -3272,6 +5305,682 @@ VueI18n.version = '8.15.0';
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.photo.details
+    ? _c("div", { staticClass: "photo-details" }, [
+        _c("div", { staticClass: "col-md-6 col-sm-6 col-xs-12" }, [
+          _c("div", { staticClass: "photo" }, [
+            _c("p", [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("span", { staticClass: "detail" }, [
+                _vm._v(
+                  "(" +
+                    _vm._s(_vm.photo.id) +
+                    ") | " +
+                    _vm._s(_vm.photo.details.date)
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm.photo.details.dispatchRegister
+            ? _c("div", { staticClass: "route" }, [
+                _c("p", [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "detail" }, [
+                    _vm._v(
+                      _vm._s(_vm.photo.details.dispatchRegister.route.name)
+                    )
+                  ]),
+                  _vm._v(",\n                "),
+                  _c("span", { staticClass: "detail" }, [
+                    _vm._v(
+                      _vm._s(_vm.$t("Round trip")) +
+                        " " +
+                        _vm._s(_vm.photo.details.dispatchRegister.round_trip)
+                    )
+                  ]),
+                  _vm._v(",\n                "),
+                  _c("span", { staticClass: "detail" }, [
+                    _vm._v(
+                      _vm._s(_vm.$t("Turn")) +
+                        " " +
+                        _vm._s(_vm.photo.details.dispatchRegister.turn)
+                    )
+                  ])
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "passengers" }, [
+            _c("p", { staticClass: "detail" }, [
+              _vm._v(
+                "\n                " + _vm._s(_vm.$t("Passengers")) + ": "
+              ),
+              _vm.photo.details.occupation
+                ? _c("span", [
+                    _vm._v(_vm._s(_vm.photo.details.occupation.count))
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "detail" }, [
+              _vm._v(
+                "\n                " + _vm._s(_vm.$t("Occupation")) + ": "
+              ),
+              _vm.photo.details.occupation
+                ? _c("span", [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("numberFormat")(
+                          (40 / 100) * _vm.photo.details.occupation.count,
+                          "0.0"
+                        )
+                      ) + "%"
+                    )
+                  ])
+                : _vm._e()
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-6 col-sm-6 col-xs-12 text-right" }, [
+          _c("div", { staticClass: "photo" }, [
+            _c("p", [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("span", { staticClass: "detail" }, [
+                _vm._v(_vm._s(_vm.$t("Counts")))
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm.photo.passengers
+            ? _c("div", { staticClass: "passengers" }, [
+                _c(
+                  "ul",
+                  _vm._l(_vm.photo.passengers.byRoundTrips, function(
+                    roundTrip
+                  ) {
+                    return _c("li", { staticClass: "detail" }, [
+                      _c(
+                        "p",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: roundTrip.number,
+                              expression: "roundTrip.number"
+                            }
+                          ]
+                        },
+                        [
+                          _c("small", [
+                            _c("i", { staticClass: "fa fa-exchange" }),
+                            _vm._v(
+                              " " +
+                                _vm._s(roundTrip.number) +
+                                ", " +
+                                _vm._s(roundTrip.route) +
+                                ": " +
+                                _vm._s(roundTrip.count) +
+                                "\n                        "
+                            )
+                          ])
+                        ]
+                      )
+                    ])
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "detail" }, [
+                  _c("small", [
+                    _vm._v(
+                      _vm._s(_vm.$t("Total")) +
+                        ": " +
+                        _vm._s(_vm.photo.passengers.total)
+                    )
+                  ])
+                ])
+              ])
+            : _vm._e()
+        ])
+      ])
+    : _vm._e()
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "title" }, [
+      _c("i", { staticClass: "fa fa-calendar" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "title" }, [
+      _c("i", { staticClass: "fa fa-flag" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "title" }, [
+      _c("i", { staticClass: "fa fa-users" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.photo && _vm.photo.details
+    ? _c(
+        "div",
+        { staticClass: "container-photo col-md-12" },
+        [
+          _vm.photo.details.persons
+            ? _c(
+                "div",
+                [
+                  _vm._l(_vm.photo.details.occupation.draws, function(draw) {
+                    return _c(
+                      "div",
+                      {
+                        staticClass: "zone-detection",
+                        class:
+                          draw.count === true && !draw.profile
+                            ? "undetected"
+                            : "",
+                        style:
+                          "height: " +
+                          (draw.box.heightOrig && true
+                            ? draw.box.heightOrig
+                            : draw.box.height) +
+                          "%; width: " +
+                          draw.box.width +
+                          "%; top: " +
+                          draw.box.top +
+                          "%; left: " +
+                          draw.box.left +
+                          "%; border-color: " +
+                          draw.color +
+                          "; background: " +
+                          draw.background +
+                          ";",
+                        attrs: {
+                          title:
+                            "" +
+                            (!draw.overlap
+                              ? _vm.$t("Seat") + ": " + draw.profileStr
+                              : _vm.$t("Overlap"))
+                        },
+                        on: {
+                          mouseenter: function($event) {
+                            return _vm.setBusySeating(draw)
+                          },
+                          mouseleave: _vm.clearBusySeating
+                        }
+                      },
+                      [_c("small", [_vm._v(_vm._s(draw.confidence) + "%")])]
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.photo.details.occupation.draws, function(draw) {
+                    return _c("div", {
+                      staticClass: "zone-detection-center",
+                      style:
+                        "height: 1px; width: 1px; top: " +
+                        (draw.box.center ? draw.box.center.top : 0) +
+                        "%; left: " +
+                        (draw.box.center ? draw.box.center.left : 0) +
+                        "%;border-color: " +
+                        draw.color +
+                        ";"
+                    })
+                  })
+                ],
+                2
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.seating, function(seat) {
+            return _vm.styleSeating.show && seat.width > 0 && seat.height > 0
+              ? _c("seat-component", {
+                  key: seat.id,
+                  style:
+                    "opacity: " +
+                    (_vm.styleSeating ? _vm.styleSeating.opacity / 100 : 100),
+                  attrs: {
+                    seat: seat,
+                    image: _vm.image,
+                    fixed: _vm.fixedSeating
+                  },
+                  on: {
+                    "update:seat": function($event) {
+                      seat = $event
+                    }
+                  }
+                })
+              : _vm._e()
+          }),
+          _vm._v(" "),
+          _vm._l(_vm.busySeating, function(busySeat) {
+            return busySeat.width > 0 && busySeat.height > 0
+              ? _c("seat-component", {
+                  key: busySeat.id + Math.random(),
+                  attrs: { seat: busySeat, image: _vm.image, fixed: true }
+                })
+              : _vm._e()
+          }),
+          _vm._v(" "),
+          _vm.seatOccupied &&
+          _vm.seatOccupied.width > 0 &&
+          _vm.seatOccupied.height > 0
+            ? _c("seat-component", {
+                attrs: { seat: _vm.seatOccupied, image: _vm.image, fixed: true }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.photo.details.url
+            ? _c("img", {
+                attrs: {
+                  id: "image-seating",
+                  draggable: "false",
+                  src: _vm.photo.details.url.encoded
+                    ? _vm.photo.details.url.encoded
+                    : _vm.photo.details.url,
+                  width: _vm.image.size.width + "px",
+                  height: _vm.image.size.height + "px",
+                  alt: "Seating photo"
+                }
+              })
+            : _vm._e()
+        ],
+        2
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "zone-seating-component",
+      style: "width: " + _vm.image.size.width + "px; margin: auto"
+    },
+    [
+      _vm.photo
+        ? _c(
+            "div",
+            [
+              _c("photo-details-component", { attrs: { photo: _vm.photo } }),
+              _vm._v(" "),
+              _c("photo-persons-component", {
+                attrs: {
+                  photo: _vm.photo,
+                  seating: _vm.seating,
+                  "style-seating": _vm.styleSeating,
+                  "fixed-seating": false
+                }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "container-actions col-md-12" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default btn-sm btn-action",
+                    on: { click: _vm.load }
+                  },
+                  [_c("i", { staticClass: "fa fa-refresh" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-info btn-sm btn-action",
+                    on: { click: _vm.addSeat }
+                  },
+                  [_c("i", { staticClass: "fa fa-plus-square" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success btn-sm btn-action",
+                    on: { click: _vm.save }
+                  },
+                  [_c("i", { staticClass: "fa fa-save" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-warning btn-sm btn-action m-l-20",
+                    attrs: { disabled: !_vm.selected },
+                    on: { click: _vm.deleteSeating }
+                  },
+                  [_c("i", { staticClass: "fa fa-trash" })]
+                ),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "md-checkbox has-success" },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.styleSeating.show,
+                          expression: "styleSeating.show"
+                        }
+                      ],
+                      staticClass: "md-check",
+                      attrs: { type: "checkbox", id: "checkbox-zone-seating" },
+                      domProps: {
+                        checked: Array.isArray(_vm.styleSeating.show)
+                          ? _vm._i(_vm.styleSeating.show, null) > -1
+                          : _vm.styleSeating.show
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.styleSeating.show,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(
+                                  _vm.styleSeating,
+                                  "show",
+                                  $$a.concat([$$v])
+                                )
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.styleSeating,
+                                  "show",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
+                          } else {
+                            _vm.$set(_vm.styleSeating, "show", $$c)
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("range-slider", {
+                      staticClass: "slider",
+                      attrs: { min: "0", max: "100", step: "1" },
+                      model: {
+                        value: _vm.styleSeating.opacity,
+                        callback: function($$v) {
+                          _vm.$set(_vm.styleSeating, "opacity", $$v)
+                        },
+                        expression: "styleSeating.opacity"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.photo
+        ? _c("div", { staticClass: "col-md-12 text-center p-40" }, [
+            true
+              ? _c("img", {
+                  attrs: {
+                    draggable: "false",
+                    src: "/img/rocket/profile.svg",
+                    width: "30%"
+                  }
+                })
+              : undefined
+          ])
+        : _vm._e()
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "checkbox-zone-seating" } }, [
+      _c("span", { staticClass: "inc" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "check" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "box text-muted" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "report-photo-component",
+      staticStyle: { width: "1000px", margin: "auto" }
+    },
+    [
+      _vm.seating.length > 0
+        ? _c("div", { staticClass: "container-actions text-center" }, [
+            _c("div", { staticClass: "p-10" }, [
+              _c(
+                "div",
+                { staticClass: "md-checkbox has-success" },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.styleSeating.show,
+                        expression: "styleSeating.show"
+                      }
+                    ],
+                    staticClass: "md-check",
+                    attrs: { type: "checkbox", id: "checkbox14" },
+                    domProps: {
+                      checked: Array.isArray(_vm.styleSeating.show)
+                        ? _vm._i(_vm.styleSeating.show, null) > -1
+                        : _vm.styleSeating.show
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.styleSeating.show,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.styleSeating,
+                                "show",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.styleSeating,
+                                "show",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.styleSeating, "show", $$c)
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("range-slider", {
+                    staticClass: "slider",
+                    attrs: { min: "0", max: "100", step: "1" },
+                    model: {
+                      value: _vm.styleSeating.opacity,
+                      callback: function($$v) {
+                        _vm.$set(_vm.styleSeating, "opacity", $$v)
+                      },
+                      expression: "styleSeating.opacity"
+                    }
+                  })
+                ],
+                1
+              )
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._l(_vm.photos, function(photo) {
+        return _c(
+          "div",
+          [
+            _c("photo-details-component", { attrs: { photo: photo } }),
+            _vm._v(" "),
+            _c("photo-persons-component", {
+              attrs: {
+                photo: photo,
+                "fixed-seating": true,
+                seating: _vm.seating,
+                "style-seating": _vm.styleSeating
+              }
+            })
+          ],
+          1
+        )
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-12 text-center p-40" }, [
+        true
+          ? _c("img", {
+              attrs: {
+                draggable: "false",
+                src: "/img/rocket/report.svg",
+                width: "30%"
+              }
+            })
+          : undefined
+      ])
+    ],
+    2
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "checkbox14" } }, [
+      _c("span", { staticClass: "inc" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "check" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "box text-muted" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SearchComponent.vue?vue&type=template&id=2ff672e9&scoped=true&":
 /*!*******************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/SearchComponent.vue?vue&type=template&id=2ff672e9&scoped=true& ***!
@@ -3288,7 +5997,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "panel panel-inverse" }, [
-    _c("div", { staticClass: "panel-heading" }, [
+    _c("div", { staticClass: "panel-heading hide" }, [
       _c(
         "button",
         {
@@ -3296,7 +6005,7 @@ var render = function() {
           attrs: { type: "button" },
           on: {
             click: function($event) {
-              return _vm.searchReport()
+              return _vm.setSearch()
             }
           }
         },
@@ -3367,7 +6076,7 @@ var render = function() {
                   },
                   on: {
                     input: function($event) {
-                      return _vm.searchReport()
+                      return _vm.setSearch()
                     }
                   },
                   model: {
@@ -3403,7 +6112,7 @@ var render = function() {
                   },
                   on: {
                     change: function($event) {
-                      return _vm.searchReport()
+                      return _vm.setSearch()
                     }
                   },
                   model: {
@@ -3418,10 +6127,140 @@ var render = function() {
               1
             )
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-3" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { staticClass: "control-label" }, [_vm._v(" ")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group col-md-12" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn green-haze btn-outline btn-light btn-search-report",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.setSearch()
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-search" }),
+                  _vm._v(
+                    " " +
+                      _vm._s(_vm.$t("Search")) +
+                      "\n                        "
+                  )
+                ]
+              )
+            ])
+          ])
         ])
       ])
     ])
   ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "vue-draggable-resizable",
+    {
+      staticClass: "seat",
+      attrs: {
+        parent: true,
+        w: _vm.position.width,
+        h: _vm.position.height,
+        x: _vm.position.left,
+        y: _vm.position.top
+      },
+      on: {
+        activated: _vm.onActivated,
+        deactivated: _vm.onDeactivated,
+        resizing: _vm.onResize,
+        resizestop: _vm.onResizeStop,
+        dragging: _vm.onDrag,
+        dragstop: _vm.onDragStop
+      }
+    },
+    [
+      _c("input", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.seat.selected && !_vm.fixed,
+            expression: "seat.selected && !fixed"
+          },
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.seat.number,
+            expression: "seat.number"
+          }
+        ],
+        staticClass: "input-sm form-control",
+        attrs: { placeholder: "Seat:" },
+        domProps: { value: _vm.seat.number },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.seat, "number", $event.target.value)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("small", { staticClass: "number" }, [_vm._v(_vm._s(_vm.seat.number))]),
+      _vm._v(" "),
+      _c("span", { staticClass: "position" }, [
+        _c("span", [
+          _vm._v(
+            _vm._s(_vm._f("numberFormat")(_vm.seat.left, "0.0")) +
+              "%, " +
+              _vm._s(_vm._f("numberFormat")(_vm.seat.top, "0.0")) +
+              "% | " +
+              _vm._s(_vm._f("numberFormat")(_vm.seat.width, "0.0")) +
+              "%, " +
+              _vm._s(_vm._f("numberFormat")(_vm.seat.height, "0.0")) +
+              "%"
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("span", {
+        staticClass: "center",
+        style:
+          "left: " +
+          (_vm.position.center.left - 2) +
+          "px; top: " +
+          (_vm.position.center.top - 2) +
+          "px"
+      })
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -3564,6 +6403,352 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/vue-range-slider/dist/vue-range-slider.cjs.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-range-slider/dist/vue-range-slider.cjs.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * vue-range-slider v0.6.0
+ * https://github.com/ktsn/vue-range-slider
+ *
+ * @license
+ * Copyright (c) 2016-2018 katashin
+ * Released under the MIT license
+ * https://github.com/ktsn/vue-range-slider/blob/master/LICENSE
+ */
+
+
+/* global window, document */
+
+var DocumentEventHelper = {
+  created: function created() {
+    if (typeof document === 'undefined') return;
+    forEachListener(this, function (key, listener) {
+      on(document, key, listener);
+    });
+  },
+  beforeDestroy: function beforeDestroy() {
+    if (typeof document === 'undefined') return;
+    forEachListener(this, function (key, listener) {
+      off(document, key, listener);
+    });
+  }
+};
+
+var isBrowser = typeof window !== 'undefined';
+
+var hasPassive = isBrowser && function () {
+  var supported = false;
+
+  try {
+    var desc = {
+      get: function get() {
+        supported = true;
+      }
+    };
+    var opts = Object.defineProperty({}, 'passive', desc);
+
+    window.addEventListener('test', null, opts);
+    window.removeEventListener('test', null, opts);
+  } catch (e) {
+    supported = false;
+  }
+
+  return supported;
+}();
+
+function forEachListener(vm, f) {
+  var events = vm.$options.events;
+  Object.keys(events).forEach(function (key) {
+    f(key, function (event) {
+      return events[key].call(vm, event);
+    });
+  });
+}
+
+function on(el, name, fn) {
+  var options = hasPassive ? { passive: false } : undefined;
+  el.addEventListener(name, fn, options);
+}
+
+function off(el, name, fn) {
+  var options = hasPassive ? { passive: false } : undefined;
+  el.removeEventListener(name, fn, options);
+}
+
+function relativeMouseOffset(offset, base) {
+  var bounds = base.getBoundingClientRect();
+  return {
+    left: offset.clientX - bounds.left,
+    top: offset.clientY - bounds.top
+  };
+}
+
+function round(value, min, max, step) {
+  if (value <= min) {
+    return min;
+  }
+
+  var roundedMax = Math.floor((max - min) / step) * step + min;
+  if (value >= roundedMax) {
+    return roundedMax;
+  }
+
+  var normalize = (value - min) / step;
+  var decimal = Math.floor(normalize);
+  var fraction = normalize - decimal;
+
+  if (fraction === 0) return value;
+
+  if (fraction < 0.5) {
+    return step * decimal + min;
+  } else {
+    return step * (decimal + 1) + min;
+  }
+}
+
+var DragHelper = {
+  mixins: [DocumentEventHelper],
+
+  props: {
+    disabled: Boolean
+  },
+
+  data: function data() {
+    return {
+      isDrag: false
+    };
+  },
+
+
+  events: {
+    mousedown: function mousedown(event) {
+      return this.dragStart(event, this.offsetByMouse);
+    },
+    mousemove: function mousemove(event) {
+      return this.dragMove(event, this.offsetByMouse);
+    },
+    mouseup: function mouseup(event) {
+      return this.dragEnd(event, this.offsetByMouse);
+    },
+    touchstart: function touchstart(event) {
+      return this.dragStart(event, this.offsetByTouch);
+    },
+    touchmove: function touchmove(event) {
+      return this.dragMove(event, this.offsetByTouch);
+    },
+    touchend: function touchend(event) {
+      return this.dragEnd(event, this.offsetByTouch);
+    },
+    touchcancel: function touchcancel(event) {
+      return this.dragEnd(event, this.offsetByTouch);
+    }
+  },
+
+  methods: {
+    isInTarget: function isInTarget(el) {
+      if (!el) return false;
+
+      if (el === this.$el) {
+        return true;
+      } else {
+        return this.isInTarget(el.parentElement);
+      }
+    },
+    offsetByMouse: function offsetByMouse(event) {
+      return relativeMouseOffset(event, this.$el);
+    },
+    offsetByTouch: function offsetByTouch(event) {
+      var touch = event.touches.length === 0 ? event.changedTouches[0] : event.touches[0];
+      return relativeMouseOffset(touch, this.$el);
+    },
+    dragStart: function dragStart(event, f) {
+      if (this.disabled || event.button !== undefined && event.button !== 0 || !this.isInTarget(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+      this.isDrag = true;
+      this.$emit('dragstart', event, f(event), this.$el);
+    },
+    dragMove: function dragMove(event, f) {
+      if (!this.isDrag) return;
+      event.preventDefault();
+      this.$emit('drag', event, f(event), this.$el);
+    },
+    dragEnd: function dragEnd(event, f) {
+      if (!this.isDrag) return;
+      event.preventDefault();
+      this.isDrag = false;
+      this.$emit('dragend', event, f(event), this.$el);
+    }
+  },
+
+  render: function render() {
+    return this.$slots.default && this.$slots.default[0];
+  }
+};
+
+var RangeSlider = { render: function render() {
+    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('span', { staticClass: "range-slider", class: { disabled: _vm.disabled } }, [_c('drag-helper', { attrs: { "disabled": _vm.disabled }, on: { "dragstart": _vm.dragStart, "drag": _vm.drag, "dragend": _vm.dragEnd } }, [_c('span', { ref: "inner", staticClass: "range-slider-inner" }, [_c('input', { staticClass: "range-slider-hidden", attrs: { "type": "text", "name": _vm.name, "disabled": _vm.disabled }, domProps: { "value": _vm.actualValue } }), _vm._v(" "), _c('span', { staticClass: "range-slider-rail" }), _vm._v(" "), _c('span', { staticClass: "range-slider-fill", style: { width: _vm.valuePercent + '%' } }), _vm._v(" "), _c('span', { ref: "knob", staticClass: "range-slider-knob", style: { left: _vm.valuePercent + '%' } }, [_vm._t("knob")], 2)])])], 1);
+  }, staticRenderFns: [],
+  props: {
+    name: String,
+    value: [String, Number],
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    min: {
+      type: [String, Number],
+      default: 0
+    },
+    max: {
+      type: [String, Number],
+      default: 100
+    },
+    step: {
+      type: [String, Number],
+      default: 1
+    }
+  },
+
+  data: function data() {
+    return {
+      actualValue: null,
+      dragStartValue: null
+    };
+  },
+  created: function created() {
+    var min = this._min,
+        max = this._max;
+
+    var defaultValue = Number(this.value);
+
+    if (this.value == null || isNaN(defaultValue)) {
+      if (min > max) {
+        defaultValue = min;
+      } else {
+        defaultValue = (min + max) / 2;
+      }
+    }
+
+    this.actualValue = this.round(defaultValue);
+  },
+
+
+  computed: {
+    _min: function _min() {
+      return Number(this.min);
+    },
+    _max: function _max() {
+      return Number(this.max);
+    },
+    _step: function _step() {
+      return Number(this.step);
+    },
+    valuePercent: function valuePercent() {
+      return (this.actualValue - this._min) / (this._max - this._min) * 100;
+    }
+  },
+
+  watch: {
+    value: function value(newValue) {
+      var value = Number(newValue);
+      if (newValue != null && !isNaN(value)) {
+        this.actualValue = this.round(value);
+      }
+    },
+    min: function min() {
+      this.actualValue = this.round(this.actualValue);
+    },
+    max: function max() {
+      this.actualValue = this.round(this.actualValue);
+    }
+  },
+
+  methods: {
+    dragStart: function dragStart(event, offset) {
+      this.dragStartValue = this.actualValue;
+      if (event.target === this.$refs.knob) {
+        return;
+      }
+      // If the click is out of knob, move it to mouse position
+      this.drag(event, offset);
+    },
+    drag: function drag(event, offset) {
+      var offsetWidth = this.$refs.inner.offsetWidth;
+
+      this.actualValue = this.round(this.valueFromBounds(offset.left, offsetWidth));
+      this.emitInput(this.actualValue);
+    },
+    dragEnd: function dragEnd(event, offset) {
+      var offsetWidth = this.$refs.inner.offsetWidth;
+
+      this.actualValue = this.round(this.valueFromBounds(offset.left, offsetWidth));
+
+      if (this.dragStartValue !== this.actualValue) {
+        this.emitChange(this.actualValue);
+      }
+    },
+    emitInput: function emitInput(value) {
+      this.$emit('input', value);
+    },
+    emitChange: function emitChange(value) {
+      this.$emit('change', value);
+    },
+    valueFromBounds: function valueFromBounds(point, width) {
+      return point / width * (this._max - this._min) + this._min;
+    },
+    round: function round$$1(value) {
+      return round(value, this._min, this._max, this._step);
+    }
+  },
+
+  components: {
+    DragHelper: DragHelper
+  }
+};
+
+module.exports = RangeSlider;
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-range-slider/dist/vue-range-slider.css":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-range-slider/dist/vue-range-slider.css ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../css-loader??ref--6-1!../../postcss-loader/src??ref--6-2!./vue-range-slider.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-range-slider/dist/vue-range-slider.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/vue/dist/vue.common.dev.js":
 /*!*************************************************!*\
   !*** ./node_modules/vue/dist/vue.common.dev.js ***!
@@ -3573,7 +6758,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.6.10
+ * Vue.js v2.6.11
  * (c) 2014-2019 Evan You
  * Released under the MIT License.
  */
@@ -5539,7 +8724,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   isUsingMicroTask = true;
 } else if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
   // Fallback to setImmediate.
-  // Techinically it leverages the (macro) task queue,
+  // Technically it leverages the (macro) task queue,
   // but it is still a better choice than setTimeout.
   timerFunc = function () {
     setImmediate(flushCallbacks);
@@ -5628,7 +8813,7 @@ var initProxy;
     warn(
       "Property \"" + key + "\" must be accessed with \"$data." + key + "\" because " +
       'properties starting with "$" or "_" are not proxied in the Vue instance to ' +
-      'prevent conflicts with Vue internals' +
+      'prevent conflicts with Vue internals. ' +
       'See: https://vuejs.org/v2/api/#data',
       target
     );
@@ -6488,7 +9673,7 @@ function bindDynamicKeys (baseObj, values) {
     if (typeof key === 'string' && key) {
       baseObj[values[i]] = values[i + 1];
     } else if (key !== '' && key !== null) {
-      // null is a speical value for explicitly removing a binding
+      // null is a special value for explicitly removing a binding
       warn(
         ("Invalid value for dynamic directive argument (expected string or null): " + key),
         this
@@ -6983,6 +10168,12 @@ function _createElement (
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
     if (config.isReservedTag(tag)) {
       // platform built-in elements
+      if (isDef(data) && isDef(data.nativeOn)) {
+        warn(
+          ("The .native modifier for v-on is only valid on components but it was used on <" + tag + ">."),
+          context
+        );
+      }
       vnode = new VNode(
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
@@ -7108,7 +10299,7 @@ function renderMixin (Vue) {
     // render self
     var vnode;
     try {
-      // There's no need to maintain a stack becaues all render fns are called
+      // There's no need to maintain a stack because all render fns are called
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
       currentRenderingInstance = vm;
@@ -9007,7 +12198,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.6.10';
+Vue.version = '2.6.11';
 
 /*  */
 
@@ -9680,7 +12871,7 @@ function createPatchFunction (backend) {
     }
   }
 
-  function removeVnodes (parentElm, vnodes, startIdx, endIdx) {
+  function removeVnodes (vnodes, startIdx, endIdx) {
     for (; startIdx <= endIdx; ++startIdx) {
       var ch = vnodes[startIdx];
       if (isDef(ch)) {
@@ -9791,7 +12982,7 @@ function createPatchFunction (backend) {
       refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm;
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
     } else if (newStartIdx > newEndIdx) {
-      removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
+      removeVnodes(oldCh, oldStartIdx, oldEndIdx);
     }
   }
 
@@ -9883,7 +13074,7 @@ function createPatchFunction (backend) {
         if (isDef(oldVnode.text)) { nodeOps.setTextContent(elm, ''); }
         addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
       } else if (isDef(oldCh)) {
-        removeVnodes(elm, oldCh, 0, oldCh.length - 1);
+        removeVnodes(oldCh, 0, oldCh.length - 1);
       } else if (isDef(oldVnode.text)) {
         nodeOps.setTextContent(elm, '');
       }
@@ -10112,7 +13303,7 @@ function createPatchFunction (backend) {
 
         // destroy old node
         if (isDef(parentElm)) {
-          removeVnodes(parentElm, [oldVnode], 0, 0);
+          removeVnodes([oldVnode], 0, 0);
         } else if (isDef(oldVnode.tag)) {
           invokeDestroyHook(oldVnode);
         }
@@ -12818,7 +16009,7 @@ var startTagOpen = new RegExp(("^<" + qnameCapture));
 var startTagClose = /^\s*(\/?)>/;
 var endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
 var doctype = /^<!DOCTYPE [^>]+>/i;
-// #7298: escape - to avoid being pased as HTML comment when inlined in page
+// #7298: escape - to avoid being passed as HTML comment when inlined in page
 var comment = /^<!\--/;
 var conditionalComment = /^<!\[/;
 
@@ -13103,7 +16294,7 @@ function parseHTML (html, options) {
 /*  */
 
 var onRE = /^@|^v-on:/;
-var dirRE = /^v-|^@|^:/;
+var dirRE = /^v-|^@|^:|^#/;
 var forAliasRE = /([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/;
 var forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/;
 var stripParensRE = /^\(|\)$/g;
@@ -13727,7 +16918,7 @@ function processSlotContent (el) {
           if (el.parent && !maybeComponent(el.parent)) {
             warn$2(
               "<template v-slot> can only appear at the root level inside " +
-              "the receiving the component",
+              "the receiving component",
               el
             );
           }
@@ -14290,7 +17481,7 @@ function isDirectChildOfTemplateFor (node) {
 
 /*  */
 
-var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function\s*(?:[\w$]+)?\s*\(/;
+var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function(?:\s+[\w$]+)?\s*\(/;
 var fnInvokeRE = /\([^)]*?\);*$/;
 var simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*$/;
 
@@ -15059,6 +18250,8 @@ function checkNode (node, warn) {
           var range = node.rawAttrsMap[name];
           if (name === 'v-for') {
             checkFor(node, ("v-for=\"" + value + "\""), warn, range);
+          } else if (name === 'v-slot' || name[0] === '#') {
+            checkFunctionParameterExpression(value, (name + "=\"" + value + "\""), warn, range);
           } else if (onRE.test(name)) {
             checkEvent(value, (name + "=\"" + value + "\""), warn, range);
           } else {
@@ -15078,9 +18271,9 @@ function checkNode (node, warn) {
 }
 
 function checkEvent (exp, text, warn, range) {
-  var stipped = exp.replace(stripStringRE, '');
-  var keywordMatch = stipped.match(unaryOperatorsRE);
-  if (keywordMatch && stipped.charAt(keywordMatch.index - 1) !== '$') {
+  var stripped = exp.replace(stripStringRE, '');
+  var keywordMatch = stripped.match(unaryOperatorsRE);
+  if (keywordMatch && stripped.charAt(keywordMatch.index - 1) !== '$') {
     warn(
       "avoid using JavaScript unary operator as property name: " +
       "\"" + (keywordMatch[0]) + "\" in expression " + (text.trim()),
@@ -15132,6 +18325,19 @@ function checkExpression (exp, text, warn, range) {
         range
       );
     }
+  }
+}
+
+function checkFunctionParameterExpression (exp, text, warn, range) {
+  try {
+    new Function(exp, '');
+  } catch (e) {
+    warn(
+      "invalid function parameter expression: " + (e.message) + " in\n\n" +
+      "    " + exp + "\n\n" +
+      "  Raw expression: " + (text.trim()) + "\n",
+      range
+    );
   }
 }
 
@@ -15571,6 +18777,354 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue":
+/*!************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoDetailsComponent.vue ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PhotoDetailsComponent_vue_vue_type_template_id_79249e3e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true& */ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true&");
+/* harmony import */ var _PhotoDetailsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PhotoDetailsComponent.vue?vue&type=script&lang=js& */ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _PhotoDetailsComponent_vue_vue_type_style_index_0_id_79249e3e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css& */ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _PhotoDetailsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PhotoDetailsComponent_vue_vue_type_template_id_79249e3e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PhotoDetailsComponent_vue_vue_type_template_id_79249e3e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "79249e3e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/rocket/components/PhotoDetailsComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoDetailsComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css&":
+/*!*********************************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_style_index_0_id_79249e3e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=style&index=0&id=79249e3e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_style_index_0_id_79249e3e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_style_index_0_id_79249e3e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_style_index_0_id_79249e3e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_style_index_0_id_79249e3e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_style_index_0_id_79249e3e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true&":
+/*!*******************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true& ***!
+  \*******************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_template_id_79249e3e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_template_id_79249e3e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoDetailsComponent_vue_vue_type_template_id_79249e3e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue":
+/*!************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoPersonsComponent.vue ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PhotoPersonsComponent_vue_vue_type_template_id_8218c636_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true& */ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true&");
+/* harmony import */ var _PhotoPersonsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PhotoPersonsComponent.vue?vue&type=script&lang=js& */ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _PhotoPersonsComponent_vue_vue_type_style_index_0_id_8218c636_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css& */ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _PhotoPersonsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PhotoPersonsComponent_vue_vue_type_template_id_8218c636_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PhotoPersonsComponent_vue_vue_type_template_id_8218c636_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "8218c636",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/rocket/components/PhotoPersonsComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoPersonsComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css&":
+/*!*********************************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_style_index_0_id_8218c636_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=style&index=0&id=8218c636&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_style_index_0_id_8218c636_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_style_index_0_id_8218c636_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_style_index_0_id_8218c636_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_style_index_0_id_8218c636_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_style_index_0_id_8218c636_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true&":
+/*!*******************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true& ***!
+  \*******************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_template_id_8218c636_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoPersonsComponent.vue?vue&type=template&id=8218c636&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_template_id_8218c636_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PhotoPersonsComponent_vue_vue_type_template_id_8218c636_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ProfileSeatingComponent.vue ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ProfileSeatingComponent_vue_vue_type_template_id_4d1f7386_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true& */ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true&");
+/* harmony import */ var _ProfileSeatingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProfileSeatingComponent.vue?vue&type=script&lang=js& */ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ProfileSeatingComponent_vue_vue_type_style_index_0_id_4d1f7386_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css& */ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ProfileSeatingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ProfileSeatingComponent_vue_vue_type_template_id_4d1f7386_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ProfileSeatingComponent_vue_vue_type_template_id_4d1f7386_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "4d1f7386",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/rocket/components/ProfileSeatingComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ProfileSeatingComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_style_index_0_id_4d1f7386_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=style&index=0&id=4d1f7386&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_style_index_0_id_4d1f7386_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_style_index_0_id_4d1f7386_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_style_index_0_id_4d1f7386_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_style_index_0_id_4d1f7386_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_style_index_0_id_4d1f7386_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true&":
+/*!*********************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true& ***!
+  \*********************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_template_id_4d1f7386_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ProfileSeatingComponent.vue?vue&type=template&id=4d1f7386&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_template_id_4d1f7386_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSeatingComponent_vue_vue_type_template_id_4d1f7386_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ReportPhotoComponent.vue ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ReportPhotoComponent_vue_vue_type_template_id_5c5c5b3b_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true& */ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true&");
+/* harmony import */ var _ReportPhotoComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReportPhotoComponent.vue?vue&type=script&lang=js& */ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ReportPhotoComponent_vue_vue_type_style_index_0_id_5c5c5b3b_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css& */ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ReportPhotoComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ReportPhotoComponent_vue_vue_type_template_id_5c5c5b3b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ReportPhotoComponent_vue_vue_type_template_id_5c5c5b3b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "5c5c5b3b",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/rocket/components/ReportPhotoComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ReportPhotoComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css&":
+/*!********************************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_style_index_0_id_5c5c5b3b_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=style&index=0&id=5c5c5b3b&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_style_index_0_id_5c5c5b3b_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_style_index_0_id_5c5c5b3b_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_style_index_0_id_5c5c5b3b_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_style_index_0_id_5c5c5b3b_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_style_index_0_id_5c5c5b3b_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true&":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true& ***!
+  \******************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_template_id_5c5c5b3b_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/ReportPhotoComponent.vue?vue&type=template&id=5c5c5b3b&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_template_id_5c5c5b3b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportPhotoComponent_vue_vue_type_template_id_5c5c5b3b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/admin/rocket/components/SearchComponent.vue":
 /*!******************************************************************!*\
   !*** ./resources/js/admin/rocket/components/SearchComponent.vue ***!
@@ -15642,6 +19196,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/admin/rocket/components/SeatComponent.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/SeatComponent.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SeatComponent_vue_vue_type_template_id_c36d7ea8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true& */ "./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true&");
+/* harmony import */ var _SeatComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SeatComponent.vue?vue&type=script&lang=js& */ "./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _SeatComponent_vue_vue_type_style_index_0_id_c36d7ea8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css& */ "./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _SeatComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SeatComponent_vue_vue_type_template_id_c36d7ea8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SeatComponent_vue_vue_type_template_id_c36d7ea8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "c36d7ea8",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/rocket/components/SeatComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./SeatComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css&":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_style_index_0_id_c36d7ea8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=style&index=0&id=c36d7ea8&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_style_index_0_id_c36d7ea8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_style_index_0_id_c36d7ea8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_style_index_0_id_c36d7ea8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_style_index_0_id_c36d7ea8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_style_index_0_id_c36d7ea8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true& ***!
+  \***********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_template_id_c36d7ea8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/SeatComponent.vue?vue&type=template&id=c36d7ea8&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_template_id_c36d7ea8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SeatComponent_vue_vue_type_template_id_c36d7ea8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/admin/rocket/main.js":
 /*!*******************************************!*\
   !*** ./resources/js/admin/rocket/main.js ***!
@@ -15651,25 +19292,36 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_SearchComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/SearchComponent */ "./resources/js/admin/rocket/components/SearchComponent.vue");
-/* harmony import */ var vue_json_pretty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-json-pretty */ "./node_modules/vue-json-pretty/vue-json-pretty.js");
-/* harmony import */ var vue_json_pretty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_json_pretty__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _lang_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../lang/i18n */ "./resources/js/lang/i18n.js");
-/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
+/* harmony import */ var _lang_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lang/i18n */ "./resources/js/lang/i18n.js");
+/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
+/* harmony import */ var numeral__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral.js");
+/* harmony import */ var numeral__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(numeral__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue_filter_number_format__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-filter-number-format */ "./node_modules/vue-filter-number-format/dist/vue-filter-number-format.js");
+/* harmony import */ var vue_filter_number_format__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_filter_number_format__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _components_ProfileSeatingComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/ProfileSeatingComponent */ "./resources/js/admin/rocket/components/ProfileSeatingComponent.vue");
+/* harmony import */ var _components_ReportPhotoComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/ReportPhotoComponent */ "./resources/js/admin/rocket/components/ReportPhotoComponent.vue");
+/* harmony import */ var _components_SearchComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/SearchComponent */ "./resources/js/admin/rocket/components/SearchComponent.vue");
+/* harmony import */ var sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! sweetalert2/src/sweetalert2.scss */ "./node_modules/sweetalert2/src/sweetalert2.scss");
+/* harmony import */ var sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_src_sweetalert2_scss__WEBPACK_IMPORTED_MODULE_7__);
+
+
+Vue.use(vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+
+Vue.filter('numberFormat', vue_filter_number_format__WEBPACK_IMPORTED_MODULE_3___default()(numeral__WEBPACK_IMPORTED_MODULE_2___default.a));
 
 
 
 
-Vue.use(vue_i18n__WEBPACK_IMPORTED_MODULE_3__["default"]);
 var adminRocketView = new Vue({
   el: '#vue-container',
-  i18n: _lang_i18n__WEBPACK_IMPORTED_MODULE_2__["default"],
+  i18n: _lang_i18n__WEBPACK_IMPORTED_MODULE_0__["default"],
   components: {
-    SearchComponent: _components_SearchComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
-    VueJsonPretty: vue_json_pretty__WEBPACK_IMPORTED_MODULE_1___default.a
+    SearchComponent: _components_SearchComponent__WEBPACK_IMPORTED_MODULE_6__["default"],
+    ProfileSeatingComponent: _components_ProfileSeatingComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
+    ReportPhotoComponent: _components_ReportPhotoComponent__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: {
-    urlList: String,
     report: [],
     search: {
       companies: [],
@@ -15677,37 +19329,19 @@ var adminRocketView = new Vue({
       vehicles: [],
       vehicle: {},
       date: moment().format("YYYY-MM-DD")
-    }
+    },
+    searchParams: {}
   },
-  computed: {
-    searchParams: function searchParams() {
-      return {
+  computed: {},
+  methods: {
+    setSearch: function setSearch() {
+      this.searchParams = {
         date: this.search.date,
         vehicle: this.search.vehicle.id
       };
     }
   },
-  methods: {
-    searchReport: function searchReport() {
-      var _this = this;
-
-      var form = $('.form-search-report');
-      form.find('.btn-search-report').addClass(loadingClass);
-      axios.get(this.urlList, {
-        params: this.searchParams
-      }).then(function (r) {
-        _this.report = r.data;
-      })["catch"](function (error) {
-        console.log(error);
-      }).then(function () {
-        $('.report-container').hide().fadeIn();
-        form.find('.btn-search-report').removeClass(loadingClass);
-      });
-    }
-  },
-  mounted: function mounted() {
-    this.urlList = this.$el.attributes.url.value;
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -15746,10 +19380,10 @@ var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*!********************************!*\
   !*** ./resources/lang/es.json ***!
   \********************************/
-/*! exports provided: Home, Create, Update, Save, save, Delete, delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Total taken, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total turn, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Costs, Penalty, Daily report taking, Net to car, Processing, Please wait, Read safety, Concept, concept, Charge, Process, Process charge, Total liquidated, Defines the order in which the required payment should be applied, Click for activate, Click for inactivate, Error saving cost register, Priority, There are fields empty, The :attribute field is required, rear, front, default */
+/*! exports provided: Home, Create, Update, Save, save, Delete, delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Total taken, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total turn, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Costs, Penalty, Daily report taking, Net to car, Processing, Please wait, Read safety, Concept, concept, Charge, Process, Process charge, Total liquidated, Defines the order in which the required payment should be applied, Click for activate, Click for inactivate, Error saving cost register, Priority, There are fields empty, The :attribute field is required, rear, front, Profile seating save successfully, Overlap, Loading, Occupation, Counts, Total, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"delete\":\"eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Total taken\":\"Total recaudado\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"value\":\"valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total turn\":\"Total turno\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Costs\":\"Costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\",\"Read safety\":\"Seguridad vial\",\"Concept\":\"Concepto\",\"concept\":\"concepto\",\"Charge\":\"Cobrar\",\"Process\":\"Procesar\",\"Process charge\":\"Procesar cobro\",\"Total liquidated\":\"Total liquidado\",\"Defines the order in which the required payment should be applied\":\"Define el orden en que se debe aplicar el cobro obligatorio\",\"Click for activate\":\"Click para Activar\",\"Click for inactivate\":\"Click para Desactivar\",\"Error saving cost register\":\"Error al guardar el registro de Costo\",\"Priority\":\"Prioridad\",\"There are fields empty\":\"Algunos campos están vacíos\",\"The :attribute field is required\":\"El campo <em class='text-capitalize'>:attribute</em> es requerido\",\"rear\":\"atrás\",\"front\":\"frente\"}");
+module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"delete\":\"eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Total taken\":\"Total recaudado\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"value\":\"valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total turn\":\"Total turno\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Costs\":\"Costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\",\"Read safety\":\"Seguridad vial\",\"Concept\":\"Concepto\",\"concept\":\"concepto\",\"Charge\":\"Cobrar\",\"Process\":\"Procesar\",\"Process charge\":\"Procesar cobro\",\"Total liquidated\":\"Total liquidado\",\"Defines the order in which the required payment should be applied\":\"Define el orden en que se debe aplicar el cobro obligatorio\",\"Click for activate\":\"Click para Activar\",\"Click for inactivate\":\"Click para Desactivar\",\"Error saving cost register\":\"Error al guardar el registro de Costo\",\"Priority\":\"Prioridad\",\"There are fields empty\":\"Algunos campos están vacíos\",\"The :attribute field is required\":\"El campo <em class='text-capitalize'>:attribute</em> es requerido\",\"rear\":\"atrás\",\"front\":\"frente\",\"Profile seating save successfully\":\"Perfil de asientos guardado correctamente\",\"Overlap\":\"Traslape\",\"Loading\":\"Cargando\",\"Occupation\":\"Ocupación\",\"Counts\":\"Conteos\",\"Total\":\"Total\"}");
 
 /***/ }),
 

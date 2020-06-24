@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Models\Apps\Rocket;
+namespace App\Models\Apps\Rocket\Traits;
 
 
 use App\Services\AWS\RekognitionService;
@@ -24,6 +24,7 @@ trait PhotoRekognition
                 ];
 
                 $rekognition = new RekognitionService();
+
                 $this->data = $rekognition->sefFile($this->getImage('png', true))->process($type);
                 $this->persons = $this->data ? $this->data->count : 0;
             }

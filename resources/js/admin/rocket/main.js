@@ -1,20 +1,27 @@
-import SearchComponent from './components/SearchComponent';
-import VueJsonPretty from 'vue-json-pretty'
-
 import i18n from "../../lang/i18n";
 import VueI18n from 'vue-i18n';
-
 Vue.use(VueI18n);
+
+import numeral from "numeral";
+import NumberFormat from "vue-filter-number-format";
+Vue.filter('numberFormat', NumberFormat(numeral));
+
+import ProfileSeatingComponent from './components/ProfileSeatingComponent';
+import ReportPhotoComponent from './components/ReportPhotoComponent';
+import SearchComponent from './components/SearchComponent';
+
+import 'sweetalert2/src/sweetalert2.scss';
+
 
 let adminRocketView = new Vue({
     el: '#vue-container',
     i18n,
     components: {
         SearchComponent,
-        VueJsonPretty
+        ProfileSeatingComponent,
+        ReportPhotoComponent
     },
     data: {
-        urlList: String,
         report: [],
         search: {
             companies: [],
@@ -23,31 +30,20 @@ let adminRocketView = new Vue({
             vehicle: {},
             date: moment().format("YYYY-MM-DD")
         },
+        searchParams: {}
     },
     computed: {
-        searchParams: function () {
-            return {
-                date: this.search.date,
-                vehicle: this.search.vehicle.id
-            }
-        },
+
     },
     methods: {
-        searchReport: function () {
-            const form = $('.form-search-report');
-            form.find('.btn-search-report').addClass(loadingClass);
-
-            axios.get(this.urlList, {params: this.searchParams}).then((r) => {
-                this.report = r.data;
-            }).catch(function (error) {
-                console.log(error);
-            }).then(function () {
-                $('.report-container').hide().fadeIn();
-                form.find('.btn-search-report').removeClass(loadingClass);
-            });
+        setSearch: function () {
+            this.searchParams = {
+                date: this.search.date,
+                vehicle: this.search.vehicle.id
+            };
         }
     },
     mounted: function () {
-        this.urlList = this.$el.attributes.url.value;
+
     },
 });

@@ -6,6 +6,7 @@
 @endsection
 
 @section('content')
+
     <!-- begin breadcrumb -->
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Admin')</a></li>
@@ -21,18 +22,36 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div id="vue-container" class="row" url="{{ route('admin.rocket.search') }}">
+    <div id="vue-container" class="row">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
-            <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('admin.rocket.params.get', ['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
+            <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('admin.rocket.params.get', ['name' => __('search')]) }}" :search.sync="search" v-on:set-search="setSearch($event)"></search-component>
         </form>
         <!-- end search form -->
-        <hr class="hr">
+
         <!-- begin content report -->
         <div class="report-container col-md-12">
-            <div class="portlet light ">
-                <div class="portlet-body">
-                    <vue-json-pretty :data="report"></vue-json-pretty>
+            <div class="portlet-body">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#tab-report-photos" data-toggle="tab">
+                            <i class="fa fa-photo"></i> @lang('Report')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#tab-profile-seating" data-toggle="tab">
+                            <i class="fa fa-users"></i> @lang('Profile')
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="tab-report-photos">
+                        <report-photo-component :search-params="searchParams" api-url="{{ route('admin.rocket') }}"></report-photo-component>
+                    </div>
+
+                    <div class="tab-pane" id="tab-profile-seating">
+                        <profile-seating-component :search-params="searchParams" api-url="{{ route('admin.rocket') }}"></profile-seating-component>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,6 +80,7 @@
 
 @section('scripts')
     <script src="{{ mix('resources/js/admin/rocket/main.js') }}" type="application/ecmascript"></script>
+    {{--    <script src="{{ mix('resources/js/admin/rocket/main.js') }}" type="application/ecmascript"></script>--}}
 
     <script type="application/ecmascript">
         $('.menu-admin, .menu-admin-rocket').addClass('active-animated');

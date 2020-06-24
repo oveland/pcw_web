@@ -13,10 +13,9 @@ use App\Models\Vehicles\CurrentLocation;
 use App\Models\Vehicles\Vehicle;
 use App\Services\API\Files\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
-use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
-use Image;
+use Intervention\Image\Image;
 
 class APIRocketFilesService implements APIFilesInterface
 {
@@ -55,7 +54,7 @@ class APIRocketFilesService implements APIFilesInterface
     }
 
     /**
-     * @return \Intervention\Image\Image|mixed|null
+     * @return Image|mixed|null
      * @throws FileNotFoundException
      */
     public function serve()
@@ -75,7 +74,7 @@ class APIRocketFilesService implements APIFilesInterface
     }
 
     /**
-     * @return \Intervention\Image\Image|mixed
+     * @return Image|mixed
      * @throws FileNotFoundException
      */
     public function getLastPhoto()
@@ -83,12 +82,12 @@ class APIRocketFilesService implements APIFilesInterface
         if ($this->vehicle) {
             return $this->photoService->getLastPhoto($this->vehicle);
         } else {
-            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->response();
+            return $this->photoService->notFoundImage();
         }
     }
 
     /**
-     * @return \Intervention\Image\Image|mixed
+     * @return Image|mixed
      * @throws FileNotFoundException
      */
     public function getPhoto()
@@ -98,7 +97,7 @@ class APIRocketFilesService implements APIFilesInterface
         if ($photo) {
             return $this->photoService->getFile($photo, $this->request->get('encode'), $this->request->get('with-effect'));
         } else {
-            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->response();
+            return $this->photoService->notFoundImage();
         }
     }
 }

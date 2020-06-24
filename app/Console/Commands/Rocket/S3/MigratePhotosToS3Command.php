@@ -5,27 +5,25 @@ namespace App\Console\Commands\Rocket\S3;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Tmp\MigrationService;
-use Carbon\Carbon;
-use File;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Storage;
 
-class DownloadPhotosCommand extends Command
+class MigratePhotosToS3Command extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'rocket:s3:download-photos {--vehicle-plate=} {--date=}';
+    protected $signature = 'rocket:migrate-to-s3 {--vehicle-plate=} {--date=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a folder with photos associated to a dispatch register. This folder is used by AWS Custom Labels for training a rekognition model';
+    protected $description = 'Migrate photos to S3 Bucket';
     /**
      * @var MigrationService
      */
@@ -52,14 +50,27 @@ class DownloadPhotosCommand extends Command
     {
         $date = str_replace('-', '', $this->option('date'));
         $vehiclePlate = $this->option('vehicle-plate');
-        if ($date && $vehiclePlate) {
+
+        if ($date) {
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
-                if($this->option('from') === 's3'){
-                    $this->migrationService->downloadPhotoFromS3($vehicle, $date);
-                }else{
-                    $this->migrationService->downloadPhotoFromS3($vehicle, $date);
+                $photos = Photo::findAllByVehicleAndDate($vehicle, $date)->take(5);
+
+                $s3 = Storage::disk('s3');
+                $local = Storage::disk('local');
+
+                foreach ($photos as $photo) {
+
+                    $originalPath = $photo->getOriginalPath();
+                    $s3FilePath = $photo->buildPath('s3');
+
+                    if (!$s3->exists($s3FilePath)) {
+                        $response = $s3->put($s3FilePath, $local->get($originalPath));
+                        $this->info("$originalPath: Put " . $originalPath . " >> $response");
+                    } else {
+                        $this->info("$s3FilePath exists!");
+                    }
                 }
 
                 $this->info('Finished!');

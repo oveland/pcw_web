@@ -1,7 +1,7 @@
 <template>
     <div class="panel panel-inverse">
-        <div class="panel-heading">
-            <button type="button" class="btn btn-success btn-sm btn-search-report" @click="searchReport()">
+        <div class="panel-heading hide">
+            <button type="button" class="btn btn-success btn-sm btn-search-report" @click="setSearch()">
                 <i class="fa fa-search"></i> Search
             </button>
         </div>
@@ -23,7 +23,7 @@
                         <label class="control-label">Vehicle</label>
                         <div class="form-group">
                             <multiselect track-by="number" label="number" :options="search.vehicles"
-                                         @input="searchReport()" v-model="search.vehicle"
+                                         @input="setSearch()" v-model="search.vehicle"
                                          :option-height="104" :searchable="true" :allow-empty="true"
                                          :placeholder="$t('Select a vehicle')"></multiselect>
                         </div>
@@ -34,7 +34,17 @@
                     <div class="form-group">
                         <label class="control-label">Date report</label>
                         <div class="input-group col-md-12">
-                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="searchReport()" width="100%"></date-picker>
+                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="setSearch()" width="100%"></date-picker>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">&nbsp;</label>
+                        <div class="input-group col-md-12">
+                            <button type="button" class="btn green-haze btn-outline btn-light btn-search-report" @click="setSearch()">
+                                <i class="fa fa-search"></i> {{ $t('Search') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -79,9 +89,9 @@
 
                     });
             },
-            searchReport: function () {
+            setSearch: function () {
                 if (this.search.vehicle && this.search.vehicle.id) {
-                    this.$emit('search-report');
+                    this.$emit('set-search');
                 } else {
                     gerror("Select a vehicle");
                 }

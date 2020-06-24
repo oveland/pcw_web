@@ -17,7 +17,6 @@ class RekognitionService
     {
         $options = [
             'credentials' => new Credentials(config('aws.credentials.rekognition.key'), config('aws.credentials.rekognition.secret')),
-//            'profile' => 'pcw-rekognition', // Profile configured on ~/.aws/credentials file for a user with access and Rekognition permissions
             'region' => 'us-west-2',
             'version' => 'latest'
         ];
@@ -61,13 +60,13 @@ class RekognitionService
 
     public function faces()
     {
-        $result = $this->rekognition->detectFaces(array(
+        $result = collect($this->rekognition->detectFaces(array(
                 'Image' => array(
                     'Bytes' => $this->file,
                 ),
                 'Attributes' => array('ALL')
             )
-        );
+        ));
 
         return $this->castFacesResponse($result);
     }
@@ -123,8 +122,6 @@ class RekognitionService
             }
         }
 
-        $count = count($draws);
-
         return (object)[
             'type' => 'faces',
             'draws' => $draws,
@@ -151,13 +148,10 @@ class RekognitionService
             }
         }
 
-
-        $count = count($draws);
-
         return (object)[
             'type' => 'heads',
             'draws' => $draws
-        ];;
+        ];
     }
 
     /**
@@ -179,12 +173,10 @@ class RekognitionService
             }
         }
 
-        $count = count($draws);
-
         return (object)[
             'type' => 'persons',
             'draws' => $draws
-        ];;
+        ];
     }
 
     /**
@@ -197,66 +189,90 @@ class RekognitionService
         $boundingBox = $data['BoundingBox'];
 
         $width = $boundingBox['Width'] * 100;
-        $height = $boundingBox['Height'] * 100;
-        $height = $width * 0.9;
+        $heightOrig = $boundingBox['Height'] * 100;
+
+        $relationSize = $heightOrig / $width;
+
+        $largeDetection = $relationSize > 2.5;
+
+        $height = $width * ($largeDetection ? 0.95 : 1);
         $left = $boundingBox['Left'] * 100;
         $top = $boundingBox['Top'] * 100;
 
         $confidence = isset($data['Confidence']) ? floatval(number_format($data['Confidence'], 1)) : intval($confidence);
 
-        $rule = $this->getRuleFromConfidence($confidence);
+        $rule = $this->getRuleFromConfidence($confidence, $boundingBox);
 
         return (object)[
             'box' => (object)[
                 'width' => $width,
                 'height' => $height,
+                'heightOrig' => $heightOrig,
+                'relationSize' => $relationSize,
+                'largeDetection' => $largeDetection,
                 'left' => $left,
                 'top' => $top,
                 'center' => (object)[
                     'left' => $left + $width / 2,
-                    'top' => $top + $height / 2,
+                    'top' => $top + $height / ($largeDetection ? 1.6 : 2.3), // TODO: En Large Detection el alto del centro debe ajustarse de forma dinámica según la relación H/W
                 ],
             ],
             'confidence' => $confidence,
             'color' => $rule->color ?? 'white',
             'count' => $rule->count,
+            'overlap' => $rule->overlap,
             'background' => $rule->count ? 'rgba(122, 162, 12, 0.1)' : 'rgba(137, 138, 135, 0.1)',
         ];
     }
 
     /**
      * @param $confidence
+     * @param $boundingBox
      * @return mixed
      */
-    public function getRuleFromConfidence($confidence)
+    public function getRuleFromConfidence($confidence, $boundingBox)
     {
         $confidence = intval($confidence);
+
+        $hasOverlap = $this->checkIfOverlap($boundingBox);
 
         $rules = collect([
             (object)[
                 'range' => range(0, 25),
                 'color' => 'red',
+                'overlap' => $hasOverlap,
                 'count' => false
             ],
             (object)[
                 'range' => range(25, 50),
                 'color' => 'orange',
+                'overlap' => $hasOverlap,
                 'count' => false
             ],
             (object)[
                 'range' => range(50, 70),
                 'color' => 'yellow',
+                'overlap' => $hasOverlap,
                 'count' => false
             ],
             (object)[
                 'range' => range(70, 100),
                 'color' => '#9bef00',
-                'count' => true
+                'overlap' => $hasOverlap,
+                'count' => true && !$hasOverlap,
             ]
         ]);
 
         return $rules->filter(function ($rule) use ($confidence) {
             return collect($rule->range)->contains($confidence);
         })->first();
+    }
+
+    public function checkIfOverlap($boundingBox)
+    {
+        $width = $boundingBox['Width'] * 100;
+        $height = $boundingBox['Height'] * 100;
+
+        return ($height > 60) && $width > 10;
     }
 }
