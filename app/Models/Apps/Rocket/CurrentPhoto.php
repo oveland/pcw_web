@@ -2,18 +2,14 @@
 
 namespace App\Models\Apps\Rocket;
 
+use App\Models\Apps\Rocket\Traits\PhotoGlobals;
+use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use Eloquent;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
-use File;
-use Image;
-use Storage;
 
 /**
  * App\Models\Apps\Rocket\Photo
@@ -47,43 +43,25 @@ use Storage;
  * @property-read Vehicle $vehicle
  * @method static Builder|CurrentPhoto findByVehicle(Vehicle $vehicle)
  * @property int|null $persons
- * @property-read \App\Models\Routes\DispatchRegister|null $dispatchRegister
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Apps\Rocket\CurrentPhoto wherePersons($value)
+ * @property-read DispatchRegister|null $dispatchRegister
+ * @method static Builder|CurrentPhoto wherePersons($value)
+ * @property string $disk
+ * @property string|null $effects
+ * @method static Builder|CurrentPhoto whereDisk($value)
+ * @method static Builder|CurrentPhoto whereEffects($value)
  */
-class CurrentPhoto extends Model
+class CurrentPhoto extends Model implements PhotoInterface
 {
+    public const BASE_PATH = '/Apps/Rocket/Photos/';
+
+    use PhotoGlobals;
+
     protected $table = 'app_current_photos';
+    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side'];
 
     public function getDateFormat()
     {
         return config('app.simple_date_time_format');
-    }
-
-    public function getDateAttribute($date)
-    {
-        if (Str::contains($date, '-')) {
-            return $date = Carbon::createFromFormat('Y-m-d H:i:s', $date);
-        }
-
-        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
-    }
-
-    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side'];
-
-    /**
-     * @return BelongsTo | Vehicle
-     */
-    public function vehicle()
-    {
-        return $this->belongsTo(Vehicle::class);
-    }
-
-    /**
-     * @return BelongsTo | DispatchRegister
-     */
-    public function dispatchRegister()
-    {
-        return $this->belongsTo(DispatchRegister::class);
     }
 
     /**
@@ -96,55 +74,7 @@ class CurrentPhoto extends Model
         $currentPhoto = $query->where('vehicle_id', $vehicle->id)->first();
         $currentPhoto = $currentPhoto ? $currentPhoto : new CurrentPhoto();
         $currentPhoto->vehicle()->associate($vehicle);
+        $currentPhoto->save();
         return $currentPhoto;
-    }
-
-    /**
-     * @param string $encodeImage
-     * @return object
-     * @throws FileNotFoundException
-     */
-    public function getAPIFields($encodeImage = 'url')
-    {
-        $dispatchRegister = $this->dispatchRegister;
-
-        return (object)[
-            'id' => $this->id,
-            'url' => $this->encode($encodeImage),
-            'date' => $this->date->toDateTimeString(),
-            'side' => Str::ucfirst(__($this->side)),
-            'type' => Str::ucfirst(__($this->type)),
-            'vehicle_id' => $this->vehicle_id,
-            'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
-            'persons' => $this->data,
-        ];
-    }
-
-
-    /**
-     * @param string $encode
-     * @return \Intervention\Image\Image
-     * @throws FileNotFoundException
-     */
-    public function encode($encode = "webp")
-    {
-        if ($this->vehicle && Storage::exists($this->path)) {
-            return Image::make(Storage::get($this->path))->encode($encode);
-        } else {
-            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->encode($encode);
-        }
-    }
-
-    public function setDataAttribute($data)
-    {
-        $this->attributes['data'] = collect($data)->toJson();
-    }
-
-    /**
-     * @return object
-     */
-    function getDataAttribute($data)
-    {
-        return $data && Str::of($data)->startsWith('{') && Str::of($data)->endsWith('}') ? (object)json_decode($data, true) : null;
     }
 }

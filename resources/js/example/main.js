@@ -18,7 +18,7 @@ let camerasReportView = new Vue({
         report: [],
         search: {
             companies: [],
-            company: [],
+            company: {},
             vehicles: [],
             vehicle: {},
             date: moment().format("YYYY-MM-DD")

@@ -12,24 +12,32 @@ use App\Events\App\Rocket\AppEvent;
 use App\Events\App\Rocket\PhotoMapEvent;
 use App\Models\Apps\Rocket\CurrentPhoto;
 use App\Models\Apps\Rocket\Photo;
+use App\Models\Apps\Rocket\ProfileSeat;
+use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Vehicles\Vehicle;
+use App\PerfilSeat;
 use Carbon\Carbon;
 use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
-use Image;
+use Intervention\Image\Image;
 use Storage;
 use Validator;
 
 class PhotoService
 {
-    public const PATH = '/Apps/Rocket/Photos/';
+    public $storage;
+    public const DISK = 's3';
+
+    public function __construct()
+    {
+        $this->storage = Storage::disk(self::DISK);
+    }
 
     /**
      * @param Vehicle $vehicle
      * @param $data
      * @return object
-     * @throws FileNotFoundException
      */
     public function saveImageData(Vehicle $vehicle, $data)
     {
@@ -54,13 +62,9 @@ class PhotoService
             $photo->dispatch_register_id = $currentLocation->dispatch_register_id;
             $photo->location_id = $currentLocation->location_id;
 
-            $imageData = $data->get('img');
-            $image = $this->decodeImageData($imageData);
-            $imageName = $photo->date->format('YmdHis') . ".jpeg";
-            $path = self::PATH . $vehicle->id . "/$imageName";
+            $image = $this->decodeImageData($data->get('img'));
 
-            $photo->path = $path;
-            Storage::disk('local')->put($photo->path, $image);
+            $this->storage->put($photo->path, $image);
 
             if ($photo->save()) {
                 $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
@@ -70,7 +74,7 @@ class PhotoService
                 $currentPhoto->persons = $photo->persons;
                 $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
                 $currentPhoto->location_id = $photo->location_id;
-                $currentPhoto->path = $path;
+                $currentPhoto->path = $photo->path;
 
                 $success = $currentPhoto->save();
                 if ($success) $message = "Photo saved successfully";
@@ -97,7 +101,6 @@ class PhotoService
      * @param $side
      * @param $quality
      * @return object
-     * @throws FileNotFoundException
      */
     public function takePhoto(Vehicle $vehicle, $side, $quality)
     {
@@ -136,13 +139,13 @@ class PhotoService
 
     /**
      * @param Vehicle $vehicle
+     * @param null $date
      * @return object
-     * @throws FileNotFoundException
      */
-    public function notifyToMap(Vehicle $vehicle)
+    public function notifyToMap(Vehicle $vehicle, $date = null)
     {
         $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
-        $historic = $this->getHistoric($vehicle);
+        $historic = $this->getHistoric($vehicle, $date);
 
         event(new PhotoMapEvent($vehicle,
             [
@@ -152,9 +155,37 @@ class PhotoService
             ]
         ));
 
-        $photo = null;
-        if ($currentPhoto) {
-            $currentPhoto = $currentPhoto->getAPIFields('data-url');
+        $photo = $this->getPhotoData($currentPhoto, $historic);
+
+        event(new PhotoMapEvent($vehicle,
+            [
+                'type' => 'new',
+                'vehicle' => $vehicle->getAPIFields(),
+                'photo' => $photo
+            ]
+        ));
+
+        return (object)[
+            'success' => true,
+            'message' => "Notify to map send. Vehicle $vehicle->number"
+        ];
+    }
+
+
+    /**
+     * @param $photo
+     * @param Collection $historic
+     * @return object|null
+     */
+    function getPhotoData(PhotoInterface $photo, $historic)
+    {
+        $historic = $historic->where('id', '<=', $photo->id);
+
+        $photoData = null;
+
+        if ($photo) {
+            $details = $photo->getAPIFields('data-url');
+            $details->occupation = $this->processOccupation($photo);
 
             $personsByRoundTrips = collect([]);
             $historicByTurns = $historic->groupBy('dr');
@@ -176,9 +207,9 @@ class PhotoService
                 }
             }
 
-            $photo = (object)[
-                'id' => $currentPhoto->id,
-                'details' => $currentPhoto,
+            $photoData = (object)[
+                'id' => $photo->id,
+                'details' => $details,
                 'passengers' => (object)[
                     'byRoundTrips' => $personsByRoundTrips,
                     'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
@@ -186,31 +217,51 @@ class PhotoService
             ];
         }
 
-        event(new PhotoMapEvent($vehicle,
-            [
-                'type' => 'new',
-                'vehicle' => $vehicle->getAPIFields(),
-                'photo' => $photo
-            ]
-        ));
-
-        return (object)[
-            'success' => true,
-            'message' => "Notify to map send. Vehicle $vehicle->number"
-        ];
+        return $photoData;
     }
 
+    /**
+     * @param PhotoInterface $currentPhoto
+     * @param PhotoInterface $prevPhoto
+     * @param bool $firstPhotoInRoundTrip
+     * @return int
+     */
+    public function countOccupation(PhotoInterface $currentPhoto, PhotoInterface $prevPhoto, $firstPhotoInRoundTrip = false)
+    {
+        $details = $currentPhoto->getAPIFields('url');
+        $details->occupation = $this->processOccupation($currentPhoto);
+
+        $currentSeatingOccupied = collect($details->occupation->seatingOccupied);
+
+        $details = $prevPhoto->getAPIFields('url');
+        $details->occupation = $this->processOccupation($prevPhoto);
+
+        $prevSeatingOccupied = collect($details->occupation->seatingOccupied);
+
+        $count = 0;
+        if ($firstPhotoInRoundTrip) {
+            $count = collect($prevSeatingOccupied)->count();
+        } else {
+            foreach ($prevSeatingOccupied as $seatNumber => $prevSeatOccupied) {
+                if (!$currentSeatingOccupied->get($seatNumber)) {
+                    $count++;
+                }
+            }
+        }
+
+        return $count;
+    }
 
     /**
      * @param Vehicle $vehicle
      * @param null $date
      * @return Collection
-     * @throws FileNotFoundException
      */
     public function getHistoric(Vehicle $vehicle, $date = null)
     {
         $historic = collect([]);
-        $photos = Photo::where('vehicle_id', $vehicle->id)->whereDate('date', $date ? $date : Carbon::now())->orderBy('date')->get();
+
+        $photos = Photo::findAllByVehicleAndDate($vehicle, $date ? $date : Carbon::now());
 
         if ($photos->isNotEmpty()) {
             $prev = $photos->first();
@@ -219,60 +270,64 @@ class PhotoService
             $totalPersons = 0;
 
             foreach ($photos as $photo) {
-//                if (($prev->id == $photo->id) || $photo->date->diffInSeconds($prev->date) > 20) {
-                if (true) {
-                    $dr = $photo->dispatchRegister;
-                    $currentCount = $photo->data ? $photo->data->count : 0;
-                    $prevCount = $prev->data ? $prev->data->count : 0;
-                    $difference = $currentCount - $prevCount;
-                    $newPersons = $difference > 0 ? $difference : 0;
 
-                    if($photo->persons === null){
-                        $photo->persons = $currentCount;
-                        $photo->save();
-                    }
+                $details = $photo->getAPIFields('url');
+                $details->occupation = $this->processOccupation($photo);
 
-                    $roundTrip = null;
-                    $routeName = null;
+                $dr = $photo->dispatchRegister;
+                $currentCount = $details->occupation ? $details->occupation->count : 0;
 
-                    $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prev->dispatch_register_id || $prev->id == $photo->id;
+                $prevOccupation = $this->processOccupation($prev);
+                $prevCount = $prevOccupation ? $prevOccupation->count : 0;
 
-                    if ($firstPhotoInRoundTrip) {
-                        $personsByRoundTrip = $currentCount;
-                    } else if ($dr) {
-                        $personsByRoundTrip += $newPersons;
-                    }
-
-                    if ($dr) {
-                        $roundTrip = $dr->round_trip;
-                        $routeName = $dr->route->name;
-                        $totalPersons += $firstPhotoInRoundTrip ? $currentCount : $newPersons;
-                    }
-
-                    $personsByRoundTrips = collect([])->push((object)[
-                        'id' => $dr ? $dr->id : null,
-                        'number' => $roundTrip,
-                        'route' => $routeName,
-                        'count' => $personsByRoundTrip,
-
-                        'prevCount' => $prevCount,
-                        'currentCount' => $currentCount,
-                        'newPersons' => $newPersons,
-                        'prevId' => $prev->id,
-                    ]);
-
-                    $historic->push((object)[
-                        'id' => $photo->id,
-                        'time' => $photo->date->format('H:i:s').''.$photo->id,
-                        'dr' => $photo->dispatch_register_id,
-                        'details' => $photo->getAPIFields('url'),
-                        'passengers' => (object)[
-                            'byRoundTrips' => $personsByRoundTrips,
-                            'totalInRoundTrip' => $personsByRoundTrip,
-                            'total' => $totalPersons,
-                        ]
-                    ]);
+                if ($photo->persons === null) {
+                    $photo->persons = $currentCount;
+                    $photo->save();
                 }
+
+                $roundTrip = null;
+                $routeName = null;
+
+                $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prev->dispatch_register_id || $prev->id == $photo->id;
+
+                $newPersons = $this->countOccupation($photo, $prev, $firstPhotoInRoundTrip);
+
+                if ($firstPhotoInRoundTrip) {
+                    $personsByRoundTrip = $currentCount;
+                } else if ($dr) {
+                    $personsByRoundTrip += $newPersons;
+                }
+
+                if ($dr) {
+                    $roundTrip = $dr->round_trip;
+                    $routeName = $dr->route->name;
+                    $totalPersons += $firstPhotoInRoundTrip ? $currentCount : $newPersons;
+                }
+
+                $personsByRoundTrips = collect([])->push((object)[
+                    'id' => $dr ? $dr->id : null,
+                    'number' => $roundTrip,
+                    'route' => $routeName,
+                    'count' => $personsByRoundTrip,
+
+                    'prevCount' => $prevCount,
+                    'currentCount' => $currentCount,
+                    'newPersons' => $newPersons,
+                    'prevId' => $prev->id,
+                ]);
+
+                $historic->push((object)[
+                    'id' => $photo->id,
+                    'time' => $photo->date->format('H:i:s') . '' . $photo->id,
+                    'dr' => $photo->dispatch_register_id,
+                    'details' => $details,
+                    'passengers' => (object)[
+                        'byRoundTrips' => $personsByRoundTrips,
+                        'totalInRoundTrip' => $personsByRoundTrip,
+                        'total' => $totalPersons,
+                    ]
+                ]);
+
                 $prev = $photo;
             }
         }
@@ -281,34 +336,68 @@ class PhotoService
     }
 
     /**
+     * @param PhotoInterface $photo
+     * @return Collection
+     */
+    public function processOccupation(PhotoInterface $photo)
+    {
+        $persons = $photo->data;
+
+        if ($persons) {
+            $profileSeating = ProfileSeat::findByVehicle($photo->vehicle);
+            $personDraws = collect([]);
+            $seatingOccupied = collect([]);
+            foreach ($persons->draws as $recognition) {
+                $recognition = (object)$recognition;
+                if ($recognition->count) {
+                    $zoneDetected = new PhotoZone($recognition->box);
+                    $profileOccupation = $zoneDetected->getProfileOccupation($profileSeating);
+                    $recognition->profile = $profileOccupation;
+
+                    if ($profileOccupation->seatOccupied) {
+                        $seatingOccupied->put($profileOccupation->seatOccupied->number, $profileOccupation->seatOccupied);
+                    }
+
+                    $recognition->profileStr = $profileOccupation->seating->pluck('number')->implode(', ');
+                }
+                $personDraws[] = $recognition;
+            }
+
+            $persons->draws = $personDraws;
+            $persons->count = $seatingOccupied->count();
+            $persons->seatingOccupied = $seatingOccupied;
+
+            return $persons;
+        }
+
+        return null;
+    }
+
+    /**
      * @param Vehicle $vehicle
      * @param string $encode
-     * @return \Intervention\Image\Image
+     * @return Image
      * @throws FileNotFoundException
      */
     public function getLastPhoto(Vehicle $vehicle, $encode = "webp")
     {
         $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
-        if ($vehicle && Storage::exists($currentPhoto->path)) {
-            return Image::make(Storage::get($currentPhoto->path))->encode($encode);
+        if ($currentPhoto) {
+            return $currentPhoto->getImage($encode);
         } else {
-            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->encode($encode);
+            return $this->notFoundImage();
         }
     }
 
     /**
      * @param Photo $photo
      * @param string $encode
-     * @return \Intervention\Image\Image|mixed
-     * @throws FileNotFoundException
+     * @param bool $withEffect
+     * @return Image|mixed
      */
-    public function getPhoto(Photo $photo, $encode = "webp")
+    public function getFile(Photo $photo, $encode = "webp", $withEffect = false)
     {
-        if (Storage::exists($photo->path)) {
-            $image = Image::make(Storage::get($photo->path));
-        } else {
-            $image = Image::make(File::get('img/image-404.jpg'))->resize(300, 300);
-        }
+        $image = $photo->getImage($encode, $withEffect);
 
         if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
             return $image->response($encode);
@@ -325,5 +414,14 @@ class PhotoService
     {
         $image_parts = explode(";base64,", $base64);
         return base64_decode($image_parts[1]);
+    }
+
+    /**
+     * @return mixed
+     * @throws FileNotFoundException
+     */
+    public function notFoundImage()
+    {
+        return (new Image)->make(File::get('img/image-404.jpg'))->resize(300, 300)->response();
     }
 }

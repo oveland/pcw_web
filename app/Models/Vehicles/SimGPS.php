@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS query()
  * @property-read \App\Models\Vehicles\GPSType $type
+ * @property int|null $user_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\SimGPS whereUserId($value)
  */
 class SimGPS extends Model
 {
