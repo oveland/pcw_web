@@ -55,7 +55,7 @@ class MigratePhotosToS3Command extends Command
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
-                $photos = Photo::findAllByVehicleAndDate($vehicle, $date)->take(5);
+                $photos = Photo::findAllByVehicleAndDate($vehicle, $date)->take(1000);
 
                 $s3 = Storage::disk('s3');
                 $local = Storage::disk('local');
@@ -65,11 +65,19 @@ class MigratePhotosToS3Command extends Command
                     $originalPath = $photo->getOriginalPath();
                     $s3FilePath = $photo->buildPath('s3');
 
+                    $migrated = true;
+
                     if (!$s3->exists($s3FilePath)) {
-                        $response = $s3->put($s3FilePath, $local->get($originalPath));
-                        $this->info("$originalPath: Put " . $originalPath . " >> $response");
+                        $migrated = $s3->put($s3FilePath, $local->get($originalPath));
+                        $this->info("$originalPath: Put " . $originalPath . " >> $migrated");
+
                     } else {
                         $this->info("$s3FilePath exists!");
+                    }
+
+                    if($migrated){
+                        $this->info("Photo data migrated: Disk: $photo->disk and path: $photo->path");
+                        $photo->save();
                     }
                 }
 

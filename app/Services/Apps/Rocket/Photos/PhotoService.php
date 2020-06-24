@@ -55,6 +55,7 @@ class PhotoService
 
         if ($validator->passes()) {
             $photo = new Photo($data->toArray());
+            $photo->disk = self::DISK;
             $photo->date = Carbon::createFromFormat('Y-m-d H:i:s', $data->get('date'), 'America/Bogota');
             $photo->vehicle()->associate($vehicle);
 
@@ -69,6 +70,7 @@ class PhotoService
             if ($photo->save()) {
                 $currentPhoto = CurrentPhoto::findByVehicle($vehicle);
                 $currentPhoto->fill($data->toArray());
+                $currentPhoto->disk = $photo->disk;
                 $currentPhoto->date = $photo->date;
                 $currentPhoto->data = $photo->data;
                 $currentPhoto->persons = $photo->persons;

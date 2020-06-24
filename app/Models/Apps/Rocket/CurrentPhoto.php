@@ -57,7 +57,7 @@ class CurrentPhoto extends Model implements PhotoInterface
     use PhotoGlobals;
 
     protected $table = 'app_current_photos';
-    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side'];
+    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side', 'disk'];
 
     public function getDateFormat()
     {

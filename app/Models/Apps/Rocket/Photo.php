@@ -58,7 +58,7 @@ class Photo extends Model implements PhotoInterface
     public const BASE_PATH = '/Apps/Rocket/Photos/';
 
     protected $table = 'app_photos';
-    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side'];
+    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side', 'disk'];
 
     protected static function boot()
     {
