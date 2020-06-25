@@ -351,7 +351,7 @@ class PhotoService
             $seatingOccupied = collect([]);
             foreach ($persons->draws as $recognition) {
                 $recognition = (object)$recognition;
-                if ($recognition->count) {
+                if (isset($recognition->count)) {
                     $zoneDetected = new PhotoZone($recognition->box);
                     $profileOccupation = $zoneDetected->getProfileOccupation($profileSeating);
                     $recognition->profile = $profileOccupation;

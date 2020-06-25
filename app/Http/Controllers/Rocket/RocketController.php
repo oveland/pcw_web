@@ -124,11 +124,13 @@ class RocketController extends Controller
 //
                     $photo = Photo::where('id', 4493)->where('vehicle_id', $vehicle->id)->first();
 
-//                    $photo = Photo::where('id', 4594)->where('vehicle_id', $vehicle->id)->first();
+
+                    // 76 Yumbeños
+                    $photo = Photo::where('id', 8039)->where('vehicle_id', $vehicle->id)->first();
 
                     if ($photo) {
-                        $photo->processRekognition(true, 'persons');
-                        $photo->save();
+//                        $photo->processRekognition(true, 'persons');
+//                        $photo->save();
 
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
