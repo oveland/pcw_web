@@ -109,7 +109,7 @@
     .seat{
         text-align: center;
         padding: 2px;
-        background-color: rgba(0, 233, 198, 0.38);
+        background-color: rgba(0, 233, 198, 0.43);
         border-radius: 3px;
         border-style: solid;
         border-color: #00e1ff;

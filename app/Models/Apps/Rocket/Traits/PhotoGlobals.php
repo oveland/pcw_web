@@ -12,8 +12,6 @@ use Illuminate\Support\Str;
 
 trait PhotoGlobals
 {
-    use PhotoEncode;
-
     public function getDateAttribute($date)
     {
         if (Str::contains($date, '-')) {
@@ -54,7 +52,7 @@ trait PhotoGlobals
 
         return (object)[
             'id' => $this->id,
-            'url' => $this->encode($encodeImage),
+            'url' => $this->encode($encodeImage, true),
             'path' => $this->getOriginalPath(),
             'date' => $this->date->toDateTimeString(),
             'side' => Str::ucfirst(__($this->side)),
@@ -66,23 +64,67 @@ trait PhotoGlobals
         ];
     }
 
-    public function setDataAttribute($data)
+    public function setDataAttribute($dataPersons)
     {
-        $this->attributes['data'] = collect($data)->toJson();
+        // TODO Change implementation of property ->data to ->data_persons and release data column
+        $this->setDataPersonsAttribute($dataPersons);
+        $this->attributes['data'] = $this->attributes['data_persons'];
+    }
+
+    /**
+     * @param $dataPersons
+     * @return object
+     */
+    function getDataAttribute($dataPersons)
+    {
+        // TODO Change implementation of property ->data to ->data_persons and release data column
+        return $this->data_persons;
+    }
+
+    public function setDataPersonsAttribute($dataPersons)
+    {
+        $dataPersons = $this->photoRekognitionService('persons')->processRekognition($dataPersons);
+        $this->attributes['data_persons'] = collect($dataPersons)->toJson(JSON_FORCE_OBJECT);
+    }
+
+    /**
+     * @param $dataPersons
+     * @return object
+     */
+    function getDataPersonsAttribute($dataPersons)
+    {
+        $dataPersons = $dataPersons && Str::of($dataPersons)->startsWith('{') && Str::of($dataPersons)->endsWith('}') ? (object)json_decode($dataPersons, true) : null;
+        if ($dataPersons) {
+            return $this->photoRekognitionService('persons')->processRekognition($dataPersons);
+        }
+
+        return null;
+    }
+
+
+    public function setDataFacesAttribute($dataFaces)
+    {
+        $dataFaces = $this->photoRekognitionService('faces')->processRekognition($dataFaces);
+        $this->attributes['data_faces'] = collect($dataFaces)->toJson(JSON_FORCE_OBJECT);
+    }
+
+    /**
+     * @param $dataFaces
+     * @return object
+     */
+    function getDataFacesAttribute($dataFaces)
+    {
+        $dataFaces = $dataFaces && Str::of($dataFaces)->startsWith('{') && Str::of($dataFaces)->endsWith('}') ? (object)json_decode($dataFaces, true) : null;
+        if ($dataFaces) {
+            return $this->photoRekognitionService('faces')->processRekognition($dataFaces);
+        }
+
+        return null;
     }
 
     public function setEffectsAttribute($effects)
     {
         $this->attributes['effects'] = collect($effects)->toJson();
-    }
-
-    /**
-     * @param $data
-     * @return object
-     */
-    function getDataAttribute($data)
-    {
-        return $data && Str::of($data)->startsWith('{') && Str::of($data)->endsWith('}') ? (object)json_decode($data, true) : null;
     }
 
     /**

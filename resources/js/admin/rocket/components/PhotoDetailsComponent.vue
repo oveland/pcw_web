@@ -21,10 +21,12 @@
             </div>
             <div class="passengers">
                 <p class="detail">
-                    {{ $t('Passengers') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.count }}</span>
+                    {{ $t('Passengers') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.persons }}</span>
+
+                    <span v-if="!photo.details.occupation.count">{{ $t('Paused count') }}</span>
                 </p>
                 <p class="detail">
-                    {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ ((40/100)*photo.details.occupation.count) | numberFormat('0.0') }}%</span>
+                    {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ ((40/100)*photo.details.occupation.persons) | numberFormat('0.0') }}%</span>
                 </p>
             </div>
         </div>
@@ -43,7 +45,7 @@
                     <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail">
                         <p v-show="roundTrip.number">
                             <small>
-                                <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
+                                <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.persons }}
                             </small>
                         </p>
                     </li>

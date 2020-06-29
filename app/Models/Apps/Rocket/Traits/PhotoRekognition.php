@@ -4,30 +4,69 @@
 namespace App\Models\Apps\Rocket\Traits;
 
 
+use App;
+use App\Services\Apps\Rocket\Photos\PhotoRekognitionService;
 use App\Services\AWS\RekognitionService;
 
 trait PhotoRekognition
 {
     /**
+     * @param $type
+     * @return PhotoRekognitionService
+     */
+    public function photoRekognitionService($type)
+    {
+        return App::make("rocket.photo.rekognition.$type", ['vehicle' => $this->vehicle]);
+    }
+
+    /**
      * @param bool $force
      * @param string $type
      */
-    public function processRekognition($force = false, $type = 'persons')
+    public function processRekognition($force = false, $type = null)
     {
-        if ($force || (collect($this->data)->isEmpty() && !$this->id)) {
-            if ($this->path) {
-                $this->effects = [
-                    'brightness' => 10,
-                    'contrast' => 5,
-                    'gamma' => 2,
-                    'sharpen' => 12
-                ];
+        $type = $this->getType($type);
+        $this->rekognition = $type;
 
+
+        if ($force || collect($this->data_persons)->isEmpty()) {
+            $vehicle = $this->vehicle;
+            if ($this->path && $vehicle) {
                 $rekognition = new RekognitionService();
 
-                $this->data = $rekognition->sefFile($this->getImage('png', true))->process($type);
-                $this->persons = $this->data ? $this->data->count : 0;
+                switch ($type) {
+                    case 'persons_and_faces':
+                        $config = $this->photoRekognitionService('faces')->config;
+                        $this->effects = $config->photo->effects;
+                        $data = $rekognition->sefFile($this->getImage('png', true))->process($type);
+                        $this->data_faces = $data->faces;
+
+                        $config = $this->photoRekognitionService('persons')->config;
+                        $this->effects = $config->photo->effects;
+                        $data = $rekognition->sefFile($this->getImage('png', true))->process($type);
+                        $this->data_persons = $data->persons;
+                        break;
+                    default:
+                        $config = $this->photoRekognitionService($type)->config;
+                        $this->effects = $config->photo->effects;
+                        $data = $rekognition->sefFile($this->getImage('png', true))->process($type);
+                        $column = "data_$type";
+                        $this->$column = $data;
+                        break;
+                }
             }
         }
+    }
+
+    /**
+     * @param $type
+     * @return string
+     */
+    private function getType($type)
+    {
+        if (!$type) $type = $this->rekognition;
+        if (!$type) $type = 'persons_and_faces';
+
+        return $type;
     }
 }

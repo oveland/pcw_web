@@ -50,7 +50,7 @@ class TakePhotoCommand extends Command
         $vehicle = Vehicle::where('plate', $plate)->first();
 
         if ($vehicle) {
-            $response = $this->photoService->takePhoto($vehicle, $this->option('side'), $this->option('quality'));
+            $response = $this->photoService->for($vehicle)->takePhoto($this->option('side'), $this->option('quality'));
             $this->info($response->message);
             if ($response->success) {
                 $this->info(collect($response->params)->toJson());

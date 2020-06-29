@@ -1,12 +1,17 @@
 <template>
     <div class="container-photo col-md-12" v-if="photo && photo.details">
-        <div v-if="photo.details.persons">
-            <div v-for="draw in photo.details.occupation.draws" class="zone-detection" :class="draw.count === true && !draw.profile ? 'undetected' : ''" @mouseenter="setBusySeating(draw)" @mouseleave="clearBusySeating"
-                 :title="`${!draw.overlap ? $t('Seat')+': '+draw.profileStr : $t('Overlap')}`"
-                 :style="`height: ${draw.box.heightOrig && true ? draw.box.heightOrig : draw.box.height}%; width: ${draw.box.width}%; top: ${draw.box.top}%; left: ${draw.box.left}%; border-color: ${draw.color}; background: ${draw.background};`">
+        <div v-if="photo.details.occupation">
+            <div v-if="draw.box.heightOrig" v-for="draw in photo.details.occupation.draws" class="zone-detection zone-detection-original"
+                 :style="`height: ${draw.box.heightOrig}%; width: ${draw.box.width}%; top: ${draw.box.top}%; left: ${draw.box.left}%; border-color: #d3d3d354; background: rgba(255, 255, 255, 0.04);border-width:1px !important`">
+            </div>
+
+            <div v-for="draw in photo.details.occupation.draws" class="zone-detection" :class="`${draw.count === true && !draw.profile ? 'undetected' : ''} ${draw.selectedClass}`" @mouseenter="setBusySeating(draw)" @mouseleave="clearBusySeating(draw)"
+                 :title="`${!draw.overlap ? $t('Seat')+': ' + draw.profileStr : $t('Overlap')}`"
+                 :style="`height: ${draw.box.height}%; width: ${draw.box.width}%; top: ${draw.box.top}%; left: ${draw.box.left}%; border-color: ${draw.color}; background: ${draw.background};`">
                 <small>{{ draw.confidence }}%</small>
             </div>
-            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center"
+
+            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center" :class="draw.selectedClass" :title="`${draw.largeDetection ? 'LDT: ' : 'Normal'}: ${draw.relationSize} | ${draw.overlap ? $t('Overlap') : ''} Count: ${draw.count ? $t('YES') : $t('NO')}`"
                  :style="`height: 1px; width: 1px; top: ${draw.box.center ? draw.box.center.top : 0}%; left: ${draw.box.center ? draw.box.center.left : 0}%;border-color: ${draw.color};`">
             </div>
         </div>
@@ -32,6 +37,11 @@
             fixedSeating: Boolean,
             styleSeating: Object
         },
+        watch:{
+            styleSeating(){
+                this.clearBusySeating();
+            }
+        },
         data() {
             return {
                 busySeating: [],
@@ -41,17 +51,19 @@
                         width: 1000,
                         height: 700,
                     },
-                },
+                }
             }
         },
         methods: {
             setBusySeating(draw) {
                 if(draw.profile){
+                    draw.selectedClass = 'selected';
                     this.busySeating = draw.profile.seating;
                     this.seatOccupied = draw.profile.seatOccupied;
                 }
             },
-            clearBusySeating() {
+            clearBusySeating(draw) {
+                draw.selectedClass = '';
                 this.busySeating = [];
             },
         }
@@ -85,6 +97,7 @@
         border-style: solid;
         border-width: 2px;
         position: absolute;
+        border-radius: 50%;
         z-index: 100000 !important;
     }
 
@@ -92,5 +105,11 @@
         font-size: 0.5em;
         color: #e2e1e1;
         float: left;
+    }
+
+    .container-photo .zone-detection.selected, .container-photo .zone-detection-center.selected {
+        border-color: #fc0050 !important;
+        border-radius: 2px;
+        z-index: 10000 !important;
     }
 </style>

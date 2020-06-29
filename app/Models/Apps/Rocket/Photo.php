@@ -2,6 +2,7 @@
 
 namespace App\Models\Apps\Rocket;
 
+use App\Models\Apps\Rocket\Traits\PhotoEncode;
 use App\Models\Apps\Rocket\Traits\PhotoGlobals;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Apps\Rocket\Traits\PhotoRekognition;
@@ -51,10 +52,16 @@ use Illuminate\Support\Carbon;
  * @property string $disk
  * @method static Builder|Photo whereDisk($value)
  * @method static Collection|Photo[] findAllByVehicleAndDate(Vehicle $vehicle, $date)
+ * @property string $rekognition
+ * @method static Builder|Photo whereRekognition($value)
+ * @property string|null $data_persons
+ * @method static Builder|Photo whereDataPersons($value)
+ * @property string|null $data_faces
+ * @method static Builder|Photo whereDataFaces($value)
  */
 class Photo extends Model implements PhotoInterface
 {
-    use PhotoRekognition, PhotoGlobals;
+    use PhotoRekognition, PhotoGlobals, PhotoEncode;
     public const BASE_PATH = '/Apps/Rocket/Photos/';
 
     protected $table = 'app_photos';
@@ -64,7 +71,7 @@ class Photo extends Model implements PhotoInterface
     {
         parent::boot();
         static::saving(function (Photo $photo) {
-            $photo->processRekognition();
+            $photo->processRekognition($photo->rekognition);
         });
     }
 

@@ -3,9 +3,8 @@
 namespace App\Services\Apps\Rocket\Photos;
 
 use App\Models\Apps\Rocket\ProfileSeat;
-use Illuminate\Support\Collection;
 
-class PhotoZone
+abstract class PhotoZone
 {
     public $left = 0;
     public $top = 0;
@@ -18,17 +17,27 @@ class PhotoZone
      * PhotoZone constructor.
      * @param array | object $zone
      */
-    public function __construct($zone)
+    public function __construct($zone = null)
     {
-        $zone = (object)$zone;
+        $this->buildZone($zone);
+    }
 
-        $this->left = $zone->left;
-        $this->top = $zone->top;
-        $this->width = $zone->width;
-        $this->height = $zone->height;
-        $this->center = (object)$zone->center;
+    /**
+     * @param array | object $zone
+     */
+    public function buildZone($zone)
+    {
+        if ($zone) {
+            $zone = (object)$zone;
 
-        $this->largeDetection = isset($zone->largeDetection) ? $zone->largeDetection : false;
+            $this->left = $zone->left;
+            $this->top = $zone->top;
+            $this->width = $zone->width;
+            $this->height = $zone->height;
+            $this->center = (object)$zone->center;
+
+            $this->largeDetection = isset($zone->largeDetection) ? $zone->largeDetection : false;
+        }
     }
 
     public function L()
@@ -76,6 +85,20 @@ class PhotoZone
     }
 
     /**
+     * @param PhotoZone $zone
+     * @return bool
+     */
+    public function isBiggerThan(PhotoZone $zone)
+    {
+        return $this->include($zone) && (
+                $zone->left > $this->left &&
+                $zone->top > $this->top &&
+                $zone->width < $this->width &&
+                $zone->height < $this->height
+            );
+    }
+
+    /**
      * @param ProfileSeat $profileSeating
      * @return object
      */
@@ -83,8 +106,7 @@ class PhotoZone
     {
         $seatingWithinZoneDetected = collect([]);
         foreach (collect($profileSeating->occupation)->sortBy('number') as $profileSeat) {
-            $candidateSeatingZone = new PhotoZone($profileSeat);
-
+            $candidateSeatingZone = $this->getSeatingZoneInstance($profileSeat);
             $profileSeat = $this->profileWithArea($profileSeat);
 
             if ($candidateSeatingZone->include($this)) {
@@ -122,9 +144,13 @@ class PhotoZone
         ];
     }
 
+    /**
+     * @param $profileSeat
+     * @return object
+     */
     public function profileWithArea($profileSeat)
     {
-        $seatZone = new PhotoZone($profileSeat);
+        $seatZone = $this->getSeatingZoneInstance($profileSeat);
         $profileSeat = (object)$profileSeat;
         $profileSeat->area = $seatZone->area();
         $profileSeat->areaDetected = $this->area();
@@ -134,13 +160,9 @@ class PhotoZone
         return $profileSeat;
     }
 
-    public function isBiggerThan(PhotoZone $zone)
-    {
-        return $this->include($zone) && (
-                $zone->left > $this->left &&
-                $zone->top > $this->top &&
-                $zone->width < $this->width &&
-                $zone->height < $this->height
-            );
-    }
+    /**
+     * @param null $profileSeat
+     * @return mixed
+     */
+    abstract function getSeatingZoneInstance($profileSeat = null);
 }

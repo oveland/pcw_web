@@ -737,5 +737,6 @@
   "Loading": "Cargando",
   "Occupation": "Ocupación",
   "Counts": "Conteos",
-  "Total": "Total"
+  "Total": "Total",
+  "Paused count": "Conteo pausado"
 }

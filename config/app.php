@@ -3,6 +3,7 @@
 use App\Providers\APIProvider;
 use App\Providers\BEAServiceProvider;
 use App\Providers\ReportsServiceProvider;
+use App\Providers\RocketServiceProvider;
 
 return [
 
@@ -195,6 +196,7 @@ return [
          */
         ReportsServiceProvider::class,
         BEAServiceProvider::class,
+        RocketServiceProvider::class,
         APIProvider::class
     ],
 

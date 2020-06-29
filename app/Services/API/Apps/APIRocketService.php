@@ -15,7 +15,6 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -53,7 +52,6 @@ class APIRocketService implements APIAppsInterface
 
     /**
      * @return JsonResponse
-     * @throws FileNotFoundException
      */
     public function serve(): JsonResponse
     {
@@ -91,11 +89,13 @@ class APIRocketService implements APIAppsInterface
 
     /**
      * @return JsonResponse
-     * @throws FileNotFoundException
      */
     public function savePhoto()
     {
-        $process = $this->photoService->saveImageData($this->vehicle, $this->request->all());
+        $process = $this->photoService
+            ->for($this->vehicle)
+            ->saveImageData($this->request->all());
+
         if ($process->response->success) {
             $photo = $process->photo;
             Storage::disk('local')->append('photo.log', "$photo->url&encode=jpg \n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
@@ -108,13 +108,19 @@ class APIRocketService implements APIAppsInterface
 
     /**
      * @return JsonResponse
-     * @throws FileNotFoundException
      */
     public function event()
     {
         switch ($this->request->get('action')) {
             case 'take-photo':
-                return response()->json($this->photoService->takePhoto($this->vehicle, $this->request->get('side'), $this->request->get('quality')));
+                return response()->json(
+                    $this->photoService
+                        ->for($this->vehicle)
+                        ->takePhoto(
+                            $this->request->get('side'),
+                            $this->request->get('quality')
+                        )
+                );
                 break;
             default:
                 return response()->json([
@@ -169,7 +175,6 @@ class APIRocketService implements APIAppsInterface
     public function log()
     {
         $success = false;
-        $message = "";
 
         $validator = Validator::make($this->request->all(), [
             'data' => 'required',

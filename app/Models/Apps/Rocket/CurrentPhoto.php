@@ -2,6 +2,7 @@
 
 namespace App\Models\Apps\Rocket;
 
+use App\Models\Apps\Rocket\Traits\PhotoEncode;
 use App\Models\Apps\Rocket\Traits\PhotoGlobals;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Routes\DispatchRegister;
@@ -49,12 +50,18 @@ use Illuminate\Support\Carbon;
  * @property string|null $effects
  * @method static Builder|CurrentPhoto whereDisk($value)
  * @method static Builder|CurrentPhoto whereEffects($value)
+ * @property string $rekognition
+ * @method static Builder|Photo whereRekognition($value)
+ * @property string|null $data_persons
+ * @method static Builder|Photo whereDataPersons($value)
+ * @property string|null $data_faces
+ * @method static Builder|Photo whereDataFaces($value)
  */
 class CurrentPhoto extends Model implements PhotoInterface
 {
     public const BASE_PATH = '/Apps/Rocket/Photos/';
 
-    use PhotoGlobals;
+    use PhotoGlobals, PhotoEncode;
 
     protected $table = 'app_current_photos';
     protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side', 'disk'];

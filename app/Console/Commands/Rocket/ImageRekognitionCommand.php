@@ -50,7 +50,6 @@ class ImageRekognitionCommand extends Command
      * Execute the console command.
      *
      * @return mixed
-     * @throws FileNotFoundException
      */
     public function handle()
     {
@@ -60,7 +59,7 @@ class ImageRekognitionCommand extends Command
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
-                $photos = Photo::whereDate('date', $date)->where('vehicle_id', $vehicle->id)->get();
+                $photos = Photo::findAllByVehicleAndDate($vehicle, $date);
                 $this->info('Process ' . $photos->count() . ' photos');
 //                $ID = 4688;
 //                DB::statement("UPDATE app_photos SET effects = null where id <> $ID");
@@ -85,7 +84,7 @@ class ImageRekognitionCommand extends Command
                     $this->info(collect($photo->effects)->toJson());
                 }
                 $this->info("Finished!. Notifying to map...");
-                $this->photoService->notifyToMap($vehicle, $date);
+                $this->photoService->for($vehicle)->notifyToMap($date);
 
             } else {
                 $this->info("Plate $vehiclePlate doesnt associated with a vehicle!");
