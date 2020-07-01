@@ -99,10 +99,10 @@
                     id: Date.now(),
                     number: null,
                     selected: false,
-                    top: this.selected ? this.selected.top + 10 : 300,
-                    left: this.selected ? this.selected.left + 10 : 300,
-                    width: this.selected ? this.selected.width : 100,
-                    height: this.selected ? this.selected.height : 50,
+                    top: this.selected ? this.selected.top + 10 : 30,
+                    left: this.selected ? this.selected.left + 10 : 30,
+                    width: this.selected ? this.selected.width : 10,
+                    height: this.selected ? this.selected.height : 10,
                     center: {
                         left: 450 + 100 / 2,
                         top: 300 + 50 / 2

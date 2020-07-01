@@ -110,44 +110,48 @@ class RocketController extends Controller
                     $photos = $this->photoService->for($vehicle)->getHistoric($date);
 
                     if ($photos->count()) {
-                        $photo = Photo::where('id', $photos->last()->id)->first();
+                        $photo = Photo::get($photos->last()->id)->first();
 
-//                    $photo = Photo::where('id', 4594)->where('vehicle_id', $vehicle->id)->first(); // Indeterminado...
-//                    $photo = Photo::where('id', 4598)->where('vehicle_id', $vehicle->id)->first(); // Indeterminado...
-//                    $photo = Photo::where('id', 4536)->where('vehicle_id', $vehicle->id)->first(); // Similar a 4600
-//
-//
-//                    $photo = Photo::where('id', 4600)->where('vehicle_id', $vehicle->id)->first();
-//
-//
-//                    $photo = Photo::where('id', 4491)->where('vehicle_id', $vehicle->id)->first();
-//
-//                    $photo = Photo::where('id', 4501)->where('vehicle_id', $vehicle->id)->first();
-//                    $photo = Photo::where('id', 4569)->where('vehicle_id', $vehicle->id)->first();
-//                    $photo = Photo::where('id', 4574)->where('vehicle_id', $vehicle->id)->first();
-//
-//                    $photo = Photo::where('id', 4493)->where('vehicle_id', $vehicle->id)->first();
+//                      338 Alameda
 
+                        $photo = Photo::get(4594);
+                        $photo = Photo::get(4598);
+                        $photo = Photo::get(4536);
 
-                        // 76 Yumbeños
-//                    $photo = Photo::where('id', 8041)->where('vehicle_id', $vehicle->id)->first(); // 6/6
-//                    $photo = Photo::where('id', 8044)->where('vehicle_id', $vehicle->id)->first(); // 13/14
-//                    $photo = Photo::where('id', 8045)->where('vehicle_id', $vehicle->id)->first(); // 14/14
-//                    $photo = Photo::where('id', 8067)->where('vehicle_id', $vehicle->id)->first(); // 8/9
-//                    $photo = Photo::where('id', 8069)->where('vehicle_id', $vehicle->id)->first(); // 7/7
-//                    $photo = Photo::where('id', 8073)->where('vehicle_id', $vehicle->id)->first(); // 5/5
-//                    $photo = Photo::where('id', 8076)->where('vehicle_id', $vehicle->id)->first(); // 5/5
-//                    $photo = Photo::where('id', 8092)->where('vehicle_id', $vehicle->id)->first(); // 2/2
-//                    $photo = Photo::where('id', 8149)->where('vehicle_id', $vehicle->id)->first(); // 4/4
-//                    $photo = Photo::where('id', 8176)->where('vehicle_id', $vehicle->id)->first(); // 9/9
-//                    $photo = Photo::where('id', 8178)->where('vehicle_id', $vehicle->id)->first(); // 9/9
+                        $photo = Photo::get(4600);
+                        $photo = Photo::get(4491);
+
+                        $photo = Photo::get(4501);
+                        $photo = Photo::get(4569);
+                        $photo = Photo::get(4574);
+
+                        $photo = Photo::get(4493);
 
 
-//                    $photo = Photo::where('id', 11913)->where('vehicle_id', $vehicle->id)->first(); // 9/9
+//                      76 Yumbeños
+
+                        $photo = Photo::get(8041); // 6/6
+                        $photo = Photo::get(8044); // 13/14
+                        $photo = Photo::get(8045); // 14/14
+                        $photo = Photo::get(8067); // 8/9
+                        $photo = Photo::get(8069); // 7/7
+                        $photo = Photo::get(8073); // 5/5
+                        $photo = Photo::get(8076); // 5/5
+                        $photo = Photo::get(8092); // 2/2
+                        $photo = Photo::get(8149); // 4/4
+                        $photo = Photo::get(8176); // 9/9
+                        $photo = Photo::get(8178); // 9/9
+
+                        $photo = Photo::get(11913); // 9/9
 
 
-//                        $photo->processRekognition(true, 'persons_and_faces');
-//                        $photo->save();
+//                      566 Yumbeños
+
+                        $photo = Photo::get(11913);
+
+
+                        $photo->processRekognition(true, 'persons_and_faces');
+                        $photo->save();
 
                         if ($photo) {
                             $response->photo = $this->photoService->getPhotoData($photo, $photos);
