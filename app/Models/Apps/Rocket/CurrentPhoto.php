@@ -81,7 +81,8 @@ class CurrentPhoto extends Model implements PhotoInterface
         $currentPhoto = $query->where('vehicle_id', $vehicle->id)->first();
         $currentPhoto = $currentPhoto ? $currentPhoto : new CurrentPhoto();
         $currentPhoto->vehicle()->associate($vehicle);
-        $currentPhoto->save();
+        $currentPhoto->date = Carbon::now();
+//        $currentPhoto->save();
         return $currentPhoto;
     }
 }

@@ -37,6 +37,20 @@ class ProfileSeat extends Model
 
     protected $fillable = ['occupation'];
 
+    public function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
+    public function getDateAttribute($date)
+    {
+        if (Str::contains($date, '-')) {
+            return Carbon::createFromFormat('Y-m-d H:i:s', $date);
+        }
+
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);

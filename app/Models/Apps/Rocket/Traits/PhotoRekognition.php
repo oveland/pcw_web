@@ -4,21 +4,10 @@
 namespace App\Models\Apps\Rocket\Traits;
 
 
-use App;
-use App\Services\Apps\Rocket\Photos\PhotoRekognitionService;
 use App\Services\AWS\RekognitionService;
 
 trait PhotoRekognition
 {
-    /**
-     * @param $type
-     * @return PhotoRekognitionService
-     */
-    public function photoRekognitionService($type)
-    {
-        return App::make("rocket.photo.rekognition.$type", ['vehicle' => $this->vehicle]);
-    }
-
     /**
      * @param bool $force
      * @param string $type

@@ -6,12 +6,23 @@ namespace App\Models\Apps\Rocket\Traits;
 
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
+use App\Services\Apps\Rocket\Photos\PhotoRekognitionService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use App;
 
 trait PhotoGlobals
 {
+    /**
+     * @param $type
+     * @return PhotoRekognitionService
+     */
+    public function photoRekognitionService($type)
+    {
+        return App::make("rocket.photo.rekognition.$type", ['vehicle' => $this->vehicle]);
+    }
+
     public function getDateAttribute($date)
     {
         if (Str::contains($date, '-')) {

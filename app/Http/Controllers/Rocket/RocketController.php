@@ -59,7 +59,7 @@ class RocketController extends Controller
                 if ($vehicle) {
                     $date = $request->get('date');
                     $photos = $this->photoService->for($vehicle)->getHistoric($date);
-                    $response->photos = $photos;
+                    $response->photos = $photos->sortByDesc('time')->values();
 
                     $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
                     $response->seating = $profileSeat ? $profileSeat->occupation : [];
@@ -108,6 +108,10 @@ class RocketController extends Controller
                 if ($vehicle) {
                     $date = $request->get('date');
                     $photos = $this->photoService->for($vehicle)->getHistoric($date);
+
+                    if ($photos->count()) {
+                        $photo = Photo::where('id', $photos->last()->id)->first();
+
 //                    $photo = Photo::where('id', 4594)->where('vehicle_id', $vehicle->id)->first(); // Indeterminado...
 //                    $photo = Photo::where('id', 4598)->where('vehicle_id', $vehicle->id)->first(); // Indeterminado...
 //                    $photo = Photo::where('id', 4536)->where('vehicle_id', $vehicle->id)->first(); // Similar a 4600
@@ -122,12 +126,12 @@ class RocketController extends Controller
 //                    $photo = Photo::where('id', 4569)->where('vehicle_id', $vehicle->id)->first();
 //                    $photo = Photo::where('id', 4574)->where('vehicle_id', $vehicle->id)->first();
 //
-                    $photo = Photo::where('id', 4493)->where('vehicle_id', $vehicle->id)->first();
+//                    $photo = Photo::where('id', 4493)->where('vehicle_id', $vehicle->id)->first();
 
 
-                    // 76 Yumbeños
+                        // 76 Yumbeños
 //                    $photo = Photo::where('id', 8041)->where('vehicle_id', $vehicle->id)->first(); // 6/6
-                    $photo = Photo::where('id', 8044)->where('vehicle_id', $vehicle->id)->first(); // 13/14
+//                    $photo = Photo::where('id', 8044)->where('vehicle_id', $vehicle->id)->first(); // 13/14
 //                    $photo = Photo::where('id', 8045)->where('vehicle_id', $vehicle->id)->first(); // 14/14
 //                    $photo = Photo::where('id', 8067)->where('vehicle_id', $vehicle->id)->first(); // 8/9
 //                    $photo = Photo::where('id', 8069)->where('vehicle_id', $vehicle->id)->first(); // 7/7
@@ -138,11 +142,16 @@ class RocketController extends Controller
 //                    $photo = Photo::where('id', 8176)->where('vehicle_id', $vehicle->id)->first(); // 9/9
 //                    $photo = Photo::where('id', 8178)->where('vehicle_id', $vehicle->id)->first(); // 9/9
 
-                    if ($photo) {
+
+//                    $photo = Photo::where('id', 11913)->where('vehicle_id', $vehicle->id)->first(); // 9/9
+
+
 //                        $photo->processRekognition(true, 'persons_and_faces');
 //                        $photo->save();
 
-                        $response->photo = $this->photoService->getPhotoData($photo, $photos);
+                        if ($photo) {
+                            $response->photo = $this->photoService->getPhotoData($photo, $photos);
+                        }
                     }
 
                     $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
