@@ -110,52 +110,51 @@ class RocketController extends Controller
                     $photos = $this->photoService->for($vehicle)->getHistoric($date);
 
                     if ($photos->count()) {
-                        $photo = Photo::get($photos->last()->id)->first();
+                        $photo = Photo::find($photos->last()->id);
+                    }
 
-//                      338 Alameda
+////                      338 Alameda
+//
+//                        $photo = Photo::find(4594);
+//                        $photo = Photo::find(4598);
+//                        $photo = Photo::find(4536);
+//
+//                        $photo = Photo::find(4600);
+//                        $photo = Photo::find(4491);
+//
+//                        $photo = Photo::find(4501);
+//                        $photo = Photo::find(4569);
+//                        $photo = Photo::find(4574);
+//
+//                        $photo = Photo::find(4493);
+//
+//
+////                      76 Yumbeños
+//
+//                        $photo = Photo::find(8041); // 6/6
+//                        $photo = Photo::find(8044); // 13/14
+//                        $photo = Photo::find(8045); // 14/14
+//                        $photo = Photo::find(8067); // 8/9
+//                        $photo = Photo::find(8069); // 7/7
+//                        $photo = Photo::find(8073); // 5/5
+//                        $photo = Photo::find(8076); // 5/5
+//                        $photo = Photo::find(8092); // 2/2
+//                        $photo = Photo::find(8149); // 4/4
+//                        $photo = Photo::find(8176); // 9/9
+//                        $photo = Photo::find(8178); // 9/9
+//
+//                        $photo = Photo::find(11913); // 9/9
+//
+//
+////                      566 Yumbeños
+//
+                    $photo = Photo::find(13314);
 
-                        $photo = Photo::get(4594);
-                        $photo = Photo::get(4598);
-                        $photo = Photo::get(4536);
+//                        $photo->processRekognition(true, 'persons_and_faces');
+//                        $photo->save();
 
-                        $photo = Photo::get(4600);
-                        $photo = Photo::get(4491);
-
-                        $photo = Photo::get(4501);
-                        $photo = Photo::get(4569);
-                        $photo = Photo::get(4574);
-
-                        $photo = Photo::get(4493);
-
-
-//                      76 Yumbeños
-
-                        $photo = Photo::get(8041); // 6/6
-                        $photo = Photo::get(8044); // 13/14
-                        $photo = Photo::get(8045); // 14/14
-                        $photo = Photo::get(8067); // 8/9
-                        $photo = Photo::get(8069); // 7/7
-                        $photo = Photo::get(8073); // 5/5
-                        $photo = Photo::get(8076); // 5/5
-                        $photo = Photo::get(8092); // 2/2
-                        $photo = Photo::get(8149); // 4/4
-                        $photo = Photo::get(8176); // 9/9
-                        $photo = Photo::get(8178); // 9/9
-
-                        $photo = Photo::get(11913); // 9/9
-
-
-//                      566 Yumbeños
-
-                        $photo = Photo::get(11913);
-
-
-                        $photo->processRekognition(true, 'persons_and_faces');
-                        $photo->save();
-
-                        if ($photo) {
-                            $response->photo = $this->photoService->getPhotoData($photo, $photos);
-                        }
+                    if ($photo) {
+                        $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
 
                     $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
