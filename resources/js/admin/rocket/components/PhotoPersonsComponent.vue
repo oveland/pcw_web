@@ -20,22 +20,45 @@
         <seat-component v-if="busySeat.width > 0 && busySeat.height > 0" v-for="busySeat in busySeating" :key="busySeat.id + Math.random()" :seat="busySeat" :image="image" :fixed="true"></seat-component>
         <seat-component v-if="seatOccupied && seatOccupied.width > 0 && seatOccupied.height > 0" :seat="seatOccupied" :image="image" :fixed="true"></seat-component>
         <img id="image-seating" v-if="photo.details.url" draggable="false" :src="photo.details.url.encoded ? photo.details.url.encoded : photo.details.url" :width="`${image.size.width}px`" :height="`${image.size.height}px`" alt="Seating photo">
+
+        <div class="container-actions text-center" v-if="seating.length > 0">
+            <div class="p-10">
+                <div class="md-checkbox has-success">
+                    <input type="checkbox" id="checkbox14" class="md-check" v-model="styleSeating.show">
+                    <label for="checkbox14">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box text-muted"></span>
+                    </label>
+                    <range-slider
+                            class="slider"
+                            min="0"
+                            max="100"
+                            step="1"
+                            v-model="styleSeating.opacity">
+                    </range-slider>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+    import RangeSlider from 'vue-range-slider';
+    import 'vue-range-slider/dist/vue-range-slider.css';
+
     import SeatComponent from './SeatComponent';
 
     export default {
         name: "PhotoPersonsComponent",
         components: {
+            RangeSlider,
             SeatComponent
         },
         props: {
             photo: Object,
             seating: Array,
             fixedSeating: Boolean,
-            styleSeating: Object
         },
         watch:{
             styleSeating(){
@@ -51,7 +74,11 @@
                         width: 1000,
                         height: 700,
                     },
-                }
+                },
+                styleSeating: {
+                    show: false,
+                    opacity: 100,
+                },
             }
         },
         methods: {
@@ -111,5 +138,18 @@
         border-color: #fc0050 !important;
         border-radius: 2px;
         z-index: 10000 !important;
+    }
+
+    .slider{
+        margin: 0;
+    }
+
+    .container-actions{
+        position: absolute;
+        bottom: 5%;
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        margin-left: 15%;
     }
 </style>
