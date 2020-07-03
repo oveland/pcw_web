@@ -1,5 +1,5 @@
 <template>
-    <vue-draggable-resizable class="seat"
+    <vue-draggable-resizable class="seat" :class="isOccupied ? 'occupied': ''"
                              :parent="true"
                              :w="position.width" :h="position.height" :x="position.left" :y="position.top"
                              @activated="onActivated" @deactivated="onDeactivated"
@@ -25,6 +25,7 @@
         },
         props: {
             seat: Object,
+            seatingOccupied: Object,
             image: Object,
             fixed: Boolean
         },
@@ -55,6 +56,9 @@
                         top: h / 2
                     }
                 };
+            },
+            isOccupied(){
+                return this.seatingOccupied && this.seatingOccupied[this.seat.number];
             }
         },
         methods: {
@@ -106,7 +110,7 @@
 </script>
 
 <style scoped>
-    .seat{
+    .seat {
         text-align: center;
         padding: 2px;
         background-color: rgba(0, 233, 198, 0.43);
@@ -117,7 +121,12 @@
         z-index: 200 !important;
     }
 
-    .seat.active{
+    .seat.occupied {
+        background-color: #0805f578 !important;
+        border-color: #000163;
+    }
+
+    .seat.active {
         background-color: rgba(13, 208, 32, 0);
         box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);
         border-color: #ff0051;
@@ -125,11 +134,11 @@
         z-index: 10000 !important;
     }
 
-    .seat:hover{
+    .seat:hover {
         cursor: move;
     }
 
-    .seat .number{
+    .seat .number {
         font-size: 1.7em !important;
         color: white;
         font-weight: bold;
@@ -137,7 +146,12 @@
         text-shadow: 1px 2px 3px #0600cc;
     }
 
-    .seat .center{
+    .seat.occupied .number {
+        color: #f5ffdd !important;
+        text-shadow: 1px 2px 3px yellow !important;
+    }
+
+    .seat .center {
         position: relative;
         float: left;
         border: 1px solid #00ceff;
@@ -145,7 +159,7 @@
         width: 1px;
     }
 
-    .seat input{
+    .seat input {
         background: #0000006e !important;
         color: white !important;
         height: 15px !important;
@@ -154,7 +168,7 @@
         top: -30px;
     }
 
-    .seat .position{
+    .seat .position {
         font-size: 0.7em !important;
         color: white;
         font-weight: bold;
@@ -166,13 +180,13 @@
         display: none;
     }
 
-    .seat.active .position{
+    .seat.active .position {
         display: block !important;
     }
 
-   .draw{
-       width: 20%;
-       background: darkgrey;
-       color: white;
-   }
+    .draw {
+        width: 20%;
+        background: darkgrey;
+        color: white;
+    }
 </style>

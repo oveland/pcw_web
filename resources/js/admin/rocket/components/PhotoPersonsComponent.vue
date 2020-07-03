@@ -16,9 +16,9 @@
             </div>
         </div>
 
-        <seat-component v-if="styleSeating.show && seat.width > 0 && seat.height > 0" v-for="seat in seating" :key="seat.id" :seat.sync="seat" :style="`opacity: ${styleSeating ? styleSeating.opacity/100 : 100}`" :image="image" :fixed="fixedSeating"></seat-component>
+        <seat-component v-if="styleSeating.show && seat.width > 0 && seat.height > 0" v-for="seat in seating" :key="seat.id" :seat.sync="seat" :seating-occupied="seatingOccupied" :style="`opacity: ${styleSeating ? styleSeating.opacity/100 : 100}`" :image="image" :fixed="fixedSeating"></seat-component>
         <seat-component v-if="busySeat.width > 0 && busySeat.height > 0" v-for="busySeat in busySeating" :key="busySeat.id + Math.random()" :seat="busySeat" :image="image" :fixed="true"></seat-component>
-        <seat-component v-if="seatOccupied && seatOccupied.width > 0 && seatOccupied.height > 0" :seat="seatOccupied" :image="image" :fixed="true"></seat-component>
+        <seat-component v-if="seatOccupied && seatOccupied.width > 0 && seatOccupied.height > 0" :seat="seatOccupied" :seating-occupied="seatingOccupied" :image="image" :fixed="true"></seat-component>
         <img  id="image-seating" v-if="photo.details.url" draggable="false" v-lazy="photo.details.url.encoded ? photo.details.url.encoded : photo.details.url" :width="`${image.size.width}px`" :height="`${image.size.height}px`" alt="Seating photo">
 
         <div class="container-actions text-center" v-if="photo && seating.length > 0">
@@ -82,6 +82,11 @@
                     show: false,
                     opacity: 100,
                 },
+            }
+        },
+        computed: {
+            seatingOccupied(){
+                return this.photo.details.occupation ? this.photo.details.occupation.seatingOccupied : null;
             }
         },
         methods: {

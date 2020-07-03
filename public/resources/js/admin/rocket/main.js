@@ -264,6 +264,11 @@ Vue.use(vue_lazyload__WEBPACK_IMPORTED_MODULE_2__["default"]);
       }
     };
   },
+  computed: {
+    seatingOccupied: function seatingOccupied() {
+      return this.photo.details.occupation ? this.photo.details.occupation.seatingOccupied : null;
+    }
+  },
   methods: {
     setBusySeating: function setBusySeating(draw) {
       if (draw.profile) {
@@ -723,6 +728,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: {
     seat: Object,
+    seatingOccupied: Object,
     image: Object,
     fixed: Boolean
   },
@@ -752,6 +758,9 @@ __webpack_require__.r(__webpack_exports__);
           top: h / 2
         }
       };
+    },
+    isOccupied: function isOccupied() {
+      return this.seatingOccupied && this.seatingOccupied[this.seat.number];
     }
   },
   methods: {
@@ -930,7 +939,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.seat[data-v-c36d7ea8]{\n     text-align: center;\n     padding: 2px;\n     background-color: rgba(0, 233, 198, 0.43);\n     border-radius: 3px;\n     border-style: solid;\n     border-color: #00e1ff;\n     transition: ease background-color 1s;\n     z-index: 200 !important;\n}\n.seat.active[data-v-c36d7ea8]{\n     background-color: rgba(13, 208, 32, 0);\n     box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n     border-color: #ff0051;\n     border-width: 2px;\n     z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover{\n     cursor: move;\n}\n.seat .number[data-v-c36d7ea8]{\n     font-size: 1.7em !important;\n     color: white;\n     font-weight: bold;\n     z-index: 10000;\n     text-shadow: 1px 2px 3px #0600cc;\n}\n.seat .center[data-v-c36d7ea8]{\n     position: relative;\n     float: left;\n     border: 1px solid #00ceff;\n     height: 1px;\n     width: 1px;\n}\n.seat input[data-v-c36d7ea8]{\n     background: #0000006e !important;\n     color: white !important;\n     height: 15px !important;\n     font-size: 0.8em !important;\n     position: absolute;\n     top: -30px;\n}\n.seat .position[data-v-c36d7ea8]{\n     font-size: 0.7em !important;\n     color: white;\n     font-weight: bold;\n     background: rgba(10, 21, 32, 0.71);\n     padding: 2px;\n     position: absolute;\n     width: 120px;\n     bottom: -40px;\n     display: none;\n}\n.seat.active .position[data-v-c36d7ea8]{\n     display: block !important;\n}\n.draw[data-v-c36d7ea8]{\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
+exports.push([module.i, "\n.seat[data-v-c36d7ea8] {\n    text-align: center;\n    padding: 2px;\n    background-color: rgba(0, 233, 198, 0.43);\n    border-radius: 3px;\n    border-style: solid;\n    border-color: #00e1ff;\n    transition: ease background-color 1s;\n    z-index: 200 !important;\n}\n.seat.occupied[data-v-c36d7ea8] {\n    background-color: #0805f578 !important;\n    border-color: #000163;\n}\n.seat.active[data-v-c36d7ea8] {\n    background-color: rgba(13, 208, 32, 0);\n    box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n    border-color: #ff0051;\n    border-width: 2px;\n    z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover {\n    cursor: move;\n}\n.seat .number[data-v-c36d7ea8] {\n    font-size: 1.7em !important;\n    color: white;\n    font-weight: bold;\n    z-index: 10000;\n    text-shadow: 1px 2px 3px #0600cc;\n}\n.seat.occupied .number[data-v-c36d7ea8] {\n    color: #f5ffdd !important;\n    text-shadow: 1px 2px 3px yellow !important;\n}\n.seat .center[data-v-c36d7ea8] {\n    position: relative;\n    float: left;\n    border: 1px solid #00ceff;\n    height: 1px;\n    width: 1px;\n}\n.seat input[data-v-c36d7ea8] {\n    background: #0000006e !important;\n    color: white !important;\n    height: 15px !important;\n    font-size: 0.8em !important;\n    position: absolute;\n    top: -30px;\n}\n.seat .position[data-v-c36d7ea8] {\n    font-size: 0.7em !important;\n    color: white;\n    font-weight: bold;\n    background: rgba(10, 21, 32, 0.71);\n    padding: 2px;\n    position: absolute;\n    width: 120px;\n    bottom: -40px;\n    display: none;\n}\n.seat.active .position[data-v-c36d7ea8] {\n    display: block !important;\n}\n.draw[data-v-c36d7ea8] {\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
 
 // exports
 
@@ -7405,6 +7414,7 @@ var render = function() {
                     (_vm.styleSeating ? _vm.styleSeating.opacity / 100 : 100),
                   attrs: {
                     seat: seat,
+                    "seating-occupied": _vm.seatingOccupied,
                     image: _vm.image,
                     fixed: _vm.fixedSeating
                   },
@@ -7430,7 +7440,12 @@ var render = function() {
           _vm.seatOccupied.width > 0 &&
           _vm.seatOccupied.height > 0
             ? _c("seat-component", {
-                attrs: { seat: _vm.seatOccupied, image: _vm.image, fixed: true }
+                attrs: {
+                  seat: _vm.seatOccupied,
+                  "seating-occupied": _vm.seatingOccupied,
+                  image: _vm.image,
+                  fixed: true
+                }
               })
             : _vm._e(),
           _vm._v(" "),
@@ -7939,6 +7954,7 @@ var render = function() {
     "vue-draggable-resizable",
     {
       staticClass: "seat",
+      class: _vm.isOccupied ? "occupied" : "",
       attrs: {
         parent: true,
         w: _vm.position.width,
