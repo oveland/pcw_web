@@ -137,7 +137,7 @@ class APIRocketService implements APIAppsInterface
             case 'take-photo':
                 $response = $this->rocketService->for($this->vehicle)
                     ->command([
-                        'action' => $action,
+                        'action' => 'get-photo',
                         'side' => $this->request->get('side') ?? 'rear',
                         'quality' => $this->request->get('quality') ?? 'hd'
                     ]);

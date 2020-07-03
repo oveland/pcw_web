@@ -52,7 +52,7 @@ class TakePhotoCommand extends Command
         if ($vehicle) {
             $response = $this->rocketService->for($vehicle)
                 ->command([
-                    'action' => 'take-photo',
+                    'action' => 'get-photo',
                     'side' => $this->option('side'),
                     'quality' => $this->option('quality')
                 ]);
