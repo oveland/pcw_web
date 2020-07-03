@@ -24,7 +24,7 @@ class ManagePassengersByRecorderController extends Controller
                     $field = $request->get('field');
                     $value = $request->get('value');
 
-                    $editedInfo = "$field = $value";
+                    $editedInfo = "User $user->id > $field = $value";
 
                     $success = DB::update("UPDATE registrodespacho SET $field = $value, edit_user_id = $user->id, edited_info = edited_info || '$editedInfo, ', ignore_trigger = TRUE WHERE id_registro = $id");
 
