@@ -152,7 +152,7 @@ abstract class PhotoRekognitionService
             return collect($rule->range)->contains($confidence);
         })->first());
 
-        $count = $rule->get('count') && !$boxZone->overlap && $boundingBox->width > 2 && $boundingBox->height > 2;
+        $count = $rule->get('count') && !$boxZone->overlap && $boundingBox->width > 1.5 && $boundingBox->height > 2;
 
         if(!$count){
             $rule->put('color', 'rgba(255, 50, 55, 0.78)');
@@ -235,6 +235,7 @@ abstract class PhotoRekognitionService
             $occupation->count = $count;
             $occupation->persons = $seatingOccupied->count();
             $occupation->seatingOccupied = $seatingOccupied;
+            $occupation->seatingOccupiedStr = $seatingOccupied->keys()->sort()->implode(', ');
 
             return $occupation;
         }

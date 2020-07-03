@@ -19,13 +19,13 @@
         <seat-component v-if="styleSeating.show && seat.width > 0 && seat.height > 0" v-for="seat in seating" :key="seat.id" :seat.sync="seat" :style="`opacity: ${styleSeating ? styleSeating.opacity/100 : 100}`" :image="image" :fixed="fixedSeating"></seat-component>
         <seat-component v-if="busySeat.width > 0 && busySeat.height > 0" v-for="busySeat in busySeating" :key="busySeat.id + Math.random()" :seat="busySeat" :image="image" :fixed="true"></seat-component>
         <seat-component v-if="seatOccupied && seatOccupied.width > 0 && seatOccupied.height > 0" :seat="seatOccupied" :image="image" :fixed="true"></seat-component>
-        <img id="image-seating" v-if="photo.details.url" draggable="false" :src="photo.details.url.encoded ? photo.details.url.encoded : photo.details.url" :width="`${image.size.width}px`" :height="`${image.size.height}px`" alt="Seating photo">
+        <img  id="image-seating" v-if="photo.details.url" draggable="false" v-lazy="photo.details.url.encoded ? photo.details.url.encoded : photo.details.url" :width="`${image.size.width}px`" :height="`${image.size.height}px`" alt="Seating photo">
 
-        <div class="container-actions text-center" v-if="seating.length > 0">
-            <div class="p-10">
+        <div class="container-actions text-center" v-if="photo && seating.length > 0">
+            <div class="p-10 actions">
                 <div class="md-checkbox has-success">
-                    <input type="checkbox" id="checkbox14" class="md-check" v-model="styleSeating.show">
-                    <label for="checkbox14">
+                    <input type="checkbox" :id="`show-photo-${photo.id}${fixedSeating ? '':'-profile'}`" class="md-check" v-model="styleSeating.show">
+                    <label :for="`show-photo-${photo.id}${fixedSeating ? '':'-profile'}`">
                         <span class="inc"></span>
                         <span class="check"></span>
                         <span class="box text-muted"></span>
@@ -46,6 +46,9 @@
 <script>
     import RangeSlider from 'vue-range-slider';
     import 'vue-range-slider/dist/vue-range-slider.css';
+
+    import VueLazyload from 'vue-lazyload';
+    Vue.use(VueLazyload);
 
     import SeatComponent from './SeatComponent';
 
@@ -144,12 +147,18 @@
         margin: 0;
     }
 
-    .container-actions{
+    .container-actions .actions {
+        margin: auto;
+        width: 20%;
+    }
+
+    .container-actions {
         position: absolute;
-        bottom: 5%;
+        bottom: 0;
         z-index: 10000;
         background: rgba(0, 0, 0, 0.05);
         border-radius: 10px;
-        margin-left: 15%;
+        margin: auto;
+        width: 100%;
     }
 </style>

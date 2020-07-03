@@ -155,6 +155,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PhotoDetailsComponent",
   props: {
@@ -177,7 +180,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_range_slider__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-range-slider/dist/vue-range-slider.css */ "./node_modules/vue-range-slider/dist/vue-range-slider.css");
 /* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _SeatComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SeatComponent */ "./resources/js/admin/rocket/components/SeatComponent.vue");
+/* harmony import */ var vue_lazyload__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-lazyload */ "./node_modules/vue-lazyload/vue-lazyload.esm.js");
+/* harmony import */ var _SeatComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SeatComponent */ "./resources/js/admin/rocket/components/SeatComponent.vue");
 //
 //
 //
@@ -225,12 +229,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
+
+Vue.use(vue_lazyload__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PhotoPersonsComponent",
   components: {
     RangeSlider: vue_range_slider__WEBPACK_IMPORTED_MODULE_0___default.a,
-    SeatComponent: _SeatComponent__WEBPACK_IMPORTED_MODULE_2__["default"]
+    SeatComponent: _SeatComponent__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   props: {
     photo: Object,
@@ -323,23 +329,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -365,10 +354,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      styleSeating: {
-        show: Boolean,
-        opacity: 100
-      },
       image: {
         size: {
           width: 1000,
@@ -907,7 +892,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.container-photo[data-v-8218c636] {\n    padding: 0 !important;\n    width: 1000px;\n    height: auto;\n}\n.container-photo .zone-detection[data-v-8218c636] {\n    position: absolute;\n    /*background: rgba(137, 138, 135, 0.54);*/\n    /*color: #9bef00;*/\n    border-width: 2px;\n    border-style: solid;\n    border-radius: 5px;\n    z-index: 200;\n    padding: 5px;\n}\n.container-photo .zone-detection.undetected[data-v-8218c636] {\n    border: 3px solid red !important;\n    border-radius: 4px;\n}\n.container-photo .zone-detection-center[data-v-8218c636] {\n    border-style: solid;\n    border-width: 2px;\n    position: absolute;\n    border-radius: 50%;\n    z-index: 100000 !important;\n}\n.container-photo .zone-detection small[data-v-8218c636] {\n    font-size: 0.5em;\n    color: #e2e1e1;\n    float: left;\n}\n.container-photo .zone-detection.selected[data-v-8218c636], .container-photo .zone-detection-center.selected[data-v-8218c636] {\n    border-color: #fc0050 !important;\n    border-radius: 2px;\n    z-index: 10000 !important;\n}\n.slider[data-v-8218c636]{\n    margin: 0;\n}\n.container-actions[data-v-8218c636]{\n    position: absolute;\n    bottom: 5%;\n    z-index: 10000;\n    background: rgba(0, 0, 0, 0.05);\n    border-radius: 10px;\n    margin-left: 15%;\n}\n", ""]);
+exports.push([module.i, "\n.container-photo[data-v-8218c636] {\n    padding: 0 !important;\n    width: 1000px;\n    height: auto;\n}\n.container-photo .zone-detection[data-v-8218c636] {\n    position: absolute;\n    /*background: rgba(137, 138, 135, 0.54);*/\n    /*color: #9bef00;*/\n    border-width: 2px;\n    border-style: solid;\n    border-radius: 5px;\n    z-index: 200;\n    padding: 5px;\n}\n.container-photo .zone-detection.undetected[data-v-8218c636] {\n    border: 3px solid red !important;\n    border-radius: 4px;\n}\n.container-photo .zone-detection-center[data-v-8218c636] {\n    border-style: solid;\n    border-width: 2px;\n    position: absolute;\n    border-radius: 50%;\n    z-index: 100000 !important;\n}\n.container-photo .zone-detection small[data-v-8218c636] {\n    font-size: 0.5em;\n    color: #e2e1e1;\n    float: left;\n}\n.container-photo .zone-detection.selected[data-v-8218c636], .container-photo .zone-detection-center.selected[data-v-8218c636] {\n    border-color: #fc0050 !important;\n    border-radius: 2px;\n    z-index: 10000 !important;\n}\n.slider[data-v-8218c636]{\n    margin: 0;\n}\n.container-actions .actions[data-v-8218c636] {\n    margin: auto;\n    width: 20%;\n}\n.container-actions[data-v-8218c636] {\n    position: absolute;\n    bottom: 0;\n    z-index: 10000;\n    background: rgba(0, 0, 0, 0.05);\n    border-radius: 10px;\n    margin: auto;\n    width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -926,7 +911,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.container-actions[data-v-4d1f7386] {\n    margin: auto;\n    width: 1000px;\n    text-align: center;\n}\n.btn-action[data-v-4d1f7386] {\n    margin: 5px;\n    display: inline;\n}\n", ""]);
+exports.push([module.i, "\n.btn-action[data-v-4d1f7386] {\n    margin: 5px;\n    display: inline;\n}\n", ""]);
 
 // exports
 
@@ -945,7 +930,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.seat[data-v-c36d7ea8]{\n     text-align: center;\n     padding: 2px;\n     background-color: rgba(0, 233, 198, 0.43);\n     border-radius: 3px;\n     border-style: solid;\n     border-color: #00e1ff;\n     transition: ease background-color 1s;\n     z-index: 200 !important;\n}\n.seat.active[data-v-c36d7ea8]{\n     background-color: rgba(13, 208, 32, 0);\n     box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n     border-color: #ff0051;\n     border-width: 2px;\n     z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover{\n     cursor: move;\n}\n.seat .number[data-v-c36d7ea8]{\n     font-size: 0.7em !important;\n     color: white;\n     font-weight: bold;\n     z-index: 10000;\n}\n.seat .center[data-v-c36d7ea8]{\n     position: relative;\n     float: left;\n     border: 1px solid #00ceff;\n     height: 1px;\n     width: 1px;\n}\n.seat input[data-v-c36d7ea8]{\n     background: #0000006e !important;\n     color: white !important;\n     height: 15px !important;\n     font-size: 0.8em !important;\n     position: absolute;\n     top: -30px;\n}\n.seat .position[data-v-c36d7ea8]{\n     font-size: 0.7em !important;\n     color: white;\n     font-weight: bold;\n     background: rgba(10, 21, 32, 0.71);\n     padding: 2px;\n     position: absolute;\n     width: 120px;\n     bottom: -40px;\n     display: none;\n}\n.seat.active .position[data-v-c36d7ea8]{\n     display: block !important;\n}\n.draw[data-v-c36d7ea8]{\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
+exports.push([module.i, "\n.seat[data-v-c36d7ea8]{\n     text-align: center;\n     padding: 2px;\n     background-color: rgba(0, 233, 198, 0.43);\n     border-radius: 3px;\n     border-style: solid;\n     border-color: #00e1ff;\n     transition: ease background-color 1s;\n     z-index: 200 !important;\n}\n.seat.active[data-v-c36d7ea8]{\n     background-color: rgba(13, 208, 32, 0);\n     box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n     border-color: #ff0051;\n     border-width: 2px;\n     z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover{\n     cursor: move;\n}\n.seat .number[data-v-c36d7ea8]{\n     font-size: 1.7em !important;\n     color: white;\n     font-weight: bold;\n     z-index: 10000;\n     text-shadow: 1px 2px 3px #0600cc;\n}\n.seat .center[data-v-c36d7ea8]{\n     position: relative;\n     float: left;\n     border: 1px solid #00ceff;\n     height: 1px;\n     width: 1px;\n}\n.seat input[data-v-c36d7ea8]{\n     background: #0000006e !important;\n     color: white !important;\n     height: 15px !important;\n     font-size: 0.8em !important;\n     position: absolute;\n     top: -30px;\n}\n.seat .position[data-v-c36d7ea8]{\n     font-size: 0.7em !important;\n     color: white;\n     font-weight: bold;\n     background: rgba(10, 21, 32, 0.71);\n     padding: 2px;\n     position: absolute;\n     width: 120px;\n     bottom: -40px;\n     display: none;\n}\n.seat.active .position[data-v-c36d7ea8]{\n     display: block !important;\n}\n.draw[data-v-c36d7ea8]{\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
 
 // exports
 
@@ -5269,6 +5254,1824 @@ VueI18n.version = '8.15.0';
 
 /***/ }),
 
+/***/ "./node_modules/vue-lazyload/vue-lazyload.esm.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/vue-lazyload/vue-lazyload.esm.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/*!
+ * Vue-Lazyload.js v1.3.3
+ * (c) 2019 Awe <hilongjw@gmail.com>
+ * Released under the MIT License.
+ */
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+/*!
+ * is-primitive <https://github.com/jonschlinkert/is-primitive>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+// see http://jsperf.com/testing-value-is-primitive/7
+
+var isPrimitive = function isPrimitive(value) {
+  return value == null || typeof value !== 'function' && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) !== 'object';
+};
+
+/*!
+ * assign-symbols <https://github.com/jonschlinkert/assign-symbols>
+ *
+ * Copyright (c) 2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+var assignSymbols = function assignSymbols(receiver, objects) {
+  if (receiver === null || typeof receiver === 'undefined') {
+    throw new TypeError('expected first argument to be an object.');
+  }
+
+  if (typeof objects === 'undefined' || typeof Symbol === 'undefined') {
+    return receiver;
+  }
+
+  if (typeof Object.getOwnPropertySymbols !== 'function') {
+    return receiver;
+  }
+
+  var isEnumerable = Object.prototype.propertyIsEnumerable;
+  var target = Object(receiver);
+  var len = arguments.length,
+      i = 0;
+
+  while (++i < len) {
+    var provider = Object(arguments[i]);
+    var names = Object.getOwnPropertySymbols(provider);
+
+    for (var j = 0; j < names.length; j++) {
+      var key = names[j];
+
+      if (isEnumerable.call(provider, key)) {
+        target[key] = provider[key];
+      }
+    }
+  }
+  return target;
+};
+
+var toString = Object.prototype.toString;
+
+/**
+ * Get the native `typeof` a value.
+ *
+ * @param  {*} `val`
+ * @return {*} Native javascript type
+ */
+
+var kindOf = function kindOf(val) {
+  var type = typeof val === 'undefined' ? 'undefined' : _typeof(val);
+
+  // primitivies
+  if (type === 'undefined') {
+    return 'undefined';
+  }
+  if (val === null) {
+    return 'null';
+  }
+  if (val === true || val === false || val instanceof Boolean) {
+    return 'boolean';
+  }
+  if (type === 'string' || val instanceof String) {
+    return 'string';
+  }
+  if (type === 'number' || val instanceof Number) {
+    return 'number';
+  }
+
+  // functions
+  if (type === 'function' || val instanceof Function) {
+    if (typeof val.constructor.name !== 'undefined' && val.constructor.name.slice(0, 9) === 'Generator') {
+      return 'generatorfunction';
+    }
+    return 'function';
+  }
+
+  // array
+  if (typeof Array.isArray !== 'undefined' && Array.isArray(val)) {
+    return 'array';
+  }
+
+  // check for instances of RegExp and Date before calling `toString`
+  if (val instanceof RegExp) {
+    return 'regexp';
+  }
+  if (val instanceof Date) {
+    return 'date';
+  }
+
+  // other objects
+  type = toString.call(val);
+
+  if (type === '[object RegExp]') {
+    return 'regexp';
+  }
+  if (type === '[object Date]') {
+    return 'date';
+  }
+  if (type === '[object Arguments]') {
+    return 'arguments';
+  }
+  if (type === '[object Error]') {
+    return 'error';
+  }
+  if (type === '[object Promise]') {
+    return 'promise';
+  }
+
+  // buffer
+  if (isBuffer(val)) {
+    return 'buffer';
+  }
+
+  // es6: Map, WeakMap, Set, WeakSet
+  if (type === '[object Set]') {
+    return 'set';
+  }
+  if (type === '[object WeakSet]') {
+    return 'weakset';
+  }
+  if (type === '[object Map]') {
+    return 'map';
+  }
+  if (type === '[object WeakMap]') {
+    return 'weakmap';
+  }
+  if (type === '[object Symbol]') {
+    return 'symbol';
+  }
+
+  if (type === '[object Map Iterator]') {
+    return 'mapiterator';
+  }
+  if (type === '[object Set Iterator]') {
+    return 'setiterator';
+  }
+  if (type === '[object String Iterator]') {
+    return 'stringiterator';
+  }
+  if (type === '[object Array Iterator]') {
+    return 'arrayiterator';
+  }
+
+  // typed arrays
+  if (type === '[object Int8Array]') {
+    return 'int8array';
+  }
+  if (type === '[object Uint8Array]') {
+    return 'uint8array';
+  }
+  if (type === '[object Uint8ClampedArray]') {
+    return 'uint8clampedarray';
+  }
+  if (type === '[object Int16Array]') {
+    return 'int16array';
+  }
+  if (type === '[object Uint16Array]') {
+    return 'uint16array';
+  }
+  if (type === '[object Int32Array]') {
+    return 'int32array';
+  }
+  if (type === '[object Uint32Array]') {
+    return 'uint32array';
+  }
+  if (type === '[object Float32Array]') {
+    return 'float32array';
+  }
+  if (type === '[object Float64Array]') {
+    return 'float64array';
+  }
+
+  // must be a plain object
+  return 'object';
+};
+
+/**
+ * If you need to support Safari 5-7 (8-10 yr-old browser),
+ * take a look at https://github.com/feross/is-buffer
+ */
+
+function isBuffer(val) {
+  return val.constructor && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
+}
+
+function assign(target /*, objects*/) {
+  target = target || {};
+  var len = arguments.length,
+      i = 0;
+  if (len === 1) {
+    return target;
+  }
+  while (++i < len) {
+    var val = arguments[i];
+    if (isPrimitive(target)) {
+      target = val;
+    }
+    if (isObject$1(val)) {
+      extend(target, val);
+    }
+  }
+  return target;
+}
+
+/**
+ * Shallow extend
+ */
+
+function extend(target, obj) {
+  assignSymbols(target, obj);
+
+  for (var key in obj) {
+    if (key !== '__proto__' && hasOwn(obj, key)) {
+      var val = obj[key];
+      if (isObject$1(val)) {
+        if (kindOf(target[key]) === 'undefined' && kindOf(val) === 'function') {
+          target[key] = val;
+        }
+        target[key] = assign(target[key] || {}, val);
+      } else {
+        target[key] = val;
+      }
+    }
+  }
+  return target;
+}
+
+/**
+ * Returns true if the object is a plain object or a function.
+ */
+
+function isObject$1(obj) {
+  return kindOf(obj) === 'object' || kindOf(obj) === 'function';
+}
+
+/**
+ * Returns true if the given `key` is an own property of `obj`.
+ */
+
+function hasOwn(obj, key) {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
+/**
+ * Expose `assign`
+ */
+
+var assignDeep = assign;
+
+var inBrowser = typeof window !== 'undefined';
+var hasIntersectionObserver = checkIntersectionObserver();
+
+function checkIntersectionObserver() {
+  if (inBrowser && 'IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
+    // Minimal polyfill for Edge 15's lack of `isIntersecting`
+    // See: https://github.com/w3c/IntersectionObserver/issues/211
+    if (!('isIntersecting' in window.IntersectionObserverEntry.prototype)) {
+      Object.defineProperty(window.IntersectionObserverEntry.prototype, 'isIntersecting', {
+        get: function get$$1() {
+          return this.intersectionRatio > 0;
+        }
+      });
+    }
+    return true;
+  }
+  return false;
+}
+
+var modeType = {
+  event: 'event',
+  observer: 'observer'
+
+  // CustomEvent polyfill
+};var CustomEvent = function () {
+  if (!inBrowser) return;
+  if (typeof window.CustomEvent === 'function') return window.CustomEvent;
+  function CustomEvent(event, params) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent('CustomEvent');
+    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+    return evt;
+  }
+  CustomEvent.prototype = window.Event.prototype;
+  return CustomEvent;
+}();
+
+function remove(arr, item) {
+  if (!arr.length) return;
+  var index = arr.indexOf(item);
+  if (index > -1) return arr.splice(index, 1);
+}
+
+function some(arr, fn) {
+  var has = false;
+  for (var i = 0, len = arr.length; i < len; i++) {
+    if (fn(arr[i])) {
+      has = true;
+      break;
+    }
+  }
+  return has;
+}
+
+function getBestSelectionFromSrcset(el, scale) {
+  if (el.tagName !== 'IMG' || !el.getAttribute('data-srcset')) return;
+
+  var options = el.getAttribute('data-srcset');
+  var result = [];
+  var container = el.parentNode;
+  var containerWidth = container.offsetWidth * scale;
+
+  var spaceIndex = void 0;
+  var tmpSrc = void 0;
+  var tmpWidth = void 0;
+
+  options = options.trim().split(',');
+
+  options.map(function (item) {
+    item = item.trim();
+    spaceIndex = item.lastIndexOf(' ');
+    if (spaceIndex === -1) {
+      tmpSrc = item;
+      tmpWidth = 999998;
+    } else {
+      tmpSrc = item.substr(0, spaceIndex);
+      tmpWidth = parseInt(item.substr(spaceIndex + 1, item.length - spaceIndex - 2), 10);
+    }
+    result.push([tmpWidth, tmpSrc]);
+  });
+
+  result.sort(function (a, b) {
+    if (a[0] < b[0]) {
+      return 1;
+    }
+    if (a[0] > b[0]) {
+      return -1;
+    }
+    if (a[0] === b[0]) {
+      if (b[1].indexOf('.webp', b[1].length - 5) !== -1) {
+        return 1;
+      }
+      if (a[1].indexOf('.webp', a[1].length - 5) !== -1) {
+        return -1;
+      }
+    }
+    return 0;
+  });
+  var bestSelectedSrc = '';
+  var tmpOption = void 0;
+
+  for (var i = 0; i < result.length; i++) {
+    tmpOption = result[i];
+    bestSelectedSrc = tmpOption[1];
+    var next = result[i + 1];
+    if (next && next[0] < containerWidth) {
+      bestSelectedSrc = tmpOption[1];
+      break;
+    } else if (!next) {
+      bestSelectedSrc = tmpOption[1];
+      break;
+    }
+  }
+
+  return bestSelectedSrc;
+}
+
+function find(arr, fn) {
+  var item = void 0;
+  for (var i = 0, len = arr.length; i < len; i++) {
+    if (fn(arr[i])) {
+      item = arr[i];
+      break;
+    }
+  }
+  return item;
+}
+
+var getDPR = function getDPR() {
+  var scale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+  return inBrowser ? window.devicePixelRatio || scale : scale;
+};
+
+function supportWebp() {
+  if (!inBrowser) return false;
+
+  var support = true;
+  var d = document;
+
+  try {
+    var el = d.createElement('object');
+    el.type = 'image/webp';
+    el.style.visibility = 'hidden';
+    el.innerHTML = '!';
+    d.body.appendChild(el);
+    support = !el.offsetWidth;
+    d.body.removeChild(el);
+  } catch (err) {
+    support = false;
+  }
+
+  return support;
+}
+
+function throttle(action, delay) {
+  var timeout = null;
+  var lastRun = 0;
+  return function () {
+    if (timeout) {
+      return;
+    }
+    var elapsed = Date.now() - lastRun;
+    var context = this;
+    var args = arguments;
+    var runCallback = function runCallback() {
+      lastRun = Date.now();
+      timeout = false;
+      action.apply(context, args);
+    };
+    if (elapsed >= delay) {
+      runCallback();
+    } else {
+      timeout = setTimeout(runCallback, delay);
+    }
+  };
+}
+
+function testSupportsPassive() {
+  if (!inBrowser) return;
+  var support = false;
+  try {
+    var opts = Object.defineProperty({}, 'passive', {
+      get: function get$$1() {
+        support = true;
+      }
+    });
+    window.addEventListener('test', null, opts);
+  } catch (e) {}
+  return support;
+}
+
+var supportsPassive = testSupportsPassive();
+
+var _ = {
+  on: function on(el, type, func) {
+    var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+    if (supportsPassive) {
+      el.addEventListener(type, func, {
+        capture: capture,
+        passive: true
+      });
+    } else {
+      el.addEventListener(type, func, capture);
+    }
+  },
+  off: function off(el, type, func) {
+    var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+    el.removeEventListener(type, func, capture);
+  }
+};
+
+var loadImageAsync = function loadImageAsync(item, resolve, reject) {
+  var image = new Image();
+  if (!item || !item.src) {
+    var err = new Error('image src is required');
+    return reject(err);
+  }
+
+  image.src = item.src;
+
+  image.onload = function () {
+    resolve({
+      naturalHeight: image.naturalHeight,
+      naturalWidth: image.naturalWidth,
+      src: image.src
+    });
+  };
+
+  image.onerror = function (e) {
+    reject(e);
+  };
+};
+
+var style = function style(el, prop) {
+  return typeof getComputedStyle !== 'undefined' ? getComputedStyle(el, null).getPropertyValue(prop) : el.style[prop];
+};
+
+var overflow = function overflow(el) {
+  return style(el, 'overflow') + style(el, 'overflow-y') + style(el, 'overflow-x');
+};
+
+var scrollParent = function scrollParent(el) {
+  if (!inBrowser) return;
+  if (!(el instanceof HTMLElement)) {
+    return window;
+  }
+
+  var parent = el;
+
+  while (parent) {
+    if (parent === document.body || parent === document.documentElement) {
+      break;
+    }
+
+    if (!parent.parentNode) {
+      break;
+    }
+
+    if (/(scroll|auto)/.test(overflow(parent))) {
+      return parent;
+    }
+
+    parent = parent.parentNode;
+  }
+
+  return window;
+};
+
+function isObject(obj) {
+  return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
+}
+
+function ObjectKeys(obj) {
+  if (!(obj instanceof Object)) return [];
+  if (Object.keys) {
+    return Object.keys(obj);
+  } else {
+    var keys = [];
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        keys.push(key);
+      }
+    }
+    return keys;
+  }
+}
+
+function ArrayFrom(arrLike) {
+  var len = arrLike.length;
+  var list = [];
+  for (var i = 0; i < len; i++) {
+    list.push(arrLike[i]);
+  }
+  return list;
+}
+
+function noop() {}
+
+var ImageCache = function () {
+  function ImageCache(_ref) {
+    var max = _ref.max;
+    classCallCheck(this, ImageCache);
+
+    this.options = {
+      max: max || 100
+    };
+    this._caches = [];
+  }
+
+  createClass(ImageCache, [{
+    key: 'has',
+    value: function has(key) {
+      return this._caches.indexOf(key) > -1;
+    }
+  }, {
+    key: 'add',
+    value: function add(key) {
+      if (this.has(key)) return;
+      this._caches.push(key);
+      if (this._caches.length > this.options.max) {
+        this.free();
+      }
+    }
+  }, {
+    key: 'free',
+    value: function free() {
+      this._caches.shift();
+    }
+  }]);
+  return ImageCache;
+}();
+
+// el: {
+//     state,
+//     src,
+//     error,
+//     loading
+// }
+
+var ReactiveListener = function () {
+  function ReactiveListener(_ref) {
+    var el = _ref.el,
+        src = _ref.src,
+        error = _ref.error,
+        loading = _ref.loading,
+        bindType = _ref.bindType,
+        $parent = _ref.$parent,
+        options = _ref.options,
+        elRenderer = _ref.elRenderer,
+        imageCache = _ref.imageCache;
+    classCallCheck(this, ReactiveListener);
+
+    this.el = el;
+    this.src = src;
+    this.error = error;
+    this.loading = loading;
+    this.bindType = bindType;
+    this.attempt = 0;
+
+    this.naturalHeight = 0;
+    this.naturalWidth = 0;
+
+    this.options = options;
+
+    this.rect = null;
+
+    this.$parent = $parent;
+    this.elRenderer = elRenderer;
+    this._imageCache = imageCache;
+    this.performanceData = {
+      init: Date.now(),
+      loadStart: 0,
+      loadEnd: 0
+    };
+
+    this.filter();
+    this.initState();
+    this.render('loading', false);
+  }
+
+  /*
+   * init listener state
+   * @return
+   */
+
+
+  createClass(ReactiveListener, [{
+    key: 'initState',
+    value: function initState() {
+      if ('dataset' in this.el) {
+        this.el.dataset.src = this.src;
+      } else {
+        this.el.setAttribute('data-src', this.src);
+      }
+
+      this.state = {
+        loading: false,
+        error: false,
+        loaded: false,
+        rendered: false
+      };
+    }
+
+    /*
+     * record performance
+     * @return
+     */
+
+  }, {
+    key: 'record',
+    value: function record(event) {
+      this.performanceData[event] = Date.now();
+    }
+
+    /*
+     * update image listener data
+     * @param  {String} image uri
+     * @param  {String} loading image uri
+     * @param  {String} error image uri
+     * @return
+     */
+
+  }, {
+    key: 'update',
+    value: function update(_ref2) {
+      var src = _ref2.src,
+          loading = _ref2.loading,
+          error = _ref2.error;
+
+      var oldSrc = this.src;
+      this.src = src;
+      this.loading = loading;
+      this.error = error;
+      this.filter();
+      if (oldSrc !== this.src) {
+        this.attempt = 0;
+        this.initState();
+      }
+    }
+
+    /*
+     * get el node rect
+     * @return
+     */
+
+  }, {
+    key: 'getRect',
+    value: function getRect() {
+      this.rect = this.el.getBoundingClientRect();
+    }
+
+    /*
+     *  check el is in view
+     * @return {Boolean} el is in view
+     */
+
+  }, {
+    key: 'checkInView',
+    value: function checkInView() {
+      this.getRect();
+      return this.rect.top < window.innerHeight * this.options.preLoad && this.rect.bottom > this.options.preLoadTop && this.rect.left < window.innerWidth * this.options.preLoad && this.rect.right > 0;
+    }
+
+    /*
+     * listener filter
+     */
+
+  }, {
+    key: 'filter',
+    value: function filter() {
+      var _this = this;
+
+      ObjectKeys(this.options.filter).map(function (key) {
+        _this.options.filter[key](_this, _this.options);
+      });
+    }
+
+    /*
+     * render loading first
+     * @params cb:Function
+     * @return
+     */
+
+  }, {
+    key: 'renderLoading',
+    value: function renderLoading(cb) {
+      var _this2 = this;
+
+      this.state.loading = true;
+      loadImageAsync({
+        src: this.loading
+      }, function (data) {
+        _this2.render('loading', false);
+        _this2.state.loading = false;
+        cb();
+      }, function () {
+        // handler `loading image` load failed
+        cb();
+        _this2.state.loading = false;
+        if (!_this2.options.silent) console.warn('VueLazyload log: load failed with loading image(' + _this2.loading + ')');
+      });
+    }
+
+    /*
+     * try load image and  render it
+     * @return
+     */
+
+  }, {
+    key: 'load',
+    value: function load() {
+      var _this3 = this;
+
+      var onFinish = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
+
+      if (this.attempt > this.options.attempt - 1 && this.state.error) {
+        if (!this.options.silent) console.log('VueLazyload log: ' + this.src + ' tried too more than ' + this.options.attempt + ' times');
+        onFinish();
+        return;
+      }
+      if (this.state.rendered && this.state.loaded) return;
+      if (this._imageCache.has(this.src)) {
+        this.state.loaded = true;
+        this.render('loaded', true);
+        this.state.rendered = true;
+        return onFinish();
+      }
+
+      this.renderLoading(function () {
+        _this3.attempt++;
+
+        _this3.options.adapter['beforeLoad'] && _this3.options.adapter['beforeLoad'](_this3, _this3.options);
+        _this3.record('loadStart');
+
+        loadImageAsync({
+          src: _this3.src
+        }, function (data) {
+          _this3.naturalHeight = data.naturalHeight;
+          _this3.naturalWidth = data.naturalWidth;
+          _this3.state.loaded = true;
+          _this3.state.error = false;
+          _this3.record('loadEnd');
+          _this3.render('loaded', false);
+          _this3.state.rendered = true;
+          _this3._imageCache.add(_this3.src);
+          onFinish();
+        }, function (err) {
+          !_this3.options.silent && console.error(err);
+          _this3.state.error = true;
+          _this3.state.loaded = false;
+          _this3.render('error', false);
+        });
+      });
+    }
+
+    /*
+     * render image
+     * @param  {String} state to render // ['loading', 'src', 'error']
+     * @param  {String} is form cache
+     * @return
+     */
+
+  }, {
+    key: 'render',
+    value: function render(state, cache) {
+      this.elRenderer(this, state, cache);
+    }
+
+    /*
+     * output performance data
+     * @return {Object} performance data
+     */
+
+  }, {
+    key: 'performance',
+    value: function performance() {
+      var state = 'loading';
+      var time = 0;
+
+      if (this.state.loaded) {
+        state = 'loaded';
+        time = (this.performanceData.loadEnd - this.performanceData.loadStart) / 1000;
+      }
+
+      if (this.state.error) state = 'error';
+
+      return {
+        src: this.src,
+        state: state,
+        time: time
+      };
+    }
+
+    /*
+     * $destroy
+     * @return
+     */
+
+  }, {
+    key: '$destroy',
+    value: function $destroy() {
+      this.el = null;
+      this.src = null;
+      this.error = null;
+      this.loading = null;
+      this.bindType = null;
+      this.attempt = 0;
+    }
+  }]);
+  return ReactiveListener;
+}();
+
+var DEFAULT_URL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+var DEFAULT_EVENTS = ['scroll', 'wheel', 'mousewheel', 'resize', 'animationend', 'transitionend', 'touchmove'];
+var DEFAULT_OBSERVER_OPTIONS = {
+  rootMargin: '0px',
+  threshold: 0
+};
+
+var Lazy = function (Vue) {
+  return function () {
+    function Lazy(_ref) {
+      var preLoad = _ref.preLoad,
+          error = _ref.error,
+          throttleWait = _ref.throttleWait,
+          preLoadTop = _ref.preLoadTop,
+          dispatchEvent = _ref.dispatchEvent,
+          loading = _ref.loading,
+          attempt = _ref.attempt,
+          _ref$silent = _ref.silent,
+          silent = _ref$silent === undefined ? true : _ref$silent,
+          scale = _ref.scale,
+          listenEvents = _ref.listenEvents,
+          hasbind = _ref.hasbind,
+          filter = _ref.filter,
+          adapter = _ref.adapter,
+          observer = _ref.observer,
+          observerOptions = _ref.observerOptions;
+      classCallCheck(this, Lazy);
+
+      this.version = '1.3.3';
+      this.mode = modeType.event;
+      this.ListenerQueue = [];
+      this.TargetIndex = 0;
+      this.TargetQueue = [];
+      this.options = {
+        silent: silent,
+        dispatchEvent: !!dispatchEvent,
+        throttleWait: throttleWait || 200,
+        preLoad: preLoad || 1.3,
+        preLoadTop: preLoadTop || 0,
+        error: error || DEFAULT_URL,
+        loading: loading || DEFAULT_URL,
+        attempt: attempt || 3,
+        scale: scale || getDPR(scale),
+        ListenEvents: listenEvents || DEFAULT_EVENTS,
+        hasbind: false,
+        supportWebp: supportWebp(),
+        filter: filter || {},
+        adapter: adapter || {},
+        observer: !!observer,
+        observerOptions: observerOptions || DEFAULT_OBSERVER_OPTIONS
+      };
+      this._initEvent();
+      this._imageCache = new ImageCache({ max: 200 });
+      this.lazyLoadHandler = throttle(this._lazyLoadHandler.bind(this), this.options.throttleWait);
+
+      this.setMode(this.options.observer ? modeType.observer : modeType.event);
+    }
+
+    /**
+     * update config
+     * @param  {Object} config params
+     * @return
+     */
+
+
+    createClass(Lazy, [{
+      key: 'config',
+      value: function config() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        assignDeep(this.options, options);
+      }
+
+      /**
+       * output listener's load performance
+       * @return {Array}
+       */
+
+    }, {
+      key: 'performance',
+      value: function performance() {
+        var list = [];
+
+        this.ListenerQueue.map(function (item) {
+          list.push(item.performance());
+        });
+
+        return list;
+      }
+
+      /*
+       * add lazy component to queue
+       * @param  {Vue} vm lazy component instance
+       * @return
+       */
+
+    }, {
+      key: 'addLazyBox',
+      value: function addLazyBox(vm) {
+        this.ListenerQueue.push(vm);
+        if (inBrowser) {
+          this._addListenerTarget(window);
+          this._observer && this._observer.observe(vm.el);
+          if (vm.$el && vm.$el.parentNode) {
+            this._addListenerTarget(vm.$el.parentNode);
+          }
+        }
+      }
+
+      /*
+       * add image listener to queue
+       * @param  {DOM} el
+       * @param  {object} binding vue directive binding
+       * @param  {vnode} vnode vue directive vnode
+       * @return
+       */
+
+    }, {
+      key: 'add',
+      value: function add(el, binding, vnode) {
+        var _this = this;
+
+        if (some(this.ListenerQueue, function (item) {
+          return item.el === el;
+        })) {
+          this.update(el, binding);
+          return Vue.nextTick(this.lazyLoadHandler);
+        }
+
+        var _valueFormatter2 = this._valueFormatter(binding.value),
+            src = _valueFormatter2.src,
+            loading = _valueFormatter2.loading,
+            error = _valueFormatter2.error;
+
+        Vue.nextTick(function () {
+          src = getBestSelectionFromSrcset(el, _this.options.scale) || src;
+          _this._observer && _this._observer.observe(el);
+
+          var container = Object.keys(binding.modifiers)[0];
+          var $parent = void 0;
+
+          if (container) {
+            $parent = vnode.context.$refs[container];
+            // if there is container passed in, try ref first, then fallback to getElementById to support the original usage
+            $parent = $parent ? $parent.$el || $parent : document.getElementById(container);
+          }
+
+          if (!$parent) {
+            $parent = scrollParent(el);
+          }
+
+          var newListener = new ReactiveListener({
+            bindType: binding.arg,
+            $parent: $parent,
+            el: el,
+            loading: loading,
+            error: error,
+            src: src,
+            elRenderer: _this._elRenderer.bind(_this),
+            options: _this.options,
+            imageCache: _this._imageCache
+          });
+
+          _this.ListenerQueue.push(newListener);
+
+          if (inBrowser) {
+            _this._addListenerTarget(window);
+            _this._addListenerTarget($parent);
+          }
+
+          _this.lazyLoadHandler();
+          Vue.nextTick(function () {
+            return _this.lazyLoadHandler();
+          });
+        });
+      }
+
+      /**
+      * update image src
+      * @param  {DOM} el
+      * @param  {object} vue directive binding
+      * @return
+      */
+
+    }, {
+      key: 'update',
+      value: function update(el, binding, vnode) {
+        var _this2 = this;
+
+        var _valueFormatter3 = this._valueFormatter(binding.value),
+            src = _valueFormatter3.src,
+            loading = _valueFormatter3.loading,
+            error = _valueFormatter3.error;
+
+        src = getBestSelectionFromSrcset(el, this.options.scale) || src;
+
+        var exist = find(this.ListenerQueue, function (item) {
+          return item.el === el;
+        });
+        if (!exist) {
+          this.add(el, binding, vnode);
+        } else {
+          exist.update({
+            src: src,
+            loading: loading,
+            error: error
+          });
+        }
+        if (this._observer) {
+          this._observer.unobserve(el);
+          this._observer.observe(el);
+        }
+        this.lazyLoadHandler();
+        Vue.nextTick(function () {
+          return _this2.lazyLoadHandler();
+        });
+      }
+
+      /**
+      * remove listener form list
+      * @param  {DOM} el
+      * @return
+      */
+
+    }, {
+      key: 'remove',
+      value: function remove$$1(el) {
+        if (!el) return;
+        this._observer && this._observer.unobserve(el);
+        var existItem = find(this.ListenerQueue, function (item) {
+          return item.el === el;
+        });
+        if (existItem) {
+          this._removeListenerTarget(existItem.$parent);
+          this._removeListenerTarget(window);
+          remove(this.ListenerQueue, existItem);
+          existItem.$destroy();
+        }
+      }
+
+      /*
+       * remove lazy components form list
+       * @param  {Vue} vm Vue instance
+       * @return
+       */
+
+    }, {
+      key: 'removeComponent',
+      value: function removeComponent(vm) {
+        if (!vm) return;
+        remove(this.ListenerQueue, vm);
+        this._observer && this._observer.unobserve(vm.el);
+        if (vm.$parent && vm.$el.parentNode) {
+          this._removeListenerTarget(vm.$el.parentNode);
+        }
+        this._removeListenerTarget(window);
+      }
+    }, {
+      key: 'setMode',
+      value: function setMode(mode) {
+        var _this3 = this;
+
+        if (!hasIntersectionObserver && mode === modeType.observer) {
+          mode = modeType.event;
+        }
+
+        this.mode = mode; // event or observer
+
+        if (mode === modeType.event) {
+          if (this._observer) {
+            this.ListenerQueue.forEach(function (listener) {
+              _this3._observer.unobserve(listener.el);
+            });
+            this._observer = null;
+          }
+
+          this.TargetQueue.forEach(function (target) {
+            _this3._initListen(target.el, true);
+          });
+        } else {
+          this.TargetQueue.forEach(function (target) {
+            _this3._initListen(target.el, false);
+          });
+          this._initIntersectionObserver();
+        }
+      }
+
+      /*
+      *** Private functions ***
+      */
+
+      /*
+       * add listener target
+       * @param  {DOM} el listener target
+       * @return
+       */
+
+    }, {
+      key: '_addListenerTarget',
+      value: function _addListenerTarget(el) {
+        if (!el) return;
+        var target = find(this.TargetQueue, function (target) {
+          return target.el === el;
+        });
+        if (!target) {
+          target = {
+            el: el,
+            id: ++this.TargetIndex,
+            childrenCount: 1,
+            listened: true
+          };
+          this.mode === modeType.event && this._initListen(target.el, true);
+          this.TargetQueue.push(target);
+        } else {
+          target.childrenCount++;
+        }
+        return this.TargetIndex;
+      }
+
+      /*
+       * remove listener target or reduce target childrenCount
+       * @param  {DOM} el or window
+       * @return
+       */
+
+    }, {
+      key: '_removeListenerTarget',
+      value: function _removeListenerTarget(el) {
+        var _this4 = this;
+
+        this.TargetQueue.forEach(function (target, index) {
+          if (target.el === el) {
+            target.childrenCount--;
+            if (!target.childrenCount) {
+              _this4._initListen(target.el, false);
+              _this4.TargetQueue.splice(index, 1);
+              target = null;
+            }
+          }
+        });
+      }
+
+      /*
+       * add or remove eventlistener
+       * @param  {DOM} el DOM or Window
+       * @param  {boolean} start flag
+       * @return
+       */
+
+    }, {
+      key: '_initListen',
+      value: function _initListen(el, start) {
+        var _this5 = this;
+
+        this.options.ListenEvents.forEach(function (evt) {
+          return _[start ? 'on' : 'off'](el, evt, _this5.lazyLoadHandler);
+        });
+      }
+    }, {
+      key: '_initEvent',
+      value: function _initEvent() {
+        var _this6 = this;
+
+        this.Event = {
+          listeners: {
+            loading: [],
+            loaded: [],
+            error: []
+          }
+        };
+
+        this.$on = function (event, func) {
+          if (!_this6.Event.listeners[event]) _this6.Event.listeners[event] = [];
+          _this6.Event.listeners[event].push(func);
+        };
+
+        this.$once = function (event, func) {
+          var vm = _this6;
+          function on() {
+            vm.$off(event, on);
+            func.apply(vm, arguments);
+          }
+          _this6.$on(event, on);
+        };
+
+        this.$off = function (event, func) {
+          if (!func) {
+            if (!_this6.Event.listeners[event]) return;
+            _this6.Event.listeners[event].length = 0;
+            return;
+          }
+          remove(_this6.Event.listeners[event], func);
+        };
+
+        this.$emit = function (event, context, inCache) {
+          if (!_this6.Event.listeners[event]) return;
+          _this6.Event.listeners[event].forEach(function (func) {
+            return func(context, inCache);
+          });
+        };
+      }
+
+      /**
+       * find nodes which in viewport and trigger load
+       * @return
+       */
+
+    }, {
+      key: '_lazyLoadHandler',
+      value: function _lazyLoadHandler() {
+        var _this7 = this;
+
+        var freeList = [];
+        this.ListenerQueue.forEach(function (listener, index) {
+          if (!listener.el || !listener.el.parentNode) {
+            freeList.push(listener);
+          }
+          var catIn = listener.checkInView();
+          if (!catIn) return;
+          listener.load();
+        });
+        freeList.forEach(function (item) {
+          remove(_this7.ListenerQueue, item);
+          item.$destroy();
+        });
+      }
+      /**
+      * init IntersectionObserver
+      * set mode to observer
+      * @return
+      */
+
+    }, {
+      key: '_initIntersectionObserver',
+      value: function _initIntersectionObserver() {
+        var _this8 = this;
+
+        if (!hasIntersectionObserver) return;
+        this._observer = new IntersectionObserver(this._observerHandler.bind(this), this.options.observerOptions);
+        if (this.ListenerQueue.length) {
+          this.ListenerQueue.forEach(function (listener) {
+            _this8._observer.observe(listener.el);
+          });
+        }
+      }
+
+      /**
+      * init IntersectionObserver
+      * @return
+      */
+
+    }, {
+      key: '_observerHandler',
+      value: function _observerHandler(entries, observer) {
+        var _this9 = this;
+
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            _this9.ListenerQueue.forEach(function (listener) {
+              if (listener.el === entry.target) {
+                if (listener.state.loaded) return _this9._observer.unobserve(listener.el);
+                listener.load();
+              }
+            });
+          }
+        });
+      }
+
+      /**
+      * set element attribute with image'url and state
+      * @param  {object} lazyload listener object
+      * @param  {string} state will be rendered
+      * @param  {bool} inCache  is rendered from cache
+      * @return
+      */
+
+    }, {
+      key: '_elRenderer',
+      value: function _elRenderer(listener, state, cache) {
+        if (!listener.el) return;
+        var el = listener.el,
+            bindType = listener.bindType;
+
+
+        var src = void 0;
+        switch (state) {
+          case 'loading':
+            src = listener.loading;
+            break;
+          case 'error':
+            src = listener.error;
+            break;
+          default:
+            src = listener.src;
+            break;
+        }
+
+        if (bindType) {
+          el.style[bindType] = 'url("' + src + '")';
+        } else if (el.getAttribute('src') !== src) {
+          el.setAttribute('src', src);
+        }
+
+        el.setAttribute('lazy', state);
+
+        this.$emit(state, listener, cache);
+        this.options.adapter[state] && this.options.adapter[state](listener, this.options);
+
+        if (this.options.dispatchEvent) {
+          var event = new CustomEvent(state, {
+            detail: listener
+          });
+          el.dispatchEvent(event);
+        }
+      }
+
+      /**
+      * generate loading loaded error image url
+      * @param {string} image's src
+      * @return {object} image's loading, loaded, error url
+      */
+
+    }, {
+      key: '_valueFormatter',
+      value: function _valueFormatter(value) {
+        var src = value;
+        var loading = this.options.loading;
+        var error = this.options.error;
+
+        // value is object
+        if (isObject(value)) {
+          if (!value.src && !this.options.silent) console.error('Vue Lazyload warning: miss src with ' + value);
+          src = value.src;
+          loading = value.loading || this.options.loading;
+          error = value.error || this.options.error;
+        }
+        return {
+          src: src,
+          loading: loading,
+          error: error
+        };
+      }
+    }]);
+    return Lazy;
+  }();
+};
+
+var LazyComponent = (function (lazy) {
+  return {
+    props: {
+      tag: {
+        type: String,
+        default: 'div'
+      }
+    },
+    render: function render(h) {
+      if (this.show === false) {
+        return h(this.tag);
+      }
+      return h(this.tag, null, this.$slots.default);
+    },
+    data: function data() {
+      return {
+        el: null,
+        state: {
+          loaded: false
+        },
+        rect: {},
+        show: false
+      };
+    },
+    mounted: function mounted() {
+      this.el = this.$el;
+      lazy.addLazyBox(this);
+      lazy.lazyLoadHandler();
+    },
+    beforeDestroy: function beforeDestroy() {
+      lazy.removeComponent(this);
+    },
+
+    methods: {
+      getRect: function getRect() {
+        this.rect = this.$el.getBoundingClientRect();
+      },
+      checkInView: function checkInView() {
+        this.getRect();
+        return inBrowser && this.rect.top < window.innerHeight * lazy.options.preLoad && this.rect.bottom > 0 && this.rect.left < window.innerWidth * lazy.options.preLoad && this.rect.right > 0;
+      },
+      load: function load() {
+        this.show = true;
+        this.state.loaded = true;
+        this.$emit('show', this);
+      },
+      destroy: function destroy() {
+        return this.$destroy;
+      }
+    }
+  };
+});
+
+var LazyContainerMananger = function () {
+  function LazyContainerMananger(_ref) {
+    var lazy = _ref.lazy;
+    classCallCheck(this, LazyContainerMananger);
+
+    this.lazy = lazy;
+    lazy.lazyContainerMananger = this;
+    this._queue = [];
+  }
+
+  createClass(LazyContainerMananger, [{
+    key: 'bind',
+    value: function bind(el, binding, vnode) {
+      var container = new LazyContainer$1({ el: el, binding: binding, vnode: vnode, lazy: this.lazy });
+      this._queue.push(container);
+    }
+  }, {
+    key: 'update',
+    value: function update(el, binding, vnode) {
+      var container = find(this._queue, function (item) {
+        return item.el === el;
+      });
+      if (!container) return;
+      container.update({ el: el, binding: binding, vnode: vnode });
+    }
+  }, {
+    key: 'unbind',
+    value: function unbind(el, binding, vnode) {
+      var container = find(this._queue, function (item) {
+        return item.el === el;
+      });
+      if (!container) return;
+      container.clear();
+      remove(this._queue, container);
+    }
+  }]);
+  return LazyContainerMananger;
+}();
+
+var defaultOptions = {
+  selector: 'img'
+};
+
+var LazyContainer$1 = function () {
+  function LazyContainer(_ref2) {
+    var el = _ref2.el,
+        binding = _ref2.binding,
+        vnode = _ref2.vnode,
+        lazy = _ref2.lazy;
+    classCallCheck(this, LazyContainer);
+
+    this.el = null;
+    this.vnode = vnode;
+    this.binding = binding;
+    this.options = {};
+    this.lazy = lazy;
+
+    this._queue = [];
+    this.update({ el: el, binding: binding });
+  }
+
+  createClass(LazyContainer, [{
+    key: 'update',
+    value: function update(_ref3) {
+      var _this = this;
+
+      var el = _ref3.el,
+          binding = _ref3.binding;
+
+      this.el = el;
+      this.options = assignDeep({}, defaultOptions, binding.value);
+
+      var imgs = this.getImgs();
+      imgs.forEach(function (el) {
+        _this.lazy.add(el, assignDeep({}, _this.binding, {
+          value: {
+            src: 'dataset' in el ? el.dataset.src : el.getAttribute('data-src'),
+            error: ('dataset' in el ? el.dataset.error : el.getAttribute('data-error')) || _this.options.error,
+            loading: ('dataset' in el ? el.dataset.loading : el.getAttribute('data-loading')) || _this.options.loading
+          }
+        }), _this.vnode);
+      });
+    }
+  }, {
+    key: 'getImgs',
+    value: function getImgs() {
+      return ArrayFrom(this.el.querySelectorAll(this.options.selector));
+    }
+  }, {
+    key: 'clear',
+    value: function clear() {
+      var _this2 = this;
+
+      var imgs = this.getImgs();
+      imgs.forEach(function (el) {
+        return _this2.lazy.remove(el);
+      });
+
+      this.vnode = null;
+      this.binding = null;
+      this.lazy = null;
+    }
+  }]);
+  return LazyContainer;
+}();
+
+var LazyImage = (function (lazyManager) {
+  return {
+    props: {
+      src: [String, Object],
+      tag: {
+        type: String,
+        default: 'img'
+      }
+    },
+    render: function render(h) {
+      return h(this.tag, {
+        attrs: {
+          src: this.renderSrc
+        }
+      }, this.$slots.default);
+    },
+    data: function data() {
+      return {
+        el: null,
+        options: {
+          src: '',
+          error: '',
+          loading: '',
+          attempt: lazyManager.options.attempt
+        },
+        state: {
+          loaded: false,
+          error: false,
+          attempt: 0
+        },
+        rect: {},
+        renderSrc: ''
+      };
+    },
+
+    watch: {
+      src: function src() {
+        this.init();
+        lazyManager.addLazyBox(this);
+        lazyManager.lazyLoadHandler();
+      }
+    },
+    created: function created() {
+      this.init();
+      this.renderSrc = this.options.loading;
+    },
+    mounted: function mounted() {
+      this.el = this.$el;
+      lazyManager.addLazyBox(this);
+      lazyManager.lazyLoadHandler();
+    },
+    beforeDestroy: function beforeDestroy() {
+      lazyManager.removeComponent(this);
+    },
+
+    methods: {
+      init: function init() {
+        var _lazyManager$_valueFo = lazyManager._valueFormatter(this.src),
+            src = _lazyManager$_valueFo.src,
+            loading = _lazyManager$_valueFo.loading,
+            error = _lazyManager$_valueFo.error;
+
+        this.state.loaded = false;
+        this.options.src = src;
+        this.options.error = error;
+        this.options.loading = loading;
+        this.renderSrc = this.options.loading;
+      },
+      getRect: function getRect() {
+        this.rect = this.$el.getBoundingClientRect();
+      },
+      checkInView: function checkInView() {
+        this.getRect();
+        return inBrowser && this.rect.top < window.innerHeight * lazyManager.options.preLoad && this.rect.bottom > 0 && this.rect.left < window.innerWidth * lazyManager.options.preLoad && this.rect.right > 0;
+      },
+      load: function load() {
+        var _this = this;
+
+        var onFinish = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
+
+        if (this.state.attempt > this.options.attempt - 1 && this.state.error) {
+          if (!lazyManager.options.silent) console.log('VueLazyload log: ' + this.options.src + ' tried too more than ' + this.options.attempt + ' times');
+          onFinish();
+          return;
+        }
+        var src = this.options.src;
+        loadImageAsync({ src: src }, function (_ref) {
+          var src = _ref.src;
+
+          _this.renderSrc = src;
+          _this.state.loaded = true;
+        }, function (e) {
+          _this.state.attempt++;
+          _this.renderSrc = _this.options.error;
+          _this.state.error = true;
+        });
+      }
+    }
+  };
+});
+
+var index = {
+  /*
+  * install function
+  * @param  {Vue} Vue
+  * @param  {object} options  lazyload options
+  */
+  install: function install(Vue) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    var LazyClass = Lazy(Vue);
+    var lazy = new LazyClass(options);
+    var lazyContainer = new LazyContainerMananger({ lazy: lazy });
+
+    var isVue2 = Vue.version.split('.')[0] === '2';
+
+    Vue.prototype.$Lazyload = lazy;
+
+    if (options.lazyComponent) {
+      Vue.component('lazy-component', LazyComponent(lazy));
+    }
+
+    if (options.lazyImage) {
+      Vue.component('lazy-image', LazyImage(lazy));
+    }
+
+    if (isVue2) {
+      Vue.directive('lazy', {
+        bind: lazy.add.bind(lazy),
+        update: lazy.update.bind(lazy),
+        componentUpdated: lazy.lazyLoadHandler.bind(lazy),
+        unbind: lazy.remove.bind(lazy)
+      });
+      Vue.directive('lazy-container', {
+        bind: lazyContainer.bind.bind(lazyContainer),
+        componentUpdated: lazyContainer.update.bind(lazyContainer),
+        unbind: lazyContainer.unbind.bind(lazyContainer)
+      });
+    } else {
+      Vue.directive('lazy', {
+        bind: lazy.lazyLoadHandler.bind(lazy),
+        update: function update(newValue, oldValue) {
+          assignDeep(this.vm.$refs, this.vm.$els);
+          lazy.add(this.el, {
+            modifiers: this.modifiers || {},
+            arg: this.arg,
+            value: newValue,
+            oldValue: oldValue
+          }, {
+            context: this.vm
+          });
+        },
+        unbind: function unbind() {
+          lazy.remove(this.el);
+        }
+      });
+
+      Vue.directive('lazy-container', {
+        update: function update(newValue, oldValue) {
+          lazyContainer.update(this.el, {
+            modifiers: this.modifiers || {},
+            arg: this.arg,
+            value: newValue,
+            oldValue: oldValue
+          }, {
+            context: this.vm
+          });
+        },
+        unbind: function unbind() {
+          lazyContainer.unbind(this.el);
+        }
+      });
+    }
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (index);
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true&":
 /*!*************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/rocket/components/PhotoDetailsComponent.vue?vue&type=template&id=79249e3e&scoped=true& ***!
@@ -5361,6 +7164,17 @@ var render = function() {
                           "0.0"
                         )
                       ) + "%"
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "detail" }, [
+              _vm._v("\n                " + _vm._s(_vm.$t("Seating")) + ": "),
+              _vm.photo.details.occupation
+                ? _c("span", [
+                    _vm._v(
+                      _vm._s(_vm.photo.details.occupation.seatingOccupiedStr)
                     )
                   ])
                 : _vm._e()
@@ -5622,12 +7436,20 @@ var render = function() {
           _vm._v(" "),
           _vm.photo.details.url
             ? _c("img", {
+                directives: [
+                  {
+                    name: "lazy",
+                    rawName: "v-lazy",
+                    value: _vm.photo.details.url.encoded
+                      ? _vm.photo.details.url.encoded
+                      : _vm.photo.details.url,
+                    expression:
+                      "photo.details.url.encoded ? photo.details.url.encoded : photo.details.url"
+                  }
+                ],
                 attrs: {
                   id: "image-seating",
                   draggable: "false",
-                  src: _vm.photo.details.url.encoded
-                    ? _vm.photo.details.url.encoded
-                    : _vm.photo.details.url,
                   width: _vm.image.size.width + "px",
                   height: _vm.image.size.height + "px",
                   alt: "Seating photo"
@@ -5635,9 +7457,9 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.seating.length > 0
+          _vm.photo && _vm.seating.length > 0
             ? _c("div", { staticClass: "container-actions text-center" }, [
-                _c("div", { staticClass: "p-10" }, [
+                _c("div", { staticClass: "p-10 actions" }, [
                   _c(
                     "div",
                     { staticClass: "md-checkbox has-success" },
@@ -5652,7 +7474,13 @@ var render = function() {
                           }
                         ],
                         staticClass: "md-check",
-                        attrs: { type: "checkbox", id: "checkbox14" },
+                        attrs: {
+                          type: "checkbox",
+                          id:
+                            "show-photo-" +
+                            _vm.photo.id +
+                            (_vm.fixedSeating ? "" : "-profile")
+                        },
                         domProps: {
                           checked: Array.isArray(_vm.styleSeating.show)
                             ? _vm._i(_vm.styleSeating.show, null) > -1
@@ -5688,7 +7516,24 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      _vm._m(0),
+                      _c(
+                        "label",
+                        {
+                          attrs: {
+                            for:
+                              "show-photo-" +
+                              _vm.photo.id +
+                              (_vm.fixedSeating ? "" : "-profile")
+                          }
+                        },
+                        [
+                          _c("span", { staticClass: "inc" }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "check" }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "box text-muted" })
+                        ]
+                      ),
                       _vm._v(" "),
                       _c("range-slider", {
                         staticClass: "slider",
@@ -5712,20 +7557,7 @@ var render = function() {
       )
     : _vm._e()
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "checkbox14" } }, [
-      _c("span", { staticClass: "inc" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "check" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "box text-muted" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -5764,118 +7596,52 @@ var render = function() {
                 attrs: {
                   photo: _vm.photo,
                   seating: _vm.seating,
-                  "style-seating": _vm.styleSeating,
                   "fixed-seating": false
                 }
               }),
               _vm._v(" "),
-              _c("div", { staticClass: "container-actions col-md-12" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-default btn-sm btn-action",
-                    on: { click: _vm.load }
-                  },
-                  [_c("i", { staticClass: "fa fa-refresh" })]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-info btn-sm btn-action",
-                    on: { click: _vm.addSeat }
-                  },
-                  [_c("i", { staticClass: "fa fa-plus-square" })]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-success btn-sm btn-action",
-                    on: { click: _vm.save }
-                  },
-                  [_c("i", { staticClass: "fa fa-save" })]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-warning btn-sm btn-action m-l-20",
-                    attrs: { disabled: !_vm.selected },
-                    on: { click: _vm.deleteSeating }
-                  },
-                  [_c("i", { staticClass: "fa fa-trash" })]
-                ),
-                _vm._v(" "),
-                _c("br"),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "md-checkbox has-success" },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.styleSeating.show,
-                          expression: "styleSeating.show"
-                        }
-                      ],
-                      staticClass: "md-check",
-                      attrs: { type: "checkbox", id: "checkbox-zone-seating" },
-                      domProps: {
-                        checked: Array.isArray(_vm.styleSeating.show)
-                          ? _vm._i(_vm.styleSeating.show, null) > -1
-                          : _vm.styleSeating.show
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.styleSeating.show,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                _vm.$set(
-                                  _vm.styleSeating,
-                                  "show",
-                                  $$a.concat([$$v])
-                                )
-                            } else {
-                              $$i > -1 &&
-                                _vm.$set(
-                                  _vm.styleSeating,
-                                  "show",
-                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                )
-                            }
-                          } else {
-                            _vm.$set(_vm.styleSeating, "show", $$c)
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm._m(0),
-                    _vm._v(" "),
-                    _c("range-slider", {
-                      staticClass: "slider",
-                      attrs: { min: "0", max: "100", step: "1" },
-                      model: {
-                        value: _vm.styleSeating.opacity,
-                        callback: function($$v) {
-                          _vm.$set(_vm.styleSeating, "opacity", $$v)
-                        },
-                        expression: "styleSeating.opacity"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ])
+              _c(
+                "div",
+                { staticClass: "container-actions col-md-12 text-center" },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default btn-sm btn-action",
+                      on: { click: _vm.load }
+                    },
+                    [_c("i", { staticClass: "fa fa-refresh" })]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm btn-action",
+                      on: { click: _vm.addSeat }
+                    },
+                    [_c("i", { staticClass: "fa fa-plus-square" })]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success btn-sm btn-action",
+                      on: { click: _vm.save }
+                    },
+                    [_c("i", { staticClass: "fa fa-save" })]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-warning btn-sm btn-action m-l-20",
+                      attrs: { disabled: !_vm.selected },
+                      on: { click: _vm.deleteSeating }
+                    },
+                    [_c("i", { staticClass: "fa fa-trash" })]
+                  )
+                ]
+              )
             ],
             1
           )
@@ -5897,20 +7663,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "checkbox-zone-seating" } }, [
-      _c("span", { staticClass: "inc" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "check" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "box text-muted" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -19360,10 +21113,10 @@ var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*!********************************!*\
   !*** ./resources/lang/es.json ***!
   \********************************/
-/*! exports provided: Home, Create, Update, Save, save, Delete, delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Total taken, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total turn, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Costs, Penalty, Daily report taking, Net to car, Processing, Please wait, Read safety, Concept, concept, Charge, Process, Process charge, Total liquidated, Defines the order in which the required payment should be applied, Click for activate, Click for inactivate, Error saving cost register, Priority, There are fields empty, The :attribute field is required, rear, front, Profile seating save successfully, Overlap, Loading, Occupation, Counts, Total, Paused count, default */
+/*! exports provided: Home, Create, Update, Save, save, Delete, delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Total taken, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total turn, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Costs, Penalty, Daily report taking, Net to car, Processing, Please wait, Read safety, Concept, concept, Charge, Process, Process charge, Total liquidated, Defines the order in which the required payment should be applied, Click for activate, Click for inactivate, Error saving cost register, Priority, There are fields empty, The :attribute field is required, rear, front, Profile seating save successfully, Overlap, Loading, Occupation, Counts, Total, Paused count, Seating, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"delete\":\"eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Total taken\":\"Total recaudado\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"value\":\"valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total turn\":\"Total turno\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Costs\":\"Costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\",\"Read safety\":\"Seguridad vial\",\"Concept\":\"Concepto\",\"concept\":\"concepto\",\"Charge\":\"Cobrar\",\"Process\":\"Procesar\",\"Process charge\":\"Procesar cobro\",\"Total liquidated\":\"Total liquidado\",\"Defines the order in which the required payment should be applied\":\"Define el orden en que se debe aplicar el cobro obligatorio\",\"Click for activate\":\"Click para Activar\",\"Click for inactivate\":\"Click para Desactivar\",\"Error saving cost register\":\"Error al guardar el registro de Costo\",\"Priority\":\"Prioridad\",\"There are fields empty\":\"Algunos campos están vacíos\",\"The :attribute field is required\":\"El campo <em class='text-capitalize'>:attribute</em> es requerido\",\"rear\":\"atrás\",\"front\":\"frente\",\"Profile seating save successfully\":\"Perfil de asientos guardado correctamente\",\"Overlap\":\"Traslape\",\"Loading\":\"Cargando\",\"Occupation\":\"Ocupación\",\"Counts\":\"Conteos\",\"Total\":\"Total\",\"Paused count\":\"Conteo pausado\"}");
+module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"delete\":\"eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Total taken\":\"Total recaudado\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"value\":\"valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total turn\":\"Total turno\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Costs\":\"Costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\",\"Read safety\":\"Seguridad vial\",\"Concept\":\"Concepto\",\"concept\":\"concepto\",\"Charge\":\"Cobrar\",\"Process\":\"Procesar\",\"Process charge\":\"Procesar cobro\",\"Total liquidated\":\"Total liquidado\",\"Defines the order in which the required payment should be applied\":\"Define el orden en que se debe aplicar el cobro obligatorio\",\"Click for activate\":\"Click para Activar\",\"Click for inactivate\":\"Click para Desactivar\",\"Error saving cost register\":\"Error al guardar el registro de Costo\",\"Priority\":\"Prioridad\",\"There are fields empty\":\"Algunos campos están vacíos\",\"The :attribute field is required\":\"El campo <em class='text-capitalize'>:attribute</em> es requerido\",\"rear\":\"atrás\",\"front\":\"frente\",\"Profile seating save successfully\":\"Perfil de asientos guardado correctamente\",\"Overlap\":\"Traslape\",\"Loading\":\"Cargando\",\"Occupation\":\"Ocupación\",\"Counts\":\"Conteos\",\"Total\":\"Total\",\"Paused count\":\"Conteo pausado\",\"Seating\":\"Asientos\"}");
 
 /***/ }),
 

@@ -126,7 +126,7 @@ abstract class PhotoZone
 
                 $largeDetection = $this->largeDetection;
 
-                $criteria = $largeDetection ? $overlapArea > $prevOverlapArea : $intersectedArea > $prevIntersectedArea;
+                $criteria = $largeDetection && ($this->width > 10) ? $overlapArea > $prevOverlapArea : $intersectedArea > $prevIntersectedArea;
 
                 if ($criteria || $prevSeat === null) {
                     $seatOccupied = $profileSeat;

@@ -3,9 +3,9 @@
         <div v-if="photo">
             <photo-details-component :photo="photo"></photo-details-component>
 
-            <photo-persons-component :photo="photo" :seating="seating" :style-seating="styleSeating" :fixed-seating="false"></photo-persons-component>
+            <photo-persons-component :photo="photo" :seating="seating" :fixed-seating="false"></photo-persons-component>
 
-            <div class="container-actions col-md-12">
+            <div class="container-actions col-md-12 text-center">
                 <button class="btn btn-default btn-sm btn-action" @click="load">
                     <i class="fa fa-refresh"></i>
                 </button>
@@ -18,23 +18,6 @@
                 <button :disabled="!selected" class="btn btn-warning btn-sm btn-action m-l-20" @click="deleteSeating">
                     <i class="fa fa-trash"></i>
                 </button>
-                <br>
-
-                <div class="md-checkbox has-success">
-                    <input type="checkbox" id="checkbox-zone-seating" class="md-check" v-model="styleSeating.show">
-                    <label for="checkbox-zone-seating">
-                        <span class="inc"></span>
-                        <span class="check"></span>
-                        <span class="box text-muted"></span>
-                    </label>
-                    <range-slider
-                            class="slider"
-                            min="0"
-                            max="100"
-                            step="1"
-                            v-model="styleSeating.opacity">
-                    </range-slider>
-                </div>
             </div>
         </div>
 
@@ -72,10 +55,6 @@
         },
         data() {
             return {
-                styleSeating: {
-                    show: Boolean,
-                    opacity: 100,
-                },
                 image: {
                     size: {
                         width: 1000,
@@ -186,12 +165,6 @@
 </script>
 
 <style scoped>
-    .container-actions {
-        margin: auto;
-        width: 1000px;
-        text-align: center;
-    }
-
     .btn-action {
         margin: 5px;
         display: inline;

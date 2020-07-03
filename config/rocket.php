@@ -53,6 +53,7 @@ return [
                     ],
                     'box' => [
                         'ld' => 2.5,                                # Min relation height/width for Large Detection
+                        'mld' => 10,                                # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
@@ -110,6 +111,7 @@ return [
                     ],
                     'box' => [
                         'ld' => 2.5,                                # Min relation height/width for Large Detection
+                        'mld' => 2,                                 # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
@@ -169,6 +171,7 @@ return [
                     ],
                     'box' => [
                         'ld' => 2.5,                                # Min relation height/width for Large Detection
+                        'mld' => 10,                                # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
@@ -226,6 +229,7 @@ return [
                     ],
                     'box' => [
                         'ld' => 2.5,                                # Min relation height/width for Large Detection
+                        'mld' => 2,                                 # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
@@ -259,19 +263,25 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 25),
+                            'range' => range(0, 20),
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 40),
+                            'range' => range(20, 40),
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(40, 100),
+                            'range' => range(40, 60),
+                            'color' => 'yellow',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => range(60, 100),
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -279,6 +289,7 @@ return [
                     ],
                     'box' => [
                         'ld' => 2.4,                                # Min relation height/width for Large Detection
+                        'mld' => 10,                                # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
@@ -289,10 +300,10 @@ return [
                     'draw' => [
                         'heightFromWidth' => [
                             'nd' => 130,                            # Percent of height when Normal Detection
-                            'ld' => 135                              # Percent of height when Large Detection
+                            'ld' => 150                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 25,                             # Percent top of point center when Normal Detection
+                            'nd' => 50,                             # Percent top of point center when Normal Detection
                             'ld' => 30                              # Percent top of point center when Large Detection
                         ]
                     ]
@@ -330,6 +341,7 @@ return [
                     ],
                     'box' => [
                         'ld' => 2.5,                                # Min relation height/width for Large Detection
+                        'mld' => 2,                                 # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
@@ -339,11 +351,11 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 200,                            # Percent of height when Normal Detection
-                            'ld' => 200                             # Percent of height when Large Detection
+                            'nd' => 220,                            # Percent of height when Normal Detection
+                            'ld' => 220                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 35,                             # Percent top of point center when Normal Detection
+                            'nd' => 50,                             # Percent top of point center when Normal Detection
                             'ld' => 50                              # Percent top of point center when Large Detection
                         ]
                     ]

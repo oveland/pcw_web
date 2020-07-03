@@ -28,6 +28,9 @@
                 <p class="detail">
                     {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ ((40/100)*photo.details.occupation.persons) | numberFormat('0.0') }}%</span>
                 </p>
+                <p class="detail">
+                    {{ $t('Seating') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.seatingOccupiedStr }}</span>
+                </p>
             </div>
         </div>
 

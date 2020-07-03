@@ -6,21 +6,21 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\RocketService;
 use Illuminate\Console\Command;
 
-class TakePhotoCommand extends Command
+class ReleaseBusyCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'rocket:take-photo {--vehicle-plate=DEM-003} {--side=rear} {--quality=hd}';
+    protected $signature = 'rocket:release-busy {--vehicle-plate=DEM-003}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send command to Rocket App for take a photo via Web Sockets connection';
+    protected $description = 'Send command to Rocket App for release app when app is blocked by prevent kill down';
 
     /**
      * @var RocketService
@@ -52,9 +52,8 @@ class TakePhotoCommand extends Command
         if ($vehicle) {
             $response = $this->rocketService->for($vehicle)
                 ->command([
-                    'action' => 'take-photo',
-                    'side' => $this->option('side'),
-                    'quality' => $this->option('quality')
+                    'action' => 'set-enable',
+                    'release' => 'true',
                 ]);
 
             $this->info($response->message);

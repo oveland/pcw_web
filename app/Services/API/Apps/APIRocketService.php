@@ -15,6 +15,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
+use App\Services\Apps\Rocket\RocketService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -28,6 +29,9 @@ class APIRocketService implements APIAppsInterface
      */
     private $request;
 
+    /**
+     * @var string
+     */
     private $service;
 
     /**
@@ -35,10 +39,26 @@ class APIRocketService implements APIAppsInterface
      */
     private $vehicle;
 
+    /**
+     * @var CurrentLocation
+     */
     private $currentLocation;
 
+    /**
+     * @var PhotoService
+     */
     private $photoService;
 
+    /**
+     * @var RocketService
+     */
+    private $rocketService;
+
+
+    /**
+     * APIRocketService constructor.
+     * @param $service
+     */
     public function __construct($service)
     {
         $this->request = request();
@@ -48,6 +68,7 @@ class APIRocketService implements APIAppsInterface
         if ($this->vehicle) $this->currentLocation = CurrentLocation::findByVehicle($this->vehicle);
 
         $this->photoService = new PhotoService();
+        $this->rocketService = new RocketService();
     }
 
     /**
@@ -98,7 +119,7 @@ class APIRocketService implements APIAppsInterface
 
         if ($process->response->success) {
             $photo = $process->photo;
-            Storage::disk('local')->append('photo.log', "$photo->url&encode=jpg \n$photo->date\n$photo->side: $photo->type\n" . $this->vehicle->plate . ":\n");
+            Storage::disk('local')->append('photo.log', $this->vehicle->plate . " | $photo->date | $photo->type >> $photo->url&encode=jpg\n");
         } else {
             Storage::disk('local')->append('photo.log', "Error saving photo: " . $process->response->message . ". Data > " . $this->request->except('img')->toJson());
         }
@@ -111,16 +132,17 @@ class APIRocketService implements APIAppsInterface
      */
     public function event()
     {
-        switch ($this->request->get('action')) {
+        $action = $this->request->get('action');
+        switch ($action) {
             case 'take-photo':
-                return response()->json(
-                    $this->photoService
-                        ->for($this->vehicle)
-                        ->takePhoto(
-                            $this->request->get('side'),
-                            $this->request->get('quality')
-                        )
-                );
+                $response = $this->rocketService->for($this->vehicle)
+                    ->command([
+                        'action' => $action,
+                        'side' => $this->request->get('side') ?? 'rear',
+                        'quality' => $this->request->get('quality') ?? 'hd'
+                    ]);
+
+                return response()->json($response);
                 break;
             default:
                 return response()->json([

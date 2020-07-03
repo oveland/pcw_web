@@ -121,48 +121,6 @@ class PhotoService
     }
 
     /**
-     * Request photo via Websockets to Rocket app
-     *
-     * @param $side
-     * @param $quality
-     * @return object
-     */
-    function takePhoto($side, $quality)
-    {
-        $params = collect([]);
-        $success = false;
-
-        $action = "get-photo";
-        if ($action) {
-            if (collect(['rear', 'front'])->contains($side)) {
-                $options = collect([
-                    'action' => "get-photo",
-                    'side' => $side,
-                    'quality' => $quality
-                ]);
-                event(new AppEvent($this->vehicle, $options->toArray()));
-                $success = true;
-                $message = "Photo has been requested to vehicle " . $this->vehicle->number;
-
-                $this->notifyToMap();
-
-                $params = $options;
-                $params->put('date', Carbon::now()->toDateTimeString());
-            } else {
-                $message = "Camera side is invalid";
-            }
-        } else {
-            $message = "Action not found";
-        }
-
-        return (object)[
-            'success' => $success,
-            'message' => $message,
-            'params' => (object)$params->toArray()
-        ];
-    }
-
-    /**
      * @param null $date
      * @return object
      */
@@ -296,6 +254,8 @@ class PhotoService
                     $occupation->draws = $occupation->draws->merge($facesOccupation->draws);
                 }
 
+
+                $occupation->seatingOccupiedStr = $occupation->seatingOccupied->keys()->sort()->implode(', ');
 
                 return $occupation;
 

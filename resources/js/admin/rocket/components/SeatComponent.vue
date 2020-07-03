@@ -130,10 +130,11 @@
     }
 
     .seat .number{
-        font-size: 0.7em !important;
+        font-size: 1.7em !important;
         color: white;
         font-weight: bold;
         z-index: 10000;
+        text-shadow: 1px 2px 3px #0600cc;
     }
 
     .seat .center{
