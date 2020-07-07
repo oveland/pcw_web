@@ -3,9 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\Company\Company;
-use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
-use Auth;
 use Carbon\Carbon;
 use DB;
 use Eloquent;
@@ -16,8 +14,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Collection;
-use phpDocumentor\Reflection\Types\This;
+use Illuminate\Support\Collection;;
 
 /**
  * App\Models\Users\User
@@ -257,6 +254,16 @@ class User extends Authenticatable
      */
     public function canViewAllRoutes(){
         return !($this->belongsToMontebello() && $this->isProprietary());
+    }
+
+    public function canEditRecorders()
+    {
+        $usersCan = [
+            // ALAMEDA:
+//            2018101180, // DIEGOE
+        ];
+
+        return in_array( $this->id, $usersCan ) || $this->isAdmin();
     }
 
     public function getVehicleTags()

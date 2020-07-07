@@ -67,7 +67,7 @@ class Kernel extends ConsoleKernel
         /* Reports for ALAMEDA */
         $schedule->command('mail-routes:events --company=14 --prod=true')->dailyAt('08:00');
         //$schedule->command('mail-routes:dispatches --company=14 --prod=true')->dailyAt('04:00');
-        $schedule->command('mail-passengers:consolidated --company=14')->dailyAt('08:10');
+//        $schedule->command('mail-passengers:consolidated --company=14')->dailyAt('08:10');
 
         //$schedule->command('dar:run')->dailyAt('03:00');
 

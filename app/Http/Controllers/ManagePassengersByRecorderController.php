@@ -17,19 +17,21 @@ class ManagePassengersByRecorderController extends Controller
     {
         switch ($action) {
             case 'editRecorders':
-                if (Auth::user()->isAdmin()) {
+                $user = Auth::user();
+
+                if ($user->canEditRecorders()) {
                     $id = $request->get('id');
                     $field = $request->get('field');
                     $value = $request->get('value');
 
-                    $success = DB::update("UPDATE registrodespacho SET $field = $value, ignore_trigger = TRUE WHERE id_registro = $id");
+                    $success = DB::update("UPDATE registrodespacho SET $field = $value, edit_user_id = $user->id, edited_info = edited_info || 'User $user->id > $field = $value, ', ignore_trigger = TRUE WHERE id_registro = $id");
 
                     return Response::json([
                         'success' => $success,
                         'value' => $value
                     ]);
                 }
-                return "Noting to do";
+                return "Nothing to do";
                 break;
             default:
                 return "Nothing to do";

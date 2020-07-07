@@ -136,8 +136,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(Company $company, $date, $routeId = null, $vehicleId = null)
  * @property-read mixed $route_time
  * @property-read mixed $total_off_road
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDriver(\App\Models\Drivers\Driver $driver = null)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereVehicle(\App\Models\Vehicles\Vehicle $vehicle = null)
+ * @method static Builder|DispatchRegister whereDriver(Driver $driver = null)
+ * @method static Builder|DispatchRegister whereVehicle(Vehicle $vehicle = null)
+ * @property int|null $edit_user_id
+ * @property string|null $edited_info
+ * @method static Builder|DispatchRegister whereEditUserId($value)
+ * @method static Builder|DispatchRegister whereEditedInfo($value)
  */
 class DispatchRegister extends Model
 {

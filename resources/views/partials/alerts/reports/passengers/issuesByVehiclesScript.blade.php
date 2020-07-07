@@ -1,4 +1,4 @@
-@if(Auth::user() && Auth::user()->isAdmin() )
+@if(Auth::user() && Auth::user()->canEditRecorders() )
 <script type="application/javascript">
     $(document).ready(function () {
         $('body').on('click', '.box-edit', function () {

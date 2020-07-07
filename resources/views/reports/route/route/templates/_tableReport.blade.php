@@ -130,7 +130,7 @@
             <th width="5%" class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
             @if( $company->hasDriverRegisters() )
             <td width="25%" class="text-uppercase">
-                @if( Auth::user()->isAdmin() )
+                @if( Auth::user()->isSuperAdmin() )
                     @php
                         $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code;
                     @endphp
@@ -197,7 +197,7 @@
 
             @if( $company->hasRecorderCounter() )
                 <td width="10%" class="p-r-0 p-l-0 text-center">
-                    @if( Auth::user()->isAdmin() )
+                    @if( Auth::user()->canEditRecorders() )
                         <div class="tooltips box-edit" data-title="@lang('Start Recorder')">
                             <span class="box-info">
                                 <span class="">
@@ -214,7 +214,7 @@
                         {{ $startRecorder }}
                     @endif
                     <hr class="m-0">
-                    @if( Auth::user()->isAdmin() )
+                    @if( Auth::user()->canEditRecorders() )
                         <div class="tooltips box-edit" data-title="@lang('End Recorder')">
                             <span class="box-info">
                                 <span class="">
