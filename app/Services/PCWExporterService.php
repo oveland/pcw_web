@@ -62,10 +62,10 @@ class PCWExporterService
         return $excel;
     }
 
-    public static function createSheet($excel, $dataExport)
+    public static function createSheet($excel, $dataExport, $disableFilters = false)
     {
         $sheetTitle = isset($dataExport->sheetTitle) ? $dataExport->sheetTitle : $dataExport->subTitle;
-        return $excel->sheet($sheetTitle, function ($sheet) use ($dataExport) {
+        return $excel->sheet($sheetTitle, function ($sheet) use ($dataExport, $disableFilters) {
             $startIndex = 3;
             $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '...'];
 
@@ -96,7 +96,7 @@ class PCWExporterService
             });
 
             /* SORTABLE COLUMN HEADERS */
-            $sheet->setAutoFilter("A$startIndex:$config->lastLetter" . ($config->totalRows));
+            if(!$disableFilters)$sheet->setAutoFilter("A$startIndex:$config->lastLetter" . ($config->totalRows));
 
             /*  MAIN HEADER */
             $sheet->setHeight(1, 50);
