@@ -105,6 +105,7 @@ class RocketController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
+                $photo = null;
                 if ($vehicle) {
                     $date = $request->get('date');
                     $photos = $this->photoService->for($vehicle)->getHistoric($date);
@@ -148,11 +149,11 @@ class RocketController extends Controller
 //
 ////                      566 Yumbeños
 //
-                    $photo = Photo::find(13314);
-
-                    $photo = Photo::find(14173); // 17 / 17     (1, 2, 3, 5, 6, 7, 8, 9, 11, 12, 14, 16, 17, 18, 19, 21, 23)
-                    $photo = Photo::find(14222); // 10 / 10     (1, 4, 7, 8, 9, 12, 16, 18, 20, 23)
-                    $photo = Photo::find(14220); // 9 / 10      (1, 4, 7, 8, 9, 12, 18, 20, 23)
+//                    $photo = Photo::find(13314);
+//
+//                    $photo = Photo::find(14173); // 17 / 17     (1, 2, 3, 5, 6, 7, 8, 9, 11, 12, 14, 16, 17, 18, 19, 21, 23)
+//                    $photo = Photo::find(14222); // 10 / 10     (1, 4, 7, 8, 9, 12, 16, 18, 20, 23)
+//                    $photo = Photo::find(14220); // 9 / 10      (1, 4, 7, 8, 9, 12, 18, 20, 23)
 //                    $photo = Photo::find(14217); // 9 / 10      (1, 4, 7, 8, 9, 12, 18, 20, 23)
 //                    $photo = Photo::find(14217); // 9 / 9       (1, 4, 7, 8, 12, 16, 18, 20, 23)
 //                    $photo = Photo::find(14210); // 5 / 5       (1, 5, 12, 16, 18)

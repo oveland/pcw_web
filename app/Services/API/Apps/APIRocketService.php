@@ -94,6 +94,15 @@ class APIRocketService implements APIAppsInterface
                     return $this->log();
                     break;
 
+                case 'check-online':
+                    Storage::disk('local')->append('rocket.log', '✅️ '.$this->vehicle->plate.' | '. $this->request->get('date') . ' >> Check online');
+
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'ACK'
+                    ]);
+                    break;
+
                 default:
                     return response()->json([
                         'success' => false,
