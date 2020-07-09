@@ -547,6 +547,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
+                                <li class="nav-item menu-passengers-photos">
+                                    <a href="{{ route('report.passengers.photos') }}" class="faa-parent animated-hover nav-link nav-toggle">
+                                        <i class="fa fa-camera faa-vertical"></i>
+                                        @lang('Photos')
+                                    </a>
+                                </li>
                                 @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter()) )
                                     <li class="nav-item menu-passengers-recorders">
                                         <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
