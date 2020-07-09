@@ -209,7 +209,7 @@ class DispatchRouteService
                     $speedingLocations = $locations->where('speeding', true);
 
                     $offRoadReport = $this->offRoad->groupByFirstOffRoad($locations);
-                    $speedingReport = $this->speeding::groupByFirstSpeedingEvent($speedingLocations);
+                    $speedingReport = $this->speeding->groupByFirstSpeedingEvent($speedingLocations);
                     $controlPointReport = $this->controlPoints->reportWithDelay($dispatchRegister);
 
                     $totalOffRoads = $offRoadReport->count();

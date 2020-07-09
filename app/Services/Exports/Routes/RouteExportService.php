@@ -259,10 +259,8 @@ class RouteExportService
 
                         /* SHEETS */
                         $excel = PCWExporterService::createHeaders($excel, $dataExport);
-                        $excel = PCWExporterService::createSheet($excel, $dataExport);
+                        $excel = PCWExporterService::createSheet($excel, $dataExport, true);
                     }
-
-
                 } else {
                     dump("No reports found for $route->name on date $date");
                 }
