@@ -259,12 +259,10 @@ class PhotoService
                     }
 
                     $occupation->persons = $occupation->seatingOccupied->count();
-
-                    $occupation->occupationPercent = 100 * $occupation->seatingOccupied->count() / $profileSeating->occupation->count();
-                    $occupation->percentLevel = $personsRekognition->getOccupationLevel($occupation->occupationPercent);
                 }
 
-
+                $occupation->percent = 100 * $occupation->seatingOccupied->count() / $profileSeating->occupation->count();
+                $occupation->percentLevel = $personsRekognition->getOccupationLevel($occupation->percent);
                 $occupation->seatingOccupiedStr = $occupation->seatingOccupied->keys()->sort()->implode(', ');
 
                 return $occupation;

@@ -313,7 +313,7 @@ return [
         'faces' => [
             'photo' => [
                 'effects' => [
-                    'brightness' => 20,
+                    'brightness' => 18,
                     'contrast' => 8,
                     'gamma' => 1,
                     'sharpen' => 0

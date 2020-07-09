@@ -249,6 +249,7 @@ abstract class PhotoRekognitionService
 
     public function getOccupationLevel($op)
     {
+        $op = intval($op);
         $level = 1;
         if ($op > 35) {
             $level = 2;
