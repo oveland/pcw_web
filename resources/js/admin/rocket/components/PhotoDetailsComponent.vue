@@ -48,7 +48,7 @@
                     <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail">
                         <p v-show="roundTrip.number">
                             <small>
-                                <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.persons }}
+                                <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
                             </small>
                         </p>
                     </li>

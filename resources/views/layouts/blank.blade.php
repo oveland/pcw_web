@@ -28,11 +28,11 @@ License: You must have a valid license purchased only from themeforest(the above
 </head>
 <!-- END HEAD -->
 
-<body class="">
+<body class="blank">
 
 <div class="page-content-wrapper">
     <!-- BEGIN CONTENT BODY -->
-    <div class="p-20" style="background:white;height: 1500px">
+    <div id="container-iframe" class="p-20" style="background:white;height: auto">
         <div class="body-content" style="display: none">
             @yield('content')
         </div>
@@ -51,5 +51,11 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- END FOOTER -->
 @include('template.metronic.plugins')
 </body>
+
+<style>
+    body, .sf-toolbar div{
+        background: white !important;
+    }
+</style>
 
 </html>

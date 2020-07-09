@@ -9,10 +9,10 @@
 namespace App\Services\Apps\Rocket\Photos;
 
 use App;
-use App\Events\App\Rocket\AppEvent;
 use App\Events\App\Rocket\PhotoMapEvent;
 use App\Models\Apps\Rocket\CurrentPhoto;
 use App\Models\Apps\Rocket\Photo;
+use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Vehicles\Vehicle;
 use App\PerfilSeat;
@@ -171,6 +171,7 @@ class PhotoService
 
             $personsByRoundTrips = collect([]);
             $historicByTurns = $historic->groupBy('dr');
+            $lastHistoricByTurn = null;
             foreach ($historicByTurns as $dr => $historicByTurn) {
                 $firstHistoricByTurn = $historicByTurn->sortBy('time')->first();
                 $lastHistoricByTurn = $historicByTurn->sortBy('time')->last();
@@ -195,6 +196,7 @@ class PhotoService
                 'passengers' => (object)[
                     'byRoundTrips' => $personsByRoundTrips,
                     'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
+                    'totalSum' => $historic->count() ? $historic->last()->passengers->totalSum : 0
                 ],
             ];
         }
@@ -234,24 +236,32 @@ class PhotoService
     private function getOccupation(PhotoInterface $photo, $type = self::REKOGNITION_TYPE)
     {
 
-        switch ($type){
+        switch ($type) {
             case 'persons':
             case 'faces':
                 return $this->getRekognitionService($type)->processOccupation($photo);
                 break;
             case 'persons_and_faces':
-                $personsOccupation = $this->getRekognitionService('persons')->processOccupation($photo);
-                $facesOccupation = $this->getRekognitionService('faces')->processOccupation($photo);
+                $profileSeating = ProfileSeat::findByVehicle($this->vehicle);
+                $personsRekognition = $this->getRekognitionService('persons');
+                $facesRekognition = $this->getRekognitionService('faces');
+
+                $personsOccupation = $personsRekognition->processOccupation($photo);
+                $facesOccupation = $facesRekognition->processOccupation($photo);
 
                 $occupation = $personsOccupation;
 
-                if($facesOccupation){
-                    foreach ($facesOccupation->seatingOccupied as $seatNumber => $seatOccupied){
+                if ($facesOccupation) {
+                    $occupation->draws = $occupation->draws->merge($facesOccupation->draws);
+
+                    foreach ($facesOccupation->seatingOccupied as $seatNumber => $seatOccupied) {
                         $occupation->seatingOccupied->put($seatNumber, $seatOccupied);
                     }
 
                     $occupation->persons = $occupation->seatingOccupied->count();
-                    $occupation->draws = $occupation->draws->merge($facesOccupation->draws);
+
+                    $occupation->occupationPercent = 100 * $occupation->seatingOccupied->count() / $profileSeating->occupation->count();
+                    $occupation->percentLevel = $personsRekognition->getOccupationLevel($occupation->occupationPercent);
                 }
 
 
@@ -280,6 +290,7 @@ class PhotoService
 
             $personsByRoundTrip = 0;
             $totalPersons = 0;
+            $totalSum = 0;
 
             foreach ($photos as $photo) {
 
@@ -301,6 +312,7 @@ class PhotoService
                 $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prevPhoto->dispatch_register_id || $prevPhoto->id == $photo->id;
 
                 $newPersons = $this->countOccupation($currentOccupation, $prevOccupation, $firstPhotoInRoundTrip);
+                $totalSum += $newPersons;
 
                 if ($firstPhotoInRoundTrip) {
                     $personsByRoundTrip = $currentCount;
@@ -319,6 +331,7 @@ class PhotoService
                     'number' => $roundTrip,
                     'route' => $routeName,
                     'persons' => $personsByRoundTrip,
+                    'count' => $personsByRoundTrip,
 
                     'prevCount' => $prevCount,
                     'currentCount' => $currentCount,
@@ -339,6 +352,7 @@ class PhotoService
                         'byRoundTrips' => $personsByRoundTrips,
                         'totalInRoundTrip' => $personsByRoundTrip,
                         'total' => $totalPersons,
+                        'totalSum' => $totalSum,
                     ]
                 ]);
 

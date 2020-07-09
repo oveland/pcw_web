@@ -87,6 +87,8 @@ class Photo extends Model implements PhotoInterface
             ->where('vehicle_id', $vehicle->id)
             ->whereDate('date', $date)
             ->orderBy('date')
+//            ->offset(100)
+//            ->limit(3)
             ->get();
     }
 }

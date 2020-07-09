@@ -739,5 +739,10 @@
   "Counts": "Conteos",
   "Total": "Total",
   "Paused count": "Conteo pausado",
-  "Seating": "Asientos"
+  "Seating": "Asientos",
+  "photos": "fotos",
+  "General count": "Conteo general",
+  "Total by round trips": "Total por vueltas",
+  "Total accumulated": "Conteos acumulados",
+  "Photos": "Fotos"
 }

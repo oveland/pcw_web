@@ -154,7 +154,7 @@ abstract class PhotoRekognitionService
 
         $count = $rule->get('count') && !$boxZone->overlap && $boundingBox->width > 1.5 && $boundingBox->height > 2;
 
-        if(!$count){
+        if (!$count) {
             $rule->put('color', 'rgba(255, 50, 55, 0.78)');
         }
 
@@ -231,9 +231,13 @@ abstract class PhotoRekognitionService
                 $personDraws[] = $recognition;
             }
 
+            $occupationPercent = 100 * $seatingOccupied->count() / $profileSeating->occupation->count();
+
             $occupation->draws = $personDraws;
             $occupation->count = $count;
             $occupation->persons = $seatingOccupied->count();
+            $occupation->percent = $occupationPercent;
+            $occupation->percentLevel = $this->getOccupationLevel($occupationPercent);
             $occupation->seatingOccupied = $seatingOccupied;
             $occupation->seatingOccupiedStr = $seatingOccupied->keys()->sort()->implode(', ');
 
@@ -241,6 +245,18 @@ abstract class PhotoRekognitionService
         }
 
         return null;
+    }
+
+    public function getOccupationLevel($op)
+    {
+        $level = 1;
+        if ($op > 35) {
+            $level = 2;
+        }
+        if ($op > 50) {
+            $level = 3;
+        }
+        return $level;
     }
 
     /**

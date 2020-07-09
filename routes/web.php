@@ -320,6 +320,19 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/', 'GeolocationPassengersReportController@index')->name('report-passengers-geolocation');
                 Route::any('/search', 'GeolocationPassengersReportController@search')->name('report-passengers-geolocation-search');
             });
+
+            Route::prefix(__('photos'))->group(function () {
+                Route::get('/', 'Rocket\ReportPhotosController@index')->name('report.passengers.photos');
+
+                Route::prefix('report')->group(function () {
+                    Route::get('/{name}', 'Rocket\ReportPhotosController@report')->name('report.passengers.photos.report');
+                });
+
+                Route::prefix('params')->group(function () {
+                    Route::get('/{name}/get', 'Rocket\ReportPhotosController@getParams')->name('report.passengers.photos.params.get');
+                    Route::any('/{name}/save', 'Rocket\ReportPhotosController@setParams')->name('report.passengers.photos.params.set');
+                });
+            });
         });
 
         /* Routes for drivers report */
@@ -436,17 +449,6 @@ Route::prefix(__('link'))->group(function () {
         return view('reports.route.route.templates._externalLinks', compact('link'));
     })->name('link-report-route-chart-view');
 
-    // Url temporal. Because excel url on consolidated mail report was generated with url for historic view, instead of url for chart view on the month of March
-    // TODO: Delete next code on July 2019
-    Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{dispatchRegister}', function (Illuminate\Http\Request $request, $first) {
-        $user = User::find($first);
-        if(!$user){
-            return redirect(route('report-route-chart-view',['dispatchRegister' => $first, 'location' => 0]));
-        }
-        Auth::login($user, true);
-        return redirect(route('report-route-historic'));
-    });
-
     Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic-path') . '/{user}', function (User $user) {
         Auth::login($user, true);
         return redirect(route('report-route-historic'));
@@ -461,6 +463,19 @@ Route::prefix(__('link'))->group(function () {
 
                     return redirect(route('takings-passengers-liquidation'))->with('hide-menu', true);
                 })->name('link-takings-passengers-liquidation');
+            });
+        });
+    });
+
+    // TODO: Temporal link to render beta ML on NE
+    Route::prefix(__('reports'))->group(function () {
+        Route::prefix(__('passengers'))->group(function () {
+            Route::prefix(__('photos'))->group(function () {
+                Route::get('/{user}', function (User $user){
+                    Auth::login($user, true);
+
+                    return redirect(route('report.passengers.photos'))->with('hide-menu', true);
+                })->name('link.reports.passengers.photos');
             });
         });
     });
