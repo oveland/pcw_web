@@ -159,11 +159,11 @@ class RocketController extends Controller
 //                    $photo = Photo::find(14210); // 5 / 5       (1, 5, 12, 16, 18)
 
 
-                    $photo = Photo::find(17044);
+//                    $photo = Photo::find(17044);
 
 
-                        $photo->processRekognition(true, 'faces');
-                        $photo->save();
+//                        $photo->processRekognition(true, 'faces');
+//                        $photo->save();
 
                     if ($photo) {
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
