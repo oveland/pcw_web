@@ -4,8 +4,8 @@
 namespace App\Models\Apps\Rocket\Traits;
 
 
+use App\Models\Apps\Rocket\Photo;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -52,6 +52,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereDataPersons($value)
  * @property string|null $data_faces
  * @method static Builder|Photo whereDataFaces($value)
+ * @property string|null $data_properties
+ * @method static Builder|Photo whereDataProperties($value)
  */
 
 interface PhotoInterface

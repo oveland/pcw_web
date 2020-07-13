@@ -162,6 +162,7 @@ class PhotoService
     function getPhotoData(PhotoInterface $photo, $historic)
     {
         $historic = $historic->where('id', '<=', $photo->id);
+        $lastPhoto = $historic->last();
 
         $photoData = null;
 
@@ -193,10 +194,17 @@ class PhotoService
             $photoData = (object)[
                 'id' => $photo->id,
                 'details' => $details,
+                'prevDetails' => $lastPhoto->prevDetails ?? null,
+                'seatingBoardingStr' => $lastPhoto->seatingBoardingStr ?? null,
+                'seatingMixStr' => $lastPhoto->seatingMixStr ?? null,
+                'seatingReleaseStr' => $lastPhoto->seatingReleaseStr ?? null,
+                'seatingActivatedStr' => $lastPhoto->seatingActivatedStr ?? null,
+                'alarms' => $lastPhoto->alarms ?? null,
                 'passengers' => (object)[
                     'byRoundTrips' => $personsByRoundTrips,
                     'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
-                    'totalSum' => $historic->count() ? $historic->last()->passengers->totalSum : 0
+                    'totalSum' => $historic->count() ? $historic->last()->passengers->totalSum : 0,
+                    'totalSum2' => $historic->count() ? $historic->last()->passengers->totalSum2 : 0
                 ],
             ];
         }
@@ -204,13 +212,102 @@ class PhotoService
         return $photoData;
     }
 
+
+    public function processPersistenceSeating(&$currentOccupied, &$prevOccupied)
+    {
+        $currentOccupiedMod = collect([]);
+        foreach ($currentOccupied as $seat => $data) {
+            $inPrevSeat = $prevOccupied->get($seat);
+
+            $newData = collect($data);
+            $newData->put('counterActivate', $inPrevSeat ? (intval(isset($inPrevSeat->counterActivate) ? $inPrevSeat->counterActivate : 0) + 1) : 0);
+
+            $currentOccupiedMod->put($seat, (object)$newData->toArray());
+        }
+
+        $currentOccupied = $currentOccupiedMod;
+//
+//        $prevOccupiedMod = collect([]);
+//        foreach ($prevOccupied as $seat => $data) {
+//            $inCurrentSeat = $currentOccupied->get($seat);
+//
+//            $newData = collect($data);
+//            $newData->put('counterRelease', $inCurrentSeat && $inCurrentSeat->counterActivate <= 1 ? 0 : intval(isset($data->counterRelease) ? $data->counterRelease : 0) + 1);
+//
+//            if ($newData->get('counterRelease') > 1) {
+//                $currentOccupied->put($seat, (object)$newData->toArray());
+//            }
+//
+//            $prevOccupiedMod->put($seat, (object)$newData->toArray());
+//        }
+//
+//        $prevOccupied = $prevOccupiedMod;
+    }
+
+    /**
+     * @param Collection $currentOccupied
+     * @param Collection $prevOccupied
+     * @return Collection
+     */
+    public function getSeatingReleased($currentOccupied, $prevOccupied)
+    {
+        $seatingRelease = collect([]);
+
+        if ($prevOccupied->count() && $prevOccupied->count() || true) {
+//            $prevOccupiedMod = collect([]);
+            foreach ($prevOccupied as $seat => $data) {
+//                $inCurrentSeat = $currentOccupied->get($seat);
+
+                $newData = collect($data);
+//                $newData->put('counterRelease', $inCurrentSeat ? 0 : intval(isset($data->counterRelease) ? $data->counterRelease : 0) + 1);
+
+                if ($newData->get('counterRelease') > 1) {
+                    $seatingRelease->put($seat, (object)$newData->toArray());
+                } else {
+//                    $currentOccupied->put($seat, (object)$newData->toArray());
+                }
+
+//                $prevOccupiedMod->put($seat, (object)$newData->toArray());
+            }
+//            $prevOccupied = $prevOccupiedMod;
+        }
+        return $seatingRelease;
+    }
+
+    /**
+     * @param Collection $currentOccupied
+     * @param Collection $prevOccupied
+     * @return Collection
+     */
+    public function getSeatingActivated($currentOccupied, $prevOccupied)
+    {
+        $seatingBusy = collect([]);
+
+//        $currentOccupiedMod = collect([]);
+        foreach ($currentOccupied as $seat => $data) {
+//            $inPrevSeat = $prevOccupied->get($seat);
+
+            $newData = collect($data);
+//            $newData->put('counterActivate', $inPrevSeat ? (intval(isset($inPrevSeat->counterActivate) ? $inPrevSeat->counterActivate : 0) + 1) : 0);
+
+            if ($newData->get('counterActivate') == 2) {
+//                $newData->put('counterActivate', 0);
+                $seatingBusy->put($seat, (object)$newData->toArray());
+            }
+
+//            $currentOccupiedMod->put($seat, (object)$newData->toArray());
+        }
+//        $currentOccupied = $currentOccupiedMod;
+
+        return $seatingBusy;
+    }
+
     /**
      * @param $currentOccupation
      * @param $prevOccupation
-     * @param bool $firstPhotoInRoundTrip
      * @return int
      */
-    private function countOccupation($currentOccupation, $prevOccupation, $firstPhotoInRoundTrip = false)
+    private function countOccupation($currentOccupation, $prevOccupation)
     {
         $count = 0;
         if ($currentOccupation && $prevOccupation) {
@@ -218,13 +315,9 @@ class PhotoService
             $prevSeatingOccupied = collect($prevOccupation->seatingOccupied);
 
             if ($prevOccupation->count && $currentOccupation->count) {
-                if ($firstPhotoInRoundTrip) {
-                    $count = collect($prevSeatingOccupied)->count();
-                } else {
-                    foreach ($prevSeatingOccupied as $seatNumber => $prevSeatOccupied) {
-                        if (!$currentSeatingOccupied->get($seatNumber)) {
-                            $count++;
-                        }
+                foreach ($prevSeatingOccupied as $seatNumber => $prevSeatOccupied) {
+                    if (!$currentSeatingOccupied->get($seatNumber)) {
+                        $count++;
                     }
                 }
             }
@@ -253,24 +346,69 @@ class PhotoService
 
                 if ($facesOccupation) {
                     $occupation->draws = $occupation->draws->merge($facesOccupation->draws);
-
-                    foreach ($facesOccupation->seatingOccupied as $seatNumber => $seatOccupied) {
-                        $occupation->seatingOccupied->put($seatNumber, $seatOccupied);
-                    }
-
-                    $occupation->persons = $occupation->seatingOccupied->count();
                 }
 
-                $occupation->percent = 100 * $occupation->seatingOccupied->count() / $profileSeating->occupation->count();
-                $occupation->percentLevel = $personsRekognition->getOccupationLevel($occupation->percent);
-                $occupation->seatingOccupiedStr = $occupation->seatingOccupied->keys()->sort()->implode(', ');
+                $occupation = $this->filterDrawsInsideOverlap($occupation);
+//                $occupation->type = $type;
 
-                return $occupation;
+                return $personsRekognition->occupationParams($profileSeating, $occupation);
 
                 break;
         }
 
         return null;
+    }
+
+    function filterDrawsInsideOverlap($occupation)
+    {
+        if ($occupation->withOverlap) {
+
+            $nd = collect([]);
+            foreach ($occupation->draws as &$rekognition) {
+                $rekognition = (object)$rekognition;
+                if ($rekognition->count) {
+                    $recognitionZone = new Zone($rekognition->box);
+
+                    $partnersDraws = $occupation->draws;
+
+                    foreach ($partnersDraws as $partner) {
+                        if ($partner->overlap) {
+                            $partnerZone = new Zone($partner->box);
+
+                            $rekognition->isInside = $recognitionZone->isInsideOf($partnerZone);
+
+                            if ($rekognition->isInside) {
+                                $rekognition->count = false;
+                                $rekognition->color = "rgb(0, 239, 222)";
+                            }
+                        }
+                    }
+                }
+
+                $nd->push($rekognition);
+            }
+
+            $occupation->draws = $nd->toArray();
+        }
+
+        return $occupation;
+    }
+
+    /**
+     * @param PhotoInterface $currentPhoto
+     * @param $counterLock
+     * @param $alert
+     */
+    public function processLockCam(PhotoInterface $currentPhoto, &$counterLock, &$alert)
+    {
+        $currentAvBrightness = $currentPhoto->data_properties->avBrightness ?? null;
+
+        if ($currentAvBrightness !== null && $currentAvBrightness < 2) {
+            $counterLock++;
+        } else {
+            $counterLock = 0;
+        }
+        $alert = $counterLock >= 3;
     }
 
     /**
@@ -285,15 +423,50 @@ class PhotoService
 
         if ($photos->isNotEmpty()) {
             $prevPhoto = $photos->first();
+            $prevOccupation = $this->getOccupation($prevPhoto);
 
             $personsByRoundTrip = 0;
             $totalPersons = 0;
             $totalSum = 0;
+            $totalSum2 = 0;
+
+            $alerts = collect([]);
+            $counterLock = 0;
+            $alertLockCam = false;
 
             foreach ($photos as $photo) {
 
                 $currentOccupation = $this->getOccupation($photo);
-                $prevOccupation = $this->getOccupation($prevPhoto);
+
+                $details = $photo->getAPIFields('url');
+
+                $prevDetails = $prevPhoto->getAPIFields('url');
+                $prevDetails->occupation = $prevOccupation;
+
+                $seatingBoarding = clone $currentOccupation->seatingOccupied;
+
+                if ($currentOccupation->withOverlap) {
+                    foreach ($prevOccupation->seatingOccupied as $seatNumber => $seatOccupied) {
+                        $currentOccupation->seatingOccupied->put($seatNumber, $seatOccupied);
+                    }
+                }
+
+                $details->occupation = $currentOccupation;
+
+
+                $this->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied);
+
+//                $seatingReleased = $this->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied);
+                $seatingActivated = $this->getSeatingActivated($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied);
+
+
+                $seatingReleased = collect([]);
+
+//                $newPersons = $seatingReleased->count();
+                $newPersons = $seatingActivated->count();
+
+                $totalSum += $currentOccupation->withOverlap ? 0 : $newPersons;
+                $totalSum2 += $seatingActivated->count();
 
                 $currentCount = $currentOccupation ? $currentOccupation->persons : 0;
                 $prevCount = $prevOccupation ? $prevOccupation->persons : 0;
@@ -309,19 +482,19 @@ class PhotoService
                 $dr = $photo->dispatchRegister;
                 $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prevPhoto->dispatch_register_id || $prevPhoto->id == $photo->id;
 
-                $newPersons = $this->countOccupation($currentOccupation, $prevOccupation, $firstPhotoInRoundTrip);
-                $totalSum += $newPersons;
 
                 if ($firstPhotoInRoundTrip) {
-                    $personsByRoundTrip = $currentCount;
-                } else if ($dr) {
-                    $personsByRoundTrip += $newPersons;
-                }
+                    $personsByRoundTrip = 0;
+                } else
+                    if ($dr) {
+                        $personsByRoundTrip += $newPersons;
+                    }
 
                 if ($dr) {
                     $roundTrip = $dr->round_trip;
                     $routeName = $dr->route->name;
-                    $totalPersons += $firstPhotoInRoundTrip ? $currentCount : $newPersons;
+                    $totalPersons += $firstPhotoInRoundTrip ? 0 : $newPersons;
+//                    $totalPersons +=  $newPersons;
                 }
 
                 $personsByRoundTrips = collect([])->push((object)[
@@ -337,24 +510,36 @@ class PhotoService
                     'prevId' => $prevPhoto->id,
                 ]);
 
-
-                $details = $photo->getAPIFields('url');
-                $details->occupation = $currentOccupation;
+                $this->processLockCam($photo, $counterLock, $alertLockCam);
 
                 $historic->push((object)[
                     'id' => $photo->id,
                     'time' => $photo->date->format('H:i:s') . '' . $photo->id,
                     'dr' => $photo->dispatch_register_id,
                     'details' => $details,
+                    'prevDetails' => $prevDetails,
+                    'seatingBoardingStr' => $seatingBoarding->keys()->sort()->implode(', '),
+                    'seatingMixStr' => $currentOccupation->withOverlap ? $currentOccupation->seatingOccupied->keys()->sort()->implode(', ') : "",
+                    'seatingReleaseStr' => $seatingReleased->keys()->sort()->implode(', '),
+                    'seatingActivatedStr' => $seatingActivated->keys()->sort()->implode(', '),
+                    'alarms' => (object)[
+                        'withOverlap' => $currentOccupation->withOverlap,
+                        'lockCamera' => $alertLockCam,
+                        'counterLockCamera' => $counterLock,
+                        'av' => $photo->data_properties
+                    ],
                     'passengers' => (object)[
                         'byRoundTrips' => $personsByRoundTrips,
                         'totalInRoundTrip' => $personsByRoundTrip,
                         'total' => $totalPersons,
                         'totalSum' => $totalSum,
+                        'totalSum2' => $totalSum2,
                     ]
                 ]);
 
-                if ($details->occupation->count) $prevPhoto = $photo;
+//                if ($details->occupation->count)
+                $prevPhoto = $photo;
+                $prevOccupation = $currentOccupation;
             }
         }
 

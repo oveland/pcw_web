@@ -30,6 +30,7 @@ use Illuminate\Support\Str;
  * @method static Builder|ProfileSeat wherePhoto($value)
  * @mixin Eloquent
  * @method static Builder|ProfileSeat findByVehicle(Vehicle $vehicle)
+ * @property-read mixed $date
  */
 class ProfileSeat extends Model
 {

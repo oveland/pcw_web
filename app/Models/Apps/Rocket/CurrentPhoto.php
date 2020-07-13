@@ -56,6 +56,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereDataPersons($value)
  * @property string|null $data_faces
  * @method static Builder|Photo whereDataFaces($value)
+ * @property string|null $data_properties
+ * @method static Builder|CurrentPhoto whereDataProperties($value)
  */
 class CurrentPhoto extends Model implements PhotoInterface
 {

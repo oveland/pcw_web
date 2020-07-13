@@ -25,7 +25,7 @@
         },
         props: {
             seat: Object,
-            seatingOccupied: Object,
+            seatingOccupied: Object | Array,
             image: Object,
             fixed: Boolean
         },

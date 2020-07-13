@@ -58,10 +58,14 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereDataPersons($value)
  * @property string|null $data_faces
  * @method static Builder|Photo whereDataFaces($value)
+ * @property string|null $data_properties
+ * @method static Builder|Photo whereDataProperties($value)
  */
 class Photo extends Model implements PhotoInterface
 {
-    use PhotoRekognition, PhotoGlobals, PhotoEncode;
+    use PhotoRekognition;
+    use PhotoGlobals, PhotoEncode;
+
     public const BASE_PATH = '/Apps/Rocket/Photos/';
 
     protected $table = 'app_photos';
@@ -87,8 +91,16 @@ class Photo extends Model implements PhotoInterface
             ->where('vehicle_id', $vehicle->id)
             ->whereDate('date', $date)
             ->orderBy('date')
+
+//            ->where('id', '<=', 17154) // 7:09 46
+//            ->where('id', '<=', 17276) // 09:00   77
+//            ->where('id', '<=', 17500) // 12:50   117
+
+//            ->whereBetween('id', [17717, 17816]) // 12:50   14
+
+
 //            ->offset(100)
-//            ->limit(3)
+//            ->limit(72)
             ->get();
     }
 }

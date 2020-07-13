@@ -22,15 +22,19 @@
                 </div>
                 <div class="passengers">
                     <p class="detail">
-                        {{ $t('Passengers') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.persons }}</span>
-
+                        {{ $t('Bearding passengers') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.persons }}</span>
                         <span v-if="!photo.details.occupation.count">{{ $t('Paused count') }}</span>
                     </p>
                     <p class="detail">
                         {{ $t('Seating') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.seatingOccupiedStr }}</span>
                     </p>
-                    <p class="detail text-bold text-uppercase" :class="`percent-level-${photo.details.occupation.percentLevel}`">
-                        {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.percent | numberFormat('0.0') }}%</span>
+                    <p class="detail text-bold text-uppercase"
+                       :class="`percent-level-${photo.details.occupation.percentLevel}`">
+                        {{ $t('Occupation') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.percent | numberFormat('0.0') }}%</span>
+
+                        <span class="text-danger text-uppercase" v-if="photo.alarms && photo.alarms.lockCamera">
+                            <i class="fa fa-warning"></i> {{ $t('Lock alarm') }} <small style="font-size: 0.5em">{{ photo.alarms.counterLockCamera }}</small>
+                        </span>
                     </p>
                 </div>
             </div>
@@ -49,7 +53,8 @@
                         <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail" v-if="roundTrip.number">
                             <p v-show="roundTrip.number">
                                 <small>
-                                    <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
+                                    <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{
+                                    roundTrip.count }}
                                 </small>
                             </p>
                         </li>
@@ -89,7 +94,7 @@
         display: inline-table;
     }
 
-    .photo-details p{
+    .photo-details p {
         margin: 0;
     }
 
@@ -117,15 +122,15 @@
         font-size: 0.8em !important;
     }
 
-    .percent-level-1{
+    .percent-level-1 {
         color: #a6e005 !important;
     }
 
-    .percent-level-2{
+    .percent-level-2 {
         color: #fc8d06 !important;
     }
 
-    .percent-level-3{
+    .percent-level-3 {
         color: rgb(255, 77, 77) !important;
     }
 </style>

@@ -133,6 +133,10 @@ use Carbon\Carbon;
  * @property-read int|null $parking_report_count
  * @property-read int|null $reports_count
  * @property-read int|null $speeding_report_count
+ * @property int|null $edit_user_id
+ * @property string|null $edited_info
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereEditUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereEditedInfo($value)
  */
 class DispatchRegister extends Model
 {

@@ -17,7 +17,6 @@ trait PhotoRekognition
         $type = $this->getType($type);
         $this->rekognition = $type;
 
-
         if ($force || collect($this->data_persons)->isEmpty()) {
             $vehicle = $this->vehicle;
             if ($this->path && $vehicle) {
@@ -38,6 +37,7 @@ trait PhotoRekognition
                     default:
                         $config = $this->photoRekognitionService($type)->config;
                         $this->effects = $config->photo->effects;
+
                         $data = $rekognition->sefFile($this->getImage('png', true))->process($type);
                         $column = "data_$type";
                         $this->$column = $data;

@@ -21,7 +21,7 @@ abstract class PhotoRekognitionService
     /**
      * @var PhotoZone
      */
-    protected $zoneDetected;
+    public $zoneDetected;
 
     /**
      * @var object
@@ -164,8 +164,8 @@ abstract class PhotoRekognitionService
 
         $background = ($count ? $rule->get('background') : 'rgba(137, 138, 135, 0.1)');
 
-        $rule->put('count', $count);
-        $rule->put('overlap', $rule->get('count') && $boxZone->overlap);
+        $rule->put('count', $count && !$boxZone->overlap);
+        $rule->put('overlap', $boxZone->overlap);
         $rule->put('background', $background);
         $rule->put('largeDetection', $boxZone->largeDetection);
         $rule->put('relationSize', $boxZone->relationSize);
@@ -186,65 +186,226 @@ abstract class PhotoRekognitionService
         $width = $boundingBox->width;
         $heightOrig = isset($boundingBox->heightOrig) ? $boundingBox->heightOrig : $boundingBox->height;
 
+        if (isset($boundingBox->center)) {
+            $centerOrig = (object)(isset($boundingBox->center) ? $boundingBox->center : $boundingBox->centerOrig);
+        } else {
+            $centerOrig = (object)[
+                'left' => $boundingBox->left + $boundingBox->width / 2,
+                'top' => $boundingBox->top + $boundingBox->height / 2,
+            ];
+        }
+
+
         $relationSize = $heightOrig / $width;
         $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 15);
 
-        $overlap = ($heightOrig > $configBox->od->height) && $width > $configBox->od->width || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw);
+//
+//        $overlap = $boundingBox->height > 35 || $width > 40;
+//
+//        if ($boundingBox->top < 48) {
+//            $overlap = $boundingBox->height > 30 || $width > 20;
+//        }
+//
+//
+////        if ($centerOrig->top <= 50){
+////            $overlap =
+//////                ($heightOrig > $configBox->od->height)
+//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+//////                ||
+////                $boundingBox->height > 20
+////                || $width > 15;
+////        }
+////
+////        if ($centerOrig->top <= 20) {
+////            $overlap =
+//////                ($heightOrig > $configBox->od->height)
+//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+//////                ||
+////                $boundingBox->height > 15
+////                || $width > 10;
+////        }
+////
+////        $overlap = ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
+////            || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
+////            || $boundingBox->height > 48
+////            || $width > 35;
+////
+////        if ($centerOrig->top <= 70) {
+////            $overlap =
+//////                ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
+//////                || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
+//////                ||
+////                $boundingBox->height > 35
+////                || $width > 30;
+////        }
+////
+////        if ($centerOrig->top <= 50) {
+////            $overlap =
+//////                ($heightOrig > $configBox->od->height)
+//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+//////                ||
+////                $boundingBox->height > 30
+////                || $width > 25;
+////        }
+////
+////        if ($centerOrig->top <= 40) {
+////            $overlap =
+//////                ($heightOrig > $configBox->od->height)
+//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+//////                ||
+////                $boundingBox->height > 25
+////                || $width > 20;
+////        }
+////
+////        if ($centerOrig->top <= 20) {
+////            $overlap =
+//////                ($heightOrig > $configBox->od->height)
+//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+//////                ||
+////                $boundingBox->height > 15
+////                || $width > 15;
+////        }
+//
+//        if ($overlap && $width < 25 && $boundingBox->height < 35 && $heightOrig < 50) {
+//            $overlap = $centerOrig->left >= 30 && $centerOrig->left <= 70;
+//        }
+
+        $overlap = $boundingBox->height > 50 || $width > 50;
+
+        if ($centerOrig->top <= 40) {
+            $overlap = $boundingBox->height > 28 || $width > 25;
+        }
+
+//        if ($centerOrig->top <= 50){
+//            $overlap =
+////                ($heightOrig > $configBox->od->height)
+////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+////                ||
+//                $boundingBox->height > 20
+//                || $width > 15;
+//        }
+//
+//        if ($centerOrig->top <= 20) {
+//            $overlap =
+////                ($heightOrig > $configBox->od->height)
+////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+////                ||
+//                $boundingBox->height > 15
+//                || $width > 10;
+//        }
+//
+//        $overlap = ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
+//            || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
+//            || $boundingBox->height > 48
+//            || $width > 35;
+//
+//        if ($centerOrig->top <= 70) {
+//            $overlap =
+////                ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
+////                || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
+////                ||
+//                $boundingBox->height > 35
+//                || $width > 30;
+//        }
+//
+//        if ($centerOrig->top <= 50) {
+//            $overlap =
+////                ($heightOrig > $configBox->od->height)
+////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+////                ||
+//                $boundingBox->height > 30
+//                || $width > 25;
+//        }
+//
+//        if ($centerOrig->top <= 40) {
+//            $overlap =
+////                ($heightOrig > $configBox->od->height)
+////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+////                ||
+//                $boundingBox->height > 25
+//                || $width > 20;
+//        }
+//
+//        if ($centerOrig->top <= 20) {
+//            $overlap =
+////                ($heightOrig > $configBox->od->height)
+////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
+////                ||
+//                $boundingBox->height > 15
+//                || $width > 15;
+//        }
+
+        if ($overlap && $width < 30 && $boundingBox->height < 40 && $heightOrig < 60) {
+            $overlap = $centerOrig->left >= 30 && $centerOrig->left <= 70;
+        }
+
+//        $overlap = false;
 
         return (object)compact(['overlap', 'relationSize', 'largeDetection']);
     }
 
     /**
      * @param PhotoInterface $photo
-     * @return object | null
+     * @return object
      */
     function processOccupation(PhotoInterface $photo)
     {
         $occupation = $this->getDataOccupation($photo);
+        $profileSeating = ProfileSeat::findByVehicle($this->vehicle);
 
-        if ($occupation) {
-            $profileSeating = ProfileSeat::findByVehicle($this->vehicle);
-            $personDraws = collect([]);
-            $seatingOccupied = collect([]);
+        return $this->occupationParams($profileSeating, $occupation);
+    }
 
-            $count = true;
+    /**
+     * @param $profileSeating
+     * @param $occupation
+     * @return object
+     */
+    function occupationParams($profileSeating, $occupation)
+    {
+        $personDraws = collect([]);
+        $seatingOccupied = collect([]);
 
-            foreach ($occupation->draws as $recognition) {
-                $recognition = (object)$recognition;
-                if (isset($recognition->count)) {
-                    if ($recognition->count) {
-                        $this->zoneDetected->buildZone($recognition->box);
-                        $profileOccupation = $this->zoneDetected->getProfileOccupation($profileSeating);
-                        $recognition->profile = $profileOccupation;
+        $count = true;
+        $overlap = false;
 
-                        if ($profileOccupation->seatOccupied) {
-                            $seatingOccupied->put($profileOccupation->seatOccupied->number, $profileOccupation->seatOccupied);
-                        }
+        foreach ($occupation->draws as $recognition) {
+            $recognition = (object)$recognition;
+            if (isset($recognition->count)) {
+                if ($recognition->count) {
+                    $this->zoneDetected->buildZone($recognition->box);
+                    $this->zoneDetected->setType($recognition->type);
+                    $profileOccupation = $this->zoneDetected->getProfileOccupation($profileSeating);
+                    $recognition->profile = $profileOccupation;
 
-                        $recognition->profileStr = $profileOccupation->seating->pluck('number')->implode(', ');
+                    if ($profileOccupation->seatOccupied) {
+                        $seatingOccupied->put($profileOccupation->seatOccupied->number, $profileOccupation->seatOccupied);
                     }
 
-                    if ($recognition->overlap) {
-                        $count = false;
-                    }
+                    $recognition->profileStr = $profileOccupation->seating->pluck('number')->implode(', ');
                 }
-                $personDraws[] = $recognition;
+
+                if ($recognition->overlap) {
+                    $count = false;
+                    $overlap = true;
+                }
             }
-
-            $occupationPercent = 100 * $seatingOccupied->count() / $profileSeating->occupation->count();
-
-            $occupation->draws = $personDraws;
-            $occupation->count = $count;
-            $occupation->persons = $seatingOccupied->count();
-            $occupation->percent = $occupationPercent;
-            $occupation->percentLevel = $this->getOccupationLevel($occupationPercent);
-            $occupation->seatingOccupied = $seatingOccupied;
-            $occupation->seatingOccupiedStr = $seatingOccupied->keys()->sort()->implode(', ');
-
-            return $occupation;
+            $personDraws[] = $recognition;
         }
 
-        return null;
+        $occupationPercent = 100 * $seatingOccupied->count() / $profileSeating->occupation->count();
+
+        $occupation->type = $this->type;
+        $occupation->draws = $personDraws;
+        $occupation->count = $count;
+        $occupation->withOverlap = $overlap;
+        $occupation->persons = $seatingOccupied->count();
+        $occupation->percent = $occupationPercent;
+        $occupation->percentLevel = $this->getOccupationLevel($occupationPercent);
+        $occupation->seatingOccupied = $seatingOccupied;
+        $occupation->seatingOccupiedStr = $seatingOccupied->count() ? $seatingOccupied->keys()->sort()->implode(', ') : "";
+
+        return $occupation;
     }
 
     public function getOccupationLevel($op)

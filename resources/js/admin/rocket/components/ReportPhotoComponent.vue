@@ -1,11 +1,11 @@
 <template>
-    <div class="report-photo-component" style="width: 1000px; margin: auto">
+    <div class="report-photo-component" :style="`width: ${image.size.width + 6}px; margin: auto;overflow-y:auto;height:${image.size.height + 10}px`">
         <div v-for="photo in photos">
-            <photo-details-component :photo="photo"></photo-details-component>
+            <photo-details-component :photo="photo" style="margin-bottom: 5px"></photo-details-component>
             <photo-persons-component :photo="photo" :fixed-seating="true" :seating="seating"></photo-persons-component>
         </div>
 
-        <div class="col-md-12 text-center p-40">
+        <div v-if="photos.length <= 0" class="col-md-12 text-center p-40">
             <img v-if="true" draggable="false" src="/img/rocket/report.svg" width="30%">
         </div>
     </div>
@@ -30,7 +30,7 @@
         },
         data() {
             return {
-                photos: Array,
+                photos: [],
                 seating: [],
                 image: {
                     size: {

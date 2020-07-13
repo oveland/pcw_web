@@ -1,18 +1,21 @@
 <template>
     <div class="container-photo col-md-12" v-if="photo && photo.details">
-        <div v-if="photo.details.occupation">
+        <div v-if="photo.details.occupation && styleZones.show" :style="`opacity: ${styleZones ? styleZones.opacity/100 : 100}`">
             <div v-if="draw.box.heightOrig" v-for="draw in photo.details.occupation.draws" class="zone-detection zone-detection-original"
                  :style="`height: ${draw.box.heightOrig}%; width: ${draw.box.width}%; top: ${draw.box.top}%; left: ${draw.box.left}%; border-color: #d3d3d354; background: rgba(255, 255, 255, 0.04);border-width:1px !important`">
             </div>
 
             <div v-for="draw in photo.details.occupation.draws" class="zone-detection" :class="`${draw.count === true && !draw.profile ? 'undetected' : ''} ${draw.selectedClass}`" @mouseenter="setBusySeating(draw)" @mouseleave="clearBusySeating(draw)"
-                 :title="`${!draw.overlap ? $t('Seat')+': ' + draw.profileStr : $t('Overlap')}`"
+                 :title="`${ draw.type + ' | ' + (!draw.overlap ? $t('Seat')+': ' + draw.profileStr : $t('Overlap'))}`"
                  :style="`height: ${draw.box.height}%; width: ${draw.box.width}%; top: ${draw.box.top}%; left: ${draw.box.left}%; border-color: ${draw.color}; background: ${draw.background};`">
                 <small>{{ draw.confidence }}%</small>
             </div>
 
-            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center" :class="draw.selectedClass" :title="`${draw.largeDetection ? 'LDT: ' : 'Normal'}: ${draw.relationSize} | ${draw.overlap ? $t('Overlap') : ''} Count: ${draw.count ? $t('YES') : $t('NO')}`"
+            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center" :class="draw.selectedClass" :title="`${ draw.type + ' | ' + (draw.largeDetection ? 'LDT: ' : 'Normal' )}: ${draw.relationSize} | ${draw.overlap ? $t('Overlap') : ''} Count: ${draw.count ? $t('YES') : $t('NO') }`"
                  :style="`height: 1px; width: 1px; top: ${draw.box.center ? draw.box.center.top : 0}%; left: ${draw.box.center ? draw.box.center.left : 0}%;border-color: ${draw.color};`">
+            </div>
+            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center center-orig" :class="draw.selectedClass" :title="`Original center`"
+                 :style="`height: 1px; width: 1px; top: ${draw.box.centerOrig ? draw.box.centerOrig.top : 0}%; left: ${draw.box.centerOrig ? draw.box.centerOrig.left : 0}%;border-color: ${draw.color};`">
             </div>
         </div>
 
@@ -24,8 +27,8 @@
         <div class="container-actions text-center" v-if="photo && seating.length > 0">
             <div class="p-10 actions">
                 <div class="md-checkbox has-success">
-                    <input type="checkbox" :id="`show-photo-${photo.id}${fixedSeating ? '':'-profile'}`" class="md-check" v-model="styleSeating.show">
-                    <label :for="`show-photo-${photo.id}${fixedSeating ? '':'-profile'}`">
+                    <input type="checkbox" :id="`show-seating-photo-${photo.id}${fixedSeating ? '-f':'-p'}`" class="md-check" v-model="styleSeating.show">
+                    <label :for="`show-seating-photo-${photo.id}${fixedSeating ? '-f':'-p'}`">
                         <span class="inc"></span>
                         <span class="check"></span>
                         <span class="box text-muted"></span>
@@ -36,6 +39,24 @@
                             max="100"
                             step="1"
                             v-model="styleSeating.opacity">
+                    </range-slider>
+                </div>
+            </div>
+
+            <div class="p-10 actions">
+                <div class="md-checkbox has-warning">
+                    <input type="checkbox" :id="`show-zone-photo-${photo.id}${fixedSeating ? '-f':'-p'}`" class="md-check" v-model="styleZones.show">
+                    <label :for="`show-zone-photo-${photo.id}${fixedSeating ? '-f':'-p'}`">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box text-muted"></span>
+                    </label>
+                    <range-slider
+                            class="slider slider-warning"
+                            min="0"
+                            max="100"
+                            step="1"
+                            v-model="styleZones.opacity">
                     </range-slider>
                 </div>
             </div>
@@ -82,6 +103,10 @@
                     show: false,
                     opacity: 100,
                 },
+                styleZones: {
+                    show: false,
+                    opacity: 100,
+                },
             }
         },
         computed: {
@@ -101,6 +126,9 @@
                 draw.selectedClass = '';
                 this.busySeating = [];
             },
+        },
+        created() {
+            this.styleZones.show = this.fixedSeating;
         }
     }
 </script>
@@ -148,6 +176,10 @@
         z-index: 10000 !important;
     }
 
+    .center-orig{
+        border-color: #e2e1e1 !important;
+    }
+
     .slider{
         margin: 0;
     }
@@ -165,5 +197,9 @@
         border-radius: 10px;
         margin: auto;
         width: 100%;
+    }
+
+    .slider-warning .range-slider-fill{
+        background: #fbc221 !important;
     }
 </style>

@@ -12,6 +12,15 @@ abstract class PhotoZone
     public $height = 0;
     public $center = [];
     public $largeDetection = false;
+    public $type = 'faces';
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
 
     /**
      * PhotoZone constructor.
@@ -23,7 +32,8 @@ abstract class PhotoZone
     }
 
     /**
-     * @param array | object $zone
+     * @param $zone
+     * @return $this
      */
     public function buildZone($zone)
     {
@@ -38,6 +48,8 @@ abstract class PhotoZone
 
             $this->largeDetection = isset($zone->largeDetection) ? $zone->largeDetection : false;
         }
+
+        return $this;
     }
 
     public function L()
@@ -88,13 +100,13 @@ abstract class PhotoZone
      * @param PhotoZone $zone
      * @return bool
      */
-    public function isBiggerThan(PhotoZone $zone)
+    public function isInsideOf(PhotoZone $zone)
     {
-        return $this->include($zone) && (
-                $zone->left > $this->left &&
-                $zone->top > $this->top &&
-                $zone->width < $this->width &&
-                $zone->height < $this->height
+        return $zone->include($this) && (
+                $this->left >= $zone->left &&
+                $this->top >= $zone->top &&
+                $this->width <= $zone->width &&
+                $this->height <= $zone->height
             );
     }
 
@@ -106,7 +118,7 @@ abstract class PhotoZone
     {
         $seatingWithinZoneDetected = collect([]);
         foreach (collect($profileSeating->occupation)->sortBy('number') as $profileSeat) {
-            $candidateSeatingZone = $this->getSeatingZoneInstance($profileSeat);
+            $candidateSeatingZone = new $this($profileSeat);
             $profileSeat = $this->profileWithArea($profileSeat);
 
             if ($candidateSeatingZone->include($this)) {
@@ -117,16 +129,30 @@ abstract class PhotoZone
         $seatOccupied = null;
         if ($seatingWithinZoneDetected->count() > 1) {
             $prevSeat = null;
-            foreach ($seatingWithinZoneDetected as $profileSeat) {
+            foreach ($seatingWithinZoneDetected as &$profileSeat) {
                 $intersectedArea = $profileSeat->intersectedArea;
                 $prevIntersectedArea = $prevSeat ? $prevSeat->intersectedArea : 0;
 
                 $overlapArea = $profileSeat->overlapArea;
                 $prevOverlapArea = $prevSeat ? $prevSeat->overlapArea : 0;
 
+                $distanceToCenter = $profileSeat->distanceToCenter;
+                $prevDistanceToCenter = $prevSeat ? $prevSeat->distanceToCenter : 0;
+
+                $profileSeat->distanceToCenter = $distanceToCenter;
+
                 $largeDetection = $this->largeDetection;
 
-                $criteria = $largeDetection && ($this->width > 10) ? $overlapArea > $prevOverlapArea : $intersectedArea > $prevIntersectedArea;
+                switch ($this->type) {
+                    case 'faces':
+                        $criteria = $intersectedArea > $prevIntersectedArea;
+                        break;
+                    default:
+                        $criteria = $distanceToCenter < $prevDistanceToCenter;
+                        break;
+                }
+
+//                $criteria = $largeDetection && ($this->width > 20) ? $overlapArea > $prevOverlapArea : $intersectedArea > $prevIntersectedArea;
 
                 if ($criteria || $prevSeat === null) {
                     $seatOccupied = $profileSeat;
@@ -144,25 +170,29 @@ abstract class PhotoZone
         ];
     }
 
+    public function getDistanceToCenter(PhotoZone $zone)
+    {
+        $a = abs($zone->center->left - $this->center->left);
+        $b = abs($zone->center->top - $this->center->top);
+
+        return sqrt(($a * $a) + ($b * $b));
+    }
+
     /**
      * @param $profileSeat
      * @return object
      */
     public function profileWithArea($profileSeat)
     {
-        $seatZone = $this->getSeatingZoneInstance($profileSeat);
+        $seatZone = new $this($profileSeat);
         $profileSeat = (object)$profileSeat;
         $profileSeat->area = $seatZone->area();
         $profileSeat->areaDetected = $this->area();
         $profileSeat->intersectedArea = $seatZone->intersectArea($this);
         $profileSeat->overlapArea = $seatZone->overlapArea($this);
+        $profileSeat->distanceToCenter = $this->getDistanceToCenter($seatZone);
+        $profileSeat->typeZone = $this->type;
 
         return $profileSeat;
     }
-
-    /**
-     * @param null $profileSeat
-     * @return mixed
-     */
-    abstract function getSeatingZoneInstance($profileSeat = null);
 }

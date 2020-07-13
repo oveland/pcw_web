@@ -144,6 +144,27 @@ trait PhotoGlobals
      */
     function getEffectsAttribute($effects)
     {
-        return $effects && Str::of($effects)->startsWith('{') && Str::of($effects)->endsWith('}') ? (object)json_decode($effects, true) : null;
+        $ef = $effects && Str::of($effects)->startsWith('{') && Str::of($effects)->endsWith('}') ? (object)json_decode($effects, true) : null;
+
+        if (!is_array($ef->brightness)) {
+            $config = $this->photoRekognitionService('faces')->config;
+            $this->effects = $config->photo->effects;
+        }
+
+        return $ef;
+    }
+
+    public function setDataPropertiesAttribute($dataProperties)
+    {
+        $this->attributes['data_properties'] = collect($dataProperties)->toJson();
+    }
+
+    /**
+     * @param $dataProperties
+     * @return object
+     */
+    function getDataPropertiesAttribute($dataProperties)
+    {
+        return $dataProperties && Str::of($dataProperties)->startsWith('{') && Str::of($dataProperties)->endsWith('}') ? (object)json_decode($dataProperties, true) : (object)[];
     }
 }

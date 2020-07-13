@@ -1,61 +1,88 @@
 <template>
     <div class="photo-details" v-if="photo.details">
-        <div class="col-md-6 col-sm-6 col-xs-12">
-            <div class="photo">
-                <p>
+        <div>
+            <div class="col-md-6 col-sm-6 col-xs-12 p-0">
+                <div class="photo col-md-12 p-0">
+                    <p class="pull-left">
                     <span class="title">
                         <i class="fa fa-calendar"></i>
                     </span>
-                    <span class="detail">({{ photo.id }}) | {{ photo.details.date }}</span>
-                </p>
-            </div>
-            <div v-if="photo.details.dispatchRegister" class="route">
-                <p>
+                        <span class="detail">{{ photo.details.date }} | ({{ photo.id }})</span>
+                    </p>
+                </div>
+                <div v-if="photo.details.dispatchRegister" class="route col-md-12 p-0">
+                    <p>
                     <span class="title">
                         <i class="fa fa-flag"></i>
                     </span>
-                    <span class="detail">{{ photo.details.dispatchRegister.route.name }}</span>,
-                    <span class="detail">{{ $t('Round trip')}} {{ photo.details.dispatchRegister.round_trip }}</span>,
-                    <span class="detail">{{ $t('Turn') }} {{ photo.details.dispatchRegister.turn }}</span>
-                </p>
+                        <span class="detail">{{ photo.details.dispatchRegister.route.name }}</span>,
+                        <span class="detail">{{ $t('Round trip')}} {{ photo.details.dispatchRegister.round_trip }}</span>,
+                        <span class="detail">{{ $t('Turn') }} {{ photo.details.dispatchRegister.turn }}</span>
+                    </p>
+                </div>
+                <div class="passengers col-md-12 p-0">
+                    <p class="detail col-md-12">
+                        {{ $t('Bearding passengers') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.persons }}</span>
+                    </p>
+                    <p class="detail text-bold text-uppercase" :class="`percent-level-${photo.details.occupation.percentLevel}`">
+                        {{ $t('Occupation') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.percent | numberFormat('0.0') }}%</span>
+                        <span class="text-danger text-uppercase" v-if="photo.alarms && photo.alarms.lockCamera">
+                            <i class="fa fa-warning"></i> {{ $t('Lock alarm') }} <small style="font-size: 0.5em">{{ photo.alarms.counterLockCamera }}</small>
+                        </span>
+                    </p>
+                    <div class="seating-profile col=md-12">
+                        <p>{{ $t('Seating profile') }}:</p>
+                        <div style="padding-left: 15px">
+                            <p class="detail">
+                                {{ $t('Previous seating') }}: <span v-if="photo.prevDetails && photo.prevDetails.occupation">{{ photo.prevDetails.occupation.seatingOccupiedStr }}</span>
+                            </p>
+                            <p class="detail text-info">
+                                {{ $t('Current seating') }}: <span v-if="photo.seatingBoardingStr">{{ photo.seatingBoardingStr }}</span>
+                            </p>
+                            <p class="detail">
+                                {{ $t('Mix seating') }}: <span v-if="photo.seatingMixStr">{{ photo.seatingMixStr }}</span>
+                            </p>
+                            <p class="detail text-info">
+                                {{ $t('Seating activated') }}: <span v-if="photo.seatingActivatedStr">{{ photo.seatingActivatedStr }}</span>
+                            </p>
+                            <p class="detail text-info">
+                                {{ $t('Seating release') }}: <span v-if="photo.seatingReleaseStr">{{ photo.seatingReleaseStr }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="passengers">
-                <p class="detail">
-                    {{ $t('Passengers') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.persons }}</span>
 
-                    <span v-if="!photo.details.occupation.count">{{ $t('Paused count') }}</span>
-                </p>
-                <p class="detail">
-                    {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ ((40/100)*photo.details.occupation.persons) | numberFormat('0.0') }}%</span>
-                </p>
-                <p class="detail">
-                    {{ $t('Seating') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.seatingOccupiedStr }}</span>
-                </p>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-sm-6 col-xs-12 text-right" style="">
-            <div class="photo">
-                <p>
-                    <span class="title">
-                        <i class="fa fa-users"></i>
-                    </span>
-                    <span class="detail">{{ $t('Counts') }}</span>
-                </p>
-            </div>
-            <div class="passengers" v-if="photo.passengers">
-                <ul>
-                    <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail">
-                        <p v-show="roundTrip.number">
-                            <small>
-                                <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
-                            </small>
-                        </p>
-                    </li>
-                </ul>
-                <p class="detail">
-                    <small>{{ $t('Total') }}: {{ photo.passengers.total }}</small>
-                </p>
+            <div class="col-md-6 col-sm-6 col-xs-12 text-right" style="">
+                <div class="photo">
+                    <span v-if="!photo.details.occupation.count" class="text-warning">{{ $t('Paused count') }}</span>
+                    <p>
+                        <span class="title">
+                            <i class="fa fa-users"></i>
+                        </span>
+                        <span class="detail">{{ photo.passengers.totalSum2 }} {{ $t('Counts') }} ⬆</span>
+                    </p>
+                    <p>
+                        <span class="title">
+                            <i class="fa fa-users"></i>
+                        </span>
+                        <span class="detail">{{ photo.passengers.totalSum }} {{ $t('Counts') }} ⬇</span>
+                    </p>
+                </div>
+                <div class="passengers" v-if="photo.passengers">
+                    <ul v-if="photo.passengers.byRoundTrips.length">
+                        <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail" v-if="roundTrip.number">
+                            <p v-show="roundTrip.number">
+                                <small>
+                                    <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
+                                </small>
+                            </p>
+                        </li>
+                    </ul>
+                    <p class="detail">
+                        <small>{{ $t('Total by round trips') }}: {{ photo.passengers.total }}</small>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -80,13 +107,16 @@
     }
 
     .photo-details > div {
-        background: #1e2d3361;
+        width: 100%;
+        background: #1e2d33bd;
         padding: 10px;
-        height: 100px;
+        height: auto;
+        display: inline-table;
     }
 
     .photo-details p{
         margin: 0;
+        padding: 0 !important;
     }
 
     .photo-details .photo p {
@@ -111,5 +141,27 @@
         color: white;
         padding: 2px;
         font-size: 0.8em !important;
+    }
+
+    .seating-profile p{
+        margin: 0;
+        color: white;
+        padding: 0 !important;
+    }
+
+    .seating-profile > p{
+        margin-top: 0;
+    }
+
+    .percent-level-1{
+        color: #a6e005 !important;
+    }
+
+    .percent-level-2{
+        color: #fc8d06 !important;
+    }
+
+    .percent-level-3{
+        color: rgb(255, 77, 77) !important;
     }
 </style>
