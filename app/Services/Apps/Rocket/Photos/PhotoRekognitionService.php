@@ -363,34 +363,38 @@ abstract class PhotoRekognitionService
      */
     function occupationParams($profileSeating, $occupation)
     {
+        $occupation = (object)$occupation;
+
         $personDraws = collect([]);
         $seatingOccupied = collect([]);
 
         $count = true;
         $overlap = false;
 
-        foreach ($occupation->draws as $recognition) {
-            $recognition = (object)$recognition;
-            if (isset($recognition->count)) {
-                if ($recognition->count) {
-                    $this->zoneDetected->buildZone($recognition->box);
-                    $this->zoneDetected->setType($recognition->type);
-                    $profileOccupation = $this->zoneDetected->getProfileOccupation($profileSeating);
-                    $recognition->profile = $profileOccupation;
+        if (isset($occupation->draws)) {
+            foreach ($occupation->draws as $recognition) {
+                $recognition = (object)$recognition;
+                if (isset($recognition->count)) {
+                    if ($recognition->count) {
+                        $this->zoneDetected->buildZone($recognition->box);
+                        $this->zoneDetected->setType($recognition->type);
+                        $profileOccupation = $this->zoneDetected->getProfileOccupation($profileSeating);
+                        $recognition->profile = $profileOccupation;
 
-                    if ($profileOccupation->seatOccupied) {
-                        $seatingOccupied->put($profileOccupation->seatOccupied->number, $profileOccupation->seatOccupied);
+                        if ($profileOccupation->seatOccupied) {
+                            $seatingOccupied->put($profileOccupation->seatOccupied->number, $profileOccupation->seatOccupied);
+                        }
+
+                        $recognition->profileStr = $profileOccupation->seating->pluck('number')->implode(', ');
                     }
 
-                    $recognition->profileStr = $profileOccupation->seating->pluck('number')->implode(', ');
+                    if ($recognition->overlap) {
+                        $count = false;
+                        $overlap = true;
+                    }
                 }
-
-                if ($recognition->overlap) {
-                    $count = false;
-                    $overlap = true;
-                }
+                $personDraws[] = $recognition;
             }
-            $personDraws[] = $recognition;
         }
 
         $occupationPercent = $profileSeating->occupation->count() ? 100 * $seatingOccupied->count() / $profileSeating->occupation->count() : 0;

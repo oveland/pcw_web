@@ -83,7 +83,7 @@ trait PhotoEncode
                 $image = Image::make($this->storageDriver()->get($this->path));
 
                 if ($withEffects && $this->effects) {
-                    $avBrightness = $this->getAvgLuminance($image->encode('data-url'));
+                    $avBrightness = $this->getAvgLuminance($image->encode('jpeg')->encode('data-url'));
 
                     $brightness = collect($this->effects->brightness)->filter(function ($brightness) use ($avBrightness) {
                         $brightness = (object)$brightness;
