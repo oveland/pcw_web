@@ -7561,7 +7561,7 @@ var render = function() {
                   _vm._v(
                     _vm._s(_vm.$t("General count")) +
                       ": " +
-                      _vm._s(_vm.photo.passengers.totalSum)
+                      _vm._s(_vm.photo.passengers.totalSum2)
                   )
                 ])
               ])

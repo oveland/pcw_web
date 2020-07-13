@@ -6,7 +6,7 @@
                 <span class="title">
                     <i class="fa fa-users"></i>
                 </span>
-                    <span class="detail">{{ $t('General count') }}: {{ photo.passengers.totalSum }}</span>
+                    <span class="detail">{{ $t('General count') }}: {{ photo.passengers.totalSum2 }}</span>
                 </p>
             </div>
             <div class="passengers" v-if="photo.passengers">
