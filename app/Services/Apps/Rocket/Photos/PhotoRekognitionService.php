@@ -393,7 +393,7 @@ abstract class PhotoRekognitionService
             $personDraws[] = $recognition;
         }
 
-        $occupationPercent = 100 * $seatingOccupied->count() / $profileSeating->occupation->count();
+        $occupationPercent = $profileSeating->occupation->count() ? 100 * $seatingOccupied->count() / $profileSeating->occupation->count() : 0;
 
         $occupation->type = $this->type;
         $occupation->draws = $personDraws;
