@@ -159,7 +159,7 @@ class RocketController extends Controller
 //                    $photo = Photo::find(14210); // 5 / 5       (1, 5, 12, 16, 18)
 
 
-                    $photo = Photo::find(14981);
+//                    $photo = Photo::find(14981);
 //                    $photo = Photo::find(17453);
 
 
