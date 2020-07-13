@@ -7241,7 +7241,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("span", { staticClass: "detail" }, [
                   _vm._v(
-                    _vm._s(_vm.photo.passengers.totalSum) +
+                    _vm._s(_vm.photo.passengers.totalSum2) +
                       " " +
                       _vm._s(_vm.$t("Counts"))
                   )

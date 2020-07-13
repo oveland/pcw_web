@@ -45,7 +45,7 @@
                     <span class="title">
                         <i class="fa fa-users"></i>
                     </span>
-                        <span class="detail">{{ photo.passengers.totalSum }} {{ $t('Counts') }}</span>
+                        <span class="detail">{{ photo.passengers.totalSum2 }} {{ $t('Counts') }}</span>
                     </p>
                 </div>
                 <div class="passengers" v-if="photo.passengers">
