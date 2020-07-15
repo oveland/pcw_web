@@ -484,7 +484,7 @@ class PhotoService
 
 
                 if ($firstPhotoInRoundTrip) {
-                    $personsByRoundTrip = 0;
+                    $personsByRoundTrip = $currentOccupation->seatingOccupied->count();
                 } else
                     if ($dr) {
                         $personsByRoundTrip += $newPersons;
@@ -493,7 +493,7 @@ class PhotoService
                 if ($dr) {
                     $roundTrip = $dr->round_trip;
                     $routeName = $dr->route->name;
-                    $totalPersons += $firstPhotoInRoundTrip ? 0 : $newPersons;
+                    $totalPersons += $firstPhotoInRoundTrip ? $currentOccupation->seatingOccupied->count() : $newPersons;
 //                    $totalPersons +=  $newPersons;
                 }
 
