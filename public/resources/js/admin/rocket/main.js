@@ -275,6 +275,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -816,6 +817,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     isOccupied: function isOccupied() {
       return this.seatingOccupied && this.seatingOccupied[this.seat.number];
+    },
+    getSeatStatus: function getSeatStatus() {
+      var seatingIsOccupied = this.seatingOccupied && this.seatingOccupied[this.seat.number];
+
+      if (seatingIsOccupied) {
+        if (seatingIsOccupied.counted) {
+          return 'counted';
+        } else if (seatingIsOccupied.beforeCount) {
+          return 'before-count';
+        }
+
+        return 'occupied';
+      }
+
+      return '';
     }
   },
   methods: {
@@ -994,7 +1010,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.seat[data-v-c36d7ea8] {\n    text-align: center;\n    padding: 2px;\n    background-color: rgba(0, 233, 198, 0.43);\n    border-radius: 3px;\n    border-style: solid;\n    border-color: #00e1ff;\n    transition: ease background-color 1s;\n    z-index: 200 !important;\n}\n.seat.occupied[data-v-c36d7ea8] {\n    background-color: #0805f578 !important;\n    border-color: #000163;\n}\n.seat.active[data-v-c36d7ea8] {\n    background-color: rgba(13, 208, 32, 0);\n    box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n    border-color: #ff0051;\n    border-width: 2px;\n    z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover {\n    cursor: move;\n}\n.seat .number[data-v-c36d7ea8] {\n    font-size: 1.7em !important;\n    color: white;\n    font-weight: bold;\n    z-index: 10000;\n    text-shadow: 1px 2px 3px #0600cc;\n}\n.seat.occupied .number[data-v-c36d7ea8] {\n    color: #f5ffdd !important;\n    text-shadow: 1px 2px 3px yellow !important;\n}\n.seat .center[data-v-c36d7ea8] {\n    position: relative;\n    float: left;\n    border: 1px solid #00ceff;\n    height: 1px;\n    width: 1px;\n}\n.seat input[data-v-c36d7ea8] {\n    background: #0000006e !important;\n    color: white !important;\n    height: 15px !important;\n    font-size: 0.8em !important;\n    position: absolute;\n    top: -30px;\n}\n.seat .position[data-v-c36d7ea8] {\n    font-size: 0.7em !important;\n    color: white;\n    font-weight: bold;\n    background: rgba(10, 21, 32, 0.71);\n    padding: 2px;\n    position: absolute;\n    width: 120px;\n    bottom: -40px;\n    display: none;\n}\n.seat.active .position[data-v-c36d7ea8] {\n    display: block !important;\n}\n.draw[data-v-c36d7ea8] {\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
+exports.push([module.i, "\n.seat[data-v-c36d7ea8] {\n    text-align: center;\n    padding: 2px;\n    background-color: rgba(6, 8, 8, 0.35);\n    border-radius: 3px;\n    border-style: solid;\n    border-color: #8c8e8dc2;\n    transition: ease background-color 1s;\n    z-index: 200 !important;\n}\n.seat.occupied[data-v-c36d7ea8] {\n    background-color: #0805f578 !important;\n    border-color: #000163;\n}\n.seat.before-count[data-v-c36d7ea8] {\n    background-color: rgba(149, 1, 255, 0.47) !important;\n    border-color: #000163;\n}\n.seat.counted[data-v-c36d7ea8] {\n    background-color: rgba(169, 255, 1, 0.49) !important;\n    border-color: #ef9f00 !important;\n}\n.seat.active[data-v-c36d7ea8] {\n    background-color: rgba(13, 208, 32, 0);\n    box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n    border-color: #ff0051;\n    border-width: 2px;\n    z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover {\n    cursor: move;\n}\n.seat .number[data-v-c36d7ea8] {\n    font-size: 1.7em !important;\n    color: white;\n    font-weight: bold;\n    z-index: 10000;\n    text-shadow: 1px 2px 3px #0600cc;\n}\n.seat.occupied .number[data-v-c36d7ea8] {\n    color: #f5ffdd !important;\n    text-shadow: 1px 2px 3px yellow !important;\n}\n.seat .center[data-v-c36d7ea8] {\n    position: relative;\n    float: left;\n    border: 1px solid #00ceff;\n    height: 1px;\n    width: 1px;\n}\n.seat input[data-v-c36d7ea8] {\n    background: #0000006e !important;\n    color: white !important;\n    height: 15px !important;\n    font-size: 0.8em !important;\n    position: absolute;\n    top: -30px;\n}\n.seat .position[data-v-c36d7ea8] {\n    font-size: 0.7em !important;\n    color: white;\n    font-weight: bold;\n    background: rgba(10, 21, 32, 0.71);\n    padding: 2px;\n    position: absolute;\n    width: 120px;\n    bottom: -40px;\n    display: none;\n}\n.seat.active .position[data-v-c36d7ea8] {\n    display: block !important;\n}\n.draw[data-v-c36d7ea8] {\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
 
 // exports
 
@@ -7228,8 +7244,7 @@ var render = function() {
                       _vm._s(_vm.$t("Occupation")) +
                       ": "
                   ),
-                  _vm.photo.details.occupation &&
-                  _vm.photo.details.occupation.count
+                  _vm.photo.details.occupation
                     ? _c("span", [
                         _vm._v(
                           _vm._s(
@@ -7606,7 +7621,7 @@ var render = function() {
                         "%;border-color: " +
                         draw.color +
                         ";",
-                      attrs: { title: "Original center" }
+                      attrs: { title: "Original center\n        " }
                     })
                   })
                 ],
@@ -8265,7 +8280,7 @@ var render = function() {
     "vue-draggable-resizable",
     {
       staticClass: "seat",
-      class: _vm.isOccupied ? "occupied" : "",
+      class: _vm.getSeatStatus,
       attrs: {
         parent: true,
         w: _vm.position.width,

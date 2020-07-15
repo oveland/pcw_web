@@ -285,7 +285,11 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 100),
+                            'range' => range(0, 15),
+                            'value' => 0
+                        ],
+                        [
+                            'range' => range(15, 100),
                             'value' => 20
                         ]
                     ],
@@ -308,13 +312,13 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => range(40, 50),
+                            'range' => range(40, 60),
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(50, 100),
+                            'range' => range(60, 100),
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -337,7 +341,7 @@ return [
                         ],
                         'centerTopFromHeight' => [
                             'nd' => 40,                             # Percent top of point center when Normal Detection
-                            'ld' => 40                              # Percent top of point center when Large Detection
+                            'ld' => 50                              # Percent top of point center when Large Detection
                         ]
                     ]
                 ]
@@ -373,13 +377,13 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 80),
+                            'range' => range(25, 60),
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(80, 100),
+                            'range' => range(60, 100),
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -397,8 +401,8 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 220,                            # Percent of height when Normal Detection
-                            'ld' => 220                             # Percent of height when Large Detection
+                            'nd' => 240,                            # Percent of height when Normal Detection
+                            'ld' => 240                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
                             'nd' => 50,                             # Percent top of point center when Normal Detection

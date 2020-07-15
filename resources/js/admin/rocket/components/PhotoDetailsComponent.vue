@@ -25,7 +25,7 @@
                         {{ $t('Bearding passengers') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.persons }}</span>
                     </p>
                     <p class="detail text-bold text-uppercase" :class="`percent-level-${photo.details.occupation.percentLevel}`">
-                        {{ $t('Occupation') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.percent | numberFormat('0.0') }}%</span>
+                        {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.percent | numberFormat('0.0') }}%</span>
                         <span class="text-danger text-uppercase" v-if="photo.alarms && photo.alarms.lockCamera">
                             <i class="fa fa-warning"></i> {{ $t('Lock alarm') }} <small style="font-size: 0.5em">{{ photo.alarms.counterLockCamera }}</small>
                         </span>

@@ -92,7 +92,8 @@ abstract class PhotoZone
 
     public function overlapArea(PhotoZone $zone)
     {
-        $percent = (100 / $this->area()) * $zone->area();
+        $percent = (100 / $this->width) * $zone->width;
+//        $percent = (100 / $this->area()) * $zone->area();
         return 100 - abs(100 - $percent);
     }
 
@@ -149,10 +150,14 @@ abstract class PhotoZone
                         break;
                     default:
                         $criteria = $distanceToCenter < $prevDistanceToCenter;
+
+//                        $criteria = $largeDetection && ($this->width > 20) ? $overlapArea > $prevOverlapArea : $distanceToCenter < $prevDistanceToCenter;
+
                         break;
                 }
 
-//                $criteria = $largeDetection && ($this->width > 20) ? $overlapArea > $prevOverlapArea : $intersectedArea > $prevIntersectedArea;
+//                $criteria = $distanceToCenter < $prevDistanceToCenter;
+
 
                 if ($criteria || $prevSeat === null) {
                     $seatOccupied = $profileSeat;

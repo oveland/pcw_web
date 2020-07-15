@@ -14,7 +14,8 @@
             <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center" :class="draw.selectedClass" :title="`${ draw.type + ' | ' + (draw.largeDetection ? 'LDT: ' : 'Normal' )}: ${draw.relationSize} | ${draw.overlap ? $t('Overlap') : ''} Count: ${draw.count ? $t('YES') : $t('NO') }`"
                  :style="`height: 1px; width: 1px; top: ${draw.box.center ? draw.box.center.top : 0}%; left: ${draw.box.center ? draw.box.center.left : 0}%;border-color: ${draw.color};`">
             </div>
-            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center center-orig" :class="draw.selectedClass" :title="`Original center`"
+            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center center-orig" :class="draw.selectedClass" :title="`Original center
+            `"
                  :style="`height: 1px; width: 1px; top: ${draw.box.centerOrig ? draw.box.centerOrig.top : 0}%; left: ${draw.box.centerOrig ? draw.box.centerOrig.left : 0}%;border-color: ${draw.color};`">
             </div>
         </div>

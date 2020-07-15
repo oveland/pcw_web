@@ -1,5 +1,5 @@
 <template>
-    <vue-draggable-resizable class="seat" :class="isOccupied ? 'occupied': ''"
+    <vue-draggable-resizable class="seat" :class="getSeatStatus"
                              :parent="true"
                              :w="position.width" :h="position.height" :x="position.left" :y="position.top"
                              @activated="onActivated" @deactivated="onDeactivated"
@@ -41,7 +41,7 @@
                 let w = this.image.size.width * this.seat.width / 100;
                 let h = this.image.size.height * this.seat.height / 100;
 
-                if(this.fixed === true){
+                if (this.fixed === true) {
                     // w = w > 0 ? w : 1;
                     // h = h > 0 ? h : 1;
                 }
@@ -57,8 +57,23 @@
                     }
                 };
             },
-            isOccupied(){
+            isOccupied() {
                 return this.seatingOccupied && this.seatingOccupied[this.seat.number];
+            },
+            getSeatStatus() {
+                const seatingIsOccupied = this.seatingOccupied && this.seatingOccupied[this.seat.number];
+
+                if (seatingIsOccupied) {
+                    if (seatingIsOccupied.counted) {
+                        return 'counted';
+                    }
+                    else if (seatingIsOccupied.beforeCount) {
+                        return 'before-count';
+                    }
+                    return 'occupied';
+                }
+
+                return '';
             }
         },
         methods: {
@@ -91,8 +106,8 @@
             setRelativePosition(x, y, w, h) {
                 this.seat.left = 100 * (x >= 0 ? x : 0) / this.image.size.width;
                 this.seat.top = 100 * (y >= 0 ? y : 0) / this.image.size.height;
-                if(w !== null) this.seat.width = 100 * (w > 0 ? w : 0) / this.image.size.width;
-                if(h !== null) this.seat.height = 100 * (h > 0 ? h : 0) / this.image.size.height;
+                if (w !== null) this.seat.width = 100 * (w > 0 ? w : 0) / this.image.size.width;
+                if (h !== null) this.seat.height = 100 * (h > 0 ? h : 0) / this.image.size.height;
 
                 this.centerPoint();
             },
@@ -113,10 +128,10 @@
     .seat {
         text-align: center;
         padding: 2px;
-        background-color: rgba(0, 233, 198, 0.43);
+        background-color: rgba(6, 8, 8, 0.35);
         border-radius: 3px;
         border-style: solid;
-        border-color: #00e1ff;
+        border-color: #8c8e8dc2;
         transition: ease background-color 1s;
         z-index: 200 !important;
     }
@@ -124,6 +139,16 @@
     .seat.occupied {
         background-color: #0805f578 !important;
         border-color: #000163;
+    }
+
+    .seat.before-count {
+        background-color: rgba(149, 1, 255, 0.47) !important;
+        border-color: #000163;
+    }
+
+    .seat.counted {
+        background-color: rgba(169, 255, 1, 0.49) !important;
+        border-color: #ef9f00 !important;
     }
 
     .seat.active {

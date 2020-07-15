@@ -217,10 +217,13 @@ class PhotoService
     {
         $currentOccupiedMod = collect([]);
         foreach ($currentOccupied as $seat => $data) {
-            $inPrevSeat = $prevOccupied->get($seat);
+            $persistentSeat = $prevOccupied->get($seat);
 
             $newData = collect($data);
-            $newData->put('counterActivate', $inPrevSeat ? (intval(isset($inPrevSeat->counterActivate) ? $inPrevSeat->counterActivate : 0) + 1) : 0);
+
+            $persistentCounter = intval(isset($persistentSeat->counterActivate) ? $persistentSeat->counterActivate : 0);
+
+            $newData->put('counterActivate', $persistentSeat ? ($persistentCounter + 1) : 0);
 
             $currentOccupiedMod->put($seat, (object)$newData->toArray());
         }
@@ -279,7 +282,7 @@ class PhotoService
      * @param Collection $prevOccupied
      * @return Collection
      */
-    public function getSeatingActivated($currentOccupied, $prevOccupied)
+    public function getSeatingActivated(&$currentOccupied, $prevOccupied)
     {
         $seatingBusy = collect([]);
 
@@ -295,7 +298,10 @@ class PhotoService
                 $seatingBusy->put($seat, (object)$newData->toArray());
             }
 
-//            $currentOccupiedMod->put($seat, (object)$newData->toArray());
+            $newData->put('beforeCount', $newData->get('counterActivate') == 1);
+            $newData->put('counted', $newData->get('counterActivate') >= 2);
+
+            $currentOccupied->put($seat, (object)$newData->toArray());
         }
 //        $currentOccupied = $currentOccupiedMod;
 

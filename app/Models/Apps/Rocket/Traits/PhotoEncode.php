@@ -76,8 +76,8 @@ trait PhotoEncode
     public function getImage($encode = null, $withEffects = false)
     {
         try {
-            $image = Image::make(File::get('img/image-404.jpg'))
-                ->resize(300, 300);
+//            $image = Image::make(File::get('img/image-404.jpg'))->resize(300, 300);
+            $image = null;
 
             if ($this->storageDriver()->exists($this->path)) {
                 $image = Image::make($this->storageDriver()->get($this->path));

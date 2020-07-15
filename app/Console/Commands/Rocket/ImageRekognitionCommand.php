@@ -55,37 +55,39 @@ class ImageRekognitionCommand extends Command
     {
         $date = $this->option('date');
         $vehiclePlate = $this->option('vehicle-plate');
+        $type = $this->option('type');
+
         if ($date && $vehiclePlate) {
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
                 $photos = Photo::findAllByVehicleAndDate($vehicle, $date);
-                $this->info('Process ' . $photos->count() . ' photos');
+
+                $this->info('Process ' . $photos->count() . ' photos with method: '.$type);
+
 //                $ID = 4688;
-//                DB::statement("UPDATE app_photos SET effects = null where id <> $ID");
+//                DB::statement("UPDATE app_photos SET effects = null where id = $ID");
 //                $photos = $photos->where('id', $ID);
 
                 foreach ($photos as $photo) {
-                    $prevPersons = $photo->persons;
-                    $this->info("$photo->id | Process $photo->path with $photo->persons persons. " . $photo->encode('url'));
+                    $prevDataRekognition = $type == 'persons' ? $photo->data_persons : $photo->data_faces;
 
-                    $photo->effects = [
-                        'brightness' => 10,
-                        'contrast' => 5,
-                        'gamma' => 2,
-                        'sharpen' => 12
-                    ];
+                    $prevPassengers = $prevDataRekognition ? collect($prevDataRekognition->draws)->count() : 0;
+                    $this->info("$photo->id $photo->date | With $prevPassengers passengers. " . $photo->encode('url') . "&with-effect=true&encode=png");
 
-                    $photo->processRekognition(true, 'persons');
+                    $photo->processRekognition(true, $type);
                     $photo->save();
+                    $photo->refresh();
 
-                    $diff = $photo->persons - $prevPersons;
-                    $this->info("       Now: $photo->persons persons | Diff = $diff" . (abs($diff) ? " ******* " : ""));
-                    $this->info(collect($photo->effects)->toJson());
+                    $nowDataRekognition = $type == 'persons' ? $photo->data_persons : $photo->data_faces;
+                    $nowPassengers = $nowDataRekognition ? collect($prevDataRekognition->draws)->count() : 0;
+
+                    $diff = $nowPassengers - $prevPassengers;
+                    $this->info("       Now: $nowPassengers passengers | Diff = $diff" . (abs($diff) ? " *** CHANGED **** " : ""));
+//                    $this->info(collect($photo->effects)->toJson());
                 }
                 $this->info("Finished!. Notifying to map...");
-                $this->photoService->for($vehicle)->notifyToMap($date);
-
+//                $this->photoService->for($vehicle)->notifyToMap($date);
             } else {
                 $this->info("Plate $vehiclePlate doesnt associated with a vehicle!");
             }

@@ -187,6 +187,7 @@ abstract class PhotoRekognitionService
         $heightOrig = isset($boundingBox->heightOrig) ? $boundingBox->heightOrig : $boundingBox->height;
 
         if (isset($boundingBox->center)) {
+            $boundingBox->center = (object)$boundingBox->center;
             $centerOrig = (object)(isset($boundingBox->center) ? $boundingBox->center : $boundingBox->centerOrig);
         } else {
             $centerOrig = (object)[
@@ -272,9 +273,19 @@ abstract class PhotoRekognitionService
 
         $overlap = $boundingBox->height > 50 || $width > 50;
 
-        if ($centerOrig->top <= 40) {
+
+        if ($centerOrig->top <= 50) {
             $overlap = $boundingBox->height > 28 || $width > 25;
         }
+
+        if ($boundingBox->center->top <= 35) {
+            $overlap = $heightOrig > 40;
+        }
+
+        if ($boundingBox->center->top <= 20) {
+            $overlap = $heightOrig > 30 || $width > 10;
+        }
+
 
 //        if ($centerOrig->top <= 50){
 //            $overlap =

@@ -7200,8 +7200,7 @@ var render = function() {
                       _vm._s(_vm.$t("Occupation")) +
                       ": "
                   ),
-                  _vm.photo.details.occupation &&
-                  _vm.photo.details.occupation.count
+                  _vm.photo.details.occupation
                     ? _c("span", [
                         _vm._v(
                           _vm._s(
