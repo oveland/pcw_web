@@ -146,7 +146,7 @@ trait PhotoGlobals
     {
         $ef = $effects && Str::of($effects)->startsWith('{') && Str::of($effects)->endsWith('}') ? (object)json_decode($effects, true) : null;
 
-        if (!is_array($ef->brightness)) {
+        if (!$ef || !is_array($ef->brightness)) {
             $config = $this->photoRekognitionService('faces')->config;
             $this->effects = $config->photo->effects;
         }
