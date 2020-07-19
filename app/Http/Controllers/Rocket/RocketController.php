@@ -114,54 +114,7 @@ class RocketController extends Controller
                         $photo = Photo::find($photos->last()->id);
                     }
 
-////                      338 Alameda
-//
-//                        $photo = Photo::find(4594);
-//                        $photo = Photo::find(4598);
-//                        $photo = Photo::find(4536);
-//
-//                        $photo = Photo::find(4600);
-//                        $photo = Photo::find(4491);
-//
-//                        $photo = Photo::find(4501);
-//                        $photo = Photo::find(4569);
-//                        $photo = Photo::find(4574);
-//
-//                        $photo = Photo::find(4493);
-//
-//
-////                      76 Yumbeños
-//
-//                        $photo = Photo::find(8041); // 6/6
-//                        $photo = Photo::find(8044); // 13/14
-//                        $photo = Photo::find(8045); // 14/14
-//                        $photo = Photo::find(8067); // 8/9
-//                        $photo = Photo::find(8069); // 7/7
-//                        $photo = Photo::find(8073); // 5/5
-//                        $photo = Photo::find(8076); // 5/5
-//                        $photo = Photo::find(8092); // 2/2
-//                        $photo = Photo::find(8149); // 4/4
-//                        $photo = Photo::find(8176); // 9/9
-//                        $photo = Photo::find(8178); // 9/9
-//
-//                        $photo = Photo::find(11913); // 9/9
-//
-//
-////                      566 Yumbeños
-//
-//                    $photo = Photo::find(13314);
-//
-//                    $photo = Photo::find(14173); // 17 / 17     (1, 2, 3, 5, 6, 7, 8, 9, 11, 12, 14, 16, 17, 18, 19, 21, 23)
-//                    $photo = Photo::find(14222); // 10 / 10     (1, 4, 7, 8, 9, 12, 16, 18, 20, 23)
-//                    $photo = Photo::find(14220); // 9 / 10      (1, 4, 7, 8, 9, 12, 18, 20, 23)
-//                    $photo = Photo::find(14217); // 9 / 10      (1, 4, 7, 8, 9, 12, 18, 20, 23)
-//                    $photo = Photo::find(14217); // 9 / 9       (1, 4, 7, 8, 12, 16, 18, 20, 23)
-//                    $photo = Photo::find(14210); // 5 / 5       (1, 5, 12, 16, 18)
-
-
-//                    $photo = Photo::find(14981);
-                    $photo = Photo::find(19720);
-
+//                    $photo = Photo::find(13849);
 
 //                        $photo->processRekognition(true, 'persons');
 //                        $photo->save();

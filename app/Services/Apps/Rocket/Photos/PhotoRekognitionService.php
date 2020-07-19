@@ -196,161 +196,26 @@ abstract class PhotoRekognitionService
             ];
         }
 
-
         $relationSize = $heightOrig / $width;
         $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 15);
 
-//
-//        $overlap = $boundingBox->height > 35 || $width > 40;
-//
-//        if ($boundingBox->top < 48) {
-//            $overlap = $boundingBox->height > 30 || $width > 20;
-//        }
-//
-//
-////        if ($centerOrig->top <= 50){
-////            $overlap =
-//////                ($heightOrig > $configBox->od->height)
-//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-//////                ||
-////                $boundingBox->height > 20
-////                || $width > 15;
-////        }
-////
-////        if ($centerOrig->top <= 20) {
-////            $overlap =
-//////                ($heightOrig > $configBox->od->height)
-//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-//////                ||
-////                $boundingBox->height > 15
-////                || $width > 10;
-////        }
-////
-////        $overlap = ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
-////            || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
-////            || $boundingBox->height > 48
-////            || $width > 35;
-////
-////        if ($centerOrig->top <= 70) {
-////            $overlap =
-//////                ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
-//////                || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
-//////                ||
-////                $boundingBox->height > 35
-////                || $width > 30;
-////        }
-////
-////        if ($centerOrig->top <= 50) {
-////            $overlap =
-//////                ($heightOrig > $configBox->od->height)
-//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-//////                ||
-////                $boundingBox->height > 30
-////                || $width > 25;
-////        }
-////
-////        if ($centerOrig->top <= 40) {
-////            $overlap =
-//////                ($heightOrig > $configBox->od->height)
-//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-//////                ||
-////                $boundingBox->height > 25
-////                || $width > 20;
-////        }
-////
-////        if ($centerOrig->top <= 20) {
-////            $overlap =
-//////                ($heightOrig > $configBox->od->height)
-//////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-//////                ||
-////                $boundingBox->height > 15
-////                || $width > 15;
-////        }
-//
-//        if ($overlap && $width < 25 && $boundingBox->height < 35 && $heightOrig < 50) {
-//            $overlap = $centerOrig->left >= 30 && $centerOrig->left <= 70;
-//        }
+        $overlap = false;
 
-        $overlap = $boundingBox->height > 50 || $width > 50;
+        if (isset($boundingBox->center)) {
+            $overlap = $boundingBox->height > 50 || $width > 50;
 
+            if ($centerOrig->top <= 50) {
+                $overlap = $boundingBox->height > 28 || $width > 25;
+            }
 
-        if ($centerOrig->top <= 50) {
-            $overlap = $boundingBox->height > 28 || $width > 25;
+            if ($boundingBox->center->top <= 35) {
+                $overlap = $heightOrig > 40;
+            }
+
+            if ($boundingBox->center->top <= 20) {
+                $overlap = $heightOrig > 30 || $width > 10;
+            }
         }
-
-        if ($boundingBox->center->top <= 35) {
-            $overlap = $heightOrig > 40;
-        }
-
-        if ($boundingBox->center->top <= 20) {
-            $overlap = $heightOrig > 30 || $width > 10;
-        }
-
-
-//        if ($centerOrig->top <= 50){
-//            $overlap =
-////                ($heightOrig > $configBox->od->height)
-////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-////                ||
-//                $boundingBox->height > 20
-//                || $width > 15;
-//        }
-//
-//        if ($centerOrig->top <= 20) {
-//            $overlap =
-////                ($heightOrig > $configBox->od->height)
-////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-////                ||
-//                $boundingBox->height > 15
-//                || $width > 10;
-//        }
-//
-//        $overlap = ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
-//            || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
-//            || $boundingBox->height > 48
-//            || $width > 35;
-//
-//        if ($centerOrig->top <= 70) {
-//            $overlap =
-////                ($heightOrig > $configBox->od->height + 20) && $width > $configBox->od->width + 5
-////                || ($relationSize >= $configBox->od->rs + 1 && $width > $configBox->od->rsw + 5)
-////                ||
-//                $boundingBox->height > 35
-//                || $width > 30;
-//        }
-//
-//        if ($centerOrig->top <= 50) {
-//            $overlap =
-////                ($heightOrig > $configBox->od->height)
-////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-////                ||
-//                $boundingBox->height > 30
-//                || $width > 25;
-//        }
-//
-//        if ($centerOrig->top <= 40) {
-//            $overlap =
-////                ($heightOrig > $configBox->od->height)
-////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-////                ||
-//                $boundingBox->height > 25
-//                || $width > 20;
-//        }
-//
-//        if ($centerOrig->top <= 20) {
-//            $overlap =
-////                ($heightOrig > $configBox->od->height)
-////                || ($relationSize >= $configBox->od->rs && $width > $configBox->od->rsw)
-////                ||
-//                $boundingBox->height > 15
-//                || $width > 15;
-//        }
-
-        if ($overlap && $width < 30 && $boundingBox->height < 40 && $heightOrig < 60) {
-            $overlap = $centerOrig->left >= 30 && $centerOrig->left <= 70;
-        }
-
-//        $overlap = false;
 
         return (object)compact(['overlap', 'relationSize', 'largeDetection']);
     }
