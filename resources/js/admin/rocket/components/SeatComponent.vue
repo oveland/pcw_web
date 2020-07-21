@@ -6,7 +6,13 @@
                              @resizing="onResize" @resizestop="onResizeStop"
                              @dragging="onDrag" @dragstop="onDragStop">
         <input v-show="seat.selected && !fixed" class="input-sm form-control" placeholder="Seat:" v-model="seat.number">
-        <small class="number">{{ seat.number }}</small>
+        <small class="number">
+            <span>{{ seat.number }}</span>
+            <span class="counter-info">
+                <span class="counter-event activated" v-if="counterActivate > 0 && counterActivate !== null">{{ counterActivate }} ⬆</span>
+                <span class="counter-event release" v-if="counterRelease > 0 && counterRelease !== null">{{ counterRelease }} ⬇</span>
+            </span>
+        </small>
         <span class="position">
             <span>{{ seat.left | numberFormat('0.0') }}%, {{ seat.top | numberFormat('0.0') }}% | {{ seat.width | numberFormat('0.0') }}%, {{ seat.height | numberFormat('0.0') }}%</span>
         </span>
@@ -61,19 +67,28 @@
                 return this.seatingOccupied && this.seatingOccupied[this.seat.number];
             },
             getSeatStatus() {
-                const seatingIsOccupied = this.seatingOccupied && this.seatingOccupied[this.seat.number];
+                const seatingIsOccupied = this.isOccupied;
 
                 if (seatingIsOccupied) {
                     if (seatingIsOccupied.counted) {
                         return 'counted';
-                    }
-                    else if (seatingIsOccupied.beforeCount) {
+                    } else if (seatingIsOccupied.beforeCount) {
                         return 'before-count';
+                    }else if (seatingIsOccupied.initialCount) {
+                        return 'initial-count';
                     }
                     return 'occupied';
                 }
 
                 return '';
+            },
+            counterActivate() {
+                const seatingIsOccupied = this.isOccupied;
+                return seatingIsOccupied ? seatingIsOccupied.counterActivate : null;
+            },
+            counterRelease() {
+                const seatingIsOccupied = this.isOccupied;
+                return seatingIsOccupied ? seatingIsOccupied.counterRelease : null;
             }
         },
         methods: {
@@ -137,18 +152,23 @@
     }
 
     .seat.occupied {
-        background-color: #0805f578 !important;
-        border-color: #000163;
+        background-color: rgba(5, 169, 245, 0.47) !important;
+        border-color: #39adff;
+    }
+
+    .seat.initial-count{
+        background-color: rgba(26, 1, 255, 0.47) !important;
+        border-color: #000137;
     }
 
     .seat.before-count {
-        background-color: rgba(149, 1, 255, 0.47) !important;
-        border-color: #000163;
+        background-color: rgba(188, 4, 239, 0.89) !important;
+        border-color: #310060;
     }
 
     .seat.counted {
-        background-color: rgba(169, 255, 1, 0.49) !important;
-        border-color: #ef9f00 !important;
+        background-color: rgba(164, 248, 1, 0.49) !important;
+        border-color: #bbff00 !important;
     }
 
     .seat.active {
@@ -213,5 +233,22 @@
         width: 20%;
         background: darkgrey;
         color: white;
+    }
+
+    .counter-event {
+        font-size: 0.9rem !important;
+    }
+
+    .counter-event.activated{
+        color: #00fc2a !important;
+    }
+    .counter-event.release{
+        color: #ec0035 !important;
+    }
+    .counter-info{
+        position: absolute;
+        width: 100%;
+        display: block;
+        top: 15px;
     }
 </style>

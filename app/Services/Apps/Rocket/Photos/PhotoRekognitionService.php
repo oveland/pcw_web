@@ -217,6 +217,8 @@ abstract class PhotoRekognitionService
             }
         }
 
+        $overlap = false;
+
         return (object)compact(['overlap', 'relationSize', 'largeDetection']);
     }
 

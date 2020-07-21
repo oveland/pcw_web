@@ -98,7 +98,7 @@ class Photo extends Model implements PhotoInterface
             ->limit(600)
 //            ->offset(100)
 //            ->where('id', '>=', 19670) //
-//            ->whereBetween('id', [19650, 19750]) // 12:50   14
+//            ->whereBetween('id', [17457, 17500]) // 12:50   14
 
             ->get();
     }

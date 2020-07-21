@@ -37,16 +37,16 @@
                                 {{ $t('Previous seating') }}: <span v-if="photo.prevDetails && photo.prevDetails.occupation">{{ photo.prevDetails.occupation.seatingOccupiedStr }}</span>
                             </p>
                             <p class="detail text-info">
-                                {{ $t('Current seating') }}: <span v-if="photo.seatingBoardingStr">{{ photo.seatingBoardingStr }}</span>
+                                {{ $t('Current seating') }}: <span>{{ photo.details.occupation.seatingBoardingStr }}</span>
                             </p>
                             <p class="detail">
-                                {{ $t('Mix seating') }}: <span v-if="photo.seatingMixStr">{{ photo.seatingMixStr }}</span>
+                                {{ $t('Mix seating') }}: <span>{{ photo.details.occupation.seatingMixStr }}</span>
                             </p>
                             <p class="detail text-info">
-                                {{ $t('Seating activated') }}: <span v-if="photo.seatingActivatedStr">{{ photo.seatingActivatedStr }}</span>
+                                {{ $t('Seating activated') }}: <span>{{ photo.details.occupation.seatingActivatedStr }}</span>
                             </p>
                             <p class="detail text-info">
-                                {{ $t('Seating release') }}: <span v-if="photo.seatingReleaseStr">{{ photo.seatingReleaseStr }}</span>
+                                {{ $t('Seating release') }}: <span>{{ photo.details.occupation.seatingReleaseStr }}</span>
                             </p>
                         </div>
                     </div>
@@ -60,13 +60,13 @@
                         <span class="title">
                             <i class="fa fa-users"></i>
                         </span>
-                        <span class="detail">{{ photo.passengers.totalSum2 }} {{ $t('Counts') }} ⬆</span>
+                        <span class="detail">{{ photo.passengers.totalSumOccupied }} {{ $t('Counts') }} ⬆</span>
                     </p>
                     <p>
                         <span class="title">
                             <i class="fa fa-users"></i>
                         </span>
-                        <span class="detail">{{ photo.passengers.totalSum }} {{ $t('Counts') }} ⬇</span>
+                        <span class="detail">{{ photo.passengers.totalSumReleased }} {{ $t('Counts') }} ⬇</span>
                     </p>
                 </div>
                 <div class="passengers" v-if="photo.passengers">

@@ -775,6 +775,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -819,19 +825,29 @@ __webpack_require__.r(__webpack_exports__);
       return this.seatingOccupied && this.seatingOccupied[this.seat.number];
     },
     getSeatStatus: function getSeatStatus() {
-      var seatingIsOccupied = this.seatingOccupied && this.seatingOccupied[this.seat.number];
+      var seatingIsOccupied = this.isOccupied;
 
       if (seatingIsOccupied) {
         if (seatingIsOccupied.counted) {
           return 'counted';
         } else if (seatingIsOccupied.beforeCount) {
           return 'before-count';
+        } else if (seatingIsOccupied.initialCount) {
+          return 'initial-count';
         }
 
         return 'occupied';
       }
 
       return '';
+    },
+    counterActivate: function counterActivate() {
+      var seatingIsOccupied = this.isOccupied;
+      return seatingIsOccupied ? seatingIsOccupied.counterActivate : null;
+    },
+    counterRelease: function counterRelease() {
+      var seatingIsOccupied = this.isOccupied;
+      return seatingIsOccupied ? seatingIsOccupied.counterRelease : null;
     }
   },
   methods: {
@@ -1010,7 +1026,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.seat[data-v-c36d7ea8] {\n    text-align: center;\n    padding: 2px;\n    background-color: rgba(6, 8, 8, 0.35);\n    border-radius: 3px;\n    border-style: solid;\n    border-color: #8c8e8dc2;\n    transition: ease background-color 1s;\n    z-index: 200 !important;\n}\n.seat.occupied[data-v-c36d7ea8] {\n    background-color: #0805f578 !important;\n    border-color: #000163;\n}\n.seat.before-count[data-v-c36d7ea8] {\n    background-color: rgba(149, 1, 255, 0.47) !important;\n    border-color: #000163;\n}\n.seat.counted[data-v-c36d7ea8] {\n    background-color: rgba(169, 255, 1, 0.49) !important;\n    border-color: #ef9f00 !important;\n}\n.seat.active[data-v-c36d7ea8] {\n    background-color: rgba(13, 208, 32, 0);\n    box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n    border-color: #ff0051;\n    border-width: 2px;\n    z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover {\n    cursor: move;\n}\n.seat .number[data-v-c36d7ea8] {\n    font-size: 1.7em !important;\n    color: white;\n    font-weight: bold;\n    z-index: 10000;\n    text-shadow: 1px 2px 3px #0600cc;\n}\n.seat.occupied .number[data-v-c36d7ea8] {\n    color: #f5ffdd !important;\n    text-shadow: 1px 2px 3px yellow !important;\n}\n.seat .center[data-v-c36d7ea8] {\n    position: relative;\n    float: left;\n    border: 1px solid #00ceff;\n    height: 1px;\n    width: 1px;\n}\n.seat input[data-v-c36d7ea8] {\n    background: #0000006e !important;\n    color: white !important;\n    height: 15px !important;\n    font-size: 0.8em !important;\n    position: absolute;\n    top: -30px;\n}\n.seat .position[data-v-c36d7ea8] {\n    font-size: 0.7em !important;\n    color: white;\n    font-weight: bold;\n    background: rgba(10, 21, 32, 0.71);\n    padding: 2px;\n    position: absolute;\n    width: 120px;\n    bottom: -40px;\n    display: none;\n}\n.seat.active .position[data-v-c36d7ea8] {\n    display: block !important;\n}\n.draw[data-v-c36d7ea8] {\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
+exports.push([module.i, "\n.seat[data-v-c36d7ea8] {\n    text-align: center;\n    padding: 2px;\n    background-color: rgba(6, 8, 8, 0.35);\n    border-radius: 3px;\n    border-style: solid;\n    border-color: #8c8e8dc2;\n    transition: ease background-color 1s;\n    z-index: 200 !important;\n}\n.seat.occupied[data-v-c36d7ea8] {\n    background-color: rgba(5, 169, 245, 0.47) !important;\n    border-color: #39adff;\n}\n.seat.initial-count[data-v-c36d7ea8]{\n    background-color: rgba(26, 1, 255, 0.47) !important;\n    border-color: #000137;\n}\n.seat.before-count[data-v-c36d7ea8] {\n    background-color: rgba(188, 4, 239, 0.89) !important;\n    border-color: #310060;\n}\n.seat.counted[data-v-c36d7ea8] {\n    background-color: rgba(164, 248, 1, 0.49) !important;\n    border-color: #bbff00 !important;\n}\n.seat.active[data-v-c36d7ea8] {\n    background-color: rgba(13, 208, 32, 0);\n    box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94);\n    border-color: #ff0051;\n    border-width: 2px;\n    z-index: 10000 !important;\n}\n.seat[data-v-c36d7ea8]:hover {\n    cursor: move;\n}\n.seat .number[data-v-c36d7ea8] {\n    font-size: 1.7em !important;\n    color: white;\n    font-weight: bold;\n    z-index: 10000;\n    text-shadow: 1px 2px 3px #0600cc;\n}\n.seat.occupied .number[data-v-c36d7ea8] {\n    color: #f5ffdd !important;\n    text-shadow: 1px 2px 3px yellow !important;\n}\n.seat .center[data-v-c36d7ea8] {\n    position: relative;\n    float: left;\n    border: 1px solid #00ceff;\n    height: 1px;\n    width: 1px;\n}\n.seat input[data-v-c36d7ea8] {\n    background: #0000006e !important;\n    color: white !important;\n    height: 15px !important;\n    font-size: 0.8em !important;\n    position: absolute;\n    top: -30px;\n}\n.seat .position[data-v-c36d7ea8] {\n    font-size: 0.7em !important;\n    color: white;\n    font-weight: bold;\n    background: rgba(10, 21, 32, 0.71);\n    padding: 2px;\n    position: absolute;\n    width: 120px;\n    bottom: -40px;\n    display: none;\n}\n.seat.active .position[data-v-c36d7ea8] {\n    display: block !important;\n}\n.draw[data-v-c36d7ea8] {\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n.counter-event[data-v-c36d7ea8] {\n    font-size: 0.9rem !important;\n}\n.counter-event.activated[data-v-c36d7ea8]{\n    color: #00fc2a !important;\n}\n.counter-event.release[data-v-c36d7ea8]{\n    color: #ec0035 !important;\n}\n.counter-info[data-v-c36d7ea8]{\n    position: absolute;\n    width: 100%;\n    display: block;\n    top: 15px;\n}\n", ""]);
 
 // exports
 
@@ -7303,11 +7319,11 @@ var render = function() {
                         _vm._s(_vm.$t("Current seating")) +
                         ": "
                     ),
-                    _vm.photo.seatingBoardingStr
-                      ? _c("span", [
-                          _vm._v(_vm._s(_vm.photo.seatingBoardingStr))
-                        ])
-                      : _vm._e()
+                    _c("span", [
+                      _vm._v(
+                        _vm._s(_vm.photo.details.occupation.seatingBoardingStr)
+                      )
+                    ])
                   ]),
                   _vm._v(" "),
                   _c("p", { staticClass: "detail" }, [
@@ -7316,9 +7332,9 @@ var render = function() {
                         _vm._s(_vm.$t("Mix seating")) +
                         ": "
                     ),
-                    _vm.photo.seatingMixStr
-                      ? _c("span", [_vm._v(_vm._s(_vm.photo.seatingMixStr))])
-                      : _vm._e()
+                    _c("span", [
+                      _vm._v(_vm._s(_vm.photo.details.occupation.seatingMixStr))
+                    ])
                   ]),
                   _vm._v(" "),
                   _c("p", { staticClass: "detail text-info" }, [
@@ -7327,11 +7343,11 @@ var render = function() {
                         _vm._s(_vm.$t("Seating activated")) +
                         ": "
                     ),
-                    _vm.photo.seatingActivatedStr
-                      ? _c("span", [
-                          _vm._v(_vm._s(_vm.photo.seatingActivatedStr))
-                        ])
-                      : _vm._e()
+                    _c("span", [
+                      _vm._v(
+                        _vm._s(_vm.photo.details.occupation.seatingActivatedStr)
+                      )
+                    ])
                   ]),
                   _vm._v(" "),
                   _c("p", { staticClass: "detail text-info" }, [
@@ -7340,11 +7356,11 @@ var render = function() {
                         _vm._s(_vm.$t("Seating release")) +
                         ": "
                     ),
-                    _vm.photo.seatingReleaseStr
-                      ? _c("span", [
-                          _vm._v(_vm._s(_vm.photo.seatingReleaseStr))
-                        ])
-                      : _vm._e()
+                    _c("span", [
+                      _vm._v(
+                        _vm._s(_vm.photo.details.occupation.seatingReleaseStr)
+                      )
+                    ])
                   ])
                 ])
               ])
@@ -7364,7 +7380,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("span", { staticClass: "detail" }, [
                   _vm._v(
-                    _vm._s(_vm.photo.passengers.totalSum2) +
+                    _vm._s(_vm.photo.passengers.totalSumOccupied) +
                       " " +
                       _vm._s(_vm.$t("Counts")) +
                       " ⬆"
@@ -7377,7 +7393,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("span", { staticClass: "detail" }, [
                   _vm._v(
-                    _vm._s(_vm.photo.passengers.totalSum) +
+                    _vm._s(_vm.photo.passengers.totalSumReleased) +
                       " " +
                       _vm._s(_vm.$t("Counts")) +
                       " ⬇"
@@ -8326,7 +8342,23 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c("small", { staticClass: "number" }, [_vm._v(_vm._s(_vm.seat.number))]),
+      _c("small", { staticClass: "number" }, [
+        _c("span", [_vm._v(_vm._s(_vm.seat.number))]),
+        _vm._v(" "),
+        _c("span", { staticClass: "counter-info" }, [
+          _vm.counterActivate > 0 && _vm.counterActivate !== null
+            ? _c("span", { staticClass: "counter-event activated" }, [
+                _vm._v(_vm._s(_vm.counterActivate) + " ⬆")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.counterRelease > 0 && _vm.counterRelease !== null
+            ? _c("span", { staticClass: "counter-event release" }, [
+                _vm._v(_vm._s(_vm.counterRelease) + " ⬇")
+              ])
+            : _vm._e()
+        ])
+      ]),
       _vm._v(" "),
       _c("span", { staticClass: "position" }, [
         _c("span", [
