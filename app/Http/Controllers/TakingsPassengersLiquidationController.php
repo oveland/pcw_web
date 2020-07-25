@@ -37,7 +37,7 @@ class TakingsPassengersLiquidationController extends Controller
         $user = Auth::user();
         $link = config('app.beta_server_url')."/link/recaudo/pasajeros/liquidacion/$user->id"; // TODO: Change when BETA migrated fully to NE domain
 
-        return view('takings.passengers.liquidation.index', compact('link'));
+        return view('partials.iframe', compact('link'));
     }
 
     /**

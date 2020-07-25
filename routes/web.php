@@ -298,6 +298,10 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/', 'GeolocationPassengersReportController@index')->name('report-passengers-geolocation');
                 Route::any('/search', 'GeolocationPassengersReportController@search')->name('report-passengers-geolocation-search');
             });
+
+            Route::prefix(__('photos'))->group(function () {
+                Route::get('/', 'Rocket\ReportPhotosController@index')->name('report.passengers.photos');
+            });
         });
 
         /* Routes for drivers report */

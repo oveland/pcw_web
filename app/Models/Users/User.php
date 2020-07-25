@@ -261,6 +261,7 @@ class User extends Authenticatable
         $usersCan = [
             // ALAMEDA:
 //            2018101180, // DIEGOE
+            2018101181, // GUSTAVO
         ];
 
         return in_array( $this->id, $usersCan ) || $this->isAdmin();
