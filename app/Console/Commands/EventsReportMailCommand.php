@@ -99,9 +99,8 @@ class EventsReportMailCommand extends Command
             case Company::ALAMEDA:
                 if ($production) {
                     $mailTo = ['gerencia@alameda.com.co', 'movilidad@alameda.com.co', 'jeferh@alameda.com.co', 'olatorre22@hotmail.com'];
-                    $mailTo = ['olatorre22@hotmail.com', 'oiva.pcw@gmail.com'];
                 } else {
-                    $mailTo = ['soportenivel2pcwtecnologia@outlook.com'];
+                    $mailTo = ['olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com', 'oiva.pcw@gmail.com'];
                 }
                 break;
             /*case Company::TUPAL:
