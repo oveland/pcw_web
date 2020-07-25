@@ -108,10 +108,10 @@ class ControlPointService
                         ->where('fringe_id', $dispatchRegister->departure_fringe_id)
                         ->get()->first();
 
-                    if($controlPointTime){
+                    if($controlPointTime && intval($controlPointTimeReport->distancem)){
                         $timeScheduled = $controlPointTime->time_from_dispatch;
                         $timeMeasured = StrTime::segToStrTime(
-                            StrTime::toSeg($timeScheduled) * StrTime::toSeg($controlPointTimeReport->timem) / StrTime::toSeg($controlPointTimeReport->timep)
+                            StrTime::toSeg($controlPointTimeReport->timem) * intval($controlPoint->distance_from_dispatch) / intval($controlPointTimeReport->distancem)
                         );
                     }else{
                         $timeScheduled = $controlPointTimeReport->timep;
