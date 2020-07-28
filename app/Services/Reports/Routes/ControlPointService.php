@@ -25,17 +25,26 @@ class ControlPointService
      * @param Route $route
      * @param string $vehicleReport
      * @param $dateReport
+     * @param bool $ascendant
      * @return Collection
      */
-    function buildReportsByControlPoints(Company $company, Route $route, $vehicleReport = 'all', $dateReport)
+    function buildReportsByControlPoints(Company $company, Route $route, $vehicleReport = 'all', $dateReport, $ascendant = true)
     {
         $dispatchRegisters = DispatchRegister::active()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
             ->orderByDesc('departure_time')
             ->get();
 
-        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get()->sortByDesc(function (ControlPointTimeReport $report) {
-            return $report->dispatchRegister->departure_time;
-        });
+        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get();
+
+        if ($ascendant) {
+            $allReportsByControlPoints = $allReportsByControlPoints->sortBy(function (ControlPointTimeReport $report) {
+                return $report->dispatchRegister->departure_time;
+            });
+        } else {
+            $allReportsByControlPoints = $allReportsByControlPoints->sortByDesc(function (ControlPointTimeReport $report) {
+                return $report->dispatchRegister->departure_time;
+            });
+        }
 
         $reportsByDispatchRegister = $allReportsByControlPoints->groupBy('dispatch_register_id');
 
@@ -108,12 +117,12 @@ class ControlPointService
                         ->where('fringe_id', $dispatchRegister->departure_fringe_id)
                         ->get()->first();
 
-                    if($controlPointTime && intval($controlPointTimeReport->distancem)){
+                    if ($controlPointTime && intval($controlPointTimeReport->distancem)) {
                         $timeScheduled = $controlPointTime->time_from_dispatch;
                         $timeMeasured = StrTime::segToStrTime(
                             StrTime::toSeg($controlPointTimeReport->timem) * intval($controlPoint->distance_from_dispatch) / intval($controlPointTimeReport->distancem)
                         );
-                    }else{
+                    } else {
                         $timeScheduled = $controlPointTimeReport->timep;
                         $timeMeasured = $controlPointTimeReport->timem;
                     }
@@ -143,6 +152,7 @@ class ControlPointService
                 'hasReport' => $hasReport,
                 'statusColor' => $statusColor,
                 'statusText' => $statusText,
+                'backgroundProfile' => $controlPointTimeReport->background_profile ?? '',
                 'scheduledControlPointTime' => $scheduledControlPointTime,
                 'measuredControlPointTime' => $measuredControlPointTime,
                 'timeScheduled' => $timeScheduled,

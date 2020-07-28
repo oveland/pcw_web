@@ -10,6 +10,7 @@
         }
         .icon-vehicle-status{
             position: sticky;
+            text-shadow: white 1px 1px 4px;
         }
 
         .report-tab-cp {
@@ -41,6 +42,11 @@
 
         .report-tab-cp .bg-warning{
             color:white !important;
+        }
+        .td-info{
+            -webkit-box-shadow: inset 0px 0px 32px -12px rgba(255,255,255,1);
+            -moz-box-shadow: inset 0px 0px 32px -12px rgba(255,255,255,1);
+            box-shadow: inset 0px 0px 32px -12px rgba(255,255,255,1);
         }
     </style>
 
@@ -146,6 +152,23 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-2 col-sm-4 col-xs-12">
+                            <div class="form-group">
+                                <label for="type-report" class="control-label">@lang('Options')</label>
+                                <div class="form-group">
+                                    <div class="has-warning">
+                                        <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
+                                            <label class="text-bold">
+                                                <input id="active-vehicles" class="vehicle-options" name="ascendant" type="checkbox" value="active-vehicles"> @lang('Ascendant')
+                                            </label>
+                                            <label class="text-bold">
+                                                <input id="exclude-in-repair" class="vehicle-options" name="paint-profile" type="checkbox" value="exclude-in-repair"> @lang('Paint profile')
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -192,7 +215,7 @@
                 }
             });
 
-            $('#date-report, #type-report, #company-report').change(function () {
+            $('#date-report, #type-report, #company-report, .vehicle-options').change(function () {
                 reportContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();

@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereTimep($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereVehicleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereVersion($value)
+ * @property-read mixed $background_profile
  */
 class ControlPointTimeReport extends Model
 {
@@ -59,31 +60,73 @@ class ControlPointTimeReport extends Model
         return config('app.simple_date_time_format');
     }
 
-    function controlPoint(){
+    function controlPoint()
+    {
         return $this->belongsTo(ControlPoint::class);
     }
 
-    function dispatchRegister(){
+    function dispatchRegister()
+    {
         return $this->belongsTo(DispatchRegister::class);
     }
 
-    function fringe(){
+    function fringe()
+    {
         return $this->belongsTo(Fringe::class);
     }
 
-    function location(){
+    function location()
+    {
         return $this->belongsTo(Location::class);
     }
 
-    function vehicle(){
+    function vehicle()
+    {
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function fast(){
+    public function fast()
+    {
         return $this->status == 'fast';
     }
 
-    public function slow(){
+    public function slow()
+    {
         return $this->status == 'slow';
+    }
+
+    public function getStatusInMinutesAttribute()
+    {
+        return intval(intval($this->attributes['status_in_minutes']));
+    }
+
+    public function getBackgroundProfileAttribute()
+    {
+        # defines a spectrum in minutes ofr example 1 hour
+        $rangeOK = 5;
+        $spectrum = 30;
+        $density = abs($this->status_in_minutes) > $spectrum ? 1 : abs($this->status_in_minutes) / $spectrum;
+
+        $intensityRGB = 255 * $density;
+
+        $intensitySecondary = 200 - $intensityRGB;
+        $intensitySecondary = $intensitySecondary > 0 ? $intensitySecondary : 0;
+
+        if(abs($this->status_in_minutes) <= $rangeOK){
+            $red = $this->status_in_minutes < 0 ? $intensitySecondary + 20 : 0;
+            $green = (abs($this->status_in_minutes) <= 1 ? 220 : 200 ) - intval($intensityRGB);
+            $blue = $this->status_in_minutes > 0 ? $intensitySecondary : 0;
+        }elseif ($this->status_in_minutes > $rangeOK ){
+            $red = 0;
+            $green = $intensitySecondary;
+            $blue = 255 - intval($intensityRGB);
+        }elseif ($this->status_in_minutes < $rangeOK ){
+            $red = 255 - intval($intensityRGB);
+            $green = $intensitySecondary;
+            $blue = 0;
+        }
+        $density = number_format($density, '2', '.', '');
+
+        return "rgba($red,$green,$blue);";
     }
 }

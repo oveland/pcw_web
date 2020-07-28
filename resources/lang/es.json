@@ -575,7 +575,7 @@
   "Total vehicles": "Total vehículos",
   "Completed turns": "Turnos completos",
   "Total round trips": "Total vueltas",
-  "Export grouped report":"Exportar reporte agrupado",
+  "Export grouped report": "Exportar reporte agrupado",
   "Export ungrouped report": "Exportar reporte desagrupado",
   "Route dispatches": "Despachos de ruta",
   "Without GPS Signal": "Sin Señal GPS",
@@ -586,7 +586,7 @@
   "Report events daily": "Reporte diario de eventos",
   "Events report": "Reporte eventos",
   "Dispatch daily report": "Reporte diario de despachos",
-  "Total route time":"Tiempo total en ruta",
+  "Total route time": "Tiempo total en ruta",
   "Management report": "Reporte gerencial",
   "Turns": "Turnos",
   "Max speed": "Velocidad máxima",
@@ -664,5 +664,7 @@
   "Booths historic report": "Reporte histórico de cabinas",
   "Liquid level": "Nivel de líquido",
   "Photos": "Fotos",
-  "photos": "fotos"
+  "photos": "fotos",
+  "Ascendant": "Ascendente",
+  "Paint profile": "Pintar perfil"
 }
