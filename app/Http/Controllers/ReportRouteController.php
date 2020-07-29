@@ -63,17 +63,18 @@ class ReportRouteController extends Controller
         $routeReport = $request->get('route-report');
         $vehicleReport = $request->get('vehicle-report');
         $completedTurns = $request->get('completed-turns');
+        $noTakenTurns = $request->get('no-taken-turns');
 
         if ($routeReport == 'none') return $this->showReportWithOutRoute($request);
 
-        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $routeReport, $vehicleReport, $completedTurns);
+        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns);
 
         $reportsByVehicle = collect([]);
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
             $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
         }
 
-        switch ($typeReport) {
+        switch ($typeReport && !$noTakenTurns) {
             case 'group-vehicles':
                 if ($request->get('export')) $this->routeService->export->groupedRouteReport($dispatchRegistersByVehicles, $dateReport);
                 $view = 'reports.route.route.routeReportByVehicle';

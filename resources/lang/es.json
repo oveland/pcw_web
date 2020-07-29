@@ -673,5 +673,6 @@
   "Net production": "Producción neta",
   "Total production": "Total producción",
   "Takings not registered": "Recaudo no registrado",
-  "Takings registered successfully": "Recaudo registrado correctamente"
+  "Takings registered successfully": "Recaudo registrado correctamente",
+  "No taken turns": "Sin recaudar"
 }

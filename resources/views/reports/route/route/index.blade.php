@@ -97,7 +97,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 options with-route">
+                        <div class="col-md-4 options with-route">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
@@ -108,6 +108,9 @@
                                             </label>
                                             <label class="text-bold">
                                                 <input id="completed-turns" name="completed-turns" type="checkbox" value="completed-turns"> @lang('Completed turns')
+                                            </label>
+                                            <label class="text-bold">
+                                                <input id="no-taken-turns" name="no-taken-turns" type="checkbox" value="no-taken-turns"> @lang('No taken turns')
                                             </label>
                                         </div>
                                     </div>
@@ -230,7 +233,7 @@
                 }
             });
 
-            $('#date-report, #route-report, #vehicle-report, #company-report, #type-report, #completed-turns').change(function () {
+            $('#date-report, #route-report, #vehicle-report, #company-report, #type-report, #completed-turns, #no-taken-turns').change(function () {
                 $('.report-container').slideUp();
             });
 

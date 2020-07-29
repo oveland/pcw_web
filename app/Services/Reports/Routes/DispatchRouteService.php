@@ -17,6 +17,7 @@ use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use function foo\func;
 
 class DispatchRouteService
 {
@@ -51,9 +52,10 @@ class DispatchRouteService
      *
      * @param $company
      * @param $dateReport
-     * @param $routeReport
-     * @param $vehicleReport
-     * @param $completedTurns
+     * @param string $routeReport
+     * @param string $vehicleReport
+     * @param bool $completedTurns
+     * @param bool $noTakenTurns
      * @return DispatchRegister[]|Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function all($company, $dateReport, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
@@ -67,14 +69,21 @@ class DispatchRouteService
     /**
      * @param $company
      * @param $dateReport
-     * @param $routeReport
-     * @param $vehicleReport
-     * @param $completedTurns
+     * @param string $routeReport
+     * @param string $vehicleReport
+     * @param bool $completedTurns
+     * @param bool $noTakenTurns
      * @return DispatchRegister[]|Builder[]|Collection
      */
-    public function allByVehicles($company, $dateReport, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
+    public function allByVehicles($company, $dateReport, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false)
     {
         $dispatchRegisters = $this->all($company, $dateReport, $routeReport, $vehicleReport, $completedTurns);
+
+        if ($noTakenTurns) {
+            $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
+                return !$dr->takings->isTaken();
+            });
+        }
 
         return $dispatchRegisters->groupBy('vehicle_id')
             ->sortBy(function ($reports, $vehicleID) {
@@ -339,7 +348,7 @@ class DispatchRouteService
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
             $vehicle = Vehicle::find($vehicleId);
             $lastLocation = $vehicle->lasLocation($dateReport);
-            
+
             $consolidatedDispatches = $this->getConsolidatedDataDispatches($dispatchRegistersByVehicle, $company);
             $consolidatedWithMaxSpeed = $consolidatedDispatches->sortByDesc('maxSpeed')->first();
 
