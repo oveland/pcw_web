@@ -179,6 +179,27 @@
         </div>
     </div>
     @endif
+
+
+    @if( Auth::user()->canMakeTakings() )
+        <div class="modal fade" id="modal-takings-passengers" style="background: #535353;opacity: 0.96;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header p-20">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="fa fa-times"></i>
+                        </button>
+                        <h4 class="modal-title text-center text-purple">
+                            <span><i class="icon-briefcase"></i> @lang('Takings') - @lang('Passengers')</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body p-t-0">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
 
 @section('scripts')

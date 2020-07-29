@@ -344,24 +344,6 @@
 </table>
 <!-- end table -->
 
-<div class="modal fade" id="modal-takings-passengers" style="background: #535353;opacity: 0.96;">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header p-20">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="fa fa-times"></i>
-                </button>
-                <h4 class="modal-title text-center text-purple">
-                    <span><i class="icon-briefcase"></i> @lang('Takings') - @lang('Passengers')</span>
-                </h4>
-            </div>
-            <div class="modal-body p-t-0">
-
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="application/javascript">
 
     @if( Auth::user()->belongsToCootransol() )
@@ -395,11 +377,13 @@
     }
     @endif
 
+    @if( Auth::user()->canMakeTakings() )
     function showTakingsForm(url) {
         let modalTakingsPassengers = $('#modal-takings-passengers');
         let modalBody = modalTakingsPassengers.find('.modal-body');
         modalBody.html($('.loading').html()).load(url);
     }
+    @endif
 </script>
 
 <style>
