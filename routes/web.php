@@ -110,6 +110,13 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/migrate/{company}', 'VehicleIssuesController@migrateOldReports')->name('operation-vehicles-issues-migrate');
             });
         });
+
+        Route::prefix(__('routes'))->group(function () {
+            Route::prefix(__('takings'))->group(function () {
+                Route::get('/{dispatchRegister}', 'Operation\Routes\Takings\RouteTakingsController@form')->name('operation-routes-takings-form');
+                Route::post('/{dispatchRegister}/taking', 'Operation\Routes\Takings\RouteTakingsController@taking')->name('operation-routes-takings-taking');
+            });
+        });
     });
 
     /* Routes for route report */

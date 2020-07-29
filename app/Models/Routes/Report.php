@@ -4,6 +4,8 @@ namespace App\Models\Routes;
 
 use App\Models\Vehicles\Location;
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,29 +26,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $timep
  * @property int|null $location_id
  * @property float|null $status_in_minutes
- * @property-read \App\Models\Routes\DispatchRegister $dispatchRegister
- * @property-read \App\Models\Vehicles\Location|null $location
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereDateCreated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereDispatchRegisterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereDistanced($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereDistancem($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereDistancep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereLastUpdated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereStatusInMinutes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereTimed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereTimem($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereTimep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereVersion($value)
- * @mixin \Eloquent
+ * @property-read DispatchRegister $dispatchRegister
+ * @property-read Location|null $location
+ * @method static Builder|Report whereDate($value)
+ * @method static Builder|Report whereDateCreated($value)
+ * @method static Builder|Report whereDispatchRegisterId($value)
+ * @method static Builder|Report whereDistanced($value)
+ * @method static Builder|Report whereDistancem($value)
+ * @method static Builder|Report whereDistancep($value)
+ * @method static Builder|Report whereId($value)
+ * @method static Builder|Report whereLastUpdated($value)
+ * @method static Builder|Report whereLocationId($value)
+ * @method static Builder|Report whereStatus($value)
+ * @method static Builder|Report whereStatusInMinutes($value)
+ * @method static Builder|Report whereTimed($value)
+ * @method static Builder|Report whereTimem($value)
+ * @method static Builder|Report whereTimep($value)
+ * @method static Builder|Report whereVersion($value)
+ * @mixin Eloquent
  * @property int|null $control_point_id
  * @property int|null $fringe_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereControlPointId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Report whereFringeId($value)
- * @property-read \App\Models\Routes\ControlPoint|null $controlPoint
+ * @method static Builder|Report whereControlPointId($value)
+ * @method static Builder|Report whereFringeId($value)
+ * @property-read ControlPoint|null $controlPoint
  */
 class Report extends Model
 {

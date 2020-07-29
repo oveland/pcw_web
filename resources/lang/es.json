@@ -180,6 +180,7 @@
   "Difference": "Diferencia",
   "reports": "reportes",
   "locations": "ubicaciones",
+  "Locations": "Ubicaciones",
   "url-reports": "reportes",
   "routes": "rutas",
   "route": "ruta",
@@ -666,5 +667,11 @@
   "Photos": "Fotos",
   "photos": "fotos",
   "Ascendant": "Ascendente",
-  "Paint profile": "Pintar perfil"
+  "Paint profile": "Pintar perfil",
+  "Others": "Otros",
+  "Fuel": "Combustible",
+  "Net production": "Producción neta",
+  "Total production": "Total producción",
+  "Takings not registered": "Recaudo no registrado",
+  "Takings registered successfully": "Recaudo registrado correctamente"
 }

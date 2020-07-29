@@ -14,6 +14,7 @@ use App\Services\Reports\Routes\OffRoadService;
 use App\Services\Reports\Routes\SpeedingService;
 use App\Services\Reports\Routes\ControlPointService;
 
+use App\Services\Reports\Routes\Takings\RouteTakingsService;
 use Illuminate\Support\ServiceProvider;
 
 class ReportsServiceProvider extends ServiceProvider
@@ -42,7 +43,7 @@ class ReportsServiceProvider extends ServiceProvider
         $this->app->bind(RouteService::class, function () {
             $dispatchService = new DispatchRouteService(new OffRoadService(), new SpeedingService(), new ControlPointService());
 
-            return new RouteService($dispatchService, new RouteExportService());
+            return new RouteService($dispatchService, new RouteExportService(), new RouteTakingsService());
         });
     }
 }

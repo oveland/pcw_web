@@ -14,7 +14,9 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Collection;;
+use Illuminate\Support\Collection;
+
+;
 
 /**
  * App\Models\Users\User
@@ -54,6 +56,8 @@ use Illuminate\Support\Collection;;
  */
 class User extends Authenticatable
 {
+    const ADMIN_ROLE = 1;
+    const SYSTEM_ROLE = 2;
     const PROPRIETARY_ROLE = 3;
     const DISPATCHER_ROLE = 4;
 
@@ -99,10 +103,10 @@ class User extends Authenticatable
     public function isSuperAdmin()
     {
         return $this->isAdmin() && (
-            $this->id == 625565             // OVELAND
-            || $this->id == 940736          // OMAR
-            || $this->id == 1130648973      // BRIAN
-        );
+                $this->id == 625565             // OVELAND
+                || $this->id == 940736          // OMAR
+                || $this->id == 1130648973      // BRIAN
+            );
     }
 
     /**
@@ -177,8 +181,13 @@ class User extends Authenticatable
             2018101065,
         ];
 
-        return in_array( $this->id, $usersCanAdmin ) || $this->isAdmin();
+        return in_array($this->id, $usersCanAdmin) || $this->isAdmin();
 
+    }
+
+    public function canMakeTakings()
+    {
+        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE;
     }
 
     /**
@@ -201,7 +210,7 @@ class User extends Authenticatable
             2018101065,
         ];
 
-        return (in_array( $this->id, $usersCanSendSMS ) && $this->canAdminGPS()) || $this->isSuperAdmin();
+        return (in_array($this->id, $usersCanSendSMS) && $this->canAdminGPS()) || $this->isSuperAdmin();
     }
 
     /**
@@ -239,7 +248,7 @@ class User extends Authenticatable
         if ($this->isProprietary()) {
             $assignedVehicles = Vehicle::whereIn('id', $this->userVehicles->pluck('vehicle_id'));
 
-            if( $active ) $assignedVehicles = $assignedVehicles->active();
+            if ($active) $assignedVehicles = $assignedVehicles->active();
             $assignedVehicles = $assignedVehicles->get();
         } else {
             $company = $company ? $company : $this->company;
@@ -252,7 +261,8 @@ class User extends Authenticatable
     /**
      * @return bool
      */
-    public function canViewAllRoutes(){
+    public function canViewAllRoutes()
+    {
         return !($this->belongsToMontebello() && $this->isProprietary());
     }
 
@@ -264,12 +274,12 @@ class User extends Authenticatable
             2018101181, // GUSTAVO
         ];
 
-        return in_array( $this->id, $usersCan ) || $this->isAdmin();
+        return in_array($this->id, $usersCan) || $this->isAdmin();
     }
 
     public function getVehicleTags()
     {
-        return collect( $this->vehicle_tags ? explode(',', $this->vehicle_tags) : []);
+        return collect($this->vehicle_tags ? explode(',', $this->vehicle_tags) : []);
     }
 
     /**
@@ -279,7 +289,7 @@ class User extends Authenticatable
     public function getUserRoutes(Company $company)
     {
         $userCompany = $this->company;
-        if($this->isAdmin() && $company){
+        if ($this->isAdmin() && $company) {
             $userCompany = $company;
         }
 

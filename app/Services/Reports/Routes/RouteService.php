@@ -9,6 +9,7 @@
 namespace App\Services\Reports\Routes;
 
 use App\Services\Exports\Routes\RouteExportService;
+use App\Services\Reports\Routes\Takings\RouteTakingsService;
 
 class RouteService
 {
@@ -23,13 +24,20 @@ class RouteService
     public $export;
 
     /**
+     * @var RouteTakingsService
+     */
+    public $takings;
+
+    /**
      * RouteService constructor.
      * @param DispatchRouteService $dispatchService
      * @param RouteExportService $routeExportService
+     * @param RouteTakingsService $takingsService
      */
-    public function __construct(DispatchRouteService $dispatchService, RouteExportService $routeExportService)
+    public function __construct(DispatchRouteService $dispatchService, RouteExportService $routeExportService, RouteTakingsService $takingsService)
     {
         $this->dispatch = $dispatchService;
         $this->export = $routeExportService;
+        $this->takings = $takingsService;
     }
 }

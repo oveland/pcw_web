@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Routes\DispatchRegister
@@ -142,6 +143,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $edited_info
  * @method static Builder|DispatchRegister whereEditUserId($value)
  * @method static Builder|DispatchRegister whereEditedInfo($value)
+ * @property-read \App\Models\Routes\RouteTaking $takings
  */
 class DispatchRegister extends Model
 {
@@ -506,6 +508,21 @@ class DispatchRegister extends Model
     public function getTotalOffRoadAttribute()
     {
         return $this->getTotalOffRoad();
+    }
+
+    /**
+     * @return RouteTaking | HasOne
+     */
+    public function getTakingsAttribute()
+    {
+        $takings = RouteTaking::findByDr($this);
+
+        if (!$takings) {
+            $takings = new RouteTaking();
+            $takings->dispatchRegister()->associate($this);
+        }
+
+        return $takings;
     }
 
     const CREATED_AT = 'date_created';

@@ -128,6 +128,7 @@
             </th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
+
             @if( $company->hasDriverRegisters() )
             <td width="25%" class="text-uppercase">
                 @if( Auth::user()->isSuperAdmin() )
@@ -157,6 +158,7 @@
                 @endif
             </td>
             @endif
+
             <td class="text-center">
                 {{ $strTime->toString($dispatchRegister->departure_time) }}<br>
                 <small class="tooltips text-info" data-title="@lang('Vehicles without route')" data-placement="bottom">
@@ -181,6 +183,7 @@
                     @endphp
                 @endif
             </td>
+
             <td width="10%" class="text-center">
                 <small class="tooltips text-bold" data-title="@lang('Arrival Time')"  data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time) }}
@@ -193,6 +196,7 @@
                     {{ $strTime->toString($dispatchRegister->arrival_time_difference) }} <i class="ion-android-stopwatch text-muted"></i>
                 </small>
             </td>
+
             <td width="8%" class="text-center">{{ $dispatchRegister->getRouteTime() }}</td>
 
             @if( $company->hasRecorderCounter() )
@@ -270,36 +274,47 @@
             @endif
 
             <td width="15%" class="text-center">
-                @if( Auth::user()->isSuperAdmin() )
-                    <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover tooltips"
-                            data-original-title="@lang('Execute DAR')">
-                        <i class="fa fa-cogs faa-pulse"></i>
-                    </button>
-
-                    <a href="#modal-report-log"
-                       data-toggle="modal"
-                       onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
-                       class="btn btn-xs btn-danger faa-parent animated-hover tooltips" data-original-title="@lang('Show report details')">
-                        <i class="fa fa-code faa-pulse"></i>
-                    </a>
+                @if( Auth::user()->canMakeTakings() )
+                <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal" onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
+                   class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips"
+                   data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')" data-html="true">
+                    <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
+                    <i class="fa fa-dollar faa-vertical" style="margin-right: 0px; margin-left: 0"></i>
+                </a>
                 @endif
+
                 <a href="#modal-route-report"
-                   class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
+                   class="btn green-haze faa-parent animated-hover btn-show-chart-route-report btn-circle btn-outline tooltips"
                    data-toggle="modal"
                    data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
                    data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
                    data-original-title="@lang('Graph report detail')">
                     <i class="fa fa-area-chart faa-pulse"></i>
                 </a>
-                @if( Auth::user()->isSuperAdmin() )
-                    @php
-                        $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
-                        $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
-                    @endphp
-                    <hr class="hr no-padding">
-                    <small>{!! $totalLocations !!} @lang('locations')</small><br>
-                    <small>{!! $totalReports !!} @lang('reports')</small>
-                @endif
+
+                <div class="p-t-5">
+                    @if( Auth::user()->isSuperAdmin() )
+                        <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover btn-circle tooltips"
+                                data-original-title="@lang('Execute DAR')" data-placement="bottom">
+                            <i class="fa fa-cogs faa-pulse"></i>
+                        </button>
+
+                        <a href="#modal-report-log"
+                           data-toggle="modal" data-placement="bottom"
+                           onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
+                           class="btn btn-xs btn-danger faa-parent animated-hover tooltips btn-circle" data-original-title="@lang('Show report details')">
+                            <i class="fa fa-code faa-pulse"></i>
+                        </a>
+                    @endif
+
+                    @if( Auth::user()->isSuperAdmin() )
+                        @php
+                            $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                            $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
+                        @endphp
+                        <small class="badge tooltips" data-original-title="@lang('Locations') / @lang('Reports')" data-placement="bottom">{!! $totalLocations !!} / {!! $totalReports !!}</small>
+                    @endif
+                </div>
             </td>
         </tr>
         @php
@@ -329,8 +344,27 @@
 </table>
 <!-- end table -->
 
-@if( Auth::user()->belongsToCootransol() )
+<div class="modal fade" id="modal-takings-passengers" style="background: #535353;opacity: 0.96;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header p-20">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="fa fa-times"></i>
+                </button>
+                <h4 class="modal-title text-center text-purple">
+                    <span><i class="icon-briefcase"></i> @lang('Takings') - @lang('Passengers')</span>
+                </h4>
+            </div>
+            <div class="modal-body p-t-0">
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="application/javascript">
+
+    @if( Auth::user()->belongsToCootransol() )
     let modalExecuteDAR = $('#modal-execute-DAR');
 
     function executeDAR(dispatchRegisterId){
@@ -346,8 +380,8 @@
             timeout: 0,
             success:function(data){
                 if( data.success ){
-                    gsuccess('@lang('Process executed successfully')');
                     modalExecuteDAR.find('pre').html(data.infoProcess.totalNewReports+' @lang('locations have been processed')<br>@lang('Detected route'): '+data.infoProcess.routeName);
+                    gsuccess('@lang('Process executed successfully')');
                 }else{
                     let message = '@lang('An error occurred in the process. Contact your administrator')';
                     gerror(message);
@@ -359,5 +393,17 @@
             }
         });
     }
+    @endif
+
+    function showTakingsForm(url) {
+        let modalTakingsPassengers = $('#modal-takings-passengers');
+        let modalBody = modalTakingsPassengers.find('.modal-body');
+        modalBody.html($('.loading').html()).load(url);
+    }
 </script>
-@endif
+
+<style>
+    #modal-takings-passengers button.close{
+        margin: 10px !important;
+    }
+</style>
