@@ -8,19 +8,21 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CobanCameraController extends Controller
 {
     /**
      * @var GeneralController
      */
-    private $pcwAuthService;
+    private $auth;
 
     public function __construct(PCWAuthService $pcwAuthService)
     {
-        $this->pcwAuthService = $pcwAuthService;
+        $this->auth = $pcwAuthService;
     }
 
     /**
@@ -35,13 +37,11 @@ class CobanCameraController extends Controller
 
     /**
      * @param Request $request
-     * @return Factory|View
+     * @return JsonResponse
      */
     public function searchParams(Request $request)
     {
-        //$access = $this->pcwAuthService->getAccessProperties();
         $company = Company::find($request->get('company'));
-        //$company = Company::find(21);
         return response()->json([
             'vehicles' => $company->vehicles,
             'date' => Carbon::now()->toDateString(),
@@ -50,7 +50,7 @@ class CobanCameraController extends Controller
 
     /**
      * @param Request $request
-     * @return Factory|View
+     * @return JsonResponse
      */
     public function show(Request $request)
     {
@@ -70,8 +70,8 @@ class CobanCameraController extends Controller
     private function getPhotosReport(Vehicle $vehicle = null, $date)
     {
         $report = collect([]);
-        if($vehicle){
-            $photos = CobanPhoto::whereBetween('created_at', ["$date 00:00:00", "$date 23:59:59"])
+        if ($vehicle) {
+            $photos = CobanPhoto::whereDate('created_at', $date)
                 ->where('vehicle_id', $vehicle->id)
                 ->with(['vehicle', 'location', 'dispatchRegister'])
                 ->orderByDesc('date')
@@ -82,7 +82,7 @@ class CobanCameraController extends Controller
                 $location = $photo->location;
                 $report->push([
                     'id' => $photo->id,
-                    'date' => ($report->count() + 1)." ⮞ ".$photo->date->toDateTimeString(),
+                    'date' => ($report->count() + 1) . " ⮞ " . $photo->date->toDateTimeString(),
                     'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                     'location' => $location ? $location->getAPIFields() : null
                 ]);
@@ -93,7 +93,7 @@ class CobanCameraController extends Controller
 
     /**
      * @param CobanPhoto $photo
-     * @return Factory|View
+     * @return BinaryFileResponse
      */
     public function showPhoto(CobanPhoto $photo)
     {
