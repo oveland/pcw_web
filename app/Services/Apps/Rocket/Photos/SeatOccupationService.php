@@ -8,8 +8,8 @@ use Illuminate\Support\Collection;
 
 class SeatOccupationService
 {
-    protected const THRESHOLD_ACTIVATE = 2;
-    protected const THRESHOLD_RELEASE = 2;
+    protected const THRESHOLD_ACTIVATE = 3;
+    protected const THRESHOLD_RELEASE = 3;
 
     /**
      * @param Collection $currentOccupied

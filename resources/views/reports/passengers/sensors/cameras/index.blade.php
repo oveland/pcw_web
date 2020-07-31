@@ -49,7 +49,7 @@
                         <h4><i class="fa fa-camera"></i> @lang('Photo detail')</h4>
                     </div>
                     <div class="modal-body">
-                        <photo-detail url-photo="{{ route('report-passengers-sensors-cameras-photo', ['photo'=>'']) }}" :photo="photoDetail"></photo-detail>
+                        <photo-detail url-photo="{{ route('report-passengers-sensors-cameras-photo-index') }}" :photo="photoDetail"></photo-detail>
                     </div>
                     <div class="modal-footer">
                         <button class="btn width-100 btn-default" data-dismiss="modal">

@@ -307,6 +307,7 @@ Route::group(['middleware' => ['auth']], function () {
                     Route::get('/', 'CobanCameraController@index')->name('report-passengers-sensors-cameras');
                     Route::get('/search-params', 'CobanCameraController@searchParams')->name('report-passengers-sensors-cameras-search-params');
                     Route::get('/show', 'CobanCameraController@show')->name('report-passengers-sensors-cameras-show');
+                    Route::get('/photo', 'CobanCameraController@showPhoto')->name('report-passengers-sensors-cameras-photo-index');
                     Route::get('/photo/{photo}', 'CobanCameraController@showPhoto')->name('report-passengers-sensors-cameras-photo');
                 });
             });
