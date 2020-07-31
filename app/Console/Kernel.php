@@ -43,7 +43,10 @@ class Kernel extends ConsoleKernel
 //                ->between('05:00', '22:00');
 //            $schedule->command('rocket:release-busy --vehicle-plate=WDK-885')->hourly()->between('06:00', '18:00');
 
+            $schedule->command('rocket:take-photo --vehicle-plate=DEM-001')->cron('*/2 * * * *');
             $schedule->command('rocket:take-photo --vehicle-plate=DEM-002')->cron('*/2 * * * *');
+
+            $schedule->command('rocket:take-photo --vehicle-plate=VCI-427')->cron('*/2 * * * *');
 //                ->between('05:00', '19:00');
             
         } else {
