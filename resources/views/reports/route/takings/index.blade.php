@@ -49,7 +49,7 @@
                     </div>
                     <div class="portlet-body row">
                         <div class="tab-content" style="border-top: 1px solid #e7e4e4">
-                            <div id="report-list" class="tab-pane fade active in row">
+                            <div id="report-list" class="tab-pane fade active in">
                                 <table-component :report="report" :totals="totals" :averages="averages"></table-component>
                             </div>
                             <div id="report-graphs" class="tab-pane fade row" >
