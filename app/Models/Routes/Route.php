@@ -115,7 +115,7 @@ class Route extends Model
     public function getAPIFields()
     {
         $dataAPI = $this->toArray();
-        $dataAPI['company'] = $this->company->toArray();
+        $dataAPI['company'] = $this->company->getAPIFields();
         return (object)$dataAPI;
     }
 

@@ -175,6 +175,12 @@
                                     @lang('Dispatch')
                                 </a>
                             </li>
+                            <li class="nav-item menu-routes-takings">
+                                <a href="{{ route('reports.routes.takings')  }}" class="faa-parent animated-hover nav-link">
+                                    <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
+                                    @lang('Takings')
+                                </a>
+                            </li>
                             <li class="nav-item menu-report-route-historic">
                                 <a href="{{ route('report-route-historic')  }}" class="faa-parent animated-hover nav-link">
                                     <i class="fa fa-map-o" aria-hidden="true"></i>

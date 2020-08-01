@@ -22,6 +22,8 @@ mix.js('resources/js/reports/apps/main.js', 'resources/js/reports/apps/');
 mix.js('resources/js/admin/rocket/main.js', 'resources/js/admin/rocket/');
 mix.js('resources/js/reports/passengers/photos/main.js', 'resources/js/reports/passengers/photos/');
 
+mix.js('resources/js/reports/routes/takings/main.js', 'resources/js/reports/routes/takings/');
+
 
 if (mix.inProduction()) {
     mix.version();

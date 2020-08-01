@@ -251,4 +251,9 @@ class Company extends Model
 
         return $returnValue ? $config->value : $config->active;
     }
+
+    public function getAPIFields()
+    {
+        return (object) $this->only(['id', 'name', 'short_name', 'active']);
+    }
 }

@@ -168,6 +168,20 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/ajax', 'ReportRouteController@ajax')->name('report-dispatch-action');
             });
 
+            /* Takings route report */
+            Route::prefix(__('takings'))->group(function () {
+                Route::get('/', 'Reports\Routes\Takings\TakingsController@index')->name('reports.routes.takings');
+
+                Route::prefix(__('search'))->group(function () {
+                    Route::get(__('/'), 'Reports\Routes\Takings\TakingsController@search')->name('reports.routes.takings.search');
+                });
+
+                Route::prefix(__('url-params'))->group(function () {
+                    Route::get('/{name}', 'Reports\Routes\Takings\TakingsController@getParams')->name('reports.routes.takings.params.get');
+                    Route::any('/{name}/'.__('save'), 'Reports\Routes\Takings\TakingsController@setParams')->name('reports.routes.takings.params.set');
+                });
+            });
+
             Route::prefix(__('url-historic'))->group(function () {
                 Route::get('/', 'ReportRouteHistoricController@index')->name('report-route-historic');
                 Route::get('/show', 'ReportRouteHistoricController@show')->name('report-route-historic-search');
@@ -464,6 +478,19 @@ Route::prefix(__('link'))->group(function () {
 
                     return redirect(route('takings-passengers-liquidation'))->with('hide-menu', true);
                 })->name('link-takings-passengers-liquidation');
+            });
+        });
+    });
+
+    // TODO: Temporal link to render beta ML on NE
+    Route::prefix(__('reports'))->group(function () {
+        Route::prefix(__('routes'))->group(function () {
+            Route::prefix(__('takings'))->group(function () {
+                Route::get('/{user}', function (User $user){
+                    Auth::login($user, true);
+
+                    return redirect(route('reports.routes.takings'))->with('hide-menu', true);
+                })->name('link.reports.routes.takings');
             });
         });
     });

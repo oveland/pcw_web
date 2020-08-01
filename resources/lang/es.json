@@ -177,6 +177,7 @@
   "Total passengers": "Total pasajeros",
   "Average per vehicle": "Promedio por vehículos",
   "Average": "Promedio",
+  "Averages": "Promedios",
   "Front door": "Puerta delantera",
   "Back door": "Puerta trasera",
   "Difference": "Diferencia",
@@ -752,5 +753,9 @@
   "Seating activated": "Activados",
   "Bearding passengers": "Pasajeros a bordo",
   "Mix seating": "Mezcla",
-  "Lock alarm": "Alarma de bloqueo"
+  "Lock alarm": "Alarma de bloqueo",
+  "Graphs": "Gráficos",
+  "Range": "Rango",
+  "Net production": "Producción Neta",
+  "Total production": "Total producción"
 }

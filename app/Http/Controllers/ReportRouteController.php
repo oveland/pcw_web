@@ -42,7 +42,6 @@ class ReportRouteController extends Controller
      */
     public function __construct(PCWAuthService $authService, RouteService $routeService)
     {
-
         $this->routeService = $routeService;
         $this->authService = $authService;
     }
