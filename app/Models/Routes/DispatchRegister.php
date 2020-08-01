@@ -143,7 +143,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $edited_info
  * @method static Builder|DispatchRegister whereEditUserId($value)
  * @method static Builder|DispatchRegister whereEditedInfo($value)
- * @property-read \App\Models\Routes\RouteTaking $takings
+ * @property-read RouteTaking $takings
  */
 class DispatchRegister extends Model
 {

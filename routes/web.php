@@ -136,6 +136,11 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/ajax', 'ReportRouteController@ajax')->name('route-ajax-action');
             });
 
+            /* Takings route report */
+            Route::prefix(__('takings'))->group(function () {
+                Route::get('/', 'Reports\Routes\Takings\TakingsController@index')->name('reports.routes.takings');
+            });
+
             /* Route report */
             Route::prefix(__('dispatch'))->group(function () {
                 Route::get('/', 'ReportRouteController@index')->name('report-dispatch');
