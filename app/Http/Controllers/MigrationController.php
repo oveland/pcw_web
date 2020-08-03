@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Routes\Dispatch;
+use App\Models\Routes\RouteTariff;
 use Auth;
 use App\CobanVehicle;
 use App\Models\Company\Company;
@@ -237,6 +238,16 @@ class MigrationController extends Controller
 
             try {
                 $route->save();
+                $route->refresh();
+                $routeTariff = $route->tariff;
+                if (!$routeTariff) {
+                    $routeTariff = new RouteTariff();
+                    $routeTariff->route_id = $route->id;
+                }
+                $tariffValue = collect(DB::select("SELECT tarifa FROM tarifas_rutas WHERE id_ruta = $route->id"))->first();
+                $routeTariff->value = $tariffValue ? $tariffValue->tarifa : 0;
+                $routeTariff->save();
+
                 $new ? $totalCreated++ : $totalUpdated++;
             } catch (QueryException $e) {
                 $totalErrors++;

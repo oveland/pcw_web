@@ -18,10 +18,12 @@ class RouteTakingsService
         $takings = $dispatchRegister->takings;
         $takings->fill($data);
 
+        $takings->taken = $takings->total_production > 0 && $takings->net_production > 0;
+
         if ($takings->save()) {
             $response->success = true;
             $response->message = __('Takings registered successfully');
-            $response->taken = $takings->isTaken();
+            $response->taken = $takings->taken;
         } else {
             $response->message = __('Takings not registered');
         }

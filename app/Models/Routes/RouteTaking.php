@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|RouteTaking whereUpdatedAt($value)
  * @mixin Eloquent
  * @property-read DispatchRegister $dispatchRegister
+ * @property bool $taken
+ * @method static Builder|RouteTaking whereTaken($value)
  */
 class RouteTaking extends Model
 {
@@ -59,6 +61,6 @@ class RouteTaking extends Model
 
     public function isTaken()
     {
-        return $this->total_production && $this->net_production;
+        return $this->taken;
     }
 }

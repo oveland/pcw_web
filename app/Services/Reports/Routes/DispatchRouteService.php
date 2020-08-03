@@ -81,7 +81,7 @@ class DispatchRouteService
 
         if ($noTakenTurns) {
             $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
-                return !$dr->takings->isTaken();
+                return !$dr->takings->taken;
             });
         }
 
