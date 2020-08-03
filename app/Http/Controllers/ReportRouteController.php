@@ -74,7 +74,7 @@ class ReportRouteController extends Controller
             $reportsByVehicle->put($vehicleId, CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegistersByVehicle));
         }
 
-        switch ($typeReport && !$noTakenTurns) {
+        switch ($typeReport) {
             case 'group-vehicles':
                 if ($request->get('export')) $this->routeService->export->groupedRouteReport($dispatchRegistersByVehicles, $dateReport);
                 $view = 'reports.route.route.routeReportByVehicle';
