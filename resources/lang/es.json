@@ -701,6 +701,7 @@
   "Error at generate taking register": "Error al generar el registro de recaudo",
   "Taking": "Recaudar",
   "Takings list": "Listado Recaudo",
+  "Takings report": "Reporte de recaudo",
   "Liquidated without taking": "Liquidado sin recaudar",
   "Print total": "Imprimir total",
   "Receipt": "Comprobante",
@@ -757,5 +758,8 @@
   "Graphs": "Gráficos",
   "Range": "Rango",
   "Net production": "Producción Neta",
-  "Total production": "Total producción"
+  "Total production": "Total producción",
+  "All vehicles": "Todos los vehículos",
+  "Others": "Otros",
+  "No taken": "Sin recaudar"
 }

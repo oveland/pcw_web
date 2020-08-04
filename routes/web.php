@@ -171,14 +171,11 @@ Route::group(['middleware' => ['auth']], function () {
             /* Takings route report */
             Route::prefix(__('takings'))->group(function () {
                 Route::get('/', 'Reports\Routes\Takings\TakingsController@index')->name('reports.routes.takings');
-
-                Route::prefix(__('search'))->group(function () {
-                    Route::get(__('/'), 'Reports\Routes\Takings\TakingsController@search')->name('reports.routes.takings.search');
-                });
+                Route::get(__('search'), 'Reports\Routes\Takings\TakingsController@search')->name('reports.routes.takings.search');
+                Route::get(__('export'), 'Reports\Routes\Takings\TakingsController@export')->name('reports.routes.takings.export');
 
                 Route::prefix(__('url-params'))->group(function () {
                     Route::get('/{name}', 'Reports\Routes\Takings\TakingsController@getParams')->name('reports.routes.takings.params.get');
-                    Route::any('/{name}/'.__('save'), 'Reports\Routes\Takings\TakingsController@setParams')->name('reports.routes.takings.params.set');
                 });
             });
 

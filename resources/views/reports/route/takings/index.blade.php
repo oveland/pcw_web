@@ -21,10 +21,10 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div id="reports-takings-container" class="row" url="{{ route('reports.routes.takings.search') }}">
+    <div id="reports-takings-container" class="row" url="{{ route('reports.routes.takings.search') }}" export="{{ route('reports.routes.takings.export') }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
-            <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('reports.routes.takings.params.get', ['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
+            <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('reports.routes.takings.params.get', ['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)" v-on:export-report="exportReport(event)"></search-component>
         </form>
         <!-- end search form -->
 

@@ -40,7 +40,7 @@
 			</thead>
 
 			<tbody>
-			<tr v-for="r in report">
+			<tr v-for="r in report" :class="r.passengers.recorders.count < 0 ? 'bg-danger' : ''">
 				<th width="5%" class="bg-inverse text-white text-center">
 					{{ r.route.name }}<br>
 					<small>{{ r.date }}</small>
@@ -69,7 +69,7 @@
 				<tr>
 					<td colspan="14" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
 				</tr>
-				<tr>
+				<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
 					<td colspan="4" class="text-right text-bold">
 						<i class="fa fa-sliders"></i> {{ $t('Average') }}
 					</td>
@@ -83,7 +83,7 @@
 						<takings-details-component :takings="averages" type="averages"></takings-details-component>
 					</td>
 				</tr>
-				<tr>
+				<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
 					<td colspan="5" class="text-right text-bold uppercase" style="font-size: 1.1em !important;">
 						<i class="icon-layers"></i> {{ $t('Totals') }}
 					</td>
@@ -135,5 +135,9 @@ export default {
 <style>
 .table-report small {
 	font-size: 0.8em !important;
+}
+
+.table-report .bg-danger{
+	background-color: #f7e6e6 !important;
 }
 </style>

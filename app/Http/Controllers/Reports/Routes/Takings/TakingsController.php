@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Reports\Routes\Takings;
 
 use App\Http\Controllers\GeneralController;
-use App\Http\Controllers\Utils\StrTime;
-use App\Models\Routes\DispatchRegister;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\DispatchService;
 use Illuminate\Contracts\View\Factory;
@@ -34,10 +32,9 @@ class TakingsController extends Controller
     }
 
     /**
-     * @param Request $request
      * @return Factory|View
      */
-    public function index(Request $request)
+    public function index()
     {
         $hideMenu = session('hide-menu');
         return view('reports.route.takings.index', compact('hideMenu'));
@@ -45,10 +42,12 @@ class TakingsController extends Controller
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return object
      */
-    public function search(Request $request)
+    private function searchParams(Request $request)
     {
+        $route = $request->get('route');
+        $vehicle = $request->get('vehicle');
         $date = $request->get('date');
         $initialDate = $date;
         $finalDate = null;
@@ -57,64 +56,38 @@ class TakingsController extends Controller
             $finalDate = $date[1];
         }
 
-        $route = $request->get('route');
-        $vehicle = $request->get('vehicle');
+        return (object)compact(['initialDate', 'finalDate', 'route', 'vehicle']);
+    }
 
-        $data = $this->dispatchService->getTurns($initialDate, $finalDate, $route, $vehicle);
+    /**
+     * @param Request $request
+     * @return object
+     */
+    private function findReport(Request $request)
+    {
+        $params = $this->searchParams($request);
+        return $this->dispatchService->getTakingsReport($params->initialDate, $params->finalDate, $params->route, $params->vehicle);
+    }
 
-        $totals = [
-            'passengers' => $data->sum(function ($d) {
-                return $d->passengers->recorders->count;
-            }),
-            'totalProduction' => $data->sum(function ($d) {
-                return $d->takings->totalProduction;
-            }),
-            'control' => $data->sum(function ($d) {
-                return $d->takings->control;
-            }),
-            'fuel' => $data->sum(function ($d) {
-                return $d->takings->fuel;
-            }),
-            'others' => $data->sum(function ($d) {
-                return $d->takings->others;
-            }),
-            'netProduction' => $data->sum(function ($d) {
-                return $d->takings->netProduction;
-            }),
-            'routeTime' => StrTime::segToStrTime($data->sum(function ($d) {
-                return StrTime::toSeg($d->routeTime);
-            })),
-        ];
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $report = $this->findReport($request);
+        return response()->json($report);
+    }
 
-        $averages = [
-            'passengers' => intval($data->average(function ($d) {
-                return $d->passengers->recorders->count;
-            })),
-            'totalProduction' => $data->average(function ($d) {
-                return $d->takings->totalProduction;
-            }),
-            'control' => $data->average(function ($d) {
-                return $d->takings->control;
-            }),
-            'fuel' => $data->average(function ($d) {
-                return $d->takings->fuel;
-            }),
-            'others' => $data->average(function ($d) {
-                return $d->takings->others;
-            }),
-            'netProduction' => $data->average(function ($d) {
-                return $d->takings->netProduction;
-            }),
-            'routeTime' => StrTime::segToStrTime($data->average(function ($d) {
-                return StrTime::toSeg($d->routeTime);
-            })),
-        ];
-
-        return response()->json([
-            'report' => $data,
-            'totals' => $totals,
-            'averages' => $averages,
-        ]);
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function export(Request $request)
+    {
+        $params = $this->searchParams($request);
+        $report = $this->findReport($request);
+        return $this->dispatchService->exportTakingsReport((object)compact(['report', 'params']));
     }
 
     /**
@@ -138,6 +111,7 @@ class TakingsController extends Controller
                 ]);
                 break;
             case __('another'):
+            default:
                 return response()->json([]);
                 break;
         }

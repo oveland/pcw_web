@@ -56,11 +56,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read RouteGoogle $routeGoogle
  * @property int $distance_threshold
  * @property int $sampling_radius
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereDistanceThreshold($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\Route whereSamplingRadius($value)
+ * @method static Builder|Route whereDistanceThreshold($value)
+ * @method static Builder|Route whereSamplingRadius($value)
  * @property-read int|null $control_points_count
  * @property-read int|null $current_dispatch_registers_count
  * @property-read int|null $sub_routes_count
+ * * @property-read RouteTariff $tariff
+ * @property-read \RouteTariff $tariff
  */
 class Route extends Model
 {
@@ -135,5 +137,19 @@ class Route extends Model
         else{
             return $this->hasMany(Route::class)->where('id', $this->id);
         }
+    }
+
+    /**
+     * @return RouteTariff
+     */
+    function getTariffAttribute()
+    {
+        $tariff = RouteTariff::where('route_id', $this->id)->first();
+        if (!$tariff) {
+            $tariff = new RouteTariff();
+            $tariff->route()->associate($this);
+            $tariff->value = 0;
+        }
+        return $tariff;
     }
 }

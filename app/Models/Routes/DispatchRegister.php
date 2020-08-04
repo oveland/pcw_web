@@ -150,6 +150,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|DispatchRegister whereEditUserId($value)
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
+ * @property-read \RouteTariff $tariff
  */
 class DispatchRegister extends Model
 {
@@ -563,11 +564,23 @@ class DispatchRegister extends Model
         return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
+    public function getPassengersAttribute()
+    {
+        return (object)[
+            'recorders' => (object)[
+                'start' => $this->start_recorder,
+                'end' => $this->end_recorder,
+                'count' => intval($this->end_recorder) - intval($this->start_recorder),
+            ]
+        ];
+    }
+
     /**
-     * @return RouteTaking | HasOne
+     * @return RouteTaking
      */
     public function getTakingsAttribute()
     {
+
         $takings = RouteTaking::findByDr($this);
 
         if (!$takings) {
@@ -575,7 +588,19 @@ class DispatchRegister extends Model
             $takings->dispatchRegister()->associate($this);
         }
 
+        $takings->total_production = intval($this->tariff->value) * $this->passengers->recorders->count;
+        $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others;
+
         return $takings;
+    }
+
+    /**
+     * TODO this attribute must be a instance of DispatchTariff!!
+     * @return RouteTariff
+     */
+    public function getTariffAttribute()
+    {
+        return $this->route->tariff;
     }
 
     const CREATED_AT = 'date_created';

@@ -31,6 +31,7 @@ let camerasReportView = new Vue({
     },
     data: {
         urlList: String,
+        urlExport: String,
         report: [],
         totals: {},
         averages: {},
@@ -56,11 +57,13 @@ let camerasReportView = new Vue({
         },
     },
     methods: {
-        searchReport: function () {
+        searchReport() {
             const form = $('.form-search-report');
             form.find('.btn-search-report').addClass(loadingClass);
 
-            axios.get(this.urlList, {params: this.searchParams}).then((r) => {
+            axios.get(this.urlList, {
+                params: this.searchParams
+            }).then((r) => {
                 return r.data;
             }).then((data) => {
                 this.report = data.report;
@@ -72,9 +75,13 @@ let camerasReportView = new Vue({
                 $('.report-container').hide().fadeIn();
                 form.find('.btn-search-report').removeClass(loadingClass);
             });
+        },
+        exportReport() {
+            window.open(`${this.urlExport}?${$.param(this.searchParams)}`, '_blank');
         }
     },
     mounted: function () {
         this.urlList = this.$el.attributes.url.value;
+        this.urlExport = this.$el.attributes.export.value;
     },
 });

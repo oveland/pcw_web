@@ -6,7 +6,7 @@
             </button>
 
 			<button type="button" class="btn green-meadow btn-search-report btn-outline btn-circle" @click="exportReport()">
-				<i class="fa fa-download"></i> {{ $t('Export') }} <i class="fa fa-cog fa-spin"></i>
+				<i class="fa fa-download"></i> {{ $t('Export') }}
 			</button>
         </div>
         <div class="panel-body p-b-15">
@@ -103,7 +103,7 @@
 				this.$emit('search-report');
             },
 			exportReport: function () {
-				ginfo(this.$t('Feature on development'));
+				this.$emit('export-report');
             }
         },
         components: {

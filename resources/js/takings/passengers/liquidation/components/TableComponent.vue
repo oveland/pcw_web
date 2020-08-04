@@ -60,7 +60,7 @@
                     </span>
                 </td>
                 <td class="col-md-2 text-center">
-                    <span v-if="mark.turn.driver">
+                    <span v-if="mark.turn.driver && mark.turn.driver.first_name">
                         {{ mark.turn.driver.first_name + (mark.turn.driver.last_name ? (' ' + mark.turn.driver.last_name):'') }}
                     </span>
                 </td>
