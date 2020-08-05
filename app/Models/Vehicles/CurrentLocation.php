@@ -10,6 +10,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Vehicles\CurrentLocation
@@ -88,6 +89,10 @@ class CurrentLocation extends Model
      */
     public function getDateAttribute($date)
     {
+        if (Str::contains($date, '-')) {
+            return Carbon::createFromFormat('Y-m-d H:i:s', explode('.', $date)[0]);
+        }
+
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
@@ -131,9 +136,8 @@ class CurrentLocation extends Model
 
         if (!$currentLocation) {
             $currentLocation = CurrentLocation::create([
-                '',
                 'vehicle_id' => $vehicle->id,
-                'date' => '2020-01-01 00:00:00.0',
+                'date' => Carbon::createFromFormat('Y-m-d H:i:s', '2020-01-01 00:00:00'),
                 'latitude' => 3.4529876122683594,
                 'longitude' => -76.51858507170815,
                 'orientation' => 0,
@@ -141,8 +145,8 @@ class CurrentLocation extends Model
                 'current_mileage' => 0,
                 'speed' => 0,
                 'vehicle_status_id' => 1,
-                'date_created' => Carbon::now()->toDateTimeString().".0",
-                'last_updated' => Carbon::now()->toDateTimeString().".0"
+                'date_created' => Carbon::now(),
+                'last_updated' => Carbon::now()
             ]);
         }
 
