@@ -66,7 +66,7 @@ class TakingsController extends Controller
     private function findReport(Request $request)
     {
         $params = $this->searchParams($request);
-        return $this->dispatchService->getTakingsReport($params->initialDate, $params->finalDate, $params->route, $params->vehicle);
+        return $this->dispatchService->getTakingsReport($params->initialDate, $params->finalDate, $params->route, $params->vehicle, 'takings');
     }
 
     /**

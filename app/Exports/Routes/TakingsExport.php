@@ -34,29 +34,31 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
 
             $observations = $report->takings->observations;
 
-            if(!$report->takings->isTaken){
-                $observations = "      << ".strtoupper(__('No taken'))." >>";
+            if (!$report->takings->isTaken && $report->forNormalTakings) {
+                $observations = "      << " . strtoupper(__('No taken')) . " >>";
             }
 
+            $route = $report->onlyControlTakings ? __('Takings without dispatch turns') : $report->route->name;
+
             $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                      # A CELL
-                __('Date') => $report->date,                              # B CELL
-                __('Vehicle') => $report->vehicle->number,                                         # C CELL
-                __('Route') => $report->route->name,                                        # D CELL
-                __('Round trip') => $report->roundTrip,                                  # E CELL
-                __('Turn') => $report->turn,                                  # E CELL
-                __('Departure time') => $report->departureTime,                       # F CELL
-                __('Arrival time') => $report->arrivalTime,                       # F CELL
-                __('Route time') => $report->routeTime,                       # F CELL
-                __('Start recorder') => $report->passengers->recorders->start,                                    # G CELL
-                __('End recorder') => $report->passengers->recorders->end,                                        # H CELL
-                __('Passengers') => $report->passengers->recorders->count,                                        # H CELL
-                __('Total production') => intval($report->takings->totalProduction),                                        # H CELL
-                __('Control') => intval($report->takings->control),                                        # H CELL
-                __('Fuel') => intval($report->takings->fuel),                                        # H CELL
-                __('Others') => intval($report->takings->others),                                        # H CELL
-                __('Net production') => intval($report->takings->netProduction),                                        # H CELL
-                __('Observations') => $observations,                                        # H CELL
+                __('N°') => count($dataExcel) + 1,                                                                  # A CELL
+                __('Date') => $report->date,                                                                        # B CELL
+                __('Vehicle') => $report->vehicle->number,                                                          # C CELL
+                __('Route') => $route,                                                                              # D CELL
+                __('Round trip') => $report->forNormalTakings ? $report->roundTrip : '',                            # E CELL
+                __('Turn') => $report->forNormalTakings ? $report->turn : '',                                       # E CELL
+                __('Departure time') => $report->forNormalTakings ? $report->departureTime : '',                    # F CELL
+                __('Arrival time') => $report->forNormalTakings ? $report->arrivalTime : '',                        # G CELL
+                __('Route time') => $report->forNormalTakings ? $report->routeTime : '',                            # H CELL
+                __('Start recorder') => $report->forNormalTakings ? $report->passengers->recorders->start : '',     # I CELL
+                __('End recorder') => $report->forNormalTakings ? $report->passengers->recorders->end : '',         # J CELL
+                __('Passengers') => $report->forNormalTakings ? $report->passengers->recorders->count : 0,          # K CELL
+                __('Total production') => intval($report->takings->totalProduction),                                # L CELL
+                __('Control') => intval($report->takings->control),                                                 # M CELL
+                __('Fuel') => intval($report->takings->fuel),                                                       # N CELL
+                __('Others') => intval($report->takings->others),                                                   # O CELL
+                __('Net production') => intval($report->takings->netProduction),                                    # P CELL
+                __('Observations') => $observations,                                                                # Q CELL
             ];
         }
 

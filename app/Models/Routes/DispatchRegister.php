@@ -157,6 +157,7 @@ class DispatchRegister extends Model
     const IN_PROGRESS = "En camino";
     const COMPLETE = "Terminó";
     const CANCELLED = "No terminó";
+    const TAKINGS = "takings";
 
     function getDateFormat()
     {
@@ -227,6 +228,16 @@ class DispatchRegister extends Model
         return $query->where('status', $this::COMPLETE);
     }
 
+    public function onlyControlTakings()
+    {
+        return $this->status === self::TAKINGS;
+    }
+
+    public function forNormalTakings()
+    {
+        return !$this->onlyControlTakings();
+    }
+
     /**
      * @param Builder | DispatchRegister $query
      * @param $type
@@ -243,6 +254,11 @@ class DispatchRegister extends Model
                 break;
             case 'cancelled':
                 return $query->cancelled();
+                break;
+            case 'takings':
+                return $query->where(function ($query) use ($type) {
+                    $query->completed()->orWhere('status', $type);
+                });
                 break;
             default:
                 return $query;
@@ -405,7 +421,7 @@ class DispatchRegister extends Model
             'route_time' => $this->getRouteTime(),
             'routeTime' => $this->getRouteTime(),
 
-            'route' => $this->route->getAPIFields(),
+            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
             'vehicle' => $this->vehicle->getAPIFields(),
             'status' => $this->status,
 
@@ -414,7 +430,9 @@ class DispatchRegister extends Model
 
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
             'passengers' => $passengers,
-            'takings' => $this->takings->getAPIFields()
+            'takings' => $this->takings->getAPIFields(),
+            'onlyControlTakings' => $this->onlyControlTakings(),
+            'forNormalTakings' => $this->forNormalTakings()
         ];
     }
 
@@ -600,7 +618,13 @@ class DispatchRegister extends Model
      */
     public function getTariffAttribute()
     {
-        return $this->route->tariff;
+        $tariff = $this->onlyControlTakings() ? null : $this->route->tariff;
+        if ($this->onlyControlTakings() || !$tariff) {
+            $tariff = new RouteTariff();
+            $tariff->value = 0;
+        }
+
+        return $tariff;
     }
 
     const CREATED_AT = 'date_created';

@@ -45,21 +45,30 @@
 					{{ r.route.name }}<br>
 					<small>{{ r.date }}</small>
 				</th>
-				<th width="5%" class="bg-inverse text-white text-center">{{ r.roundTrip }}</th>
-				<th width="5%" class="bg-inverse text-white text-center">{{ r.turn }}</th>
-				<th width="5%" class="bg-inverse text-white text-center">{{ r.vehicle.number }}</th>
-				<th width="5%" class="text-center">
+				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.roundTrip }}</th>
+				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.turn }}</th>
+				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.vehicle.number }}</th>
+				<th v-if="r.forNormalTakings" width="5%" class="text-center">
 					<small>{{ r.departureTime }}</small><br>
 					<small>{{ r.arrivalTime }}</small>
 					<hr class="m-0">
 					<span>{{ r.routeTime }}</span>
 				</th>
-				<th width="5%" class="text-center">
+				<th v-if="r.forNormalTakings" width="5%" class="text-center">
 					<small>{{ r.passengers.recorders.start }}</small><br>
 					<small>{{ r.passengers.recorders.end }}</small>
 					<hr class="m-0">
 					<span>{{ r.passengers.recorders.count }}</span>
 				</th>
+
+				<td v-if="r.onlyControlTakings" colspan="5" class="text-center">
+					<h4>
+						<i class="icon-briefcase faa-ring"></i>
+						<i class="fa fa-dollar faa-vertical"></i>
+						{{ $t('Takings without dispatch turns') }}
+					</h4>
+				</td>
+
 				<th width="5%">
 					<takings-details-component :takings="r.takings"></takings-details-component>
 				</th>

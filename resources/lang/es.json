@@ -761,5 +761,6 @@
   "Total production": "Total producción",
   "All vehicles": "Todos los vehículos",
   "Others": "Otros",
-  "No taken": "Sin recaudar"
+  "No taken": "Sin recaudar",
+  "Takings without dispatch turns": "Recaudo sin turnos de despacho"
 }

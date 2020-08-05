@@ -30,11 +30,14 @@ class DispatchService
      */
     function getTurns($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'completed')
     {
-        $dr = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->company, $initialDate, $finalDate, $route, $vehicle)->type($type)->get();
+        $dr = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->company, $initialDate, $finalDate, $route, $vehicle)->type($type)
+            ->get();
 
         return $dr->map(function (DispatchRegister $dr) {
             return $dr->getAPIFields();
-        })->sortBy('id')->values();
+        })->sortBy(function ($dr){
+            return "$dr->date.$dr->id";
+        })->values();
     }
 
     /**
