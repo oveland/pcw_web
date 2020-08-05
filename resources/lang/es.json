@@ -675,5 +675,8 @@
   "Takings not registered": "Recaudo no registrado",
   "Takings registered successfully": "Recaudo registrado correctamente",
   "No taken turns": "Sin recaudar",
-  "Tariff": "Tarifa"
+  "Tariff": "Tarifa",
+  "There are not dispatch registers on this date": "No hay turnos de despacho en esta fecha",
+  "Register takings": "Registrar recaudo",
+  "To register takings you must be select a vehicle": "Para registrar recaudo debe seleccionar un vehículo"
 }

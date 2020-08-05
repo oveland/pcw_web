@@ -5,24 +5,30 @@
                 <i class="fa fa-bus"></i> <strong>@lang('Vehicle'):</strong>
                 <span>{{ $dispatchRegister->vehicle->number }}</span>
             </h4>
-            <div class="col-md-12">
-                <h5>
-                    <i class="icon-directions"></i> <strong>@lang('Round trip'):</strong>
-                    <span>{{ $dispatchRegister->round_trip }}</span>
-                </h5>
-                <h5>
-                    <i class="fa fa-users"></i> <strong>@lang('Total') @lang('passengers'):</strong>
-                    <span>{{ $dispatchRegister->passengers->recorders->count }}</span>
-                </h5>
-                <h5>
-                    <i class="icon-compass"></i> <strong>@lang('Recorders'):</strong>
-                    <span>{{ $dispatchRegister->passengers->recorders->start }} - {{ $dispatchRegister->passengers->recorders->end }}</span>
-                </h5>
-                <h5>
-                    <i class="fa fa-dollar"></i><strong style="margin-left: 8px">@lang('Tariff'):</strong>
-                    <span>{{ $dispatchRegister->tariff->value }}</span>
-                </h5>
-            </div>
+            <h4>
+                <i class="fa fa-calendar"></i>
+                <span>{{ $dispatchRegister->date }}</span>
+            </h4>
+            @if(!$dispatchRegister->onlyControlTakings())
+                <div class="col-md-12">
+                    <h5>
+                        <i class="icon-directions"></i> <strong>@lang('Round trip'):</strong>
+                        <span>{{ $dispatchRegister->round_trip }}</span>
+                    </h5>
+                    <h5>
+                        <i class="fa fa-users"></i> <strong>@lang('Total') @lang('passengers'):</strong>
+                        <span>{{ $dispatchRegister->passengers->recorders->count }}</span>
+                    </h5>
+                    <h5>
+                        <i class="icon-compass"></i> <strong>@lang('Recorders'):</strong>
+                        <span>{{ $dispatchRegister->passengers->recorders->start }} - {{ $dispatchRegister->passengers->recorders->end }}</span>
+                    </h5>
+                    <h5>
+                        <i class="fa fa-dollar"></i><strong style="margin-left: 8px">@lang('Tariff'):</strong>
+                        <span>{{ $dispatchRegister->tariff->value }}</span>
+                    </h5>
+                </div>
+            @endif
         </div>
     </div>
 

@@ -149,6 +149,7 @@ class DispatchRegister extends Model
 {
     const IN_PROGRESS = "En camino";
     const COMPLETE = "Terminó";
+    const TAKINGS = "takings";
 
     function getDateFormat()
     {
@@ -369,6 +370,11 @@ class DispatchRegister extends Model
             ->get();
     }
 
+    public function onlyControlTakings()
+    {
+        return $this->status === self::TAKINGS;
+    }
+
     public function getAPIFields()
     {
         return (object)[
@@ -381,12 +387,13 @@ class DispatchRegister extends Model
             'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
             'difference_time' => $this->arrival_time_difference,
             'route_time' => $this->getRouteTime(),
-            'route' => $this->route->getAPIFields(),
+            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
             'vehicle' => $this->vehicle->getAPIFields(),
             'status' => $this->status,
             'driver_id' => $this->driver ? $this->driver->id : null,
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
+            'forTakings' => $this->onlyControlTakings()
         ];
     }
 
@@ -546,7 +553,13 @@ class DispatchRegister extends Model
      */
     public function getTariffAttribute()
     {
-        return $this->route->tariff;
+        $tariff = $this->onlyControlTakings() ? null : $this->route->tariff;
+        if ($this->onlyControlTakings() || !$tariff) {
+            $tariff = new RouteTariff();
+            $tariff->value = 0;
+        }
+
+        return $tariff;
     }
 
     const CREATED_AT = 'date_created';

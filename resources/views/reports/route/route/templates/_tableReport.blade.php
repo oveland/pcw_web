@@ -252,7 +252,7 @@
                 </td>
             @endif
 
-            @if( false )
+            @if( true )
                 <td width="10%" class="text-center">
                     <span class="tooltips" data-title="@lang('Round trip')">
                         {{ $dispatchRegister->passengersBySensor }}

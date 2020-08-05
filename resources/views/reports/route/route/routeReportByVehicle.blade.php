@@ -47,5 +47,32 @@
         </div>
     </div>
 @else
-    @include('partials.alerts.noRegistersFound')
+    @include('partials.alerts.noRegistersFound', ['message' => 'There are not dispatch registers on this date'])
+
+    @if( Auth::user()->canMakeTakings())
+        <div class="m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3" style="position: relative;top: -60px;z-index: 10000;">
+            <div class="col-md-12">
+                <div class="details col-md-8 col-md-offset-3">
+                    @if($vehicleReport && $vehicleReport != 'all' && $dateReport)
+                    <a id="btn-taking-empty" href="#modal-takings-passengers" data-toggle="modal" onclick="showTakingsForm('{{ route("operation-routes-takings-form-create", ["vehicle" => $vehicleReport, 'date' => $dateReport]) }}')"
+                       class="btn purple-sharp btn-outline sbold uppercase faa-parent animated-hover btn-circle tooltips">
+                        <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
+                        <i class="fa fa-dollar faa-vertical" style="margin-right: 0px; margin-left: 0"></i>
+
+                        @lang('Register takings')
+                    </a>
+                    @else
+                        <p>@lang('To register takings you must be select a vehicle')</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <script>
+            function showTakingsForm(url) {
+                let modalTakingsPassengers = $('#modal-takings-passengers');
+                let modalBody = modalTakingsPassengers.find('.modal-body');
+                modalBody.html($('.loading').html()).load(url);
+            }
+        </script>
+    @endif
 @endif

@@ -33,14 +33,17 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin Eloquent
  * @property-read DispatchRegister $dispatchRegister
  * @property bool $taken
+ * @method static Builder|RouteTaking newModelQuery()
+ * @method static Builder|RouteTaking newQuery()
+ * @method static Builder|RouteTaking query()
  * @method static Builder|RouteTaking whereTaken($value)
  */
 class RouteTaking extends Model
 {
     protected $guarded = [];
-    protected $fillable = ["total_production", "control", "fuel", "others", "net_production", "observations"];
+    protected $fillable = ["total_production", "control", "fuel", "others", "observations"];
 
-    protected function getDateFormat()
+    public function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }
@@ -62,5 +65,20 @@ class RouteTaking extends Model
     public function isTaken()
     {
         return $this->taken;
+    }
+
+    /**
+     * @return object
+     */
+    public function getAPIFields()
+    {
+        return (object)[
+            'totalProduction' => $this->total_production,
+            'control' => $this->control,
+            'fuel' => $this->fuel,
+            'others' => $this->others,
+            'netProduction' => $this->net_production,
+            'observations' => $this->observations,
+        ];
     }
 }
