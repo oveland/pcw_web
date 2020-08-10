@@ -81,7 +81,7 @@ class ControlPointService
 
             $controlPointTime = ControlPointTime::where('control_point_id', $controlPoint->id)
                 ->where('fringe_id', $dispatchRegister->departure_fringe_id)
-                ->get()->first();
+                ->first();
 
             $hasReport = false;
             $scheduledControlPointTime = $controlPointTime ? StrTime::addStrTime($departureTime, $controlPointTime->time_from_dispatch) : '--:--:--';
@@ -97,6 +97,7 @@ class ControlPointService
                     return $report->dispatchRegister->departure_time;
                 })
                 ->where('control_point_id', $controlPoint->id)
+                ->sortBy('id')
                 ->first();
 
             if ($controlPointTimeReport || $first || ($last && $dispatchRegister->complete() && $dispatchRegister->arrival_time_scheduled)) {
@@ -115,7 +116,7 @@ class ControlPointService
                 } else { // On middle control points calculates the params report with the interpolation process
                     $controlPointTime = ControlPointTime::where('control_point_id', $controlPoint->id)
                         ->where('fringe_id', $dispatchRegister->departure_fringe_id)
-                        ->get()->first();
+                        ->first();
 
                     if ($controlPointTime && intval($controlPointTimeReport->distancem)) {
                         $timeScheduled = $controlPointTime->time_from_dispatch;
