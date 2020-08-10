@@ -16,7 +16,7 @@
 			<span class="pull-left">{{ $t('Others') }}:</span>
 			<span>{{ takings.others | numberFormat('$0,0') }}</span>
 		</p>
-		<p class="text-bold text-right">
+		<p class="text-bold text-right" :class="hideNet ? 'hide' : ''">
 			<span class="pull-left">{{ $t('Net production') }}:</span>
 			<span>{{ takings.netProduction | numberFormat('$0,0') }}</span>
 		</p>
@@ -33,6 +33,7 @@ export default {
 	name: "TakingsDetailsComponent",
 	props: {
 		takings: Object,
+		hideNet: Boolean,
 		type: String
 	}
 }

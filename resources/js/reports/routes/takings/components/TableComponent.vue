@@ -89,7 +89,7 @@
 						<i class="icon-users"></i> {{ $t('Passengers') }}: {{ averages.passengers }}
 					</td>
 					<td class="text-center">
-						<takings-details-component :takings="averages" type="averages"></takings-details-component>
+						<takings-details-component :takings="averages" type="averages" hide-net="true"></takings-details-component>
 					</td>
 				</tr>
 				<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">

@@ -46,6 +46,18 @@
                     </div>
                 </div>
 
+				<div class="col-md-2 hide">
+					<div class="form-group">
+						<label class="control-label">{{ $t('Driver') }}</label>
+						<div class="form-group">
+							<multiselect track-by="number" label="number" :options="search.vehicles" :clear-on-select="true"
+										 @input="searchReport()" v-model="search.vehicle"
+										 :option-height="104" :searchable="true" :allow-empty="true"
+										 :placeholder="$t('Select a vehicle')"></multiselect>
+						</div>
+					</div>
+				</div>
+
                 <div class="col-md-3">
                     <div class="form-group">
 						<label class="control-label">{{ $t('Date') }} | {{ $t('Range') }} <input type="checkbox" v-model="search.dateRange" class="pull-right"></label>

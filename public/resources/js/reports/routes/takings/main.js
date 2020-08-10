@@ -1084,6 +1084,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1335,6 +1347,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "TakingsDetailsComponent",
   props: {
     takings: Object,
+    hideNet: Boolean,
     type: String
   }
 });
@@ -5854,6 +5867,46 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
+        _c("div", { staticClass: "col-md-2 hide" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { staticClass: "control-label" }, [
+              _vm._v(_vm._s(_vm.$t("Driver")))
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "form-group" },
+              [
+                _c("multiselect", {
+                  attrs: {
+                    "track-by": "number",
+                    label: "number",
+                    options: _vm.search.vehicles,
+                    "clear-on-select": true,
+                    "option-height": 104,
+                    searchable: true,
+                    "allow-empty": true,
+                    placeholder: _vm.$t("Select a vehicle")
+                  },
+                  on: {
+                    input: function($event) {
+                      return _vm.searchReport()
+                    }
+                  },
+                  model: {
+                    value: _vm.search.vehicle,
+                    callback: function($$v) {
+                      _vm.$set(_vm.search, "vehicle", $$v)
+                    },
+                    expression: "search.vehicle"
+                  }
+                })
+              ],
+              1
+            )
+          ])
+        ]),
+        _vm._v(" "),
         _c("div", { staticClass: "col-md-3" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [
@@ -6216,7 +6269,11 @@ var render = function() {
                     { staticClass: "text-center" },
                     [
                       _c("takings-details-component", {
-                        attrs: { takings: _vm.averages, type: "averages" }
+                        attrs: {
+                          takings: _vm.averages,
+                          type: "averages",
+                          "hide-net": "true"
+                        }
                       })
                     ],
                     1
@@ -6418,17 +6475,24 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("p", { staticClass: "text-bold text-right" }, [
-        _c("span", { staticClass: "pull-left" }, [
-          _vm._v(_vm._s(_vm.$t("Net production")) + ":")
-        ]),
-        _vm._v(" "),
-        _c("span", [
-          _vm._v(
-            _vm._s(_vm._f("numberFormat")(_vm.takings.netProduction, "$0,0"))
-          )
-        ])
-      ]),
+      _c(
+        "p",
+        {
+          staticClass: "text-bold text-right",
+          class: _vm.hideNet ? "hide" : ""
+        },
+        [
+          _c("span", { staticClass: "pull-left" }, [
+            _vm._v(_vm._s(_vm.$t("Net production")) + ":")
+          ]),
+          _vm._v(" "),
+          _c("span", [
+            _vm._v(
+              _vm._s(_vm._f("numberFormat")(_vm.takings.netProduction, "$0,0"))
+            )
+          ])
+        ]
+      ),
       _vm._v(" "),
       _vm.takings.observations
         ? _c("p", { staticClass: "text-info" }, [
