@@ -6490,7 +6490,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm.takings.observations
+      _vm.takings.observations && _vm.totals !== "totals"
         ? _c("p", { staticClass: "text-info" }, [
             _c("span", { staticClass: "pull-left" }, [
               _vm._v(_vm._s(_vm.$t("Observations")) + ":")

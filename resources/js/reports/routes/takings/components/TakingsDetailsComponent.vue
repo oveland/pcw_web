@@ -20,7 +20,7 @@
 			<span class="pull-left">{{ $t('Net production') }}:</span>
 			<span>{{ takings.netProduction | numberFormat('$0,0') }}</span>
 		</p>
-		<p v-if="takings.observations" class="text-info">
+		<p v-if="takings.observations && totals !== 'totals'" class="text-info">
 			<span class="pull-left">{{ $t('Observations') }}:</span>
 			<br>
 			<span>{{ takings.observations }}</span>
