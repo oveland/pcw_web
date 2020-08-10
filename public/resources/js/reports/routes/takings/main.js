@@ -1285,6 +1285,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
@@ -6099,7 +6101,20 @@ var render = function() {
                         attrs: { width: "5%" }
                       },
                       [
-                        _vm._v("\n\t\t\t\t" + _vm._s(r.route.name)),
+                        r.forNormalTakings
+                          ? _c("span", [_vm._v(_vm._s(r.route.name))])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        r.onlyControlTakings
+                          ? _c("span", [
+                              _vm._v(
+                                _vm._s(_vm.$t("Vehicle")) +
+                                  " " +
+                                  _vm._s(r.vehicle.number)
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
                         _c("br"),
                         _vm._v(" "),
                         _c("small", [_vm._v(_vm._s(r.date))])

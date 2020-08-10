@@ -42,7 +42,9 @@
 			<tbody>
 			<tr v-for="r in report" :class="r.passengers.recorders.count < 0 ? 'bg-danger' : ''">
 				<th width="5%" class="bg-inverse text-white text-center">
-					{{ r.route.name }}<br>
+					<span v-if="r.forNormalTakings">{{ r.route.name }}</span>
+					<span v-if="r.onlyControlTakings">{{ $t('Vehicle') }} {{ r.vehicle.number }}</span>
+					<br>
 					<small>{{ r.date }}</small>
 				</th>
 				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.roundTrip }}</th>
