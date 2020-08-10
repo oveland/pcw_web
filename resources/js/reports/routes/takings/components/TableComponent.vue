@@ -70,7 +70,7 @@
 				</td>
 
 				<th width="5%">
-					<takings-details-component :takings="r.takings"></takings-details-component>
+					<takings-details-component :takings="r.takings" :hide-net="true"></takings-details-component>
 				</th>
 			</tr>
 			</tbody>
@@ -89,7 +89,7 @@
 						<i class="icon-users"></i> {{ $t('Passengers') }}: {{ averages.passengers }}
 					</td>
 					<td class="text-center">
-						<takings-details-component :takings="averages" type="averages" hide-net="true"></takings-details-component>
+						<takings-details-component :takings="averages" type="averages"></takings-details-component>
 					</td>
 				</tr>
 				<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">

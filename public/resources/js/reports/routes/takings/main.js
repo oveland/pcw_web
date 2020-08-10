@@ -6218,7 +6218,7 @@ var render = function() {
                       { attrs: { width: "5%" } },
                       [
                         _c("takings-details-component", {
-                          attrs: { takings: r.takings }
+                          attrs: { takings: r.takings, "hide-net": true }
                         })
                       ],
                       1
@@ -6269,11 +6269,7 @@ var render = function() {
                     { staticClass: "text-center" },
                     [
                       _c("takings-details-component", {
-                        attrs: {
-                          takings: _vm.averages,
-                          type: "averages",
-                          "hide-net": "true"
-                        }
+                        attrs: { takings: _vm.averages, type: "averages" }
                       })
                     ],
                     1
