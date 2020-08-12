@@ -35,7 +35,7 @@ class DispatchService
 
         return $dr->map(function (DispatchRegister $dr) {
             return $dr->getAPIFields();
-        })->sortBy(function ($dr){
+        })->sortBy(function ($dr) {
             return "$dr->date.$dr->id";
         })->values();
     }
@@ -51,6 +51,13 @@ class DispatchService
     public function getTakingsReport($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'completed')
     {
         $dispatchRegisters = $this->getTurns($initialDate, $finalDate, $route, $vehicle, $type);
+
+        $totalObservations = "";
+
+        foreach ($dispatchRegisters as $d) {
+            $observations = $d->takings->observations;
+            if ($observations) $totalObservations .= ($finalDate ? "\n$d->date " : ''). __('Round trip') . " $d->roundTrip: $observations. ";
+        }
 
         $totals = [
             'passengers' => $dispatchRegisters->sum(function ($d) {
@@ -74,9 +81,10 @@ class DispatchService
             'routeTime' => StrTime::segToStrTime($dispatchRegisters->sum(function ($d) {
                 return StrTime::toSeg($d->routeTime);
             })),
-            'hasInvalidCounts' => $dispatchRegisters->filter(function ($d){
+            'hasInvalidCounts' => $dispatchRegisters->filter(function ($d) {
                 return $d->passengers->recorders->count < 0;
-            })->count()
+            })->count(),
+            'observations' => $totalObservations
         ];
 
         $averages = [

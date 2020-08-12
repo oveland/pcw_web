@@ -294,7 +294,7 @@ abstract class PhotoRekognitionService
     {
         $op = intval($op);
         $level = 1;
-        if ($op > 35) {
+        if ($op >= 35) {
             $level = 2;
         }
         if ($op > 50) {

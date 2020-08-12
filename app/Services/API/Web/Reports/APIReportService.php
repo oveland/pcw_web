@@ -9,12 +9,22 @@
 namespace App\Services\API\Web\Reports;
 
 use App\Models\Routes\DispatchRegister;
+use App\Models\Vehicles\Vehicle;
 use App\Services\API\Web\Contracts\APIWebInterface;
 use App\Services\Reports\Routes\ControlPointService;
+use App\Services\Reports\Routes\DispatchRouteService;
+use App\Services\Reports\Routes\DispatchService;
+use FontLib\TrueType\Collection;
 use Illuminate\Http\JsonResponse;
 
 class APIReportService implements APIWebInterface
 {
+
+    /**
+     * @var DispatchService
+     */
+    private $dispatchService;
+
     /**
      * APIReportService constructor.
      * @param $service
@@ -35,6 +45,9 @@ class APIReportService implements APIWebInterface
             case 'control-points':
                 return $this->buildControlPointReport();
                 break;
+            case 'takings-daily':
+                return $this->buildTakingsReport();
+                break;
             default:
                 return response()->json([
                     'error' => true,
@@ -43,6 +56,30 @@ class APIReportService implements APIWebInterface
                 break;
         }
 
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    private function buildTakingsReport()
+    {
+        $vehicle = Vehicle::find($this->request->get('vehicle'));
+        $date = $this->request->get('date');
+
+        if ($vehicle && $date) {
+            $this->dispatchService = new DispatchService($vehicle->company);
+
+            $report = $this->dispatchService->getTakingsReport($date, null, null, $vehicle->id);
+
+            return response()->json([
+                'error' => false,
+                'report' => $report
+            ]);
+        }
+        return response()->json([
+            'error' => true,
+            'message' => __('Vehicle not found')
+        ]);
     }
 
     /**
