@@ -5,17 +5,17 @@
 			<thead>
 			<tr class="inverse">
 				<th class="">
-					<i class="fa fa-flag text-muted"></i><br>
-					{{ $t('Route') }}<br>
+					<i class="fa fa-car text-muted"></i><br>
+					{{ $t('Vehicle') }}<br>
 					<small>{{ $t('Date') }}</small>
+				</th>
+				<th class="">
+					<i class="fa fa-flag text-muted"></i><br>
+					{{ $t('Route') }}
 				</th>
 				<th>
 					<i class="fa fa-retweet text-muted"></i><br>
 					{{ $t('Round Trip') }}
-				</th>
-				<th class="">
-					<i class="fa fa-car text-muted"></i><br>
-					{{ $t('Vehicle') }}
 				</th>
 				<th class="text-center">
 					<i class="fa fa-users text-muted"></i><br>
@@ -24,7 +24,7 @@
 						{{ $t('Recorder') }}
 					</small>
 				</th>
-				<th width="10%">
+				<th width="40%">
 					<i class="icon-briefcase"></i><br>
 					{{ $t('Takings') }}
 				</th>
@@ -34,13 +34,14 @@
 			<tbody>
 			<tr v-for="r in report" :class="r.passengers.recorders.count < 0 ? 'bg-danger' : ''">
 				<th width="5%" class="bg-inverse text-white text-center">
-					<span v-if="r.forNormalTakings">{{ r.route.name }}</span>
-					<span v-if="r.onlyControlTakings">{{ $t('Vehicle') }} {{ r.vehicle.number }}</span>
+					<span>{{ r.vehicle.number }}</span>
 					<br>
 					<small>{{ r.date }}</small>
 				</th>
+				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">
+					{{ r.route.name }}
+				</th>
 				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.roundTrip }}</th>
-				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.vehicle.number }}</th>
 				<th v-if="r.forNormalTakings" width="5%" class="text-center">
 					<small>{{ r.passengers.recorders.start }}</small><br>
 					<small>{{ r.passengers.recorders.end }}</small>
@@ -56,7 +57,7 @@
 					</h4>
 				</td>
 
-				<th width="5%">
+				<th width="40%">
 					<takings-details-component :takings="r.takings" :hide-net="true"></takings-details-component>
 				</th>
 			</tr>
@@ -75,7 +76,7 @@
 					<td class="text-center text-bold">
 						<i class="icon-users"></i> {{ $t('Passengers') }}: {{ averages.passengers }}
 					</td>
-					<td class="text-center">
+					<td class="text-center" width="40%">
 						<takings-details-component :takings="averages" type="averages"></takings-details-component>
 					</td>
 				</tr>
@@ -89,7 +90,7 @@
 					<td class="text-center text-bold" style="font-size: 1.1em !important;">
 						<i class="icon-users"></i> {{ $t('Passengers') }}: {{ totals.passengers }}
 					</td>
-					<td class="text-center">
+					<td class="text-center" width="40%">
 						<takings-details-component :takings="totals" type="totals"></takings-details-component>
 					</td>
 				</tr>

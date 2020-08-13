@@ -1272,6 +1272,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
@@ -6019,12 +6020,18 @@ var render = function() {
             _c("thead", [
               _c("tr", { staticClass: "inverse" }, [
                 _c("th", {}, [
-                  _c("i", { staticClass: "fa fa-flag text-muted" }),
+                  _c("i", { staticClass: "fa fa-car text-muted" }),
                   _c("br"),
-                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.$t("Route"))),
+                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.$t("Vehicle"))),
                   _c("br"),
                   _vm._v(" "),
                   _c("small", [_vm._v(_vm._s(_vm.$t("Date")))])
+                ]),
+                _vm._v(" "),
+                _c("th", {}, [
+                  _c("i", { staticClass: "fa fa-flag text-muted" }),
+                  _c("br"),
+                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.$t("Route")) + "\n\t\t\t")
                 ]),
                 _vm._v(" "),
                 _c("th", [
@@ -6033,12 +6040,6 @@ var render = function() {
                   _vm._v(
                     "\n\t\t\t\t" + _vm._s(_vm.$t("Round Trip")) + "\n\t\t\t"
                   )
-                ]),
-                _vm._v(" "),
-                _c("th", {}, [
-                  _c("i", { staticClass: "fa fa-car text-muted" }),
-                  _c("br"),
-                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.$t("Vehicle")) + "\n\t\t\t")
                 ]),
                 _vm._v(" "),
                 _c("th", { staticClass: "text-center" }, [
@@ -6056,7 +6057,7 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c("th", { attrs: { width: "10%" } }, [
+                _c("th", { attrs: { width: "40%" } }, [
                   _c("i", { staticClass: "icon-briefcase" }),
                   _c("br"),
                   _vm._v("\n\t\t\t\t" + _vm._s(_vm.$t("Takings")) + "\n\t\t\t")
@@ -6080,19 +6081,7 @@ var render = function() {
                         attrs: { width: "5%" }
                       },
                       [
-                        r.forNormalTakings
-                          ? _c("span", [_vm._v(_vm._s(r.route.name))])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        r.onlyControlTakings
-                          ? _c("span", [
-                              _vm._v(
-                                _vm._s(_vm.$t("Vehicle")) +
-                                  " " +
-                                  _vm._s(r.vehicle.number)
-                              )
-                            ])
-                          : _vm._e(),
+                        _c("span", [_vm._v(_vm._s(r.vehicle.number))]),
                         _vm._v(" "),
                         _c("br"),
                         _vm._v(" "),
@@ -6107,7 +6096,11 @@ var render = function() {
                             staticClass: "bg-inverse text-white text-center",
                             attrs: { width: "5%" }
                           },
-                          [_vm._v(_vm._s(r.roundTrip))]
+                          [
+                            _vm._v(
+                              "\n\t\t\t\t" + _vm._s(r.route.name) + "\n\t\t\t"
+                            )
+                          ]
                         )
                       : _vm._e(),
                     _vm._v(" "),
@@ -6118,7 +6111,7 @@ var render = function() {
                             staticClass: "bg-inverse text-white text-center",
                             attrs: { width: "5%" }
                           },
-                          [_vm._v(_vm._s(r.vehicle.number))]
+                          [_vm._v(_vm._s(r.roundTrip))]
                         )
                       : _vm._e(),
                     _vm._v(" "),
@@ -6178,7 +6171,7 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "th",
-                      { attrs: { width: "5%" } },
+                      { attrs: { width: "40%" } },
                       [
                         _c("takings-details-component", {
                           attrs: { takings: r.takings, "hide-net": true }
@@ -6229,7 +6222,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "td",
-                    { staticClass: "text-center" },
+                    { staticClass: "text-center", attrs: { width: "40%" } },
                     [
                       _c("takings-details-component", {
                         attrs: { takings: _vm.averages, type: "averages" }
@@ -6282,7 +6275,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "td",
-                    { staticClass: "text-center" },
+                    { staticClass: "text-center", attrs: { width: "40%" } },
                     [
                       _c("takings-details-component", {
                         attrs: { takings: _vm.totals, type: "totals" }
