@@ -13,17 +13,9 @@
 					<i class="fa fa-retweet text-muted"></i><br>
 					{{ $t('Round Trip') }}
 				</th>
-				<th>
-					<i class="fa fa-list-ol text-muted"></i><br>
-					{{ $t('Turn') }}
-				</th>
 				<th class="">
 					<i class="fa fa-car text-muted"></i><br>
 					{{ $t('Vehicle') }}
-				</th>
-				<th>
-					<i class="ion-android-stopwatch text-muted"></i><br>
-					{{ $t('Route Time') }}
 				</th>
 				<th class="text-center">
 					<i class="fa fa-users text-muted"></i><br>
@@ -48,14 +40,7 @@
 					<small>{{ r.date }}</small>
 				</th>
 				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.roundTrip }}</th>
-				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.turn }}</th>
 				<th v-if="r.forNormalTakings" width="5%" class="bg-inverse text-white text-center">{{ r.vehicle.number }}</th>
-				<th v-if="r.forNormalTakings" width="5%" class="text-center">
-					<small>{{ r.departureTime }}</small><br>
-					<small>{{ r.arrivalTime }}</small>
-					<hr class="m-0">
-					<span>{{ r.routeTime }}</span>
-				</th>
 				<th v-if="r.forNormalTakings" width="5%" class="text-center">
 					<small>{{ r.passengers.recorders.start }}</small><br>
 					<small>{{ r.passengers.recorders.end }}</small>
@@ -63,7 +48,7 @@
 					<span>{{ r.passengers.recorders.count }}</span>
 				</th>
 
-				<td v-if="r.onlyControlTakings" colspan="5" class="text-center">
+				<td v-if="r.onlyControlTakings" colspan="3" class="text-center">
 					<h4>
 						<i class="icon-briefcase faa-ring"></i>
 						<i class="fa fa-dollar faa-vertical"></i>
@@ -78,10 +63,10 @@
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="14" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
+					<td colspan="12" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
 				</tr>
 				<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
-					<td colspan="4" class="text-right text-bold">
+					<td colspan="2" class="text-right text-bold">
 						<i class="fa fa-sliders"></i> {{ $t('Average') }}
 					</td>
 					<td class="text-center text-bold">
@@ -95,7 +80,7 @@
 					</td>
 				</tr>
 				<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
-					<td colspan="5" class="text-right text-bold uppercase" style="font-size: 1.1em !important;">
+					<td colspan="3" class="text-right text-bold uppercase" style="font-size: 1.1em !important;">
 						<i class="icon-layers"></i> {{ $t('Totals') }}
 					</td>
 					<td class="text-center text-bold hide">

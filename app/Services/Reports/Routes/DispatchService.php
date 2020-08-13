@@ -72,6 +72,12 @@ class DispatchService
             'fuel' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->fuel;
             }),
+            'fuelGallons' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->fuelGallons;
+            }),
+            'bonus' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->bonus;
+            }),
             'others' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->others;
             }),
@@ -99,6 +105,12 @@ class DispatchService
             }),
             'fuel' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->fuel;
+            }),
+            'fuelGallons' => $dispatchRegisters->average(function ($d) {
+                return $d->takings->fuelGallons;
+            }),
+            'bonus' => $dispatchRegisters->average(function ($d) {
+                return $d->takings->bonus;
             }),
             'others' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->others;

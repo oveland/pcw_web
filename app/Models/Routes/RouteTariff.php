@@ -28,6 +28,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|RouteTariff newModelQuery()
  * @method static Builder|RouteTariff newQuery()
  * @method static Builder|RouteTariff query()
+ * @property int $passenger
+ * @property int $fuel
+ * @method static Builder|RouteTariff whereFuel($value)
+ * @method static Builder|RouteTariff wherePassenger($value)
  */
 class RouteTariff extends Model
 {

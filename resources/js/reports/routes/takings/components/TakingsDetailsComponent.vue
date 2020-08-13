@@ -13,6 +13,14 @@
 			<span>{{ takings.fuel | numberFormat('$0,0') }}</span>
 		</p>
 		<p class="text-right">
+			<span class="pull-left">{{ $t('Fuel gallons') }}:</span>
+			<span>{{ takings.fuelGallons.toFixed(2) }}</span>
+		</p>
+		<p class="text-right">
+			<span class="pull-left">{{ $t('Various') }}:</span>
+			<span>{{ takings.bonus | numberFormat('$0,0') }}</span>
+		</p>
+		<p class="text-right">
 			<span class="pull-left">{{ $t('Others') }}:</span>
 			<span>{{ takings.others | numberFormat('$0,0') }}</span>
 		</p>
@@ -20,7 +28,7 @@
 			<span class="pull-left">{{ $t('Net production') }}:</span>
 			<span>{{ takings.netProduction | numberFormat('$0,0') }}</span>
 		</p>
-		<p v-if="takings.observations && totals !== 'totals'" class="text-info">
+		<p v-if="takings.observations && type !== 'totals'" class="text-info">
 			<span class="pull-left">{{ $t('Observations') }}:</span>
 			<br>
 			<span>{{ takings.observations }}</span>

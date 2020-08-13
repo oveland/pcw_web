@@ -7,10 +7,12 @@ use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Laravel\Passport\HasApiTokens;
 
 /**
@@ -47,12 +49,16 @@ use Laravel\Passport\HasApiTokens;
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
  * @property string|null $vehicle_tags
+ * @property-read mixed $user_routes
+ * @property-read Collection $userRoutes
  * @method static Builder|User whereVehicleTags($value)
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read int|null $clients_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
  * @property-read int|null $tokens_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\UserVehicle[] $userVehicles
+ * @property-read int|null $user_vehicles_count
  */
 class User extends Authenticatable
 {
@@ -108,7 +114,11 @@ class User extends Authenticatable
      */
     public function isSuperAdmin()
     {
-        return $this->isAdmin() && ($this->id == 625565 || $this->id == 940736 || $this->id == 1130648973);
+        return $this->isAdmin() && (
+                $this->id == 625565             // OVELAND
+                || $this->id == 940736          // OMAR
+                || $this->id == 1130648973      // BRIAN
+            );
     }
 
     /**
@@ -116,7 +126,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin2()
     {
-        return $this->id == 625565;
+        return $this->id == 625565;     // OVELAND
     }
 
     /**
@@ -148,7 +158,7 @@ class User extends Authenticatable
      */
     public function belongsToMontebello()
     {
-        return $this->company ? ($this->company->id === Company::MONTEBELLO || $this->isSuperAdmin()) : false;
+        return $this->company ? ($this->company->id === Company::MONTEBELLO || $this->company->id === Company::URBANUS_MONTEBELLO || $this->isSuperAdmin()) : false;
     }
 
     /**
@@ -166,16 +176,30 @@ class User extends Authenticatable
     public function canAdmin()
     {
         $usersCanAdmin = [
-            999459,
-            841403,
-            679396,
-            23994798,
-            123994798,
-            323994798
+            999459, // CJHONATAN
+            841403, // AJHONATAN
+            2018101039, // JHONATAN569
+            1130648973, // BRIAN,
+            23994798,   // SISTEMATUPAL
+            123994798,  // JULIANTP
+            323994798,  // JULIANYB,
+
+            // VICENTE
+            623994798,
+            2018101012,
+            2018101054,
+            523994798,
+            423994798,
+            2018101065,
         ];
 
-        return in_array( $this->id, $usersCanAdmin ) || $this->isAdmin();
+        return in_array($this->id, $usersCanAdmin) || $this->isAdmin();
 
+    }
+
+    public function canMakeTakings()
+    {
+        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE;
     }
 
     /**
@@ -186,12 +210,28 @@ class User extends Authenticatable
         return $this->canAdmin();
     }
 
+    public function canSendSMS($onlyReset = false)
+    {
+        $usersCanSendSMS = [
+            // VICENTE
+            623994798,
+            2018101012,
+            2018101054,
+            523994798,
+            423994798,
+            2018101065,
+        ];
+
+        return (in_array($this->id, $usersCanSendSMS) && $this->canAdminGPS()) || $this->isSuperAdmin();
+    }
+
     /**
      * @return bool
      */
     public function canSelectRouteReport()
     {
-        return $this->belongsToMontebello();
+        return true;
+        //return $this->belongsToMontebello();
     }
 
     /**
@@ -203,15 +243,24 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isDispatcher()
+    {
+        return $this->role_id == self::DISPATCHER_ROLE;
+    }
+
+    /**
      * @param Company $company
      * @param bool $active
-     * @return Vehicle|Vehicle[]
+     * @return Vehicle[]
      */
-    public function assignedVehicles($company, $active = true)
+    public function assignedVehicles($company = null, $active = true)
     {
-        if ($this->isProprietary() && $this->belongsToMontebello()) {
-            $assignedVehicles = Vehicle::whereIn('plate', collect(\DB::select("SELECT placa plate FROM usuario_vehi WHERE usuario = '$this->username'"))->pluck('plate'));
-            if( $active ) $assignedVehicles = $assignedVehicles->active();
+        if ($this->isProprietary()) {
+            $assignedVehicles = Vehicle::whereIn('id', $this->userVehicles->pluck('vehicle_id'));
+
+            if ($active) $assignedVehicles = $assignedVehicles->active();
             $assignedVehicles = $assignedVehicles->get();
         } else {
             $company = $company ? $company : $this->company;
@@ -223,23 +272,45 @@ class User extends Authenticatable
 
     public function canML($roleName)
     {
-        switch ($roleName){
+        switch ($roleName) {
             case 'liquidate':
                 return $this->role_id === self::ANALYST_ML_ROLE || ($this->role_id < 3) || $this->isAdmin();
-            break;
+                break;
             case 'takings':
                 return $this->role_id === self::ANALYST_ML_ROLE || $this->role_id === self::DISPATCHER_ROLE || ($this->role_id < 3) || $this->isAdmin();
-            break;
+                break;
             case 'takings-list':
                 return $this->role_id === self::ANALYST_ML_ROLE || $this->role_id === self::DISPATCHER_ROLE || ($this->role_id < 3) || $this->isAdmin();
-            break;
+                break;
             case 'admin-params':
                 return $this->role_id === self::ANALYST_ML_ROLE || ($this->role_id < 3) || $this->isAdmin();
-            break;
+                break;
             default:
                 return false;
                 break;
 
         }
+    }
+
+    /**
+     * @param Company $company
+     * @return Collection
+     */
+    public function getUserRoutes(Company $company)
+    {
+        $userCompany = $this->company;
+        if ($this->isAdmin() && $company) {
+            $userCompany = $company;
+        }
+
+        return collect(DB::select("SELECT * FROM get_user_routes($this->id, $userCompany->id)"));
+    }
+
+    /**
+     * @return UserVehicle[] | HasMany
+     */
+    public function userVehicles()
+    {
+        return $this->hasMany(UserVehicle::class);
     }
 }

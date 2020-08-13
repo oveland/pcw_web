@@ -762,5 +762,12 @@
   "All vehicles": "Todos los vehículos",
   "Others": "Otros",
   "No taken": "Sin recaudar",
-  "Takings without dispatch turns": "Recaudo sin turnos de despacho"
+  "Takings without dispatch turns": "Recaudo sin turnos de despacho",
+  "Bonus": "Bonificación",
+  "Fuel gallons": "Galones combustible",
+  "Fuel gallon value": "Valor galón de combustible",
+  "Passenger tariff": "Tarifa pasajero",
+  "Fuel tariff": "Tarifa combustible",
+  "Taken at": "Recaudado en",
+  "Various": "Varios"
 }

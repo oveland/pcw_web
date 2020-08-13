@@ -11,6 +11,7 @@ use App\Models\Vehicles\Location;
 use App\Models\Vehicles\ParkingReport;
 use App\Models\Vehicles\Speeding;
 use App\Models\Vehicles\Vehicle;
+use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -479,7 +480,6 @@ class DispatchRegister extends Model
     public function scopeWhereDateOrRange($query, $initialDate, $finalDate = null)
     {
         if ($finalDate) {
-//            dd([explode(' ', $initialDate)[0], explode(' ', $finalDate)[0]]);
             $query = $query->whereBetween('date', [explode(' ', $initialDate)[0], explode(' ', $finalDate)[0]]);
         } else {
             $query = $query->whereDate('date', explode(' ', $initialDate)[0]);
@@ -508,21 +508,25 @@ class DispatchRegister extends Model
      */
     public function scopeWhereCompanyAndRouteAndVehicle($query, Company $company, $routeId = null, $vehicleId = null)
     {
-        return $query->where(function ($query) use ($company, $routeId, $vehicleId) {
-            if ($vehicleId == 'all' || $vehicleId == null) {
-                $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
-            } else if ($vehicleId) {
-                $query = $query->where('vehicle_id', $vehicleId);
-            }
+        $user = Auth::user();
 
-            if ($company->hasADD()) {
-                $query = $query->orWhere('route_id', intval($routeId));
-            } else if ($routeId != 'all' && $routeId != null) {
-                $query = $query->where('route_id', intval($routeId));
-            }
+        return $query
+            ->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'))
+            ->where(function ($query) use ($company, $routeId, $vehicleId) {
+                if ($vehicleId == 'all' || $vehicleId == null) {
+                    $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+                } else if ($vehicleId) {
+                    $query = $query->where('vehicle_id', $vehicleId);
+                }
 
-            return $query;
-        });
+                if ($company->hasADD() && $vehicleId == 'all') {
+                    $query = $query->orWhere('route_id', intval($routeId));
+                } else if ($routeId != 'all' && $routeId != null) {
+                    $query = $query->where('route_id', intval($routeId));
+                }
+
+                return $query;
+            });
     }
 
     /**
@@ -598,7 +602,6 @@ class DispatchRegister extends Model
      */
     public function getTakingsAttribute()
     {
-
         $takings = RouteTaking::findByDr($this);
 
         if (!$takings) {
@@ -606,25 +609,17 @@ class DispatchRegister extends Model
             $takings->dispatchRegister()->associate($this);
         }
 
-        $takings->total_production = intval($this->tariff->value) * $this->passengers->recorders->count;
-        $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others;
-
-        return $takings;
-    }
-
-    /**
-     * TODO this attribute must be a instance of DispatchTariff!!
-     * @return RouteTariff
-     */
-    public function getTariffAttribute()
-    {
-        $tariff = $this->onlyControlTakings() ? null : $this->route->tariff;
-        if ($this->onlyControlTakings() || !$tariff) {
-            $tariff = new RouteTariff();
-            $tariff->value = 0;
+        if (!$this->onlyControlTakings()) {
+            $takings->passenger_tariff = $takings->passengerTariff($this->route);
+            $takings->total_production = $takings->passenger_tariff * $this->passengers->recorders->count;
         }
 
-        return $tariff;
+        $takings->fuel_tariff = $takings->fuelTariff($this->route);
+        $takings->fuel_gallons = $takings->fuel_tariff > 0 ? $takings->fuel / $takings->fuel_tariff : 0;
+
+        $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others - $takings->bonus;
+
+        return $takings;
     }
 
     const CREATED_AT = 'date_created';
