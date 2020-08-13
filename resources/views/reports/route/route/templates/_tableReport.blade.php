@@ -107,7 +107,7 @@
             $totalPassengersBySensor +=$dispatchRegister->passengersBySensor;
             $totalPassengersBySensorRecorder +=$dispatchRegister->passengersBySensorRecorder;
 
-            $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0)?true:false;
+            $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0) && !$withEndDate?true:false;
 
             $offRoadPercent = $dispatchRegister->getOffRoadPercent();
 

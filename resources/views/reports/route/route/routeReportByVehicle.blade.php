@@ -40,7 +40,7 @@
             @foreach($dispatchRegistersByVehicles as $vehicleId => $dispatchRegisters)
                 <div id="report-tab-{{ $vehicleId }}" class="table-responsive tab-pane fade {{$loop->first?'active in':''}}">
                     <!-- begin table -->
-                @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company'))
+                @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'withEndDate'))
                 <!-- end table -->
                 </div>
             @endforeach

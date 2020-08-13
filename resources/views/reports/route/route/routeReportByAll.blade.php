@@ -23,7 +23,7 @@
             <div id="report-tab" class="table-responsive tab-pane fade active in">
                 @foreach($dispatchRegistersByVehicles as $vehicleId => $dispatchRegisters)
                     <!-- begin table -->
-                    @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company'))
+                    @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'withEndDate'))
 
                     <hr class="hr no-padding">
 
