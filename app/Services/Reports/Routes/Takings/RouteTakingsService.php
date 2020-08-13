@@ -3,6 +3,7 @@
 namespace App\Services\Reports\Routes\Takings;
 
 use App\Models\Routes\DispatchRegister;
+use Auth;
 
 class RouteTakingsService
 {
@@ -19,6 +20,8 @@ class RouteTakingsService
         $takings->fill($data);
 
         $takings->taken = $takings->total_production > 0 && $takings->net_production > 0;
+
+        $takings->user()->associate(Auth::user());
 
         if ($takings->save()) {
             $response->success = true;

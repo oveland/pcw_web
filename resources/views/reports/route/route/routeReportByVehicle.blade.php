@@ -12,7 +12,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=group-vehicles&export=true" class="btn btn-sm btn-primary btn-rounded pull-left tooltips" data-title="@lang('Export grouped report')">
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&date-end-report={{ $dateEndReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=group-vehicles&export=true" class="btn btn-sm btn-primary btn-rounded pull-left tooltips" data-title="@lang('Export grouped report')">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
             </div>

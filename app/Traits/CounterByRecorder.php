@@ -50,7 +50,9 @@ trait CounterByRecorder
 
         if ($vehicle->countAllFromSensorRecorder()) return CounterBySensor::totalByVehicle($vehicleId, $dispatchRegistersByVehicle);
 
-        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy('departure_time');
+        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy(function ($dr){
+            return "$dr->date-".$dr->vehicle->number."$dr->departure_time";
+        });
 
         $totalPassengers = 0;
         $firstStartRecorder = 0;

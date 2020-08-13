@@ -4,6 +4,7 @@ namespace App\Models\Routes;
 
 use App\Models\Company\Company;
 use App\Models\Vehicles\CurrentLocation;
+use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -23,9 +24,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $dispatch_id
  * @property int $bea_id
  * @property bool $active
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Company\Company $company
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Company $company
  * @property-read Collection|ControlPoint[] $controlPoints
  * @method static Builder|Route whereActive($value)
  * @method static Builder|Route whereCompanyId($value)
@@ -39,7 +40,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Route whereUrl($value)
  * @mixin Eloquent
  * @method static Builder|Route active()
- * @property-read Collection|\App\Models\Routes\Fringe[] $fringes
+ * @property-read Collection|Fringe[] $fringes
  * @property-read Collection|CurrentDispatchRegister[] $currentDispatchRegisters
  * @property-read Dispatch $dispatch
  * @property bool|null $as_group
@@ -143,7 +144,8 @@ class Route extends Model
         if (!$tariff) {
             $tariff = new RouteTariff();
             $tariff->route()->associate($this);
-            $tariff->value = 0;
+            $tariff->passenger = 0;
+            $tariff->fuel = 0;
         }
         return $tariff;
     }

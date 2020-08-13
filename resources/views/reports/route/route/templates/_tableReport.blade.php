@@ -3,6 +3,10 @@
     <thead>
     <tr class="inverse">
         <th class="">
+            <i class="fa fa-calendar text-muted"></i><br>
+            @lang('Date')
+        </th>
+        <th class="">
             <i class="fa fa-flag text-muted"></i><br>
             @lang('Route')
         </th>
@@ -110,6 +114,7 @@
             $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true))
         @endphp
         <tr>
+            <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                 {{ $route->name }}
                 @if($offRoadPercent)

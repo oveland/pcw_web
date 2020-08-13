@@ -133,6 +133,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|DispatchRegister newQuery()
  * @method static Builder|DispatchRegister query()
  * @method static Builder|DispatchRegister whereCompanyAndRouteId(Company $company, $routeId = null)
+ * @method static Builder|DispatchRegister whereDateOrRange($initialDate, $finalDate = null)
+ * @method static Builder|DispatchRegister whereCompanyAndRouteAndVehicle(Company $company, $route = null, $vehicle = null)
+ * @method static Builder|DispatchRegister whereCompanyAndDateRangeAndRouteIdAndVehicleId(Company $company, $initialDate, $finalDate = null, $routeId = null, $vehicleId = null)
  * @method static Builder|DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(Company $company, $date, $routeId = null, $vehicleId = null)
  * @property-read mixed $route_time
  * @property-read mixed $total_off_road
@@ -144,6 +147,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
  * @property-read DispatchTariff $tariff
+ * @property-read \RouteTariff $fuel_tariff
  */
 class DispatchRegister extends Model
 {
@@ -431,6 +435,22 @@ class DispatchRegister extends Model
         return $this->vehicle->plate == 'VCK-531';
     }
 
+    /**
+     * @param Buider | DispatchRegister $query
+     * @param string $initialDate
+     * @param string | null $finalDate
+     * @return DispatchRegister | Builder
+     */
+    public function scopeWhereDateOrRange($query, $initialDate, $finalDate = null)
+    {
+        if ($finalDate) {
+            $query = $query->whereBetween('date', [explode(' ', $initialDate)[0], explode(' ', $finalDate)[0]]);
+        } else {
+            $query = $query->whereDate('date', explode(' ', $initialDate)[0]);
+        }
+
+        return $query;
+    }
 
     /**
      * @param DispatchRegister $query
@@ -453,20 +473,20 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @param DispatchRegister $query
+     * @param Builder | DispatchRegister $query
      * @param Company $company
-     * @param $date
-     * @param null $routeId
-     * @param null $vehicleId
+     * @param $routeId
+     * @param $vehicleId
+     * @return Builder | DispatchRegister
      */
-    public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
+    public function scopeWhereCompanyAndRouteAndVehicle($query, Company $company, $routeId = null, $vehicleId = null)
     {
         $user = Auth::user();
 
-        $query->where('date', explode(' ', $date)[0])
+        return $query
             ->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'))
             ->where(function ($query) use ($company, $routeId, $vehicleId) {
-                if ($vehicleId == 'all') {
+                if ($vehicleId == 'all' || $vehicleId == null) {
                     $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
                 } else if ($vehicleId) {
                     $query = $query->where('vehicle_id', $vehicleId);
@@ -474,13 +494,41 @@ class DispatchRegister extends Model
 
                 if ($company->hasADD() && $vehicleId == 'all') {
                     $query = $query->orWhere('route_id', intval($routeId));
-                } else if ($routeId != 'all') {
+                } else if ($routeId != 'all' && $routeId != null) {
                     $query = $query->where('route_id', intval($routeId));
                 }
 
                 return $query;
             });
     }
+
+    /**
+     * @param Builder | DispatchRegister $query
+     * @param Company $company
+     * @param $date
+     * @param null $routeId
+     * @param null $vehicleId
+     * @return DispatchRegister | Builder
+     */
+    public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
+    {
+        return $query->whereDateOrRange($date)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId);
+    }
+
+    /**
+     * @param Builder | DispatchRegister $query
+     * @param Company $company
+     * @param string $initialDate
+     * @param string | null $finalDate
+     * @param null $routeId
+     * @param null $vehicleId
+     * @return DispatchRegister | Builder
+     */
+    public function scopeWhereCompanyAndDateRangeAndRouteIdAndVehicleId($query, Company $company, $initialDate, $finalDate = null, $routeId = null, $vehicleId = null)
+    {
+        return $query->whereDateOrRange($initialDate, $finalDate)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId);
+    }
+
 
     public function getOffRoadPercent()
     {
@@ -533,7 +581,6 @@ class DispatchRegister extends Model
      */
     public function getTakingsAttribute()
     {
-
         $takings = RouteTaking::findByDr($this);
 
         if (!$takings) {
@@ -541,25 +588,17 @@ class DispatchRegister extends Model
             $takings->dispatchRegister()->associate($this);
         }
 
-        $takings->total_production = intval($this->tariff->value) * $this->passengers->recorders->count;
-        $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others;
-
-        return $takings;
-    }
-
-    /**
-     * TODO this attribute must be a instance of DispatchTariff!!
-     * @return RouteTariff
-     */
-    public function getTariffAttribute()
-    {
-        $tariff = $this->onlyControlTakings() ? null : $this->route->tariff;
-        if ($this->onlyControlTakings() || !$tariff) {
-            $tariff = new RouteTariff();
-            $tariff->value = 0;
+        if (!$this->onlyControlTakings()) {
+            $takings->passenger_tariff = $takings->passengerTariff($this->route);
+            $takings->total_production = $takings->passenger_tariff * $this->passengers->recorders->count;
         }
 
-        return $tariff;
+        $takings->fuel_tariff = $takings->fuelTariff($this->route);
+        $takings->fuel_gallons = $takings->fuel_tariff > 0 ? $takings->fuel / $takings->fuel_tariff : 0;
+
+        $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others - $takings->bonus;
+
+        return $takings;
     }
 
     const CREATED_AT = 'date_created';

@@ -66,7 +66,12 @@
                         @endif
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="date-report" class="control-label field-required">@lang('Date report')</label>
+                                <label for="date-report" class="control-label field-required">
+                                    @lang('Date')
+                                </label>
+                                <label class="text-bold">
+                                    &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
+                                </label>
                                 <div class="input-group date" id="datetimepicker-report">
                                     <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
@@ -75,6 +80,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-2 date-end-container" style="display: none">
+                            <div class="form-group">
+                                <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
@@ -196,9 +213,7 @@
                             <span><i class="icon-briefcase"></i> @lang('Takings') - @lang('Passengers')</span>
                         </h4>
                     </div>
-                    <div class="modal-body p-t-0">
-
-                    </div>
+                    <div class="modal-body p-t-0 p-b-0"></div>
                 </div>
             </div>
         </div>
@@ -206,6 +221,8 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.js') }}" type="text/javascript"></script>
+
     <script type="application/javascript">
         $('.menu-routes, .menu-route-report').addClass('active-animated');
 
@@ -255,6 +272,13 @@
             setTimeout(function(){
                 $('.btn-show-off-road-report').click();
             },500);
+        });
+
+        $('#with-end-date').change(function(){
+            const dec =  $('.date-end-container').slideUp();
+            if ($(this).is(':checked')) {
+                dec.slideDown().val( '2020-10-08' );
+            }
         });
     </script>
 @endsection

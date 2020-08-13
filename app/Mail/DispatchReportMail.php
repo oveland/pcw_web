@@ -54,7 +54,7 @@ class DispatchReportMail extends Mailable
 
     public function buildReport()
     {
-        $this->dispatchReports = $this->routeService->dispatch->allByVehicles($this->company, $this->dateReport, $this->routeReport, $this->vehicleReport, $this->completedTurns);
+        $this->dispatchReports = $this->routeService->dispatch->allByVehicles($this->company, $this->dateReport, null, $this->routeReport, $this->vehicleReport, $this->completedTurns);
 
         return $this->dispatchReports->count();
     }

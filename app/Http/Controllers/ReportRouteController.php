@@ -59,6 +59,8 @@ class ReportRouteController extends Controller
     {
         $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
+        $withEndDate = $request->get('with-end-date');
+        $dateEndReport = $withEndDate ? $request->get('date-end-report') : null;
         $typeReport = $request->get('type-report');
         $routeReport = $request->get('route-report');
         $vehicleReport = $request->get('vehicle-report');
@@ -67,7 +69,7 @@ class ReportRouteController extends Controller
 
         if ($routeReport == 'none') return $this->showReportWithOutRoute($request);
 
-        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns);
+        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns);
 
         $reportsByVehicle = collect([]);
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
@@ -86,7 +88,7 @@ class ReportRouteController extends Controller
 
         }
 
-        return view($view, compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'routeReport', 'vehicleReport', 'typeReport', 'completedTurns']));
+        return view($view, compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'dateEndReport', 'withEndDate', 'routeReport', 'vehicleReport', 'typeReport', 'completedTurns']));
     }
 
     public function showReportWithOutRoute(Request $request)

@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin Eloquent
  * @property int $id
  * @property int $route_id
- * @property int $value
  * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -25,6 +24,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|RouteTariff whereUpdatedAt($value)
  * @method static Builder|RouteTariff whereValue($value)
  * @property-read Route $route
+ * @property int $passenger
+ * @property int $fuel
+ * @method static Builder|RouteTariff whereFuel($value)
+ * @method static Builder|RouteTariff wherePassenger($value)
  */
 class RouteTariff extends Model
 {

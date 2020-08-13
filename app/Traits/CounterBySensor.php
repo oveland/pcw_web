@@ -33,7 +33,9 @@ trait CounterBySensor
     static function totalByVehicle($vehicleId, $dispatchRegistersByVehicle)
     {
         $vehicle = Vehicle::find($vehicleId);
-        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy('departure_time');
+        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy(function ($dr){
+            return "$dr->date-".$dr->vehicle->number."$dr->departure_time";
+        });
 
         $history = collect([]);
         $issues = collect([]);

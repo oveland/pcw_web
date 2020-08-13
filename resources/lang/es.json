@@ -678,5 +678,13 @@
   "Tariff": "Tarifa",
   "There are not dispatch registers on this date": "No hay turnos de despacho en esta fecha",
   "Register takings": "Registrar recaudo",
-  "To register takings you must be select a vehicle": "Para registrar recaudo debe seleccionar un vehículo"
+  "To register takings you must be select a vehicle": "Para registrar recaudo debe seleccionar un vehículo",
+  "Bonus": "Bonificación",
+  "Fuel gallons": "Galones combustible",
+  "Fuel gallon value": "Valor galón de combustible",
+  "Passenger tariff": "Tarifa pasajero",
+  "Fuel tariff": "Tarifa combustible",
+  "Taken at": "Recaudado en",
+  "Various": "Varios",
+  "Date end": "Fecha final"
 }

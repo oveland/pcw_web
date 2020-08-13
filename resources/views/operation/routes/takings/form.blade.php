@@ -23,9 +23,13 @@
                         <i class="icon-compass"></i> <strong>@lang('Recorders'):</strong>
                         <span>{{ $dispatchRegister->passengers->recorders->start }} - {{ $dispatchRegister->passengers->recorders->end }}</span>
                     </h5>
+                    <h5 style="border-top: 1px solid lightgray;" class="m=t-10 p-t-10">
+                        <i class="fa fa-dollar"></i><i class="fa fa-user"></i><strong>@lang('Passenger tariff'):</strong>
+                        <span>${{ number_format($dispatchRegister->takings->passenger_tariff, 0) }}</span>
+                    </h5>
                     <h5>
-                        <i class="fa fa-dollar"></i><strong style="margin-left: 8px">@lang('Tariff'):</strong>
-                        <span>{{ $dispatchRegister->tariff->value }}</span>
+                        <i class="fa fa-dollar"></i><i class="fa fa-flask"></i><strong>@lang('Fuel tariff'):</strong>
+                        <span>${{ number_format($dispatchRegister->takings->fuel_tariff, 1) }}</span>
                     </h5>
                 </div>
             @endif
@@ -42,7 +46,7 @@
                 <div class="col-md-7">
                     <div class="input-icon">
                         <i class="fa fa-dollar"></i>
-                        <input type="number" disabled class="form-control input-circle-right" id="total_production_takings" name="total_production" value="{{ $dispatchRegister->takings->total_production }}">
+                        <input type="number" disabled class="form-control input-circle-right disabled" id="total_production_takings" name="total_production" value="{{ $dispatchRegister->takings->total_production }}">
                     </div>
                 </div>
             </div>
@@ -51,7 +55,16 @@
                 <div class="col-md-7">
                     <div class="input-icon">
                         <i class="icon-bag"></i>
-                        <input type="number" class="form-control input-circle-right" id="control_takings" name="control" value="{{ $dispatchRegister->takings->control }}">
+                        <input type="number" class="form-control input-circle-right currency" id="control_takings" name="control" value="{{ $dispatchRegister->takings->control }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fuel" class="col-md-5 control-label">@lang('Fuel gallons')</label>
+                <div class="col-md-7">
+                    <div class="input-icon">
+                        <i class="fa fa-flask"></i>
+                        <input type="number" disabled step="0.1" class="form-control input-circle-right disabled" id="fuel_gallons_takings" name="fuel_gallons" value="{{ number_format($dispatchRegister->takings->fuel_gallons, 2) }}">
                     </div>
                 </div>
             </div>
@@ -64,6 +77,17 @@
                     </div>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="others" class="col-md-5 control-label">@lang('Various')</label>
+                <div class="col-md-7">
+                    <div class="input-icon">
+                        <i class="icon-badge"></i>
+                        <input type="number" class="form-control input-circle-right" id="bonus_takings" name="bonus" value="{{ $dispatchRegister->takings->bonus }}">
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="others" class="col-md-5 control-label">@lang('Others')</label>
                 <div class="col-md-7">
@@ -109,9 +133,37 @@
             </div>
         </form>
     </div>
+
+    @if($dispatchRegister->takings->isTaken())
+        <div class="col-md-12 p-0">
+            <div class="well row m-0">
+                <h6 class="text-purple purple">
+                    <i class="fa fa-calendar"></i> <strong>@lang('Taken at'):</strong>
+                    <span>{{ $dispatchRegister->takings->created_at }}</span>
+                </h6>
+
+                @if($dispatchRegister->takings->created_at != $dispatchRegister->takings->updated_at)
+                    <h6 class="text-warning orange">
+                        <i class="fa fa-calendar"></i> <strong>@lang('Updated at'):</strong>
+                        <span>{{ $dispatchRegister->takings->updated_at }}</span>
+                    </h6>
+                @endif
+                @if($dispatchRegister->takings->user)
+                    <h6 class="text-info orange">
+                        <i class="fa fa-user"></i> <strong>@lang('User'):</strong>
+                        <span>{{ $dispatchRegister->takings->user->username }} ({{ $dispatchRegister->takings->user->name }})</span>
+                    </h6>
+                @endif
+            </div>
+        </div>
+    @endif
 </div>
 
 <script>
+    // $("#control_takings").inputmask('999,999', {
+    //     numericInput: true
+    // });
+
     let text = $('#observations');
     text.on('change drop keydown cut paste', function () {
         text.height('auto');
@@ -149,23 +201,39 @@
         });
     });
 
-    formTakingsPassengers.find('input.form-control').keyup(function () {
+    formTakingsPassengers.find('input.form-control').change(function () {
         let totalProduction = $(this).parents('form').find('#total_production_takings').val();
         let control = $(this).parents('form').find('#control_takings').val();
-        let fuel = $(this).parents('form').find('#fuel_takings').val();
         let others = $(this).parents('form').find('#others_takings').val();
+        let bonus = $(this).parents('form').find('#bonus_takings').val();
+
+        let fuel = $(this).parents('form').find('#fuel_takings').val();
+        const fuelTariff = parseFloat({{ $dispatchRegister->takings->fuel_tariff }});
+        let fuelGallons = fuelTariff > 0 && fuel > 0 ? fuel / fuelTariff : 0;
 
         totalProduction = totalProduction ? totalProduction : 0;
         control = control ? control : 0;
         fuel = fuel ? fuel : 0;
         others = others ? others : 0;
 
-        $(this).parents('form').find('#net_production_takings').val(totalProduction - control - fuel - others);
+        $(this).parents('form').find('#net_production_takings').val(totalProduction - control - fuel - others - bonus);
+        $(this).parents('form').find('#fuel_gallons_takings').val(fuelGallons.toFixed(2));
     });
+
+    formTakingsPassengers.find('input.form-control').keyup(function () {
+        $(this).change();
+    });
+
+    $('.tooltips').tooltip();
 </script>
 
 <style>
     .value-recorders {
         font-size: 0.8em !important;
+    }
+    .form-taking-passengers input[type=number]::-webkit-inner-spin-button,
+    .form-taking-passengers input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 </style>

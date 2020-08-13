@@ -17,7 +17,7 @@ class CreateRouteTakingsTable extends Migration
             $table->increments('id');
             $table->integer('total_production')->nullable();
             $table->integer('control')->nullable();
-            $table->integer('fuel')->nullable();
+            $table->double('fuel')->nullable();
             $table->integer('others')->nullable();
             $table->integer('net_production')->nullable();
             $table->text('observations')->nullable();

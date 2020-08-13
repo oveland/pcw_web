@@ -52,16 +52,17 @@ class DispatchRouteService
      *
      * @param $company
      * @param $dateReport
+     * @param null $dateEndReport
      * @param string $routeReport
      * @param string $vehicleReport
      * @param bool $completedTurns
-     * @param bool $noTakenTurns
      * @return DispatchRegister[]|Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function all($company, $dateReport, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
+    public function all($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
     {
-        return DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $routeReport, $vehicleReport)
+        return DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport)
             ->active($completedTurns)
+            ->orderBy('date')
             ->orderBy('departure_time')
             ->get();
     }
@@ -69,15 +70,16 @@ class DispatchRouteService
     /**
      * @param $company
      * @param $dateReport
+     * @param $dateEndReport
      * @param string $routeReport
      * @param string $vehicleReport
      * @param bool $completedTurns
      * @param bool $noTakenTurns
      * @return DispatchRegister[]|Builder[]|Collection
      */
-    public function allByVehicles($company, $dateReport, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false)
+    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false)
     {
-        $dispatchRegisters = $this->all($company, $dateReport, $routeReport, $vehicleReport, $completedTurns);
+        $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns);
 
         if ($noTakenTurns) {
             $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
@@ -85,10 +87,11 @@ class DispatchRouteService
             });
         }
 
-        return $dispatchRegisters->groupBy('vehicle_id')
-            ->sortBy(function ($reports, $vehicleID) {
-                return $reports->first()->vehicle->number;
-            });
+        $data = $dispatchRegisters->sortBy(function ($dr){
+            return "$dr->date-".$dr->vehicle->number."$dr->departure_time";
+        })->groupBy('vehicle_id');
+
+        return $data;
     }
 
     /**
@@ -265,14 +268,16 @@ class DispatchRouteService
      */
     function buildDailyEventsReport(Company $company, $dateReport, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
     {
-        $allDispatchRegisters = $this->all($company, $dateReport, $routeReport, $vehicleReport, $completedTurns);
+        $allDispatchRegisters = $this->all($company, $dateReport, null, $routeReport, $vehicleReport, $completedTurns);
 
         $eventsReports = collect([]);
         $routes = $company->activeRoutes
             ->where('id', '<>', 183); // TODO: Let route 183 when all parameters are configured
 
         foreach ($routes as $route) {
-            $dispatchRegisters = $allDispatchRegisters->where('route_id', $route->id)->sortBy('departure_time');
+            $dispatchRegisters = $allDispatchRegisters->where('route_id', $route->id)->sortBy(function ($dr){
+                return "$dr->date-".$dr->vehicle->number."$dr->departure_time";
+            });
             $reportVehicleByRoute = $this->getConsolidatedDataDispatches($dispatchRegisters, $company)->where('hasEvent', true);
 
             $eventsReports->put($route->id, (object)[
@@ -342,7 +347,7 @@ class DispatchRouteService
      */
     public function buildManagementReport(Company $company, $dateReport, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
     {
-        $dispatchRegistersByVehicles = $this->allByVehicles($company, $dateReport, $routeReport, $vehicleReport, $completedTurns);
+        $dispatchRegistersByVehicles = $this->allByVehicles($company, $dateReport, null, $routeReport, $vehicleReport, $completedTurns);
 
         $managementReport = collect([]);
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
