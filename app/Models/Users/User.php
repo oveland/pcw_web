@@ -5,6 +5,7 @@ namespace App\Models\Users;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
+use DB;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +14,9 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
+use Laravel\Passport\Client;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Passport\Token;
 
 /**
  * App\Models\Users\User
@@ -53,11 +56,11 @@ use Laravel\Passport\HasApiTokens;
  * @property-read Collection $userRoutes
  * @method static Builder|User whereVehicleTags($value)
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
+ * @property-read \Illuminate\Database\Eloquent\Collection|Client[] $clients
  * @property-read int|null $clients_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
+ * @property-read \Illuminate\Database\Eloquent\Collection|Token[] $tokens
  * @property-read int|null $tokens_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\UserVehicle[] $userVehicles
+ * @property-read \Illuminate\Database\Eloquent\Collection|UserVehicle[] $userVehicles
  * @property-read int|null $user_vehicles_count
  */
 class User extends Authenticatable
