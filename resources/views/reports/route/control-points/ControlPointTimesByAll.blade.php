@@ -14,7 +14,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-control-points-search-report') }}?export=true&type-report={{ $query->typeReport }}&date-report={{ $query->dateReport }}&company-report={{ $query->company->id }}&route-report={{ $query->route->id }}"
+                <a href="{{ route('report-route-control-points-search-report') }}?{{ $query->stringParams }}&export=true"
                    class="btn green btn-circle tooltips"
                    data-title="@lang('Export excel')" data-placement="bottom">
                     <i class="fa fa-download"></i>
@@ -28,13 +28,16 @@
             </h5>
         </div>
 
-        <div class="tab-content panel p-0">
+        <div class="tab-content panel">
             <div id="report-tab" class="tab-pane fade active in report-tab-cp">
                 <div class="">
                     <div class="table-responsive col-md-12 p-0" style="padding-bottom: 90px;height: 1000px">
                         <table class="table table-bordered table-condensed table-hover table-valign-middle table-report-control-point data-table-report">
                             <thead>
                             <tr class="">
+                                <th class="text-center bg-inverse-dark text-muted">
+                                    <i class="fa fa-list-ol"></i>
+                                </th>
                                 <th class="text-center bg-inverse-dark text-muted">
                                     <i class="fa fa-calendar"></i>
                                     @lang('Date')
@@ -47,7 +50,7 @@
                                     <i class="fa fa-car"></i>
                                     @lang('Vehicle')
                                 </th>
-                                <th class="text-center bg-inverse-dark text-muted">
+                                <th class="text-center bg-inverse-dark text-muted hide">
                                     <i class="fa fa-user"></i>
                                     @lang('Driver')
                                 </th>
@@ -59,12 +62,20 @@
                                     <i class="ion-android-stopwatch"></i><br>
                                     @lang('Fringe')
                                 </th>
+                                @php
+                                    $controlPointAverage = collect([]);
+                                    $lastScheduled = collect([]);
+                                @endphp
                                 @foreach($reportsByControlPoints->first()->reportsByControlPoint as $reportByControlPoint)
-                                    @php($controlPoint =  $reportByControlPoint->controlPoint)
-                                    <th class="{{ $controlPoint->trajectory == 0 ? 'success':'warning' }}" style="">
+                                    @php
+                                        $controlPoint =  $reportByControlPoint->controlPoint;
+                                        $controlPointAverage->put($controlPoint->id, 0);
+                                        $lastScheduled->put($controlPoint->id, "");
+                                    @endphp
+                                    <th class="{{ $controlPoint->trajectory == 0 ? 'info':'danger' }}" style="">
                                         <div style="display: inline-block;vertical-align: middle;float: none;">
-                                            <span>{{ $controlPoint->name }}</span>
-                                            <br><br>
+                                            <small>{{ $controlPoint->name }}</small>
+                                            <hr>
                                             <small>
                                                 <i style="font-size: 100% !important;" class="fa fa-map-marker"></i> <strong class="control-point-distance">{{ $controlPoint->distance_from_dispatch }} m</strong>
                                             </small>
@@ -91,9 +102,12 @@
                                     $vehicle = $reportsByControlPoint->vehicle;
                                     $driver = $reportsByControlPoint->driver;
 
-                                    $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true))
+                                    $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true));
                                 @endphp
                                 <tr class="">
+                                    <th class="text-capitalize text-muted bg-inverse">
+                                        {{ $loop->iteration }}
+                                    </th>
                                     <th class="text-capitalize text-muted bg-inverse">
                                         {{ $dispatchRegister->date }}
                                     </th>
@@ -112,8 +126,10 @@
                                     <th class="bg-inverse text-uppercase text-muted">
                                         {{ $vehicle->number }}
                                     </th>
-                                    <th class="bg-inverse text-uppercase text-muted">
-                                        {{ $dispatchRegister->driverName() }}
+                                    <th class="bg-inverse text-uppercase text-muted hide">
+                                        <small>
+                                            {{ $dispatchRegister->driverName() }}
+                                        </small>
                                     </th>
                                     <th class="bg-inverse text-uppercase text-muted">
                                         @if( $dispatchRegister->complete() )
@@ -128,12 +144,15 @@
                                             {{ '--:--:--' }}
                                         @endif
                                     </th>
-                                    <th class="bg-inverse text-uppercase text-muted" style="border-right: 10px solid {{ $dispatchRegister->departureFringe->style_color }}">
-                                        {{ $dispatchRegister->departureFringe->name }}
+                                    <th class="bg-inverse text-capitalize text-muted" style="border-right: 10px solid {{ $dispatchRegister->departureFringe->style_color }}">
+                                        {{ $dispatchRegister->departureFringe->name }} <br>
+                                        <small>{{ $dispatchRegister->departureFringe->dayType->description }}</small>
                                     </th>
                                     @foreach($reportsByControlPoint->reportsByControlPoint as $reportByControlPoint)
                                         @php
                                             $controlPoint = $reportByControlPoint->controlPoint;
+                                            $controlPointAverage->put($controlPoint->id, $controlPointAverage->get($controlPoint->id) + $reportByControlPoint->timeMeasuredInSeconds);
+                                            $lastScheduled->put($controlPoint->id, $reportByControlPoint->timeScheduled);
                                         @endphp
                                         @if( $reportByControlPoint->hasReport )
                                             <td class="text-center td-info" style="background: {{  $query->paintProfile ? $reportByControlPoint->backgroundProfile : "white" }};">
@@ -199,18 +218,41 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            @if($reportsByControlPoints->count())
+                            </tbody>
+                            <tfoot>
+                            @if($reportsByControlPoints->count() && $query->fringeReport)
                                 <tr>
-                                    <td class="bg-inverse" colspan="4">
-                                    </td>
+                                    <th class="bg-inverse text-muted text-right text-uppercase" colspan="4">
+                                        <span class="pull-right">@lang('Averages')</span>
+                                    </th>
                                     <th class="text-center text-muted bg-inverse tooltips" data-title="@lang('Average'): @lang('Route time')">
                                         {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$reportsByControlPoints->count()) }}
                                     </th>
-                                    <td class="bg-inverse" colspan="20">
-                                    </td>
+                                    <th class="bg-inverse text-muted">
+                                            {{ $reportsByControlPoints->last()->dispatchRegister->departureFringe->name }}<br>
+                                            <small>{{ $reportsByControlPoints->last()->dispatchRegister->departureFringe->dayType->description }}</small>
+                                    </th>
+                                    @foreach($reportsByControlPoints->first()->reportsByControlPoint as $reportByControlPoint)
+                                        @php($controlPoint =  $reportByControlPoint->controlPoint)
+                                        <th class="{{ $controlPoint->trajectory == 0 ? 'info':'danger' }}" style="">
+                                            <small>{{ $controlPoint->name }}</small>
+                                            <hr>
+                                            <small>
+                                                <span class="tooltips" title="@lang('Average time from dispatch')">
+                                                    {{ $strTime::segToStrTime($controlPointAverage->get($controlPoint->id) / $reportsByControlPoints->count()) }}
+                                                </span>
+                                                <br>
+                                                <span class="tooltips" title="@lang('Scheduled time from dispatch')" data-placement="bottom">
+                                                    {{ $lastScheduled->get($controlPoint->id) }}
+                                                </span>
+                                            </small>
+                                        </th>
+                                    @endforeach
+                                    <th class="">
+                                    </th>
                                 </tr>
                             @endif
-                            </tbody>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

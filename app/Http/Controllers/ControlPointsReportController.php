@@ -55,7 +55,8 @@ class ControlPointsReportController extends Controller
     {
         $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
-        $dateEndReport = $request->get('date-end-report');
+        $dateEndReport = $request->get('with-end-date') ? $request->get('date-end-report') : $dateReport;
+
         $controlPointsReport = $request->get('control-points-report');
         $fringeReport = $request->get('fringe-report');
         $vehicleId = $request->get('vehicle-report');
@@ -74,6 +75,7 @@ class ControlPointsReportController extends Controller
         $typeReport = $request->get('type-report');
 
         $query = (object)[
+            'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
             'dateReport' => $dateReport,
             'typeReport' => $typeReport,
             'company' => $company,
@@ -133,23 +135,25 @@ class ControlPointsReportController extends Controller
             $dispatchRegister = $report->dispatchRegister;
             $reportsByControlPoint = $report->reportsByControlPoint;
 
-            $routeTimes = '--:--:--';
-            if ($dispatchRegister->complete()) {
-                $routeTimes = "Salida: $dispatchRegister->departure_time\nLlegada: $dispatchRegister->arrival_time\nEn ruta: " . $dispatchRegister->getRouteTime();
-            }
-
             $controlPointsReport = collect([]);
             foreach ($reportsByControlPoint as $reportByControlPoint) {
                 $controlPoint = $reportByControlPoint->controlPoint;
-                $controlPointsReport->put($controlPoint->name, "$reportByControlPoint->difference\n$reportByControlPoint->statusText");
+                $controlPointsReport->put($controlPoint->name, "$reportByControlPoint->difference");
             }
+
+            $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => 0]);
+            $controlPointsReport->put(__('Details'), $link);
 
             $dataExcel[] = collect([
                 __('N°') => count($dataExcel) + 1,                                          # A CELL
+                __('Date') => $dispatchRegister->date,                                          # A CELL
                 __('Vehicle') => intval($vehicle->number),                                  # B CELL
-                __('Plate') => $vehicle->plate,                                             # C CELL
+                __('Route') => $dispatchRegister->route->name,                                  # B CELL
+                __('Round trip') => $dispatchRegister->round_trip,                                  # B CELL
                 __('Driver') => $report->driverName,                                        # D CELL
-                __('Route time') => $routeTimes,                                            # E CELL
+                __('Departure time') => $dispatchRegister->departure_time,                                            # E CELL
+                __('Arrival time') => $dispatchRegister->arrival_time,                                            # E CELL
+                __('Route time') => $dispatchRegister->getRouteTime(),                                            # E CELL
             ])->merge($controlPointsReport)->toArray();
         }
 
@@ -158,7 +162,7 @@ class ControlPointsReportController extends Controller
             'title' => __('Control point time report'),
             'subTitle' => " $route->name $dateReport",
             'data' => $dataExcel,
-            'type' => 'controlPointTimesByAll'
+            'type' => 'controlPointsReport'
         ];
 
 

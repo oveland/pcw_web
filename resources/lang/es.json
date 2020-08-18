@@ -700,5 +700,8 @@
   "Control points": "Puntos de control",
   "Range": "Rango",
   "Speeding_report": "Excesos",
-  "Speeding report": "Reporte de excesos de velocidad"
+  "Speeding report": "Reporte de excesos de velocidad",
+  "Averages": "Promedios",
+  "Scheduled time from dispatch": "Tiempo programado desde despacho",
+  "Average time from dispatch": "Tiempo promedio desde despacho"
 }

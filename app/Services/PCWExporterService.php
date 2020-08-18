@@ -96,7 +96,7 @@ class PCWExporterService
             });
 
             /* SORTABLE COLUMN HEADERS */
-            if(!$disableFilters)$sheet->setAutoFilter("A$startIndex:$config->lastLetter" . ($config->totalRows));
+            if (!$disableFilters) $sheet->setAutoFilter("A$startIndex:$config->lastLetter" . ($config->totalRows));
 
             /*  MAIN HEADER */
             $sheet->setHeight(1, 50);
@@ -224,6 +224,34 @@ class PCWExporterService
 
                 $sheet->setCellValue("D$lastRow", "TOTAL");
                 $sheet = self::styleFooter($sheet, $config);
+                break;
+
+            case 'controlPointsReport':
+                $startIndex = $config->startIndex + 1;
+                $rows = range($config->startIndex + 1, $config->totalRows, 1);
+
+                foreach ($rows as $row) {
+                    $cell = $sheet->getCell($config->lastLetter . $row);
+                    $cellLink = $cell->getValue();
+
+                    $cell->getHyperlink()->setUrl($cellLink);
+                    $cell->setValueExplicit(__('Chart'));
+                }
+
+                $sheet->cells("$config->lastLetter$startIndex:$config->lastLetter$config->totalRows", function ($cells) {
+                    $cells->setValignment('center');
+                    $cells->setAlignment('center');
+                    $cells->setBackground('#0a0a15');
+                    $cells->setFontColor(self::$fontColorInverse);
+                    $cells->setFont(array(
+                        'family' => 'Calibri',
+                        'size' => '13',
+                        'bold' => true,
+                        'italic' => true,
+                        'underline' => \PHPExcel_Style_Font::UNDERLINE_SINGLE
+                    ));
+                });
+
                 break;
 
             case 'offRoadReport':

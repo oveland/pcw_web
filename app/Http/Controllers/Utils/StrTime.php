@@ -11,16 +11,17 @@ namespace App\Http\Controllers\Utils;
 
 class StrTime
 {
-    static function intervalToTime($interval){
+    static function intervalToTime($interval)
+    {
         return self::segToStrTime(self::toSeg($interval));
     }
 
     static function toSeg($strTime)
     {
-        if( $strTime == '--:--:--' )return 0;
+        if ($strTime == '--:--:--') return 0;
         $strTimeArray = explode(":", $strTime);
 
-        if(count($strTimeArray) == 2){
+        if (count($strTimeArray) == 2) {
             return $strTimeArray[0] * 60 + $strTimeArray[1];
         }
         return $strTimeArray[0] * 3600 + $strTimeArray[1] * 60 + $strTimeArray[2];
@@ -61,6 +62,15 @@ class StrTime
         }
     }
 
+    static function differenceInSeconds($strTimeA, $strTimeB)
+    {
+        if (self::timeAGreaterThanTimeB($strTimeB, $strTimeA)) {
+            return self::toSeg(self::subStrTime($strTimeB, $strTimeA));
+        } else {
+            return -self::toSeg(self::subStrTime($strTimeA, $strTimeB));
+        }
+    }
+
     static function addStrTime($strTimeA, $strTimeB)
     {
         return self::segToStrTime(self::toSeg($strTimeA) + self::toSeg($strTimeB));
@@ -71,12 +81,14 @@ class StrTime
         return self::segToStrTime(self::toSeg($strTimeA) - self::toSeg($strTimeB));
     }
 
-    static function toString($time){
-        return explode('.',$time)[0];
+    static function toString($time)
+    {
+        return explode('.', $time)[0];
     }
 
-    static function toShortString($time){
-        $fields = explode(':',self::toString($time));
+    static function toShortString($time)
+    {
+        $fields = explode(':', self::toString($time));
         return "$fields[0]:$fields[1]";
     }
 }

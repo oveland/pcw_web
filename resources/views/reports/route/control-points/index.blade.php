@@ -218,9 +218,9 @@
                     </div>
                 </div>
             </div>
+            </div>
         </form>
         <!-- end search form -->
-        <hr class="hr">
         <!-- begin content report -->
         <div class="report-container col-md-12"></div>
         <!-- end content report -->

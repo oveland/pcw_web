@@ -17,6 +17,7 @@ use App\Http\Controllers\Utils\StrTime;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use Illuminate\Support\Collection;
+use Psy\Util\Str;
 
 class ControlPointService
 {
@@ -52,11 +53,11 @@ class ControlPointService
 
         if ($ascendant) {
             $allReportsByControlPoints = $allReportsByControlPoints->sortBy(function (ControlPointTimeReport $report) {
-                return $report->date.$report->dispatchRegister->departure_time;
+                return $report->date . $report->dispatchRegister->departure_time;
             });
         } else {
             $allReportsByControlPoints = $allReportsByControlPoints->sortByDesc(function (ControlPointTimeReport $report) {
-                return $report->date.$report->dispatchRegister->departure_time;
+                return $report->date . $report->dispatchRegister->departure_time;
             });
         }
 
@@ -105,6 +106,7 @@ class ControlPointService
             $scheduledControlPointTime = $controlPointTime ? StrTime::addStrTime($departureTime, $controlPointTime->time_from_dispatch) : '--:--:--';
             $measuredControlPointTime = '--:--:--';
             $difference = '--:--:--';
+            $differenceInSeconds = 0;
             $statusColor = '';
             $statusText = '';
             $timeScheduled = '00:00:00';
@@ -165,6 +167,7 @@ class ControlPointService
                 }
 
                 $difference = StrTime::difference($measuredControlPointTime, $scheduledControlPointTime);
+                $differenceInSeconds = StrTime::differenceInSeconds($measuredControlPointTime, $scheduledControlPointTime);
             }
 
             $departureFringe = $dispatchRegister->departureFringe;
@@ -186,7 +189,9 @@ class ControlPointService
                 'timeMeasured' => $timeMeasured,
                 'timep' => $controlPointTimeReport->timep ?? '--:--:--',
                 'timem' => $controlPointTimeReport->timem ?? '--:--:--',
-                'difference' => $difference
+                'difference' => $difference,
+                'differenceInSeconds' => $differenceInSeconds,
+                'timeMeasuredInSeconds' => StrTime::toSeg($timeMeasured),
             ]);
         }
 

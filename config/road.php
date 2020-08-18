@@ -92,5 +92,5 @@ return [
     | Defines the time for report a vehicle as parked
     |
     */
-    'time_parked_vehicle_threshold' => '00:10:00',
+    'time_parked_vehicle_threshold' => '00:08:00',
 ];
