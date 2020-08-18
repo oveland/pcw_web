@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Routes\Fringe;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 use Auth;
@@ -46,7 +47,9 @@ class GeneralController extends Controller
         $fringes = [];
         $route = Route::find($request->get('route'));
         if ($route) {
-            $fringes = $route->allFringes()->orderBy('from')->get();
+            $fringes = $route->allFringes()->get()->sortBy(function (Fringe $f){
+                return "$f->day_type_id.$f->from";
+            });
         }
 
         return view('partials.selects.fringes', compact(['fringes']));
