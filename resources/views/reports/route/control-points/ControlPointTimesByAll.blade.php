@@ -14,20 +14,17 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-control-points-search-report') }}?export=true&type-report={{ $query->typeReport }}&date-report={{ $query->dateReport }}&company-report={{ $query->company->id }}&route-report={{ $query->route->id }}" class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
+                <a href="{{ route('report-route-control-points-search-report') }}?export=true&type-report={{ $query->typeReport }}&date-report={{ $query->dateReport }}&company-report={{ $query->company->id }}&route-report={{ $query->route->id }}"
+                   class="btn btn-lime btn-rounded bg-lime-dark btn-sm tooltips"
                    data-title="@lang('Export excel')" data-placement="bottom">
-                    <i class="fa fa-file-excel-o"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-info " data-click="panel-expand" title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
+                    <i class="fa fa-file-excel-o"></i> @lang('Export')
                 </a>
             </div>
 
             <h5 class="text-white m-t-10">
-                <span class="hides text-uppercase">
+                <span class="hides">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    @lang('Control point time report')
-                    <hr class="text-inverse-light">
+                    {{ count($reportsByControlPoints) }} @lang('registers')
                 </span>
             </h5>
         </div>
@@ -195,14 +192,12 @@
                             @endforeach
                             @if($reportsByControlPoints->count())
                                 <tr>
-                                    <td colspan="4">
-
+                                    <td colspan="4" class="bg-inverse">
                                     </td>
                                     <th class="text-center text-muted bg-inverse tooltips" data-title="@lang('Average'): @lang('Route time')">
                                         {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$reportsByControlPoints->count()) }}
                                     </th>
-                                    <td colspan="20">
-
+                                    <td colspan="20" class="bg-inverse">
                                     </td>
                                 </tr>
                             @endif
