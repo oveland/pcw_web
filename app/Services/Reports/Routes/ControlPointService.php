@@ -25,24 +25,38 @@ class ControlPointService
      * @param Route $route
      * @param string $vehicleReport
      * @param $dateReport
+     * @param null $dateEndReport
+     * @param array | null $controlPointReport
+     * @param null $fringeReport
      * @param bool $ascendant
      * @return Collection
      */
-    function buildReportsByControlPoints(Company $company, Route $route, $vehicleReport = 'all', $dateReport, $ascendant = true)
+    function buildReportsByControlPoints(Company $company, Route $route, $vehicleReport = 'all', $dateReport, $dateEndReport = null, $controlPointReport = null, $fringeReport = null, $ascendant = true)
     {
-        $dispatchRegisters = DispatchRegister::active()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $route->id, $vehicleReport)->active()
+//        $dispatchRegisters = DispatchRegister::active()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
             ->orderByDesc('departure_time')
             ->get();
 
-        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))->get();
+        if ($fringeReport) {
+            $dispatchRegisters = $dispatchRegisters->where('departure_fringe_id', $fringeReport);
+        }
+
+        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
+
+        if (is_array($controlPointReport)) {
+            $allReportsByControlPoints = $allReportsByControlPoints->whereIn('control_point_id', $controlPointReport);
+        }
+
+        $allReportsByControlPoints = $allReportsByControlPoints->get();
 
         if ($ascendant) {
             $allReportsByControlPoints = $allReportsByControlPoints->sortBy(function (ControlPointTimeReport $report) {
-                return $report->dispatchRegister->departure_time;
+                return $report->date.$report->dispatchRegister->departure_time;
             });
         } else {
             $allReportsByControlPoints = $allReportsByControlPoints->sortByDesc(function (ControlPointTimeReport $report) {
-                return $report->dispatchRegister->departure_time;
+                return $report->date.$report->dispatchRegister->departure_time;
             });
         }
 
@@ -51,7 +65,7 @@ class ControlPointService
         $reportsByControlPoints = collect([]);
         foreach ($reportsByDispatchRegister as $dispatchRegisterId => $reportByDispatchRegister) {
             $dispatchRegister = DispatchRegister::find($dispatchRegisterId);
-            $reportsByControlPoints->push($this->buildControlPointReportsByDispatchRegister($dispatchRegister, $reportByDispatchRegister));
+            $reportsByControlPoints->push($this->buildControlPointReportsByDispatchRegister($dispatchRegister, $reportByDispatchRegister, $controlPointReport));
         }
 
         return $reportsByControlPoints;
@@ -61,11 +75,15 @@ class ControlPointService
     /**
      * @param DispatchRegister $dispatchRegister
      * @param Collection $reportByDispatchRegister
+     * @param array | null $controlPointId
      * @return object
      */
-    public function buildControlPointReportsByDispatchRegister(DispatchRegister $dispatchRegister, $reportByDispatchRegister)
+    public function buildControlPointReportsByDispatchRegister(DispatchRegister $dispatchRegister, $reportByDispatchRegister, $controlPointId = null)
     {
         $controlPoints = $dispatchRegister->route->controlPoints;
+
+        if (is_array($controlPointId)) $controlPoints = $controlPoints->whereIn('id', collect($controlPointId)->merge([$controlPoints->first()->id, $controlPoints->last()->id]));
+
         $vehicle = $dispatchRegister->vehicle;
         $driver = $dispatchRegister->driver;
         $driverName = $dispatchRegister->driverName();
@@ -107,12 +125,20 @@ class ControlPointService
                 if ($first) { // On first control point take 'At time' status
                     $scheduledControlPointTime = $departureTime;
                     $measuredControlPointTime = $departureTime;
+
+                    $controlPointTimeReport = new ControlPointTimeReport();
+                    $controlPointTimeReport->status_in_minutes = 0;
                 } else if ($last && $dispatchRegister->complete()) { // On last control point take the dispatch's times
                     $scheduledControlPointTime = $arrivalTimeScheduled;
                     $measuredControlPointTime = $arrivalTime;
 
                     $timeScheduled = StrTime::subStrTime($arrivalTimeScheduled, $departureTime);
                     $timeMeasured = StrTime::subStrTime($arrivalTime, $departureTime);
+
+                    $controlPointTimeReport = new ControlPointTimeReport();
+                    $difference = StrTime::difference($measuredControlPointTime, $scheduledControlPointTime);
+                    $controlPointTimeReport->status_in_minutes = StrTime::toSeg($difference) / 60;
+
                 } else { // On middle control points calculates the params report with the interpolation process
                     $controlPointTime = ControlPointTime::where('control_point_id', $controlPoint->id)
                         ->where('fringe_id', $dispatchRegister->departure_fringe_id)

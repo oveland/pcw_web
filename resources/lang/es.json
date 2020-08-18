@@ -686,5 +686,19 @@
   "Fuel tariff": "Tarifa combustible",
   "Taken at": "Recaudado en",
   "Various": "Varios",
-  "Date end": "Fecha final"
+  "Date end": "Fecha final",
+  "Control point": "Punto de Control",
+  "Select Control Point": "Seleccione un punto de control",
+  "No control points found": "Sin puntos de control",
+  "All control points": "Todos",
+  "GPS time": "Hora GPS",
+  "From dispatch": "Desde despacho",
+  "Scheduled": "Programado",
+  "Measured": "Medido",
+  "Show details": "Mostrar detalles",
+  "No fringes found": "Sin franjas",
+  "Control points": "Puntos de control",
+  "Range": "Rango",
+  "Speeding_report": "Excesos",
+  "Speeding report": "Reporte de excesos de velocidad"
 }

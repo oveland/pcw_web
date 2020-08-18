@@ -30,6 +30,28 @@ class GeneralController extends Controller
         return view('partials.selects.routes', compact(['routes', 'withAll', 'withNone', 'defaultKmzUrl']));
     }
 
+    public function loadSelectControlPoints(Request $request)
+    {
+        $controlPoints = [];
+        $route = Route::find($request->get('route'));
+        if ($route) {
+            $controlPoints = $route->controlPoints->sortBy('order');
+        }
+
+        return view('partials.selects.controlPoints', compact(['controlPoints']));
+    }
+
+    public function loadSelectFringes(Request $request)
+    {
+        $fringes = [];
+        $route = Route::find($request->get('route'));
+        if ($route) {
+            $fringes = $route->allFringes()->orderBy('from')->get();
+        }
+
+        return view('partials.selects.fringes', compact(['fringes']));
+    }
+
     public function loadSelectDrivers(Request $request)
     {
         $company = $this->getCompany($request);
@@ -68,12 +90,12 @@ class GeneralController extends Controller
         if ($route) {
             $company = $route->company;
             $vehicles = $user->assignedVehicles($company);
-            if($company->id === Company::MONTEBELLO){
-                $vehicles = $vehicles->filter(function($vehicle) use ($routeId){
+            if ($company->id === Company::MONTEBELLO) {
+                $vehicles = $vehicles->filter(function ($vehicle) use ($routeId) {
                     return $vehicle->dispatcherVehicles()->where('route_id', $routeId)->get()->count();
                 });
             }
-        }else{
+        } else {
             $vehicles = $user->assignedVehicles(null);
         }
 
@@ -111,7 +133,7 @@ class GeneralController extends Controller
     {
         $routes = ($company ? $company->activeRoutes->sortBy('name') : []);
 
-        return  Auth::user()->canViewAllRoutes() ? $routes : $routes->where('as_group', true) ;
+        return Auth::user()->canViewAllRoutes() ? $routes : $routes->where('as_group', true);
     }
 
     public static function getVehiclesFromCompany(Company $company = null)

@@ -95,6 +95,11 @@ class Route extends Model
         return $this->hasMany(Fringe::class)->where('day_type_id', $dayType)->get();
     }
 
+    public function allFringes()
+    {
+        return $this->hasMany(Fringe::class);
+    }
+
     public function currentLocations()
     {
         $currentRouteDispatchRegisters = $this->currentDispatchRegisters;

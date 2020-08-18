@@ -13,8 +13,10 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Psy\Util\Str;
 
 class SpeedingService
 {
@@ -38,7 +40,9 @@ class SpeedingService
                 'totalSpeeding' => $speedingByVehicle->count(),
                 'speedingByRoutes' => (object)[
                     'speedingByRoute' => $speedingByVehicleByRoute,
-                    'totalSpeedingByRoutes' => $speedingByVehicleByRoute->sum(function ($route) { return count($route); })
+                    'totalSpeedingByRoutes' => $speedingByVehicleByRoute->sum(function ($route) {
+                        return count($route);
+                    })
                 ]
             ]);
         }
@@ -58,21 +62,34 @@ class SpeedingService
      */
     function allSpeeding(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
+        $initialDate = trim($initialDate);
+        $finalDate = trim($finalDate);
         $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
 
-        if($routeReport == 'all' || !$routeReport){
+        if ($routeReport == 'all' || !$routeReport) {
             $vehicles = $company->vehicles();
-            if($vehicleReport != 'all'){
+            if ($vehicleReport != 'all') {
                 $vehicles = $vehicles->where('id', $vehicleReport);
             }
 
             $allSpeeding = $allSpeeding->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
-        }else{
-            $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
+        } else {
+            $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)
+                ->select('id')
+                ->get();
             $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
         }
 
         $allSpeeding = $allSpeeding->orderBy('date')->get();
+
+        $allSpeeding = $allSpeeding
+            ->filter(function (Location $s) use ($initialDate, $finalDate) {
+                $time = $s->date->toTimeString();
+                $initialTime = collect(explode(' ', $initialDate))->get(1);
+                $finalTime = collect(explode(' ', $finalDate))->get(1);
+
+                return $time >= $initialTime && $time <= $finalTime;
+            })->sortBy('id');
 
         return $allSpeeding;
     }

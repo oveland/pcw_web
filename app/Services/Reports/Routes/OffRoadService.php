@@ -19,7 +19,6 @@ use Excel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
-use App\Models\Routes\Route;
 
 class OffRoadService
 {
@@ -34,7 +33,7 @@ class OffRoadService
     function offRoadByVehiclesReport(Company $company, $initialDate, $finalDate)
     {
         $offRoadByVehiclesReport = collect([]);
-        $offRoadsByVehiclesByRoutes = $this->offRoadsByVehicles($this->allOffRoads($company, $initialDate, $finalDate));
+        $offRoadsByVehiclesByRoutes = self::groupByFirstOffRoadByRoute($this->allOffRoads($company, $initialDate, $finalDate));
 
         foreach ($offRoadsByVehiclesByRoutes as $vehicleId => $offRoadsByRoutes) {
             $offRoadByVehiclesReport->put($vehicleId, [
@@ -79,12 +78,23 @@ class OffRoadService
             return $allSpeeding->orderBy('date')->get();
          */
 
-        $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $initialDate, $routeReport, $vehicleReport)->get();
-        return Location::witOffRoads()
+        $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)->get();
+        $allOffRoads = Location::witOffRoads()
             ->whereBetween('date', [$initialDate, $finalDate])
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
             ->orderBy('date')
             ->get();
+
+        $allOffRoads = $allOffRoads
+            ->filter(function (Location $o) use ($initialDate, $finalDate) {
+                $time = $o->date->toTimeString();
+                $initialTime = collect(explode(' ', $initialDate))->get(1);
+                $finalTime = collect(explode(' ', $finalDate))->get(1);
+
+                return $time >= $initialTime && $time <= $finalTime;
+            })->sortBy('id');
+
+        return $allOffRoads;
     }
 
     /**
@@ -120,25 +130,6 @@ class OffRoadService
     }
 
     /**
-     * Groups all off roads by vehicle and first event
-     *
-     * @param $allOffRoads
-     * @return \Illuminate\Support\Collection
-     */
-    function offRoadsByVehicles($allOffRoads)
-    {
-        $allOffRoadsByVehicles = $allOffRoads->groupBy('vehicle_id');
-
-        $offRoadsByVehicles = collect([]);
-        foreach ($allOffRoadsByVehicles as $vehicleId => $offRoadsByVehicle) {
-            $offRoadsEvents = self::groupByFirstOffRoadByRoute($offRoadsByVehicle);
-            if (count($offRoadsEvents)) $offRoadsByVehicles->put($vehicleId, $offRoadsEvents);
-        }
-
-        return $offRoadsByVehicles;
-    }
-
-    /**
      * Extract first event of the all off roads and group it by route
      *
      * @param $offRoadsByVehicle
@@ -163,7 +154,8 @@ class OffRoadService
      * @param $offRoadsByVehicle
      * @return \Illuminate\Support\Collection
      */
-    function groupByFirstOffRoad($offRoadsByVehicle){
+    function groupByFirstOffRoad($offRoadsByVehicle)
+    {
         return self::groupByFirstOffRoadEvent($offRoadsByVehicle);
     }
 
@@ -184,7 +176,7 @@ class OffRoadService
         $lastOffRoad = null;
         $offRoadMove = collect([]);
         foreach ($offRoadsByVehicle as $offRoad) {
-            if( $lastOffRoad && Geolocation::getDistance($offRoad->latitude, $offRoad->longitude, $lastOffRoad->latitude, $lastOffRoad->longitude) > 10 ){
+            if ($lastOffRoad && Geolocation::getDistance($offRoad->latitude, $offRoad->longitude, $lastOffRoad->latitude, $lastOffRoad->longitude) > 10) {
                 $offRoadMove->push($offRoad);
             }
             $lastOffRoad = $offRoad;
@@ -196,11 +188,11 @@ class OffRoadService
 
         $offRoadByDispatchRegisters = $offRoadMove->groupBy('dispatch_register_id');
 
-        foreach ($offRoadByDispatchRegisters as $offRoadByDispatchRegister){
+        foreach ($offRoadByDispatchRegisters as $offRoadByDispatchRegister) {
 
-            if($truncateTimeFromDispatchRegister || true){
+            if ($truncateTimeFromDispatchRegister || true) {
                 $dispatchRegister = $offRoadByDispatchRegister->first()->dispatchRegister;
-                if($dispatchRegister){
+                if ($dispatchRegister) {
                     $date = $dispatchRegister->getParsedDate()->toDateString();
                     $offRoadByDispatchRegister = $offRoadByDispatchRegister->where('date', '<=', "$date $dispatchRegister->arrival_time_scheduled");
                 }
@@ -216,7 +208,7 @@ class OffRoadService
                 }
 
                 if ($totalByGroup > 3) {
-                    if( $firstOffRoadOnGroup->isTrueOffRoad() ){
+                    if ($firstOffRoadOnGroup->isTrueOffRoad()) {
                         $offRoadsEvents->push($firstOffRoadOnGroup);
                     }
                     $totalByGroup = 0;
@@ -237,29 +229,27 @@ class OffRoadService
     public function exportByVehicles($dataReport, $query)
     {
         return Excel::create(__('Off Roads') . " $query->dateReport", function ($excel) use ($dataReport, $query) {
-            foreach ($dataReport as $vehicleId => $reportByRoutes) {
+            foreach ($dataReport as $vehicleId => $reports) {
                 $vehicle = Vehicle::find($vehicleId);
                 $dataExcel = array();
 
-                foreach ($reportByRoutes as $routeID => $reportByRoute) {
-                    $route = Route::find($routeID);
-                    foreach ($reportByRoute as $report){
-                        $dispatchRegister = $report->dispatchRegister;
+                foreach ($reports as $report) {
+                    $dispatchRegister = $report->dispatchRegister;
+                    $route = $dispatchRegister->route;
 
-                        $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => $report->id]);
+                    $link = route('link-report-route-chart-view', ['dispatchRegister' => $dispatchRegister->id, 'location' => $report->id]);
 
-                        $dataExcel[] = [
-                            __('N°') => count($dataExcel) + 1,                                                              # A CELL
-                            __('Vehicle') => intval($vehicle->number),                                                      # B CELL
-                            __('Plate') => $vehicle->plate,                                                                 # C CELL
-                            __('Route') => $route->name,                                                                    # D CELL
-                            __('Turn') => $dispatchRegister->turn,                                                          # E CELL
-                            __('Round Trip') => $dispatchRegister->round_trip,                                              # F CELL
-                            __('Time') => $report->date->toTimeString(),                                                    # G CELL
-                            //__('Location') => Geolocation::getAddressFromCoordinates($report->latitude, $report->longitude),
-                            __('Details') => $link                                                                          # H CELL
-                        ];
-                    }
+                    $dataExcel[] = [
+                        __('N°') => count($dataExcel) + 1,                                                              # A CELL
+                        __('Date') => $report->date->toDateString(),                                                # G CELL
+                        __('Time') => $report->date->toTimeString(),                                                # G CELL
+                        __('Vehicle') => intval($vehicle->number),                                                      # B CELL
+                        __('Route') => $route->name,                                                                    # D CELL
+                        __('Turn') => $dispatchRegister->turn,                                                          # E CELL
+                        __('Round Trip') => $dispatchRegister->round_trip,                                              # F CELL
+                        //__('Location') => Geolocation::getAddressFromCoordinates($report->latitude, $report->longitude),
+                        __('Details') => $link                                                                          # H CELL
+                    ];
                 }
 
                 $dataExport = (object)[
@@ -270,8 +260,6 @@ class OffRoadService
                     'data' => $dataExcel,
                     'type' => 'offRoadReport'
                 ];
-                //foreach ()
-                /* SHEETS */
                 $excel = PCWExporterService::createHeaders($excel, $dataExport);
                 $excel = PCWExporterService::createSheet($excel, $dataExport);
             }

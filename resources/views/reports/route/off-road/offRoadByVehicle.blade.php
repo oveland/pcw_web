@@ -2,182 +2,113 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-off-road-search') }}?{{ $query->stringParams }}&export=true" class="btn btn-lime bg-lime-dark btn-sm btn-rounded tooltips"
-                data-title="@lang('Export excel')">
-                    <i class="fa fa-file-excel-o"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime " data-click="panel-expand"
-                   title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
+                <a href="{{ route('report-route-off-road-search') }}?{{ $query->stringParams }}&export=true"
+                   class="btn green btn-circle tooltips"
+                   data-title="@lang('Export excel')">
+                    <i class="fa fa-download"></i>
                 </a>
             </div>
 
-            <h5 class="text-white m-t-10 text-uppercase">
-                <i class="fa fa-random"></i> @lang('Off road report by Vehicle') <br> <i class="fa fa-clock-o"></i> {{ $query->initialTime }} - {{ $query->finalTime }}
-            </h5>
+            <div class="row">
+                <div class="col-md-11">
+                    <ul class="nav nav-pills nav-pills-success m-0">
+                        @foreach($offRoadsByVehicles as $vehicleId => $offRoadReport)
+                            @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
+                            <li class="{{ $loop->first ? 'active' : '' }}">
+                                <a href="#vehicle-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
+                                   data-original-title="{{ $vehicle->plate }}">
+                                    <i class="fa fa-car f-s-8 icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
+                                    <strong>{{ $vehicle->number }}</strong>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="tab-content panel">
-            <div class="row" style="display: contents">
-                <div class="col-md-6 col-lg-4 col-sm-12 col-xs-12 p-0">
-                    <div class="widge p-t-0 report-by-vehicle-container">
-                        <div class="widget-header bg-inverse m-0">
-                            <h4 class="text-white label-vehicles">{{ count($offRoadsByVehicles) }} @lang('Vehicles')
-                                <div class="col-md-1 pull-right p-0">
-                                    <i class="fa fa-times btn-clear-search btn btn-default btn-xs" onclick="$(this).parents('.label-vehicles').find('input').val('').keyup()"></i>
-                                </div>
-                                <div class="col-md-6 pull-right p-0">
-                                    <input type="number" class="form-control input-sm col-md-4 search-vehicle-list" placeholder="@lang('Search')" style="top:-7px"/>
-                                </div>
-                            </h4>
-                        </div>
-                        <div data-scrollbar="true" data-height="400px" data-distance="0px">
-                            <ul class="widget-todolist m-0">
-                                @foreach($offRoadsByVehicles as $vehicleId => $offRoadReport)
-                                    @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
-                                    @php( $totalOffRoads = $offRoadReport->sum(function ($route) { return count($route); }) )
+            @foreach($offRoadsByVehicles as $vehicleId => $offRoadReports)
+                @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
+                <div id="vehicle-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first ? 'active in' : '' }}">
+                    <div class="table-responsive col-md-12 p-0">
+                        <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
+                            <thead>
+                            <tr class="inverse">
+                                <th>
+                                    <i class="fa fa-list"></i>
+                                </th>
+                                <th>
+                                    <i class="fa fa-clock-o text-muted"></i><br>
+                                    @lang('Date')
+                                </th>
+                                <th>
+                                    <i class="fa fa-flag text-muted"></i><br>
+                                    @lang('Route')
+                                </th>
+                                <th>
+                                    <i class="fa fa-retweet text-muted"></i><br>
+                                    @lang('Round Trip')
+                                </th>
+                                <th>
+                                    <i class="fa fa-list-ol"></i><br>
+                                    @lang('Turn')
+                                </th>
+                                <th>
+                                    <i class="icon-user text-muted"></i><br>
+                                    @lang('Driver')
+                                </th>
+                                <th>
+                                    <i class="fa fa-rocket text-muted"></i><br>
+                                    @lang('Actions')
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($offRoadReports as $offRoad)
+                                @php
+                                    $dispatchRegister = $offRoad->dispatchRegister;
+                                    $driver = $dispatchRegister->driver;
+                                @endphp
+                                <tr>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $offRoad->date->toDatetimeString() }}</td>
+                                    <td class="text-center">{{ $dispatchRegister->route->name }}</td>
+                                    <td class="text-center">{{ $dispatchRegister->round_trip }}</td>
+                                    <td class="text-center">{{ $dispatchRegister->turn }}</td>
+                                    <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline btn-circle yellow-casablanca btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" data-title="@lang('Location')">
+                                            &nbsp;<i class="fa fa-map-marker"></i>&nbsp;
+                                        </button>
+                                        <span id="address-{{ $offRoad->id }}" class="tooltips" data-title="@lang('Address')"></span>
+                                        <button class="btn btn-outline btn-circle blue-chambray btn-show-address tooltips" data-title="@lang('Address')" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
+                                                data-url="{{ route('report-route-off-road-geolocation-address',['offRoad'=>$offRoad->id]) }}"
+                                                data-target="#address-{{ $offRoad->id }}">
+                                            <i class="fa fa-refresh faa-spin animated-hover hide"></i>
+                                            <i class="fa fa-map"></i>
+                                        </button>
 
-                                    <li id="vehicle-list-{{ $vehicle->number }}" class="vehicle-list accordion-toggle accordion-toggle-styled {{ $loop->first ? 'collapsed':'' }} accordion-vehicles" data-toggle="collapse" data-parent="#accordion-vehicles" data-target="#vehicle-{{ $vehicleId }}" {{ $loop->first ? 'aria-expanded=true':'' }}>
-                                        <div class="checkbox">
-                                            <label class="icon-vehicle-list">
-                                                <i class="fa fa-car text-muted"><span style="font-family: 'Lato', sans-serif;font-size: 50%;float: left;margin-left: 8px">{{ $loop->index + 1 }}</span></i>
-                                            </label>
-                                        </div>
-                                        <div class="info info-vehicle-list">
-                                            <h4>{{ $vehicle->number  }} <i class="fa fa-minus"></i> {{ $vehicle->plate  }}</h4>
-                                            <p><strong>{{ $totalOffRoads }} @lang('outs')</strong> @lang('in') {{ count($offRoadReport) }} {{ __(str_plural('route',count($offRoadReport))) }}</p>
-                                        </div>
-                                        <div class="action hide">
-                                            <a href="#" data-toggle="dropdown"><i class="fa fa-cog fa-spin"></i></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li><a href="javascript:;">Edit</a></li>
-                                                <li><a href="javascript:;">Archive</a></li>
-                                                <li><a href="javascript:;">Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
+                                        <a href="#modal-route-report"
+                                           class="btn btn-outline btn-circle green-meadow faa-parent animated-hover btn-show-chart-route-report tooltips"
+                                           data-toggle="modal"
+                                           data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}?centerOnLocation={{ $offRoad->id }}"
+                                           data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                                           data-original-title="@lang('Graph report detail')">
+                                            <i class="fa fa-area-chart faa-pulse"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr id="image-{{ $offRoad->id }}" class="collapse fade collapse-off-road-image" data-url="{{ route('report-route-off-road-geolocation-image',['offRoad'=>$offRoad->id]) }}">
+                                    <td colspan="6" class="text-center">
+                                        <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div id="accordion-vehicles" class="col-md-6 col-lg-8 col-sm-12 col-sm-12 p-l-0">
-                    @foreach($offRoadsByVehicles as $vehicleId => $offRoadReports)
-                        @php( $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId) )
-                        <div id="vehicle-{{ $vehicleId }}" class="panel-collapse collapse {{ $loop->first ? 'in':'' }}" aria-expanded="false">
-                            <!-- begin panel -->
-                            <div class="panel panel-white panel-with-tabs">
-                                <div class="panel-heading" style="display: flow-root;margin-top: 10px">
-                                    <ul id="panel-tab" class="nav nav-tabs nav-tabs-warning pull-right m-0">
-                                        @foreach($offRoadReports as $routeId => $offRoadReport)
-                                            @php($route = \App\Models\Routes\Route::find($routeId))
-                                            <li class="{{ $loop->first ? 'active':'' }}">
-                                                <a href="#panel-tab-{{ $vehicleId }}-{{ $route->id }}" data-toggle="tab">
-                                                    <span class="badge badge-danger m-b-5">{{ count($offRoadReport) }}</span>
-                                                    <span class="">{{ $route->name }}</span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                    <h4 class="panel-title">
-                                        {{ $vehicle->number  }} <i class="fa fa-minus"></i> {{ $vehicle->plate  }}
-                                    </h4>
-                                </div>
-                                <div id="panel-tab-content" class="tab-content">
-                                    @foreach($offRoadReports as $routeId => $offRoadReport)
-                                        @php($route = \App\Models\Routes\Route::find($routeId))
-                                        <div id="panel-tab-{{ $vehicleId }}-{{ $routeId }}" class="tab-pane fade in {{ $loop->first ? 'active':'' }}">
-                                            <div class="table-responsive col-md-12 p-0">
-                                                <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
-                                                    <thead>
-                                                        <tr class="inverse">
-                                                            <th>
-                                                                <i class="fa fa-list-ol"></i><br>
-                                                                @lang('Turn')
-                                                            </th>
-                                                            <th>
-                                                                <i class="fa fa-retweet text-muted"></i><br>
-                                                                @lang('Round Trip')
-                                                            </th>
-                                                            <th>
-                                                                <i class="icon-user text-muted"></i><br>
-                                                                @lang('Driver')
-                                                            </th>
-                                                            <th>
-                                                                <i class="fa fa-clock-o text-muted"></i><br>
-                                                                @lang('Time')
-                                                            </th>
-                                                            <th>
-                                                                <i class="fa fa-rocket text-muted"></i><br>
-                                                                @lang('Actions')
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @php($dispatchRegister = null)
-                                                        @php($offRoadReport = $offRoadReport->sortBy('date'))
-                                                        @foreach($offRoadReport as $offRoad)
-                                                            @php($dispatchRegister = $offRoad->dispatchRegister)
-                                                            @php($driver = $dispatchRegister->driver)
-                                                            <tr>
-                                                                <td>{{ $dispatchRegister->turn }}</td>
-                                                                <td>{{ $dispatchRegister->round_trip }}</td>
-                                                                <td class="text-uppercase" width="10%">{{ $driver?$driver->fullName():$dispatchRegister->driver_code }}</td>
-                                                                <td>{{ $offRoad->date->toTimeString() }}</td>
-                                                                <td class="text-center">
-                                                                    <button class="btn btn-xs btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $offRoad->id }}" data-title="@lang('Location')">
-                                                                        &nbsp;<i class="fa fa-map-marker"></i>&nbsp;
-                                                                    </button>
-                                                                    <span id="address-{{ $offRoad->id }}" class="tooltips" data-title="@lang('Address')"></span>
-                                                                    <button class="btn btn-xs btn-info btn-show-address tooltips" data-title="@lang('Address')" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
-                                                                            data-url="{{ route('report-route-off-road-geolocation-address',['offRoad'=>$offRoad->id]) }}"
-                                                                            data-target="#address-{{ $offRoad->id }}">
-                                                                        <i class="fa fa-refresh faa-spin animated-hover hide"></i>
-                                                                        <i class="fa fa-map"></i>
-                                                                    </button>
-
-                                                                    <a href="#modal-route-report"
-                                                                       class="btn btn-xs btn-lime btn-link faa-parent animated-hover btn-show-chart-route-report tooltips"
-                                                                       data-toggle="modal"
-                                                                       data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}?centerOnLocation={{ $offRoad->id }}"
-                                                                       data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                                                                       data-original-title="@lang('Graph report detail')">
-                                                                        <i class="fa fa-area-chart faa-pulse"></i>
-                                                                    </a>
-
-                                                                    @if( Auth::user()->isSuperAdmin() )
-                                                                        @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                                                                        @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                                                                        <hr class="hr no-padding">
-                                                                        <small>{!! $totalLocations !!} @lang('locations')</small><br>
-                                                                        <small>{!! $totalReports !!} @lang('reports')</small>
-                                                                    @endif
-                                                                </td>
-                                                            </tr>
-                                                            <tr id="image-{{ $offRoad->id }}" class="collapse fade collapse-off-road-image" data-url="{{ route('report-route-off-road-geolocation-image',['offRoad'=>$offRoad->id]) }}">
-                                                                <td colspan="5" class="text-center">
-                                                                    <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                    <tfoot class="hide">
-                                                        <tr>
-                                                            <td colspan="4" class="text-right">
-
-                                                            </td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <!-- end panel -->
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
     <script type="application/javascript">

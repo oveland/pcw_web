@@ -11,6 +11,28 @@
         });
     }
 
+    function loadSelectControlPointReport(route) {
+        let controlPointSelect = $('#control-point-report');
+        controlPointSelect.html($('#select-loading').html()).trigger('change.select2');
+        controlPointSelect.load('{{ route('general-load-select-control-points') }}', {
+            route,
+            withAll: true,
+        }, function () {
+            controlPointSelect.trigger('change.select2');
+        });
+    }
+
+    function loadSelectFringesReport(route) {
+        let fringeSelect = $('#fringe-report');
+        fringeSelect.html($('#select-loading').html()).trigger('change.select2');
+        fringeSelect.load('{{ route('general-load-select-fringes') }}', {
+            route,
+            withAll: true,
+        }, function () {
+            fringeSelect.trigger('change.select2');
+        });
+    }
+
     function loadSelectDriverReport(company) {
         let driverSelect = $('#driver-report');
         if (is_not_null(company)) {

@@ -12,9 +12,15 @@
 
     <div class="panel panel-inverse">
         <div class="panel-heading p-b-40">
-            <div class="panel-heading-btn">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&date-end-report={{ $dateEndReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=ungrouped-vehicles&export=true" class="btn btn-sm btn-info btn-rounded pull-left tooltips" data-title="@lang('Export ungrouped report')">
-                    <i class="fa fa-file-excel-o"></i>
+            <h6 class="pull-left">
+                {{ count($dispatchRegistersByVehicles) }} @lang('Vehicles')
+            </h6>
+
+            <div class="panel-heading-btn pull-right">
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&date-end-report={{ $dateEndReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=ungrouped-vehicles&export=true"
+                   class="btn green btn-circle tooltips"
+                   data-title="@lang('Export ungrouped report') | @lang('Excel')">
+                    <i class="fa fa-download"></i>
                 </a>
             </div>
         </div>

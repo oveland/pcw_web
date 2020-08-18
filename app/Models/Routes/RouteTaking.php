@@ -95,7 +95,7 @@ class RouteTaking extends Model
 
     function fuelTariff(Route $route = null)
     {
-        if ($this->isTaken()) {
+        if ($this->isTaken() && intval($this->fuel_tariff)) {
             return intval($this->fuel_tariff);
         }
 

@@ -4,17 +4,19 @@ namespace App\Models\Routes;
 
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\Routes\ControlPointTimeReport
  *
- * @property-read \App\Models\Routes\ControlPoint $controlPoint
- * @property-read \App\Models\Routes\DispatchRegister $dispatchRegister
- * @property-read \App\Models\Routes\Fringe $fringe
- * @property-read \App\Models\Vehicles\Location $location
- * @property-read \App\Models\Vehicles\Vehicle $vehicle
- * @mixin \Eloquent
+ * @property-read ControlPoint $controlPoint
+ * @property-read DispatchRegister $dispatchRegister
+ * @property-read Fringe $fringe
+ * @property-read Location $location
+ * @property-read Vehicle $vehicle
+ * @mixin Eloquent
  * @property int $id
  * @property int $version
  * @property int|null $control_point_id
@@ -33,24 +35,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $timem
  * @property string $timep
  * @property int $vehicle_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereControlPointId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereDateCreated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereDispatchRegisterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereDistanced($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereDistancem($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereDistancep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereFringeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereLastUpdated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereStatusInMinutes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereTimed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereTimem($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereTimep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereVehicleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPointTimeReport whereVersion($value)
+ * @method static Builder|ControlPointTimeReport whereControlPointId($value)
+ * @method static Builder|ControlPointTimeReport whereDate($value)
+ * @method static Builder|ControlPointTimeReport whereDateCreated($value)
+ * @method static Builder|ControlPointTimeReport whereDispatchRegisterId($value)
+ * @method static Builder|ControlPointTimeReport whereDistanced($value)
+ * @method static Builder|ControlPointTimeReport whereDistancem($value)
+ * @method static Builder|ControlPointTimeReport whereDistancep($value)
+ * @method static Builder|ControlPointTimeReport whereFringeId($value)
+ * @method static Builder|ControlPointTimeReport whereId($value)
+ * @method static Builder|ControlPointTimeReport whereLastUpdated($value)
+ * @method static Builder|ControlPointTimeReport whereLocationId($value)
+ * @method static Builder|ControlPointTimeReport whereStatus($value)
+ * @method static Builder|ControlPointTimeReport whereStatusInMinutes($value)
+ * @method static Builder|ControlPointTimeReport whereTimed($value)
+ * @method static Builder|ControlPointTimeReport whereTimem($value)
+ * @method static Builder|ControlPointTimeReport whereTimep($value)
+ * @method static Builder|ControlPointTimeReport whereVehicleId($value)
+ * @method static Builder|ControlPointTimeReport whereVersion($value)
  * @property-read mixed $background_profile
  */
 class ControlPointTimeReport extends Model

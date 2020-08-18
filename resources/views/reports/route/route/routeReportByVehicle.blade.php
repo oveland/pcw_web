@@ -12,13 +12,15 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&date-end-report={{ $dateEndReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=group-vehicles&export=true" class="btn btn-sm btn-primary btn-rounded pull-left tooltips" data-title="@lang('Export grouped report')">
-                    <i class="fa fa-file-excel-o"></i>
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&date-end-report={{ $dateEndReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=group-vehicles&export=true"
+                   class="btn green btn-circle tooltips"
+                   data-title="@lang('Export grouped report') | @lang('Excel')">
+                    <i class="fa fa-download"></i>
                 </a>
             </div>
             <div class="row">
                 <div class="col-md-11">
-                    <ul class="nav nav-pills nav-pills-success nav-vehicles">
+                    <ul class="nav nav-pills nav-pills-success m-0">
                         @foreach($dispatchRegistersByVehicles as $vehicleId => $dispatchRegisters)
                             @php
                                 $vehicle = \App\Models\Vehicles\Vehicle::find($vehicleId);
@@ -26,7 +28,7 @@
                             <li class="{{$loop->first?'active':''}}">
                                 <a href="#report-tab-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
                                    data-original-title="{{ $vehicle->plate }}">
-                                    <i class="fa fa-car f-s-8 icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
+                                    <i class="fa fa-car f-s-8 pull-right icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
                                     <strong>{{ $vehicle->number }}</strong>
                                 </a>
                             </li>

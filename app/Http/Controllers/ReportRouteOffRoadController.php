@@ -56,10 +56,14 @@ class ReportRouteOffRoadController extends Controller
     {
         list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
+        $date = $request->get('date-report');
+        $dateEnd = $request->get('with-end-date') ? $request->get('date-end-report') : $date;
+
         $query = (object)[
             'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
             'company' => $this->pcwAuthService->getCompanyFromRequest($request),
-            'dateReport' => $request->get('date-report'),
+            'dateReport' => $date,
+            'dateEndReport' => $dateEnd,
             'routeReport' => $request->get('route-report'),
             'vehicleReport' => $request->get('vehicle-report'),
             'initialTime' => $initialTime,
@@ -67,12 +71,12 @@ class ReportRouteOffRoadController extends Controller
             'typeReport' => $request->get('type-report'),
         ];
 
-        $allOffRoads = $this->offRoadService->allOffRoads($query->company, "$query->dateReport $query->initialTime:00", "$query->dateReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
-        $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
+        $allOffRoads = $this->offRoadService->allOffRoads($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
+        $offRoadsByVehicles = $allOffRoads->groupBy('vehicle_id');
 
-        if( $request->get('export') )$this->exportByVehicles($offRoadsByVehicles, $query);
+        if ($request->get('export')) $this->offRoadService->exportByVehicles($offRoadsByVehicles, $query);
 
-        return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles','query']));
+        return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles', 'query']));
     }
 
     /**
@@ -102,14 +106,5 @@ class ReportRouteOffRoadController extends Controller
     {
         $location->status = 'FOR';
         $location->save();
-    }
-
-    /**
-     * @param $dataReport
-     * @param $query
-     */
-    public function exportByVehicles($dataReport, $query)
-    {
-        $this->offRoadService->exportByVehicles($dataReport, $query);
     }
 }

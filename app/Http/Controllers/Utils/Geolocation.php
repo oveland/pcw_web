@@ -117,16 +117,16 @@ class Geolocation
     public static function getAddressFromCoordinates($latitude, $longitude)
     {
         $address = __('Unavailable');
-        if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90 ) return $address."*";
+        if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90) return $address . "*";
         $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=" . config('road.google_api_token');
 
         try {
             $client = new Client();
             $response = $client->get($url)->getBody()->getContents();
             $data = (object)json_decode($response, true);
-            $result = (object) collect($data->results)->first();
+            $result = (object)collect($data->results)->first();
 
-            $address = collect(explode(",", $result->formatted_address))->take(3)->implode(",") ;
+            $address = collect(explode(",", $result->formatted_address))->take(3)->implode(",");
         } catch (\Exception $e) {
         }
 
@@ -162,14 +162,22 @@ class Geolocation
         return rad2deg(acos($threshold_distance / $a) + acos($threshold_distance / $b));
     }
 
-    public static function getImageRouteWithANearLocation($route, $location)
+    /**
+     * @param null $route
+     * @param $location
+     * @return mixed
+     */
+    public static function getImageRouteWithANearLocation($route = null, $location)
     {
-        $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
-        $nearestRouteCoordinates = self::filterNearestRouteCoordinates($location, $routeCoordinates);
-
         $routePath = "path=color:0x0000ff";
-        foreach ($nearestRouteCoordinates as $nearestRouteCoordinate) {
-            $routePath .= '|' . $nearestRouteCoordinate->latitude . ',' . $nearestRouteCoordinate->longitude;
+
+        if ($route) {
+            $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
+            $nearestRouteCoordinates = self::filterNearestRouteCoordinates($location, $routeCoordinates);
+
+            foreach ($nearestRouteCoordinates as $nearestRouteCoordinate) {
+                $routePath .= '|' . $nearestRouteCoordinate->latitude . ',' . $nearestRouteCoordinate->longitude;
+            }
         }
 
         $url = "https://maps.googleapis.com/maps/api/staticmap?size=500x200&maptype=roadmap\&center=$location->latitude,$location->longitude&zoom=16&$routePath&markers=size:mid%7Ccolor:0xCC2701|$location->latitude,$location->longitude&key=" . config('road.google_api_token');
@@ -199,8 +207,8 @@ class Geolocation
      */
     public static function filterNearestRouteCoordinates($location, $route_coordinates)
     {
-        $location = (object) $location;
-        $route_coordinates = (object) $route_coordinates;
+        $location = (object)$location;
+        $route_coordinates = (object)$route_coordinates;
 
         $location_latitude = $location->latitude;
         $location_longitude = $location->longitude;
@@ -226,15 +234,15 @@ class Geolocation
     public static function findNearestCoordinateFromLocation($location, $routeCoordinates)
     {
         $nearestRouteCoordinate = [];
-        $location = (object) $location;
-        $routeCoordinates = (object) $routeCoordinates;
+        $location = (object)$location;
+        $routeCoordinates = (object)$routeCoordinates;
         $minRadius = 10000;
-        foreach ($routeCoordinates as $routeCoordinate){
+        foreach ($routeCoordinates as $routeCoordinate) {
             $radius = self::getDistance(
                 $routeCoordinate->latitude, $routeCoordinate->longitude,
                 $location->latitude, $location->longitude
             );
-            if($radius < $minRadius){
+            if ($radius < $minRadius) {
                 $nearestRouteCoordinate = $routeCoordinate;
                 $minRadius = $radius;
             }

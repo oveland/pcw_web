@@ -90,7 +90,7 @@
                         @endif
 
                         @if(true || Auth::user()->canSelectRouteReport())
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                     <div class="form-group">
@@ -115,11 +115,26 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="date-report"
-                                       class="control-label field-required">@lang('Date report')</label>
+                                <label for="date-report" class="control-label field-required">
+                                    @lang('Date')
+                                </label>
+                                <label class="text-bold">
+                                    &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
+                                </label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control"
-                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 date-end-container" style="display: none;">
+                            <div class="form-group">
+                                <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -136,7 +151,6 @@
             </div>
         </form>
         <!-- end search form -->
-        <hr class="hr">
         <!-- begin content report -->
         <div class="report-container col-md-12"></div>
         <!-- end content report -->
@@ -278,6 +292,13 @@
                     mainContainer.slideUp(100);
                 }
             });
+        });
+
+        $('#with-end-date').change(function(){
+            const dec =  $('.date-end-container').slideUp();
+            if ($(this).is(':checked')) {
+                dec.slideDown().val( '2020-10-08' );
+            }
         });
     </script>
 @endsection

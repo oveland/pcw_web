@@ -3,23 +3,21 @@
     <div class="panel-heading">
         <div class="panel-heading-btn">
             <a href="{{ route('report-vehicle-parked-search-report') }}?{{ $stringParams }}&export=true"
-               data-title="@lang('Export excel')"
-               class="btn btn-sm btn-lime btn-circle bg-lime-dark btn-icon pull-left tooltips">
-                <i class="fa fa-file-excel-o"></i>
-            </a>
-            <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime pull-right tooltips"
-               data-click="panel-expand" title="@lang('Expand / Compress')">
-                <i class="fa fa-expand"></i>
+               class="btn green btn-circle tooltips"
+               data-title="@lang('Export excel')">
+                <i class="fa fa-download"></i>
             </a>
         </div>
         <div class="row">
             <div class="col-md-11">
-                <ul class="nav nav-pills nav-pills-success">
+                <ul class="nav nav-pills nav-pills-success m-0">
                     @foreach($parkedReportsByVehicles as $vehicleId => $parkedReportsByVehicle)
                         @php( $vehicle = $parkedReportsByVehicle->first()->vehicle )
                         <li class="{{$loop->first?'active':''}}">
-                            <a href="#report-tab-{{ $vehicleId }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-title="{{ $vehicle->plate }}">
-                                {{ $vehicle->number }}
+                            <a href="#report-tab-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
+                               data-original-title="{{ $vehicle->plate }}">
+                                <i class="fa fa-car f-s-8 icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
+                                <strong>{{ $vehicle->number }}</strong>
                             </a>
                         </li>
                     @endforeach
@@ -39,7 +37,7 @@
                     </th>
                     <th class="col-md-2">
                         <i class="fa fa-clock-o text-muted"></i><br>
-                        @lang('Time')
+                        @lang('Date')
                     </th>
                     <th>
                         <i class="fa fa-car text-muted"></i><br>
@@ -57,114 +55,50 @@
                     <tr>
                         <td class="bg-inverse text-white text-center">{{ $loop->iteration }}</td>
                         <td class="text-center">
-                            {{ $parking->date->toTimeString() ?? '' }}
+                            {{ $parking->date->toDateTimeString() ?? '' }}
                         </td>
                         <td class="text-center">
-                            {{ $parking->vehicle->number }} | {{ $parking->vehicle->plate }}
+                            {{ $parking->vehicle->number }}
                         </td>
                         <td class="text-center">
+                            <button class="btn btn-outline btn-circle yellow-casablanca btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $parking->id }}" data-title="@lang('Location')">
+                                <i class="fa fa-map-marker"></i>
+                            </button>
+                            <span id="address-{{ $parking->id }}" class="tooltips" data-title="@lang('Address')"></span>
+                            <button class="btn btn-outline btn-circle blue-chambray btn-show-address tooltips" data-title="@lang('Address')" onclick="$(this).parent('td').find('.btn-location').find('span').slideUp(1000)"
+                                    data-url="{{ route('report-vehicle-parked-geolocation-address',['speeding'=>$parking->id]) }}"
+                                    data-target="#address-{{ $parking->id }}">
+                                <i class="fa fa-refresh faa-spin animated-hover hide"></i>
+                                <i class="fa fa-map"></i>
+                            </button>
                             @if( $dispatchRegister )
-                                <button class="btn btn-sm btn-primary faa-parent animated-hover tooltips" data-title="@lang('Route')"
-                                        data-toggle="collapse" data-target="#collapse-{{ $parking->id }}" aria-expanded="false" aria-controls="collapse-{{ $parking->id }}">
+                                <div class="faa-parent animated-hover tooltips" data-title="@lang('Route')"
+                                     data-toggle="collapse" data-target="#collapse-{{ $parking->id }}" aria-expanded="false" aria-controls="collapse-{{ $parking->id }}">
                                     <i class="fa fa-flag"></i>
-                                    {{ $dispatchRegister->route->name }}
-                                </button>
+                                    {{ $dispatchRegister->route->name }} |
+
+                                    <span class="text-capitalize tooltips" data-title="@lang('Driver')" data-placement="right">
+                                            <i class="fa fa-user"></i>
+                                            {{ $dispatchRegister->driverName() }}
+                                        </span>
+                                </div>
                             @else
-                                @lang('Without assigned route')
+                                <div>
+                                    @lang('Without assigned route')
+                                </div>
                             @endif
                         </td>
                     </tr>
 
-                    @if($dispatchRegister)
-                        @php( $driver = $dispatchRegister->driver )
-                        <tr id="collapse-{{ $parking->id }}" class="collapse fade" aria-expanded="true">
-                            <td class="bg-inverse text-white text-center">
-                                @lang('Details')
-                            </td>
-                            <td colspan="3">
-                                <div class="col-md-4">
-                                    <div class="widget widget-stat bg-info p-20">
-                                        <div class="widget-stat-btn">
-                                            <a href="javascript:void(0)" class="tooltips" data-title="{{ $dispatchRegister->status }}">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </div>
-                                        <div class="widget-stat-icon">
-                                            <i class="fa fa-flag"></i>
-                                        </div>
-                                        <div class="widget-stat-info">
-                                            <div class="widget-stat-title">
-                                                @lang('Route Information')
-                                            </div>
-                                            <div class="widget-stat-number">
-                                                <strong>{{ $dispatchRegister->route->name }}</strong>
-                                            </div>
-                                            <div class="widget-stat-text">
-                                                <strong>@lang('Turn')</strong> {{ $dispatchRegister->turn }},
-                                                <strong>@lang('Round Trip')</strong> {{ $dispatchRegister->round_trip }},
-                                                <strong class="tooltips" data-title="@lang('Departure time')" data-placement="bottom">{{ $dispatchRegister->departure_time }}</strong>
-                                                <br>
-                                                <span class="f-s-10 text-capitalize tooltips" data-title="@lang('Driver')" data-placement="right">
-                                                    <i class="fa fa-user"></i>
-                                                    {{ $dispatchRegister->driverName() }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <tr id="collapse-{{ $parking->id }}" class="e" aria-expanded="true">
+                        <td colspan="4" class="p-0">
+                            <div id="image-{{ $parking->id }}" class="collapse collapse-parked-location-image" data-url="{{ route('report-vehicle-parked-geolocation-image',['parkingReport'=>$parking->id]) }}">
+                                <div class="text-center">
+                                    <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
                                 </div>
-                                @if($parking->report_id)
-                                    <div class="col-md-4">
-                                        <div class="widget widget-stat bg-success p-20">
-                                        <div class="widget-stat-btn">
-                                            <a href="javascript:void(0)" class="tooltips" data-title="@lang('Near of') {{ $parking->controlPoint->name }}">
-                                                <i class="fa fa-map-marker"></i>
-                                            </a>
-                                        </div>
-                                        <div class="widget-stat-icon">
-                                            <i class="fa fa-area-chart"></i>
-                                        </div>
-                                        <div class="widget-stat-info">
-                                            <div class="widget-stat-title">
-                                                @lang('Route report')
-                                            </div>
-                                            <div class="widget-stat-number">
-                                                <strong>{{ $parking->timed }}</strong>
-                                            </div>
-                                            <div class="widget-stat-text">
-                                                <strong class="tooltips" data-title="@lang('Time scheduled')" data-placement="right">
-                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parking->timep) }}
-                                                </strong>
-                                                <br>
-                                                <strong class="tooltips" data-title="@lang('Time reported')" data-placement="right">
-                                                    {{ \App\Http\Controllers\Utils\Database::addStringTimes($dispatchRegister->departure_time, $parking->timem) }}
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                @endif
-                                <div class="col-md-4">
-                                    <button class="btn btn-sm btn-warning btn-location tooltips" data-toggle="collapse" data-target="#image-{{ $parking->id }}" title="@lang('Location')">
-                                        <i class="fa fa-map-marker"></i>
-                                        <span>@lang('Location')</span>
-                                    </button>
-                                    <hr>
-                                    <span id="address-{{ $parking->id }}" class="tooltips" data-title="@lang('Address')"></span>
-                                    <button class="btn btn-sm btn-info btn-show-address"
-                                            data-url="{{ route('report-vehicle-parked-geolocation-address',['parkingReport'=>$parking->id]) }}"
-                                            data-target="#address-{{ $parking->id }}">
-                                        <i class="fa fa-refresh faa-spin animated-hover hide"></i>
-                                        <span>@lang('Address')</span>
-                                    </button>
-                                </div>
-                                <div id="image-{{ $parking->id }}" class="collapse fade collapse-parked-location-image" data-url="{{ route('report-vehicle-parked-geolocation-image',['parkingReport'=>$parking->id]) }}">
-                                    <div class="text-center">
-                                        <i class="fa fa-2x fa-cog fa-spin text-muted"></i>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endif
+                            </div>
+                        </td>
+                    </tr>
                 @endforeach
                 </tbody>
             </table>

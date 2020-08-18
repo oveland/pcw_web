@@ -55,7 +55,11 @@ class ControlPointsReportController extends Controller
     {
         $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
+        $dateEndReport = $request->get('date-end-report');
+        $controlPointsReport = $request->get('control-points-report');
+        $fringeReport = $request->get('fringe-report');
         $vehicleId = $request->get('vehicle-report');
+        $showDetails = $request->get('show-details');
         $vehicle = $vehicleId != 'all' ? Vehicle::find($request->get('vehicle-report')) : null;
 
         $ascendant = $request->get('ascendant');
@@ -77,12 +81,15 @@ class ControlPointsReportController extends Controller
             'vehicleId' => $vehicleId,
             'vehicle' => $vehicle,
             'ascendant' => $ascendant,
-            'paintProfile' => $paintProfile
+            'paintProfile' => $paintProfile,
+            'controlPointsReport' => $controlPointsReport,
+            'fringeReport' => $fringeReport,
+            'showDetails' => $showDetails,
         ];
 
         if (!$route || !$route->belongsToCompany($company)) abort(404);
 
-        $reportsByControlPoints = $this->controlPointService->buildReportsByControlPoints($company, $route, $vehicleId, $dateReport, !!$ascendant);
+        $reportsByControlPoints = $this->controlPointService->buildReportsByControlPoints($company, $route, $vehicleId, $dateReport, $dateEndReport, $controlPointsReport, $fringeReport, !!$ascendant);
 
         switch ($typeReport) {
             case 'round-trip':

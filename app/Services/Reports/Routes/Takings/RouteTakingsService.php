@@ -19,7 +19,7 @@ class RouteTakingsService
         $takings = $dispatchRegister->takings;
         $takings->fill($data);
 
-        $takings->taken = $takings->total_production > 0 && $takings->net_production > 0;
+        $takings->taken = $takings->total_production > 0;
 
         $takings->user()->associate(Auth::user());
 

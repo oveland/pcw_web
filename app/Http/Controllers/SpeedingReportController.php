@@ -62,10 +62,14 @@ class SpeedingReportController extends Controller
     {
         list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
+        $date = $request->get('date-report');
+        $dateEnd = $request->get('with-end-date') ? $request->get('date-end-report') : $date;
+
         $query = (object)[
             'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
             'company' => $this->pcwAuthService->getCompanyFromRequest($request),
-            'dateReport' => $request->get('date-report'),
+            'dateReport' => $date,
+            'dateEndReport' => $dateEnd,
             'routeReport' => $request->get('route-report'),
             'vehicleReport' => $request->get('vehicle-report'),
             'initialTime' => $initialTime,
@@ -73,7 +77,7 @@ class SpeedingReportController extends Controller
             'typeReport' => $request->get('type-report'),
         ];
 
-        $allSpeeding =$this->speedingService->allSpeeding($query->company, "$query->dateReport $query->initialTime:00", "$query->dateReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
+        $allSpeeding =$this->speedingService->allSpeeding($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
         $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding);
 
         if( $request->get('export') )$this->export($speedingReportByVehicles, $query);
@@ -90,15 +94,18 @@ class SpeedingReportController extends Controller
     public function export($speedingReportByVehicle, $query)
     {
         $dateReport = $query->dateReport;
+        $dateEndReport = $query->dateEndReport;
         $typeReport = $query->typeReport;
+
+        $dateReport = $dateReport == $dateEndReport ? $dateReport : "$dateReport $dateEndReport";
 
         if( $typeReport == 'group' ){
             Excel::create(__('Speeding') . " $dateReport", function ($excel) use ($speedingReportByVehicle, $dateReport) {
                 foreach ($speedingReportByVehicle as $speedingReport) {
-                    $vehicle = $speedingReport->first()->vehicle;
                     $dataExcel = array();
 
                     foreach ($speedingReport as $speeding) {
+                        $vehicle = $speeding->vehicle;
                         $speed = $speeding->speed;
                         if( $speed > 200 ){
                             $speed = 100 + (random_int(-10,10));
@@ -106,23 +113,21 @@ class SpeedingReportController extends Controller
 
                         $dataExcel[] = [
                             __('N°') => count($dataExcel) + 1,                             # A CELL
+                            __('Date') => $speeding->date->toDateString(),                                 # B CELL
                             __('Time') => $speeding->time->toTimeString(),                                 # B CELL
-                            __('Vehicle') => intval($vehicle->number),                     # C CELL
-                            __('Plate') => $vehicle->plate,                                # D CELL
                             __('Speed') => number_format($speed,2, ',', ''),# E CELL
                             __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
                         ];
                     }
 
                     $dataExport = (object)[
-                        'fileName' => __('Speeding') . " $dateReport",
+                        'fileName' => str_limit(__('Speeding') . " $dateReport", 28, '...'),
                         'title' => __('Speeding') . " $dateReport",
                         'subTitle' => count($speedingReport)." ".__('Speeding'),
                         'sheetTitle' => "$vehicle->number",
                         'data' => $dataExcel
                     ];
-                    //foreach ()
-                    /* SHEETS */
+
                     $excel = PCWExporterService::createHeaders($excel, $dataExport);
                     $excel = PCWExporterService::createSheet($excel, $dataExport);
                 }
@@ -142,23 +147,21 @@ class SpeedingReportController extends Controller
 
                 $dataExcel[] = [
                     __('N°') => count($dataExcel) + 1,                             # A CELL
+                    __('Date') => $speeding->date->toDateString(),                                 # B CELL
                     __('Time') => $speeding->time->toTimeString(),                 # C CELL
                     __('Vehicle') => $vehicle->number,                             # B CELL
-                    __('Plate') => $vehicle->plate,                                # D CELL
                     __('Speed') => number_format($speed,2, ',', ''),# E CELL
                     __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
                 ];
             }
 
             $fileData = (object)[
-                'fileName' => __('Speeding') . " $dateReport",
+                'fileName' => __('Speeding_report'). " $dateReport",
                 'title' => " $dateReport",
                 'subTitle' => count($speedingReport)." ".__('Speeding'),
-                'sheetTitle' => __('Speeding') . " $dateReport",
+                'sheetTitle' => __('Speeding_report') . " $dateReport",
                 'data' => $dataExcel
             ];
-            //foreach ()
-            /* SHEETS */
 
             PCWExporterService::excel($fileData);
         }

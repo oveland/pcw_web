@@ -54,13 +54,19 @@ class ParkedVehiclesReportController extends Controller
     {
         $stringParams = explode('?', $request->getRequestUri())[1] ?? '';
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
+        $vehicleReport = $request->get('vehicle-report');
         $routeReport = $request->get('route-report');
         $dateReport = $request->get('date-report');
+        $dateEnd = $request->get('with-end-date') ? $request->get('date-end-report') : $dateReport;
 
         $vehicles = $company->userVehicles($routeReport);
+        if ($vehicleReport != 'all') {
+            $vehicles = $vehicles->where('id', $vehicleReport);
+        }
 
         $parkedReports = ParkingReport::whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+            ->whereBetween('date', ["$dateReport 00:00:00", "$dateEnd 23:59:59"])
+            ->orderBy('id')
             ->get();
 
         if ($request->get('export')) $this->export($parkedReports, $dateReport);
@@ -88,10 +94,8 @@ class ParkedVehiclesReportController extends Controller
                 __('N°') => count($dataExcel) + 1,                                       # A CELL
                 __('Parked date') => $parkedReport->date,                                # B CELL
                 __('Vehicle') => intval($vehicle->number),                               # C CELL
-                __('Plate') => $vehicle->plate,                                          # D CELL
                 __('Route') => $route->name ?? __('Without assigned route'),        # E CELL
                 __('Driver') => $driverName,                                             # F CELL
-                __('Status') => $parkedReport->timed,                                    # G CELL
             ];
         }
 
@@ -119,7 +123,7 @@ class ParkedVehiclesReportController extends Controller
      */
     public function getImageFromCoordinate(ParkingReport $parkingReport)
     {
-        $route = $parkingReport->dispatchRegister->route;
+        $route = $parkingReport->dispatchRegister ? $parkingReport->dispatchRegister->route : null;
         return Geolocation::getImageRouteWithANearLocation($route, $parkingReport);
     }
 }
