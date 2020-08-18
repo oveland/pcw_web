@@ -1,13 +1,28 @@
 <template>
     <div class="panel">
         <div class="p-t-20 p-l-30">
-            <button type="button" class="btn blue-hoki btn-search-report btn-outline btn-circle" @click="searchReport()">
-                <i class="fa fa-search"></i> {{ $t('Search') }}
-            </button>
-
-			<button type="button" class="btn green-meadow btn-search-report btn-outline btn-circle" @click="exportReport()">
-				<i class="fa fa-download"></i> {{ $t('Export') }}
-			</button>
+			<div class="btn-group btn-group-circle btn-group-solid m-0">
+				<button type="button" class="btn blue-hoki btn-search-report btn-outline" @click="searchReport()">
+					<i class="fa fa-search"></i> {{ $t('Search') }}
+				</button>
+				<div class="btn-group btn-group-solid m-0">
+					<button type="button" class="btn blue btn-circle-right btn-outline green-meadow dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+						 <i class="fa fa-file-excel-o"></i> {{ $t('Export') }} <i class="fa fa-angle-down"></i>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<a @click="exportReport('detailed')">
+								<i class="icon-list"></i> {{ $t('Detailed') }}
+							</a>
+						</li>
+						<li>
+							<a @click="exportReport('totals')">
+								<i class="icon-layers"></i> {{ $t('Totals') }}
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
         </div>
         <div class="panel-body p-b-15">
             <div class="form-input-flat">
@@ -28,7 +43,7 @@
 						<div class="form-group">
 							<multiselect track-by="name" label="name" :options="search.routes" v-model="search.route" :clear-on-select="false"
 										 :option-height="104" :searchable="true" :allow-empty="true"
-										 :placeholder="$t('Select a route')"
+										 :placeholder="$t('Select a route')" @input="hideMainContainer()"
 							></multiselect>
 						</div>
 					</div>
@@ -62,7 +77,7 @@
                     <div class="form-group">
 						<label class="control-label">{{ $t('Date') }} | {{ $t('Range') }} <input type="checkbox" v-model="search.dateRange" class="pull-right"></label>
                         <div class="input-group col-md-12">
-                            <date-picker v-model="search.date"  :range="search.dateRange" valueType="format" :first-day-of-week="1" lang="es" @change="searchReport()" width="100%"></date-picker>
+                            <date-picker v-model="search.date"  :range="search.dateRange" valueType="format" :first-day-of-week="1" lang="es" @input="hideMainContainer()" width="100%"></date-picker>
                         </div>
                     </div>
                 </div>
@@ -114,9 +129,13 @@
             searchReport: function () {
 				this.$emit('search-report');
             },
-			exportReport: function () {
-				this.$emit('export-report');
-            }
+			exportReport: function (type) {
+            	this.search.type = type;
+            	this.$emit('export-report');
+            },
+			hideMainContainer() {
+				$('.report-container').slideUp();
+			}
         },
         components: {
             Multiselect,

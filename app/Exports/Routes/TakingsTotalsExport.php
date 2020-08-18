@@ -18,7 +18,7 @@ use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, WithTitle, WithHeadings, WithEvents, WithColumnFormatting
+class TakingsTotalsExport implements FromCollection, ShouldAutoSize, Responsable, WithTitle, WithHeadings, WithEvents, WithColumnFormatting
 {
     use ExportWithPCWStyle;
 
@@ -30,35 +30,45 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
     {
         $dataExcel = array();
         $params = $data->params;
-        $dataReport = $data->report;
-        foreach ($dataReport->report as $report) {
+        $reportByVehicles = $data->report;
 
-            $observations = $report->takings->observations;
+        foreach ($reportByVehicles as $reportByDates) {
+            foreach ($reportByDates as $date => $data) {
+                $report = $data->report->sortBy('departureTime');
+                $firstDr = $report->first();
+                $lastDr = $report->last();
+                $roundTrips = $report->max('roundTrip');
+                $totals = (object)$data->totals;
 
-            if (!$report->takings->isTaken && $report->forNormalTakings) {
-                $observations = "      << " . strtoupper(__('No taken')) . " >>";
+                $routesNames = collect($report->pluck('route.name'));
+                $routesNames = $routesNames->combine($routesNames)->implode(', ');
+
+                $observations = $totals->observations;
+//                if (!$report->takings->isTaken && $report->forNormalTakings) {
+//                    $observations = "      << " . strtoupper(__('No taken')) . " >>";
+//                }
+
+//                $route = $report->onlyControlTakings ? __('Takings without dispatch turns') : $report->route->name;
+
+                $dataExcel[] = [
+                    __('N°') => count($dataExcel) + 1,                                                              # A CELL
+                    __('Date') => $date,                                                                            # B CELL
+                    __('Vehicle') => $firstDr->vehicle->number,                                                     # C CELL
+                    __('Routes') => $routesNames,                                                                   # D CELL
+                    __('Round trips') => $roundTrips,                                                               # E CELL
+                    __('Start recorder') => $firstDr->passengers->recorders->start,                                 # F CELL
+                    __('End recorder') => $lastDr->passengers->recorders->end,                                      # G CELL
+                    __('Passengers') => $totals->passengers,                                                        # H CELL
+                    __('Total production') => intval($totals->totalProduction),                                     # I CELL
+                    __('Control') => intval($totals->control),                                                      # J CELL
+                    __('Fuel') => intval($totals->fuel),                                                            # K CELL
+                    __('Fuel gallons') => number_format($totals->fuelGallons, 2),                          # L CELL
+                    __('Various') => intval($totals->bonus),                                                        # M CELL
+                    __('Others') => intval($totals->others),                                                        # N CELL
+                    __('Net production') => intval($totals->netProduction),                                         # O CELL
+                    __('Observations') => $observations,                                                            # P CELL
+                ];
             }
-
-            $route = $report->onlyControlTakings ? __('Takings without dispatch turns') : $report->route->name;
-
-            $dataExcel[] = [
-                __('N°') => count($dataExcel) + 1,                                                                  # A CELL
-                __('Date') => $report->date,                                                                        # B CELL
-                __('Vehicle') => $report->vehicle->number,                                                          # C CELL
-                __('Route') => $route,                                                                              # D CELL
-                __('Round trip') => $report->forNormalTakings ? $report->roundTrip : '',                            # E CELL
-                __('Start recorder') => $report->forNormalTakings ? $report->passengers->recorders->start : '',     # F CELL
-                __('End recorder') => $report->forNormalTakings ? $report->passengers->recorders->end : '',         # G CELL
-                __('Passengers') => $report->forNormalTakings ? $report->passengers->recorders->count : 0,          # H CELL
-                __('Total production') => intval($report->takings->totalProduction),                                # I CELL
-                __('Control') => intval($report->takings->control),                                                 # J CELL
-                __('Fuel') => intval($report->takings->fuel),                                                       # K CELL
-                __('Fuel gallons') => number_format($report->takings->fuelGallons, 2),                     # L CELL
-                __('Various') => intval($report->takings->bonus),                                                   # M CELL
-                __('Others') => intval($report->takings->others),                                                   # N CELL
-                __('Net production') => intval($report->takings->netProduction),                                    # O CELL
-                __('Observations') => $observations,                                                                # P CELL
-            ];
         }
 
         $dateReport = $params->initialDate . ($params->finalDate ? " - $params->finalDate" : '');
@@ -69,8 +79,8 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
         $subtitle .= " | " . ($route ? __('Route') . ": $route" : __('All routes'));
 
         $this->report = (object)[
-            'fileName' => __('Takings detailed r.') . " $dateReport",
-            'title' => __('Takings detailed report') . "\n $dateReport",
+            'fileName' => __('Takings totals r.') . " $dateReport",
+            'title' => __('Takings totals report') . "\n $dateReport",
             'subTitle' => "$subtitle",
             'sheetTitle' => $dateReport,
             'data' => $dataExcel
@@ -85,7 +95,10 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
      */
     public function setStyleSheet(Sheet $spreadsheet)
     {
-        $this->setStyleSheetWithFooter($spreadsheet);
+        $this->fillColorTitle = 'ffc92700';
+        $this->fillColorSubTitle = 'ffc94100';
+        $this->fillColorHeaders = 'ff772100';
+        $this->borderColorAll = 'dddddddd';
 
         $config = $this->getConfig();
         $totalLetter = $config->letter->end;
@@ -110,6 +123,9 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
         foreach (['C', 'E', 'H', 'L'] as $cell) {
             $this->setCenter($workSheet, $cell);
         }
+
+        $this->setStyleSheetWithFooter($spreadsheet);
+        $this->setGlobalStyleSheet($spreadsheet);
     }
 
     /**

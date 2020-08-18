@@ -31,10 +31,9 @@
         <!-- begin content report -->
         <div class="report-container col-md-12">
             <div class="portlet light p-15">
-                <div class="portlet-body">
-
-                    <div class="portlet-title">
-                        <div class="">
+                <div class="portlet-body p-0">
+                    <div class="portlet-title p-b-15">
+                        <div class="p-l-15">
                             <div class="btn-group btn-group-devided width-full btn-group-modules" data-toggle="buttons">
                                 <label class="btn btn-tab btn-transparent yellow-crusta btn-outline pull-left btn-circle uppercase active" data-toggle="tab" data-target="#report-list"
                                        onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">

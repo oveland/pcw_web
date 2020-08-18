@@ -215,7 +215,6 @@ class DispatchRegister extends Model
 
     public function getParsedDate()
     {
-        if ($this->date == null) dd($this->id, $this->date);
         return Carbon::createFromFormat(config('app.date_format'), $this->date);
     }
 
@@ -424,6 +423,7 @@ class DispatchRegister extends Model
 
             'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
             'vehicle' => $this->vehicle->getAPIFields(),
+            'vehicle_id' => $this->vehicle_id,
             'status' => $this->status,
 
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),

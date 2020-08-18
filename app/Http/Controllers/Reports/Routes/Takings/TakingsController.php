@@ -49,6 +49,7 @@ class TakingsController extends Controller
         $route = $request->get('route');
         $vehicle = $request->get('vehicle');
         $date = $request->get('date');
+        $type = $request->get('type');
         $initialDate = $date;
         $finalDate = null;
         if (is_array($date)) {
@@ -56,7 +57,7 @@ class TakingsController extends Controller
             $finalDate = $date[1];
         }
 
-        return (object)compact(['initialDate', 'finalDate', 'route', 'vehicle']);
+        return (object)compact(['initialDate', 'finalDate', 'route', 'vehicle', 'type']);
     }
 
     /**
@@ -66,7 +67,7 @@ class TakingsController extends Controller
     private function findReport(Request $request)
     {
         $params = $this->searchParams($request);
-        return $this->dispatchService->getTakingsReport($params->initialDate, $params->finalDate, $params->route, $params->vehicle, 'takings');
+        return $this->dispatchService->getTakingsReport($params->initialDate, $params->finalDate, $params->route, $params->vehicle, $params->type);
     }
 
     /**
@@ -75,6 +76,7 @@ class TakingsController extends Controller
      */
     public function search(Request $request)
     {
+        $request->merge(['type' => 'detailed']);
         $report = $this->findReport($request);
         return response()->json($report);
     }

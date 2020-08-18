@@ -28,7 +28,7 @@ trait ExportWithPCWStyle
      * It's required to define the fileName within
      * the export class when making use of Responsable.
      */
-    public $fileName = "export.".Extension::XLSX;
+    public $fileName = "export." . Extension::XLSX;
 
 
     /**
@@ -43,10 +43,10 @@ trait ExportWithPCWStyle
      */
     private $writerType = Extension::XLSX;
 
-    private static $fillColorTitle = 'ff01142c';
-    private static $fillColorSubTitle = 'ff01042c';
-    private static $fillColorHeaders = 'ff021833';
-    private static $borderColorAll = 'dddddddd';
+    protected $fillColorTitle = 'ff01142c';
+    protected $fillColorSubTitle = 'ff01042c';
+    protected $fillColorHeaders = 'ff021833';
+    protected $borderColorAll = 'dddddddd';
 
     function setFileName()
     {
@@ -115,7 +115,7 @@ trait ExportWithPCWStyle
 
         $workSheet->getStyle($config->cellRange->lastDataRow)->applyFromArray([
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => self::$fillColorTitle]],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => $this->fillColorTitle]],
             'font' => ['color' => ['argb' => Color::COLOR_WHITE], 'bold' => true]
         ]);
     }
@@ -141,34 +141,34 @@ trait ExportWithPCWStyle
         $styleAll->getAlignment()->setWrapText(true);
         $styleAll->applyFromArray([
             'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
-            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => self::$borderColorAll]]],
+            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => $this->borderColorAll]]],
             'font' => ['name' => 'Consolas', 'size' => 10],
         ]);
 
         $workSheet->getStyle($config->cellRange->title)->applyFromArray([
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => self::$borderColorAll]]],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => self::$fillColorTitle]],
+            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => $this->borderColorAll]]],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => $this->fillColorTitle]],
             'font' => ['color' => ['argb' => Color::COLOR_WHITE], 'bold' => true]
         ]);
 
         $workSheet->getStyle($config->cellRange->subTitle)->applyFromArray([
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => self::$borderColorAll]]],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => self::$fillColorSubTitle]],
+            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => $this->borderColorAll]]],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => $this->fillColorSubTitle]],
             'font' => ['color' => ['argb' => Color::COLOR_WHITE], 'bold' => true]
         ]);
 
         $workSheet->getStyle($config->cellRange->headers)->applyFromArray([
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => self::$borderColorAll]]],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => self::$fillColorHeaders]],
+            'borders' => ['outline' => ['borderStyle' => Border::BORDER_THICK, 'color' => ['argb' => $this->borderColorAll]]],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => $this->fillColorHeaders]],
             'font' => ['color' => ['argb' => Color::COLOR_WHITE], 'bold' => true]
         ]);
 
         $workSheet->getStyle($config->cellRange->firstDataColumn)->applyFromArray([
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => self::$fillColorHeaders]],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['argb' => $this->fillColorHeaders]],
             'font' => ['color' => ['argb' => Color::COLOR_WHITE], 'bold' => true]
         ]);
     }
