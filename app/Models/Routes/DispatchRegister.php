@@ -398,6 +398,49 @@ class DispatchRegister extends Model
             ]
         ];
 
+        $driver = $this->driver;
+        $driveName = $driver ? $driver->fullName() : __('Unassigned');
+
+        if (request()->get('dump')) {
+            return (object)[
+                'id' => $this->id,
+                'date' => $this->getParsedDate()->toDateString(),
+                'turn' => $this->turn,
+
+                'round_trip' => $this->round_trip,
+                'roundTrip' => $this->round_trip,
+
+                'departure_time' => $this->departure_time,
+                'departureTime' => $this->departure_time,
+
+                'arrival_time_scheduled' => $this->arrival_time_scheduled,
+                'arrivalTimeScheduled' => $this->arrival_time_scheduled,
+
+                'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
+                'arrivalTime' => $this->complete() ? $this->arrival_time : '--:--:--',
+
+                'difference_time' => $this->arrival_time_difference,
+                'differenceTime' => $this->arrival_time_difference,
+
+                'route_time' => $this->getRouteTime(),
+                'routeTime' => $this->getRouteTime(),
+//
+                'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
+                'vehicle' => $this->vehicle->getAPIFields(),
+                'vehicle_id' => $this->vehicle_id,
+                'status' => $this->status,
+//
+                'driver_name' => $driveName,
+                'driverName' => $driveName,
+
+                'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
+                'passengers' => $passengers,
+                'takings' => $this->takings->getAPIFields(),
+                'onlyControlTakings' => $this->onlyControlTakings(),
+                'forNormalTakings' => $this->forNormalTakings()
+            ];
+        }
+
         return (object)[
             'id' => $this->id,
             'date' => $this->getParsedDate()->toDateString(),
@@ -556,7 +599,11 @@ class DispatchRegister extends Model
      */
     public function scopeWhereCompanyAndDateRangeAndRouteIdAndVehicleId($query, Company $company, $initialDate, $finalDate = null, $routeId = null, $vehicleId = null)
     {
-        return $query->whereDateOrRange($initialDate, $finalDate)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId);
+        return $query->whereDateOrRange($initialDate, $finalDate)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId)
+            ->with('vehicle')
+            ->with('route')
+            ->with('driver')
+            ->with('user');
     }
 
     public function getOffRoadPercent()
@@ -600,12 +647,18 @@ class DispatchRegister extends Model
         ];
     }
 
+    public function routeTakings()
+    {
+        return $this->hasOne(RouteTaking::class);
+    }
+
     /**
      * @return RouteTaking
      */
     public function getTakingsAttribute()
     {
-        $takings = RouteTaking::findByDr($this);
+//        $takings = RouteTaking::findByDr($this);
+        $takings = $this->routeTakings;
 
         if (!$takings) {
             $takings = new RouteTaking();

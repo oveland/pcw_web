@@ -37,7 +37,8 @@ class TakingsTotalsExport implements FromCollection, ShouldAutoSize, Responsable
                 $report = $data->report->sortBy('departureTime');
                 $firstDr = $report->first();
                 $lastDr = $report->last();
-                $roundTrips = $report->max('roundTrip');
+
+                $roundTrips = $lastDr->onlyControlTakings ? '' : $report->count();
                 $totals = (object)$data->totals;
 
                 $routesNames = collect($report->pluck('route.name'));
@@ -143,6 +144,7 @@ class TakingsTotalsExport implements FromCollection, ShouldAutoSize, Responsable
             'L' => NumberFormat::FORMAT_NUMBER_00,
             'M' => NumberFormat::FORMAT_CURRENCY_USD,
             'N' => NumberFormat::FORMAT_CURRENCY_USD,
+            'O' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 

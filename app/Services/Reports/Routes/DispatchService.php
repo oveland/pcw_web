@@ -7,6 +7,7 @@ use App\Exports\Routes\TakingsTotalsExport;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class DispatchService
@@ -32,6 +33,7 @@ class DispatchService
     function getTurns($initialDate, $finalDate = null, $route = null, $vehicle = null, $typeTurns = 'completed')
     {
         $dr = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->company, $initialDate, $finalDate, $route, $vehicle)->type($typeTurns)
+            ->with('routeTakings')
             ->get();
 
         return $dr->map(function (DispatchRegister $dr) {
@@ -51,9 +53,15 @@ class DispatchService
      */
     public function getTakingsReport($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'detailed')
     {
+        $now = Carbon::now();
+        if (request()->get('dump')) {
+            dump($now->toTimeString());
+        }
+
         switch ($type) {
             case 'totals':
-                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle);
+                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
+
                 if ($turns->isNotEmpty()) {
                     $turnsByVehicles = $turns->groupBy('vehicle_id');
                     $report = collect([]);
@@ -71,7 +79,13 @@ class DispatchService
                 }
                 break;
             default:
-                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle);
+                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
+
+                if (request()->get('dump')) {
+                    $then = Carbon::now();
+                    dd($then->toTimeString(), $then->diffInSeconds($now).' seconds', $turns->count());
+                }
+
                 if ($turns->isNotEmpty()) {
                     return $this->getData($turns);
                 }
