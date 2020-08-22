@@ -20,6 +20,11 @@
 								<i class="icon-layers"></i> {{ $t('Totals') }}
 							</a>
 						</li>
+						<li>
+							<a @click="exportReport('grouped')">
+								<i class="fa fa-car"></i> {{ $t('Grouped') }}
+							</a>
+						</li>
 					</ul>
 				</div>
 			</div>

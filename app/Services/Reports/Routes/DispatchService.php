@@ -3,6 +3,7 @@
 namespace App\Services\Reports\Routes;
 
 use App\Exports\Routes\TakingsExport;
+use App\Exports\Routes\TakingsGroupedExport;
 use App\Exports\Routes\TakingsTotalsExport;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
@@ -53,13 +54,9 @@ class DispatchService
      */
     public function getTakingsReport($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'detailed')
     {
-        $now = Carbon::now();
-        if (request()->get('dump')) {
-            dump($now->toTimeString());
-        }
-
         switch ($type) {
             case 'totals':
+            case 'grouped':
                 $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
 
                 if ($turns->isNotEmpty()) {
@@ -80,11 +77,6 @@ class DispatchService
                 break;
             default:
                 $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
-
-                if (request()->get('dump')) {
-                    $then = Carbon::now();
-                    dd($then->toTimeString(), $then->diffInSeconds($now).' seconds', $turns->count());
-                }
 
                 if ($turns->isNotEmpty()) {
                     return $this->getData($turns);
@@ -208,6 +200,10 @@ class DispatchService
         switch ($params->type) {
             case 'totals':
                 $file = new TakingsTotalsExport($data);
+                if ($download) return $file->download();
+                break;
+            case 'grouped':
+                $file = new TakingsGroupedExport($data);
                 if ($download) return $file->download();
                 break;
             default:

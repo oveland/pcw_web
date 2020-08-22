@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Services\API\Apps\APIConcoxService;
 use App\Services\API\Apps\MyRouteService;
 use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
 use App\Services\API\Apps\APIRocketService;
+use App\Services\API\Files\APIConcoxFilesService;
 use App\Services\API\Files\APIRocketFilesService;
 use App\Services\API\Web\APIPassengersService;
 use App\Services\API\Web\DB\APIMigrationsService;
@@ -64,6 +66,10 @@ class APIProvider extends ServiceProvider
                 case 'rocket':
                 case 'app-rocket':
                     return new APIRocketService($service);
+                    break;
+                case 'concox':
+                    return new APIConcoxService($service);
+                    break;
                 default:
                     return abort(403);
                     break;
@@ -102,7 +108,7 @@ class APIProvider extends ServiceProvider
                     return new APIRocketFilesService($service);
                     break;
                 default:
-                    return Image::make(File::get('img/image-404.jpg'))->resize(200,200)->response('png');
+                    return Image::make(File::get('img/image-404.jpg'))->resize(200, 200)->response('png');
                     break;
             }
         });

@@ -771,7 +771,10 @@
   "Taken at": "Recaudado en",
   "Various": "Varios",
   "Takings totals r.": "R. totales recaudo",
-  "Takings detailed r.": "R. detallado recaudo",
+  "Takings detailed r.": "R. detallado",
+  "Takings grouped r.": "R. agrupado",
   "Takings totals report": "Reporte totales de recaudo",
-  "Takings detailed report": "Reporte detallado de recaudo"
+  "Takings detailed report": "Reporte detallado de recaudo",
+  "Takings grouped report": "Reporte agrupado de recaudo",
+  "Grouped": "Agrupado"
 }
