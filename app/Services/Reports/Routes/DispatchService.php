@@ -59,6 +59,10 @@ class DispatchService
             case 'grouped':
                 $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
 
+                $turns = $turns->sortBy(function ($dr) {
+                    return $dr->vehicle->number . "$dr->id";
+                })->values();
+
                 if ($turns->isNotEmpty()) {
                     $turnsByVehicles = $turns->groupBy('vehicle_id');
                     $report = collect([]);

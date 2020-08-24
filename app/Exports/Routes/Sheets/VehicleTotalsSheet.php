@@ -65,7 +65,7 @@ class VehicleTotalsSheet implements FromCollection, ShouldAutoSize, Responsable,
         }
 
         $dateReport = $params->initialDate . ($params->finalDate ? " - $params->finalDate" : '');
-        $vehicle = Vehicle::find($params->vehicle)->number;
+        $vehicle = $params->vehicle;// Vehicle::find($params->vehicle)->number;
         $route = $params->route ? Route::find($params->route)->name : "";
 
         $subtitle = __('Vehicle') . ": $vehicle  | " . ($route ? __('Route') . ": $route" : __('All routes'));

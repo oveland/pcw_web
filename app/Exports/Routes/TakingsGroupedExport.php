@@ -37,10 +37,6 @@ class TakingsGroupedExport implements WithMultipleSheets
         $params = $this->data->params;
         $reportByVehicles = $this->data->report;
 
-        $reportByVehicles = collect($reportByVehicles)->sortBy(function ($r, $v) {
-            return Vehicle::find($v)->number;
-        });
-
         foreach ($reportByVehicles as $vehicleId => $reportByDates) {
             $params->vehicle = $vehicleId;
             $sheets->push(new VehicleTotalsSheet((object)[
