@@ -526,7 +526,11 @@ class DispatchRegister extends Model
      */
     public function scopeWhereCompanyAndDateRangeAndRouteIdAndVehicleId($query, Company $company, $initialDate, $finalDate = null, $routeId = null, $vehicleId = null)
     {
-        return $query->whereDateOrRange($initialDate, $finalDate)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId);
+        return $query->whereDateOrRange($initialDate, $finalDate)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId)
+            ->with('vehicle')
+            ->with('route')
+            ->with('driver')
+            ->with('user');
     }
 
 

@@ -36,6 +36,7 @@ class ControlPointService
     {
         $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $route->id, $vehicleReport)->active()
 //        $dispatchRegisters = DispatchRegister::active()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
+            ->select('id')
             ->orderByDesc('departure_time')
             ->get();
 
@@ -43,7 +44,8 @@ class ControlPointService
             $dispatchRegisters = $dispatchRegisters->where('departure_fringe_id', $fringeReport);
         }
 
-        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
+        $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
+        ->with('dispatchRegister');
 
         if (is_array($controlPointReport)) {
             $allReportsByControlPoints = $allReportsByControlPoints->whereIn('control_point_id', $controlPointReport);

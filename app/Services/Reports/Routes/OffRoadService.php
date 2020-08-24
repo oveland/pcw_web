@@ -82,6 +82,7 @@ class OffRoadService
         $allOffRoads = Location::witOffRoads()
             ->whereBetween('date', [$initialDate, $finalDate])
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
+            ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.route'])
             ->orderBy('date')
             ->get();
 

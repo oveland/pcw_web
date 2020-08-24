@@ -80,7 +80,9 @@ class SpeedingService
             $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
         }
 
-        $allSpeeding = $allSpeeding->orderBy('date')->get();
+        $allSpeeding = $allSpeeding
+            ->with(['vehicle', 'dispatchRegister'])
+            ->orderBy('date')->get();
 
         $allSpeeding = $allSpeeding
             ->filter(function (Location $s) use ($initialDate, $finalDate) {

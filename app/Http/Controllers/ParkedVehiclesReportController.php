@@ -67,10 +67,11 @@ class ParkedVehiclesReportController extends Controller
         $parkedReports = ParkingReport::whereIn('vehicle_id', $vehicles->pluck('id'))
             ->whereBetween('date', ["$dateReport 00:00:00", "$dateEnd 23:59:59"])
             ->orderBy('id')
+            ->with(['vehicle', 'dispatchRegister'])
             ->get();
 
-        $parkedReports = $parkedReports->sortBy(function($pr){
-            return $pr->vehicle->number.'-'.$pr->id;
+        $parkedReports = $parkedReports->sortBy(function ($pr) {
+            return $pr->vehicle->number . '-' . $pr->id;
         });
 
         if ($request->get('export')) $this->export($parkedReports, $dateReport);
