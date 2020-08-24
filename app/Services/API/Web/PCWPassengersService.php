@@ -61,7 +61,7 @@ class PCWPassengersService implements APIWebInterface
     public function buildPassengersReport(Company $company, $dateReport)
     {
         $routes = $company->routes;
-        $allDispatchRegisters = DispatchRegister::active()
+        $allDispatchRegisters = DispatchRegister::completed()
             ->whereIn('route_id', $routes->pluck('id'))
             ->where('date', $dateReport)
             ->with('vehicle')

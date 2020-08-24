@@ -97,7 +97,7 @@
 
                             $sensor > 0 ? $totalSensor->push($sensor):null;
                         @endphp
-                        <tr class="text-center">
+                        <tr class="text-center {{ $recorderIssue ? 'alert-warning' : ''  }} ">
                             <td >{{ $loop->iteration }}</td>
                             <td>{{ $vehicle->number }}</td>
                             <td class="text-left">{{ $report->driverProcessed }} </td>
@@ -111,16 +111,22 @@
                             <td class="sensor recorder">{{ $sensor }}</td>
                             <td class="p-3">
                                 @if($recorderIssue)
-                                    <div class="tooltips" data-html="true" data-title="<i class='fa fa-exclamation-triangle'></i> @lang('Please fix the issues first')">
-                                        <a href="javascript:alert('@lang('Please fix the issues first')')" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase disabled">
+                                    <div class="tooltips text-danger" data-html="true" data-title="<i class='fa fa-exclamation-triangle'></i> @lang('Please fix the issues first')">
+                                        <a href="javascript:alert('@lang('Please fix the issues first')')" class="btn btn-sm btn-circle red  sbold uppercase disabled">
                                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                         </a>
                                     </div>
                                 @else
                                     <a href="http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=descargarReciboFinal&empresa={{ $vehicle->company->short_name }}&ui={{ Auth::user()->id }}&n_carro={{ $vehicle->number }}&placa={{ $vehicle->plate }}&fecha_sel={{ $passengerReport->date }}"
                                        target="_blank" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase tooltips" data-html="true"
-                                       data-title="<i class='fa fa-download'></i> @lang('Settlement receipt')">
+                                       data-title="<i class='fa fa-users'></i> @lang('Settlement receipt')">
                                         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                    </a>
+
+                                    <a href="http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=downloadTakingsReceipt&empresa={{ $vehicle->company->short_name }}&ui={{ Auth::user()->id }}&n_carro={{ $vehicle->number }}&placa={{ $vehicle->plate }}&fecha_sel={{ $passengerReport->date }}"
+                                       target="_blank" class="btn btn-sm btn-circle purple btn-outline sbold uppercase tooltips" data-html="true"
+                                       data-title="<i class='fa fa-dollar faa-ring faa-animated'></i> @lang('Takings receipt')">
+                                        <i class="icon-briefcase" aria-hidden="true"></i>
                                     </a>
                                 @endif
                             </td>
