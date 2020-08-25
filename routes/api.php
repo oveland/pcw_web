@@ -64,3 +64,5 @@ Route::any('/v1/{resource}/{service}', 'API\APIController@web');
 */
 Route::any('/v2/{platform}/{resource}/{service}', 'API\APIController@serve');
 
+Route::any('/v2/test', 'API\APIController@test');
+

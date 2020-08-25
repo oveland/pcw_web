@@ -7,22 +7,28 @@
 				</button>
 				<div class="btn-group btn-group-solid m-0">
 					<button type="button" class="btn blue btn-circle-right btn-outline green-meadow dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-						 <i class="fa fa-file-excel-o"></i> {{ $t('Export') }} <i class="fa fa-angle-down"></i>
+						 <i class="fa fa-download"></i> {{ $t('Export') }} <i class="fa fa-angle-down"></i>
 					</button>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu menu-export">
 						<li>
 							<a @click="exportReport('detailed')">
-								<i class="icon-list"></i> {{ $t('Detailed') }}
+								<i class="icon-list"></i> {{ $t('Detailed') }} <i class="fa fa-file-excel-o pull-right green tooltips" :title="$t('Excel')"></i>
 							</a>
 						</li>
 						<li>
 							<a @click="exportReport('totals')">
-								<i class="icon-layers"></i> {{ $t('Totals') }}
+								<i class="icon-layers"></i> {{ $t('Totals') }} <i class="fa fa-file-excel-o pull-right green tooltips" :title="$t('Excel')"></i>
 							</a>
 						</li>
 						<li>
 							<a @click="exportReport('grouped')">
-								<i class="fa fa-car"></i> {{ $t('Grouped') }}
+								<i class="fa fa-car"></i> {{ $t('Grouped') }} <i class="fa fa-file-excel-o pull-right green tooltips" :title="$t('Excel')"></i>
+							</a>
+						</li>
+						<li v-if="!search.vehicle.id && search.date && !search.dateRange" class="divider"> </li>
+						<li v-if="!search.vehicle.id && search.date && !search.dateRange">
+							<a :href="`http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=downloadTakingsReceipt&ui=${ui}&vehicle=${search.vehicle ? search.vehicle.id : ''}&fecha_sel=${search.date}&date-end`" target="_blank">
+								<i class="icon-layers"></i> {{ $t('Receipt consolidated') }} <i class="fa fa-file-pdf-o pull-right red tooltips" :title="$t('PDF')"></i>
 							</a>
 						</li>
 					</ul>
@@ -100,7 +106,8 @@
 		props: {
             urlParams: String,
             search: Object,
-            admin: ""
+            admin: "",
+			ui: Number
         },
         methods: {
             getSearchParams: function () {
@@ -158,5 +165,13 @@
 	.mx-datepicker-popup{
 		left: 0 !important;
 		right: 0 !important;
+	}
+
+	.menu-export .green{
+		color: #148500 !important;
+	}
+
+	.menu-export .red{
+		color: #851f00 !important;
 	}
 </style>

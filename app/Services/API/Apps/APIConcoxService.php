@@ -5,6 +5,8 @@ namespace App\Services\API\Apps;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -13,8 +15,10 @@ use Illuminate\Support\Str;
 class APIConcoxService implements APIAppsInterface
 {
     private const API_URL = 'http://open.10000track.com/route/rest';
-    private const APP_KEY = 'APP_KEY_HERE';
-    private const APP_SECRET = 'APP_SECRET_HERE';
+//    private const API_URL = 'https://postman-echo.com/post';
+    private const APP_KEY = '8FB345B8693CCD00E573E7459324059A';
+//    private const APP_SECRET = 'be8fe6b5babc49e3ba8c2c3682ac0a05';
+    private const APP_SECRET = 'BE8FE6B5BABC49E3BA8C2C3682AC0A05';
     private const USER_ID = 'pcwoveland';
     private const USER_PWD_MD5 = 'BA1E3ADBF24AD7221BFC4F5C0446DF4E';
 
@@ -73,7 +77,7 @@ class APIConcoxService implements APIAppsInterface
         $this->service = $service ?? $this->request->get('action');
 
         $this->signMethod = 'md5';
-        $this->v = '1.0';
+        $this->version = '1.0';
         $this->format = 'json';
         $this->expiresIn = 7200; // 2 Hours
     }
@@ -96,12 +100,34 @@ class APIConcoxService implements APIAppsInterface
         }
     }
 
-    public function buildAccessTokenBody()
+    public function buildAccessTokenBody($type)
+    {
+        $private = collect([]);
+        switch ($type) {
+            case 'get-access-token':
+                $this->method = 'jimi.oauth.token.get';
+                $private = collect([
+                    'user_id' => self::USER_ID,
+                    'user_pwd_md5' => self::USER_PWD_MD5,
+                    'expires_in' => $this->expiresIn,
+                ]);
+                break;
+        }
+
+        return $this->getCommonParametersRequest()->merge($private)->toArray();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getCommonParametersRequest()
     {
         $this->timestamp = Carbon::now('UTC')->toDateTimeString();
-        $this->sign = md5(self::APP_SECRET . "app_key" . self::APP_KEY . "expires_in" . $this->expiresIn . "format" . $this->format . "method" . $this->method . "sign_method" . $this->signMethod . "timestamp" . $this->timestamp . "user_id" . self::USER_ID . "user_pwd_md5" . self::USER_PWD_MD5 . "v" . $this->version . self::APP_SECRET);
 
-        return [
+        $utf8 = utf8_encode(self::APP_SECRET . "app_key" . self::APP_KEY . "expires_in" . $this->expiresIn . "format" . $this->format . "method" . $this->method . "sign_method" . $this->signMethod . "timestamp" . $this->timestamp . "user_id" . self::USER_ID . "user_pwd_md5" . self::USER_PWD_MD5 . "v" . $this->version . self::APP_SECRET);
+        $this->sign = md5($utf8);
+
+        return collect([
             'method' => $this->method,
             'timestamp' => $this->timestamp,
             'app_key' => self::APP_KEY,
@@ -109,10 +135,7 @@ class APIConcoxService implements APIAppsInterface
             'sign_method' => $this->signMethod,
             'v' => $this->version,
             'format' => $this->format,
-            'user_id' => self::USER_ID,
-            'user_pwd_md5' => self::USER_PWD_MD5,
-            'expires_in' => $this->expiresIn,
-        ];
+        ]);
     }
 
     /**
@@ -121,14 +144,23 @@ class APIConcoxService implements APIAppsInterface
     public function getAccessToken()
     {
         $response = [];
-        $this->method = 'jimi.oauth.token.get';
+        $requestBody = $this->buildAccessTokenBody('get-access-token');
 
-        $requestBody = $this->buildAccessTokenBody();
+//        dd($requestBody);
 
-        dd($requestBody);
+        $response = $this->rest($requestBody);
 
-        //TODO: Implement logic for get Access Token
+        return response()->json(json_decode($this->rest($requestBody), true));
+    }
 
-        return response()->json($response);
+    public function rest($body)
+    {
+        $client = new Client([
+            'base_uri' => new Uri(self::API_URL)
+        ]);
+
+        return $client->request('POST', self::API_URL, [
+            'json' => $body
+        ])->getBody()->getContents();
     }
 }

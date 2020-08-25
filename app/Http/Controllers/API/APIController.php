@@ -6,6 +6,7 @@ use App;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\Request;
 
 class APIController extends Controller
 {
@@ -60,5 +61,10 @@ class APIController extends Controller
             'error' => true,
             'message' => 'Platform or Resource or Service not specified yet'
         ]);
+    }
+
+    public function test(Request $request)
+    {
+        return response()->json($request->all());
     }
 }
