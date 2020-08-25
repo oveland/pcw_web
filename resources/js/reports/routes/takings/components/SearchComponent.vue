@@ -25,8 +25,8 @@
 								<i class="fa fa-car"></i> {{ $t('Grouped') }} <i class="fa fa-file-excel-o pull-right green tooltips" :title="$t('Excel')"></i>
 							</a>
 						</li>
-						<li v-if="!search.vehicle.id && search.date && !search.dateRange" class="divider"> </li>
-						<li v-if="!search.vehicle.id && search.date && !search.dateRange">
+						<li v-if="(!search.vehicle || !search.vehicle.id) && search.date && !search.dateRange" class="divider"> </li>
+						<li v-if="(!search.vehicle || !search.vehicle.id) && search.date && !search.dateRange">
 							<a :href="`http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=downloadTakingsReceipt&ui=${ui}&vehicle=${search.vehicle ? search.vehicle.id : ''}&fecha_sel=${search.date}&date-end`" target="_blank">
 								<i class="icon-layers"></i> {{ $t('Receipt consolidated') }} <i class="fa fa-file-pdf-o pull-right red tooltips" :title="$t('PDF')"></i>
 							</a>

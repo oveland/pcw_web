@@ -152,6 +152,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
  * @property-read \RouteTariff $tariff
+ * @property-read \App\Models\Routes\RouteTaking|null $routeTakings
  */
 class DispatchRegister extends Model
 {

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\API\Apps\APIConcoxService;
+use App\Services\API\Apps\Concox\APIConcoxService;
 use App\Services\API\Apps\MyRouteService;
 use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
@@ -12,7 +12,6 @@ use App\Services\API\Files\APIRocketFilesService;
 use App\Services\API\Web\APIPassengersService;
 use App\Services\API\Web\DB\APIMigrationsService;
 use App\Services\API\Web\Reports\APIReportService;
-use App\Services\Apps\Rocket\Photos\PhotoService;
 use File;
 use Illuminate\Support\ServiceProvider;
 use Image;
