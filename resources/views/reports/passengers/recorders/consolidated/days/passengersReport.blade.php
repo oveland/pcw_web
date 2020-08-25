@@ -122,12 +122,6 @@
                                        data-title="<i class='fa fa-users'></i> @lang('Settlement receipt')">
                                         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                     </a>
-
-                                    <a href="http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=downloadTakingsReceipt&empresa={{ $vehicle->company->short_name }}&ui={{ Auth::user()->id }}&n_carro={{ $vehicle->number }}&placa={{ $vehicle->plate }}&fecha_sel={{ $passengerReport->date }}"
-                                       target="_blank" class="btn btn-sm btn-circle purple btn-outline sbold uppercase tooltips" data-html="true"
-                                       data-title="<i class='fa fa-dollar faa-ring faa-animated'></i> @lang('Takings receipt')">
-                                        <i class="icon-briefcase" aria-hidden="true"></i>
-                                    </a>
                                 @endif
                             </td>
                         </tr>
