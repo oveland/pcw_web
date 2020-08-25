@@ -112,7 +112,7 @@ class Company extends Model
     public function userVehicles($routeId = null)
     {
         $user = Auth::user();
-        $vehicles = $user->assignedVehicles($this);
+        $vehicles = $user ? $user->assignedVehicles($this) : $this->activeVehicles;
         if ($this->hasADD() && $routeId && $routeId != 'all') {
             $route = Route::find($routeId);
             if ($route) {

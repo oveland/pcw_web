@@ -8,6 +8,7 @@
 
 namespace App\Services\API\Web\Reports;
 
+use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Services\API\Web\Contracts\APIWebInterface;
@@ -63,13 +64,21 @@ class APIReportService implements APIWebInterface
      */
     private function buildTakingsReport()
     {
-        $vehicle = Vehicle::find($this->request->get('vehicle'));
+        $vehicleRequest = $this->request->get('vehicle');
+        $routeRequest = $this->request->get('route');
+        $finalDate = $this->request->get('final-date');
+
+        $vehicle = Vehicle::find($vehicleRequest);
+        $company = $vehicle ? $vehicle->company : Company::find(Company::ALAMEDA);  // TODO: Need control for all vehicles
+        if($this->request->get('dump')){
+//            dd($company);
+        }
+        $this->dispatchService = new DispatchService($company);
+
         $date = $this->request->get('date');
 
-        if ($vehicle && $date) {
-            $this->dispatchService = new DispatchService($vehicle->company);
-
-            $report = $this->dispatchService->getTakingsReport($date, null, null, $vehicle->id);
+        if ($date) {
+            $report = $this->dispatchService->getTakingsReport($date, $finalDate, $routeRequest, $vehicleRequest);
 
             return response()->json([
                 'error' => false,
