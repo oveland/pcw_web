@@ -963,8 +963,8 @@ __webpack_require__.r(__webpack_exports__);
 
       var mainContainer = $('.report-container');
       mainContainer.fadeIn();
-      this.search.date = moment().format("YYYY-MM-DD");
-      this.search.date = '2020-02-27';
+      this.search.date = moment().format("YYYY-MM-DD"); // this.search.date = '2020-02-27';
+
       var companySearch = this.search.company;
       companySearch = {
         id: 30
@@ -980,10 +980,9 @@ __webpack_require__.r(__webpack_exports__);
         _this.search.company = _.find(_this.search.companies, function (c) {
           //return c.id === data.company.id;
           return c.id === 30;
-        });
-        _this.search.vehicle = _.find(_this.search.vehicles, function (c) {
-          return c.id === 1953;
-        });
+        }); // this.search.vehicle = _.find(this.search.vehicles, function(c){
+        //     return c.id === 1953;
+        // });
 
         _this.searchReport();
       })["catch"](function (error) {

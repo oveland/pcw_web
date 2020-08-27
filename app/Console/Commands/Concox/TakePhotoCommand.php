@@ -47,7 +47,7 @@ class TakePhotoCommand extends Command
     {
         $camera = $this->option('camera');
 
-        $this->info(Carbon::now(). " | Concox request photo camera: $camera");
+        $this->info(Carbon::now() . " | Concox request photo camera: $camera");
 
         $response = $this->concoxService->takePhoto($camera);
         $this->info($response);
