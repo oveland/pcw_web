@@ -65,9 +65,6 @@ class AccessToken extends Model
         $now = Carbon::now();
         $diffInSeconds = $now->diffInSeconds($this->time);
         $isAlive = $diffInSeconds < $this->expires_in;
-
-        dump("$diffInSeconds vs $this->expires_in : " . ($isAlive ? 'ALIVE' : 'DEAD!'));
-
         return $isAlive;
     }
 

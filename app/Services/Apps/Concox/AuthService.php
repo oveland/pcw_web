@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\API\Apps\Concox;
+namespace App\Services\Apps\Concox;
 
 use App\Models\Apps\Concox\AccessToken;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class APIAuthConcoxService
+class AuthService
 {
     private const API_URL = 'http://open.10000track.com/route/rest';
     private const APP_KEY = '8FB345B8693CCD00E573E7459324059A';
@@ -124,10 +124,7 @@ class APIAuthConcoxService
             'form_params' => $this->getParams()->toArray()
         ])->getBody()->getContents();
 
-        $content = collect(json_decode($response));
-
-        dump($this->getParams()->toArray(), $content);
-        return $content;
+        return collect(json_decode($response));
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Services\API\Apps\Concox;
 
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
+use App\Services\Apps\Concox\ConcoxService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -21,9 +22,9 @@ class APIConcoxService implements APIAppsInterface
     private $service;
 
     /**
-     * @var APIAuthConcoxService
+     * @var ConcoxService
      */
-    private $auth;
+    private $concox;
 
     /**
      * APIConcoxService constructor.
@@ -33,8 +34,7 @@ class APIConcoxService implements APIAppsInterface
     {
         $this->request = request();
         $this->service = $service ?? $this->request->get('action');
-
-        $this->auth = new APIAuthConcoxService();
+        $this->concox = new ConcoxService();
     }
 
     /**
@@ -43,8 +43,24 @@ class APIConcoxService implements APIAppsInterface
     public function serve(): JsonResponse
     {
         switch ($this->service) {
-            case 'get-access-token':
-                return $this->getAccessToken();
+            case 'take-photo':
+                $camera = $this->request->get('camera');
+
+                $response = $this->concox->takePhoto($camera);
+                return response()->json($response->toArray());
+            case 'get-photo':
+                $camera = $this->request->get('camera');
+
+                $photos = $this->concox->getPhoto($camera);
+                return response()->json($photos->toArray());
+                break;
+            case 'get-live-stream-video':
+                $response = $this->concox->getLiveStreamVideo();
+                return response()->json($response->toArray());
+                break;
+            case 'get-commands-support-list':
+                $response = $this->concox->getCommandSupportList();
+                return response()->json($response->toArray());
                 break;
             default:
                 return response()->json([
@@ -53,17 +69,5 @@ class APIConcoxService implements APIAppsInterface
                 ]);
                 break;
         }
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function getAccessToken()
-    {
-        $access = $this->auth->getAccessToken();
-
-        dd($access);
-
-        return response()->json($accessToken->toArray());
     }
 }
