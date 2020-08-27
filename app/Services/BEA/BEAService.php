@@ -72,8 +72,8 @@ class BEAService
         $vehicles = $this->repository->getAllVehicles();
 
         foreach ($vehicles as $vehicle) {
-//            $this->sync->checkPenaltiesFor($vehicle);
-//            $this->sync->checkManagementCostsFor($vehicle);
+            $this->sync->checkPenaltiesFor($vehicle);
+            $this->sync->checkManagementCostsFor($vehicle);
         }
 
         return (object)[
@@ -170,12 +170,12 @@ class BEAService
      */
     function getBEAMarks($vehicleId, $date)
     {
-//        $this->sync->for($vehicleId, $date)->last();
+        $this->sync->for($vehicleId, $date)->last();
 
         $vehicle = Vehicle::find($vehicleId);
-//        $this->sync->checkDiscountsFor($vehicle);
-//        $this->sync->checkPenaltiesFor($vehicle);
-//        $this->sync->checkManagementCostsFor($vehicle);
+        $this->sync->checkDiscountsFor($vehicle);
+        $this->sync->checkPenaltiesFor($vehicle);
+        $this->sync->checkManagementCostsFor($vehicle);
 
         if (!$vehicle) return collect([]);
         $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();
