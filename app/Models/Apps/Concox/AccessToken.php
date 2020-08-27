@@ -33,13 +33,17 @@ use Illuminate\Support\Carbon;
  * @method static Builder|AccessToken whereRefreshToken($value)
  * @method static Builder|AccessToken whereTime($value)
  * @method static Builder|AccessToken whereUpdatedAt($value)
- * @property string $time
  */
 class AccessToken extends Model
 {
     protected $table = 'concox_access_tokens';
 
     protected $fillable = ['app_key', 'account', 'access_token', 'refresh_token', 'expires_in', 'time'];
+
+    public function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
 
     public function getTimeAttribute($time)
     {
