@@ -52,6 +52,9 @@ class APIConcoxService implements APIAppsInterface
                 $camera = $this->request->get('camera');
 
                 $photos = $this->concox->getPhoto($camera);
+
+                dd($photos);
+
                 return response()->json($photos->toArray());
                 break;
             case 'get-live-stream-video':
@@ -60,6 +63,13 @@ class APIConcoxService implements APIAppsInterface
                 break;
             case 'get-commands-support-list':
                 $response = $this->concox->getCommandSupportList();
+                return response()->json($response->toArray());
+                break;
+            case 'sync-photos':
+                $response = $this->concox->syncPhotos();
+
+                dd($response);
+
                 return response()->json($response->toArray());
                 break;
             default:

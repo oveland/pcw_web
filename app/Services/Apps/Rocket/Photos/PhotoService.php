@@ -90,8 +90,8 @@ class PhotoService
             $photo->vehicle()->associate($this->vehicle);
 
             $currentLocation = $this->vehicle->currentLocation;
-            $photo->dispatch_register_id = $currentLocation->dispatch_register_id;
-            $photo->location_id = $currentLocation->location_id;
+            $photo->dispatch_register_id = $currentLocation->dispatch_register_id ?? null;
+            $photo->location_id = $currentLocation->location_id ?? null;
 
             $image = $this->decodeImageData($data->get('img'));
 
@@ -111,7 +111,9 @@ class PhotoService
                 $success = $currentPhoto->save();
                 if ($success) $message = "Photo saved successfully";
 
-                $this->notifyToMap();
+                if (!App::environment('local')) {
+//                    $this->notifyToMap();
+                }
             }
         } else {
             $message = collect($validator->errors())->flatten()->implode(' ');

@@ -58,6 +58,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereDataFaces($value)
  * @property string|null $data_properties
  * @method static Builder|CurrentPhoto whereDataProperties($value)
+ * @property string|null $uid
+ * @method static Builder|CurrentPhoto whereUid($value)
  */
 class CurrentPhoto extends Model implements PhotoInterface
 {
@@ -66,7 +68,7 @@ class CurrentPhoto extends Model implements PhotoInterface
     use PhotoGlobals, PhotoEncode;
 
     protected $table = 'app_current_photos';
-    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side', 'disk'];
+    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side', 'disk', 'uid'];
 
     public function getDateFormat()
     {

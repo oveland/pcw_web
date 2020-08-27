@@ -355,7 +355,7 @@ class ManagerGPSController extends Controller
                                     if ($simGPS) {
                                         if ($request->get('auto-set-plate')) {
                                             $vehicle = $simGPS->vehicle;
-                                            $gpsVehicle = GpsVehicle::findByVehicleId($vehicle->id);
+                                            $gpsVehicle = GpsVehicle::findByVehicleId($vehicle->id)->first();
 
                                             $gpsId = $vehicle->plate;
                                             if($gpsVehicle){

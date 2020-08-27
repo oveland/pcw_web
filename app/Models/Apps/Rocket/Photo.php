@@ -60,6 +60,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereDataFaces($value)
  * @property string|null $data_properties
  * @method static Builder|Photo whereDataProperties($value)
+ * @property string|null $uid
+ * @method static Builder|Photo whereUid($value)
  */
 class Photo extends Model implements PhotoInterface
 {
@@ -69,7 +71,7 @@ class Photo extends Model implements PhotoInterface
     public const BASE_PATH = '/Apps/Rocket/Photos/';
 
     protected $table = 'app_photos';
-    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side', 'disk'];
+    protected $fillable = ['date', 'vehicle_id', 'dispatch_register_id', 'location_id', 'path', 'type', 'data', 'side', 'disk', 'uid'];
 
     protected static function boot()
     {

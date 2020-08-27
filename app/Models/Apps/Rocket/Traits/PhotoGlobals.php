@@ -7,6 +7,7 @@ namespace App\Models\Apps\Rocket\Traits;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Photos\PhotoRekognitionService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -51,6 +52,16 @@ trait PhotoGlobals
     public function dispatchRegister()
     {
         return $this->belongsTo(DispatchRegister::class);
+    }
+
+    /**
+     * @param Builder $query
+     * @param $uid
+     * @return Builder
+     */
+    public function scopeWhereUid(Builder $query, $uid)
+    {
+        return $query->where('uid', $uid);
     }
 
     /**

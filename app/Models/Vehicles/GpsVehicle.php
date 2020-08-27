@@ -33,10 +33,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|GpsVehicle findBySim($sim)
  * @property-read GPSType|null $type
  * @property string|null $tags
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle findByVehicleId($vehicle_id)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereTags($value)
+ * @method static Builder|GpsVehicle findByVehicleId($vehicle_id)
+ * @method static Builder|GpsVehicle findByImei($imei)
+ * @method static Builder|GpsVehicle whereTags($value)
  * @property int|null $user_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\GpsVehicle whereUserId($value)
+ * @method static Builder|GpsVehicle whereUserId($value)
  */
 class GpsVehicle extends Model
 {
@@ -64,6 +65,11 @@ class GpsVehicle extends Model
 
     public function scopeFindByVehicleId($query, $vehicle_id)
     {
-        return $query->where('vehicle_id', $vehicle_id)->get()->first();
+        return $query->where('vehicle_id', $vehicle_id);
+    }
+
+    public function scopeFindByImei($query, $imei)
+    {
+        return $query->where('imei', $imei);
     }
 }
