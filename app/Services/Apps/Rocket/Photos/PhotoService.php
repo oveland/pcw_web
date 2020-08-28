@@ -94,10 +94,10 @@ class PhotoService
             $photo->location_id = $currentLocation->location_id ?? null;
 
             $image = $this->decodeImageData($data->get('img'));
-
-            $this->storage->put($photo->path, $image);
-
-            if ($photo->save()) {
+            
+            $storageResponse = $this->storage->put($photo->path, $image);
+            
+            if ($photo->save() && $storageResponse) {
                 $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
                 $currentPhoto->fill($data->toArray());
                 $currentPhoto->disk = $photo->disk;

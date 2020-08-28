@@ -9,8 +9,8 @@ use App\Services\AWS\RekognitionService;
 trait PhotoRekognition
 {
     /**
-     * @param bool $force
-     * @param string $type
+     * @param false $force
+     * @param null $type
      */
     public function processRekognition($force = false, $type = null)
     {
@@ -21,24 +21,25 @@ trait PhotoRekognition
             $vehicle = $this->vehicle;
             if ($this->path && $vehicle) {
                 $rekognition = new RekognitionService();
+                $image = $this->getImage('png', true);
 
                 switch ($type) {
                     case 'persons_and_faces':
                         $config = $this->photoRekognitionService('faces')->config;
                         $this->effects = $config->photo->effects;
-                        $data = $rekognition->sefFile($this->getImage('png', true))->process($type);
+                        $data = $rekognition->sefFile($image)->process($type);
                         $this->data_faces = $data->faces;
 
                         $config = $this->photoRekognitionService('persons')->config;
                         $this->effects = $config->photo->effects;
-                        $data = $rekognition->sefFile($this->getImage('png', true))->process($type);
+                        $data = $rekognition->sefFile($image)->process($type);
                         $this->data_persons = $data->persons;
                         break;
                     default:
                         $config = $this->photoRekognitionService($type)->config;
                         $this->effects = $config->photo->effects;
 
-                        $data = $rekognition->sefFile($this->getImage('png', true))->process($type);
+                        $data = $rekognition->sefFile($image)->process($type);
                         $column = "data_$type";
                         $this->$column = $data;
                         break;

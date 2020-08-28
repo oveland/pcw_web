@@ -57,9 +57,10 @@ class ConcoxService
     /**
      * @param string $camera
      * @param int $minutesAgo
+     * @param int $limit
      * @return Collection
      */
-    public function getPhoto($camera = '1', $minutesAgo = 2)
+    public function getPhoto($camera = '1', $minutesAgo = 2, $limit = 2)
     {
         $photos = collect([]);
         $accessToken = $this->auth->getAccessToken();
@@ -72,7 +73,7 @@ class ConcoxService
                 'camera' => $camera,
                 'media_type' => '1',
                 'page_no' => 0,
-                'page_size' => 2,
+                'page_size' => $limit,
                 'start_time' => Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString(),
                 'end_time' => Carbon::now('UTC')->toDateTimeString()
             ]);
@@ -138,9 +139,12 @@ class ConcoxService
     }
 
     /**
-     *
+     * @param string $camera
+     * @param int $minutesAgo
+     * @param int $limit
+     * @return Collection
      */
-    public function syncPhotos()
+    public function syncPhotos($camera = '1', $minutesAgo = 3, $limit = 2)
     {
         $response = collect([
             'success' => true,
@@ -149,7 +153,7 @@ class ConcoxService
         ]);
 
         $photoService = new PhotoService();
-        $photos = $this->getPhoto(1, 2);
+        $photos = $this->getPhoto($camera, $minutesAgo, $limit);
 
         $messages = collect([]);
         foreach ($photos as $photo) {
@@ -162,14 +166,13 @@ class ConcoxService
 
             $checkPhoto = Photo::whereUid($photoUId)->first();
 
-            if (!$checkPhoto || true) {
+            if (!$checkPhoto) {
                 $gpsVehicle = GpsVehicle::findByImei($imei)->first();
                 if ($gpsVehicle || true) {
 
 
 //                    $vehicle = $gpsVehicle->vehicle; // TODO: implement logic for associate Imei Concox with vehicle
                     $vehicle = Vehicle::find(2150);
-                    dd($vehicle);
 
                     $year = collect($photoData)->get(2);
                     $month = collect($photoData)->get(3);
@@ -193,7 +196,13 @@ class ConcoxService
                     ];
 
                     $photoService->for($vehicle);
-                    $photoService->saveImageData($data);
+                    $saved = $photoService->saveImageData($data);
+                    $successSaved = $saved->response->success;
+                    $response->put('success', $successSaved);
+                    if (!$successSaved) {
+                        $response->put('message', $saved->response->message);
+                    }
+
                 } else {
                     $response->put('success', false);
                     $response->put('message', "One or more photos haven't a vehicle associated with your imei");

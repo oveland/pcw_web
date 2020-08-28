@@ -75,10 +75,10 @@ trait PhotoEncode
      */
     public function getImage($encode = null, $withEffects = false)
     {
-        try {
-            $image = Image::make(File::get('img/image-404.jpg'))->resize(300, 300);
-//            $image = null;
+        $image = null;
 
+        try {
+//            $image = Image::make(File::get('img/image-404.jpg'))->resize(300, 300);
             if ($this->storageDriver()->exists($this->path)) {
                 $image = Image::make($this->storageDriver()->get($this->path));
 
@@ -116,10 +116,12 @@ trait PhotoEncode
             }
 
 //            $this->save();
-            return $encode ? $image->encode($encode) : $image;
+            $image = $encode ? $image->encode($encode) : $image;
         } catch (FileNotFoundException $e) {
-            return null;
+
         }
+
+        return $image;
     }
 
     function getAvgLuminance($filename, $num_samples = 30)
