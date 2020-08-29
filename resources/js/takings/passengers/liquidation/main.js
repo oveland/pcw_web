@@ -117,8 +117,9 @@ let liquidationView = new Vue({
 
             const totalTurns = totalGrossBea + totalPenalties;
             const subTotalTurns = totalTurns - totalPayFall + totalGetFall;
-            const totalDispatch = totalTurns - (totalDiscounts - totalDiscountByFuel - totalDiscountByMobilityAuxilio) - totalCommissions;
-            const balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
+            const totalDispatch = totalTurns - (totalDiscounts - totalDiscountByMobilityAuxilio) - totalCommissions;
+            // const balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
+            const balance = totalDispatch - totalPayFall + totalGetFall;
 
             return {
                 // Totals

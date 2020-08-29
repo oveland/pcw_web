@@ -34938,8 +34938,9 @@ var liquidationView = new Vue({
 
       var totalTurns = totalGrossBea + totalPenalties;
       var subTotalTurns = totalTurns - totalPayFall + totalGetFall;
-      var totalDispatch = totalTurns - (totalDiscounts - totalDiscountByFuel - totalDiscountByMobilityAuxilio) - totalCommissions;
-      var balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
+      var totalDispatch = totalTurns - (totalDiscounts - totalDiscountByMobilityAuxilio) - totalCommissions; // const balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
+
+      var balance = totalDispatch - totalPayFall + totalGetFall;
       return {
         // Totals
         totalBea: _.sumBy(this.marks, 'totalBEA'),

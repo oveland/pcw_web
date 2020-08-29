@@ -114,7 +114,7 @@ class RocketController extends Controller
                         $photo = Photo::find($photos->last()->id);
                     }
 
-//                    $photo = Photo::find(17462);
+//                    $photo = Photo::find(39550);
 
 //                        $photo->processRekognition(true, 'persons');
 //                        $photo->save();
