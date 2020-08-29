@@ -129,7 +129,7 @@
             },
         },
         created() {
-            this.styleZones.show = this.fixedSeating;
+            // this.styleZones.show = this.fixedSeating;
         }
     }
 </script>

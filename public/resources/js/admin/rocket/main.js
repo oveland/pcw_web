@@ -335,8 +335,7 @@ Vue.use(vue_lazyload__WEBPACK_IMPORTED_MODULE_2__["default"]);
       this.busySeating = [];
     }
   },
-  created: function created() {
-    this.styleZones.show = this.fixedSeating;
+  created: function created() {// this.styleZones.show = this.fixedSeating;
   }
 });
 
