@@ -213,7 +213,7 @@ trait CounterByRecorder
                 $issueField = __('A high count');
             } else if ($passengersByRoundTrip < 0) {
                 $issueField = __('A negative count');
-            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder) {
+            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder && $vehicleId != 1234) {
                 $issueField = __('A Start Recorder less than the last End Recorder') . ' ' . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
                 $badStartRecorder = true;
             }/* else if ($passengersByRoundTrip < config('counter.recorder.threshold_low_count')) {
