@@ -38,7 +38,7 @@ trait CounterByRecorder
             }),
             'issues' => collect($issues),
             'lastVehicleNumber' => $lastDispatchRegister ? $lastDispatchRegister->vehicle->number : '',
-            'lastDriverName' => $lastDispatchRegister ? $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | '.$lastDispatchRegister->driver->fullName() : '') : '',
+            'lastDriverName' => $lastDispatchRegister ? $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | ' . $lastDispatchRegister->driver->fullName() : '') : '',
         ];
     }
 
@@ -50,8 +50,8 @@ trait CounterByRecorder
 
         if ($vehicle->countAllFromSensorRecorder()) return CounterBySensor::totalByVehicle($vehicleId, $dispatchRegistersByVehicle);
 
-        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy(function ($dr){
-            return "$dr->date-".$dr->vehicle->number."$dr->departure_time";
+        $dispatchRegistersByVehicle = $dispatchRegistersByVehicle->sortBy(function ($dr) {
+            return "$dr->date-" . $dr->vehicle->number . "$dr->departure_time";
         });
 
         $totalPassengers = 0;
@@ -69,34 +69,40 @@ trait CounterByRecorder
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
                 $passengersByRoundTrip = 0;
                 $endRecorder = 0;
-                if( $dispatchRegister->complete() ){
+
+                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
+
+                if ($dispatchRegister->complete()) {
                     $endRecorder = $dispatchRegister->end_recorder;
-                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
+//                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
 
 
-                    if ($classifyByRoute) {
-                        $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
-                            ->where('date', '=', $dispatchRegister->date)
-                            ->where('id', '<', $dispatchRegister->id)
-                            ->orderByDesc('id')
-                            ->limit(1)->get()->first();
-                    }
-
-                    /* For change route between prev and current dispatch registers when there are prev registers */
-                    if ($lastDispatchRegister && $lastDispatchRegister->route->id != $dispatchRegister->route->id) {
+                    if ($startRecorder == 0) {
                         if ($classifyByRoute) {
-                            $endRecorderByOtherRoutes = $lastDispatchRegister->end_recorder;
-                        } else {
-                            $endRecorderByOtherRoutes = $dispatchRegisters->where('vehicle_id', $vehicleId)
-                                    ->where('id', '<', $dispatchRegister->id)
-                                    ->where('id', '>=', $lastDispatchRegister->id ?? 0)
-                                    ->last()->end_recorder ?? null;
+                            $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
+                                ->where('date', '=', $dispatchRegister->date)
+                                ->where('id', '<', $dispatchRegister->id)
+                                ->orderByDesc('id')
+                                ->limit(1)->get()->first();
                         }
 
-                        $startRecorder = (($endRecorderByOtherRoutes > 0 && abs($startRecorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $startRecorder;
-                    } else if (abs($endRecorder - $startRecorder) > 1000) {
-                        $startRecorder = 0; // For search a properly value in the next logic
+                        /* For change route between prev and current dispatch registers when there are prev registers */
+                        if ($lastDispatchRegister && $lastDispatchRegister->route->id != $dispatchRegister->route->id) {
+                            if ($classifyByRoute) {
+                                $endRecorderByOtherRoutes = $lastDispatchRegister->end_recorder;
+                            } else {
+                                $endRecorderByOtherRoutes = $dispatchRegisters->where('vehicle_id', $vehicleId)
+                                        ->where('id', '<', $dispatchRegister->id)
+                                        ->where('id', '>=', $lastDispatchRegister->id ?? 0)
+                                        ->last()->end_recorder ?? null;
+                            }
+
+                            $startRecorder = (($endRecorderByOtherRoutes > 0 && abs($startRecorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $startRecorder;
+                        }
                     }
+//                    else if (abs($endRecorder - $startRecorder) > 1000) {
+//                        $startRecorder = 0; // For search a properly value in the next logic
+//                    }
 
                     if ($startRecorder == 0) {
                         $startRecorder = DispatchRegister::active()
@@ -157,7 +163,7 @@ trait CounterByRecorder
                 $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
 
                 // Save the last dispatch register
-                if( $dispatchRegister->complete() )$lastDispatchRegister = $dispatchRegister;
+                if ($dispatchRegister->complete()) $lastDispatchRegister = $dispatchRegister;
             }
         }
 
@@ -176,7 +182,7 @@ trait CounterByRecorder
                 'history' => $history,
                 'issue' => $issues->first(),
 
-                'lastDriverName' => $lastDispatchRegister ? $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | '.$lastDispatchRegister->driver->fullName() : '') : '',
+                'lastDriverName' => $lastDispatchRegister ? $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | ' . $lastDispatchRegister->driver->fullName() : '') : '',
             ],
             'issues' => $issues
         ];
@@ -198,7 +204,7 @@ trait CounterByRecorder
     {
         $issueField = null;
         $badStartRecorder = false;
-        if($dispatchRegister->complete()){
+        if ($dispatchRegister->complete()) {
             if ($startRecorder <= 0) {
                 $issueField = __('Start Recorder');
             } else if ($endRecorder <= 0) {
