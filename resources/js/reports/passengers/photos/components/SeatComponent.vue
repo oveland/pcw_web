@@ -124,7 +124,7 @@
         z-index: 200 !important;
     }
 
-    .seat.occupiedssssss {
+    .seat.occupied {
         background-color: #a9ff01 !important;
         border-color: #000163;
     }
