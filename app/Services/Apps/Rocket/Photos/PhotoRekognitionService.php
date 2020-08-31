@@ -4,9 +4,11 @@
 namespace App\Services\Apps\Rocket\Photos;
 
 
+use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Vehicles\Vehicle;
+use App\Services\Apps\Rocket\ConfigProfileService;
 use Illuminate\Support\Collection;
 
 abstract class PhotoRekognitionService
@@ -39,7 +41,8 @@ abstract class PhotoRekognitionService
         $this->vehicle = $vehicle;
         $this->zoneDetected = $zoneDetected;
 
-        $this->config = $this->getConfig();
+        $configService = new ConfigProfileService($vehicle);
+        $this->config = $configService->type($this->type);
     }
 
     /**
@@ -65,21 +68,8 @@ abstract class PhotoRekognitionService
     }
 
     /**
-     * @return Collection|object
-     */
-    protected function getConfig()
-    {
-        $config = json_decode(
-            json_encode(
-                config('rocket.' . $this->vehicle->company_id . '.' . $this->type), JSON_FORCE_OBJECT
-            ),
-            false);
-
-        return $config;
-    }
-
-    /**
      * @param array | object | Collection $data
+     * @param $type
      * @return object
      */
     protected function processDraw($data, $type)
@@ -152,7 +142,7 @@ abstract class PhotoRekognitionService
             return collect($rule->range)->contains($confidence);
         })->first());
 
-        $count = $rule->get('count') && !$boxZone->overlap && $boundingBox->width > 1.5 && $boundingBox->height > 2;
+        $count = $rule->get('count') && !$boxZone->overlap;// && $boundingBox->width > 1.5 && $boundingBox->height > 2;
 
         if (!$count) {
             $rule->put('color', 'rgba(255, 50, 55, 0.78)');

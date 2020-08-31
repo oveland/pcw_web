@@ -4,6 +4,9 @@
 namespace App\Services\Apps\Rocket\Photos;
 
 
+use App\Models\Apps\Rocket\ConfigProfile;
+use App\Models\Vehicles\Vehicle;
+use App\Services\Apps\Rocket\ConfigProfileService;
 use Illuminate\Support\Collection;
 
 class SeatOccupationService
@@ -12,9 +15,30 @@ class SeatOccupationService
     protected const THRESHOLD_RELEASE = 2;
 
     /**
-     * @param Collection $currentOccupied
-     * @param Collection $prevOccupied
-     * @param $withOverlap
+     * @var Vehicle
+     */
+    private $vehicle;
+
+    /**
+     * @var array
+     */
+    private $configSeating;
+
+    /**
+     * ConfigProfileService constructor.
+     * @param Vehicle $vehicle
+     */
+    function __construct(Vehicle $vehicle)
+    {
+        $this->vehicle = $vehicle;
+        $configService = new ConfigProfileService($vehicle);
+        $this->configSeating = collect($configService->get()->config)->get('seating');
+    }
+
+    /**
+     * @param $currentOccupied
+     * @param $prevOccupied
+     * @param false $withOverlap
      */
     public function processPersistenceSeating(&$currentOccupied, $prevOccupied, $withOverlap = false)
     {
@@ -30,6 +54,8 @@ class SeatOccupationService
     private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false)
     {
         foreach ($prevOccupied as $seat => $data) {
+            $seatReleaseThreshold = $this->configSeating[$seat]['persistence']['release'];
+
             $newData = collect($data);
             $persistentCurrent = $currentOccupied->get($seat);
 
@@ -39,7 +65,7 @@ class SeatOccupationService
 
                 $newData->put('counterRelease', $counterRelease);
 
-                if ($counterRelease < self::THRESHOLD_RELEASE && $newData->get('counterActivate') >= 2) {
+                if ($counterRelease < $seatReleaseThreshold && $newData->get('counterActivate') >= 2) {
                     $newData->put('lockedReleased', $counterRelease);
                     $currentOccupied->put($seat, (object)$newData->toArray());
                 } else {
@@ -59,6 +85,8 @@ class SeatOccupationService
     private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false)
     {
         foreach ($currentOccupied as $seat => $data) {
+            $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
+
             $newData = collect($data);
             $persistentPrev = $prevOccupied->get($seat);
 
@@ -74,10 +102,10 @@ class SeatOccupationService
             $risingEvent = $counterActivate > $prevCounterActivate;
 
             $newData->put('counterActivate', $counterActivate);
-            $newData->put('initialCount', $counterActivate == self::THRESHOLD_ACTIVATE - 2);
-            $newData->put('beforeCount', $counterActivate == self::THRESHOLD_ACTIVATE - 1);
-            $newData->put('activated', $counterActivate == self::THRESHOLD_ACTIVATE && $risingEvent);
-            $newData->put('counted', $counterActivate >= self::THRESHOLD_ACTIVATE);
+            $newData->put('initialCount', $counterActivate == $seatActivateThreshold - 2);
+            $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
+            $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent);
+            $newData->put('counted', $counterActivate >= $seatActivateThreshold);
             $newData->put('risingEvent', $risingEvent);
 
             $currentOccupied->put($seat, (object)$newData->toArray());

@@ -949,7 +949,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, "\n.seat[data-v-6648d1c5] {\n    text-align: center;\n    padding: 2px;\n    background-color: rgb(0, 233, 198);\n    border-radius: 3px;\n    border-style: solid;\n    border-color: #003941;\n    transition: ease background-color 1s;\n    z-index: 200 !important;\n}\n.seat.occupied[data-v-6648d1c5] {\n    background-color: #a9ff01 !important;\n    border-color: #000163;\n}\n.seat.active[data-v-6648d1c5] {\n    background-color: rgba(13, 208, 32, 0) !important;\n    box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94) !important;\n    border-color: #ff0051 !important;\n    border-width: 2px !important;\n    z-index: 10000 !important;\n}\n.seat[data-v-6648d1c5]:hover {\n    cursor: move;\n}\n.seat .number[data-v-6648d1c5] {\n    font-size: 1.2em !important;\n    color: white;\n    font-weight: bold;\n    z-index: 100000;\n    text-shadow: 1px 2px 3px #0600cc;\n    position: relative;\n    top: 35%;\n}\n.seat.occupied .number[data-v-6648d1c5] {\n    color: white !important;\n    text-shadow: 1px 2px 3px #400121;\n}\n.seat .center[data-v-6648d1c5] {\n    position: relative;\n    float: left;\n    border: 1px solid #00ceff;\n    height: 1px;\n    width: 1px;\n}\n.seat input[data-v-6648d1c5] {\n    background: #0000006e !important;\n    color: white !important;\n    height: 15px !important;\n    font-size: 0.8em !important;\n    position: absolute;\n    top: -30px;\n}\n.seat .position[data-v-6648d1c5] {\n    font-size: 0.7em !important;\n    color: white;\n    font-weight: bold;\n    background: rgba(10, 21, 32, 0.71);\n    padding: 2px;\n    position: absolute;\n    width: 120px;\n    bottom: -40px;\n    display: none;\n}\n.seat.active .position[data-v-6648d1c5] {\n    display: block !important;\n}\n.draw[data-v-6648d1c5] {\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
+exports.push([module.i, "\n.seat[data-v-6648d1c5] {\n    text-align: center;\n    padding: 2px;\n    background-color: rgb(0, 233, 198);\n    border-radius: 3px;\n    border-style: solid;\n    border-color: #003941;\n    transition: ease background-color 1s;\n    z-index: 200 !important;\n}\n.seat.occupiedssssss[data-v-6648d1c5] {\n    background-color: #a9ff01 !important;\n    border-color: #000163;\n}\n.seat.active[data-v-6648d1c5] {\n    background-color: rgba(13, 208, 32, 0) !important;\n    box-shadow: 1px 1px 10px 1px rgba(205, 205, 205, 0.94) !important;\n    border-color: #ff0051 !important;\n    border-width: 2px !important;\n    z-index: 10000 !important;\n}\n.seat[data-v-6648d1c5]:hover {\n    cursor: move;\n}\n.seat .number[data-v-6648d1c5] {\n    font-size: 1.2em !important;\n    color: white;\n    font-weight: bold;\n    z-index: 100000;\n    text-shadow: 1px 2px 3px #0600cc;\n    position: relative;\n    top: 35%;\n}\n.seat.occupied .number[data-v-6648d1c5] {\n    color: white !important;\n    text-shadow: 1px 2px 3px #400121;\n}\n.seat .center[data-v-6648d1c5] {\n    position: relative;\n    float: left;\n    border: 1px solid #00ceff;\n    height: 1px;\n    width: 1px;\n}\n.seat input[data-v-6648d1c5] {\n    background: #0000006e !important;\n    color: white !important;\n    height: 15px !important;\n    font-size: 0.8em !important;\n    position: absolute;\n    top: -30px;\n}\n.seat .position[data-v-6648d1c5] {\n    font-size: 0.7em !important;\n    color: white;\n    font-weight: bold;\n    background: rgba(10, 21, 32, 0.71);\n    padding: 2px;\n    position: absolute;\n    width: 120px;\n    bottom: -40px;\n    display: none;\n}\n.seat.active .position[data-v-6648d1c5] {\n    display: block !important;\n}\n.draw[data-v-6648d1c5] {\n    width: 20%;\n    background: darkgrey;\n    color: white;\n}\n", ""]);
 
 // exports
 
@@ -7156,36 +7156,13 @@ var render = function() {
               : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "passengers" }, [
-              _c("p", { staticClass: "detail" }, [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(_vm.$t("Bearding passengers")) +
-                    ": "
-                ),
-                _vm.photo.details.occupation &&
-                _vm.photo.details.occupation.count
-                  ? _c("span", [
-                      _vm._v(_vm._s(_vm.photo.details.occupation.persons))
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                !_vm.photo.details.occupation.count
-                  ? _c("span", [_vm._v(_vm._s(_vm.$t("Paused count")))])
-                  : _vm._e()
-              ]),
+              false
+                ? undefined
+                : _vm._e(),
               _vm._v(" "),
-              _c("p", { staticClass: "detail" }, [
-                _vm._v(
-                  "\n                    " + _vm._s(_vm.$t("Seating")) + ": "
-                ),
-                _vm.photo.details.occupation
-                  ? _c("span", [
-                      _vm._v(
-                        _vm._s(_vm.photo.details.occupation.seatingOccupiedStr)
-                      )
-                    ])
-                  : _vm._e()
-              ]),
+              false
+                ? undefined
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "p",
@@ -7240,7 +7217,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("span", { staticClass: "detail" }, [
                   _vm._v(
-                    _vm._s(_vm.photo.passengers.totalSum2) +
+                    _vm._s(_vm.photo.passengers.totalSumOccupied) +
                       " " +
                       _vm._s(_vm.$t("Counts"))
                   )
@@ -7560,13 +7537,13 @@ var render = function() {
                   _vm._v(
                     _vm._s(_vm.$t("General count")) +
                       ": " +
-                      _vm._s(_vm.photo.passengers.totalSum2)
+                      _vm._s(_vm.photo.passengers.total)
                   )
                 ])
               ])
             ]),
             _vm._v(" "),
-            _vm.photo.passengers
+            _vm.photo.passengers && false
               ? _c("div", { staticClass: "passengers" }, [
                   _c(
                     "ul",
@@ -7965,7 +7942,9 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c("small", { staticClass: "number" }, [_vm._v(_vm._s(_vm.seat.number))]),
+      false
+        ? undefined
+        : _vm._e(),
       _vm._v(" "),
       !_vm.fixed
         ? _c("span", { staticClass: "position" }, [

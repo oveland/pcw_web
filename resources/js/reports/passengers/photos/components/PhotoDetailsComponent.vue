@@ -21,11 +21,11 @@
                     </p>
                 </div>
                 <div class="passengers">
-                    <p class="detail">
+                    <p class="detail" v-if="false">
                         {{ $t('Bearding passengers') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.persons }}</span>
                         <span v-if="!photo.details.occupation.count">{{ $t('Paused count') }}</span>
                     </p>
-                    <p class="detail">
+                    <p class="detail" v-if="false">
                         {{ $t('Seating') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.seatingOccupiedStr }}</span>
                     </p>
                     <p class="detail text-bold text-uppercase"
@@ -45,7 +45,7 @@
                     <span class="title">
                         <i class="fa fa-users"></i>
                     </span>
-                        <span class="detail">{{ photo.passengers.totalSum2 }} {{ $t('Counts') }}</span>
+                        <span class="detail">{{ photo.passengers.totalSumOccupied }} {{ $t('Counts') }}</span>
                     </p>
                 </div>
                 <div class="passengers" v-if="photo.passengers">

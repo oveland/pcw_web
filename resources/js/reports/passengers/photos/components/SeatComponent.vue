@@ -9,7 +9,7 @@
                              @resizing="onResize" @resizestop="onResizeStop"
                              @dragging="onDrag" @dragstop="onDragStop">
         <input v-show="seat.selected && !fixed" class="input-sm form-control" placeholder="Seat:" v-model="seat.number">
-        <small class="number">{{ seat.number }}</small>
+        <small class="number" v-if="false">{{ seat.number }}</small>
         <span v-if="!fixed" class="position">
             <span>{{ seat.left | numberFormat('0.0') }}%, {{ seat.top | numberFormat('0.0') }}% | {{ seat.width | numberFormat('0.0') }}%, {{ seat.height | numberFormat('0.0') }}%</span>
         </span>
@@ -124,7 +124,7 @@
         z-index: 200 !important;
     }
 
-    .seat.occupied {
+    .seat.occupiedssssss {
         background-color: #a9ff01 !important;
         border-color: #000163;
     }

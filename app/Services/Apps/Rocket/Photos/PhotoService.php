@@ -51,7 +51,6 @@ class PhotoService
     function __construct()
     {
         $this->storage = Storage::disk(self::DISK);
-        $this->seatOccupationService = new SeatOccupationService();
     }
 
     /**
@@ -61,6 +60,7 @@ class PhotoService
     function for(Vehicle $vehicle)
     {
         $this->vehicle = $vehicle;
+        $this->seatOccupationService = new SeatOccupationService($vehicle);
 
         return $this;
     }
@@ -94,9 +94,9 @@ class PhotoService
             $photo->location_id = $currentLocation->location_id ?? null;
 
             $image = $this->decodeImageData($data->get('img'));
-            
+
             $storageResponse = $this->storage->put($photo->path, $image);
-            
+
             if ($photo->save() && $storageResponse) {
                 $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
                 $currentPhoto->fill($data->toArray());
@@ -368,7 +368,8 @@ class PhotoService
 
 
                 if ($firstPhotoInRoundTrip) {
-                    $personsByRoundTrip = $currentOccupation->seatingOccupied->count();
+                    $personsByRoundTrip = $newPersons;
+//                    $personsByRoundTrip = $currentOccupation->seatingOccupied->count();
                 } else {
                     if ($dr) {
                         $personsByRoundTrip += $newPersons;
@@ -378,7 +379,8 @@ class PhotoService
                 if ($dr) {
                     $roundTrip = $dr->round_trip;
                     $routeName = $dr->route->name;
-                    $totalPersons += $firstPhotoInRoundTrip ? $currentOccupation->seatingOccupied->count() : $newPersons;
+//                    $totalPersons += $firstPhotoInRoundTrip ? $currentOccupation->seatingOccupied->count() : $newPersons;
+                    $totalPersons += $newPersons;
                 }
 
                 $personsByRoundTrips = collect([])->push((object)[

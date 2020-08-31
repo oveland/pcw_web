@@ -345,6 +345,9 @@ return [
                         ]
                     ]
                 ]
+            ],
+            'seating' => [
+
             ]
         ],
         'faces' => [

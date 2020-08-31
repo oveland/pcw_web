@@ -6,10 +6,10 @@
                 <span class="title">
                     <i class="fa fa-users"></i>
                 </span>
-                    <span class="detail">{{ $t('General count') }}: {{ photo.passengers.totalSum2 }}</span>
+                    <span class="detail">{{ $t('General count') }}: {{ photo.passengers.total }}</span>
                 </p>
             </div>
-            <div class="passengers" v-if="photo.passengers">
+            <div class="passengers" v-if="photo.passengers && false">
                 <ul>
                     <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail">
                         <p v-show="roundTrip.number">
