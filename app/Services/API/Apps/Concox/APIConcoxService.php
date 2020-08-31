@@ -50,10 +50,16 @@ class APIConcoxService implements APIAppsInterface
                 return response()->json($response->toArray());
             case 'get-photo':
                 $camera = $this->request->get('camera');
-                $minutesAgo = $this->request->get('minutes-agp');
-                $limit = $this->request->get('limit');
+                $minutesAgo = intval($this->request->get('minutes-ago'));
+                $limit = intval($this->request->get('limit'));
+                $page = intval($this->request->get('page'));
 
-                $photos = $this->concox->getPhoto($camera, $minutesAgo, $limit);
+                $camera = $camera ? $camera : '1';
+                $minutesAgo = $minutesAgo ? $minutesAgo : 2;
+                $limit = $limit ? $limit : 2;
+                $page = $page ? $page : 0;
+
+                $photos = $this->concox->getPhoto($camera, $minutesAgo, $limit, $page);
 
                 dd($photos);
 
@@ -68,7 +74,11 @@ class APIConcoxService implements APIAppsInterface
                 return response()->json($response->toArray());
                 break;
             case 'sync-photos':
-                $response = $this->concox->syncPhotos($this->request->get('camera'), $this->request->get('minutes-ago'));
+                $camera = $this->request->get('camera');
+                $minutesAgo = $this->request->get('minutes-ago');
+                $limit = $this->request->get('limit');
+
+                $response = $this->concox->syncPhotos($camera, $minutesAgo, $limit);
 
                 dd($response);
 

@@ -179,7 +179,16 @@ class BEASyncService
 
         $queryVehicle = $this->vehicle ? "AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . ($this->vehicle->bea_id ?? 0) . ")" : "";
 
-        $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
+        if (request()->get('dump')) {
+//            $q = "SELECT * FROM C_AUTOBUS WHERE CAU_NUMECONOM IN ('8600', '8800', '62000')";
+//            $vehicle = BEADB::for($this->company)->select($q);
+//            dump($q, $vehicle);
+            $q = "SELECT * FROM A_MARCA WHERE (AMR_FHINICIO = '2020-08-28 08:58:00')";
+            $marks = BEADB::for($this->company)->select($q);
+            dd($q, $marks);
+        } else {
+            $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
+        }
 
         foreach ($marks as $markBEA) {
             DB::transaction(function () use ($markBEA) {

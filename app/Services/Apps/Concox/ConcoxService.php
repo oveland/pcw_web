@@ -58,9 +58,10 @@ class ConcoxService
      * @param string $camera
      * @param int $minutesAgo
      * @param int $limit
+     * @param int $page
      * @return Collection
      */
-    public function getPhoto($camera = '1', $minutesAgo = 2, $limit = 2)
+    public function getPhoto($camera = '1', $minutesAgo = 2, $limit = 2, $page = 0)
     {
         $photos = collect([]);
         $accessToken = $this->auth->getAccessToken();
@@ -72,7 +73,7 @@ class ConcoxService
                 'imei' => '351777095427025',
                 'camera' => $camera,
                 'media_type' => '1',
-                'page_no' => 0,
+                'page_no' => $page,
                 'page_size' => $limit,
                 'start_time' => Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString(),
                 'end_time' => Carbon::now('UTC')->toDateTimeString()
