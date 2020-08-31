@@ -74,10 +74,10 @@ class ConfigProfileService
             $activate = self::THRESHOLD_ACTIVATE;
             $release = self::THRESHOLD_RELEASE;
 
-            if (collect([15, 18])->contains(intval($number))) {
-                $activate = 1;
-                $release = 2;
-            }
+//            if (collect([15, 18])->contains(intval($number))) {
+//                $activate = 1;
+//                $release = 2;
+//            }
 
             $seatingConfig[$number] = [
                 'persistence' => compact(['activate', 'release'])

@@ -1,6 +1,6 @@
 <template>
     <div v-if="photo" class="zone-seating-component photo-header-report" :style="`width: ${image.size.width + 6}px; margin: auto`">
-        <div>
+        <div v-if="false">
             <div class="photo">
                 <p>
                 <span class="title">
@@ -9,7 +9,7 @@
                     <span class="detail">{{ $t('General count') }}: {{ photo.passengers.total }}</span>
                 </p>
             </div>
-            <div class="passengers" v-if="photo.passengers && false">
+            <div class="passengers" v-if="photo.passengers">
                 <ul>
                     <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail">
                         <p v-show="roundTrip.number">

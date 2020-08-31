@@ -48,7 +48,7 @@
                         <span class="detail">{{ photo.passengers.totalSumOccupied }} {{ $t('Counts') }}</span>
                     </p>
                 </div>
-                <div class="passengers" v-if="photo.passengers">
+                <div class="passengers" v-if="photo.passengers && false">
                     <ul v-if="photo.passengers.byRoundTrips.length">
                         <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail" v-if="roundTrip.number">
                             <p v-show="roundTrip.number">

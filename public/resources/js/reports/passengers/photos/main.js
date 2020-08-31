@@ -7225,7 +7225,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm.photo.passengers
+            _vm.photo.passengers && false
               ? _c("div", { staticClass: "passengers" }, [
                   _vm.photo.passengers.byRoundTrips.length
                     ? _c(
@@ -7528,73 +7528,9 @@ var render = function() {
           style: "width: " + (_vm.image.size.width + 6) + "px; margin: auto"
         },
         [
-          _c("div", [
-            _c("div", { staticClass: "photo" }, [
-              _c("p", [
-                _vm._m(0),
-                _vm._v(" "),
-                _c("span", { staticClass: "detail" }, [
-                  _vm._v(
-                    _vm._s(_vm.$t("General count")) +
-                      ": " +
-                      _vm._s(_vm.photo.passengers.total)
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _vm.photo.passengers && false
-              ? _c("div", { staticClass: "passengers" }, [
-                  _c(
-                    "ul",
-                    _vm._l(_vm.photo.passengers.byRoundTrips, function(
-                      roundTrip
-                    ) {
-                      return _c("li", { staticClass: "detail" }, [
-                        _c(
-                          "p",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: roundTrip.number,
-                                expression: "roundTrip.number"
-                              }
-                            ]
-                          },
-                          [
-                            _c("small", [
-                              _c("i", { staticClass: "fa fa-exchange" }),
-                              _vm._v(
-                                " " +
-                                  _vm._s(roundTrip.number) +
-                                  ", " +
-                                  _vm._s(roundTrip.route) +
-                                  ": " +
-                                  _vm._s(roundTrip.count) +
-                                  "\n                        "
-                              )
-                            ])
-                          ]
-                        )
-                      ])
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "detail count-round-trips" }, [
-                    _c("small", [
-                      _vm._v(
-                        _vm._s(_vm.$t("Total by round trips")) +
-                          ": " +
-                          _vm._s(_vm.photo.passengers.total)
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e()
-          ])
+          false
+            ? undefined
+            : _vm._e()
         ]
       )
     : _vm._e()
