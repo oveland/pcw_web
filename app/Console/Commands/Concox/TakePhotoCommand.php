@@ -5,6 +5,7 @@ namespace App\Console\Commands\Concox;
 use App\Services\Apps\Concox\ConcoxService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Log;
 
 class TakePhotoCommand extends Command
 {
@@ -47,14 +48,39 @@ class TakePhotoCommand extends Command
     {
         $camera = $this->option('camera');
 
-        $this->info(Carbon::now() . " | Concox request photo camera: $camera");
-
+        $camera = '1';
+        $this->logData(Carbon::now() . " | Concox request photo camera: $camera");
         $response = $this->concoxService->takePhoto($camera);
-        $this->info($response);
+        $this->logData($response);
 
         $this->info(Carbon::now() . " | Sync: $camera");
-        $this->info($this->concoxService->syncPhotos('1', 3, 2, 0));
+        $this->info($this->concoxService->syncPhotos($camera, 60, 30));
+
+//        $camera = '2';
+//        $this->logData(Carbon::now() . " | Concox request photo camera: $camera");
+//        $response = $this->concoxService->takePhoto($camera);
+//        $this->logData($response);
 
         return null;
+    }
+
+    /**
+     * @param $message
+     * @param string $level
+     */
+    public function logData($message, $level = 'info')
+    {
+        $this->info($message);
+        switch ($level) {
+            case 'warning':
+                Log::warning($message);
+                break;
+            case 'error':
+                Log::error($message);
+                break;
+            default:
+                Log::info($message);
+                break;
+        }
     }
 }

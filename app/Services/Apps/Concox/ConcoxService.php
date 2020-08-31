@@ -66,6 +66,19 @@ class ConcoxService
         $photos = collect([]);
         $accessToken = $this->auth->getAccessToken();
 
+        $from = request()->get('from');
+        $from = $from ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString().$from)->setTimezone('UTC')->toDateTimeString() : null;
+
+        $to = request()->get('to');
+        $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString().$to)->setTimezone('UTC')->toDateTimeString() : null;
+
+        if(request()->get('dump')){
+            dump($from, $to);
+        }
+
+        $starTime = $from ? $from : Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString();
+        $endTime = $to ? $to : Carbon::now('UTC')->toDateTimeString();
+
         if ($accessToken) {
             $this->auth->setPrivateParams([
                 'method' => 'jimi.device.media.URL',
@@ -75,8 +88,8 @@ class ConcoxService
                 'media_type' => '1',
                 'page_no' => $page,
                 'page_size' => $limit,
-                'start_time' => Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString(),
-                'end_time' => Carbon::now('UTC')->toDateTimeString()
+                'start_time' => $starTime,
+                'end_time' => $endTime
             ]);
 
             $request = $this->auth->request();
