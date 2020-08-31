@@ -61,7 +61,7 @@ class APIConcoxService implements APIAppsInterface
 
                 $photos = $this->concox->getPhoto($camera, $minutesAgo, $limit, $page);
 
-                dd($photos);
+                dd($photos->pluck('file_URL'));
 
                 return response()->json($photos->toArray());
                 break;

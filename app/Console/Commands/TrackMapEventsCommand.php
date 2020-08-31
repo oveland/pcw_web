@@ -89,7 +89,7 @@ class TrackMapEventsCommand extends Command
                 sleep(20);
             }
         } else {
-            $this->logData("Company does'nt exists in DB!");
+            $this->logData("Company does'nt exists in DB!", 'error');
         }
     }
 
@@ -101,8 +101,8 @@ class TrackMapEventsCommand extends Command
         $trackData = collect($this->trackMapService->track($this->company->id, 0));
 
         $hasEvents = $trackData->filter(function ($track) {
-                return ($track->speeding > 0 || $track->alertOffRoad || $track->alertParked);
-            })->count();
+            return ($track->speeding > 0 || $track->alertOffRoad || $track->alertParked);
+        })->count();
 
         if ($hasEvents) {
             $this->logData("Has event! ...Sending track data!");
@@ -134,7 +134,7 @@ class TrackMapEventsCommand extends Command
                 Log::error($message);
                 break;
             default:
-                Log::info($message);
+//                Log::info($message);
                 break;
         }
     }

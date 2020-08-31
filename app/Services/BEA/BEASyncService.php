@@ -180,10 +180,7 @@ class BEASyncService
         $queryVehicle = $this->vehicle ? "AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . ($this->vehicle->bea_id ?? 0) . ")" : "";
 
         if (request()->get('dump')) {
-//            $q = "SELECT * FROM C_AUTOBUS WHERE CAU_NUMECONOM IN ('8600', '8800', '62000')";
-//            $vehicle = BEADB::for($this->company)->select($q);
-//            dump($q, $vehicle);
-            $q = "SELECT * FROM A_MARCA WHERE (AMR_FHINICIO = '2020-08-28 08:58:00')";
+            $q = "SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle";
             $marks = BEADB::for($this->company)->select($q);
             dd($q, $marks);
         } else {
@@ -247,13 +244,18 @@ class BEASyncService
         $turn = $this->validateTurn($markBEA->AMR_IDTURNO);
         $trajectory = $this->validateTrajectory($markBEA->AMR_IDDERROTERO);
 
+        $initialTime = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO);
+        $finalTime = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHFINAL);
+
+        $dateTime = $initialTime->toDateString() == $finalTime->toDateString() ? $initialTime : $finalTime;
+
         $mark->company_id = $this->company->id;
         $mark->bea_id = $markBEA->AMR_IDMARCA;
         $mark->turn_id = $turn->id;
         $mark->trajectory_id = $trajectory ? $trajectory->id : null;
-        $mark->date = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO)->format(config('app.simple_date_time_format'));
-        $mark->initial_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO)->format(config('app.simple_time_format'));
-        $mark->final_time = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHFINAL)->format(config('app.simple_time_format'));
+        $mark->date = $dateTime->format(config('app.simple_date_time_format'));
+        $mark->initial_time = $initialTime->format(config('app.simple_time_format'));
+        $mark->final_time = $finalTime->format(config('app.simple_time_format'));
         $mark->passengers_up = $passengersUp;
         $mark->passengers_down = $passengersDown;
         $mark->locks = $locks;

@@ -129,7 +129,7 @@ class TrackMapCommand extends Command
                 }
             }
 
-            if( $this->company->id != Company::MONTEBELLO ){
+            if ($this->company->id != Company::MONTEBELLO) {
                 $track = collect($this->trackMapService->track($this->company->id, 0));
                 if ($this->driver == 'echo') {
                     $this->logData("Sending data for all routes");
@@ -137,7 +137,7 @@ class TrackMapCommand extends Command
                 }
             }
         } else {
-            $this->logData("Company does'nt exists in DB!");
+            $this->logData("Company does'nt exists in DB!", 'error');
         }
     }
 
@@ -158,7 +158,7 @@ class TrackMapCommand extends Command
                 Log::error($message);
                 break;
             default:
-                Log::info($message);
+//                Log::info($message);
                 break;
         }
     }
