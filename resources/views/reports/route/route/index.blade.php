@@ -277,7 +277,7 @@
         $('#with-end-date').change(function(){
             const dec =  $('.date-end-container').slideUp();
             if ($(this).is(':checked')) {
-                dec.slideDown().val( '2020-10-08' );
+                dec.slideDown();
             }
         });
     </script>

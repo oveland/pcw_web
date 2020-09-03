@@ -206,13 +206,6 @@
                 mainContainer.slideUp(100);
             });
 
-            $('#date-report, #type-report').change(function () {
-                mainContainer.slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
-            });
-
             $('#modal-route-report').on('shown.bs.modal', function () {
                 initializeMap();
             });
@@ -259,7 +252,7 @@
                 mainContainer.slideUp(100);
             }).change();
             @else
-                $('#route-report').change();
+                loadSelectRouteReport(null);
             @endif
 
             let time = moment('00:00', 'HH:mm');
@@ -297,7 +290,7 @@
         $('#with-end-date').change(function(){
             const dec =  $('.date-end-container').slideUp();
             if ($(this).is(':checked')) {
-                dec.slideDown().val( '2020-10-08' );
+                dec.slideDown();
             }
         });
     </script>

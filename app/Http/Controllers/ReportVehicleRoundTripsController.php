@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
 use App\Services\PCWExporterService;
 use Auth;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ReportVehicleRoundTripsController extends Controller
 {
@@ -23,7 +26,7 @@ class ReportVehicleRoundTripsController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -35,15 +38,18 @@ class ReportVehicleRoundTripsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function show(Request $request)
     {
         $company = $this->generalController->getCompany($request);
         $dateReport = $request->get('date-report');
         $routeReport = $request->get('route-report');
+        $withEndDate = $request->get('with-end-date');
+        $dateEndReport = $withEndDate ? $request->get('date-end-report') : null;
+        $vehicleReport = $request->get('vehicle-report');
 
-        $roundTripsReport = $this->buildRoundTripsReport($company, $dateReport, $routeReport);
+        $roundTripsReport = $this->buildRoundTripsReport($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $withEndDate);
 
         if ($request->get('export')) $this->export($roundTripsReport);
 
@@ -51,31 +57,34 @@ class ReportVehicleRoundTripsController extends Controller
     }
 
     /**
-     * @param Company|null $company
+     * @param Company $company
      * @param $dateReport
-     * @param string $routeReport
+     * @param $dateEndReport
+     * @param $routeReport
+     * @param $vehicleId
+     * @param $withEndDate
      * @return object
      */
-    public function buildRoundTripsReport(Company $company = null, $dateReport, $routeReport = 'all')
+    public function buildRoundTripsReport(Company $company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $withEndDate)
     {
-        $vehicles = $company->vehicles;
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport)
+            ->with('vehicle')
+            ->orderBy('id')->get();
 
-        $dispatchRegistersByVehicles = DispatchRegister::completed()
-            ->whereIn('vehicle_id', $vehicles->pluck('id'))
-            ->where('date', $dateReport);
+//        $dispatchRegistersByVehicles = DispatchRegister::completed()
+//            ->whereIn('vehicle_id', $vehicles->pluck('id'))
+//            ->where('date', $dateReport);
+//
+//        if ($routeReport != 'all') {
+//            $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->where('route_id', $routeReport);
+//        }
 
-        if ($routeReport != 'all') {
-            $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->where('route_id', $routeReport);
-        }
-
-        $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->orderBy('id')
-            ->get()
-            ->groupBy('vehicle_id');
+        $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
 
 
         $reports = collect([]);
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
-            $vehicle = $vehicles->where('id', $vehicleId)->first();
+            $vehicle = $dispatchRegistersByVehicle->first()->vehicle;
             $dispatchRegistersByVehicleByRoutes = $dispatchRegistersByVehicle->groupBy('route_id');
 
             $reportRoundTripsByRoutes = collect([]);
@@ -86,9 +95,7 @@ class ReportVehicleRoundTripsController extends Controller
                     (object)[
                         'route' => $route,
                         'dispatchRegisters' => $dispatchRegistersByVehicleByRoute,
-                        'roundTripsByRoute' => $dispatchRegistersByVehicleByRoute->max('round_trip'),
-                        'firstDepartureTime' => $dispatchRegistersByVehicleByRoute->min('departure_time'),
-                        'lastArrivalTime' => $dispatchRegistersByVehicleByRoute->max('arrival_time')
+                        'roundTripsByRoute' => $dispatchRegistersByVehicleByRoute->count()
                     ]
                 );
             }
@@ -107,6 +114,9 @@ class ReportVehicleRoundTripsController extends Controller
             'company' => $company,
             'dateReport' => $dateReport,
             'routeReport' => $routeReport,
+            'dateEndReport' => $dateEndReport,
+            'vehicleReport' => $vehicleReport,
+            'withEndDate' => $withEndDate,
             'reports' => $reports->sortBy('totalRoundTrips'),
             'totalRoundTripsByFleet' => $reports->sum('totalRoundTrips')
         ];
@@ -120,8 +130,10 @@ class ReportVehicleRoundTripsController extends Controller
     public function export($roundTripsReport)
     {
         $dateReport = $roundTripsReport->dateReport;
+        $dateEndReport = $roundTripsReport->dateEndReport;
         $reports = $roundTripsReport->reports;
         $routeReport = $roundTripsReport->routeReport;
+        $vehicle = $roundTripsReport->vehicleReport && $roundTripsReport->vehicleReport != 'all' ? Vehicle::find($roundTripsReport->vehicleReport) : null;
 
         $dataExcel = array();
         foreach ($reports as $report) {
@@ -136,11 +148,14 @@ class ReportVehicleRoundTripsController extends Controller
 
         $route = $routeReport != 'all' ? Route::find($routeReport) : null;
 
-        $titleRoute = ($route ? "\n $route->name" : "");
+        $title = ($route ? "\n $route->name" : "");
+        $title .= ($vehicle ? "\n ".__('Vehicle')." $vehicle->number" : "");
+
+        $dateReport .= $dateEndReport ? " - $dateEndReport" : "";
 
         PCWExporterService::excel([
-            'fileName' => __('Round trip report') . " $dateReport",
-            'title' => __('Round trip report').$titleRoute,
+            'fileName' => __('Round trip report') . $roundTripsReport->dateReport,
+            'title' => __('Round trip report') . $title,
             'subTitle' => $dateReport,
             'data' => $dataExcel,
             'type' => 'roundTripsVehicleReport'

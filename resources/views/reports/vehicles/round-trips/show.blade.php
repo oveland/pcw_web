@@ -9,7 +9,7 @@
                 <a class="btn btn-info btn-sm bg-info-dark btn-rounded see-details">
                     <i class="fa fa-list-alt" aria-hidden="true"></i> @lang('See details')
                 </a>
-                <a href="{{ route('report-vehicle-round-trips-show') }}?company={{ $roundTripsReport->company->id }}&date-report={{ $roundTripsReport->dateReport }}&route-report={{ $roundTripsReport->routeReport }}&export=true"
+                <a href="{{ route('report-vehicle-round-trips-show') }}?company={{ $roundTripsReport->company->id }}&date-report={{ $roundTripsReport->dateReport }}&route-report={{ $roundTripsReport->routeReport }}&date-end-report={{ $roundTripsReport->dateEndReport }}&vehicle-report={{ $roundTripsReport->vehicleReport }}&with-end-date={{ $roundTripsReport->withEndDate }}&export=true"
                    class="btn btn-lime btn-sm bg-lime-dark btn-rounded tooltips" data-title="@lang('Export excel')">
                     <i class="fa fa-file-excel-o"></i>
                 </a>
@@ -28,7 +28,7 @@
         </div>
         <div class="table-responsive">
             <!-- begin table -->
-            <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
+            <table class="table table-bordered table-striped table-hover table-valign-middle table-report table-condensed">
                 <thead>
                 <tr class="inverse">
                     <th class="text-center">N°</th>
@@ -54,27 +54,22 @@
                     @endphp
                     <tr class="text-center">
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $vehicle->number }} <i class="fa fa-hand-o-right"
-                                                      aria-hidden="true"></i> {{  $vehicle->plate }}</td>
-                        <td class="text-center">
-                            <a class="btn btn-{{ $reportRoundTripByRoutes->count() > 1 ? 'grey tooltips vehicle-see-details' :'white' }} btn-icon btn-circle btn-sm" data-title="@lang('Vehicle with mixed routes')">
-                                {{ $report->totalRoundTrips }}
-                            </a>
+                        <td>{{ $vehicle->number }}</td>
+                        <td class="text-center tooltips" data-title="{{ $reportRoundTripByRoutes->count() > 1 ? __('Vehicle with mixed routes'):'' }}">
+                            {{ $report->totalRoundTrips }}
+                            @if($reportRoundTripByRoutes->count() > 1)
+                                <i class="fa fa-info text-info tooltips vehicle-see-details"></i>
+                            @endif
                         </td>
-                        <td class="text-center details">
-                            @foreach($reportRoundTripByRoutes as $reportRoundTripByRoute)
-                                <a class="btn btn-success btn-xs active p-l-15 p-r-15">
-                                    <span><i class="fa fa-flag"></i> {{ $reportRoundTripByRoute->route->name }}</span><br>
-                                    <strong> {{ $reportRoundTripByRoute->roundTripsByRoute }} {{ __('round trip'.($reportRoundTripByRoute->roundTripsByRoute > 1?'s':'')) }}</strong><br>
-                                    <small class="tooltips" data-title="@lang('Departure time on first round trip')" data-placement="bottom">
-                                        {{ \App\Http\Controllers\Utils\StrTime::toString($reportRoundTripByRoute->firstDepartureTime) }}
-                                    </small>
-                                    @lang('and')
-                                    <small class="tooltips" data-title="@lang('Arrival time on last round trip')" data-placement="bottom">
-                                        {{ \App\Http\Controllers\Utils\StrTime::toString($reportRoundTripByRoute->lastArrivalTime) }}
-                                    </small>
-                                </a>
-                            @endforeach
+                        <td class="text-left details">
+                            <ul>
+                                @foreach($reportRoundTripByRoutes as $reportRoundTripByRoute)
+                                    <li>
+                                        <span>{{ $reportRoundTripByRoute->route->name }}</span> |
+                                        <strong>{{ $reportRoundTripByRoute->roundTripsByRoute }} {{ __('round trip'.($reportRoundTripByRoute->roundTripsByRoute > 1?'s':'')) }}</strong><br>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </td>
                     </tr>
                 @endforeach
