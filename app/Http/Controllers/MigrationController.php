@@ -370,10 +370,10 @@ class MigrationController extends Controller
     public function migrateVehicles(Request $request)
     {
         if ($request->get('delete')) {
-            $deleted = DB::delete('DELETE FROM gps_vehicles');
-            dump($deleted . ' registers has ben deleted from gps_vehicles!');;
-            $deleted = DB::delete('DELETE FROM vehicles');
-            dd($deleted . ' registers has ben deleted!');;
+//            $deleted = DB::delete('DELETE FROM gps_vehicles');
+//            dump($deleted . ' registers has ben deleted from gps_vehicles!');;
+//            $deleted = DB::delete('DELETE FROM vehicles');
+//            dd($deleted . ' registers has ben deleted!');
         }
 
         $maxIdGpsVehicles = collect(DB::select("SELECT max(id) FROM gps_vehicles"))->first()->max + 1;
