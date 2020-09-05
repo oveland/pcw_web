@@ -39,7 +39,7 @@
                             <p class="detail text-info">
                                 {{ $t('Current seating') }}: <span>{{ photo.details.occupation.seatingBoardingStr }}</span>
                             </p>
-                            <p class="detail">
+                            <p class="detail hide">
                                 {{ $t('Mix seating') }}: <span>{{ photo.details.occupation.seatingMixStr }}</span>
                             </p>
                             <p class="detail text-info">
@@ -50,6 +50,12 @@
                             </p>
                         </div>
                     </div>
+					<div class="col-md-12">
+						<p>{{ $t('Recognition') }}</p>
+						<ul class="detail">
+							<li v-for="(count, type) in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">{{ $t(type) + `: ${count}` }} </li>
+						</ul>
+					</div>
                 </div>
             </div>
 

@@ -204,6 +204,7 @@ class PhotoService
                 'details' => $details,
                 'prevDetails' => $lastPhoto->prevDetails ?? null,
                 'alarms' => $lastPhoto->alarms ?? null,
+                'rekognitionCounts' => $lastPhoto->rekognitionCounts ?? null,
                 'passengers' => (object)[
                     'byRoundTrips' => $personsByRoundTrips,
                     'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
@@ -404,11 +405,14 @@ class PhotoService
                 $details->occupation->seatingReleaseStr = $seatingReleased->keys()->sort()->implode(', ');
                 $details->occupation->seatingActivatedStr = $seatingActivated->keys()->sort()->implode(', ');
 
+                $rekognitionCounts = collect($details->occupation->draws)->countBy('type');
+
                 $historic->push((object)[
                     'id' => $photo->id,
                     'time' => $photo->date->format('H:i:s') . '' . $photo->id,
                     'drId' => $photo->dispatch_register_id,
                     'details' => $details,
+                    'rekognitionCounts' => $rekognitionCounts,
                     'prevDetails' => $prevDetails,
                     'alarms' => (object)[
                         'withOverlap' => $currentOccupation->withOverlap,

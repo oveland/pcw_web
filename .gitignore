@@ -16,3 +16,4 @@ _ide_helper_models.php
 /storage/exports
 /public/tmp.jpeg
 .phpunit.result.cache
+resources/js/lang/es.json
