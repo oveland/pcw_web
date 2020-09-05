@@ -147,6 +147,7 @@
             $('#route-report').change(function () {
                 // loadSelectVehicleReportFromRoute($(this).val());
                 reportContainer.slideUp(100);
+                loadSelectVehicleReportFromRoute($(this).val());
             });
 
             @if(Auth::user()->isAdmin())
@@ -157,6 +158,7 @@
             }).change();
             @else
                 loadSelectRouteReport(null);
+                $('#route-report').change();
             @endif
         });
 

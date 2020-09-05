@@ -3,10 +3,10 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a class="btn btn-info btn-sm bg-info-dark btn-rounded hide-details">
+                <a class="btn hide btn-info btn-sm bg-info-dark btn-rounded hide-detailss">
                     <i class="fa fa-list-alt" aria-hidden="true"></i> @lang('Hide details')
                 </a>
-                <a class="btn btn-info btn-sm bg-info-dark btn-rounded see-details">
+                <a class="btn hide btn-info btn-sm bg-info-dark btn-rounded see-detailss">
                     <i class="fa fa-list-alt" aria-hidden="true"></i> @lang('See details')
                 </a>
                 <a href="{{ route('report-vehicle-round-trips-show') }}?company={{ $roundTripsReport->company->id }}&date-report={{ $roundTripsReport->dateReport }}&route-report={{ $roundTripsReport->routeReport }}&date-end-report={{ $roundTripsReport->dateEndReport }}&vehicle-report={{ $roundTripsReport->vehicleReport }}&with-end-date={{ $roundTripsReport->withEndDate }}&export=true"
