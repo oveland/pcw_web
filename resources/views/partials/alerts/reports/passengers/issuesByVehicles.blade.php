@@ -16,24 +16,24 @@
             <!-- begin widget -->
             <div class="widget">
                 <div class="widget-header bg-inverse p-10">
-                    <h4 class="text-muted">
+                    <h5  class="text-muted">
                         <i class="fa fa-car"></i>
                         <span class="issue-index">{{ $index }}</span>
                         {{ $vehicle->number }} | {{ $vehicle->plate }}
-                    </h4>
+                    </h5>
                 </div>
                 <ul class="widget-todolist">
                     @foreach($issuesByVehicle as $issue)
                         @php($dispatchRegister = $issue->dispatchRegister)
                         @php($lastDispatchRegister = $issue->lastDispatchRegister)
                         <li class="">
-                            <div class="checkbox">
-                                <label>
-                                    <i class="fa fa-exclamation-triangle faa faa-tada animated text-warning tooltips" data-title="@lang('Error in') <b>{{ $issue->field }}</b>" data-html="true"></i>
-                                </label>
-                            </div>
-                            <div class="info">
+                            <div class="info" class="tooltips" data-title="{{ $dispatchRegister->status }}">
+                                <h4>
+                                    <i class="fa fa-calendar"></i>
+                                    {{ $dispatchRegister->date }}
+                                </h4>
                                 <h4 class="tooltips" data-title="{{ $dispatchRegister->status }}">
+                                    <i class="fa fa-flag"></i>
                                     {{ $dispatchRegister->route->name }},
                                     @lang('Turn') {{ $dispatchRegister->turn }},
                                     @lang('Round Trip') {{ $dispatchRegister->round_trip }},

@@ -9,12 +9,12 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Passengers')</a></li>
-        <li class="active">@lang('Consolidated per date range')</li>
+        <li class="active">@lang('Consolidated')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Passengers report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Consolidated per date range')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Consolidated')</small>
     </h1>
 
     <!-- end page-header -->
@@ -53,18 +53,18 @@
                             </div>
                         @endif
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="driver-report" class="control-label field-required">@lang('Driver')</label>
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
-                                    <select name="driver-report" id="driver-report" class="default-select2 form-control col-md-12" data-with-all="true">
-                                        <option value="null">@lang('Select a company first')</option>
+                                    <select name="route-report" id="route-report" data-with-all="true" class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company')</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
@@ -77,23 +77,55 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="initial-date" class="control-label field-required">@lang('Initial date')</label>
-                                <div class="input-group date datepicker" data-less="true" data-than="#final-date">
-                                    <input name="initial-date" id="initial-date" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
+                                <label for="driver-report" class="control-label field-required">@lang('Driver')</label>
+                                <div class="form-group">
+                                    <select name="driver-report" id="driver-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                        <option value="null">@lang('Select a company first')</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="final-date" class="control-label field-required">@lang('Final date')</label>
-                                <div class="input-group date datepicker" data-greater="true" data-than="#initial-date">
-                                    <input name="final-date" id="final-date" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                <label for="date-report" class="control-label field-required">
+                                    @lang('Date')
+                                </label>
+                                <label class="text-bold">
+                                    &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
+                                </label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 date-end-container" style="display: none;">
+                            <div class="form-group">
+                                <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 options with-route">
+                            <div class="form-group">
+                                <label for="grouped-report" class="control-label">@lang('Options')</label>
+                                <div class="form-group">
+                                    <div class="has-warning">
+                                        <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
+                                            <label class="text-bold">
+                                                <input id="grouped-report" name="grouped-report" type="checkbox" value="group-vehicles" checked> @lang('Group by vehicle')
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,11 +169,11 @@
                 }
             });
 
-            $('#initial-date, #final-date').change(function () {
+            $('#date-report, #date-end-report, #grouped-report').change(function () {
                 mainContainer.slideUp();
             });
 
-            $('#driver-report, #vehicle-report').change(function () {
+                $('#route-report, #driver-report, #vehicle-report').change(function () {
                 mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
@@ -167,6 +199,13 @@
                 loadSelectVehicleReport(1, true);
                 loadSelectDriverReport(1);
             @endif
+
+            $('#with-end-date').change(function(){
+                const dec =  $('.date-end-container').slideUp();
+                if ($(this).is(':checked')) {
+                    dec.slideDown();
+                }
+            });
         });
     </script>
 @endsection

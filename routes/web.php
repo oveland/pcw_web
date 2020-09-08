@@ -263,8 +263,9 @@ Route::group(['middleware' => ['auth']], function () {
                         Route::get('/export', 'ReportPassengerRecorderConsolidatedDailyController@export')->name('report-passengers-recorders-consolidated-daily-export');
                     });
 
-                    Route::prefix(__('date-range'))->group(function () {
-                        Route::get('/', 'PassengersReportDateRangeController@index')->name('report-passengers-recorders-consolidated-date-range');
+                    Route::prefix('')->group(function () {
+                        Route::get('/', 'PassengersReportDateRangeController@index')->name('report-passengers-recorders-consolidated');
+                        Route::get('/range', 'PassengersReportDateRangeController@index')->name('report-passengers-recorders-consolidated-date-range');
                         Route::get('/show', 'PassengersReportDateRangeController@show')->name('report-passengers-recorders-consolidated-date-range-search');
                         Route::get('/export', 'PassengersReportDateRangeController@export')->name('report-passengers-recorders-consolidated-date-range-export');
                     });

@@ -5,10 +5,7 @@
         <div class="panel-heading">
             <div class="panel-heading-btn">
                 <a href="{{ route('report-passengers-recorders-consolidated-daily-export') }}?date-report={{ $passengerReport->date }}&company-report={{ $passengerReport->companyId }}" class="btn btn-sm btn-circle green-meadow sbold uppercase tooltips" data-title="@lang('Export excel')">
-                    <i class="fa fa-file-excel-o"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-sm btn-circle btn-default" data-click="panel-expand" title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
+                    <i class="fa fa-download"></i>
                 </a>
             </div>
             <h5 class="text-white m-t-10">

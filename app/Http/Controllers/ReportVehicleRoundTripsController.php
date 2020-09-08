@@ -68,6 +68,7 @@ class ReportVehicleRoundTripsController extends Controller
     public function buildRoundTripsReport(Company $company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $withEndDate)
     {
         $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport)
+            ->active()
             ->with('vehicle')
             ->orderBy('id')->get();
 
@@ -78,6 +79,10 @@ class ReportVehicleRoundTripsController extends Controller
 //        if ($routeReport != 'all') {
 //            $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->where('route_id', $routeReport);
 //        }
+
+        $dispatchRegisters = $dispatchRegisters->sortBy(function(DispatchRegister $dr){
+            return $dr->vehicle->number;
+        });
 
         $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
 
@@ -117,7 +122,7 @@ class ReportVehicleRoundTripsController extends Controller
             'dateEndReport' => $dateEndReport,
             'vehicleReport' => $vehicleReport,
             'withEndDate' => $withEndDate,
-            'reports' => $reports->sortBy('totalRoundTrips'),
+            'reports' => $reports,
             'totalRoundTripsByFleet' => $reports->sum('totalRoundTrips')
         ];
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Drivers\Driver;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Routes\Route;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Services\PCWTime;
@@ -16,6 +17,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Company\Company;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class PassengersReportDateRangeController extends Controller
@@ -54,12 +56,15 @@ class PassengersReportDateRangeController extends Controller
         $company = $this->pcwAuthService->getCompanyFromRequest($request);
         $vehicle = Vehicle::find(intval($request->get('vehicle-report')));
         $driver = Driver::find(intval($request->get('driver-report')));
-        $initialDate = $request->get('initial-date');
-        $finalDate = $request->get('final-date');
+        $routeReport = Route::find(intval($request->get('route-report')));;
+        $dateReport = $request->get('date-report');
+        $withEndDate = $request->get('with-end-date');
+        $dateEndReport = $withEndDate ? $request->get('date-end-report') : $dateReport;
+        $groupedReport = $request->get('grouped-report');
 
-        if ($finalDate < $initialDate) return view('partials.dates.invalidRange');
+        if ($dateEndReport < $dateReport) return view('partials.dates.invalidRange');
 
-        $passengerReport = $this->buildPassengerReport($company, $driver, $vehicle, $initialDate, $finalDate);
+        $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupedReport);
 
         if ($request->get('export')) return $this->export($passengerReport);
 
@@ -67,64 +72,100 @@ class PassengersReportDateRangeController extends Controller
     }
 
     /**
-     * Build passenger report from company and date
-     *
      * @param Company $company
-     * @param Driver|null $driver
+     * @param Route $route
      * @param Vehicle|null $vehicle
-     * @param $initialDate
-     * @param $finalDate
+     * @param Driver|null $driver
+     * @param $dateReport
+     * @param $withEndDate
+     * @param $dateEndReport
+     * @param null $groupedReport
      * @return object
      */
-    public function buildPassengerReport(Company $company, Driver $driver = null, Vehicle $vehicle = null, $initialDate, $finalDate)
+    public function buildPassengerReport(Company $company, Route $route = null, Vehicle $vehicle = null, Driver $driver = null, $dateReport, $withEndDate, $dateEndReport, $groupedReport = null)
     {
-        $dateRange = PCWTime::dateRange(Carbon::parse($initialDate), Carbon::parse($finalDate));
+        $dateRange = PCWTime::dateRange(Carbon::parse($dateReport), Carbon::parse($dateEndReport));
 
-        $dispatchRegisters = DispatchRegister::whereIn('route_id', $company->routes->pluck('id'))
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $route->id ?? null, $vehicle->id ?? null)
             ->whereDriver($driver)
-            ->whereVehicle($vehicle);
-
-        $dispatchRegisters = $dispatchRegisters
-            ->whereBetween('date', [$initialDate, $finalDate])
             ->active()
-            ->get()
-            ->sortBy('id');
+            ->with('vehicle')
+            ->with('driver')
+            ->with('route')
+            ->orderBy('id')->get();
 
-        $passengerBySensorByDates = self::buildReportBySensorByDates($dispatchRegisters);
-        $passengerByRecorderByDates = self::buildReportByRecorderByDates($dispatchRegisters);
+        $dispatchRegisters = $dispatchRegisters->sortBy(function (DispatchRegister $dr) {
+            return $dr->vehicle->number;
+        });
 
         $reports = collect([]);
-        foreach ($dateRange as $date) {
-            $sensor = $passengerBySensorByDates->where('date', $date->toDateString())->first();
-            $recorder = $passengerByRecorderByDates->where('date', $date->toDateString())->first();
 
-            $reports->put($date->toDateString(), (object)[
-                'date' => $date,
-                'totalByRecorder' => $recorder->totalByRecorder ?? 0,
-                'totalBySensor' => $sensor->totalBySensor ?? 0,
-                'totalBySensorRecorder' => $sensor->totalBySensorRecorder ?? 0,
-                'issues' => collect($recorder ? $recorder->issues : []),
-                'frame' => '',
-                'driverProcessed' => $driver ? $driver->code.' | '.$driver->fullName() : ($vehicle ? ($recorder->lastDriverName ?? '') : __('All')),
-                'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All'))
-            ]);
+        if ($vehicle == null && $groupedReport) {
+            $dispatchRegistersByVehicle = $dispatchRegisters->groupBy('vehicle_id');
+
+            foreach ($dispatchRegistersByVehicle as $vehicleId => $dr) {
+                $vehicleByDate = Vehicle::find($vehicleId);
+                $report = $this->buildReport($dateRange, $route, $vehicleByDate, $driver, $dr);
+                $reports = $reports->merge($report);
+            }
+        } else {
+            $reports = $this->buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters);
         }
 
+        $allIssues = $reports->pluck('issues')->collapse()->mapWithKeys(function ($m) {
+            return [$m->first()->vehicle_id => $m];
+        });
+
         $passengerReport = (object)[
-            'driver' => $driver,
-            'driverReport' => $driver ? $driver->id : 'all',
+            'route' => $route,
+            'routeReport' => $route ? $route->id : 'all',
             'vehicle' => $vehicle,
             'vehicleReport' => $vehicle ? $vehicle->id : 'all',
-            'initialDate' => $initialDate,
-            'finalDate' => $finalDate,
+            'driver' => $driver,
+            'driverReport' => $driver ? $driver->id : 'all',
+            'dateReport' => $dateReport,
+            'dateEndReport' => $dateEndReport,
             'companyId' => $company->id,
             'reports' => $reports,
             'totalSensor' => $reports->sum('totalBySensor'),
             'totalRecorder' => $reports->sum('totalByRecorder'),
             'totalSensorRecorder' => $reports->sum('totalBySensorRecorder'),
+            'totalRoundTrips' => $reports->sum('roundTrips'),
+            'groupedReport' => $groupedReport,
+            'withEndDate' => $withEndDate,
+            'issues' => $allIssues,
+            'canLiquidate' => ($groupedReport || $vehicle) && !$route
         ];
 
         return $passengerReport;
+    }
+
+    private function buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters)
+    {
+        $reports = collect([]);
+        $passengerBySensorByDates = self::buildReportBySensorByDates($dispatchRegisters);
+        $passengerByRecorderByDates = self::buildReportByRecorderByDates($dispatchRegisters);
+
+        foreach ($dateRange as $date) {
+            $sensor = $passengerBySensorByDates->where('date', $date->toDateString())->first();
+            $recorder = $passengerByRecorderByDates->where('date', $date->toDateString())->first();
+
+            $reports->push((object)[
+                'date' => $date->toDateString(),
+                'totalByRecorder' => $recorder->totalByRecorder ?? 0,
+                'totalBySensor' => $sensor->totalBySensor ?? 0,
+                'totalBySensorRecorder' => $sensor->totalBySensorRecorder ?? 0,
+                'issues' => collect($recorder ? $recorder->issues : []),
+                'roundTrips' => $sensor->totalRoundTrips ?? 0,
+                'frame' => '',
+                'routeProcessed' => $route ? $route->name : __('All'),
+                'vehicle' => $vehicle,
+                'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All')),
+                'driverProcessed' => $driver ? $driver->code . ' | ' . $driver->fullName() : ($vehicle ? ($recorder->lastDriverName ?? '') : __('All')),
+            ]);
+        }
+
+        return $reports;
     }
 
     /**
@@ -136,19 +177,21 @@ class PassengersReportDateRangeController extends Controller
     {
         $vehicle = $passengerReport->vehicle;
         $driver = $passengerReport->driver;
-        $initialDate = $passengerReport->initialDate;
-        $finalDate = $passengerReport->finalDate;
+        $dateReport = $passengerReport->dateReport;
+        $dateEndReport = $passengerReport->dateEndReport;
 
         $dataExcel = array();
         foreach ($passengerReport->reports as $date => $report) {
             $data = collect([
                 __('N°') => count($dataExcel) + 1,                          # A CELL
-                __('Date') => $date,                                        # B CELL
-                __('Vehicle') => $report->vehicleProcessed,                 # C CELL
-                __('Driver') => $report->driverProcessed,                   # D CELL
-                __('Sensor recorder') => $report->totalBySensorRecorder,    # E CELL
-                __('Recorder') => $report->totalByRecorder,                 # F CELL
-                __('Sensor') => $report->totalBySensor,                     # G CELL
+                __('Date') => $report->date,                                # B CELL
+                __('Route') => $report->routeProcessed,                     # C CELL
+                __('Vehicle') => $report->vehicleProcessed,                 # D CELL
+                __('Driver') => $report->driverProcessed,                   # E CELL
+                __('Total round trips') => $report->roundTrips,             # F CELL
+                __('Sensor recorder') => $report->totalBySensorRecorder,    # G CELL
+                __('Recorder') => $report->totalByRecorder,                 # H CELL
+                __('Sensor') => $report->totalBySensor,                     # I CELL
             ]);
             if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
 
@@ -160,7 +203,7 @@ class PassengersReportDateRangeController extends Controller
 
         PCWExporterService::excel([
             'fileName' => str_limit(str_limit($infoDriver, 3) . " $infoVehicle" . __('Passengers per dates'), 28),
-            'title' => str_limit(($infoDriver ? "$infoDriver\n" : "") . ($infoVehicle ? "$infoVehicle | " : "") . " $initialDate - $finalDate", 100),
+            'title' => str_limit(($infoDriver ? "$infoDriver\n" : "") . ($infoVehicle ? "$infoVehicle | " : "") . " $dateReport - $dateEndReport", 100),
             'subTitle' => str_limit(__("Passengers per dates"), 28),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
@@ -169,7 +212,7 @@ class PassengersReportDateRangeController extends Controller
 
     /**
      * @param $dispatchRegisters
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     static function buildReportBySensorByDates($dispatchRegisters)
     {
@@ -183,7 +226,8 @@ class PassengersReportDateRangeController extends Controller
             $reports->put($date, (object)[
                 'date' => $date,
                 'totalBySensor' => $report->report->sum('passengersBySensor'),
-                'totalBySensorRecorder' => $report->report->sum('passengersBySensorRecorder')
+                'totalBySensorRecorder' => $report->report->sum('passengersBySensorRecorder'),
+                'totalRoundTrips' => count($dispatchRegistersByDate)
             ]);
         }
 
@@ -192,7 +236,7 @@ class PassengersReportDateRangeController extends Controller
 
     /**
      * @param $dispatchRegisters
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     static function buildReportByRecorderByDates($dispatchRegisters)
     {
@@ -209,6 +253,7 @@ class PassengersReportDateRangeController extends Controller
                 'issues' => $report->issues,
                 'lastVehicleNumber' => $report->lastVehicleNumber,
                 'lastDriverName' => $report->lastDriverName,
+                'totalRoundTrips' => count($dispatchRegistersByDate)
             ]);
         }
 

@@ -8,8 +8,10 @@ use App\Models\Routes\Route;
 use App\Services\PCWExporterService;
 use App\Services\Reports\Passengers\PassengersService as PassengersReporter;
 use App\Models\Vehicles\Vehicle;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 
 class ReportPassengerRecorderConsolidatedDailyController extends Controller
@@ -30,10 +32,12 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
 
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
+        return redirect(route('report-passengers-recorders-consolidated'));
+
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
@@ -43,7 +47,7 @@ class ReportPassengerRecorderConsolidatedDailyController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function show(Request $request)
     {

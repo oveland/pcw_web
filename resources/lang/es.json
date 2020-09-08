@@ -705,5 +705,8 @@
   "Scheduled time from dispatch": "Tiempo programado desde despacho",
   "Average time from dispatch": "Tiempo promedio desde despacho",
   "Takings receipt": "Recibo de Recaudo",
-  "Dates": "Fechas"
+  "Dates": "Fechas",
+  "Group by vehicle": "Agrupar por vehículo",
+  "Consolidated passengers": "Consolidado de pasajeros",
+  "Settlement daily receipt": "Recibo de liquidación diaria"
 }

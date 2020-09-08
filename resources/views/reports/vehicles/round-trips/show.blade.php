@@ -10,12 +10,8 @@
                     <i class="fa fa-list-alt" aria-hidden="true"></i> @lang('See details')
                 </a>
                 <a href="{{ route('report-vehicle-round-trips-show') }}?company={{ $roundTripsReport->company->id }}&date-report={{ $roundTripsReport->dateReport }}&route-report={{ $roundTripsReport->routeReport }}&date-end-report={{ $roundTripsReport->dateEndReport }}&vehicle-report={{ $roundTripsReport->vehicleReport }}&with-end-date={{ $roundTripsReport->withEndDate }}&export=true"
-                   class="btn btn-lime btn-sm bg-lime-dark btn-rounded tooltips" data-title="@lang('Export excel')">
-                    <i class="fa fa-file-excel-o"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime " data-click="panel-expand"
-                   title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
+                   class="btn btn-success btn-rounded tooltips" data-title="@lang('Export excel')">
+                    <i class="fa fa-download"></i>
                 </a>
             </div>
             <p class="text-white label-vehicles">

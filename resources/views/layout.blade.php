@@ -557,12 +557,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="nav-item menu-passengers-recorders-consolidated">
-                                                <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
+                                                <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="faa-parent animated-hover nav-link nav-toggle">
                                                     <i class="fa fa-archive faa-vertical"></i>
                                                     @lang('Consolidated')
-                                                    <span class="arrow"></span>
                                                 </a>
-                                                <ul class="sub-menu">
+                                                <ul class="sub-menu hide">
                                                     <li class="nav-item menu-passengers-recorders-consolidated-days">
                                                         <a href="{{ route('report-passengers-recorders-consolidated-daily')  }}" class="faa-parent animated-hover nav-link">
                                                             <i class="fa fa-file-archive-o faa-vertical" aria-hidden="true"></i>
@@ -577,7 +576,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                     </li>
                                                 </ul>
                                             </li>
-                                            <li class="nav-item menu-passengers-recorders-detailed">
+                                            <li class="nav-item menu-passengers-recorders-detailed hide">
                                                 <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                                     <i class="fa fa-list-alt faa-vertical"></i>
                                                     @lang('Detailed')
