@@ -557,7 +557,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="nav-item menu-passengers-recorders-consolidated">
-                                                <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="faa-parent animated-hover nav-link nav-toggle">
+                                                <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="faa-parent animated-hover nav-link">
                                                     <i class="fa fa-archive faa-vertical"></i>
                                                     @lang('Consolidated')
                                                 </a>
