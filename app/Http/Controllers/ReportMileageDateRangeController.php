@@ -103,6 +103,24 @@ class ReportMileageDateRangeController extends Controller
                     return $ll->date->toDateString() == $date;
                 })->first() : null;
 
+                $mileage = $lastLocation ? $lastLocation->current_mileage : 0;
+
+                switch ($company->id) {
+                    case Company::MONTEBELLO:
+                        $maxMileage = 900000;
+                        break;
+                    case Company::YUMBENOS:
+                        $maxMileage = 500000;
+                        break;
+                    default:
+                        $maxMileage = 400000;
+                        break;
+                }
+
+                if($mileage < 0 || $mileage > $maxMileage){
+                    $mileage = 0;
+                }
+
                 $reports->put($key,
                     (object)[
                         'key' => $key,
@@ -113,7 +131,7 @@ class ReportMileageDateRangeController extends Controller
                         'vehicleStatus' => $lastLocation ? ($lastLocation->vehicle_active ? __('Active') : __('Inactive')) : __('No GPS reports found'),
                         'reportVehicleStatus' => $lastLocation ? $lastLocation->reportVehicleStatus : null,
                         'date' => $date,
-                        'mileage' => $lastLocation ? $lastLocation->current_mileage : 0,
+                        'mileage' => $mileage,
                         'hasReports' => !!$lastLocation,
                     ]
                 );

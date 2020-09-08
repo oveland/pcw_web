@@ -31,7 +31,7 @@
                 <i class="fa fa-road"></i> @lang('Report') @lang('mileage')
             </h1>
             <small class="text-white label-vehicles m-t-10">
-                <i class="fa fa-car"></i> {{ count($reports) }} @lang('Dates') <br>  <i class="fa fa-road"></i> {{ number_format($mileageReport->mileageByFleet/1000,2, ',', '.') }} Km @lang('in total')
+                <i class="fa fa-car"></i> {{ count($reports) }} @lang('Registers') <br>  <i class="fa fa-road"></i> {{ number_format($mileageReport->mileageByFleet/1000,2, ',', '.') }} Km @lang('in total')
             </small>
         </div>
         <div class="tab-content table-responsives">
@@ -69,7 +69,6 @@
                         </thead>
                         <tbody>
                             @foreach($reports as $report)
-                                @if($report->mileage > 500000 || $report->mileage < 0 || true)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }} </td>
                                     <td class="text-center">{{ $report->date }} </td>
@@ -97,7 +96,6 @@
                                         data-title="{{ $report->hasReports ? '':__('No GPS reports found') }}">
                                         {{ number_format($report->mileage/1000,2, ',', '.') }} </td>
                                 </tr>
-                                @endif
                             @endforeach
 
                             <tr class="bg-inverse text-white">
