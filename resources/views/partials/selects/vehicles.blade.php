@@ -7,6 +7,13 @@
     @if( $withOnlyActive ?? false )
         <option value="active">@lang('Only active')</option>
     @endif
+
+    @if( $tags ?? false )
+        @foreach($tags as $tag)
+            <option value="{{ $tag->id }}">{{ __($tag->name)  }}</option>
+        @endforeach
+    @endif
+
     @php
         $vehicles = collect($vehicles)->sortBy(function($v){
             return intval($v->number);

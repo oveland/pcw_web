@@ -47,7 +47,7 @@ class GeneralController extends Controller
         $fringes = [];
         $route = Route::find($request->get('route'));
         if ($route) {
-            $fringes = $route->allFringes()->get()->sortBy(function (Fringe $f){
+            $fringes = $route->allFringes()->get()->sortBy(function (Fringe $f) {
                 return "$f->day_type_id.$f->from";
             });
         }
@@ -78,9 +78,25 @@ class GeneralController extends Controller
 
     public function loadSelectVehicles(Request $request)
     {
-        $vehicles = self::getVehiclesFromCompany($this->getCompany($request));
+        $company = $this->getCompany($request);
+        $vehicles = self::getVehiclesFromCompany($company);
         $withAll = $request->get('withAll');
-        return view('partials.selects.vehicles', compact(['vehicles', 'withAll']));
+
+        $tags = null;
+        if ($company->id == Company::YUMBENOS) {
+            $tags = [
+                (object)[
+                    'id' => 'coop',
+                    'name' => 'Solo Cooperativa'
+                ],
+                (object)[
+                    'id' => 'yb',
+                    'name' => 'Solo Yumbeños'
+                ]
+            ];
+        }
+
+        return view('partials.selects.vehicles', compact(['vehicles', 'withAll', 'tags']));
     }
 
     public function loadSelectVehiclesFromRoute(Request $request)

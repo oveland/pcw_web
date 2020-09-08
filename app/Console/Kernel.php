@@ -38,7 +38,9 @@ class Kernel extends ConsoleKernel
         Commands\DARCommand::class,
 
         /* Commands for routes and dispatch registers */
-        Commands\CloseDispatchRegistersCommand::class
+        Commands\CloseDispatchRegistersCommand::class,
+
+        Commands\Tools\FixMileageCommand::class
     ];
 
     /**

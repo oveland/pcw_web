@@ -20,21 +20,19 @@
                     </ul>
                 </div>
             </div>
-            <div class="panel-heading-btn">
-                <a href="{{ route('report-vehicle-mileage-show-date-range') }}?company={{ $mileageReport->companyReport }}&vehicle-report={{ $mileageReport->vehicleReport  }}&initial-date-report={{ $mileageReport->initialDateReport }}&final-date-report={{ $mileageReport->finalDateReport }}&export=true" class="btn btn-lime btn-sm bg-lime-dark btn-rounded tooltips" data-title="@lang('Export excel')">
-                    <i class="fa fa-file-excel-o"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-sm btn-icon btn-circle btn-lime " data-click="panel-expand"
-                   title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
+            <div class="panel-heading-btn pull-right">
+                <a href="{{ route('report-vehicle-mileage-show-date-range') }}?company={{ $mileageReport->companyReport }}&vehicle-report={{ $mileageReport->vehicleReport  }}&initial-date-report={{ $mileageReport->initialDateReport }}&final-date-report={{ $mileageReport->finalDateReport }}&export=true"
+                   class="btn btn-success btn-circle tooltips"
+                   data-title="@lang('Export excel')">
+                    <i class="fa fa-download"></i>
                 </a>
             </div>
-            <small class="text-white label-vehicles hide"><i class="fa fa-car"></i> {{ count($reports) }} @lang('Dates')  <i class="fa fa-road"></i> {{ number_format($mileageReport->mileageByFleet,2, ',', '.') }} Km @lang('in total')</small>
-
-            <h1 class="text-white text-bold" style="font-size: 1.2em !important;">
+            <h1 class="text-white text-bold m-t-0 m-b-10" style="font-size: 1.2em !important;">
                 <i class="fa fa-road"></i> @lang('Report') @lang('mileage')
             </h1>
-
+            <small class="text-white label-vehicles m-t-10">
+                <i class="fa fa-car"></i> {{ count($reports) }} @lang('Dates') <br>  <i class="fa fa-road"></i> {{ number_format($mileageReport->mileageByFleet/1000,2, ',', '.') }} Km @lang('in total')
+            </small>
         </div>
         <div class="tab-content table-responsives">
 
@@ -71,6 +69,7 @@
                         </thead>
                         <tbody>
                             @foreach($reports as $report)
+                                @if($report->mileage > 500000 || $report->mileage < 0 || true)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }} </td>
                                     <td class="text-center">{{ $report->date }} </td>
@@ -98,6 +97,7 @@
                                         data-title="{{ $report->hasReports ? '':__('No GPS reports found') }}">
                                         {{ number_format($report->mileage/1000,2, ',', '.') }} </td>
                                 </tr>
+                                @endif
                             @endforeach
 
                             <tr class="bg-inverse text-white">

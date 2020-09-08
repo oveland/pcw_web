@@ -57,7 +57,7 @@
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-bus animated" aria-hidden="true"></i> @lang('Vehicles Report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage') - @lang('Date range')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Mileage')</small>
     </h1>
 
     <!-- end page-header -->
@@ -206,6 +206,8 @@
                 $('#company').change(function () {
                     loadSelectVehicleReport($(this).val(), true);
                 }).change();
+            @else
+            loadSelectVehicleReport(1, true);
             @endif
         });
     </script>

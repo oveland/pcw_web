@@ -508,23 +508,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </a>
                                 </li>
                                 <li class="nav-item menu-report-vehicles-mileage">
-                                    <a href="javascript:;" class="faa-parent animated-hover nav-link">
+                                    <a href="{{ route('report-vehicle-mileage-date-range')  }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-road faa-tada" aria-hidden="true"></i>
                                         @lang('Mileage')
                                     </a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item menu-route-report menu-report-vehicles-mileage-daily">
-                                            <a href="{{ route('report-vehicle-mileage')  }}" class="faa-parent animated-hover nav-link">
-                                                <i class="fa fa-calendar-o faa-vertical" aria-hidden="true"></i> @lang('Daily')
-                                            </a>
-                                        </li>
-                                        <li class="nav-item menu-route-report menu-report-vehicles-mileage-date-range">
-                                            <a href="{{ route('report-vehicle-mileage-date-range')  }}" class="faa-parent animated-hover nav-link">
-                                                <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i> @lang('Date range')
-                                            </a>
-                                        </li>
-                                    </ul>
-
                                 </li>
                                 <li class="nav-item menu-report-vehicles-round-trips">
                                     <a href="{{ route('report-vehicle-round-trips')  }}" class="faa-parent animated-hover nav-link">
