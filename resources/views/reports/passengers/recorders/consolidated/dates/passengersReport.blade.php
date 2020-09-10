@@ -4,7 +4,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-passengers-recorders-consolidated-date-range-search') }}?export=true&company-report={{ $passengerReport->companyId }}&route-report={{ $passengerReport->routeReport }}&driver-report={{ $passengerReport->driverReport }}&vehicle-report={{ $passengerReport->vehicleReport }}&date-report={{ $passengerReport->dateReport }}&date-end-report={{ $passengerReport->dateEndReport }}&grouped-report={{ $passengerReport->groupedReport }}&with-end-date={{ $passengerReport->withEndDate }}"
+                <a href="{{ route('report-passengers-recorders-consolidated-date-range-search') }}?export=true&company-report={{ $passengerReport->companyId }}&route-report={{ $passengerReport->routeReport }}&driver-report={{ $passengerReport->driverReport }}&vehicle-report={{ $passengerReport->vehicleReport }}&date-report={{ $passengerReport->dateReport }}&date-end-report={{ $passengerReport->dateEndReport }}&group-by-vehicle={{ $passengerReport->groupByVehicle }}&group-by-route={{ $passengerReport->groupByRoute }}&with-end-date={{ $passengerReport->withEndDate }}"
                    class="btn btn-success btn-rounded tooltips" data-title="@lang('Export excel')">
                     <i class="fa fa-download"></i>
                 </a>

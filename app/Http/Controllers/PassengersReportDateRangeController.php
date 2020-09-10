@@ -60,11 +60,12 @@ class PassengersReportDateRangeController extends Controller
         $dateReport = $request->get('date-report');
         $withEndDate = $request->get('with-end-date');
         $dateEndReport = $withEndDate ? $request->get('date-end-report') : $dateReport;
-        $groupedReport = $request->get('grouped-report');
+        $groupByVehicle = $request->get('group-by-vehicle');
+        $groupByRoute = $request->get('group-by-route');
 
         if ($dateEndReport < $dateReport) return view('partials.dates.invalidRange');
 
-        $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupedReport);
+        $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle, $groupByRoute);
 
         if ($request->get('export')) return $this->export($passengerReport);
 
@@ -73,16 +74,17 @@ class PassengersReportDateRangeController extends Controller
 
     /**
      * @param Company $company
-     * @param Route $route
+     * @param Route|null $route
      * @param Vehicle|null $vehicle
      * @param Driver|null $driver
      * @param $dateReport
      * @param $withEndDate
      * @param $dateEndReport
-     * @param null $groupedReport
+     * @param null $groupByVehicle
+     * @param null $groupByRoute
      * @return object
      */
-    public function buildPassengerReport(Company $company, Route $route = null, Vehicle $vehicle = null, Driver $driver = null, $dateReport, $withEndDate, $dateEndReport, $groupedReport = null)
+    public function buildPassengerReport(Company $company, Route $route = null, Vehicle $vehicle = null, Driver $driver = null, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle = null, $groupByRoute = null)
     {
         $dateRange = PCWTime::dateRange(Carbon::parse($dateReport), Carbon::parse($dateEndReport));
 
@@ -100,16 +102,42 @@ class PassengersReportDateRangeController extends Controller
 
         $reports = collect([]);
 
-        if ($vehicle == null && $groupedReport) {
-            $dispatchRegistersByVehicle = $dispatchRegisters->groupBy('vehicle_id');
+        if ($vehicle == null && $groupByVehicle) {
+            $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
 
-            foreach ($dispatchRegistersByVehicle as $vehicleId => $dr) {
+            foreach ($dispatchRegistersByVehicles as $vehicleId => $dr) {
                 $vehicleByDate = Vehicle::find($vehicleId);
-                $report = $this->buildReport($dateRange, $route, $vehicleByDate, $driver, $dr);
-                $reports = $reports->merge($report);
+
+                if ($route == null && $groupByRoute) {
+                    $dispatchRegistersByRoutes = $dr->sortBy(function ($d) {
+                        return $d->route->name;
+                    })->groupBy('route_id');
+
+                    foreach ($dispatchRegistersByRoutes as $routeId => $drr) {
+                        $routeByDateAndVehicle = Route::find($routeId);
+                        $report = $this->buildReport($dateRange, $routeByDateAndVehicle, $vehicleByDate, $driver, $drr);
+                        $reports = $reports->merge($report);
+                    }
+                } else {
+                    $report = $this->buildReport($dateRange, $route, $vehicleByDate, $driver, $dr);
+                    $reports = $reports->merge($report);
+                }
             }
         } else {
-            $reports = $this->buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters);
+
+            if ($route == null && $groupByRoute) {
+                $dispatchRegistersByRoutes = $dispatchRegisters->sortBy(function ($d) {
+                    return $d->route->name;
+                })->groupBy('route_id');
+
+                foreach ($dispatchRegistersByRoutes as $routeId => $drr) {
+                    $routeByDateAndVehicle = Route::find($routeId);
+                    $report = $this->buildReport($dateRange, $routeByDateAndVehicle, $vehicle, $driver, $drr);
+                    $reports = $reports->merge($report);
+                }
+            } else {
+                $reports = $this->buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters);
+            }
         }
 
         $allIssues = $reports->pluck('issues')->collapse()->mapWithKeys(function ($m) {
@@ -131,10 +159,11 @@ class PassengersReportDateRangeController extends Controller
             'totalRecorder' => $reports->sum('totalByRecorder'),
             'totalSensorRecorder' => $reports->sum('totalBySensorRecorder'),
             'totalRoundTrips' => $reports->sum('roundTrips'),
-            'groupedReport' => $groupedReport,
+            'groupByVehicle' => $groupByVehicle,
+            'groupByRoute' => $groupByRoute,
             'withEndDate' => $withEndDate,
             'issues' => $allIssues,
-            'canLiquidate' => ($groupedReport || $vehicle) && !$route
+            'canLiquidate' => ($groupByVehicle || $vehicle) && !$route
         ];
 
         return $passengerReport;

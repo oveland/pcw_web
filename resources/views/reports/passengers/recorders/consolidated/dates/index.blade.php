@@ -122,7 +122,10 @@
                                     <div class="has-warning">
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
-                                                <input id="grouped-report" name="grouped-report" type="checkbox" value="group-vehicles" checked> @lang('Group by vehicle')
+                                                <input id="group-by-vehicle" name="group-by-vehicle" type="checkbox" checked> @lang('Group by vehicle')
+                                            </label>
+                                            <label class="text-bold">
+                                                <input id="group-by-route" name="group-by-route" type="checkbox" checked> @lang('Group by route')
                                             </label>
                                         </div>
                                     </div>
@@ -169,7 +172,7 @@
                 }
             });
 
-            $('#date-report, #date-end-report, #grouped-report').change(function () {
+            $('#date-report, #date-end-report, #group-by-vehicle, #group-by-route').change(function () {
                 mainContainer.slideUp();
             });
 
