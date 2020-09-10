@@ -163,7 +163,7 @@ class PassengersReportDateRangeController extends Controller
             'groupByRoute' => $groupByRoute,
             'withEndDate' => $withEndDate,
             'issues' => $allIssues,
-            'canLiquidate' => ($groupByVehicle || $vehicle) && !$route
+            'canLiquidate' => ($groupByVehicle || $vehicle) && !$route && !$groupByRoute
         ];
 
         return $passengerReport;

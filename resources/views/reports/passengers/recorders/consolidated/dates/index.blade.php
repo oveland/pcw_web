@@ -125,7 +125,7 @@
                                                 <input id="group-by-vehicle" name="group-by-vehicle" type="checkbox" checked> @lang('Group by vehicle')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="group-by-route" name="group-by-route" type="checkbox" checked> @lang('Group by route')
+                                                <input id="group-by-route" name="group-by-route" type="checkbox"> @lang('Group by route')
                                             </label>
                                         </div>
                                     </div>
