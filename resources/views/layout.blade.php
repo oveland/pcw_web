@@ -36,7 +36,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <a href="{{ url('/')  }}" class="m-t-5 m-r-5 text-center animated">
                 <span class="text-white f-s-16">PCW</span><span class="text-success f-s-22">SMS</span>
             </a>
-            <div class="menu-toggler sidebar-toggler-old pull-right"></div>
+            <div class="menu-toggler sidebar-toggler-old pull-right hide"></div>
         </div>
         <!-- END LOGO -->
         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
@@ -48,7 +48,7 @@ License: You must have a valid license purchased only from themeforest(the above
             @include('flash::message')
         </div>
         <div class="top-menu">
-            <ul class="nav navbar-nav pull-right">
+            <ul class="nav navbar-nav pull-right" style="padding-top: 4px">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-extended dropdown-notification hide" id="header_notification_bar">
@@ -224,6 +224,11 @@ License: You must have a valid license purchased only from themeforest(the above
                 </li>
                 <!-- END INBOX DROPDOWN -->
 
+                <li class="dropdown tooltips" data-title="@lang('Passengers report')" data-placement="bottom">
+                    <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="dropdown-toggle p-10 faa-parent animated-hover">
+                        <i class="fa fa-users"></i>
+                    </a>
+                </li>
                 <li class="dropdown tooltips" data-title="@lang('Dispatch report')" data-placement="bottom">
                     <a href="{{ route('report-dispatch')  }}" class="dropdown-toggle p-t-10 faa-parent animated-hover">
                         <i class="fa fa-rocket faa-float m-r-10"></i>
@@ -243,7 +248,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- BEGIN USER LOGIN DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-user">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" style="padding-top: 8px"
                        data-close-others="true">
 
                         <span class="username">
