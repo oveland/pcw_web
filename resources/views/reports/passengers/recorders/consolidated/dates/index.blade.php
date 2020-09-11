@@ -158,7 +158,7 @@
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    mainContainer.slideUp(100);
+                    mainContainer.empty().html($('#animated-loading').html());
                     $.ajax({
                         url: form.attr('action'),
                         data: form.serialize(),
