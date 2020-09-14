@@ -73,7 +73,7 @@ class ConcoxService
         $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString().$to)->setTimezone('UTC')->toDateTimeString() : null;
 
         if(request()->get('dump')){
-            dump($from, $to);
+            dump($from, $to, $page);
         }
 
         $starTime = $from ? $from : Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString();
@@ -97,6 +97,11 @@ class ConcoxService
             if ($request->get('code') == 0) {
                 $photos = collect($request->get('result'))->sortByDesc('create_time');
             }
+
+            if(request()->get('dump')){
+                dd($photos);
+            }
+
         }
 
         return $photos;
@@ -198,7 +203,7 @@ class ConcoxService
                     $photoDate = Carbon::createFromFormat('YmdHis', "$year$month$day$hour$minutes$seconds");
 
                     $image = Image::make($fileUrl)
-                        ->rotate(180)
+//                        ->rotate(180)
                         ->encode('data-url');
 
                     $data = [
