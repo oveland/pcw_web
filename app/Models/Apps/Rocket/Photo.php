@@ -94,14 +94,10 @@ class Photo extends Model implements PhotoInterface
             ->whereDate('date', $date)
             ->orderBy('date')
 
-//            ->where('id', '<=', 13601) // 7:09 46
-//            ->whereBetween('id', [39838, 39865]) // 12:50   14
+//            ->where('id', 41912)
 
+//            ->whereBetween('date', ['2020-09-02 14:50:00', '2020-09-02 16:54:59'])
             ->limit(600)
-//            ->offset(100)
-//            ->where('id', '>=', 19670) //
-//            ->whereBetween('id', [17457, 17500]) // 12:50   14
-
             ->get();
     }
 }

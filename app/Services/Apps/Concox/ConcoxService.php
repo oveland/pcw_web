@@ -191,7 +191,8 @@ class ConcoxService
 
 
 //                    $vehicle = $gpsVehicle->vehicle; // TODO: implement logic for associate Imei Concox with vehicle
-                    $vehicle = Vehicle::find(2150);
+//                    $vehicle = Vehicle::find(2150); // Vehicle 87 Yumbeños
+                    $vehicle = Vehicle::find(1905); // Vehicles 1325 Tupal
 
                     $year = collect($photoData)->get(2);
                     $month = collect($photoData)->get(3);

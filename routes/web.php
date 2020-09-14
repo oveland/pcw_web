@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth']], function () {
     /* Example routes for vue development */
     Route::prefix(__('example'))->group(function () {
         Route::get('/', 'Example\ExampleController@index')->name('example');
+        Route::get('/test', 'Example\ExampleController@test')->name('test');
 
         Route::prefix(__('search'))->group(function () {
             Route::get(__('/'), 'Example\ExampleController@search')->name('example.search');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Example;
 
 use App\Http\Controllers\GeneralController;
 use App\Services\Auth\PCWAuthService;
+use App\Services\TestService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,10 +17,15 @@ class ExampleController extends Controller
      * @var GeneralController
      */
     private $auth;
+    /**
+     * @var TestService
+     */
+    private $test;
 
-    public function __construct(PCWAuthService $auth)
+    public function __construct(PCWAuthService $auth, TestService $test)
     {
         $this->auth = $auth;
+        $this->test = $test;
     }
 
     /**
@@ -29,6 +35,11 @@ class ExampleController extends Controller
     public function index(Request $request)
     {
         return view('example.index');
+    }
+
+    public function test(Request $request)
+    {
+        return $this->test->test();
     }
 
     /**
