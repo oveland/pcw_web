@@ -139,7 +139,8 @@ abstract class PhotoRekognitionService
 
         $rule = collect($rules->filter(function ($rule) use ($confidence) {
             $rule = (object)$rule;
-            return collect($rule->range)->contains($confidence);
+            $rangeArray = collect($rule->range);
+            return collect(range($rangeArray->first(), $rangeArray->last()))->contains($confidence);
         })->first());
 
         $count = $rule->get('count') && !$boxZone->overlap;// && $boundingBox->width > 1.5 && $boundingBox->height > 2;

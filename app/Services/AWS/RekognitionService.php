@@ -45,14 +45,6 @@ class RekognitionService
             case 'faces':
                 $data = $this->faces();
                 break;
-            case 'custom':
-                $data = $this->custom();
-                break;
-            case 'persons_and_faces':
-                $data = (object)[
-                    'persons' => $this->persons(),
-                    'faces' => $this->faces()
-                ];
                 break;
             default:
                 return null;

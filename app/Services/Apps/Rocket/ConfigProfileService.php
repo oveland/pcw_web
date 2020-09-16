@@ -48,7 +48,7 @@ class ConfigProfileService
             $config->config = $this->mergeWithProfileSeating();
             $config->save();
         } else {
-            $config->config = $this->mergeWithProfileSeating();
+//            $config->config = $this->mergeWithProfileSeating();
         }
 
         return $config;

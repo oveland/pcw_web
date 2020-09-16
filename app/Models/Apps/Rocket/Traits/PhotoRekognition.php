@@ -20,28 +20,13 @@ trait PhotoRekognition
         if ($force || collect($this->data_persons)->isEmpty()) {
             $vehicle = $this->vehicle;
             if ($this->path && $vehicle) {
-                $rekognition = new RekognitionService();
-                $image = $this->getImage('png', true);
-
                 switch ($type) {
                     case 'persons_and_faces':
-                        $config = $this->photoRekognitionService('faces')->config;
-                        $this->effects = $config->photo->effects;
-                        $data = $rekognition->sefFile($image)->process($type);
-                        $this->data_faces = $data->faces;
-
-                        $config = $this->photoRekognitionService('persons')->config;
-                        $this->effects = $config->photo->effects;
-                        $data = $rekognition->sefFile($image)->process($type);
-                        $this->data_persons = $data->persons;
+                        $this->process('persons');
+                        $this->process('faces');
                         break;
                     default:
-                        $config = $this->photoRekognitionService($type)->config;
-                        $this->effects = $config->photo->effects;
-
-                        $data = $rekognition->sefFile($image)->process($type);
-                        $column = "data_$type";
-                        $this->$column = $data;
+                        $this->process($type);
                         break;
                 }
             }
@@ -58,5 +43,21 @@ trait PhotoRekognition
         if (!$type) $type = 'persons_and_faces';
 
         return $type;
+    }
+
+    /**
+     * @param $type
+     */
+    private function process($type)
+    {
+        $rekognition = new RekognitionService();
+
+        $config = $this->photoRekognitionService($type)->config;
+
+        $this->effects = $config->photo->effects;
+        $image = $this->getImage('png', true);
+
+        $column = "data_$type";
+        $this->$column = $rekognition->sefFile($image)->process($type);
     }
 }

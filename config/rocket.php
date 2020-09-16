@@ -21,7 +21,7 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 100),
+                            'range' => [0, 100],
                             'value' => 10
                         ]
                     ],
@@ -32,25 +32,25 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 25),
+                            'range' => [0, 25],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 50),
+                            'range' => [25, 50],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(50, 70),
+                            'range' => [50, 70],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(70, 100),
+                            'range' => [70, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -84,11 +84,11 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 15),
+                            'range' => [0, 15],
                             'value' => 10
                         ],
                         [
-                            'range' => range(15, 100),
+                            'range' => [15, 100],
                             'value' => 20
                         ],
                     ],
@@ -99,25 +99,25 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 25),
+                            'range' => [0, 25],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 50),
+                            'range' => [25, 50],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(50, 70),
+                            'range' => [50, 70],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(70, 100),
+                            'range' => [70, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -153,7 +153,7 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 100),
+                            'range' => [0, 100],
                             'value' => 10
                         ],
                     ],
@@ -164,25 +164,25 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 25),
+                            'range' => [0, 25],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 50),
+                            'range' => [25, 50],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(50, 70),
+                            'range' => [50, 70],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(70, 100),
+                            'range' => [70, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -216,11 +216,11 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 15),
+                            'range' => [0, 15],
                             'value' => 10
                         ],
                         [
-                            'range' => range(15, 100),
+                            'range' => [15, 100],
                             'value' => 20
                         ],
                     ],
@@ -231,25 +231,25 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 25),
+                            'range' => [0, 25],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 50),
+                            'range' => [25, 50],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(50, 70),
+                            'range' => [50, 70],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(70, 100),
+                            'range' => [70, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -285,11 +285,11 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 15),
+                            'range' => [0, 15],
                             'value' => 0
                         ],
                         [
-                            'range' => range(15, 100),
+                            'range' => [15, 100],
                             'value' => 20
                         ]
                     ],
@@ -300,25 +300,25 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 20),
+                            'range' => [0, 20],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(20, 40),
+                            'range' => [20, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(40, 60),
+                            'range' => [40, 60],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(60, 100),
+                            'range' => [60, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -345,9 +345,6 @@ return [
                         ]
                     ]
                 ]
-            ],
-            'seating' => [
-
             ]
         ],
         'faces' => [
@@ -355,15 +352,15 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 10),
+                            'range' => [0, 10],
                             'value' => 0
                         ],
                         [
-                            'range' => range(10, 15),
+                            'range' => [10, 15],
                             'value' => 10
                         ],
                         [
-                            'range' => range(15, 100),
+                            'range' => [15, 100],
                             'value' => 20
                         ],
                     ],
@@ -374,19 +371,19 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 25),
+                            'range' => [0, 25],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 60),
+                            'range' => [25, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(60, 100),
+                            'range' => [60, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -422,40 +419,40 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 15),
-                            'value' => 0
+                            'range' => [0, 15],
+                            'value' => 10
                         ],
                         [
-                            'range' => range(15, 100),
-                            'value' => 20
+                            'range' => [15, 100],
+                            'value' => 10
                         ]
                     ],
-                    'contrast' => 8,
+                    'contrast' => -30,
                     'gamma' => 1,
-                    'sharpen' => 0
+                    'sharpen' => 50,
                 ],
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 20),
+                            'range' => [0, 20],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(20, 40),
+                            'range' => [20, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(40, 60),
+                            'range' => [40, 60],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(60, 100),
+                            'range' => [60, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -482,9 +479,6 @@ return [
                         ]
                     ]
                 ]
-            ],
-            'seating' => [
-
             ]
         ],
         'faces' => [
@@ -492,38 +486,38 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => range(0, 10),
-                            'value' => 0
-                        ],
-                        [
-                            'range' => range(10, 15),
+                            'range' => [0, 10],
                             'value' => 10
                         ],
                         [
-                            'range' => range(15, 100),
-                            'value' => 20
+                            'range' => [10, 15],
+                            'value' => 10
+                        ],
+                        [
+                            'range' => [15, 100],
+                            'value' => 10
                         ],
                     ],
-                    'contrast' => 8,
+                    'contrast' => -30,
                     'gamma' => 1,
-                    'sharpen' => 0
+                    'sharpen' => 50,
                 ],
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => range(0, 25),
+                            'range' => [0, 25],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(25, 60),
+                            'range' => [25, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => range(60, 100),
+                            'range' => [60, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,

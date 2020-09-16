@@ -82,35 +82,38 @@ trait PhotoEncode
             if ($this->storageDriver()->exists($this->path)) {
                 $image = Image::make($this->storageDriver()->get($this->path));
 
+                $h = $image->height() * 0.85;
+
                 if ($withEffects && $this->effects) {
                     $avBrightness = $this->getAvgLuminance($image->encode('jpeg')->encode('data-url'));
 
                     $brightness = collect($this->effects->brightness)->filter(function ($brightness) use ($avBrightness) {
                         $brightness = (object)$brightness;
-                        return collect($brightness->range)->contains($avBrightness);
+                        $rangeArray = collect($brightness->range);
+                        return collect(range($rangeArray->first(), $rangeArray->last()))->contains($avBrightness);
                     })->first();
 
                     $brightness = isset($brightness['value']) ? $brightness['value'] : 0;
+                    $contrast = $this->effects->contrast;
+                    $gamma = $this->effects->gamma;
+                    $sharpen = $this->effects->sharpen;
 
-                    $image->contrast(intval($this->effects->contrast ?? 0))
-                        ->gamma($this->effects->gamma ?? 0)
-                        ->brightness(intval($brightness ?? 0))
-                        ->sharpen(intval($this->effects->sharpen ?? 0));
+                    $image->contrast(intval($contrast ?? 0))->gamma($gamma ?? 0)->brightness(intval($brightness ?? 0))->sharpen(intval($sharpen ?? 0));
 
                     $this->data_properties = collect($this->data_properties)->put('avBrightness', $avBrightness);
 
-                    $image->text('Brightness ' . ($brightness ?? '') . " | AV: $avBrightness", 5, 430, function ($font) {
+                    $image->text('Brightness ' . ($brightness ?? '') . " | AV: $avBrightness", 5, $h, function ($font) {
                         $font->color('#00ff00');
-                    })->text('Contrast ' . intval($this->effects->contrast ?? ''), 5, 440, function ($font) {
+                    })->text('Contrast ' . intval($contrast ?? ''), 5, $h + 10, function ($font) {
                         $font->color('#00ff00');
-                    })->text('Gamma ' . intval($this->effects->gamma ?? ''), 5, 450, function ($font) {
+                    })->text('Gamma ' . intval($gamma ?? ''), 5, $h + 20, function ($font) {
                         $font->color('#00ff00');
-                    })->text('Sharpen ' . intval($this->effects->sharpen ?? ''), 5, 460, function ($font) {
+                    })->text('Sharpen ' . intval($sharpen ?? ''), 5, $h + 30, function ($font) {
                         $font->color('#00ff00');
                     });
                 }
 
-                $image->text('PCW | ' . Carbon::now()->format('Y'), 5, 475, function ($font) {
+                $image->text('PCW | ' . Carbon::now()->format('Y'), 5, $h + 45, function ($font) {
                     $font->color('#00ff00');
                 });
             }
