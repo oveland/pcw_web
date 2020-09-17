@@ -99,6 +99,25 @@ class OffRoadService
     }
 
     /**
+     * Groups all off roads by vehicle and first event
+     *
+     * @param $allOffRoads
+     * @return \Illuminate\Support\Collection
+     */
+    function offRoadsByVehicles($allOffRoads)
+    {
+        $allOffRoadsByVehicles = $allOffRoads->groupBy('vehicle_id');
+
+        $offRoadsByVehicles = collect([]);
+        foreach ($allOffRoadsByVehicles as $vehicleId => $offRoadsByVehicle) {
+            $offRoadsEvents = self::groupByFirstOffRoadEvent($offRoadsByVehicle);
+            if (count($offRoadsEvents)) $offRoadsByVehicles->put($vehicleId, $offRoadsEvents);
+        }
+
+        return $offRoadsByVehicles;
+    }
+
+    /**
      * Get all offRoads of a company and date
      *
      * @param Vehicle $vehicle

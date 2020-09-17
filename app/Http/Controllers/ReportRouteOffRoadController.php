@@ -72,8 +72,8 @@ class ReportRouteOffRoadController extends Controller
         ];
 
         $allOffRoads = $this->offRoadService->allOffRoads($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
-        $offRoadsByVehicles = $allOffRoads->groupBy('vehicle_id');
-
+        $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
+        
         if ($request->get('export')) $this->offRoadService->exportByVehicles($offRoadsByVehicles, $query);
 
         return view('reports.route.off-road.offRoadByVehicle', compact(['offRoadsByVehicles', 'query']));
