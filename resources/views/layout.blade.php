@@ -555,12 +555,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </li>
                                 @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter()) )
                                     <li class="nav-item menu-passengers-recorders">
-                                        <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
+                                        <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="faa-parent animated-hover nav-link">
                                             <i class="fa fa-compass faa-vertical"></i>
                                             @lang('Recorders')
-                                            <span class="arrow"></span>
                                         </a>
-                                        <ul class="sub-menu">
+                                        <ul class="sub-menu hide">
                                             <li class="nav-item menu-passengers-recorders-consolidated">
                                                 <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="faa-parent animated-hover nav-link">
                                                     <i class="fa fa-archive faa-vertical"></i>

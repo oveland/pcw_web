@@ -9,12 +9,12 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Passengers')</a></li>
-        <li class="active">@lang('Consolidated')</li>
+        <li class="active">@lang('Recorders')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Passengers report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Consolidated')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Recorders')</small>
     </h1>
 
     <!-- end page-header -->
@@ -127,8 +127,8 @@
                                             <label class="text-bold">
                                                 <input id="group-by-route" name="group-by-route" type="checkbox"><i class="fa fa-flag"></i> @lang('By route')
                                             </label>
-                                            <label class="text-bold group-by-date-container" style="display: none;">
-                                                <input id="group-by-date" name="group-by-date" type="checkbox"><i class="fa fa-calendar"></i> @lang('By date')
+                                            <label class="text-bold">
+                                                <input id="group-by-date" name="group-by-date" type="checkbox" checked><i class="fa fa-calendar"></i> @lang('By date')
                                             </label>
                                         </div>
                                     </div>
@@ -207,11 +207,10 @@
             @endif
 
             $('#with-end-date').change(function(){
+                const isChecked = $(this).is(':checked');
                 const dec =  $('.date-end-container').slideUp();
-                const gpd =  $('.group-by-date-container').fadeOut();
-                if ($(this).is(':checked')) {
+                if (isChecked) {
                     dec.slideDown();
-                    gpd.fadeIn();
                 }
             });
         });
