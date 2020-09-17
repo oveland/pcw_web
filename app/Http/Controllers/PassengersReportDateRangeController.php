@@ -62,10 +62,11 @@ class PassengersReportDateRangeController extends Controller
         $dateEndReport = $withEndDate ? $request->get('date-end-report') : $dateReport;
         $groupByVehicle = $request->get('group-by-vehicle');
         $groupByRoute = $request->get('group-by-route');
+        $groupByDate = $request->get('group-by-date');
 
         if ($dateEndReport < $dateReport) return view('partials.dates.invalidRange');
 
-        $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle, $groupByRoute);
+        $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle, $groupByRoute, $groupByDate);
 
         if ($request->get('export')) return $this->export($passengerReport);
 
@@ -82,9 +83,10 @@ class PassengersReportDateRangeController extends Controller
      * @param $dateEndReport
      * @param null $groupByVehicle
      * @param null $groupByRoute
+     * @param null $groupByDate
      * @return object
      */
-    public function buildPassengerReport(Company $company, Route $route = null, Vehicle $vehicle = null, Driver $driver = null, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle = null, $groupByRoute = null)
+    public function buildPassengerReport(Company $company, Route $route = null, Vehicle $vehicle = null, Driver $driver = null, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle = null, $groupByRoute = null, $groupByDate = null)
     {
         $dateRange = PCWTime::dateRange(Carbon::parse($dateReport), Carbon::parse($dateEndReport));
 
@@ -115,11 +117,11 @@ class PassengersReportDateRangeController extends Controller
 
                     foreach ($dispatchRegistersByRoutes as $routeId => $drr) {
                         $routeByDateAndVehicle = Route::find($routeId);
-                        $report = $this->buildReport($dateRange, $routeByDateAndVehicle, $vehicleByDate, $driver, $drr);
+                        $report = $this->buildReport($dateRange, $routeByDateAndVehicle, $vehicleByDate, $driver, $drr, $groupByDate);
                         $reports = $reports->merge($report);
                     }
                 } else {
-                    $report = $this->buildReport($dateRange, $route, $vehicleByDate, $driver, $dr);
+                    $report = $this->buildReport($dateRange, $route, $vehicleByDate, $driver, $dr, $groupByDate);
                     $reports = $reports->merge($report);
                 }
             }
@@ -132,11 +134,11 @@ class PassengersReportDateRangeController extends Controller
 
                 foreach ($dispatchRegistersByRoutes as $routeId => $drr) {
                     $routeByDateAndVehicle = Route::find($routeId);
-                    $report = $this->buildReport($dateRange, $routeByDateAndVehicle, $vehicle, $driver, $drr);
+                    $report = $this->buildReport($dateRange, $routeByDateAndVehicle, $vehicle, $driver, $drr, $groupByDate);
                     $reports = $reports->merge($report);
                 }
             } else {
-                $reports = $this->buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters);
+                $reports = $this->buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters, $groupByDate);
             }
         }
 
@@ -161,16 +163,28 @@ class PassengersReportDateRangeController extends Controller
             'totalRoundTrips' => $reports->sum('roundTrips'),
             'groupByVehicle' => $groupByVehicle,
             'groupByRoute' => $groupByRoute,
+            'groupByDate' => $groupByDate,
             'withEndDate' => $withEndDate,
             'issues' => $allIssues,
-            'canLiquidate' => ($groupByVehicle || $vehicle) && !$route && !$groupByRoute
+            'canLiquidate' => ($groupByVehicle || $vehicle) && !$route && !$groupByRoute && $groupByDate
         ];
 
         return $passengerReport;
     }
 
-    private function buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters)
+    /**
+     * @param Collection | array $dateRange
+     * @param $route
+     * @param $vehicle
+     * @param $driver
+     * @param $dispatchRegisters
+     * @param null $groupByDates
+     * @return Collection
+     */
+    private function buildReport($dateRange, $route, $vehicle, $driver, $dispatchRegisters, $groupByDates = null)
     {
+        $dateRange = collect($dateRange);
+
         $reports = collect([]);
         $passengerBySensorByDates = self::buildReportBySensorByDates($dispatchRegisters);
         $passengerByRecorderByDates = self::buildReportByRecorderByDates($dispatchRegisters);
@@ -187,10 +201,34 @@ class PassengersReportDateRangeController extends Controller
                 'issues' => collect($recorder ? $recorder->issues : []),
                 'roundTrips' => $sensor->totalRoundTrips ?? 0,
                 'frame' => '',
-                'routeProcessed' => $route ? $route->name : __('All'),
+                'route' => $route,
                 'vehicle' => $vehicle,
+                'driver' => $driver,
+                'routeProcessed' => $route ? $route->name : __('All'),
                 'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All')),
                 'driverProcessed' => $driver ? $driver->code . ' | ' . $driver->fullName() : ($vehicle ? ($recorder->lastDriverName ?? '') : __('All')),
+            ]);
+        }
+
+        if (!$groupByDates && $reports->count()) {
+            $dateRangeStr = $dateRange->first()->toDateString() . " a " . $dateRange->last()->toDateString();
+
+            $reports = collect([
+                (object)[
+                    'date' => $dateRangeStr,
+                    'totalByRecorder' => $reports->sum('totalByRecorder'),
+                    'totalBySensor' => $reports->sum('totalBySensor'),
+                    'totalBySensorRecorder' => $reports->sum('totalBySensorRecorder'),
+                    'issues' => $reports->pluck('issues')->collapse(),
+                    'roundTrips' => $reports->sum('totalRoundTrips'),
+                    'frame' => '',
+                    'route' => $route,
+                    'vehicle' => $vehicle,
+                    'driver' => $driver,
+                    'routeProcessed' => $route ? $route->name : __('All'),
+                    'vehicleProcessed' => $vehicle ? $vehicle->number : __('All'),
+                    'driverProcessed' => $driver ? $driver->code . ' | ' . $driver->fullName() : __('All'),
+                ]
             ]);
         }
 

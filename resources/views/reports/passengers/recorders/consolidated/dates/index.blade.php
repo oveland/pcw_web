@@ -117,15 +117,18 @@
 
                         <div class="col-md-2 options with-route">
                             <div class="form-group">
-                                <label for="grouped-report" class="control-label">@lang('Options')</label>
+                                <label for="grouped-report" class="control-label">@lang('Group options')</label>
                                 <div class="form-group">
                                     <div class="has-warning">
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
-                                                <input id="group-by-vehicle" name="group-by-vehicle" type="checkbox" checked> @lang('Group by vehicle')
+                                                <input id="group-by-vehicle" name="group-by-vehicle" type="checkbox" checked><i class="fa fa-bus"></i>  @lang('By vehicle')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="group-by-route" name="group-by-route" type="checkbox"> @lang('Group by route')
+                                                <input id="group-by-route" name="group-by-route" type="checkbox"><i class="fa fa-flag"></i> @lang('By route')
+                                            </label>
+                                            <label class="text-bold group-by-date-container" style="display: none;">
+                                                <input id="group-by-date" name="group-by-date" type="checkbox"><i class="fa fa-calendar"></i> @lang('By date')
                                             </label>
                                         </div>
                                     </div>
@@ -172,7 +175,7 @@
                 }
             });
 
-            $('#date-report, #date-end-report, #group-by-vehicle, #group-by-route').change(function () {
+            $('#date-report, #date-end-report, #group-by-vehicle, #group-by-route, #group-by-date').change(function () {
                 mainContainer.slideUp();
             });
 
@@ -205,8 +208,10 @@
 
             $('#with-end-date').change(function(){
                 const dec =  $('.date-end-container').slideUp();
+                const gpd =  $('.group-by-date-container').fadeOut();
                 if ($(this).is(':checked')) {
                     dec.slideDown();
+                    gpd.fadeIn();
                 }
             });
         });
