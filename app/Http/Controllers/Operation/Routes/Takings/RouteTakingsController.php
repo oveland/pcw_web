@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Operation\Routes\Takings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Routes\RouteTaking;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\RouteService;
@@ -40,7 +41,8 @@ class RouteTakingsController extends Controller
      */
     public function form(DispatchRegister $dispatchRegister)
     {
-        return view('operation.routes.takings.form', compact(['dispatchRegister']));
+        $fuelStations = RouteTaking::STATIONS_FUEL;
+        return view('operation.routes.takings.form', compact(['dispatchRegister', 'fuelStations']));
     }
 
     /**

@@ -60,6 +60,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Route whereDistanceThreshold($value)
  * @method static Builder|Route whereSamplingRadius($value)
  * @property-read RouteTariff $tariff
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Fringe[] $allFringes
  */
 class Route extends Model
 {

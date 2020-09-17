@@ -59,6 +59,9 @@
                     </div>
                 </div>
             </div>
+
+            <hr class="hr no-padding">
+
             <div class="form-group">
                 <label for="fuel" class="col-md-5 control-label">@lang('Fuel gallons')</label>
                 <div class="col-md-7">
@@ -77,6 +80,28 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="fuel" class="col-md-5 control-label">@lang('Station')</label>
+                <div class="col-md-7">
+                    <div class="md-radio-list">
+                        @foreach($fuelStations as $stationId => $station)
+                            @php
+                                $checked = ($dispatchRegister->takings->station_fuel_id == $stationId) || ($loop->first && !$dispatchRegister->takings->station_fuel_id);
+                            @endphp
+
+                            <div class="md-radio">
+                                <input type="radio" id="station_fuel_{{ $stationId }}" name="station_fuel_id" {{ $checked ? 'checked' : '' }} class="md-radiobtn" value="{{ $stationId }}">
+                                <label for="station_fuel_{{ $stationId }}">
+                                    <span class="inc"></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> {{ $station }} </label>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr no-padding">
 
             <div class="form-group">
                 <label for="others" class="col-md-5 control-label">@lang('Various')</label>
