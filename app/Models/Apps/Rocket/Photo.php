@@ -94,6 +94,8 @@ class Photo extends Model implements PhotoInterface
             ->whereDate('date', $date)
             ->orderBy('date')
 
+            //->where('id' , '>', 44452) // Empty
+
 //            ->where('id', 44354) // Empty
 //            ->where('id', 44422) // Empty
 
