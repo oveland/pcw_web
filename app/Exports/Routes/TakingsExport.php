@@ -54,10 +54,11 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
                 __('Control') => intval($report->takings->control),                                                 # J CELL
                 __('Fuel') => intval($report->takings->fuel),                                                       # K CELL
                 __('Fuel gallons') => number_format($report->takings->fuelGallons, 2),                     # L CELL
-                __('Various') => intval($report->takings->bonus),                                                   # M CELL
-                __('Others') => intval($report->takings->others),                                                   # N CELL
-                __('Net production') => intval($report->takings->netProduction),                                    # O CELL
-                __('Observations') => $observations,                                                                # P CELL
+                __('Station') => $report->takings->stationFuel,                                                     # M CELL
+                __('Various') => intval($report->takings->bonus),                                                   # N CELL
+                __('Others') => intval($report->takings->others),                                                   # O CELL
+                __('Net production') => intval($report->takings->netProduction),                                    # P CELL
+                __('Observations') => $observations,                                                                # Q CELL
             ];
         }
 
@@ -92,12 +93,12 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
         $workSheet = $spreadsheet->getDelegate();
 
         foreach (range($config->row->data->start, $config->row->data->end) as $row) {
-            $workSheet->setCellValue("O$row", "=I$row-J$row-K$row-M$row-N$row");
+            $workSheet->setCellValue("P$row", "=I$row-J$row-K$row-N$row-O$row");
         }
 
         $workSheet->setCellValue('G' . $config->row->data->next, 'TOTAL');
         $workSheet->getStyle('G' . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        foreach (['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'] as $totalLetterPosition) {
+        foreach (['H', 'I', 'J', 'K', 'L', 'N', 'O', 'P'] as $totalLetterPosition) {
             $workSheet->setCellValue($totalLetterPosition . $config->row->data->next, '=SUM(' . $totalLetterPosition . $config->row->data->start . ':' . $totalLetterPosition . $config->row->data->end . ')');
 
             $workSheet->getStyle($totalLetterPosition . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD);
@@ -125,8 +126,8 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
             'J' => NumberFormat::FORMAT_CURRENCY_USD,
             'K' => NumberFormat::FORMAT_CURRENCY_USD,
             'L' => NumberFormat::FORMAT_NUMBER_00,
-            'M' => NumberFormat::FORMAT_CURRENCY_USD,
             'N' => NumberFormat::FORMAT_CURRENCY_USD,
+            'O' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 

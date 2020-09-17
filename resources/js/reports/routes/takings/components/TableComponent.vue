@@ -43,6 +43,10 @@
 				</th>
 				<th>
 					<i class="icon-briefcase"></i><br>
+					<span class="">{{ $t('Station') }}</span>
+				</th>
+				<th>
+					<i class="icon-briefcase"></i><br>
 					<span class="">{{ $t('Various') }}</span>
 				</th>
 				<th>
@@ -103,6 +107,9 @@
 				<td class="text-right">
 					<span>{{ r.takings.fuelGallons.toFixed(2) }}</span>
 				</td>
+				<td class="text-left">
+					<span>{{ r.takings.stationFuel }}</span>
+				</td>
 				<td class="text-right">
 					<span>{{ r.takings.bonus | numberFormat('$0,0') }}</span>
 				</td>
@@ -118,7 +125,7 @@
 			</tr>
 
 			<tr>
-				<td colspan="14" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
+				<td colspan="15" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
 			</tr>
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
 				<td colspan="6" class="bg-inverse text-white text-right text-bold text-uppercase">
@@ -138,6 +145,8 @@
 				</td>
 				<td class="text-right">
 					<span>{{ averages.fuelGallons.toFixed(2) }}</span>
+				</td>
+				<td class="text-right">
 				</td>
 				<td class="text-right">
 					<span>{{ averages.bonus | numberFormat('$0,0') }}</span>
@@ -169,6 +178,8 @@
 				</th>
 				<th class="bg-inverse text-white text-right">
 					<span>{{ totals.fuelGallons.toFixed(2) }}</span>
+				</th>
+				<th class="bg-inverse text-right">
 				</th>
 				<th class="bg-inverse text-white text-right">
 					<span>{{ totals.bonus | numberFormat('$0,0') }}</span>

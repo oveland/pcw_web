@@ -49,11 +49,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $user_id
  * @method static Builder|RouteTaking whereUserId($value)
  * @property-read User|null $user
+ * @property int|null $station_fuel_id
+ * @method static Builder|RouteTaking whereStationFuelId($value)
  */
 class RouteTaking extends Model
 {
+    const STATIONS_FUEL = [
+        1 => 'EDS Alameda',
+        2 => 'EDS Cerros',
+        3 => 'Otra',
+    ];
+
     protected $guarded = ['total_production', 'fuel_gallons', 'net_production'];
-    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "observations"];
+    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "observations", "station_fuel_id"];
 
     public function getDateFormat()
     {
@@ -119,7 +127,19 @@ class RouteTaking extends Model
             'netProduction' => $this->net_production,
             'observations' => $this->observations,
             'user' => $this->user,
-            'isTaken' => $this->isTaken()
+            'isTaken' => $this->isTaken(),
+            'stationFuel' => $this->stationFuel()
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function stationFuel()
+    {
+        if ($this->station_fuel_id) {
+            return self::STATIONS_FUEL[$this->station_fuel_id];
+        }
+        return "";
     }
 }
