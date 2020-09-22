@@ -3,6 +3,7 @@
 namespace App\Models\BEA;
 
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Vehicle;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,16 +30,27 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Commission whereValue($value)
  * @mixin Eloquent
  * @property-read Route $route
+ * @property int|null $vehicle_id
+ * @property-read Vehicle|null $vehicle
+ * @method static Builder|Commission whereVehicleId($value)
  */
 class Commission extends Model
 {
     protected $table = 'bea_commissions';
 
-    protected $fillable = ['route_id', 'type', 'value'];
+    protected $fillable = ['route_id', 'type', 'value', 'vehicle_id'];
 
     function getDateFormat()
     {
         return config('app.simple_date_time_format');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 
     /**

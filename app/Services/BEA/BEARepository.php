@@ -17,7 +17,12 @@ class BEARepository
 {
     public $company;
 
-    public function __construct(Company $company)
+    public function __construct(Company $company = null)
+    {
+        $this->company = $company;
+    }
+
+    public function forCompany(Company $company)
     {
         $this->company = $company;
     }

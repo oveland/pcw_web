@@ -781,5 +781,9 @@
   "Recognition": "Reconocimiento",
   "persons": "personas",
   "faces": "caras",
-  "Station": "Estación combustible"
+  "Station": "Estación combustible",
+  "percentBEA": "Porcentaje de BEA",
+  "fixedBEA": "Valor fijo",
+  "Settings": "Ajustes",
+  "Historic takings": "Historial de recaudo"
 }

@@ -3,6 +3,7 @@
 namespace App\Services\BEA;
 
 use App\Facades\BEADB;
+use App\Models\BEA\Commission;
 use App\Models\BEA\GlobalCosts;
 use App\Models\BEA\Discount;
 use App\Models\BEA\ManagementCost;
@@ -465,28 +466,37 @@ class BEASyncService
         }
     }
 
+    public function checkCommissionsFor(Vehicle $vehicle)
+    {
+        $routes = $this->repository->getAllRoutes();
+
+        foreach ($routes as $route) {
+            $exists = Commission::where('vehicle_id', $vehicle->id)->where('route_id', $route->id)->first();
+
+            if (!$exists) {
+                Commission::create([
+                    'vehicle_id' => $vehicle->id,
+                    'route_id' => $route->id,
+                    'type' => 'percent',
+                    'value' => 15,
+                ]);
+            }
+        }
+    }
+
     public function checkPenaltiesFor(Vehicle $vehicle)
     {
         $routes = $this->repository->getAllRoutes();
 
-        $criteria = [
-            0 => (object)[
-                'type' => 'boarding',
-                'value' => 3000,
-            ]
-        ];
-
         foreach ($routes as $route) {
-            $c = $criteria[0];
-
             $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $route->id)->first();
 
             if (!$exists) {
                 Penalty::create([
                     'vehicle_id' => $vehicle->id,
                     'route_id' => $route->id,
-                    'type' => $c->type,
-                    'value' => $c->value,
+                    'type' => 'boarding',
+                    'value' => 3000,
                 ]);
             }
         }

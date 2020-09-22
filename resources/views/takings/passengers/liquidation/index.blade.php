@@ -58,7 +58,7 @@
                                         @if( Auth::user()->canML('takings-list') )
                                             <label class="btn btn-tab btn-transparent green-meadow btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-takings-list"
                                                    onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
-                                                <i class="fa fa-check-circle-o"></i> <span class="hidden-xs">@lang('Takings list')</span>
+                                                <i class="fa fa-check-circle-o"></i> <span class="hidden-xs">@lang('Historic takings')</span>
                                             </label>
                                         @endif
                                         @if( Auth::user()->canML('takings-list') )
@@ -135,7 +135,7 @@
 
 
         <div class="modal fade" id="modal-params-manager" tabindex="-1" role="basic" aria-hidden="true" data-backdrop="static">
-            <div class="modal-dialog modal-lg" style="width: 80%">
+            <div class="col-lg-8 col-md-offset-2 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
                 <div class="modal-content">
                     <admin-component :search-params="searchParams" url-params="{{  route('takings-passengers-liquidation-params',['name' => __('all')]) }}" v-on:refresh-report="searchReport($event)" :vehicle="search.vehicle"></admin-component>
                 </div>

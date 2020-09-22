@@ -52,8 +52,8 @@
                             <td class="text-center">{{ mark.passengersBEA }}</td>
                             <td class="text-center">{{ turn.totalTurn | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ turn.subTotalTurn | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ turn.totalDispatch | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ turn.balance | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ turn.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ turn.balance | thousandRound | numberFormat('$0,0') }}</td>
                             <td v-if="readonly" class="text-center">
                                 <button class="btn btn-sm btn-tab btn-transparent btn-outline btn-circle tooltips" :title="$t('Print')" @click="exportLiquidation(mark)" data-toggle="modal" data-target="#">
                                     <i class="fa fa-print"></i>
@@ -67,8 +67,8 @@
                             <td class="text-center">{{ totals.totalPassengersBea }}</td>
                             <td class="text-center">{{ totals.totalTurns | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ totals.subTotalTurns | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ totals.totalDispatch | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ totals.balance | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ totals.balance | thousandRound | numberFormat('$0,0') }}</td>
                             <td v-if="readonly" class="text-center">
                                 <button class="btn btn-sm yellow-crusta btn-tab btn-transparent btn-outline btn-circle tooltips" :title="$t('Print total')" @click="exportLiquidation()" data-toggle="modal" data-target="#">
                                     <i class="fa fa-print"></i>

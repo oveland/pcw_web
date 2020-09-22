@@ -1,21 +1,36 @@
 <template>
     <div class="row">
-        <div class="col-md-3 col-sm-12 col-xs-12">
-            <div class="col-md-12" v-if="vehicles">
-                <multiselect v-model="vehicle" :placeholder="$t('Select a vehicle')" label="number" track-by="id" :options="vehicles"></multiselect>
-            </div>
-        </div>
-        <div class="col-md-9 col-sm-12 col-xs-12">
+		<div class="col-md-12">
             <div class="tab-content">
                 <div class="">
                     <div class="">
-                        <ul class="nav nav-pills">
+                        <ul class="nav nav-pills pull-left">
                             <li v-for="(route, indexRoute) in routes" :class="indexRoute === 0 ? 'active' : ''">
                                 <a :href="'#tab-penalty-' + route.id" data-toggle="tab" aria-expanded="true">
                                     <i class="fa fa-flag"></i> {{ route.name }}
                                 </a>
                             </li>
                         </ul>
+
+						<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 pull-right p-0" v-if="vehicles">
+							<multiselect v-model="vehicle" :placeholder="$t('Select a vehicle')" label="number" track-by="id" :options="vehicles">
+								<template slot="singleLabel" slot-scope="props">
+									<span class="option__desc">
+										<span class="option__title">
+											<i class="fa fa-bus"></i> {{ props.option.number }}
+										</span>
+									</span>
+								</template>
+								<template slot="option" slot-scope="props">
+									<div class="option__desc">
+										<span class="option__title">
+											<i class="fa fa-bus"></i> {{ props.option.number }}
+										</span>
+									</div>
+								</template>
+							</multiselect>
+						</div>
+
                         <div class="tab-content">
                             <div v-for="(route, indexRoute) in routes" class="tab-pane fade" :class="indexRoute === 0 ? 'active in' : ''" :id="'tab-penalty-' + route.id">
                                 <table class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">

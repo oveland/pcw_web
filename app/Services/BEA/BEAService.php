@@ -72,6 +72,7 @@ class BEAService
         $vehicles = $this->repository->getAllVehicles();
 
         foreach ($vehicles as $vehicle) {
+            $this->sync->checkCommissionsFor($vehicle);
             $this->sync->checkPenaltiesFor($vehicle);
             $this->sync->checkManagementCostsFor($vehicle);
         }
@@ -174,6 +175,7 @@ class BEAService
 
         $vehicle = Vehicle::find($vehicleId);
         $this->sync->checkDiscountsFor($vehicle);
+        $this->sync->checkCommissionsFor($vehicle);
         $this->sync->checkPenaltiesFor($vehicle);
         $this->sync->checkManagementCostsFor($vehicle);
 

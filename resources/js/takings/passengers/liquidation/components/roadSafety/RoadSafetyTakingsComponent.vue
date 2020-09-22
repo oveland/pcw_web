@@ -38,8 +38,8 @@
                             <td class="text-center">{{ liquidation.totals.totalPassengersBea }}</td>
                             <td class="text-center">{{ liquidation.totals.totalTurns | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.totals.subTotalTurns | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.totals.totalDispatch | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.totals.balance | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.balance | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center text-bold">
                                 {{ liquidation.marks.length }} turns
                             </td>
@@ -79,7 +79,7 @@
                                 <span class="caption-subject font-dark bold uppercase">
                                     {{ $t('Process charge') }}
                                 </span>
-                                <strong class="pull-right" style="font-size: 1.2em !important;">Total recaudado {{ liquidationCharge.totals.totalDispatch | numberFormat('$0,0') }}</strong>
+                                <strong class="pull-right" style="font-size: 1.2em !important;">Total recaudado {{ liquidationCharge.totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</strong>
                             </div>
                         </div>
                         <div class="row portlet-body">

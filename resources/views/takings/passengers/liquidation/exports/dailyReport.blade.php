@@ -3,6 +3,11 @@
       return '$' . number_format($value, 0);
     }
 
+    function thousandRound($value) {
+        $absValue = abs($value);
+        return ($value < 0 ? -1 : 1) * round($absValue / 1000) * 1000;
+    }
+
     $totals = $report->totals;
     $marks = collect($report->marks);
     $totals->payRollCost = $marks->sum('payRollCost');
@@ -180,9 +185,9 @@
                             <td class="text-center">{{ $mark->locks }}</td>
                             <td class="text-center">{{ $mark->boarded }}</td>
                             <td class="text-center">{{ asDollars($mark->penalty->value) }}</td>
-                            <td class="text-center">{{ asDollars($turn->totalDispatch) }}</td>
+                            <td class="text-center">{{ asDollars(thousandRound($turn->totalDispatch)) }}</td>
                             <td class="text-center">{{ asDollars($mark->payRollCost) }}</td>
-                            <td class="text-right">{{ asDollars(intval($turn->totalDispatch - $mark->payRollCost - $turn->turnDiscounts['byFuel'] + $turn->getFall) ) }}</td>
+                            <td class="text-right">{{ asDollars( intval(thousandRound($turn->totalDispatch - $turn->turnDiscounts['byFuel'] - $mark->payRollCost + $turn->getFall)) ) }}</td>
                         </tr>
                         @endforeach
                         <tr class="inverse">
@@ -201,9 +206,9 @@
                             <th class="text-center">{{ $totals->totalLocks }}</th>
                             <th class="text-center">{{ $totals->totalBoarded }}</th>
                             <th class="text-center">{{ asDollars($totals->totalPenalties) }}</th>
-                            <th class="text-center">{{ asDollars($totals->totalDispatch) }}</th>
+                            <th class="text-center">{{ asDollars(thousandRound($totals->totalDispatch)) }}</th>
                             <th class="text-center">{{ asDollars($totals->payRollCost) }}</th>
-                            <th class="text-right" style="background: black !important;font-size: 1em">{{ asDollars(intval($totals->totalDispatch - $totals->payRollCost - $totals->totalDiscountByFuel + $totals->totalGetFall)) }}</th>
+                            <th class="text-right" style="background: black !important;font-size: 1em">{{ asDollars(intval(thousandRound($totals->totalDispatch - $totals->payRollCost - $totals->totalDiscountByFuel + $totals->totalGetFall))) }}</th>
                         </tr>
                         </tbody>
                     </table>

@@ -1570,9 +1570,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 
 
@@ -2442,32 +2439,65 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminCommissionComponent",
   props: {
+    vehicles: Array,
+    vehicleSelected: Object,
     routes: Array,
     commissions: Array
   },
   data: function data() {
     return {
+      vehicle: Object,
       commissionTypes: Array,
       editingCommission: Object,
       editing: false
     };
   },
+  watch: {
+    vehicleSelected: function vehicleSelected() {
+      this.vehicle = this.vehicleSelected;
+    }
+  },
   mounted: function mounted() {
     this.commissionTypes = ['percent', 'fixed'];
   },
-  computed: {},
   methods: {
     editCommission: function editCommission(commission) {
       this.editingCommission = commission;
     },
     commissionsFor: function commissionsFor(routeId) {
-      return _.filter(this.commissions, {
+      var filter = {
         'route_id': routeId
-      });
+      };
+      if (this.vehicle) filter.vehicle_id = this.vehicle.id;
+      return _.filter(this.commissions, filter);
     },
     saveCommission: function saveCommission() {
       var _this = this;
@@ -2518,6 +2548,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AdminCommissionComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdminCommissionComponent */ "./resources/js/takings/passengers/liquidation/components/admin/AdminCommissionComponent.vue");
 /* harmony import */ var _AdminPenaltyComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AdminPenaltyComponent */ "./resources/js/takings/passengers/liquidation/components/admin/AdminPenaltyComponent.vue");
 /* harmony import */ var _ManagementCostComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ManagementCostComponent */ "./resources/js/takings/passengers/liquidation/components/admin/ManagementCostComponent.vue");
+//
+//
+//
 //
 //
 //
@@ -2658,6 +2691,33 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3042,6 +3102,21 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
 /* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -11446,7 +11521,7 @@ var render = function() {
                                           }
                                         ],
                                         staticClass:
-                                          "text-center col-md-12 col-sm-12 col-xs-12 m-t-10"
+                                          "text-center col-md-12 col-sm-12 col-xs-12 m-10"
                                       },
                                       [
                                         _c(
@@ -11921,7 +11996,10 @@ var render = function() {
             { attrs: { onclick: "$('#modal-params-manager').modal('show')" } },
             [
               _c("i", { staticClass: "fa fa-cogs" }),
-              _vm._v(" " + _vm._s(_vm.$t("Admin")) + "\n                ")
+              _vm._v(" "),
+              _c("span", { staticClass: "hidden-xs" }, [
+                _vm._v(_vm._s(_vm.$t("Settings")))
+              ])
             ]
           )
         ]),
@@ -11932,7 +12010,10 @@ var render = function() {
             { attrs: { href: "#tab-road-safety", "data-toggle": "tab" } },
             [
               _c("i", { staticClass: "fa fa-user-secret" }),
-              _vm._v(" " + _vm._s(_vm.$t("Read safety")) + "\n                ")
+              _vm._v(" "),
+              _c("span", { staticClass: "hidden-xs" }, [
+                _vm._v(_vm._s(_vm.$t("Read safety")))
+              ])
             ]
           )
         ]),
@@ -11940,7 +12021,10 @@ var render = function() {
         _c("li", { staticClass: "active" }, [
           _c("a", { attrs: { href: "#tab-takings", "data-toggle": "tab" } }, [
             _c("i", { staticClass: "fa fa-briefcase" }),
-            _vm._v(" " + _vm._s(_vm.$t("Takings")) + "\n                ")
+            _vm._v(" "),
+            _c("span", { staticClass: "hidden-xs" }, [
+              _vm._v(_vm._s(_vm.$t("Takings")))
+            ])
           ])
         ])
       ])
@@ -12294,7 +12378,9 @@ var render = function() {
                                 _vm._v(
                                   _vm._s(
                                     _vm._f("numberFormat")(
-                                      _vm.turn.totalDispatch,
+                                      _vm._f("thousandRound")(
+                                        _vm.turn.totalDispatch
+                                      ),
                                       "$0,0"
                                     )
                                   )
@@ -12305,7 +12391,7 @@ var render = function() {
                                 _vm._v(
                                   _vm._s(
                                     _vm._f("numberFormat")(
-                                      _vm.turn.balance,
+                                      _vm._f("thousandRound")(_vm.turn.balance),
                                       "$0,0"
                                     )
                                   )
@@ -12385,7 +12471,9 @@ var render = function() {
                             _vm._v(
                               _vm._s(
                                 _vm._f("numberFormat")(
-                                  _vm.totals.totalDispatch,
+                                  _vm._f("thousandRound")(
+                                    _vm.totals.totalDispatch
+                                  ),
                                   "$0,0"
                                 )
                               )
@@ -12396,7 +12484,7 @@ var render = function() {
                             _vm._v(
                               _vm._s(
                                 _vm._f("numberFormat")(
-                                  _vm.totals.balance,
+                                  _vm._f("thousandRound")(_vm.totals.balance),
                                   "$0,0"
                                 )
                               )
@@ -12745,7 +12833,7 @@ var render = function() {
                             "button",
                             {
                               staticClass:
-                                "btn btn-sm yellow-crusta btn-circle btn-outline sbold uppercase m-t-5",
+                                "btn red btn-circle sbold uppercase m-t-5",
                               attrs: {
                                 "data-toggle": "modal",
                                 "data-target": "#modal-generate-liquidation"
@@ -13105,7 +13193,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                liquidation.totals.totalDispatch,
+                                _vm._f("thousandRound")(
+                                  liquidation.totals.totalDispatch
+                                ),
                                 "$0,0"
                               )
                             )
@@ -13116,7 +13206,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                liquidation.totals.balance,
+                                _vm._f("thousandRound")(
+                                  liquidation.totals.balance
+                                ),
                                 "$0,0"
                               )
                             )
@@ -13669,7 +13761,7 @@ var render = function() {
                                           "div",
                                           {
                                             staticClass:
-                                              "text-center col-md-12 col-sm-12 col-xs-12 m-t-10"
+                                              "text-center col-md-12 col-sm-12 col-xs-12 m-10"
                                           },
                                           [
                                             !_vm.control.enableSaving &&
@@ -13768,17 +13860,6 @@ var render = function() {
                   )
                 ])
               ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "modal-footer" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn dark btn-outline",
-                  attrs: { type: "button", "data-dismiss": "modal" }
-                },
-                [_vm._v(_vm._s(_vm.$t("Close")))]
-              )
             ])
           ])
         ])
@@ -14054,7 +14135,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                liquidation.totals.totalDispatch,
+                                _vm._f("thousandRound")(
+                                  liquidation.totals.totalDispatch
+                                ),
                                 "$0,0"
                               )
                             )
@@ -14065,7 +14148,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                liquidation.totals.balance,
+                                _vm._f("thousandRound")(
+                                  liquidation.totals.balance
+                                ),
                                 "$0,0"
                               )
                             )
@@ -14955,7 +15040,9 @@ var render = function() {
                                 _vm._v(
                                   _vm._s(
                                     _vm._f("numberFormat")(
-                                      _vm.turn.totalDispatch,
+                                      _vm._f("thousandRound")(
+                                        _vm.turn.totalDispatch
+                                      ),
                                       "$0,0"
                                     )
                                   )
@@ -14966,7 +15053,7 @@ var render = function() {
                                 _vm._v(
                                   _vm._s(
                                     _vm._f("numberFormat")(
-                                      _vm.turn.balance,
+                                      _vm._f("thousandRound")(_vm.turn.balance),
                                       "$0,0"
                                     )
                                   )
@@ -15044,7 +15131,9 @@ var render = function() {
                             _vm._v(
                               _vm._s(
                                 _vm._f("numberFormat")(
-                                  _vm.totals.totalDispatch,
+                                  _vm._f("thousandRound")(
+                                    _vm.totals.totalDispatch
+                                  ),
                                   "$0,0"
                                 )
                               )
@@ -15055,7 +15144,7 @@ var render = function() {
                             _vm._v(
                               _vm._s(
                                 _vm._f("numberFormat")(
-                                  _vm.totals.balance,
+                                  _vm._f("thousandRound")(_vm.totals.balance),
                                   "$0,0"
                                 )
                               )
@@ -15173,13 +15262,13 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-md-8 col-sm-12 col-xs-12 col-md-offset-2" }, [
+    _c("div", { staticClass: "col-md-12" }, [
       _c("div", { staticClass: "tab-content" }, [
         _c("div", {}, [
           _c("div", {}, [
             _c(
               "ul",
-              { staticClass: "nav nav-pills" },
+              { staticClass: "nav nav-pills pull-left" },
               _vm._l(_vm.routes, function(route, indexRoute) {
                 return _c("li", { class: indexRoute === 0 ? "active" : "" }, [
                   _c(
@@ -15196,7 +15285,7 @@ var render = function() {
                       _vm._v(
                         " " +
                           _vm._s(route.name) +
-                          "\n                            "
+                          "\n                                "
                       )
                     ]
                   )
@@ -15204,6 +15293,75 @@ var render = function() {
               }),
               0
             ),
+            _vm._v(" "),
+            _vm.vehicles
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "col-lg-2 col-md-3 col-sm-6 col-xs-12 pull-right p-0"
+                  },
+                  [
+                    _c("multiselect", {
+                      attrs: {
+                        placeholder: _vm.$t("Select a vehicle"),
+                        label: "number",
+                        "track-by": "id",
+                        options: _vm.vehicles
+                      },
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "singleLabel",
+                            fn: function(props) {
+                              return [
+                                _c("span", { staticClass: "option__desc" }, [
+                                  _c("span", { staticClass: "option__title" }, [
+                                    _c("i", { staticClass: "fa fa-bus" }),
+                                    _vm._v(
+                                      " " +
+                                        _vm._s(props.option.number) +
+                                        "\n\t\t\t\t\t\t\t\t\t\t"
+                                    )
+                                  ])
+                                ])
+                              ]
+                            }
+                          },
+                          {
+                            key: "option",
+                            fn: function(props) {
+                              return [
+                                _c("div", { staticClass: "option__desc" }, [
+                                  _c("span", { staticClass: "option__title" }, [
+                                    _c("i", { staticClass: "fa fa-bus" }),
+                                    _vm._v(
+                                      " " +
+                                        _vm._s(props.option.number) +
+                                        "\n\t\t\t\t\t\t\t\t\t\t"
+                                    )
+                                  ])
+                                ])
+                              ]
+                            }
+                          }
+                        ],
+                        null,
+                        false,
+                        853911105
+                      ),
+                      model: {
+                        value: _vm.vehicle,
+                        callback: function($$v) {
+                          _vm.vehicle = $$v
+                        },
+                        expression: "vehicle"
+                      }
+                    })
+                  ],
+                  1
+                )
+              : _vm._e(),
             _vm._v(" "),
             _c(
               "div",
@@ -15229,12 +15387,22 @@ var render = function() {
                             _vm._m(0, true),
                             _vm._v(" "),
                             _c("th", { staticClass: "col-md-2" }, [
+                              _c("i", { staticClass: "fa fa-car text-muted" }),
+                              _c("br"),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.$t("Vehicle")) +
+                                  "\n\t\t\t\t\t\t\t\t\t\t"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "col-md-2" }, [
                               _c("i", { staticClass: "icon-tag text-muted" }),
                               _c("br"),
                               _vm._v(
                                 " " +
                                   _vm._s(_vm.$t("Type")) +
-                                  "\n                                    "
+                                  "\n                                        "
                               )
                             ]),
                             _vm._v(" "),
@@ -15246,7 +15414,7 @@ var render = function() {
                               _vm._v(
                                 " " +
                                   _vm._s(_vm.$t("Value")) +
-                                  "\n                                    "
+                                  "\n                                        "
                               )
                             ]),
                             _vm._v(" "),
@@ -15258,7 +15426,7 @@ var render = function() {
                               _vm._v(
                                 " " +
                                   _vm._s(_vm.$t("Options")) +
-                                  "\n                                    "
+                                  "\n                                        "
                               )
                             ])
                           ])
@@ -15277,23 +15445,29 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c("td", { staticClass: "text-center" }, [
+                                  _vm._v(_vm._s(commission.vehicle.number))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-center" }, [
                                   _vm._v(
                                     _vm._s(
-                                      _vm._f("capitalize")(commission.type)
+                                      _vm._f("capitalize")(
+                                        _vm.$t(commission.type + "BEA")
+                                      )
                                     )
                                   )
                                 ]),
                                 _vm._v(" "),
                                 _c("td", { staticClass: "text-center" }, [
                                   _vm._v(
-                                    "\n                                        " +
+                                    "\n                                            " +
                                       _vm._s(
                                         _vm._f("numberFormat")(
                                           commission.value,
                                           "0,0"
                                         )
                                       ) +
-                                      "\n                                    "
+                                      "\n                                        "
                                   )
                                 ]),
                                 _vm._v(" "),
@@ -15305,7 +15479,7 @@ var render = function() {
                                           staticClass:
                                             "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
                                           attrs: {
-                                            title: "Edit",
+                                            title: _vm.$t("Edit"),
                                             "data-toggle": "modal",
                                             "data-target":
                                               "#modal-admin-commission-edit"
@@ -15424,7 +15598,15 @@ var render = function() {
                                     return _c(
                                       "option",
                                       { domProps: { value: type } },
-                                      [_vm._v(_vm._s(type))]
+                                      [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm._f("capitalize")(
+                                              _vm.$t(type + "BEA")
+                                            )
+                                          )
+                                        )
+                                      ]
                                     )
                                   }),
                                   0
@@ -15589,8 +15771,6 @@ var render = function() {
   return _c("div", { staticClass: "admin-component" }, [
     _c("div", { staticClass: "portlet light bordered" }, [
       _c("div", { staticClass: "portlet-title tabbable-line" }, [
-        _vm._m(0),
-        _vm._v(" "),
         _c("div", { staticClass: "caption" }, [
           _c("i", { staticClass: "fa fa-cogs" }),
           _vm._v(" "),
@@ -15611,7 +15791,9 @@ var render = function() {
               [
                 _c("i", { staticClass: "icon-tag" }),
                 _vm._v(
-                  " " + _vm._s(_vm.$t("Discounts")) + "\n                    "
+                  " " +
+                    _vm._s(_vm.$t("Discounts")) +
+                    "\n                        "
                 )
               ]
             )
@@ -15626,7 +15808,9 @@ var render = function() {
               [
                 _c("i", { staticClass: "icon-shield" }),
                 _vm._v(
-                  " " + _vm._s(_vm.$t("Penalties")) + "\n                    "
+                  " " +
+                    _vm._s(_vm.$t("Penalties")) +
+                    "\n                        "
                 )
               ]
             )
@@ -15641,7 +15825,9 @@ var render = function() {
               [
                 _c("i", { staticClass: "icon-user-follow" }),
                 _vm._v(
-                  " " + _vm._s(_vm.$t("Commissions")) + "\n                    "
+                  " " +
+                    _vm._s(_vm.$t("Commissions")) +
+                    "\n                        "
                 )
               ]
             )
@@ -15658,8 +15844,28 @@ var render = function() {
               },
               [
                 _c("i", { staticClass: "fa fa-dollar" }),
-                _vm._v(" " + _vm._s(_vm.$t("Costs")) + "\n                    ")
+                _vm._v(
+                  " " + _vm._s(_vm.$t("Costs")) + "\n                        "
+                )
               ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "divider-menu hidden-sm hidden-xs" }),
+          _vm._v(" "),
+          _c("li", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "btn btn-danger btn-outline sbold uppercase btn-circle tooltips m-t-5",
+                attrs: {
+                  type: "button",
+                  title: _vm.$t("Close"),
+                  "data-dismiss": "modal"
+                }
+              },
+              [_c("i", { staticClass: "fa fa-times" })]
             )
           ])
         ])
@@ -15720,7 +15926,12 @@ var render = function() {
             },
             [
               _c("admin-commission-component", {
-                attrs: { routes: _vm.routes, commissions: _vm.commissions },
+                attrs: {
+                  vehicles: _vm.vehicles,
+                  "vehicle-selected": _vm.vehicle,
+                  routes: _vm.routes,
+                  commissions: _vm.commissions
+                },
                 on: {
                   "refresh-report": function($event) {
                     return _vm.$emit("refresh-report")
@@ -15755,31 +15966,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "text-center col-md-12",
-        staticStyle: { position: "absolute" }
-      },
-      [
-        _c(
-          "button",
-          {
-            staticClass:
-              "btn blue-hoki btn-outline sbold uppercase btn-circle tooltips",
-            attrs: { type: "button", title: "Close", "data-dismiss": "modal" }
-          },
-          [_c("i", { staticClass: "fa fa-times" })]
-        )
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -15802,35 +15989,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-md-3 col-sm-4 col-xs-12" }, [
-      _vm.vehicles
-        ? _c(
-            "div",
-            { staticClass: "col-md-12" },
-            [
-              _c("multiselect", {
-                attrs: {
-                  placeholder: _vm.$t("Select a vehicle"),
-                  label: "number",
-                  "track-by": "id",
-                  options: _vm.vehicles
-                },
-                model: {
-                  value: _vm.vehicle,
-                  callback: function($$v) {
-                    _vm.vehicle = $$v
-                  },
-                  expression: "vehicle"
-                }
-              })
-            ],
-            1
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
     _vm.vehicle
-      ? _c("div", { staticClass: "col-md-9 col-sm-8 col-xs-12" }, [
+      ? _c("div", { staticClass: "col-md-12" }, [
           _c("div", { staticClass: "tab-content" }, [
             _c(
               "div",
@@ -15842,7 +16002,7 @@ var render = function() {
                 _c("div", {}, [
                   _c(
                     "ul",
-                    { staticClass: "nav nav-pills" },
+                    { staticClass: "nav nav-pills pull-left" },
                     _vm._l(_vm.routes, function(route, indexRoute) {
                       return _c(
                         "li",
@@ -15874,7 +16034,7 @@ var render = function() {
                               _vm._v(
                                 " " +
                                   _vm._s(route.name) +
-                                  "\n                            "
+                                  "\n                                "
                               )
                             ]
                           )
@@ -15884,431 +16044,552 @@ var render = function() {
                     0
                   ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "tab-content" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "tab-pane fade active in",
-                        attrs: { id: "tab-" + _vm.vehicle.id }
-                      },
-                      [
-                        _c(
-                          "table",
-                          {
-                            staticClass:
-                              "table table-bordered table-condensed table-report"
-                          },
-                          [
-                            _c("thead", [
-                              _c("tr", { staticClass: "inverse" }, [
-                                _c("th", { staticClass: "col-md-4" }, [
-                                  _c("i", {
-                                    staticClass: "fa fa-flag text-muted"
-                                  }),
-                                  _c("br"),
-                                  _vm._v(
-                                    " " +
-                                      _vm._s(_vm.$t("Trajectory")) +
-                                      "\n                                    "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("th", { staticClass: "col-md-8" }, [
-                                  _c("i", {
-                                    staticClass: "icon-tag text-muted"
-                                  }),
-                                  _c("br"),
-                                  _vm._v(
-                                    " " +
-                                      _vm._s(_vm.$t("Discounts")) +
-                                      "\n                                    "
-                                  )
-                                ])
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("tbody", [
-                              _c("tr", [
-                                _c(
-                                  "td",
-                                  { staticClass: "text-center col-md-4" },
-                                  [
-                                    _c(
-                                      "ul",
-                                      { staticClass: "nav nav-tabs tabs-left" },
-                                      _vm._l(_vm.trajectoriesByRoute, function(
-                                        trajectory,
-                                        indexTrajectory
-                                      ) {
-                                        return _c(
-                                          "li",
-                                          {
-                                            class:
-                                              trajectory.id ===
-                                              _vm.selectedTrajectory.id
-                                                ? "active"
-                                                : "",
-                                            on: {
-                                              click: function($event) {
-                                                return _vm.loadDiscounts(
-                                                  _vm.vehicle,
-                                                  trajectory
-                                                )
-                                              }
-                                            }
-                                          },
-                                          [
-                                            _c(
-                                              "a",
-                                              {
-                                                attrs: {
-                                                  href: ".tab-discounts",
-                                                  "data-toggle": "tab"
-                                                }
-                                              },
-                                              [
-                                                _vm._v(
-                                                  "\n                                                    " +
-                                                    _vm._s(trajectory.name) +
-                                                    "\n                                                "
-                                                )
-                                              ]
-                                            )
-                                          ]
-                                        )
-                                      }),
-                                      0
-                                    )
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  {
-                                    staticClass:
-                                      "discounts text-center col-md-8"
-                                  },
-                                  [
-                                    _c("div", { staticClass: "tab-content" }, [
+                  _vm.vehicles
+                    ? _c(
+                        "div",
+                        {
+                          staticClass:
+                            "col-lg-2 col-md-3 col-sm-6 col-xs-12 pull-right p-0"
+                        },
+                        [
+                          _c("multiselect", {
+                            attrs: {
+                              placeholder: _vm.$t("Select a vehicle"),
+                              label: "number",
+                              "track-by": "id",
+                              options: _vm.vehicles
+                            },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "singleLabel",
+                                  fn: function(props) {
+                                    return [
                                       _c(
-                                        "div",
-                                        {
-                                          staticClass:
-                                            "tab-discounts tab-pane fade active in"
-                                        },
+                                        "span",
+                                        { staticClass: "option__desc" },
                                         [
                                           _c(
-                                            "table",
-                                            {
-                                              staticClass:
-                                                "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
-                                            },
+                                            "span",
+                                            { staticClass: "option__title" },
                                             [
-                                              _c("thead", [
-                                                _c(
-                                                  "tr",
-                                                  { staticClass: "inverse" },
-                                                  [
-                                                    _vm._m(0),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "th",
-                                                      {
-                                                        staticClass: "col-md-2"
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "icon-tag text-muted"
-                                                        }),
-                                                        _c("br"),
-                                                        _vm._v(
-                                                          " " +
-                                                            _vm._s(
-                                                              _vm.$t("Name")
-                                                            ) +
-                                                            "\n                                                        "
-                                                        )
-                                                      ]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "th",
-                                                      {
-                                                        staticClass: "col-md-2"
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "icon-tag text-muted"
-                                                        }),
-                                                        _c("br"),
-                                                        _vm._v(
-                                                          " " +
-                                                            _vm._s(
-                                                              _vm.$t(
-                                                                "Description"
-                                                              )
-                                                            ) +
-                                                            "\n                                                        "
-                                                        )
-                                                      ]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "th",
-                                                      {
-                                                        staticClass: "col-md-2"
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "fa fa-dollar text-muted"
-                                                        }),
-                                                        _c("br"),
-                                                        _vm._v(
-                                                          " " +
-                                                            _vm._s(
-                                                              _vm.$t("Value")
-                                                            ) +
-                                                            "\n                                                        "
-                                                        )
-                                                      ]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "th",
-                                                      {
-                                                        staticClass: "col-md-2"
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "fa fa-calendar text-muted"
-                                                        }),
-                                                        _c("br"),
-                                                        _vm._v(
-                                                          " " +
-                                                            _vm._s(
-                                                              _vm.$t(
-                                                                "Updated at"
-                                                              )
-                                                            ) +
-                                                            "\n                                                        "
-                                                        )
-                                                      ]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "th",
-                                                      {
-                                                        staticClass: "col-md-2"
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "fa fa-rocket text-muted"
-                                                        }),
-                                                        _c("br"),
-                                                        _vm._v(
-                                                          " " +
-                                                            _vm._s(
-                                                              _vm.$t("Options")
-                                                            ) +
-                                                            "\n                                                        "
-                                                        )
-                                                      ]
-                                                    )
-                                                  ]
-                                                )
-                                              ]),
-                                              _vm._v(" "),
-                                              _c(
-                                                "tbody",
-                                                [
-                                                  _vm._l(
-                                                    _vm.discounts,
-                                                    function(
-                                                      discount,
-                                                      indexDiscount
-                                                    ) {
-                                                      return _c("tr", [
-                                                        _c(
-                                                          "td",
-                                                          {
-                                                            staticClass:
-                                                              "text-center"
-                                                          },
-                                                          [
-                                                            _vm._v(
-                                                              _vm._s(
-                                                                indexDiscount +
-                                                                  1
-                                                              )
-                                                            )
-                                                          ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                          "td",
-                                                          {
-                                                            staticClass:
-                                                              "text-center"
-                                                          },
-                                                          [
-                                                            _c("i", {
-                                                              class:
-                                                                discount
-                                                                  .discount_type
-                                                                  .icon
-                                                            }),
-                                                            _vm._v(
-                                                              " " +
-                                                                _vm._s(
-                                                                  _vm._f(
-                                                                    "capitalize"
-                                                                  )(
-                                                                    discount
-                                                                      .discount_type
-                                                                      .name
-                                                                  )
-                                                                ) +
-                                                                "\n                                                        "
-                                                            )
-                                                          ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                          "td",
-                                                          {
-                                                            staticClass:
-                                                              "text-center"
-                                                          },
-                                                          [
-                                                            _vm._v(
-                                                              _vm._s(
-                                                                discount
-                                                                  .discount_type
-                                                                  .description
-                                                              )
-                                                            )
-                                                          ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                          "td",
-                                                          {
-                                                            staticClass:
-                                                              "text-center"
-                                                          },
-                                                          [
-                                                            _vm._v(
-                                                              "\n                                                            " +
-                                                                _vm._s(
-                                                                  _vm._f(
-                                                                    "numberFormat"
-                                                                  )(
-                                                                    discount.value,
-                                                                    "$0,0"
-                                                                  )
-                                                                ) +
-                                                                "\n                                                        "
-                                                            )
-                                                          ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                          "td",
-                                                          {
-                                                            staticClass:
-                                                              "text-center"
-                                                          },
-                                                          [
-                                                            _c(
-                                                              "span",
-                                                              {
-                                                                staticClass:
-                                                                  "tooltips",
-                                                                attrs: {
-                                                                  "data-title": _vm.$t(
-                                                                    "Updated at"
-                                                                  )
-                                                                }
-                                                              },
-                                                              [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    discount.updated_at
-                                                                  )
-                                                                )
-                                                              ]
-                                                            )
-                                                          ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                          "td",
-                                                          {
-                                                            staticClass:
-                                                              "text-center"
-                                                          },
-                                                          [
-                                                            !_vm.editing
-                                                              ? _c(
-                                                                  "button",
-                                                                  {
-                                                                    staticClass:
-                                                                      "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
-                                                                    attrs: {
-                                                                      title: _vm.$t(
-                                                                        "Edit"
-                                                                      ),
-                                                                      "data-toggle":
-                                                                        "modal",
-                                                                      "data-target":
-                                                                        "#modal-admin-discount-edit"
-                                                                    },
-                                                                    on: {
-                                                                      click: function(
-                                                                        $event
-                                                                      ) {
-                                                                        return _vm.editDiscount(
-                                                                          discount
-                                                                        )
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                  [
-                                                                    _c("i", {
-                                                                      staticClass:
-                                                                        "fa fa-edit"
-                                                                    })
-                                                                  ]
-                                                                )
-                                                              : _vm._e()
-                                                          ]
-                                                        )
-                                                      ])
-                                                    }
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _vm._m(1)
-                                                ],
-                                                2
+                                              _c("i", {
+                                                staticClass: "fa fa-bus"
+                                              }),
+                                              _vm._v(
+                                                " " +
+                                                  _vm._s(props.option.number) +
+                                                  "\n\t\t\t\t\t\t\t\t\t\t"
                                               )
                                             ]
                                           )
                                         ]
                                       )
+                                    ]
+                                  }
+                                },
+                                {
+                                  key: "option",
+                                  fn: function(props) {
+                                    return [
+                                      _c(
+                                        "div",
+                                        { staticClass: "option__desc" },
+                                        [
+                                          _c(
+                                            "span",
+                                            { staticClass: "option__title" },
+                                            [
+                                              _c("i", {
+                                                staticClass: "fa fa-bus"
+                                              }),
+                                              _vm._v(
+                                                " " +
+                                                  _vm._s(props.option.number) +
+                                                  "\n\t\t\t\t\t\t\t\t\t\t"
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              false,
+                              853911105
+                            ),
+                            model: {
+                              value: _vm.vehicle,
+                              callback: function($$v) {
+                                _vm.vehicle = $$v
+                              },
+                              expression: "vehicle"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-12 p-0" }, [
+                    _c("div", { staticClass: "tab-content" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "tab-pane fade active in",
+                          attrs: { id: "tab-" + _vm.vehicle.id }
+                        },
+                        [
+                          _c("div", { staticClass: "table-responsive" }, [
+                            _c(
+                              "table",
+                              {
+                                staticClass:
+                                  "table table-bordered table-condensed table-report"
+                              },
+                              [
+                                _c("thead", [
+                                  _c("tr", { staticClass: "inverse" }, [
+                                    _c("th", { staticClass: "col-md-4" }, [
+                                      _c("i", {
+                                        staticClass: "fa fa-flag text-muted"
+                                      }),
+                                      _c("br"),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(_vm.$t("Trajectory")) +
+                                          "\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th", { staticClass: "col-md-8" }, [
+                                      _c("i", {
+                                        staticClass: "icon-tag text-muted"
+                                      }),
+                                      _c("br"),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(_vm.$t("Discounts")) +
+                                          "\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                      )
                                     ])
-                                  ]
-                                )
-                              ])
-                            ])
-                          ]
-                        )
-                      ]
-                    )
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c("tbody", [
+                                  _c("tr", [
+                                    _c(
+                                      "td",
+                                      { staticClass: "text-center col-md-4" },
+                                      [
+                                        _c(
+                                          "ul",
+                                          {
+                                            staticClass:
+                                              "nav nav-tabs tabs-left"
+                                          },
+                                          _vm._l(
+                                            _vm.trajectoriesByRoute,
+                                            function(
+                                              trajectory,
+                                              indexTrajectory
+                                            ) {
+                                              return _c(
+                                                "li",
+                                                {
+                                                  class:
+                                                    trajectory.id ===
+                                                    _vm.selectedTrajectory.id
+                                                      ? "active"
+                                                      : "",
+                                                  on: {
+                                                    click: function($event) {
+                                                      return _vm.loadDiscounts(
+                                                        _vm.vehicle,
+                                                        trajectory
+                                                      )
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "a",
+                                                    {
+                                                      attrs: {
+                                                        href: ".tab-discounts",
+                                                        "data-toggle": "tab"
+                                                      }
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                          _vm._s(
+                                                            trajectory.name
+                                                          ) +
+                                                          "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              )
+                                            }
+                                          ),
+                                          0
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "td",
+                                      {
+                                        staticClass:
+                                          "discounts text-center col-md-8"
+                                      },
+                                      [
+                                        _c(
+                                          "div",
+                                          { staticClass: "tab-content" },
+                                          [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "tab-discounts tab-pane fade active in"
+                                              },
+                                              [
+                                                _c(
+                                                  "table",
+                                                  {
+                                                    staticClass:
+                                                      "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+                                                  },
+                                                  [
+                                                    _c("thead", [
+                                                      _c(
+                                                        "tr",
+                                                        {
+                                                          staticClass: "inverse"
+                                                        },
+                                                        [
+                                                          _vm._m(0),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "th",
+                                                            {
+                                                              staticClass:
+                                                                "col-md-2"
+                                                            },
+                                                            [
+                                                              _c("i", {
+                                                                staticClass:
+                                                                  "icon-tag text-muted"
+                                                              }),
+                                                              _c("br"),
+                                                              _vm._v(
+                                                                " " +
+                                                                  _vm._s(
+                                                                    _vm.$t(
+                                                                      "Name"
+                                                                    )
+                                                                  ) +
+                                                                  "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                              )
+                                                            ]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "th",
+                                                            {
+                                                              staticClass:
+                                                                "col-md-2"
+                                                            },
+                                                            [
+                                                              _c("i", {
+                                                                staticClass:
+                                                                  "icon-tag text-muted"
+                                                              }),
+                                                              _c("br"),
+                                                              _vm._v(
+                                                                " " +
+                                                                  _vm._s(
+                                                                    _vm.$t(
+                                                                      "Description"
+                                                                    )
+                                                                  ) +
+                                                                  "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                              )
+                                                            ]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "th",
+                                                            {
+                                                              staticClass:
+                                                                "col-md-2"
+                                                            },
+                                                            [
+                                                              _c("i", {
+                                                                staticClass:
+                                                                  "fa fa-dollar text-muted"
+                                                              }),
+                                                              _c("br"),
+                                                              _vm._v(
+                                                                " " +
+                                                                  _vm._s(
+                                                                    _vm.$t(
+                                                                      "Value"
+                                                                    )
+                                                                  ) +
+                                                                  "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                              )
+                                                            ]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "th",
+                                                            {
+                                                              staticClass:
+                                                                "col-md-2"
+                                                            },
+                                                            [
+                                                              _c("i", {
+                                                                staticClass:
+                                                                  "fa fa-calendar text-muted"
+                                                              }),
+                                                              _c("br"),
+                                                              _vm._v(
+                                                                " " +
+                                                                  _vm._s(
+                                                                    _vm.$t(
+                                                                      "Updated at"
+                                                                    )
+                                                                  ) +
+                                                                  "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                              )
+                                                            ]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "th",
+                                                            {
+                                                              staticClass:
+                                                                "col-md-2"
+                                                            },
+                                                            [
+                                                              _c("i", {
+                                                                staticClass:
+                                                                  "fa fa-rocket text-muted"
+                                                              }),
+                                                              _c("br"),
+                                                              _vm._v(
+                                                                " " +
+                                                                  _vm._s(
+                                                                    _vm.$t(
+                                                                      "Options"
+                                                                    )
+                                                                  ) +
+                                                                  "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                              )
+                                                            ]
+                                                          )
+                                                        ]
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "tbody",
+                                                      [
+                                                        _vm._l(
+                                                          _vm.discounts,
+                                                          function(
+                                                            discount,
+                                                            indexDiscount
+                                                          ) {
+                                                            return _c("tr", [
+                                                              _c(
+                                                                "td",
+                                                                {
+                                                                  staticClass:
+                                                                    "text-center"
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    _vm._s(
+                                                                      indexDiscount +
+                                                                        1
+                                                                    )
+                                                                  )
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "td",
+                                                                {
+                                                                  staticClass:
+                                                                    "text-center"
+                                                                },
+                                                                [
+                                                                  _c("i", {
+                                                                    class:
+                                                                      discount
+                                                                        .discount_type
+                                                                        .icon
+                                                                  }),
+                                                                  _vm._v(
+                                                                    " " +
+                                                                      _vm._s(
+                                                                        _vm._f(
+                                                                          "capitalize"
+                                                                        )(
+                                                                          discount
+                                                                            .discount_type
+                                                                            .name
+                                                                        )
+                                                                      ) +
+                                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                                  )
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "td",
+                                                                {
+                                                                  staticClass:
+                                                                    "text-center"
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    _vm._s(
+                                                                      discount
+                                                                        .discount_type
+                                                                        .description
+                                                                    )
+                                                                  )
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "td",
+                                                                {
+                                                                  staticClass:
+                                                                    "text-center"
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                                      _vm._s(
+                                                                        _vm._f(
+                                                                          "numberFormat"
+                                                                        )(
+                                                                          discount.value,
+                                                                          "$0,0"
+                                                                        )
+                                                                      ) +
+                                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                                  )
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "td",
+                                                                {
+                                                                  staticClass:
+                                                                    "text-center"
+                                                                },
+                                                                [
+                                                                  _c(
+                                                                    "span",
+                                                                    {
+                                                                      staticClass:
+                                                                        "tooltips",
+                                                                      attrs: {
+                                                                        "data-title": _vm.$t(
+                                                                          "Updated at"
+                                                                        )
+                                                                      }
+                                                                    },
+                                                                    [
+                                                                      _vm._v(
+                                                                        _vm._s(
+                                                                          discount.updated_at
+                                                                        )
+                                                                      )
+                                                                    ]
+                                                                  )
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "td",
+                                                                {
+                                                                  staticClass:
+                                                                    "text-center"
+                                                                },
+                                                                [
+                                                                  !_vm.editing
+                                                                    ? _c(
+                                                                        "button",
+                                                                        {
+                                                                          staticClass:
+                                                                            "btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips",
+                                                                          attrs: {
+                                                                            title: _vm.$t(
+                                                                              "Edit"
+                                                                            ),
+                                                                            "data-toggle":
+                                                                              "modal",
+                                                                            "data-target":
+                                                                              "#modal-admin-discount-edit"
+                                                                          },
+                                                                          on: {
+                                                                            click: function(
+                                                                              $event
+                                                                            ) {
+                                                                              return _vm.editDiscount(
+                                                                                discount
+                                                                              )
+                                                                            }
+                                                                          }
+                                                                        },
+                                                                        [
+                                                                          _c(
+                                                                            "i",
+                                                                            {
+                                                                              staticClass:
+                                                                                "fa fa-edit"
+                                                                            }
+                                                                          )
+                                                                        ]
+                                                                      )
+                                                                    : _vm._e()
+                                                                ]
+                                                              )
+                                                            ])
+                                                          }
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _vm._m(1)
+                                                      ],
+                                                      2
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ]
+                            )
+                          ])
+                        ]
+                      )
+                    ])
                   ])
                 ])
               ]
@@ -16521,349 +16802,508 @@ var render = function() {
                               ])
                             ]
                           )
-                        ])
-                      ]
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("hr", { staticClass: "col-md-12" }),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-12 text-center" }, [
-                  _c("h2", { staticClass: "text-muted" }, [
-                    _c("i", { staticClass: "fa fa-save" }),
-                    _vm._v(
-                      " " +
-                        _vm._s(_vm.$t("Save options")) +
-                        "\n                        "
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm.vehicles
-                  ? _c(
-                      "div",
-                      { staticClass: "col-md-12 text-left no-padding" },
-                      [
-                        _c("div", { staticClass: "col-md-12 no-padding" }, [
-                          _c("span", { staticClass: "col-md-3" }, [
-                            _c("label", { staticClass: "typo__label" }, [
-                              _c("i", { staticClass: "fa fa-car" }),
-                              _vm._v(
-                                " " +
-                                  _vm._s(_vm.$t("Vehicles")) +
-                                  "\n                                "
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "col-md-3 text-center" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.options.for.vehicles,
-                                  expression: "options.for.vehicles"
-                                }
-                              ],
-                              attrs: {
-                                type: "radio",
-                                id: "default-vehicles",
-                                value: "default",
-                                name: "for-vehicles"
-                              },
-                              domProps: {
-                                checked: _vm._q(
-                                  _vm.options.for.vehicles,
-                                  "default"
-                                )
-                              },
-                              on: {
-                                change: function($event) {
-                                  return _vm.$set(
-                                    _vm.options.for,
-                                    "vehicles",
-                                    "default"
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "label",
-                              { attrs: { for: "default-vehicles" } },
-                              [_vm._v(_vm._s(_vm.$t("By default")))]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "col-md-3 text-center" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.options.for.vehicles,
-                                  expression: "options.for.vehicles"
-                                }
-                              ],
-                              attrs: {
-                                type: "radio",
-                                id: "all-vehicles",
-                                value: "all",
-                                name: "for-vehicles"
-                              },
-                              domProps: {
-                                checked: _vm._q(_vm.options.for.vehicles, "all")
-                              },
-                              on: {
-                                change: function($event) {
-                                  return _vm.$set(
-                                    _vm.options.for,
-                                    "vehicles",
-                                    "all"
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("label", { attrs: { for: "all-vehicles" } }, [
-                              _vm._v(_vm._s(_vm.$t("All")))
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "col-md-3 text-center" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.options.for.vehicles,
-                                  expression: "options.for.vehicles"
-                                }
-                              ],
-                              attrs: {
-                                type: "radio",
-                                id: "custom-vehicles",
-                                value: "custom",
-                                name: "for-vehicles"
-                              },
-                              domProps: {
-                                checked: _vm._q(
-                                  _vm.options.for.vehicles,
-                                  "custom"
-                                )
-                              },
-                              on: {
-                                change: function($event) {
-                                  return _vm.$set(
-                                    _vm.options.for,
-                                    "vehicles",
-                                    "custom"
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("label", { attrs: { for: "custom-vehicles" } }, [
-                              _vm._v(_vm._s(_vm.$t("Custom")))
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _vm.options.for.vehicles === "custom"
-                            ? _c(
-                                "div",
-                                { staticClass: "col-md-12" },
-                                [
-                                  _c("multiselect", {
-                                    attrs: {
-                                      placeholder: _vm.$t("Select vehicles"),
-                                      label: "number",
-                                      "track-by": "id",
-                                      options: _vm.vehicles,
-                                      multiple: true
-                                    },
-                                    model: {
-                                      value: _vm.options.vehicles,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.options, "vehicles", $$v)
-                                      },
-                                      expression: "options.vehicles"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            : _vm._e()
                         ]),
                         _vm._v(" "),
-                        _c("hr", { staticClass: "col-md-12 no-padding" }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-12 no-padding" }, [
-                          _c("span", { staticClass: "col-md-3" }, [
-                            _c("label", { staticClass: "typo__label" }, [
-                              _c("i", { staticClass: "fa fa-retweet" }),
-                              _vm._v(
-                                " " +
-                                  _vm._s(_vm.$t("Trajectory")) +
-                                  "\n                                "
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "col-md-3 text-center" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.options.for.trajectories,
-                                  expression: "options.for.trajectories"
-                                }
-                              ],
-                              attrs: {
-                                type: "radio",
-                                id: "default-trajectories",
-                                value: "default",
-                                name: "for-trajectories"
-                              },
-                              domProps: {
-                                checked: _vm._q(
-                                  _vm.options.for.trajectories,
-                                  "default"
-                                )
-                              },
-                              on: {
-                                change: function($event) {
-                                  return _vm.$set(
-                                    _vm.options.for,
-                                    "trajectories",
-                                    "default"
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "label",
-                              { attrs: { for: "default-trajectories" } },
-                              [_vm._v(_vm._s(_vm.$t("By default")))]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "col-md-3 text-center" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.options.for.trajectories,
-                                  expression: "options.for.trajectories"
-                                }
-                              ],
-                              attrs: {
-                                type: "radio",
-                                id: "all-trajectories",
-                                value: "all",
-                                name: "for-trajectories"
-                              },
-                              domProps: {
-                                checked: _vm._q(
-                                  _vm.options.for.trajectories,
-                                  "all"
-                                )
-                              },
-                              on: {
-                                change: function($event) {
-                                  return _vm.$set(
-                                    _vm.options.for,
-                                    "trajectories",
-                                    "all"
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "label",
-                              { attrs: { for: "all-trajectories" } },
-                              [_vm._v(_vm._s(_vm.$t("All")))]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "col-md-3 text-center" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.options.for.trajectories,
-                                  expression: "options.for.trajectories"
-                                }
-                              ],
-                              attrs: {
-                                type: "radio",
-                                id: "custom-trajectories",
-                                value: "custom",
-                                name: "for-trajectories"
-                              },
-                              domProps: {
-                                checked: _vm._q(
-                                  _vm.options.for.trajectories,
-                                  "custom"
-                                )
-                              },
-                              on: {
-                                change: function($event) {
-                                  return _vm.$set(
-                                    _vm.options.for,
-                                    "trajectories",
-                                    "custom"
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "label",
-                              { attrs: { for: "custom-trajectories" } },
-                              [_vm._v(_vm._s(_vm.$t("Custom")))]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _vm.options.for.trajectories === "custom"
-                            ? _c(
-                                "div",
-                                { staticClass: "col-md-12" },
-                                [
-                                  _c("multiselect", {
-                                    attrs: {
-                                      options: _vm.trajectoriesForMultiselect,
-                                      placeholder: _vm.$t(
-                                        "Select trajectories"
-                                      ),
-                                      "group-values": "trajectories",
-                                      "group-label": "route",
-                                      label: "name",
-                                      "track-by": "id",
-                                      multiple: true
+                        _vm.vehicles
+                          ? _c(
+                              "div",
+                              { staticClass: "col-md-12 text-left no-padding" },
+                              [
+                                _c("div", { staticClass: "col-md-12" }, [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "form-group form-md-line-input has-success"
                                     },
-                                    model: {
-                                      value: _vm.options.trajectories,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.options,
-                                          "trajectories",
-                                          $$v
+                                    [
+                                      _c("div", { staticClass: "input-icon" }, [
+                                        _c("label", [
+                                          _c("i", {
+                                            staticClass: "fa fa-save"
+                                          }),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(_vm.$t("Save options")) +
+                                              "\n\t\t\t\t\t\t\t\t\t\t\t"
+                                          )
+                                        ])
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "col-md-12 no-padding" },
+                                  [
+                                    _c("div", { staticClass: "col-md-3" }, [
+                                      _c(
+                                        "label",
+                                        {
+                                          staticClass: "typo__label text-info"
+                                        },
+                                        [
+                                          _c("i", { staticClass: "fa fa-car" }),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(_vm.$t("Vehicles")) +
+                                              "\n\t\t\t\t\t\t\t\t\t\t"
+                                          )
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "col-md-12 no-padding" },
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "col-md-3 col-sm-12 col-xs-12"
+                                          },
+                                          [
+                                            _c("input", {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value:
+                                                    _vm.options.for.vehicles,
+                                                  expression:
+                                                    "options.for.vehicles"
+                                                }
+                                              ],
+                                              attrs: {
+                                                type: "radio",
+                                                id: "default-vehicles",
+                                                value: "default",
+                                                name: "for-vehicles"
+                                              },
+                                              domProps: {
+                                                checked: _vm._q(
+                                                  _vm.options.for.vehicles,
+                                                  "default"
+                                                )
+                                              },
+                                              on: {
+                                                change: function($event) {
+                                                  return _vm.$set(
+                                                    _vm.options.for,
+                                                    "vehicles",
+                                                    "default"
+                                                  )
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "label",
+                                              {
+                                                attrs: {
+                                                  for: "default-vehicles"
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(_vm.$t("By default"))
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "col-md-2 col-sm-12 col-xs-12"
+                                          },
+                                          [
+                                            _c("input", {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value:
+                                                    _vm.options.for.vehicles,
+                                                  expression:
+                                                    "options.for.vehicles"
+                                                }
+                                              ],
+                                              attrs: {
+                                                type: "radio",
+                                                id: "all-vehicles",
+                                                value: "all",
+                                                name: "for-vehicles"
+                                              },
+                                              domProps: {
+                                                checked: _vm._q(
+                                                  _vm.options.for.vehicles,
+                                                  "all"
+                                                )
+                                              },
+                                              on: {
+                                                change: function($event) {
+                                                  return _vm.$set(
+                                                    _vm.options.for,
+                                                    "vehicles",
+                                                    "all"
+                                                  )
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "label",
+                                              {
+                                                attrs: { for: "all-vehicles" }
+                                              },
+                                              [_vm._v(_vm._s(_vm.$t("All")))]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "col-md-7 col-sm-12 col-xs-12"
+                                          },
+                                          [
+                                            _c("input", {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value:
+                                                    _vm.options.for.vehicles,
+                                                  expression:
+                                                    "options.for.vehicles"
+                                                }
+                                              ],
+                                              attrs: {
+                                                type: "radio",
+                                                id: "custom-vehicles",
+                                                value: "custom",
+                                                name: "for-vehicles"
+                                              },
+                                              domProps: {
+                                                checked: _vm._q(
+                                                  _vm.options.for.vehicles,
+                                                  "custom"
+                                                )
+                                              },
+                                              on: {
+                                                change: function($event) {
+                                                  return _vm.$set(
+                                                    _vm.options.for,
+                                                    "vehicles",
+                                                    "custom"
+                                                  )
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "label",
+                                              {
+                                                attrs: {
+                                                  for: "custom-vehicles"
+                                                }
+                                              },
+                                              [_vm._v(_vm._s(_vm.$t("Custom")))]
+                                            )
+                                          ]
                                         )
-                                      },
-                                      expression: "options.trajectories"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            : _vm._e()
-                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm.options.for.vehicles === "custom"
+                                      ? _c(
+                                          "div",
+                                          {
+                                            staticClass: "col-md-12",
+                                            staticStyle: { display: "table" }
+                                          },
+                                          [
+                                            _c("multiselect", {
+                                              attrs: {
+                                                placeholder: _vm.$t(
+                                                  "Select vehicles"
+                                                ),
+                                                label: "number",
+                                                "track-by": "id",
+                                                options: _vm.vehicles,
+                                                multiple: true
+                                              },
+                                              model: {
+                                                value: _vm.options.vehicles,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.options,
+                                                    "vehicles",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression: "options.vehicles"
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      : _vm._e()
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("hr", {
+                                  staticClass:
+                                    "col-md-12 col-xs-12 col-sm-12 no-padding"
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "col-md-12 no-padding",
+                                    staticStyle: { display: "table" }
+                                  },
+                                  [
+                                    _c("div", { staticClass: "col-md-3" }, [
+                                      _c(
+                                        "label",
+                                        {
+                                          staticClass: "typo__label text-info"
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fa fa-retweet"
+                                          }),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(_vm.$t("Trajectory")) +
+                                              "\n\t\t\t\t\t\t\t\t\t\t"
+                                          )
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "col-md-12 no-padding" },
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "col-md-3 col-sm-12 col-xs-12"
+                                          },
+                                          [
+                                            _c("input", {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value:
+                                                    _vm.options.for
+                                                      .trajectories,
+                                                  expression:
+                                                    "options.for.trajectories"
+                                                }
+                                              ],
+                                              attrs: {
+                                                type: "radio",
+                                                id: "default-trajectories",
+                                                value: "default",
+                                                name: "for-trajectories"
+                                              },
+                                              domProps: {
+                                                checked: _vm._q(
+                                                  _vm.options.for.trajectories,
+                                                  "default"
+                                                )
+                                              },
+                                              on: {
+                                                change: function($event) {
+                                                  return _vm.$set(
+                                                    _vm.options.for,
+                                                    "trajectories",
+                                                    "default"
+                                                  )
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "label",
+                                              {
+                                                attrs: {
+                                                  for: "default-trajectories"
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(_vm.$t("By default"))
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "col-md-2 col-sm-12 col-xs-12"
+                                          },
+                                          [
+                                            _c("input", {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value:
+                                                    _vm.options.for
+                                                      .trajectories,
+                                                  expression:
+                                                    "options.for.trajectories"
+                                                }
+                                              ],
+                                              attrs: {
+                                                type: "radio",
+                                                id: "all-trajectories",
+                                                value: "all",
+                                                name: "for-trajectories"
+                                              },
+                                              domProps: {
+                                                checked: _vm._q(
+                                                  _vm.options.for.trajectories,
+                                                  "all"
+                                                )
+                                              },
+                                              on: {
+                                                change: function($event) {
+                                                  return _vm.$set(
+                                                    _vm.options.for,
+                                                    "trajectories",
+                                                    "all"
+                                                  )
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "label",
+                                              {
+                                                attrs: {
+                                                  for: "all-trajectories"
+                                                }
+                                              },
+                                              [_vm._v(_vm._s(_vm.$t("All")))]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "col-md-7 col-sm-12 col-xs-12"
+                                          },
+                                          [
+                                            _c("input", {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value:
+                                                    _vm.options.for
+                                                      .trajectories,
+                                                  expression:
+                                                    "options.for.trajectories"
+                                                }
+                                              ],
+                                              attrs: {
+                                                type: "radio",
+                                                id: "custom-trajectories",
+                                                value: "custom",
+                                                name: "for-trajectories"
+                                              },
+                                              domProps: {
+                                                checked: _vm._q(
+                                                  _vm.options.for.trajectories,
+                                                  "custom"
+                                                )
+                                              },
+                                              on: {
+                                                change: function($event) {
+                                                  return _vm.$set(
+                                                    _vm.options.for,
+                                                    "trajectories",
+                                                    "custom"
+                                                  )
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "label",
+                                              {
+                                                attrs: {
+                                                  for: "custom-trajectories"
+                                                }
+                                              },
+                                              [_vm._v(_vm._s(_vm.$t("Custom")))]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm.options.for.trajectories === "custom"
+                                      ? _c(
+                                          "div",
+                                          {
+                                            staticClass: "col-md-12",
+                                            staticStyle: { display: "table" }
+                                          },
+                                          [
+                                            _c("multiselect", {
+                                              attrs: {
+                                                options:
+                                                  _vm.trajectoriesForMultiselect,
+                                                placeholder: _vm.$t(
+                                                  "Select trajectories"
+                                                ),
+                                                "group-values": "trajectories",
+                                                "group-label": "route",
+                                                label: "name",
+                                                "track-by": "id",
+                                                multiple: true
+                                              },
+                                              model: {
+                                                value: _vm.options.trajectories,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.options,
+                                                    "trajectories",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression:
+                                                  "options.trajectories"
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      : _vm._e()
+                                  ]
+                                )
+                              ]
+                            )
+                          : _vm._e()
                       ]
                     )
                   : _vm._e()
@@ -16956,40 +17396,13 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-md-3 col-sm-12 col-xs-12" }, [
-      _vm.vehicles
-        ? _c(
-            "div",
-            { staticClass: "col-md-12" },
-            [
-              _c("multiselect", {
-                attrs: {
-                  placeholder: _vm.$t("Select a vehicle"),
-                  label: "number",
-                  "track-by": "id",
-                  options: _vm.vehicles
-                },
-                model: {
-                  value: _vm.vehicle,
-                  callback: function($$v) {
-                    _vm.vehicle = $$v
-                  },
-                  expression: "vehicle"
-                }
-              })
-            ],
-            1
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-md-9 col-sm-12 col-xs-12" }, [
+    _c("div", { staticClass: "col-md-12" }, [
       _c("div", { staticClass: "tab-content" }, [
         _c("div", {}, [
           _c("div", {}, [
             _c(
               "ul",
-              { staticClass: "nav nav-pills" },
+              { staticClass: "nav nav-pills pull-left" },
               _vm._l(_vm.routes, function(route, indexRoute) {
                 return _c("li", { class: indexRoute === 0 ? "active" : "" }, [
                   _c(
@@ -17006,7 +17419,7 @@ var render = function() {
                       _vm._v(
                         " " +
                           _vm._s(route.name) +
-                          "\n                            "
+                          "\n                                "
                       )
                     ]
                   )
@@ -17014,6 +17427,75 @@ var render = function() {
               }),
               0
             ),
+            _vm._v(" "),
+            _vm.vehicles
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "col-lg-2 col-md-3 col-sm-6 col-xs-12 pull-right p-0"
+                  },
+                  [
+                    _c("multiselect", {
+                      attrs: {
+                        placeholder: _vm.$t("Select a vehicle"),
+                        label: "number",
+                        "track-by": "id",
+                        options: _vm.vehicles
+                      },
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "singleLabel",
+                            fn: function(props) {
+                              return [
+                                _c("span", { staticClass: "option__desc" }, [
+                                  _c("span", { staticClass: "option__title" }, [
+                                    _c("i", { staticClass: "fa fa-bus" }),
+                                    _vm._v(
+                                      " " +
+                                        _vm._s(props.option.number) +
+                                        "\n\t\t\t\t\t\t\t\t\t\t"
+                                    )
+                                  ])
+                                ])
+                              ]
+                            }
+                          },
+                          {
+                            key: "option",
+                            fn: function(props) {
+                              return [
+                                _c("div", { staticClass: "option__desc" }, [
+                                  _c("span", { staticClass: "option__title" }, [
+                                    _c("i", { staticClass: "fa fa-bus" }),
+                                    _vm._v(
+                                      " " +
+                                        _vm._s(props.option.number) +
+                                        "\n\t\t\t\t\t\t\t\t\t\t"
+                                    )
+                                  ])
+                                ])
+                              ]
+                            }
+                          }
+                        ],
+                        null,
+                        false,
+                        853911105
+                      ),
+                      model: {
+                        value: _vm.vehicle,
+                        callback: function($$v) {
+                          _vm.vehicle = $$v
+                        },
+                        expression: "vehicle"
+                      }
+                    })
+                  ],
+                  1
+                )
+              : _vm._e(),
             _vm._v(" "),
             _c(
               "div",
@@ -17044,7 +17526,7 @@ var render = function() {
                               _vm._v(
                                 " " +
                                   _vm._s(_vm.$t("Vehicle")) +
-                                  "\n                                    "
+                                  "\n                                        "
                               )
                             ]),
                             _vm._v(" "),
@@ -17054,7 +17536,7 @@ var render = function() {
                               _vm._v(
                                 " " +
                                   _vm._s(_vm.$t("Type")) +
-                                  "\n                                    "
+                                  "\n                                        "
                               )
                             ]),
                             _vm._v(" "),
@@ -17066,7 +17548,7 @@ var render = function() {
                               _vm._v(
                                 " " +
                                   _vm._s(_vm.$t("Value")) +
-                                  "\n                                    "
+                                  "\n                                        "
                               )
                             ]),
                             _vm._v(" "),
@@ -17078,7 +17560,7 @@ var render = function() {
                               _vm._v(
                                 " " +
                                   _vm._s(_vm.$t("Options")) +
-                                  "\n                                    "
+                                  "\n                                        "
                               )
                             ])
                           ])
@@ -17110,14 +17592,14 @@ var render = function() {
                                 _vm._v(" "),
                                 _c("td", { staticClass: "text-center" }, [
                                   _vm._v(
-                                    "\n                                        " +
+                                    "\n                                            " +
                                       _vm._s(
                                         _vm._f("numberFormat")(
                                           penalty.value,
                                           "$0,0"
                                         )
                                       ) +
-                                      "\n                                    "
+                                      "\n                                        "
                                   )
                                 ]),
                                 _vm._v(" "),
@@ -18749,7 +19231,9 @@ var render = function() {
                               _vm._v(
                                 _vm._s(
                                   _vm._f("numberFormat")(
-                                    _vm.turn.totalDispatch,
+                                    _vm._f("thousandRound")(
+                                      _vm.turn.totalDispatch
+                                    ),
                                     "$0,0"
                                   )
                                 )
@@ -18771,7 +19255,9 @@ var render = function() {
                               _vm._v(
                                 _vm._s(
                                   _vm._f("numberFormat")(
-                                    _vm.turnNetToCar(mark, _vm.turn),
+                                    _vm._f("thousandRound")(
+                                      _vm.turnNetToCar(mark, _vm.turn)
+                                    ),
                                     "$0,0"
                                   )
                                 )
@@ -18906,7 +19392,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                _vm.totals.totalDispatch,
+                                _vm._f("thousandRound")(
+                                  _vm.totals.totalDispatch
+                                ),
                                 "$0,0"
                               )
                             )
@@ -18927,7 +19415,10 @@ var render = function() {
                         _c("td", { staticClass: "text-center" }, [
                           _vm._v(
                             _vm._s(
-                              _vm._f("numberFormat")(_vm.totalNetToCar, "$0,0")
+                              _vm._f("numberFormat")(
+                                _vm._f("thousandRound")(_vm.totalNetToCar),
+                                "$0,0"
+                              )
                             )
                           )
                         ])
@@ -19108,7 +19599,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                liquidation.totals.totalDispatch,
+                                _vm._f("thousandRound")(
+                                  liquidation.totals.totalDispatch
+                                ),
                                 "$0,0"
                               )
                             )
@@ -19119,7 +19612,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                liquidation.totals.balance,
+                                _vm._f("thousandRound")(
+                                  liquidation.totals.balance
+                                ),
                                 "$0,0"
                               )
                             )
@@ -19261,7 +19756,9 @@ var render = function() {
                           "Total recaudado " +
                             _vm._s(
                               _vm._f("numberFormat")(
-                                _vm.liquidationCharge.totals.totalDispatch,
+                                _vm._f("thousandRound")(
+                                  _vm.liquidationCharge.totals.totalDispatch
+                                ),
                                 "$0,0"
                               )
                             )
@@ -19834,7 +20331,9 @@ var render = function() {
                               _vm._v(
                                 _vm._s(
                                   _vm._f("numberFormat")(
-                                    _vm.turn.totalDispatch,
+                                    _vm._f("thousandRound")(
+                                      _vm.turn.totalDispatch
+                                    ),
                                     "$0,0"
                                   )
                                 )
@@ -19901,7 +20400,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("numberFormat")(
-                                _vm.totals.totalDispatch,
+                                _vm._f("thousandRound")(
+                                  _vm.totals.totalDispatch
+                                ),
                                 "$0,0"
                               )
                             )
@@ -19976,7 +20477,9 @@ var render = function() {
                                       "Total recaudado " +
                                         _vm._s(
                                           _vm._f("numberFormat")(
-                                            _vm.liquidationTurn.totalDispatch,
+                                            _vm._f("thousandRound")(
+                                              _vm.liquidationTurn.totalDispatch
+                                            ),
                                             "$0,0"
                                           )
                                         )
@@ -34844,6 +35347,11 @@ Vue.filter('capitalize', function (value) {
   value = value.toString();
   return value.charAt(0).toUpperCase() + value.slice(1);
 });
+Vue.filter('thousandRound', function (value) {
+  // return value;
+  var absValue = Math.abs(value);
+  return (value < 0 ? -1 : 1) * Math.round(absValue / 1000) * 1000;
+});
 window.ml = {
   discountTypes: {
     auxiliary: 1,
@@ -34938,9 +35446,9 @@ var liquidationView = new Vue({
 
       var totalTurns = totalGrossBea + totalPenalties;
       var subTotalTurns = totalTurns - totalPayFall + totalGetFall;
-      var totalDispatch = totalTurns - (totalDiscounts - totalDiscountByMobilityAuxilio) - totalCommissions; // const balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
+      var totalDispatch = totalTurns - (totalDiscounts - totalDiscountByFuel - totalDiscountByMobilityAuxilio) - totalCommissions;
+      var balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel; // const balance = totalDispatch - totalPayFall + totalGetFall;
 
-      var balance = totalDispatch - totalPayFall + totalGetFall;
       return {
         // Totals
         totalBea: _.sumBy(this.marks, 'totalBEA'),
@@ -35154,10 +35662,10 @@ $(document).ready(function () {
 /*!********************************!*\
   !*** ./resources/lang/es.json ***!
   \********************************/
-/*! exports provided: Home, Create, Update, Save, save, Delete, delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Averages, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Total taken, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total turn, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Takings report, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Costs, Penalty, Daily report taking, Net to car, Processing, Please wait, Read safety, Concept, concept, Charge, Process, Process charge, Total liquidated, Defines the order in which the required payment should be applied, Click for activate, Click for inactivate, Error saving cost register, Priority, There are fields empty, The :attribute field is required, rear, front, Profile seating save successfully, Overlap, Loading, Occupation, Counts, Total, Paused count, Seating, photos, General count, Total by round trips, Total accumulated, Photos, Seating release, Previous seating, Current seating, Seating profile, Seating activated, Bearding passengers, Mix seating, Lock alarm, Graphs, Range, Net production, Total production, All vehicles, Others, No taken, Takings without dispatch turns, Bonus, Fuel gallons, Fuel gallon value, Passenger tariff, Fuel tariff, Taken at, Various, Takings totals r., Takings detailed r., Takings grouped r., Takings totals report, Takings detailed report, Takings grouped report, Grouped, Receipt consolidated, Recognition, persons, faces, Station, default */
+/*! exports provided: Home, Create, Update, Save, save, Delete, delete, Cancel, Close, Manage <b>New Strategy</b>, Route, Company, Routes, Route Time, Route time, Reports, Report, report, Route times, Times, Round trips, round trips, round-trips, Search report, Date report, Search, Chart report, Vehicle, vehicle, Vehicles, vehicles, Hour dispatch, Round Trip, round trip, Turn, No registers found, No dispatch registers found, Select an option, Select a route, Select a vehicle, Select an vehicle, Select a company, Loading..., No routes found, No vehicles found, Actions, Detail, Report detail, Hide / Show, Remove, Expand / Compress, Round trip, Historic route time chart, Track on map, Map, List, Oops, something went wrong!, of the route, No report found for this vehicle, No passengers report found for this vehicle, Vehicle current status, Route info, Route report, Control point going, Control point return, Passengers report, Register historic, Passengers, Seat, Seats, seat, seats, Seats report, Event active time, Event inactive time, Active time, Active kilometers, Feature on development, Still busy, Username, Password, Remember Me, Login, Log In, Type your credentials, Confirm Password, Register, Name, Logout, Passengers_Report_, Passengers Report, Report travel time and travel distance for vehicle seats, Export excel, Export, Date, All Routes, All routes, Without route, Chart, url-chart, Passenger report detail, Passengers report by route, Passengers register historic, between, Km in total, and, Total route distance, Active by, From, from, To, to, Table, Count trajectory, Trajectory, Active seat, Free seat, No seat report found, passengers, No registers location found, The vehicle haven´t off roads list, The date haven´t off roads list, The driver haven´t off roads list in this round trip, The driver haven´t speeding report in this round trip, The driver haven´t parking report in this round trip, The date haven´t a control point time report, Off Road, Off Roads, Off road time, Off road report, Off road, Off road report by Vehicle, Status, Status Counter, Report Counter, status, See off road report, Report vehicle off road, Off_Road_Report_, Address, Longitude, Latitude, Oops... The page you're looking for doesn't exist., Go Back, The page you are looking for might have been removed, had its name changed, or is temporarily unavailable, Oops... You don't have access permissions, The page you are looking for might have been protected with admin permissions, Access log, Users, Download report, Download excel report, Logs report, Access Logs, Consolidated per day, Consolidated daily, Recorder, recorder, Recorders, recorders, fringes, Fringes merged, Fringes, By Fringes, Start Recorder, Start recorder, First start recorder, Start Rec., End Recorder, End recorder, Last end recorder, Arrived Recorder, End Rec., All, all, for all, Total passengers, Average per vehicle, Average, Averages, Front door, Back door, Difference, reports, locations, url-reports, routes, route, consolidated, off-road, access-log, route-report, users, Type report, By vehicle, By route, Time, In, in, Location, outs, Plate, Between, Dispatch report, Departure time, Departure, Arrived, Departure Time, Arrival Time Scheduled, Arrival Time, Arrival time, Arrival Time Difference, Group, No group, Group By, by, New, Day, Daily, daily, day, Pass., date-range, Date range, New feature, Graph report detail, Verify possible error in register data, An error occurred in the process. Contact your administrator, Contact your administrator, Route distance, Passengers by Km, Consolidated per date range, Detailed per date range, Consolidated, Final date, Initial, Initial date, The date range is not valid, Detailed, detailed, Detailed per day, Warning, There are issues in data recorder, See details, Error in, Passengers by Route, A high count, A negative count, Accumulated, control-points, Control Points, Control point time report, Time to control point, Control point time report by Route, Information, Reported Time, Scheduled Time, parked, Parked date, Parked time, Parked Report, Parked report, Parked vehicles, Vehicles Report, Details, Route Information, Near of, Time scheduled, Time reported, Without assigned route, fast, slow, on time, Fringe, Time from dispatch, Km from dispatch, Driver, Drivers, driver, drivers, Drivers report, Not assigned, Speeding, Speeding Report, Speed, speeding-vehicle, speeding, The date haven´t a speeding report, with, Peak and Plate, peak-and-plate, Administration, administration, url-administration, url-vehicles, Projects, prev, Menu, Public Holidays, Calendar, Unassigned Vehicles, Unassigned, Reset, Assignations, url-manage, Manage, Manage GPS, manage, Options, Edit, Clear, GPS Command, Send SMS, Send Commands, Any GPS, Data updated successfully, Error updating data, start_recorder, driver_code, end_recorder, Registers updated, Register created successfully, Register deleted successfully, Press enter for edit, Last dispatch register, List GPS SIM, GPS SIM, GPS Type, Searching, Status GPS, Select a SIM number, Number, Type here the commands, Send, Counter, counter, Reset Command, The SIM number :sim is already associated with another GPS (Vehicle :vehicle), The Imei number :imei is already associated to vehicle :vehicle, A Start Recorder less than the last End Recorder, Please refresh the report once you finish the fix bugs, Please refresh the report once you finish the update all data, The company haven´t issues in your counters at the selected date, List of counter issues, alarms, Alarms, lowerCount, Lower count, higherCount, Higher count, Inactive cameras, Camera, camera, Cameras, cameras, Cameras Report, Photo detail, url-cameras, Check counter, Items issues, Counter issue, Type of report, Issues, Of issues, History, Historic, historic, url-historic, url-historic-path, See frame, By routes, Text copied, Copy frame, Prev value, registers, Registers, registers in total, Select a company first, Select a vehicle first, Select a route first, See all frames, Type, Item count, Signal check, No round trips found, Low count, Dispatched, Parking counts, Speeding counts, Off road counts, List counter passengers by route, List counter passengers, Manage drivers, File, Import, CSV File, In dispatch, Passengers by fringes, The are not list of passengers and counter on this date range, Maintenance, maintenance, Maintenance date created successfully, Maintenance date is not created, Maintenance date updated successfully, Maintenance date is not updated, Maintenance dates deleted successfully, Maintenance dates not deleted, Play, Pause, Stop, Sensors, sensors, Driver's seat, No Route, Platform, A record for this vehicle already exists, unassigned vehicles, assigned vehicles, Selection, Ready, Unready, None, Commands, Search vehicle, Manage SIM GPS, Mileage, mileage, Mileage Report, Mileage report, Consolidated per dates, Passengers per dates, Manage proprietaries, proprietary, Proprietary, proprietaries, Proprietaries, Script General Skypatrol, Script APN Skypatrol, Script plate Skypatrol, Script IP Skypatrol, First Name, Last Name, Cellphone, Assigned vehicles, Search proprietary, in the fleet, in the day, Auto set plate, month, Consolidate month, Without GPS signal, No report, Vehicles without route, Vehicle not found in platform, Proprietary not found in platform, Dead time, Total dead time, Accumulated dead time, Accumulated day, Dispatcher, User, All drivers, Mixed report, Mixed, mixed, Initial frame counter, Final frame counter, Show frames, Empty, Geolocation, Geolocation report, geolocation, url-geolocation, Count by round trip, Sensor recorder, Show geolocation report, Operation, operation, url-operation, Dispatches, dispatches, Dispatch, dispatch, Auto Dispatcher, Automatic, url-auto-dispatcher, Reassign route, Unassign, The Route has ben reassigned successfully, The Route has ben unassigned successfully, Add vehicles, All vehicles are assigned, Not found, Calculated, Current passengers on board, Descents, Ascents, Total descents, Total ascents, Count information, Arrival time on last round trip, Departure time on first round trip, Hide details, Vehicle with mixed routes, Round trip report, The imei must have a length of 15 characters, Updated at, Last report, Dispatch users, dispatch-users, PCW Reports, Consolidated report daily, Delay control points, Reported at, Speeding details, Off roads details, Control points details, Unavailable, Process executed successfully, Building route report, This process can take several minutes, locations have been processed, Detected route, Vehicle information, Off road vehicle, With speeding, Possible issue, Invalid sequence, Great distance traveled, Calculated speed, Time scheduled from dispatch, Time measured from dispatch, Interpolation report, GPS report, Consolidated passengers report daily, Consolidated route report daily, General report, Refresh, Distance, Average speed, The vehicle haven't off road, See, In route, YES, NO, Info route, Vehicle status, Takings, takings, Liquidation, liquidation, url-liquidation, No GPS reports found, Totals, Duration, Generate liquidation, Tolls, Fuel, Washing, Discounts, discounts, Commissions, commissions, Penalties, penalties, Liquidate, Add other, Select a driver, No drivers found, No liquidated, Liquidated, Taken, Liquidation processed successfully, Error at generate liquidation register, Error at associate liquidation with BEA Mark register, Turn list, Params, params, url-params, Mobility auxilio, Discount by, of, TAKING RECEIPT, Printed at, Liquidated at, Total liquidation, Total taken, Discount :name unable to update, Discount :name unable to update for vehicle :vehicle on trajectory :trajectory, Discount :name doesn't exists in the system, Discount edited successfully, Commission edited successfully, Penalties edited successfully, Commission unable to update, Penalty unable to update, Other discounts, Total Gross BEA, Gross BEA, Percent, Boarding, Settlement receipt, Please fix the issues first, Active, Inactive, Unregistered, The report is available only for dates before the current one, Percent in off road, See historic report, Threshold km, Only allows reports for dates before the current, Invalid date, Upload, Name without spaces, Kmz file, File name, Migrated, Migration interface, Total vehicles, Completed turns, Total round trips, Export grouped report, Export ungrouped report, Route dispatches, Without GPS Signal, Parked, Power Off, Vehicle no report, Historic report, There are turns no liquidated in :date fot this vehicle, turns, Pay fall, pay fall, Get fall, get fall, Balance, fuel, washing, tolls, locks, exempts, Value, value, Params manager, Select vehicles, Select trajectories, Description, Default, By default, Custom, Save options, Penalty type, boarding, Discount, Discounts by turn, Total Discount by turns, Penalties by turn, Commissions by turn, Boarded, Pay bearded, Auxiliaries, Locks, Total by turn, Fixed value per passenger, Initial time, Final time, Total discounts, Total discount, Total penalties, Total commissions, Falls, Add, Total turns, Total turn, Total pay fall, Total get fall, Subtotal, Total tolls, Total washing, Total dispatch, Total fuel, Observations, Operative Expenses, Operative expenses, Total operative expenses, Total other discounts, Turns liquidated, Responsible, Liquidated on, Take liquidation, Liquidation details, Print, Print detailed, Total locks, Total exempts, Show file, File other discount, Error saving other discounts files, Taking details, search, Taking processed successfully, Error at generate taking register, Taking, Takings list, Takings report, Liquidated without taking, Print total, Receipt, Turns, Liquidation updated successfully, Error at updating liquidation register, Percent of Gross BEA, Daily report, Payroll cost, costs, Costs, Penalty, Daily report taking, Net to car, Processing, Please wait, Read safety, Concept, concept, Charge, Process, Process charge, Total liquidated, Defines the order in which the required payment should be applied, Click for activate, Click for inactivate, Error saving cost register, Priority, There are fields empty, The :attribute field is required, rear, front, Profile seating save successfully, Overlap, Loading, Occupation, Counts, Total, Paused count, Seating, photos, General count, Total by round trips, Total accumulated, Photos, Seating release, Previous seating, Current seating, Seating profile, Seating activated, Bearding passengers, Mix seating, Lock alarm, Graphs, Range, Net production, Total production, All vehicles, Others, No taken, Takings without dispatch turns, Bonus, Fuel gallons, Fuel gallon value, Passenger tariff, Fuel tariff, Taken at, Various, Takings totals r., Takings detailed r., Takings grouped r., Takings totals report, Takings detailed report, Takings grouped report, Grouped, Receipt consolidated, Recognition, persons, faces, Station, percentBEA, fixedBEA, Settings, Historic takings, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"delete\":\"eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Averages\":\"Promedios\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Total taken\":\"Total recaudado\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"value\":\"valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total turn\":\"Total turno\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Takings report\":\"Reporte de recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Costs\":\"Costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\",\"Read safety\":\"Seguridad vial\",\"Concept\":\"Concepto\",\"concept\":\"concepto\",\"Charge\":\"Cobrar\",\"Process\":\"Procesar\",\"Process charge\":\"Procesar cobro\",\"Total liquidated\":\"Total liquidado\",\"Defines the order in which the required payment should be applied\":\"Define el orden en que se debe aplicar el cobro obligatorio\",\"Click for activate\":\"Click para Activar\",\"Click for inactivate\":\"Click para Desactivar\",\"Error saving cost register\":\"Error al guardar el registro de Costo\",\"Priority\":\"Prioridad\",\"There are fields empty\":\"Algunos campos están vacíos\",\"The :attribute field is required\":\"El campo <em class='text-capitalize'>:attribute</em> es requerido\",\"rear\":\"atrás\",\"front\":\"frente\",\"Profile seating save successfully\":\"Perfil de asientos guardado correctamente\",\"Overlap\":\"Traslape\",\"Loading\":\"Cargando\",\"Occupation\":\"Ocupación\",\"Counts\":\"Conteos\",\"Total\":\"Total\",\"Paused count\":\"Conteo pausado\",\"Seating\":\"Asientos\",\"photos\":\"fotos\",\"General count\":\"Conteo general\",\"Total by round trips\":\"Total por vueltas\",\"Total accumulated\":\"Conteos acumulados\",\"Photos\":\"Fotos\",\"Seating release\":\"Liberados\",\"Previous seating\":\"Anteriores\",\"Current seating\":\"Actuales\",\"Seating profile\":\"Perfil de asientos\",\"Seating activated\":\"Activados\",\"Bearding passengers\":\"Pasajeros a bordo\",\"Mix seating\":\"Mezcla\",\"Lock alarm\":\"Alarma de bloqueo\",\"Graphs\":\"Gráficos\",\"Range\":\"Rango\",\"Net production\":\"Producción Neta\",\"Total production\":\"Total producción\",\"All vehicles\":\"Todos los vehículos\",\"Others\":\"Otros\",\"No taken\":\"Sin recaudar\",\"Takings without dispatch turns\":\"Recaudo sin turnos de despacho\",\"Bonus\":\"Bonificación\",\"Fuel gallons\":\"Galones combustible\",\"Fuel gallon value\":\"Valor galón de combustible\",\"Passenger tariff\":\"Tarifa pasajero\",\"Fuel tariff\":\"Tarifa combustible\",\"Taken at\":\"Recaudado en\",\"Various\":\"Varios\",\"Takings totals r.\":\"R. totales recaudo\",\"Takings detailed r.\":\"R. detallado\",\"Takings grouped r.\":\"R. agrupado\",\"Takings totals report\":\"Reporte totales de recaudo\",\"Takings detailed report\":\"Reporte detallado de recaudo\",\"Takings grouped report\":\"Reporte agrupado de recaudo\",\"Grouped\":\"Agrupado\",\"Receipt consolidated\":\"Recibo totales\",\"Recognition\":\"Reconocimiento\",\"persons\":\"personas\",\"faces\":\"caras\",\"Station\":\"Estación combustible\"}");
+module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\":\"Actualizar\",\"Save\":\"Guardar\",\"save\":\"guardar\",\"Delete\":\"Eliminar\",\"delete\":\"eliminar\",\"Cancel\":\"Cancelar\",\"Close\":\"Cerrar\",\"Manage <b>New Strategy</b>\":\"Gestión de <b>Nueva Estrategia</b>\",\"Route\":\"Ruta\",\"Company\":\"Empresa\",\"Routes\":\"Rutas\",\"Route Time\":\"Tiempo de ruta\",\"Route time\":\"Tiempo de ruta\",\"Reports\":\"Reportes\",\"Report\":\"Reporte\",\"report\":\"reporte\",\"Route times\":\"Tiempos de ruta\",\"Times\":\"Horas\",\"Round trips\":\"Vueltas\",\"round trips\":\"vueltas\",\"round-trips\":\"vueltas\",\"Search report\":\"Consultar reporte\",\"Date report\":\"Fecha de Reporte\",\"Search\":\"Consultar\",\"Chart report\":\"Gráfica de repote\",\"Vehicle\":\"Vehículo\",\"vehicle\":\"vehículo\",\"Vehicles\":\"Vehículos\",\"vehicles\":\"vehículos\",\"Hour dispatch\":\"Hora despachado\",\"Round Trip\":\"Vuelta\",\"round trip\":\"vuelta\",\"Turn\":\"Turno\",\"No registers found\":\"No se encontraron registros\",\"No dispatch registers found\":\"No se encontraron despachos\",\"Select an option\":\"Seleccione\",\"Select a route\":\"Seleccione una ruta\",\"Select a vehicle\":\"Seleccione un vehículo\",\"Select an vehicle\":\"Seleccione un vehículo\",\"Select a company\":\"Seleccione una empresa\",\"Loading...\":\"Cargando...\",\"No routes found\":\"Sin rutas\",\"No vehicles found\":\"Sin vehículos\",\"Actions\":\"Acciones\",\"Detail\":\"Ver detalle\",\"Report detail\":\"Ver reporte\",\"Hide / Show\":\"Ocultar / Mostrar\",\"Remove\":\"Eliminar\",\"Expand / Compress\":\"Expandir / Comprimir\",\"Round trip\":\"Vuelta\",\"Historic route time chart\":\"Histórico gráfico de tiempos de ruta\",\"Track on map\":\"Seguimiento en el mapa\",\"Map\":\"Mapa\",\"List\":\"Lista\",\"Oops, something went wrong!\":\"Opps, parece que algo anda mal :(\",\"of the route\":\"de la ruta\",\"No report found for this vehicle\":\"No se ha encontrado ningún reporte para este vehículo\",\"No passengers report found for this vehicle\":\"No se ha encontrado ningún reporte de pasajeros para este vehículo\",\"Vehicle current status\":\"Estado actual del vehículo\",\"Route info\":\"Información de la ruta\",\"Route report\":\"Reporte de ruta\",\"Control point going\":\"Ida\",\"Control point return\":\"Regreso\",\"Passengers report\":\"Reporte de pasajeros\",\"Register historic\":\"Histórico de registro\",\"Passengers\":\"Pasajeros\",\"Seat\":\"Asiento\",\"Seats\":\"Asientos\",\"seat\":\"asiento\",\"seats\":\"asientos\",\"Seats report\":\"Reporte de asientos\",\"Event active time\":\"Ocupado a las\",\"Event inactive time\":\"Libre a las\",\"Active time\":\"Activo durante\",\"Active kilometers\":\"Kilómetros\",\"Feature on development\":\"Funcionalidad en desarrollo\",\"Still busy\":\"Ocupado aún\",\"Username\":\"Usuario\",\"Password\":\"Contraseña\",\"Remember Me\":\"Recuérdame\",\"Login\":\"Ingresar\",\"Log In\":\"Inicia sesión\",\"Type your credentials\":\"Ingresa tus credenciales\",\"Confirm Password\":\"Confirma Contraseña\",\"Register\":\"Registro\",\"Name\":\"Nombre\",\"Logout\":\"Cerrar Sesión\",\"Passengers_Report_\":\"Reporte_Pasajeros_\",\"Passengers Report\":\"Reporte de pasajeros\",\"Report travel time and travel distance for vehicle seats\":\"Reporte de tiempo y recorrido de los asientos del vehículo\",\"Export excel\":\"Exportar a excel\",\"Export\":\"Exportar\",\"Date\":\"Fecha\",\"All Routes\":\"Todas las rutas\",\"All routes\":\"Todas las rutas\",\"Without route\":\"Sin ruta asignada\",\"Chart\":\"Gráfica\",\"url-chart\":\"grafico\",\"Passenger report detail\":\"Ver reporte de pasajeros\",\"Passengers report by route\":\"Reporte de pasajeros por ruta\",\"Passengers register historic\":\"Histórico de registro de pasajeros\",\"between\":\"entre las\",\"Km in total\":\"Km en total\",\"and\":\"y las\",\"Total route distance\":\"Distancia total de la ruta\",\"Active by\":\"Activo por\",\"From\":\"Desde\",\"from\":\"desde\",\"To\":\"Hasta\",\"to\":\"hasta\",\"Table\":\"Tabla\",\"Count trajectory\":\"Trayectoria de conteo\",\"Trajectory\":\"Trayectoria\",\"Active seat\":\"Asiento ocupado\",\"Free seat\":\"Asiento libre\",\"No seat report found\":\"No se ha encontrado reporte para el asiento seleccionado\",\"passengers\":\"pasajeros\",\"No registers location found\":\"No se encontraron registros de coordenadas\",\"The vehicle haven´t off roads list\":\"El vehículo no presenta salidas de ruta\",\"The date haven´t off roads list\":\"No se presentaron salidas de ruta en la fecha seleccionada\",\"The driver haven´t off roads list in this round trip\":\"El conductor no presentó salidas de ruta en esta vuelta\",\"The driver haven´t speeding report in this round trip\":\"El conductor no presentó excesos de velocidad en esta vuelta\",\"The driver haven´t parking report in this round trip\":\"El conductor no presenta reportes de parkeos en esta vuelta\",\"The date haven´t a control point time report\":\"No existe un reporte de puntos de control en la fecha seleccionada\",\"Off Road\":\"Salida de ruta\",\"Off Roads\":\"Salidas de ruta\",\"Off road time\":\"Hora de salida de ruta\",\"Off road report\":\"Reporte de salidas de ruta\",\"Off road\":\"Salidas de ruta\",\"Off road report by Vehicle\":\"Salidas de ruta por vehículos\",\"Status\":\"Estado\",\"Status Counter\":\"Estado de Contador\",\"Report Counter\":\"Reporte de Contador\",\"status\":\"estado\",\"See off road report\":\"Ver reporte de salidas de ruta\",\"Report vehicle off road\":\"Reporte de salidas de ruta del vehículo\",\"Off_Road_Report_\":\"Reporte_Salida_Ruta_\",\"Address\":\"Dirección\",\"Longitude\":\"Longitud\",\"Latitude\":\"Latitud\",\"Oops... The page you're looking for doesn't exist.\":\"Ooops... La página que buscas no existe\",\"Go Back\":\"Regresa\",\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable\":\"La página que está buscando podría haber sido eliminada, su nombre cambiado o no está disponible temporalmente.\",\"Oops... You don't have access permissions\":\"Ooops... No tiene permisos de acceso.\",\"The page you are looking for might have been protected with admin permissions\":\"La página que estás buscando podría haber sido protegida con permisos de administrador\",\"Access log\":\"Logs de acceso\",\"Users\":\"Usuarios\",\"Download report\":\"Descargar reporte\",\"Download excel report\":\"Descargar reporte en excel\",\"Logs report\":\"Reportes de usuarios\",\"Access Logs\":\"Logs de acceso\",\"Consolidated per day\":\"Consolidado por día\",\"Consolidated daily\":\"Consolidado diario\",\"Recorder\":\"Registradora\",\"recorder\":\"registradora\",\"Recorders\":\"Registradoras\",\"recorders\":\"registradoras\",\"fringes\":\"franjas\",\"Fringes merged\":\"Franjas | Traslape\",\"Fringes\":\"Franjas\",\"By Fringes\":\"Por franjas\",\"Start Recorder\":\"Registradora inicial\",\"Start recorder\":\"Registradora inicial\",\"First start recorder\":\"Primera registradora inicial\",\"Start Rec.\":\"Reg. inicial\",\"End Recorder\":\"Registradora final\",\"End recorder\":\"Registradora final\",\"Last end recorder\":\"Última registradora final\",\"Arrived Recorder\":\"Registradora llegada\",\"End Rec.\":\"Reg. final\",\"All\":\"Todos\",\"all\":\"todos\",\"for all\":\"para todos\",\"Total passengers\":\"Total pasajeros\",\"Average per vehicle\":\"Promedio por vehículos\",\"Average\":\"Promedio\",\"Averages\":\"Promedios\",\"Front door\":\"Puerta delantera\",\"Back door\":\"Puerta trasera\",\"Difference\":\"Diferencia\",\"reports\":\"reportes\",\"locations\":\"ubicaciones\",\"url-reports\":\"reportes\",\"routes\":\"rutas\",\"route\":\"ruta\",\"consolidated\":\"consolidado\",\"off-road\":\"salidas-de-ruta\",\"access-log\":\"logs-de-acceso\",\"route-report\":\"reporte-de-ruta\",\"users\":\"usuarios\",\"Type report\":\"Tipo de reporte\",\"By vehicle\":\"Por vehículo\",\"By route\":\"Por ruta\",\"Time\":\"Hora\",\"In\":\"En\",\"in\":\"en\",\"Location\":\"Ubicación\",\"outs\":\"salidas\",\"Plate\":\"Placa\",\"Between\":\"Entre\",\"Dispatch report\":\"Reporte de despacho\",\"Departure time\":\"Hora despachado\",\"Departure\":\"Salida\",\"Arrived\":\"Llegada\",\"Departure Time\":\"Hora despachado\",\"Arrival Time Scheduled\":\"Llegada programada\",\"Arrival Time\":\"Hora de llegada\",\"Arrival time\":\"Hora de llegada\",\"Arrival Time Difference\":\"Diferencia llegada\",\"Group\":\"Agrupar\",\"No group\":\"Sin agrupar\",\"Group By\":\"Agrupar por\",\"by\":\"por\",\"New\":\"Nuevo\",\"Day\":\"Día\",\"Daily\":\"Diario\",\"daily\":\"diario\",\"day\":\"día\",\"Pass.\":\"Psj.\",\"date-range\":\"rango-fechas\",\"Date range\":\"Rango fechas\",\"New feature\":\"Nueva funcionalidad\",\"Graph report detail\":\"Ver gráfico de reporte\",\"Verify possible error in register data\":\"Verificar posible error en los datos de registradora\",\"An error occurred in the process. Contact your administrator\":\"Ocurrió un error en el proceso. Contacte a su administrador\",\"Contact your administrator\":\"Contacte a su administrador\",\"Route distance\":\"Distancia de ruta\",\"Passengers by Km\":\"Pasajeros por total de km\",\"Consolidated per date range\":\"Consolidado por rango de fechas\",\"Detailed per date range\":\"Detallado por rango de fechas\",\"Consolidated\":\"Consolidado\",\"Final date\":\"Fecha final\",\"Initial\":\"Inicial\",\"Initial date\":\"Fecha inicial\",\"The date range is not valid\":\"El rango de fechas no es válido\",\"Detailed\":\"Detallado\",\"detailed\":\"detallado\",\"Detailed per day\":\"Detallado por día\",\"Warning\":\"Advertencia\",\"There are issues in data recorder\":\"Existen inconsistencias en los datos de registradora\",\"See details\":\"Ver detalles\",\"Error in\":\"Error en\",\"Passengers by Route\":\"Pasajeros por Ruta\",\"A high count\":\"un conteo demasiado alto\",\"A negative count\":\"un conteo negativo\",\"Accumulated\":\"Acumulado\",\"control-points\":\"puntos-de-control\",\"Control Points\":\"Puntos de Control\",\"Control point time report\":\"Reporte de puntos de control\",\"Time to control point\":\"Tiempo a punto de control\",\"Control point time report by Route\":\"Reporte de puntos de control por ruta\",\"Information\":\"Información\",\"Reported Time\":\"Hora de reporte\",\"Scheduled Time\":\"Hora programada\",\"parked\":\"parqueados\",\"Parked date\":\"Fecha parqueado\",\"Parked time\":\"Hora parqueado\",\"Parked Report\":\"Reporte de Parqueados\",\"Parked report\":\"Reporte de parqueados\",\"Parked vehicles\":\"Parqueados\",\"Vehicles Report\":\"Reporte de Vehículos\",\"Details\":\"Detalles\",\"Route Information\":\"Información de ruta\",\"Near of\":\"Cerca a\",\"Time scheduled\":\"Hora programada\",\"Time reported\":\"Hora reportada\",\"Without assigned route\":\"Sin ruta asignada\",\"fast\":\"Adelantado\",\"slow\":\"Atrasado\",\"on time\":\"A Tiempo\",\"Fringe\":\"Franja\",\"Time from dispatch\":\"Tiempo desde despacho\",\"Km from dispatch\":\"Km desde despacho\",\"Driver\":\"Conductor\",\"Drivers\":\"Conductores\",\"driver\":\"conductor\",\"drivers\":\"conductores\",\"Drivers report\":\"Reporte de conductores\",\"Not assigned\":\"No asignado\",\"Speeding\":\"Excesos de velocidad\",\"Speeding Report\":\"Reporte excesos de velocidad\",\"Speed\":\"Velocidad\",\"speeding-vehicle\":\"excesos-de-velocidad\",\"speeding\":\"excesos-de-velocidad\",\"The date haven´t a speeding report\":\"No existen excesos de velocidad para la fecha seleccionada\",\"with\":\"con\",\"Peak and Plate\":\"Pico y Placa\",\"peak-and-plate\":\"pico-y-placa\",\"Administration\":\"Administración\",\"administration\":\"administración\",\"url-administration\":\"administracion\",\"url-vehicles\":\"vehiculos\",\"Projects\":\"Proyectos\",\"prev\":\"anterior\",\"Menu\":\"Menú\",\"Public Holidays\":\"Días Festivos\",\"Calendar\":\"Calendario\",\"Unassigned Vehicles\":\"Vehículos no asignados\",\"Unassigned\":\"Sin asignar\",\"Reset\":\"Reestablecer\",\"Assignations\":\"Asignaciones\",\"url-manage\":\"gestion\",\"Manage\":\"Gestión\",\"Manage GPS\":\"Gestión de GPS\",\"manage\":\"gestión\",\"Options\":\"Opciones\",\"Edit\":\"Modificar\",\"Clear\":\"Limpiar\",\"GPS Command\":\"Comandos GPS\",\"Send SMS\":\"Enviar SMS\",\"Send Commands\":\"Envío de comandos\",\"Any GPS\":\"Cualquier GPS\",\"Data updated successfully\":\"Dato actualizado correctamente\",\"Error updating data\":\"Error actualizando la información\",\"start_recorder\":\"registradora_salida\",\"driver_code\":\"codigo_interno_conductor\",\"end_recorder\":\"registradora_llegada\",\"Registers updated\":\"Registros actualizados\",\"Register created successfully\":\"Registro creado correctamente\",\"Register deleted successfully\":\"Registro eliminado correctamente\",\"Press enter for edit\":\"Presione 'Enter' para guardar\",\"Last dispatch register\":\"Registro de despacho anterior\",\"List GPS SIM\":\"Listado de SIM asociados a GPS\",\"GPS SIM\":\"Número de SIM\",\"GPS Type\":\"Tipo de GPS\",\"Searching\":\"Consultando\",\"Status GPS\":\"Estado del GPS\",\"Select a SIM number\":\"Seleccione un número de SIM\",\"Number\":\"Número\",\"Type here the commands\":\"Ingrese aquí los comandos\",\"Send\":\"Enviar\",\"Counter\":\"Contador\",\"counter\":\"contador\",\"Reset Command\":\"Comando de reinicio\",\"The SIM number :sim is already associated with another GPS (Vehicle :vehicle)\":\"El número de sim :sim ya está asociado a otro GPS (Vehículo :vehicle)\",\"The Imei number :imei is already associated to vehicle :vehicle\":\"El número de imei :imei ya está asociado al vehículo :vehicle\",\"A Start Recorder less than the last End Recorder\":\"Registradora de salida menor que registradora de llegada anterior\",\"Please refresh the report once you finish the fix bugs\":\"Porfavor actualice el reporte una vez termine la corrección de inconsistencias\",\"Please refresh the report once you finish the update all data\":\"Porfavor actualice el reporte una vez termine la actualización de datos\",\"The company haven´t issues in your counters at the selected date\":\"La empresa no tiene incidencias en sus contadores en la fecha seleccionada\",\"List of counter issues\":\"Listado de incidencias en contador\",\"alarms\":\"Alarmas\",\"Alarms\":\"Alarmas\",\"lowerCount\":\"Bajo conteo\",\"Lower count\":\"Bajo conteo\",\"higherCount\":\"Alto conteo\",\"Higher count\":\"Alto conteo\",\"Inactive cameras\":\"Cámara Inactiva\",\"Camera\":\"Cámara\",\"camera\":\"cámara\",\"Cameras\":\"Cámaras\",\"cameras\":\"cámaras\",\"Cameras Report\":\"Reporte de Cámaras\",\"Photo detail\":\"Detalle foto\",\"url-cameras\":\"camaras\",\"Check counter\":\"Contador de chequeo\",\"Items issues\":\"Anomalías en los items\",\"Counter issue\":\"Incidencia de contador\",\"Type of report\":\"Tipo de reporte\",\"Issues\":\"Incidencias\",\"Of issues\":\"De incidencias\",\"History\":\"Historial\",\"Historic\":\"Histórico\",\"historic\":\"histórico\",\"url-historic\":\"historico\",\"url-historic-path\":\"recorrido-historico\",\"See frame\":\"Ver trama\",\"By routes\":\"Por rutas\",\"Text copied\":\"Texto copiado\",\"Copy frame\":\"Copiar trama\",\"Prev value\":\"Valor anterior\",\"registers\":\"registros\",\"Registers\":\"Registros\",\"registers in total\":\"registros en total\",\"Select a company first\":\"Primero seleccione una empresa\",\"Select a vehicle first\":\"Primero seleccione un vehículo\",\"Select a route first\":\"Primero seleccione una ruta\",\"See all frames\":\"Ver todas las tramas\",\"Type\":\"Tipo\",\"Item count\":\"Conteo Items\",\"Signal check\":\"Señal de chequeo\",\"No round trips found\":\"Sin vueltas\",\"Low count\":\"Bajo conteo\",\"Dispatched\":\"Despachado\",\"Parking counts\":\"Parqueos\",\"Speeding counts\":\"Excesos de velocidad\",\"Off road counts\":\"Salidas de ruta\",\"List counter passengers by route\":\"Listado de conteo de pasajeros por ruta\",\"List counter passengers\":\"Listado de conteo de pasajeros\",\"Manage drivers\":\"Gestión de conductores\",\"File\":\"Archivo\",\"Import\":\"Importar\",\"CSV File\":\"Archivo CSV\",\"In dispatch\":\"En despacho\",\"Passengers by fringes\":\"Pasajeros por franjas\",\"The are not list of passengers and counter on this date range\":\"No existe conteo de pasajeros en la fecha seleccionada\",\"Maintenance\":\"Mantenimiento\",\"maintenance\":\"mantenimiento\",\"Maintenance date created successfully\":\"Fecha de mantenimiento asignada correctamente\",\"Maintenance date is not created\":\"La fecha de mantenimiento no fue asignada\",\"Maintenance date updated successfully\":\"Fecha de mantenimiento actualizada correctamente\",\"Maintenance date is not updated\":\"La fecha de mantenimiento no fue actualizada\",\"Maintenance dates deleted successfully\":\"Fechas de mantenimiento eliminadas correctamente\",\"Maintenance dates not deleted\":\"Las fechas de mantenimiento no fueron eliminadas\",\"Play\":\"Reproducir\",\"Pause\":\"Pausar\",\"Stop\":\"Parar\",\"Sensors\":\"Sensores\",\"sensors\":\"sensores\",\"Driver's seat\":\"Asiento del conductor\",\"No Route\":\"Sin Ruta\",\"Platform\":\"Plataforma\",\"A record for this vehicle already exists\":\"Ya existe un registro para este vehículo\",\"unassigned vehicles\":\"vehículos sin asignar\",\"assigned vehicles\":\"vehículos asignados\",\"Selection\":\"Selección\",\"Ready\":\"Con Script*\",\"Unready\":\"Sin script*\",\"None\":\"Ninguno\",\"Commands\":\"Comandos\",\"Search vehicle\":\"Buscar vehículo\",\"Manage SIM GPS\":\"Administrar SIM GPS\",\"Mileage\":\"Kilometraje\",\"mileage\":\"kilometraje\",\"Mileage Report\":\"Reporte kilometraje\",\"Mileage report\":\"Reporte kilometraje\",\"Consolidated per dates\":\"Consolidado por fechas\",\"Passengers per dates\":\"Pasajeros por fechas\",\"Manage proprietaries\":\"Administrar propietarios\",\"proprietary\":\"propietario\",\"Proprietary\":\"Propietario\",\"proprietaries\":\"propietarios\",\"Proprietaries\":\"Propietarios\",\"Script General Skypatrol\":\"Script Skypatrol general\",\"Script APN Skypatrol\":\"Script Skypatrol para APN\",\"Script plate Skypatrol\":\"Script Skypatrol para Placa\",\"Script IP Skypatrol\":\"Script Skypatrol para IP\",\"First Name\":\"Nombre\",\"Last Name\":\"Apellido\",\"Cellphone\":\"Celular\",\"Assigned vehicles\":\"Vehículos asignados\",\"Search proprietary\":\"Buscar propietario\",\"in the fleet\":\"en la flota\",\"in the day\":\"en el día\",\"Auto set plate\":\"Auto setear placa\",\"month\":\"mes\",\"Consolidate month\":\"Consolidado mes\",\"Without GPS signal\":\"Sin señal GPS\",\"No report\":\"No reporta\",\"Vehicles without route\":\"Vehículos sin ruta\",\"Vehicle not found in platform\":\"Vehículo no registrado en plataforma\",\"Proprietary not found in platform\":\"Propietario no registrado en plataforma\",\"Dead time\":\"Tiempo muerto\",\"Total dead time\":\"Tiempo muerto total\",\"Accumulated dead time\":\"Tiempo muerto acumulado\",\"Accumulated day\":\"Acumulado día\",\"Dispatcher\":\"Despachador\",\"User\":\"Usuario\",\"All drivers\":\"Todos\",\"Mixed report\":\"Reporte mixto\",\"Mixed\":\"Mixto\",\"mixed\":\"mixto\",\"Initial frame counter\":\"Trama de conteo inicial\",\"Final frame counter\":\"Trama de conteo final\",\"Show frames\":\"Ver tramas de conteo\",\"Empty\":\"Vacío\",\"Geolocation\":\"Geolocalización\",\"Geolocation report\":\"Reporte de Geolocalización\",\"geolocation\":\"geolocalización\",\"url-geolocation\":\"geolocalizacion\",\"Count by round trip\":\"Conteo por vuelta\",\"Sensor recorder\":\"Sensor registradora\",\"Show geolocation report\":\"Mostrar reporte de Geolocalización\",\"Operation\":\"Operación\",\"operation\":\"operación\",\"url-operation\":\"operacion\",\"Dispatches\":\"Despachos\",\"dispatches\":\"despachos\",\"Dispatch\":\"Despacho\",\"dispatch\":\"despacho\",\"Auto Dispatcher\":\"Despachador Automático\",\"Automatic\":\"Automático\",\"url-auto-dispatcher\":\"despachador-automatico\",\"Reassign route\":\"Reasignar ruta\",\"Unassign\":\"Desasignar\",\"The Route has ben reassigned successfully\":\"La ruta ha sido reasignada correctamente\",\"The Route has ben unassigned successfully\":\"La ruta ha sido desasignada correctamente\",\"Add vehicles\":\"Agregar vehículos\",\"All vehicles are assigned\":\"Todos los vehículos están asignados\",\"Not found\":\"No encontrado\",\"Calculated\":\"Calculado\",\"Current passengers on board\":\"Pasajeros actuales en bus\",\"Descents\":\"Descensos\",\"Ascents\":\"Ascensos\",\"Total descents\":\"Total descensos\",\"Total ascents\":\"Total ascensos\",\"Count information\":\"Información de conteo\",\"Arrival time on last round trip\":\"Hora de llegada de última vuelta\",\"Departure time on first round trip\":\"Hora de salida de primera vuelta\",\"Hide details\":\"Ocultar detalles\",\"Vehicle with mixed routes\":\"Vehículo con rutas mixtas\",\"Round trip report\":\"Reporte de vueltas\",\"The imei must have a length of 15 characters\":\"El imei debe tener una longitud de 15 caracteres\",\"Updated at\":\"Actualizado a las\",\"Last report\":\"Último reporte\",\"Dispatch users\":\"Usuarios despacho\",\"dispatch-users\":\"usuarios-despacho\",\"PCW Reports\":\"PCW Reportes\",\"Consolidated report daily\":\"Reporte consolidado diario\",\"Delay control points\":\"Retrasos en puntos de control\",\"Reported at\":\"Reportó en\",\"Speeding details\":\"Detalles excesos de velocidad\",\"Off roads details\":\"Detalles salidas de ruta\",\"Control points details\":\"Detalles de puntos de control\",\"Unavailable\":\"No disponible\",\"Process executed successfully\":\"Proceso ejecutado correctamente\",\"Building route report\":\"Construyendo reporte de ruta\",\"This process can take several minutes\":\"Este proceso puede tardar vaiors minutos\",\"locations have been processed\":\"ubicaciones han sido procesadas\",\"Detected route\":\"Ruta detectada\",\"Vehicle information\":\"Información del vehículo\",\"Off road vehicle\":\"Vehículo fuera de ruta\",\"With speeding\":\"Con exceso de velocidad\",\"Possible issue\":\"Posible incidencia\",\"Invalid sequence\":\"Secuencia inválida\",\"Great distance traveled\":\"Gran distancia recorrida\",\"Calculated speed\":\"Velocidad calculada\",\"Time scheduled from dispatch\":\"Tiempo programado\",\"Time measured from dispatch\":\"Tiempo medido\",\"Interpolation report\":\"Reporte con interpolación\",\"GPS report\":\"Reporte GPS\",\"Consolidated passengers report daily\":\"Reporte consolidado diario de pasajeros\",\"Consolidated route report daily\":\"Reporte consolidado diario de ruta\",\"General report\":\"Reporte general\",\"Refresh\":\"Actualizar\",\"Distance\":\"Distancia\",\"Average speed\":\"Vel. media\",\"The vehicle haven't off road\":\"El vehículo no presenta salidas de ruta\",\"See\":\"Ver\",\"In route\":\"En ruta\",\"YES\":\"SI\",\"NO\":\"NO\",\"Info route\":\"Info Ruta\",\"Vehicle status\":\"Estado vehículo\",\"Takings\":\"Recaudo\",\"takings\":\"recaudo\",\"Liquidation\":\"Liquidación\",\"liquidation\":\"liquidación\",\"url-liquidation\":\"liquidacion\",\"No GPS reports found\":\"GPS no reportó datos\",\"Totals\":\"Totales\",\"Duration\":\"Duración\",\"Generate liquidation\":\"Generar liquidación\",\"Tolls\":\"Peajes\",\"Fuel\":\"Combustible\",\"Washing\":\"Lavado\",\"Discounts\":\"Descuentos\",\"discounts\":\"descuentos\",\"Commissions\":\"Comisiones\",\"commissions\":\"comisiones\",\"Penalties\":\"Sanciones\",\"penalties\":\"sanciones\",\"Liquidate\":\"Liquidar\",\"Add other\":\"Añadir otro\",\"Select a driver\":\"Seleccione un conductor\",\"No drivers found\":\"Sin conductores\",\"No liquidated\":\"Sin liquidar\",\"Liquidated\":\"Liquidado\",\"Taken\":\"Recaudado\",\"Liquidation processed successfully\":\"Liquidación procesada correctamente\",\"Error at generate liquidation register\":\"Error al generar registro de liquidación\",\"Error at associate liquidation with BEA Mark register\":\"Error al asociar liquidación con registro de Marca BEA\",\"Turn list\":\"Listado de turnos\",\"Params\":\"Parámetros\",\"params\":\"parámetros\",\"url-params\":\"parametros\",\"Mobility auxilio\":\"Auxilio de Movilidad\",\"Discount by\":\"Descuento por\",\"of\":\"de\",\"TAKING RECEIPT\":\"COMPROBANTE DE RECAUDO\",\"Printed at\":\"Impreso en\",\"Liquidated at\":\"Liquidado en\",\"Total liquidation\":\"Total Liquidación\",\"Total taken\":\"Total recaudado\",\"Discount :name unable to update\":\"El descuento :name no fue actualizado\",\"Discount :name unable to update for vehicle :vehicle on trajectory :trajectory\":\"El descuento :name no fue actualizado para el vehículo :vehicle y el trayecto :trajectory\",\"Discount :name doesn't exists in the system\":\"El descuento :name no existe en el sistema\",\"Discount edited successfully\":\"El valor del descuento se ha modificado correctamente\",\"Commission edited successfully\":\"El valor de comisión ha sido actualizado correctamente\",\"Penalties edited successfully\":\"El varlor de penalización ha sido actualizado exitósamente\",\"Commission unable to update\":\"No ha sido posible actualizar los valores de la comisión\",\"Penalty unable to update\":\"No ha sido posible actualizar los valores de penalización\",\"Other discounts\":\"Otros decuentos\",\"Total Gross BEA\":\"Total BEA bruto\",\"Gross BEA\":\"BEA bruto\",\"Percent\":\"Porcentaje\",\"Boarding\":\"Abordados\",\"Settlement receipt\":\"Recibo de liquidación\",\"Please fix the issues first\":\"Por favor revise y solucione las inconsistencias primero\",\"Active\":\"Activo\",\"Inactive\":\"Inactivo\",\"Unregistered\":\"No calculado\",\"The report is available only for dates before the current one\":\"El reporte está disponible solo para fechas anteriores al actual\",\"Percent in off road\":\"Porcentaje por fuera de ruta\",\"See historic report\":\"Ver Histórico Recorrido\",\"Threshold km\":\"Con Km mayor a\",\"Only allows reports for dates before the current\":\"Sólo permite reportes para fechas anteriores a la actual\",\"Invalid date\":\"Fecha de consulta no válida\",\"Upload\":\"Cargar\",\"Name without spaces\":\"Nombre sin espacios\",\"Kmz file\":\"Archivo KMZ\",\"File name\":\"Nombre\",\"Migrated\":\"Migrados\",\"Migration interface\":\"Interfaz de Migración\",\"Total vehicles\":\"Total vehículos\",\"Completed turns\":\"Turnos completos\",\"Total round trips\":\"Total vueltas\",\"Export grouped report\":\"Exportar reporte agrupado\",\"Export ungrouped report\":\"Exportar reporte desagrupado\",\"Route dispatches\":\"Despachos de ruta\",\"Without GPS Signal\":\"Sin Señal GPS\",\"Parked\":\"Parqueado\",\"Power Off\":\"Apagado\",\"Vehicle no report\":\"No reporta\",\"Historic report\":\"Reporte histórico\",\"There are turns no liquidated in :date fot this vehicle\":\"Existen turnos sin liquidar para este vehículo en la fecha :date\",\"turns\":\"turnos\",\"Pay fall\":\"Pago caída\",\"pay fall\":\"pago caída\",\"Get fall\":\"Recibe caída\",\"get fall\":\"recibe caída\",\"Balance\":\"Saldo\",\"fuel\":\"combustible\",\"washing\":\"lavado\",\"tolls\":\"peajes\",\"locks\":\"bloqueos\",\"exempts\":\"excentos\",\"Value\":\"Valor\",\"value\":\"valor\",\"Params manager\":\"Administrador de parámetros\",\"Select vehicles\":\"Seleccione vehículos\",\"Select trajectories\":\"Seleccione trayectorias\",\"Description\":\"Descripción\",\"Default\":\"Defecto\",\"By default\":\"Por defecto\",\"Custom\":\"Personalizado\",\"Save options\":\"Opciones de guardado\",\"Penalty type\":\"Tipo de penalización\",\"boarding\":\"abordado\",\"Discount\":\"Descuento\",\"Discounts by turn\":\"Descuentos por turno\",\"Total Discount by turns\":\"Total descuentos por turnos\",\"Penalties by turn\":\"Penalizaciones por turno\",\"Commissions by turn\":\"Comisiones por turno\",\"Boarded\":\"Abordados\",\"Pay bearded\":\"Cobro abordados\",\"Auxiliaries\":\"Auxiliares\",\"Locks\":\"Bloqueos\",\"Total by turn\":\"Total por turno\",\"Fixed value per passenger\":\"Valor fijo por pasajero\",\"Initial time\":\"Hora inicial\",\"Final time\":\"Hora final\",\"Total discounts\":\"Total decuentos\",\"Total discount\":\"Total decuento\",\"Total penalties\":\"Total penalizaciones\",\"Total commissions\":\"Total comisiones\",\"Falls\":\"Caídas\",\"Add\":\"Agregar\",\"Total turns\":\"Total turnos\",\"Total turn\":\"Total turno\",\"Total pay fall\":\"Total pago caídas\",\"Total get fall\":\"Total recibe caídas\",\"Subtotal\":\"Subtotal\",\"Total tolls\":\"Total peajes\",\"Total washing\":\"Total lavado\",\"Total dispatch\":\"Total despacho\",\"Total fuel\":\"Total combustible\",\"Observations\":\"Observaciones\",\"Operative Expenses\":\"Gastos Operativos\",\"Operative expenses\":\"Gastos operativos\",\"Total operative expenses\":\"Total gastos operativos\",\"Total other discounts\":\"Total otros descuentos\",\"Turns liquidated\":\"Turnos liquidados\",\"Responsible\":\"Responsable\",\"Liquidated on\":\"Liquidado en\",\"Take liquidation\":\"Recaudar\",\"Liquidation details\":\"Detalles de liquidación\",\"Print\":\"Imprimir\",\"Print detailed\":\"Imprimir detallado\",\"Total locks\":\"Total bloqueos\",\"Total exempts\":\"Total excentos\",\"Show file\":\"Mostrar archivo\",\"File other discount\":\"Archivo de otro descuento\",\"Error saving other discounts files\":\"Error al guardar archivos de otros descuentos\",\"Taking details\":\"Detalle de Recaudo\",\"search\":\"buscar\",\"Taking processed successfully\":\"Recaudo procesado correctamente\",\"Error at generate taking register\":\"Error al generar el registro de recaudo\",\"Taking\":\"Recaudar\",\"Takings list\":\"Listado Recaudo\",\"Takings report\":\"Reporte de recaudo\",\"Liquidated without taking\":\"Liquidado sin recaudar\",\"Print total\":\"Imprimir total\",\"Receipt\":\"Comprobante\",\"Turns\":\"Turnos\",\"Liquidation updated successfully\":\"Liquidación actualizada correctamente\",\"Error at updating liquidation register\":\"Error al actualizar el registro de liquidación\",\"Percent of Gross BEA\":\"Porcentaje de Total turno\",\"Daily report\":\"Reporte diario\",\"Payroll cost\":\"Costo planilla\",\"costs\":\"costos\",\"Costs\":\"Costos\",\"Penalty\":\"Sanción\",\"Daily report taking\":\"Informe de recaudo diario\",\"Net to car\":\"Neto al carro\",\"Processing\":\"Procesando\",\"Please wait\":\"Porfavor espere\",\"Read safety\":\"Seguridad vial\",\"Concept\":\"Concepto\",\"concept\":\"concepto\",\"Charge\":\"Cobrar\",\"Process\":\"Procesar\",\"Process charge\":\"Procesar cobro\",\"Total liquidated\":\"Total liquidado\",\"Defines the order in which the required payment should be applied\":\"Define el orden en que se debe aplicar el cobro obligatorio\",\"Click for activate\":\"Click para Activar\",\"Click for inactivate\":\"Click para Desactivar\",\"Error saving cost register\":\"Error al guardar el registro de Costo\",\"Priority\":\"Prioridad\",\"There are fields empty\":\"Algunos campos están vacíos\",\"The :attribute field is required\":\"El campo <em class='text-capitalize'>:attribute</em> es requerido\",\"rear\":\"atrás\",\"front\":\"frente\",\"Profile seating save successfully\":\"Perfil de asientos guardado correctamente\",\"Overlap\":\"Traslape\",\"Loading\":\"Cargando\",\"Occupation\":\"Ocupación\",\"Counts\":\"Conteos\",\"Total\":\"Total\",\"Paused count\":\"Conteo pausado\",\"Seating\":\"Asientos\",\"photos\":\"fotos\",\"General count\":\"Conteo general\",\"Total by round trips\":\"Total por vueltas\",\"Total accumulated\":\"Conteos acumulados\",\"Photos\":\"Fotos\",\"Seating release\":\"Liberados\",\"Previous seating\":\"Anteriores\",\"Current seating\":\"Actuales\",\"Seating profile\":\"Perfil de asientos\",\"Seating activated\":\"Activados\",\"Bearding passengers\":\"Pasajeros a bordo\",\"Mix seating\":\"Mezcla\",\"Lock alarm\":\"Alarma de bloqueo\",\"Graphs\":\"Gráficos\",\"Range\":\"Rango\",\"Net production\":\"Producción Neta\",\"Total production\":\"Total producción\",\"All vehicles\":\"Todos los vehículos\",\"Others\":\"Otros\",\"No taken\":\"Sin recaudar\",\"Takings without dispatch turns\":\"Recaudo sin turnos de despacho\",\"Bonus\":\"Bonificación\",\"Fuel gallons\":\"Galones combustible\",\"Fuel gallon value\":\"Valor galón de combustible\",\"Passenger tariff\":\"Tarifa pasajero\",\"Fuel tariff\":\"Tarifa combustible\",\"Taken at\":\"Recaudado en\",\"Various\":\"Varios\",\"Takings totals r.\":\"R. totales recaudo\",\"Takings detailed r.\":\"R. detallado\",\"Takings grouped r.\":\"R. agrupado\",\"Takings totals report\":\"Reporte totales de recaudo\",\"Takings detailed report\":\"Reporte detallado de recaudo\",\"Takings grouped report\":\"Reporte agrupado de recaudo\",\"Grouped\":\"Agrupado\",\"Receipt consolidated\":\"Recibo totales\",\"Recognition\":\"Reconocimiento\",\"persons\":\"personas\",\"faces\":\"caras\",\"Station\":\"Estación combustible\",\"percentBEA\":\"Porcentaje de BEA\",\"fixedBEA\":\"Valor fijo\",\"Settings\":\"Ajustes\",\"Historic takings\":\"Historial de recaudo\"}");
 
 /***/ }),
 

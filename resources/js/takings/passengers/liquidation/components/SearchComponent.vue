@@ -8,17 +8,17 @@
             <ul class="nav nav-tabs tabs-reversed">
                 <li>
                     <a onclick="$('#modal-params-manager').modal('show')">
-                        <i class="fa fa-cogs"></i> {{ $t('Admin') }}
+                        <i class="fa fa-cogs"></i> <span class="hidden-xs">{{ $t('Settings') }}</span>
                     </a>
                 </li>
                 <li>
                     <a href="#tab-road-safety" data-toggle="tab">
-                        <i class="fa fa-user-secret"></i> {{ $t('Read safety') }}
+						<i class="fa fa-user-secret"></i> <span class="hidden-xs">{{ $t('Read safety') }}</span>
                     </a>
                 </li>
                 <li class="active">
                     <a href="#tab-takings" data-toggle="tab">
-                        <i class="fa fa-briefcase"></i> {{ $t('Takings') }}
+						<i class="fa fa-briefcase"></i> <span class="hidden-xs">{{ $t('Takings') }}</span>
                     </a>
                 </li>
             </ul>

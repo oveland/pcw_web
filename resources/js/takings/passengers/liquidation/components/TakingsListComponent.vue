@@ -44,8 +44,8 @@
                             <td class="text-center">{{ liquidation.totals.totalPassengersBea }}</td>
                             <td class="text-center">{{ liquidation.totals.totalTurns | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.totals.subTotalTurns | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.totals.totalDispatch | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.totals.balance | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.balance | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center text-bold">
                                 <a class="link" @click="seeLiquidationDetail(liquidation.id, true)" data-toggle="modal" data-target="#modal-takings-liquidated-marks">
                                     {{ liquidation.marks.length }} turns

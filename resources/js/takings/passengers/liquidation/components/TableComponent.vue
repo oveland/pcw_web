@@ -78,7 +78,7 @@
             </tr>
             <tr>
                 <td rowspan="2" colspan="6" class="text-center">
-                    <button v-if="!readonly && marks.length" class="btn btn-sm yellow-crusta btn-circle btn-outline sbold uppercase m-t-5" data-toggle="modal" data-target="#modal-generate-liquidation">
+                    <button v-if="!readonly && marks.length" class="btn red btn-circle sbold uppercase m-t-5" data-toggle="modal" data-target="#modal-generate-liquidation">
                         <i class="icon-layers"></i> {{ $t('Generate liquidation') }}
                     </button>
                 </td>

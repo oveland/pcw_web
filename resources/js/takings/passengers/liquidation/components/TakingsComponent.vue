@@ -41,8 +41,8 @@
                             <td class="text-center">{{ liquidation.totals.totalPassengersBea }}</td>
                             <td class="text-center">{{ liquidation.totals.totalTurns | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ liquidation.totals.subTotalTurns | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.totals.totalDispatch | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ liquidation.totals.balance | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ liquidation.totals.balance | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center text-bold">
                                 <a class="link" @click="seeLiquidation(liquidation, true)" data-toggle="modal" data-target="#modal-liquidation-detail">
                                     {{ liquidation.marks.length }} turns
@@ -176,7 +176,7 @@
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
                                                             <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
-                                                                <div class="text-center col-md-12 col-sm-12 col-xs-12 m-t-10">
+                                                                <div class="text-center col-md-12 col-sm-12 col-xs-12 m-10">
                                                                     <button v-if="!control.enableSaving && !control.processing" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken">
                                                                         <i class="fa fa-suitcase"></i> {{ $t('Taking') }}
                                                                     </button>
@@ -199,9 +199,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn dark btn-outline" data-dismiss="modal">{{ $t('Close') }}</button>
                     </div>
                 </div>
             </div>

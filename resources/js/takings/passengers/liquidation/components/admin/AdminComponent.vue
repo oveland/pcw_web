@@ -2,11 +2,6 @@
     <div class="admin-component">
         <div class="portlet light bordered">
             <div class="portlet-title tabbable-line">
-                <div class="text-center col-md-12" style="position: absolute">
-                    <button type="button" class="btn blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Close" data-dismiss="modal">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
                 <div class="caption">
                     <i class="fa fa-cogs"></i>
                     <span class="caption-subject font-dark bold uppercase">{{ $t('Params manager') }}</span>
@@ -35,6 +30,14 @@
                             <i class="fa fa-dollar"></i> {{ $t('Costs') }}
                         </a>
                     </li>
+
+					<li class="divider-menu hidden-sm hidden-xs"></li>
+
+					<li>
+						<button type="button" class="btn btn-danger btn-outline sbold uppercase btn-circle tooltips m-t-5" :title="$t('Close')" data-dismiss="modal">
+							<i class="fa fa-times"></i>
+						</button>
+					</li>
                 </ul>
             </div>
             <div class="portlet-body">
@@ -46,7 +49,7 @@
                         <admin-penalty-component :vehicles="vehicles" :vehicle-selected="vehicle" :routes="routes" :penalties="penalties" v-on:refresh-report="$emit('refresh-report')"></admin-penalty-component>
                     </div>
                     <div class="tab-pane" id="commissions-params-tab">
-                        <admin-commission-component :routes="routes" :commissions="commissions" v-on:refresh-report="$emit('refresh-report')"></admin-commission-component>
+                        <admin-commission-component :vehicles="vehicles" :vehicle-selected="vehicle" :routes="routes" :commissions="commissions" v-on:refresh-report="$emit('refresh-report')"></admin-commission-component>
                     </div>
                     <div class="tab-pane" id="management-costs-tab">
                         <management-cost-component :vehicles="vehicles" :vehicle-selected="vehicle" :management-costs="managementCosts" v-on:refresh-report="$emit('refresh-report')"></management-cost-component>

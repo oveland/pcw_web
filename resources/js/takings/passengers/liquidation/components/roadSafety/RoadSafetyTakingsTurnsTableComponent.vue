@@ -45,7 +45,7 @@
                             </td>
                             <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ mark.passengersBEA }}</td>
-                            <td class="text-center">{{ turn.totalDispatch | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ turn.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center">
                                 <button class="btn btn-tab btn-transparent green-sharp btn-outline btn-circle tooltips" :title="$t('Process charge')" @click="processCharge(mark)" data-toggle="modal" data-target="#modal-charge-turn">
                                     <i class="fa fa-user-secret"></i>
@@ -58,7 +58,7 @@
                             </td>
                             <td class="text-center">{{ totals.totalBea | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ totals.totalPassengersBea }}</td>
-                            <td class="text-center">{{ totals.totalDispatch | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -75,7 +75,7 @@
                                     <span class="caption-subject font-dark bold uppercase">
                                     {{ $t('Process charge') }}
                                 </span>
-                                    <strong class="pull-right" style="font-size: 1.2em !important;">Total recaudado {{ liquidationTurn.totalDispatch | numberFormat('$0,0') }}</strong>
+                                    <strong class="pull-right" style="font-size: 1.2em !important;">Total recaudado {{ liquidationTurn.totalDispatch | thousandRound | numberFormat('$0,0') }}</strong>
                                 </div>
                             </div>
                             <div class="row portlet-body">

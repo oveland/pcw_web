@@ -1,16 +1,36 @@
 <template>
     <div class="row">
-        <div class="col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
+		<div class="col-md-12">
             <div class="tab-content">
                 <div class="">
-                    <div class="">
-                        <ul class="nav nav-pills">
+					<div class="">
+                        <ul class="nav nav-pills pull-left">
                             <li v-for="(route, indexRoute) in routes" :class="indexRoute === 0 ? 'active' : ''">
                                 <a :href="'#tab-commission-' + route.id" data-toggle="tab" aria-expanded="true">
                                     <i class="fa fa-flag"></i> {{ route.name }}
                                 </a>
                             </li>
                         </ul>
+
+						<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 pull-right p-0" v-if="vehicles">
+							<multiselect v-model="vehicle" :placeholder="$t('Select a vehicle')" label="number" track-by="id" :options="vehicles">
+								<template slot="singleLabel" slot-scope="props">
+									<span class="option__desc">
+										<span class="option__title">
+											<i class="fa fa-bus"></i> {{ props.option.number }}
+										</span>
+									</span>
+								</template>
+								<template slot="option" slot-scope="props">
+									<div class="option__desc">
+										<span class="option__title">
+											<i class="fa fa-bus"></i> {{ props.option.number }}
+										</span>
+									</div>
+								</template>
+							</multiselect>
+						</div>
+
                         <div class="tab-content">
                             <div v-for="(route, indexRoute) in routes" class="tab-pane fade" :class="indexRoute === 0 ? 'active in' : ''" :id="'tab-commission-' + route.id">
                                 <table class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">
@@ -19,6 +39,9 @@
                                         <th class="col-md-1">
                                             <i class="fa fa-list-ol text-muted"></i><br>
                                         </th>
+										<th class="col-md-2">
+											<i class="fa fa-car text-muted"></i><br> {{ $t('Vehicle') }}
+										</th>
                                         <th class="col-md-2">
                                             <i class="icon-tag text-muted"></i><br> {{ $t('Type') }}
                                         </th>
@@ -33,12 +56,13 @@
                                     <tbody>
                                     <tr class="" v-for="(commission, indexCommission) in commissionsFor(route.id)">
                                         <td class="text-center">{{ indexCommission + 1 }}</td>
-                                        <td class="text-center">{{ commission.type | capitalize }}</td>
+										<td class="text-center">{{ commission.vehicle.number }}</td>
+                                        <td class="text-center">{{ $t(commission.type + 'BEA') | capitalize }}</td>
                                         <td class="text-center">
                                             {{ commission.value | numberFormat('0,0') }}
                                         </td>
                                         <td class="text-center">
-                                            <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" title="Edit" @click="editCommission(commission)"
+                                            <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Edit')" @click="editCommission(commission)"
                                                     data-toggle="modal" data-target="#modal-admin-commission-edit">
                                                 <i class="fa fa-edit"></i>
                                             </button>
@@ -65,7 +89,7 @@
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
                                         <select id="edit-commission-type" readonly type="text" class="form-control" v-model="editingCommission.type">
-                                            <option v-for="(type) in commissionTypes" :value="type">{{ type }}</option>
+                                            <option v-for="(type) in commissionTypes" :value="type">{{ $t(type + 'BEA') | capitalize }}</option>
                                         </select>
                                         <label for="edit-commission-type">{{ $t('Commission type') }}</label>
                                         <i class="fa fa-tag"></i>
@@ -103,28 +127,39 @@
     export default {
         name: "AdminCommissionComponent",
         props: {
+			vehicles: Array,
+			vehicleSelected: Object,
             routes: Array,
             commissions: Array,
         },
         data: function () {
             return {
+				vehicle: Object,
                 commissionTypes: Array,
                 editingCommission: Object,
                 editing: false,
             }
         },
+		watch: {
+			vehicleSelected: function () {
+				this.vehicle = this.vehicleSelected;
+			}
+		},
         mounted() {
             this.commissionTypes = ['percent', 'fixed'];
         },
-        computed: {},
         methods: {
             editCommission: function(commission){
                 this.editingCommission = commission;
             },
             commissionsFor(routeId) {
-                return _.filter(this.commissions, {
-                    'route_id': routeId,
-                });
+				let filter = {
+					'route_id': routeId,
+				};
+
+				if(this.vehicle)filter.vehicle_id = this.vehicle.id;
+
+                return _.filter(this.commissions, filter);
             },
             saveCommission: function(){
                 App.blockUI({target: '#commissions-params-tab', animate: true});

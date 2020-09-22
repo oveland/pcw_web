@@ -1,104 +1,123 @@
 <template>
     <div class="row">
-        <div class="col-md-3 col-sm-4 col-xs-12">
-            <div class="col-md-12" v-if="vehicles">
-                <multiselect v-model="vehicle" :placeholder="$t('Select a vehicle')" label="number" track-by="id" :options="vehicles"></multiselect>
-            </div>
-        </div>
-        <div class="col-md-9 col-sm-8 col-xs-12" v-if="vehicle">
+        <div class="col-md-12" v-if="vehicle">
             <div class="tab-content">
                 <div class="tab-pane fade active in" :id="'vehicle-'+vehicle.id">
                     <div class="">
-                        <ul class="nav nav-pills">
+                        <ul class="nav nav-pills pull-left">
                             <li v-for="(route, indexRoute) in routes" :class="indexRoute === 0 ? 'active' : ''" @click="loadTrajectories(route)">
                                 <a :href="'#tab-' + vehicle.id" data-toggle="tab" aria-expanded="true" @click="discounts = []">
                                     <i class="fa fa-flag"></i> {{ route.name }}
                                 </a>
                             </li>
                         </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane fade active in" :id="'tab-' + vehicle.id">
-                                <table class="table table-bordered table-condensed table-report">
-                                    <thead>
-                                    <tr class="inverse">
-                                        <th class="col-md-4">
-                                            <i class="fa fa-flag text-muted"></i><br> {{ $t('Trajectory') }}
-                                        </th>
-                                        <th class="col-md-8">
-                                            <i class="icon-tag text-muted"></i><br> {{ $t('Discounts') }}
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td class="text-center col-md-4">
-                                            <ul class="nav nav-tabs tabs-left">
-                                                <li v-for="(trajectory, indexTrajectory) in trajectoriesByRoute" :class="trajectory.id === selectedTrajectory.id ? 'active' : ''" @click="loadDiscounts(vehicle, trajectory)">
-                                                    <a href=".tab-discounts" data-toggle="tab">
-                                                        {{ trajectory.name }}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                        <td class="discounts text-center col-md-8">
-                                            <div class="tab-content">
-                                                <div class="tab-discounts tab-pane fade active in">
-                                                    <table class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">
-                                                        <thead>
-                                                        <tr class="inverse">
-                                                            <th class="col-md-1">
-                                                                <i class="fa fa-list-ol text-muted"></i><br>
-                                                            </th>
-                                                            <th class="col-md-2">
-                                                                <i class="icon-tag text-muted"></i><br> {{ $t('Name') }}
-                                                            </th>
-                                                            <th class="col-md-2">
-                                                                <i class="icon-tag text-muted"></i><br> {{ $t('Description') }}
-                                                            </th>
-                                                            <th class="col-md-2">
-                                                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Value') }}
-                                                            </th>
-                                                            <th class="col-md-2">
-                                                                <i class="fa fa-calendar text-muted"></i><br> {{ $t('Updated at') }}
-                                                            </th>
-                                                            <th class="col-md-2">
-                                                                <i class="fa fa-rocket text-muted"></i><br> {{ $t('Options') }}
-                                                            </th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr v-for="(discount, indexDiscount) in discounts">
-                                                            <td class="text-center">{{ indexDiscount + 1 }}</td>
-                                                            <td class="text-center">
-                                                                <i :class="discount.discount_type.icon"></i> {{ discount.discount_type.name | capitalize }}
-                                                            </td>
-                                                            <td class="text-center">{{ discount.discount_type.description }}</td>
-                                                            <td class="text-center">
-                                                                {{ discount.value | numberFormat('$0,0') }}
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="tooltips" :data-title="$t('Updated at')">{{ discount.updated_at }}</span>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Edit')" @click="editDiscount(discount)"
-                                                                data-toggle="modal" data-target="#modal-admin-discount-edit">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="11" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+
+						<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 pull-right p-0" v-if="vehicles">
+							<multiselect v-model="vehicle" :placeholder="$t('Select a vehicle')" label="number" track-by="id" :options="vehicles">
+								<template slot="singleLabel" slot-scope="props">
+									<span class="option__desc">
+										<span class="option__title">
+											<i class="fa fa-bus"></i> {{ props.option.number }}
+										</span>
+									</span>
+								</template>
+								<template slot="option" slot-scope="props">
+									<div class="option__desc">
+										<span class="option__title">
+											<i class="fa fa-bus"></i> {{ props.option.number }}
+										</span>
+									</div>
+								</template>
+							</multiselect>
+						</div>
+
+                        <div class="col-md-12 p-0">
+							<div class="tab-content">
+								<div class="tab-pane fade active in" :id="'tab-' + vehicle.id">
+									<div class="table-responsive">
+										<table class="table table-bordered table-condensed table-report">
+											<thead>
+											<tr class="inverse">
+												<th class="col-md-4">
+													<i class="fa fa-flag text-muted"></i><br> {{ $t('Trajectory') }}
+												</th>
+												<th class="col-md-8">
+													<i class="icon-tag text-muted"></i><br> {{ $t('Discounts') }}
+												</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr>
+												<td class="text-center col-md-4">
+													<ul class="nav nav-tabs tabs-left">
+														<li v-for="(trajectory, indexTrajectory) in trajectoriesByRoute" :class="trajectory.id === selectedTrajectory.id ? 'active' : ''" @click="loadDiscounts(vehicle, trajectory)">
+															<a href=".tab-discounts" data-toggle="tab">
+																{{ trajectory.name }}
+															</a>
+														</li>
+													</ul>
+												</td>
+												<td class="discounts text-center col-md-8">
+													<div class="tab-content">
+														<div class="tab-discounts tab-pane fade active in">
+															<table class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">
+																<thead>
+																<tr class="inverse">
+																	<th class="col-md-1">
+																		<i class="fa fa-list-ol text-muted"></i><br>
+																	</th>
+																	<th class="col-md-2">
+																		<i class="icon-tag text-muted"></i><br> {{ $t('Name') }}
+																	</th>
+																	<th class="col-md-2">
+																		<i class="icon-tag text-muted"></i><br> {{ $t('Description') }}
+																	</th>
+																	<th class="col-md-2">
+																		<i class="fa fa-dollar text-muted"></i><br> {{ $t('Value') }}
+																	</th>
+																	<th class="col-md-2">
+																		<i class="fa fa-calendar text-muted"></i><br> {{ $t('Updated at') }}
+																	</th>
+																	<th class="col-md-2">
+																		<i class="fa fa-rocket text-muted"></i><br> {{ $t('Options') }}
+																	</th>
+																</tr>
+																</thead>
+																<tbody>
+																<tr v-for="(discount, indexDiscount) in discounts">
+																	<td class="text-center">{{ indexDiscount + 1 }}</td>
+																	<td class="text-center">
+																		<i :class="discount.discount_type.icon"></i> {{ discount.discount_type.name | capitalize }}
+																	</td>
+																	<td class="text-center">{{ discount.discount_type.description }}</td>
+																	<td class="text-center">
+																		{{ discount.value | numberFormat('$0,0') }}
+																	</td>
+																	<td class="text-center">
+																		<span class="tooltips" :data-title="$t('Updated at')">{{ discount.updated_at }}</span>
+																	</td>
+																	<td class="text-center">
+																		<button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Edit')" @click="editDiscount(discount)"
+																				data-toggle="modal" data-target="#modal-admin-discount-edit">
+																			<i class="fa fa-edit"></i>
+																		</button>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="11" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
+																</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
                     </div>
                 </div>
             </div>
@@ -136,66 +155,74 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <hr class="col-md-12">
+							<div class="col-md-12 text-left no-padding" v-if="vehicles">
+								<div class="col-md-12">
+									<div class="form-group form-md-line-input has-success">
+										<div class="input-icon">
+											<label>
+												<i class="fa fa-save"></i> {{ $t('Save options') }}
+											</label>
+										</div>
+									</div>
+								</div>
 
-                        <div class="col-md-12 text-center">
-                            <h2 class="text-muted">
-                                <i class="fa fa-save"></i> {{ $t('Save options') }}
-                            </h2>
-                        </div>
+								<div class="col-md-12 no-padding">
+									<div class="col-md-3">
+										<label class="typo__label text-info">
+											<i class="fa fa-car"></i> {{ $t('Vehicles') }}
+										</label>
+									</div>
 
-                        <div class="col-md-12 text-left no-padding" v-if="vehicles">
-                            <div class="col-md-12 no-padding">
-                                <span class="col-md-3">
-                                    <label class="typo__label">
-                                        <i class="fa fa-car"></i> {{ $t('Vehicles') }}
-                                    </label>
-                                </span>
-                                <span class="col-md-3 text-center">
-                                    <input type="radio" id="default-vehicles" value="default" name="for-vehicles" v-model="options.for.vehicles">
-                                    <label for="default-vehicles">{{ $t('By default') }}</label>
-                                </span>
-                                <span class="col-md-3 text-center">
-                                    <input type="radio" id="all-vehicles" value="all" name="for-vehicles" v-model="options.for.vehicles">
-                                    <label for="all-vehicles">{{ $t('All') }}</label>
-                                </span>
-                                <span class="col-md-3 text-center">
-                                    <input type="radio" id="custom-vehicles" value="custom" name="for-vehicles" v-model="options.for.vehicles">
-                                    <label for="custom-vehicles">{{ $t('Custom') }}</label>
-                                </span>
+									<div class="col-md-12 no-padding">
+										<span class="col-md-3 col-sm-12 col-xs-12">
+											<input type="radio" id="default-vehicles" value="default" name="for-vehicles" v-model="options.for.vehicles">
+											<label for="default-vehicles">{{ $t('By default') }}</label>
+										</span>
+										<span class="col-md-2 col-sm-12 col-xs-12">
+											<input type="radio" id="all-vehicles" value="all" name="for-vehicles" v-model="options.for.vehicles">
+											<label for="all-vehicles">{{ $t('All') }}</label>
+										</span>
+										<span class="col-md-7 col-sm-12 col-xs-12">
+											<input type="radio" id="custom-vehicles" value="custom" name="for-vehicles" v-model="options.for.vehicles">
+											<label for="custom-vehicles">{{ $t('Custom') }}</label>
+										</span>
+									</div>
 
-                                <div class="col-md-12" v-if="options.for.vehicles === 'custom'">
-                                    <multiselect v-model="options.vehicles" :placeholder="$t('Select vehicles')" label="number" track-by="id" :options="vehicles" :multiple="true"></multiselect>
-                                </div>
-                            </div>
+									<div class="col-md-12" style="display: table" v-if="options.for.vehicles === 'custom'">
+										<multiselect v-model="options.vehicles" :placeholder="$t('Select vehicles')" label="number" track-by="id" :options="vehicles" :multiple="true"></multiselect>
+									</div>
+								</div>
 
-                            <hr class="col-md-12 no-padding">
+								<hr class="col-md-12 col-xs-12 col-sm-12 no-padding">
 
-                            <div class="col-md-12 no-padding">
-                                <span class="col-md-3">
-                                    <label class="typo__label">
-                                        <i class="fa fa-retweet"></i> {{ $t('Trajectory') }}
-                                    </label>
-                                </span>
-                                <span class="col-md-3 text-center">
-                                    <input type="radio" id="default-trajectories" value="default" name="for-trajectories" v-model="options.for.trajectories">
-                                    <label for="default-trajectories">{{ $t('By default') }}</label>
-                                </span>
-                                <span class="col-md-3 text-center">
-                                    <input type="radio" id="all-trajectories" value="all" name="for-trajectories" v-model="options.for.trajectories">
-                                    <label for="all-trajectories">{{ $t('All') }}</label>
-                                </span>
-                                <span class="col-md-3 text-center">
-                                    <input type="radio" id="custom-trajectories" value="custom" name="for-trajectories" v-model="options.for.trajectories">
-                                    <label for="custom-trajectories">{{ $t('Custom') }}</label>
-                                </span>
+								<div class="col-md-12 no-padding" style="display: table">
+									<div class="col-md-3">
+										<label class="typo__label text-info">
+											<i class="fa fa-retweet"></i> {{ $t('Trajectory') }}
+										</label>
+									</div>
 
-                                <div class="col-md-12" v-if="options.for.trajectories === 'custom'">
-                                    <multiselect v-model="options.trajectories" :options="trajectoriesForMultiselect" :placeholder="$t('Select trajectories')" group-values="trajectories" group-label="route" label="name" track-by="id" :multiple="true"></multiselect>
-                                </div>
-                            </div>
+									<div class="col-md-12 no-padding">
+										<span class="col-md-3 col-sm-12 col-xs-12">
+											<input type="radio" id="default-trajectories" value="default" name="for-trajectories" v-model="options.for.trajectories">
+											<label for="default-trajectories">{{ $t('By default') }}</label>
+										</span>
+										<span class="col-md-2 col-sm-12 col-xs-12">
+											<input type="radio" id="all-trajectories" value="all" name="for-trajectories" v-model="options.for.trajectories">
+											<label for="all-trajectories">{{ $t('All') }}</label>
+										</span>
+										<span class="col-md-7 col-sm-12 col-xs-12">
+											<input type="radio" id="custom-trajectories" value="custom" name="for-trajectories" v-model="options.for.trajectories">
+											<label for="custom-trajectories">{{ $t('Custom') }}</label>
+										</span>
+									</div>
+
+									<div class="col-md-12" style="display: table" v-if="options.for.trajectories === 'custom'">
+										<multiselect v-model="options.trajectories" :options="trajectoriesForMultiselect" :placeholder="$t('Select trajectories')" group-values="trajectories" group-label="route" label="name" track-by="id" :multiple="true"></multiselect>
+									</div>
+								</div>
+							</div>
                         </div>
                     </div>
                     <div class="modal-footer col-md-12 text-center">

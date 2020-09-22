@@ -91,9 +91,9 @@
                             <td class="text-center">{{ mark.locks }}</td>
                             <td class="text-center">{{ mark.boarded }}</td>
                             <td class="text-center">{{ mark.penalty.value | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ turn.totalDispatch | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ turn.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ mark.payRollCost | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ turnNetToCar(mark, turn) | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ turnNetToCar(mark, turn) | thousandRound | numberFormat('$0,0') }}</td>
                         </tr>
                         <tr>
                             <td colspan="3" class="text-right">
@@ -111,9 +111,9 @@
                             <td class="text-center">{{ totals.totalLocks }}</td>
                             <td class="text-center">{{ totals.totalBoarded }}</td>
                             <td class="text-center">{{ totals.totalPenalties | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ totals.totalDispatch | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ totalPayRollCost | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ totalNetToCar | numberFormat('$0,0') }}</td>
+                            <td class="text-center">{{ totalNetToCar | thousandRound | numberFormat('$0,0') }}</td>
                         </tr>
                         </tbody>
                     </table>

@@ -27,6 +27,13 @@ Vue.filter('capitalize', function (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
 });
 
+Vue.filter('thousandRound', function (value) {
+    // return value;
+    const absValue = Math.abs(value);
+
+    return (value < 0 ? -1 : 1) * Math.round(absValue / 1000) * 1000;
+});
+
 window.ml = {
     discountTypes: {
         auxiliary: 1,
@@ -117,9 +124,9 @@ let liquidationView = new Vue({
 
             const totalTurns = totalGrossBea + totalPenalties;
             const subTotalTurns = totalTurns - totalPayFall + totalGetFall;
-            const totalDispatch = totalTurns - (totalDiscounts - totalDiscountByMobilityAuxilio) - totalCommissions;
-            // const balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
-            const balance = totalDispatch - totalPayFall + totalGetFall;
+            const totalDispatch = totalTurns - (totalDiscounts - totalDiscountByFuel - totalDiscountByMobilityAuxilio) - totalCommissions;
+            const balance = totalDispatch - totalPayFall + totalGetFall - totalDiscountByFuel;
+            // const balance = totalDispatch - totalPayFall + totalGetFall;
 
             return {
                 // Totals

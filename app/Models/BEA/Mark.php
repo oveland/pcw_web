@@ -2,14 +2,12 @@
 
 namespace App\Models\BEA;
 
-use DateTime;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use PhpParser\Node\Expr\Cast\Object_;
 
 /**
  * App\Models\BEA\Mark
@@ -90,17 +88,17 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property int|null $duplicated_mark_id
  * @property int|null $bea_id
  * @property int $company_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark enabled()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereBeaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereDuplicated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereDuplicatedMarkId($value)
+ * @method static Builder|Mark enabled()
+ * @method static Builder|Mark whereBeaId($value)
+ * @method static Builder|Mark whereCompanyId($value)
+ * @method static Builder|Mark whereDuplicated($value)
+ * @method static Builder|Mark whereDuplicatedMarkId($value)
  * @property bool|null $ignore_trigger
  * @property-read mixed $pay_roll_cost
  * @property-read int|null $mark_commissions_count
  * @property-read int|null $mark_discounts_count
  * @property-read int|null $mark_penalties_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\Mark whereIgnoreTrigger($value)
+ * @method static Builder|Mark whereIgnoreTrigger($value)
  */
 class Mark extends Model
 {
@@ -273,7 +271,7 @@ class Mark extends Model
     {
         $markCommissions = $this->markCommissions;
         if ($this->liquidated && $markCommissions->isNotEmpty()) return $markCommissions->first();
-        return Commission::with('route')->where('route_id', $this->turn->route->id)->first();
+        return Commission::with(['route', 'vehicle'])->where('route_id', $this->turn->route->id)->where('vehicle_id', $this->turn->vehicle->id)->first();
     }
 
     /**
