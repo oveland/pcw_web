@@ -785,5 +785,7 @@
   "percentBEA": "Porcentaje de BEA",
   "fixedBEA": "Valor fijo",
   "Settings": "Ajustes",
-  "Historic takings": "Historial de recaudo"
+  "Historic takings": "Historial de recaudo",
+  "Total others discounts": "Total otros descuentos",
+  "Before takings, pleas save the changes by Other discounts": "Antes de recaudar, porfavor guarde los cambios por concepto de Otros Descuentos"
 }

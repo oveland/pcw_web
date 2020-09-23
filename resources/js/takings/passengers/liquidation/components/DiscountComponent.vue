@@ -33,29 +33,65 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="" v-for="mark in marks">
-                <td class="text-center">{{ mark.number }}</td>
-                <td class="col-md-2 text-center">
-                    <span>{{ mark.turn.route.name }}</span><br>
-                    <span class="span-full badge badge-info" v-if="mark.trajectory">
+			<template v-for="mark in marks">
+				<tr class="">
+					<td class="text-center">{{ mark.number }}</td>
+					<td class="col-md-2 text-center">
+						<span>{{ mark.turn.route.name }}</span><br>
+						<span class="span-full badge badge-info" v-if="mark.trajectory">
                         {{ mark.trajectory.name }}
                     </span>
-                    <span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
-                </td>
-                <td class="text-center">{{ mark.locks }}</td>
-                <td class="text-center">{{ mark.auxiliaries }}</td>
-                <td class="text-center">{{ mark.boarded }}</td>
-                <td class="text-center">{{ mark.passengersBEA }}</td>
-                <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
-                <td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
-                <td class="text-center col-md-3">
-                    <div v-for="discount in orderBy(mark.discounts, 'discount_type_id')" v-if="discount">
-                        <span :data-original-title="discount.discount_type.description" class="tooltips">
-                            <i :class="discount.discount_type.icon"></i> {{ discount.value | numberFormat('$0,0') }}
-                        </span><br>
-                    </div>
-                </td>
-            </tr>
+						<span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
+					</td>
+					<td class="text-center">{{ mark.locks }}</td>
+					<td class="text-center">{{ mark.auxiliaries }}</td>
+					<td class="text-center">{{ mark.boarded }}</td>
+					<td class="text-center">{{ mark.passengersBEA }}</td>
+					<td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
+					<td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
+					<td class="text-right col-md-3">
+						<div v-for="discount in orderBy(mark.discounts, 'discount_type_id')" v-if="discount">
+							<span :data-original-title="discount.discount_type.description" class="tooltips">
+								<i :class="discount.discount_type.icon"></i> {{ discount.value | numberFormat('$0,0') }}
+							</span><br>
+						</div>
+						<div v-if="!readonly" class="divider-other-discount">
+							<button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount(mark.id)">
+								<i class="fa fa-plus"></i> {{ $t('Add') }}
+							</button>
+							<button v-if="control.canUpdate && control.enableSaving && !control.processing" class="btn btn-sm green m-t-5 hide" @click="$emit('update-liquidation')">
+								<i class="fa fa-save"></i> {{ $t('Save') }}
+							</button>
+						</div>
+					</td>
+				</tr>
+				<tr class="" v-for="otherDiscount in otherDiscountByTurn(mark.id)">
+					<td colspan="8" class="text-right">
+						<div class="text-bold col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-r-0">
+							<div class="input-group" :class="!readonly ? '' : 'input-group-other-full'">
+								<span v-if="!readonly" class="input-group-addon faa-parent animated-hover tooltips" data-placement="bottom" :data-title="$t('Delete')" @click="removeOtherDiscount(otherDiscount.id)">
+									<i class="fa fa-trash faa-shake font-red"></i>
+								</span>
+								<div class="input-icon">
+									<i class="icon-tag font-green"></i> <input type="text" :disabled="readonly" class="form-control input-desc-other-discount" :placeholder="$t('Description')" v-model="otherDiscount.name" @keyup="control.enableSaving = true">
+								</div>
+								<span v-if="otherDiscount.hasFile" class="input-group-addon faa-parent animated-hover tooltips" data-placement="left" :data-title="$t('Show file')" data-toggle="modal" data-target="#modal-show-file-discount" @click="showImagePreview(otherDiscount)">
+									<i class="fa fa-image faa-shake font-red"></i>
+								</span>
+								<span v-if="!readonly" class="input-group-addon">
+                            		<input type="file" accept="image/*" @change="addDiscountFile(otherDiscount)">
+                        		</span>
+							</div>
+						</div>
+					</td>
+					<td class="text-center">
+						<div class="input-icon">
+							<i class="fa fa-dollar font-green"></i> <input type="number" :disabled="readonly" class="form-control input-other-discount" :placeholder="$t('Discount')" v-model.number="otherDiscount.value">
+						</div>
+					</td>
+				</tr>
+			</template>
+
             <tr>
                 <td colspan="9" style="height: 3px !important;background: gray;text-align: center;padding: 0;"></td>
             </tr>
@@ -69,8 +105,8 @@
                 <td class="text-center">{{ totals.totalPassengersBea }}</td>
                 <td class="text-center">{{ totals.totalBea | numberFormat('$0,0') }}</td>
                 <td class="text-center">{{ totals.totalGrossBea | numberFormat('$0,0') }}</td>
-                <td class="text-center">
-                    <div v-for="totalDiscount in orderBy(liquidation.discountsByTurns, 'type_id')" v-if="totalDiscount">
+                <td class="text-right">
+                    <div v-for="totalDiscount in orderBy(liquidation.discountsByTurns, 'discount.discount_type_id')" v-if="totalDiscount">
                         <span :data-original-title="totalDiscount.discount.discount_type.description" class="tooltips">
                             <i :class="totalDiscount.discount.discount_type.icon"></i> {{ totalDiscount.value | numberFormat('$0,0') }}
                         </span><br>
@@ -83,49 +119,22 @@
                     <i class="icon-tag"></i> {{ $t('Total Discount by turns') }}
                 </span>
                 </td>
-                <td class="text-center">
+                <td class="text-right">
                 <span :title="$t('Total discount')" class="text-bold tooltips">
                     {{ totals.totalDiscountsByTurns | numberFormat('$0,0') }}
                 </span><br>
                 </td>
             </tr>
-
-            <tr class="" v-for="otherDiscount in liquidation.otherDiscounts">
+            <tr class="total-discount-by-turn">
                 <td colspan="8" class="text-right">
-                <div class="text-bold col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-r-0">
-
-                    <div class="input-group">
-                        <span v-if="!readonly" class="input-group-addon faa-parent animated-hover tooltips" data-placement="bottom" :data-title="$t('Delete')" @click="removeOtherDiscount(otherDiscount.id)">
-                            <i class="fa fa-trash faa-shake font-red"></i>
-                        </span>
-                        <div class="input-icon">
-                            <i class="icon-tag font-green"></i> <input type="text" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Description')" v-model="otherDiscount.name" @keyup="control.enableSaving = true">
-                        </div>
-                        <span v-if="otherDiscount.hasFile" class="input-group-addon faa-parent animated-hover tooltips" data-placement="left" :data-title="$t('Show file')" data-toggle="modal" data-target="#modal-show-file-discount" @click="showImagePreview(otherDiscount)">
-                            <i class="fa fa-image faa-shake font-red"></i>
-                        </span>
-                        <span v-if="!readonly" class="input-group-addon">
-                            <input type="file" accept="image/*" class="" @change="addDiscountFile(otherDiscount)">
-                        </span>
-                    </div>
-
-                </div>
+                <span class="text-bold">
+                    <i class="icon-tag"></i> {{ $t('Total others discounts') }}
+                </span>
                 </td>
-                <td class="text-center">
-                    <div class="input-icon">
-                        <i class="fa fa-dollar font-green"></i> <input type="number" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Discount')" v-model.number="otherDiscount.value">
-                    </div>
-                </td>
-            </tr>
-
-            <tr v-if="!readonly" class="">
-                <td colspan="9" class="text-right">
-                    <button v-if="control.canUpdate && control.enableSaving && !control.processing" class="btn btn-sm green btn-outline-light btn-outline btn-white" @click="$emit('update-liquidation')">
-                        <i class="fa fa-plus"></i> {{ $t('Save') }}
-                    </button>
-                    <button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount()">
-                        <i class="fa fa-plus"></i> {{ $t('Add') }}
-                    </button>
+                <td class="text-right">
+                <span :title="$t('Total discount')" class="text-bold tooltips">
+                    {{ totals.totalOtherDiscounts | numberFormat('$0,0') }}
+                </span><br>
                 </td>
             </tr>
             </tbody>
@@ -214,13 +223,19 @@
                     this.hide();
                 }
             },
-            addOtherDiscount: function () {
+			otherDiscountByTurn(markId) {
+            	return _.filter(this.liquidation.otherDiscounts, function (other) {
+					return other.markId === markId;
+				});
+			},
+            addOtherDiscount: function (markId) {
                 const otherDiscountId = (new Date).getTime();
 
                 this.liquidation.otherDiscounts.push({
                     id: otherDiscountId,
                     name: '',
                     value: '',
+					markId: markId,
                     fileUrl: null,
                     hasFile: false
                 });
@@ -269,4 +284,27 @@
     .input-icon > i {
         margin: 8px 2px 4px 10px !important;
     }
+
+	.divider-other-discount {
+		margin-top: 5px;
+		padding-top: 5px;
+		border-top: 1px solid #d3d3d38a;
+	}
+	.divider-other-discount button{
+		width: 100%;
+	}
+
+	.input-other-discount{
+		text-align: right !important;
+		padding-right: 0 !important;
+	}
+	.input-other-discount input{
+		text-align: right !important;
+		padding-right: 0 !important;
+		margin: 10px 0 0 5px !important;
+	}
+
+	.input-group-other-full {
+		display: block;
+	}
 </style>

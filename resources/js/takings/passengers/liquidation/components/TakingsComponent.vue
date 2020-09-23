@@ -177,10 +177,12 @@
                                                             <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
                                                                 <div class="text-center col-md-12 col-sm-12 col-xs-12 m-10">
-                                                                    <button v-if="!control.enableSaving && !control.processing" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken">
+                                                                    <button v-if="!control.enableSaving && !control.processing" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken"
+																		>
                                                                         <i class="fa fa-suitcase"></i> {{ $t('Taking') }}
                                                                     </button>
-                                                                    <button v-if="control.enableSaving" class="btn btn-circle green btn-outline f-s-13 uppercase" @click="updateLiquidation">
+                                                                    <button v-if="control.enableSaving" class="btn btn-circle green btn-outline f-s-13 uppercase tooltips" @click="updateLiquidation"
+																			:data-title="$t('Before takings, pleas save the changes by Other discounts')">
                                                                         <i class="fa fa-save"></i> {{ $t('Save') }}
                                                                     </button>
                                                                 </div>
@@ -275,7 +277,13 @@
         },
         computed:{
             totals: function () {
-                let totals = this.liquidation.totals;
+
+				this.liquidation.liquidation.byTurns = [];
+				_.forEach(this.liquidation.marks, (mark) => {
+					this.liquidation.liquidation.byTurns.push(this.liquidationByTurn(mark));
+				});
+
+				let totals = this.liquidation.totals;
 
                 totals.totalOtherDiscounts = _.sumBy(this.liquidation.liquidation.otherDiscounts, function (other) {
                     return (Number.isInteger(other.value) ? other.value : 0);
@@ -284,6 +292,9 @@
                 const totalDiscounts = parseInt(totals.totalDiscountsByTurns) + parseInt(totals.totalOtherDiscounts);
                 if(totalDiscounts !== totals.totalDiscounts){
                     this.control.enableSaving = true;
+					setTimeout(() => {
+						$('.tooltips').tooltip();
+					}, 500);
                 }
 
                 const totalDispatch = totals.totalTurns - ( totalDiscounts - totals.totalDiscountByFuel - totals.totalDiscountByMobilityAuxilio) - totals.totalCommissions;
@@ -388,7 +399,68 @@
                     this.control.processing = false;
                     Swal.close();
                 });
-            }
+            },
+			/***************** LIQUIDATION BY TURN (MARK) ********************/
+			liquidationByTurn: function (mark) {
+				const penalty = mark.penalty;
+				const commission = mark.commission;
+
+				const payFall = (Number.isInteger(mark.payFall) ? mark.payFall : 0);
+				const getFall = (Number.isInteger(mark.getFall) ? mark.getFall : 0);
+				const turnDiscounts = this.turnDiscounts(mark);
+				const totalTurn = mark.totalGrossBEA + (penalty ? penalty.value : 0);
+				const subTotalTurn = totalTurn - payFall + getFall;
+				const totalDispatch = totalTurn - (turnDiscounts.total - turnDiscounts.byFuel - turnDiscounts.byMobilityAuxilio) - (commission ? commission.value : 0);
+				const balance = totalDispatch - payFall + getFall - turnDiscounts.byFuel;
+
+				return {
+					markId: mark.id,
+					payFall,
+					getFall,
+					turnDiscounts,
+					totalTurn,
+					subTotalTurn,
+					totalDispatch,
+					balance
+				};
+			},
+			turnDiscounts: function (mark) {
+				let discounts = {
+					byMobilityAuxilio: 0,
+					byFuel: 0,
+					byOperativeExpenses: 0,
+					byTolls: 0,
+					byOthers: 0,
+					total: 0
+				};
+
+				_.each(mark.discounts, function (discount) {
+					switch (discount.discount_type.uid) {
+						case window.ml.discountTypes.auxiliary:
+							discounts.byMobilityAuxilio = discount.value;
+							break;
+						case window.ml.discountTypes.fuel:
+							discounts.byFuel = discount.value;
+							break;
+						case window.ml.discountTypes.operative:
+							discounts.byOperativeExpenses = discount.value;
+							break;
+						case window.ml.discountTypes.toll:
+							discounts.byTolls = discount.value;
+							break;
+					}
+					discounts.total += discount.value;
+				});
+
+				const others = _.filter(this.liquidation.liquidation.otherDiscounts, function (other) {
+					return other.markId === mark.id;
+				});
+
+				discounts.byOthers = others.length ? _.sumBy(others, 'value') : 0;
+				discounts.total += discounts.byOthers;
+
+				return discounts;
+			},
         },
         components: {
             TableComponent,

@@ -261,11 +261,11 @@ let liquidationView = new Vue({
                 byFuel: 0,
                 byOperativeExpenses: 0,
                 byTolls: 0,
+                byOthers: 0,
                 total: 0
             };
 
             _.each(mark.discounts, function (discount) {
-
                 switch (discount.discount_type.uid) {
                     case window.ml.discountTypes.auxiliary:
                         discounts.byMobilityAuxilio = discount.value;
@@ -282,6 +282,13 @@ let liquidationView = new Vue({
                 }
                 discounts.total += discount.value;
             });
+
+            const others = _.filter(this.liquidation.otherDiscounts, function (other) {
+                return other.markId === mark.id;
+            });
+
+            discounts.byOthers = others.length ? _.sumBy(others, 'value') : 0;
+            discounts.total += discounts.byOthers;
 
             return discounts;
         },

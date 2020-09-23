@@ -3,6 +3,11 @@
       return '$' . number_format($value, 0);
     }
 
+    function thousandRound($value) {
+        $absValue = abs($value);
+        return ($value < 0 ? -1 : 1) * round($absValue / 1000) * 1000;
+    }
+
     $totals = $liquidation->totals;
     $liquidationBYTurn = (object) collect($liquidation->liquidation->byTurns)->where('markId', $mark->id)->first();
 @endphp
@@ -122,12 +127,20 @@
             </span>
         <span class="pull-right col-md-4">{{ asDollars($liquidationBYTurn->turnDiscounts['byOperativeExpenses']) }}</span>
     </h4>
+    @if($liquidationBYTurn->turnDiscounts['byOthers'])
+        <h4 class="totals">
+            <span class="">
+                <i class="fa fa-dollar"></i> @lang('Total other discounts')
+            </span>
+            <span class="pull-right col-md-4">{{ asDollars($liquidationBYTurn->turnDiscounts['byOthers']) }}</span>
+        </h4>
+    @endif
 
     <h3 class="totals">
             <span class="text-bold">
                 <i class=" icon-user-follow"></i> @lang('Total dispatch')
             </span>
-        <span class="pull-right text-bold col-md-4">{{ asDollars($liquidationBYTurn->totalDispatch) }}</span>
+        <span class="pull-right text-bold col-md-4">{{ asDollars(thousandRound($liquidationBYTurn->totalDispatch)) }}</span>
     </h3>
 
     <hr class="hr">
@@ -142,7 +155,7 @@
             <span class="text-bold">
                 @lang('Balance')
             </span>
-        <span class="pull-right text-bold">{{ asDollars($liquidationBYTurn->balance) }}</span>
+        <span class="pull-right text-bold">{{ asDollars(thousandRound($liquidationBYTurn->balance)) }}</span>
     </h3>
 
     <hr class="hr">

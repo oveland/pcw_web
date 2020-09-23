@@ -3,6 +3,11 @@
       return '$' . number_format($value, 0);
     }
 
+    function thousandRound($value) {
+        $absValue = abs($value);
+        return ($value < 0 ? -1 : 1) * round($absValue / 1000) * 1000;
+    }
+
     $totals = $liquidation->totals;
 @endphp
 <style>
@@ -134,7 +139,7 @@
             <span class="text-bold">
                 <i class=" icon-user-follow"></i> @lang('Total dispatch')
             </span>
-        <span class="pull-right text-bold col-md-4">{{ asDollars($totals->totalDispatch) }}</span>
+        <span class="pull-right text-bold col-md-4">{{ asDollars(thousandRound($totals->totalDispatch)) }}</span>
     </h3>
 
     <hr class="hr">
@@ -149,7 +154,7 @@
             <span class="text-bold">
                 @lang('Balance')
             </span>
-        <span class="pull-right text-bold">{{ asDollars($totals->balance) }}</span>
+        <span class="pull-right text-bold">{{ asDollars(thousandRound($totals->balance)) }}</span>
     </h3>
 
     <hr class="hr">
