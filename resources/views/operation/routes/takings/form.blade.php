@@ -80,6 +80,7 @@
                     </div>
                 </div>
             </div>
+            @if(!$dispatchRegister->onlyControlTakings())
             <div class="form-group">
                 <label for="fuel" class="col-md-5 control-label">@lang('Station')</label>
                 <div class="col-md-7">
@@ -100,6 +101,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <hr class="hr no-padding">
 

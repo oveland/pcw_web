@@ -50,7 +50,7 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
@@ -114,7 +114,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 options with-route">
+                        <div class="col-md-2 options with-route">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
