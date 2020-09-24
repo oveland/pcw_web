@@ -559,55 +559,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                             <i class="fa fa-compass faa-vertical"></i>
                                             @lang('Recorders')
                                         </a>
-                                        <ul class="sub-menu hide">
-                                            <li class="nav-item menu-passengers-recorders-consolidated">
-                                                <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="faa-parent animated-hover nav-link">
-                                                    <i class="fa fa-archive faa-vertical"></i>
-                                                    @lang('Consolidated')
-                                                </a>
-                                                <ul class="sub-menu hide">
-                                                    <li class="nav-item menu-passengers-recorders-consolidated-days">
-                                                        <a href="{{ route('report-passengers-recorders-consolidated-daily')  }}" class="faa-parent animated-hover nav-link">
-                                                            <i class="fa fa-file-archive-o faa-vertical" aria-hidden="true"></i>
-                                                            @lang('Daily')
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item menu-passengers-recorders-consolidated-range">
-                                                        <a href="{{ route('report-passengers-recorders-consolidated-date-range')  }}" class="faa-parent animated-hover nav-link">
-                                                            <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
-                                                            @lang('Date range')
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="nav-item menu-passengers-recorders-detailed hide">
-                                                <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
-                                                    <i class="fa fa-list-alt faa-vertical"></i>
-                                                    @lang('Detailed')
-                                                    <span class="arrow"></span>
-                                                </a>
-                                                <ul class="sub-menu">
-                                                    <li class="nav-item menu-passengers-recorders-detailed-days">
-                                                        <a href="{{ route('report-passengers-recorders-detailed-daily')  }}" class="faa-parent animated-hover nav-link">
-                                                            <i class="fa fa-file-text-o faa-vertical" aria-hidden="true"></i>
-                                                            @lang('Daily')
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item menu-passengers-recorders-detailed-range">
-                                                        <a href="{{ route('report-passengers-recorders-detailed-date-range')  }}" class="faa-parent animated-hover nav-link">
-                                                            <i class="fa fa-calendar faa-vertical" aria-hidden="true"></i>
-                                                            @lang('Date range')
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="nav-item menu-passengers-recorders-fringes">
-                                                <a href="{{ route('report-passengers-recorders-fringes') }}" class="faa-parent animated-hover nav-link">
-                                                    <i class="fa fa-industry faa-vertical"></i>
-                                                    @lang('Fringes')
-                                                </a>
-                                            </li>
-                                        </ul>
+                                    </li>
+                                    <li class="nav-item menu-passengers-fringes">
+                                        <a href="{{ route('report-passengers-fringes') }}" class="faa-parent animated-hover nav-link">
+                                            <i class="fa fa-industry faa-vertical"></i>
+                                            @lang('Fringes')
+                                        </a>
                                     </li>
                                 @endif
 

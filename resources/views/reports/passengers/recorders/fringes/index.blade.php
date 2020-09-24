@@ -22,7 +22,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-recorders-fringes-search') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-fringes-search') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -110,7 +110,7 @@
         var mainContainer = $('.main-container');
         var form = $('.form-search-report');
 
-        $('.menu-passengers, .menu-passengers-recorders, .menu-passengers-recorders-fringes').addClass('active-animated');
+        $('.menu-passengers, .menu-passengers-fringes').addClass('active-animated');
 
         $(document).ready(function () {
             form.submit(function (e) {

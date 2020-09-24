@@ -20,14 +20,14 @@ use App\Models\Company\Company;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
-class PassengersReportDateRangeController extends Controller
+class PassengersRecordersReportController extends Controller
 {
     use CounterByRecorder;
 
     private $pcwAuthService;
 
     /**
-     * PassengersReportDateRangeController constructor.
+     * PassengersRecordersReportController constructor.
      * @param PCWAuthService $pcwAuthService
      */
     public function __construct(PCWAuthService $pcwAuthService)
@@ -146,6 +146,8 @@ class PassengersReportDateRangeController extends Controller
             return [$m->first()->vehicle_id => $m];
         });
 
+        $IPK = $reports->sum('mileage') > 0 ? $reports->sum('totalByRecorder') / $reports->sum('mileage') : 0;
+
         $passengerReport = (object)[
             'route' => $route,
             'routeReport' => $route ? $route->id : 'all',
@@ -161,6 +163,8 @@ class PassengersReportDateRangeController extends Controller
             'totalRecorder' => $reports->sum('totalByRecorder'),
             'totalSensorRecorder' => $reports->sum('totalBySensorRecorder'),
             'totalRoundTrips' => $reports->sum('roundTrips'),
+            'totalMileage' => $reports->sum('mileage'),
+            'IPK' => $IPK,
             'groupByVehicle' => $groupByVehicle,
             'groupByRoute' => $groupByRoute,
             'groupByDate' => $groupByDate,
@@ -193,6 +197,10 @@ class PassengersReportDateRangeController extends Controller
             $sensor = $passengerBySensorByDates->where('date', $date->toDateString())->first();
             $recorder = $passengerByRecorderByDates->where('date', $date->toDateString())->first();
 
+            $mileage = $recorder->mileage ?? 0;
+
+            $IPK = $mileage > 0 ? $recorder->totalByRecorder / $mileage : 0;
+
             $reports->push((object)[
                 'date' => $date->toDateString(),
                 'totalByRecorder' => $recorder->totalByRecorder ?? 0,
@@ -200,6 +208,8 @@ class PassengersReportDateRangeController extends Controller
                 'totalBySensorRecorder' => $sensor->totalBySensorRecorder ?? 0,
                 'issues' => collect($recorder ? $recorder->issues : []),
                 'roundTrips' => $sensor->totalRoundTrips ?? 0,
+                'mileage' => $recorder->mileage ?? 0,
+                'IPK' => $IPK,
                 'frame' => '',
                 'route' => $route,
                 'vehicle' => $vehicle,
@@ -213,14 +223,20 @@ class PassengersReportDateRangeController extends Controller
         if (!$groupByDates && $reports->count()) {
             $dateRangeStr = $dateRange->first()->toDateString() . " a " . $dateRange->last()->toDateString();
 
+            $mileage = $reports->sum('mileage');
+            $totalByRecorder = $reports->sum('totalByRecorder');
+            $IPK = $mileage > 0 ? $totalByRecorder / $mileage : 0;
+
             $reports = collect([
                 (object)[
                     'date' => $dateRangeStr,
-                    'totalByRecorder' => $reports->sum('totalByRecorder'),
+                    'totalByRecorder' => $totalByRecorder,
                     'totalBySensor' => $reports->sum('totalBySensor'),
                     'totalBySensorRecorder' => $reports->sum('totalBySensorRecorder'),
                     'issues' => $reports->pluck('issues')->collapse(),
-                    'roundTrips' => $reports->sum('totalRoundTrips'),
+                    'roundTrips' => $reports->sum('roundTrips'),
+                    'mileage' => $mileage,
+                    'IPK' => $IPK,
                     'frame' => '',
                     'route' => $route,
                     'vehicle' => $vehicle,
@@ -256,11 +272,11 @@ class PassengersReportDateRangeController extends Controller
                 __('Vehicle') => $report->vehicleProcessed,                 # D CELL
                 __('Driver') => $report->driverProcessed,                   # E CELL
                 __('Total round trips') => $report->roundTrips,             # F CELL
-                __('Sensor recorder') => $report->totalBySensorRecorder,    # G CELL
+                __('Mileage') => $report->mileage,                          # G CELL
                 __('Recorder') => $report->totalByRecorder,                 # H CELL
-                __('Sensor') => $report->totalBySensor,                     # I CELL
+                __('IPK') => $report->IPK,                                  # I CELL
             ]);
-            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
+//            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
 
             $dataExcel[] = $data->toArray();
         }
@@ -294,7 +310,8 @@ class PassengersReportDateRangeController extends Controller
                 'date' => $date,
                 'totalBySensor' => $report->report->sum('passengersBySensor'),
                 'totalBySensorRecorder' => $report->report->sum('passengersBySensorRecorder'),
-                'totalRoundTrips' => count($dispatchRegistersByDate)
+                'totalRoundTrips' => count($dispatchRegistersByDate),
+                'mileage' => $dispatchRegistersByDate->sum('mileage'),
             ]);
         }
 
@@ -320,7 +337,8 @@ class PassengersReportDateRangeController extends Controller
                 'issues' => $report->issues,
                 'lastVehicleNumber' => $report->lastVehicleNumber,
                 'lastDriverName' => $report->lastDriverName,
-                'totalRoundTrips' => count($dispatchRegistersByDate)
+                'totalRoundTrips' => count($dispatchRegistersByDate),
+                'mileage' => $dispatchRegistersByDate->sum('mileage'),
             ]);
         }
 

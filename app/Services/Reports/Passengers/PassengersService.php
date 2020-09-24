@@ -14,20 +14,14 @@ class PassengersService
      * @var ConsolidatedService
      */
     public $consolidated;
-    /**
-     * @var DetailedService
-     */
-    public $detailed;
 
     /**
      * PassengersService constructor.
      *
      * @param ConsolidatedService $consolidatedService
-     * @param DetailedService $detailedService
      */
-    public function __construct(ConsolidatedService $consolidatedService, DetailedService $detailedService)
+    public function __construct(ConsolidatedService $consolidatedService)
     {
         $this->consolidated = $consolidatedService;
-        $this->detailed = $detailedService;
     }
 }

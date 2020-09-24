@@ -8,11 +8,6 @@
                    class="btn btn-success btn-rounded tooltips" data-title="@lang('Export excel')">
                     <i class="fa fa-download"></i>
                 </a>
-                @if( $passengerReport->vehicleReport != 'all' && Auth::user()->isAdmin() )
-                <a href="javascript:;" class="btn btn-rounded btn-info tooltips" onclick="$('.collapse-frame').collapse('show')" data-title="@lang('See all frames')">
-                    <i class="fa fa-podcast faa-pulse animated"></i>
-                </a>
-                @endif
             </div>
             <h5 class="text-white m-t-10">
                 <soan class="text-bold text-white">
@@ -33,25 +28,6 @@
                     | <i class="fa fa-user" aria-hidden="true"></i> {{ $passengerReport->driver->fullName }}
                 </small>
                 @endif
-                <br>
-
-                <ul class="nav nav-pills nav-pills-success hide">
-                    <li class="active">
-                        <a href="#all-report-tab" data-toggle="tab" aria-expanded="true" onclick="$('.sensor,.recorder').show()">
-                            <i class="fa fa-asterisk" aria-hidden="true"></i> @lang('All')
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="#all-report-tab" data-toggle="tab" aria-expanded="true" onclick="$('.sensor').show();$('.recorder').hide()">
-                            <i class="fa fa-microchip" aria-hidden="true"></i> @lang('Sensor')
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="#all-report-tab" data-toggle="tab" aria-expanded="true" onclick="$('.recorder').show();$('.sensor').hide()">
-                            <i class="fa fa-compass" aria-hidden="true"></i> @lang('Recorder')
-                        </a>
-                    </li>
-                </ul>
             </h5>
         </div>
         <div class="tab-content p-0">
@@ -89,7 +65,10 @@
                             <i class="fa fa-user" aria-hidden="true"></i><br> @lang('Driver')
                         </th>
                         <th class="text-center">
-                            <i class="fa fa-retweet" aria-hidden="true"></i><br> @lang('Total round trips')
+                            <i class="fa fa-retweet" aria-hidden="true"></i><br> @lang('Total') <br> @lang('Round trips')
+                        </th>
+                        <th class="text-center">
+                            <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage')<br> @lang('Round trips')
                         </th>
                         <th class="text-center sensor recorder">
                             <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i><br> @lang('Sensor recorder')
@@ -98,10 +77,13 @@
                             <i class="fa fa-compass" aria-hidden="true"></i><br> @lang('Passengers') <br> @lang('Recorder')
                         </th>
                         <th class="text-center sensor">
-                            <i class="fa fa-crosshairs" aria-hidden="true"></i> @lang('Sensor')
+                            <i class="fa fa-crosshairs" aria-hidden="true"></i><br> @lang('Sensor')
+                        </th>
+                        <th class="text-center">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i><br> @lang('IPK')
                         </th>
                         <th class="p-3 {{ $passengerReport->canLiquidate ? '' : 'hide' }}">
-                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i> @lang('Settlement daily receipt')
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i><br> @lang('Settlement daily receipt')
                         </th>
                     </tr>
                     </thead>
@@ -130,14 +112,16 @@
                             <td>{{ $report->vehicleProcessed }} </td>
                             <td class="">{{ $report->driverProcessed }} </td>
                             <td>{{ $report->roundTrips }} </td>
+                            <td>{{ number_format($report->mileage, 1) }} </td>
                             <td class="sensor recorder">{{ $sensorRecorder }}</td>
                             <td class="recorder text-center">
                                 <span class="{{ count($issuesByVehicles) ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
                                       onclick="{{ count($issuesByVehicles) ? "$('#issue-$date').collapse('show');":""  }}">
-                                    {{ $recorder }}
+                                    {{ number_format($recorder, 0) }}
                                 </span>
                             </td>
                             <td class="sensor">{{ $sensor }}</td>
+                            <td class="">{{ number_format($report->IPK, 2) }}</td>
                             <td class="p-3 {{ $passengerReport->canLiquidate ? '' : 'hide' }}">
                                 @if($report->vehicle)
                                     @if($report->issues->count())
@@ -185,19 +169,15 @@
                         </tr>
                         @endif
                     @endforeach
-                    <tr class="inverse bg-default hide">
-                        <td colspan="5" class="text-right">@lang('Average')</td>
-                        <td class="text-center recorder">{{ number_format($passengerReport->totalRoundTrips/count($reports),1) }}</td>
-                        <td class="text-center sensor recorder">{{ number_format($totalSensorRecorder->average(),1) }}</td>
-                        <td class="text-center recorder">{{ number_format($totalRecorder->average(),1) }}</td>
-                        <td class="text-center sensor">{{ number_format($totalSensor->average(),1) }}</td>
-                    </tr>
                     <tr class="inverse bg-inverse text-white">
                         <td colspan="5" class="text-right text-uppercase">@lang('Totals')</td>
                         <td class="text-center recorder">{{ $passengerReport->totalRoundTrips }}</td>
+                        <td class="text-center recorder">{{ number_format($passengerReport->totalMileage,1) }}</td>
                         <td class="text-center sensor recorder">{{ $totalSensorRecorder->sum() }}</td>
-                        <td class="text-center recorder">{{ $totalRecorder->sum() }}</td>
+                        <td class="text-center recorder">{{ number_format($passengerReport->totalRecorder, 0) }}</td>
                         <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
+                        <td class="text-center recorder">{{ number_format($passengerReport->IPK,2) }}</td>
+                        <td class="text-center {{ $passengerReport->canLiquidate ? '' : 'hide' }}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -209,6 +189,12 @@
     <script type="text/javascript">
         $('[data-toggle="tooltip"]').tooltip();
     </script>
+
+    <style>
+        .sensor{
+            display: none;
+        }
+    </style>
 @else
     @include('partials.alerts.noRegistersFound')
 @endif

@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Company\Company;
-use App\Services\Reports\Passengers\PassengersService as PassengersReporter;
+use App\Services\Reports\Passengers\PassengersService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -13,9 +13,9 @@ class ConsolidatedPassengersReportMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * @var PassengersReporter
+     * @var PassengersService
      */
-    private $passengersReporter;
+    private $passengersService;
 
     /**
      * @var Company
@@ -37,7 +37,7 @@ class ConsolidatedPassengersReportMail extends Mailable
     {
         $this->company = $company;
         $this->dateReport = $dateReport;
-        $this->passengersReporter = app(PassengersReporter::class);
+        $this->passengersService = app(PassengersService::class);
         $this->production = false;
     }
 
@@ -48,8 +48,8 @@ class ConsolidatedPassengersReportMail extends Mailable
 
     public function buildReport()
     {
-        $this->consolidatedReports = $this->passengersReporter->consolidated->buildDailyReport($this->company, $this->dateReport);
-        $this->pathToConsolidatesReportFile = $this->passengersReporter->consolidated->exportDailyReportFiles($this->consolidatedReports, false);
+        $this->consolidatedReports = $this->passengersService->consolidated->buildDailyReport($this->company, $this->dateReport);
+        $this->pathToConsolidatesReportFile = $this->passengersService->consolidated->exportDailyReportFiles($this->consolidatedReports, false);
 
         return $this->consolidatedReports->totalReports > 0;
     }

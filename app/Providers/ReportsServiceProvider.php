@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Services\Exports\Routes\RouteExportService;
 use App\Services\Reports\Passengers\PassengersService;
-use App\Services\Reports\Passengers\DetailedService;
 use App\Services\Reports\Passengers\ConsolidatedService as ConsolidatedPassengersReports;
 
 
@@ -37,7 +36,7 @@ class ReportsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(PassengersService::class, function () {
-            return new PassengersService(new ConsolidatedPassengersReports(), new DetailedService());
+            return new PassengersService(new ConsolidatedPassengersReports());
         });
 
         $this->app->bind(RouteService::class, function () {

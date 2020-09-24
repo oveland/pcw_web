@@ -259,7 +259,7 @@
                                             </ul>
                                         </li>
                                         <li class="has-sub menu-passengers-recorders-fringes">
-                                            <a href="{{ route('report-passengers-recorders-fringes') }}" class="faa-parent animated-hover">
+                                            <a href="{{ route('report-passengers-fringes') }}" class="faa-parent animated-hover">
                                                 <i class="fa fa-industry faa-vertical"></i>
                                                 @lang('Fringes')
                                             </a>

@@ -147,7 +147,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
  * @property-read DispatchTariff $tariff
- * @property-read \RouteTariff $fuel_tariff
+ * @property-read RouteTariff $fuel_tariff
+ * @property-read mixed $mileage
  */
 class DispatchRegister extends Model
 {
@@ -397,7 +398,8 @@ class DispatchRegister extends Model
             'driver_id' => $this->driver ? $this->driver->id : null,
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
-            'forTakings' => $this->onlyControlTakings()
+            'forTakings' => $this->onlyControlTakings(),
+            'mileage' => $this->mileage
         ];
     }
 
@@ -576,6 +578,7 @@ class DispatchRegister extends Model
                 'start' => $this->start_recorder,
                 'end' => $this->end_recorder,
                 'count' => intval($this->end_recorder) - intval($this->start_recorder),
+                'mileage' => $this->mileage
             ]
         ];
     }
@@ -603,6 +606,11 @@ class DispatchRegister extends Model
         $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others - $takings->bonus;
 
         return $takings;
+    }
+
+    public function getMileageAttribute()
+    {
+        return $this->route->distance_in_km;
     }
 
     const CREATED_AT = 'date_created';

@@ -255,41 +255,24 @@ Route::group(['middleware' => ['auth']], function () {
 
             /* Router for recorders reports */
             Route::prefix(__('recorders'))->group(function () {
+                Route::get('/', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated');
+                Route::get('/range', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated-date-range');
+                Route::get('/show', 'PassengersRecordersReportController@show')->name('report-passengers-recorders-consolidated-date-range-search');
+                Route::get('/export', 'PassengersRecordersReportController@export')->name('report-passengers-recorders-consolidated-date-range-export');
+
                 /* Router for General Reports */
                 Route::prefix(__('consolidated'))->group(function () {
                     Route::prefix(__('daily'))->group(function () {
-                        Route::get('/', 'ReportPassengerRecorderConsolidatedDailyController@index')->name('report-passengers-recorders-consolidated-daily');
-                        Route::get('/show', 'ReportPassengerRecorderConsolidatedDailyController@show')->name('report-passengers-recorders-consolidated-daily-search');
-                        Route::get('/export', 'ReportPassengerRecorderConsolidatedDailyController@export')->name('report-passengers-recorders-consolidated-daily-export');
+                        Route::get('/', function (){
+                            return redirect(route('report-passengers-recorders-consolidated'));
+                        })->name('report-passengers-recorders-consolidated-daily');
                     });
                 });
+            });
 
-                Route::prefix('')->group(function () {
-                    Route::get('/', 'PassengersReportDateRangeController@index')->name('report-passengers-recorders-consolidated');
-                    Route::get('/range', 'PassengersReportDateRangeController@index')->name('report-passengers-recorders-consolidated-date-range');
-                    Route::get('/show', 'PassengersReportDateRangeController@show')->name('report-passengers-recorders-consolidated-date-range-search');
-                    Route::get('/export', 'PassengersReportDateRangeController@export')->name('report-passengers-recorders-consolidated-date-range-export');
-                });
-
-                /* Router for General Reports */
-                Route::prefix(__('detailed'))->group(function () {
-                    Route::prefix(__('daily'))->group(function () {
-                        Route::get('/', 'PassengerReportDetailedController@index')->name('report-passengers-recorders-detailed-daily');
-                        Route::get('/show', 'PassengerReportDetailedController@show')->name('report-passengers-recorders-detailed-daily-search');
-                        Route::get('/export', 'PassengerReportDetailedController@export')->name('report-passengers-recorders-detailed-daily-export');
-                    });
-
-                    Route::prefix(__('date-range'))->group(function () {
-                        Route::get('/', 'PassengerReportDetailedDateRangeController@index')->name('report-passengers-recorders-detailed-date-range');
-                        Route::get('/show', 'PassengerReportDetailedDateRangeController@show')->name('report-passengers-recorders-detailed-date-range-search');
-                        Route::get('/export', 'PassengerReportDetailedDateRangeController@export')->name('report-passengers-recorders-detailed-date-range-export');
-                    });
-                });
-
-                Route::prefix(__('fringes'))->group(function () {
-                    Route::get('/', 'RecorderPassengerReportByFringesController@index')->name('report-passengers-recorders-fringes');
-                    Route::get('/search', 'RecorderPassengerReportByFringesController@search')->name('report-passengers-recorders-fringes-search');
-                });
+            Route::prefix(__('fringes'))->group(function () {
+                Route::get('/', 'PassengerReportByFringesController@index')->name('report-passengers-fringes');
+                Route::get('/search', 'PassengerReportByFringesController@search')->name('report-passengers-fringes-search');
             });
 
             Route::prefix(__('sensors'))->group(function () {

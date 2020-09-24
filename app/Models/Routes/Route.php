@@ -60,7 +60,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Route whereDistanceThreshold($value)
  * @method static Builder|Route whereSamplingRadius($value)
  * @property-read RouteTariff $tariff
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Routes\Fringe[] $allFringes
+ * @property-read Collection|Fringe[] $allFringes
+ * @property-read mixed $distance_in_km
  */
 class Route extends Model
 {
@@ -154,5 +155,10 @@ class Route extends Model
             $tariff->fuel = 0;
         }
         return $tariff;
+    }
+
+    public function getDistanceInKmAttribute()
+    {
+        return $this->distance;
     }
 }
