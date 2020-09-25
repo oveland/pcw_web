@@ -439,7 +439,6 @@ class PassengersRecordersReport2Controller extends Controller
 
         $reports = collect([]);
         foreach ($dispatchRegistersByDates as $date => $dispatchRegistersByDate) {
-            $date = Carbon::createFromFormat(config('app.date_format'), $date)->format('Y-m-d');
             $report = CounterBySensor::report($dispatchRegistersByDate);
 
             $reports->put($date, (object)[
@@ -464,7 +463,6 @@ class PassengersRecordersReport2Controller extends Controller
 
         $reports = collect([]);
         foreach ($dispatchRegistersByDates as $date => $dispatchRegistersByDate) {
-            $date = Carbon::createFromFormat(config('app.date_format'), $date)->format('Y-m-d');
             $report = CounterByRecorder::report($dispatchRegistersByDate);
 
             $reports->put($date, (object)[

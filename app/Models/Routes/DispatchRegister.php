@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Routes\DispatchRegister
@@ -159,6 +160,19 @@ class DispatchRegister extends Model
     function getDateFormat()
     {
         return config('app.simple_date_time_format');
+    }
+
+    /**
+     * @param $date
+     * @return string
+     */
+    public function getDateAttribute($date)
+    {
+        if (Str::contains($date, '-')) {
+            return Carbon::createFromFormat('Y-m-d', explode(' ', $date)[0])->toDateString();
+        }
+
+        return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0])->toDateString();
     }
 
     public function getDepartureTimeAttribute($departure_time)
