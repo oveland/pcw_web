@@ -1442,7 +1442,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <template id="animated-loading">
     <div class="col-md-12 text-center">
-        <img class="" alt="@lang('Loading')..." src="{{ asset('img/loading.gif') }}">
+        <img class="" alt="@lang('Loading')..." src="http://www.pcwserviciosgps.com/files/loading.svg" height="200px">
     </div>
 </template>
 

@@ -101,7 +101,7 @@
     <script>
         $(document).ready(function () {
             $('#modal-migration').on('hidden.bs.modal', function () {
-                $('.container-migration').empty().html($('#animated-loading').html());
+                $('.container-migration').empty().hide().html($('#animated-loading').html()).show();
                 location.reload();
             });
         });

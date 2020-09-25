@@ -171,7 +171,7 @@
         $(document).ready(function () {
             form.submit(function (e) {
                 e.preventDefault();
-                mainContainer.show().empty().html($('#animated-loading').html());
+                mainContainer.show().empty().hide().html($('#animated-loading').html()).show();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
                     $.ajax({

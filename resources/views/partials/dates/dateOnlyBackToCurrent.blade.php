@@ -1,5 +1,5 @@
 <div class="alert alert-danger alert-bordered fade in m-b-10 col-md-6 col-md-offset-3">
-    <div class="col-md-2" style="padding-top: 10px">
+    <div class="col-md-2" style="padding-top: 20px">
         <i class="fa fa-3x fa-exclamation-circle"></i>
     </div>
     <div class="col-md-10">

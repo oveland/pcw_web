@@ -247,7 +247,7 @@
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-
+                    reportContainer.empty().hide().html($('#animated-loading').html()).show();
                     $.ajax({
                         url: form.attr('action'),
                         data: form.serialize(),
@@ -256,6 +256,9 @@
                         },
                         complete: function () {
                             form.find('.btn-search-report').removeClass(loadingClass);
+                        },
+                        error: function (data) {
+                            reportContainer.empty().fadeIn();
                         }
                     });
                 }

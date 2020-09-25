@@ -717,5 +717,6 @@
   "Programmed": "Programado",
   "Mileage round trips": "Kilometraje vueltas",
   "Mileage programmed": "Kilometraje programado",
-  "No data": "•"
+  "No data": "•",
+  "The date range must be less than :limit days": "El rango de fechas no debe superar los :limit días"
 }

@@ -161,26 +161,29 @@
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    mainContainer.empty().html($('#animated-loading').html());
+                    mainContainer.empty().hide().html($('#animated-loading').html()).show();
                     $.ajax({
                         url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            mainContainer.empty().hide().html(data).fadeIn();
+                            mainContainer.empty().html(data).fadeIn();
                         },
                         complete:function(){
                             form.find('.btn-search-report').removeClass(loadingClass);
+                        },
+                        error: function (data) {
+                            mainContainer.empty().fadeIn();
                         }
                     });
                 }
             });
 
             $('#date-report, #date-end-report, #group-by-vehicle, #group-by-route, #group-by-date').change(function () {
-                mainContainer.slideUp();
+                mainContainer.hide();
             });
 
-                $('#route-report, #driver-report, #vehicle-report').change(function () {
-                mainContainer.slideUp();
+            $('#route-report, #driver-report, #vehicle-report').change(function () {
+                mainContainer.hide();
                 if (form.isValid(false)) {
                     form.submit();
                 }
@@ -195,7 +198,7 @@
 
             @if(Auth::user()->isAdmin())
                 $('#company-report').change(function () {
-                    mainContainer.slideUp();
+                    mainContainer.hide();
                     loadSelectRouteReport($(this).val());
                     loadSelectVehicleReport($(this).val(), true);
                     loadSelectDriverReport($(this).val());

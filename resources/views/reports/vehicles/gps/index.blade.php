@@ -175,7 +175,7 @@
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
                     reportContainer.show();
-                    reportContainer.empty().html($('#animated-loading').html());
+                    reportContainer.empty().hide().html($('#animated-loading').html()).show();
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),

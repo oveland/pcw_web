@@ -17,7 +17,7 @@ use App\Models\Vehicles\Vehicle;
 
 Auth::routes();
 
-Route::get('/metronic', function(){
+Route::get('/metronic', function () {
     return view('metronic');
 })->name('metronic');
 
@@ -102,7 +102,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::prefix(__('url-vehicles'))->group(function () {
             Route::prefix(__('vehicle-issues'))->group(function () {
-                Route::get('/', function(){
+                Route::get('/', function () {
                     return redirect(route('report-vehicles-issues'));
                 })->name('operation-vehicles-issues');
                 Route::get('/current/{company}', 'VehicleIssuesController@current')->name('operation-vehicles-issues-current');
@@ -128,7 +128,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix(__('routes'))->group(function () {
             /* Route report */
             Route::prefix(__('route-report'))->group(function () {
-                Route::get('/', function(){
+                Route::get('/', function () {
                     return redirect(route('report-dispatch'));
                 })->name('report-route');
                 Route::get('/show', 'ReportRouteController@show')->name('report-route-search');
@@ -255,15 +255,15 @@ Route::group(['middleware' => ['auth']], function () {
 
             /* Router for recorders reports */
             Route::prefix(__('recorders'))->group(function () {
-                Route::get('/', 'PassengersRecordersReport2Controller@index')->name('report-passengers-recorders-consolidated');
-                Route::get('/range', 'PassengersRecordersReport2Controller@index')->name('report-passengers-recorders-consolidated-date-range');
-                Route::get('/show', 'PassengersRecordersReport2Controller@show')->name('report-passengers-recorders-consolidated-date-range-search');
-                Route::get('/export', 'PassengersRecordersReport2Controller@export')->name('report-passengers-recorders-consolidated-date-range-export');
+                Route::get('/', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated');
+                Route::get('/range', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated-date-range');
+                Route::get('/show', 'PassengersRecordersReportController@show')->name('report-passengers-recorders-consolidated-date-range-search');
+                Route::get('/export', 'PassengersRecordersReportController@export')->name('report-passengers-recorders-consolidated-date-range-export');
 
                 /* Router for General Reports */
                 Route::prefix(__('consolidated'))->group(function () {
                     Route::prefix(__('daily'))->group(function () {
-                        Route::get('/', function (){
+                        Route::get('/', function () {
                             return redirect(route('report-passengers-recorders-consolidated'));
                         })->name('report-passengers-recorders-consolidated-daily');
                     });
@@ -422,17 +422,17 @@ Route::prefix(__('link'))->group(function () {
 
     Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{user}', function (User $user) {
         Auth::login($user, true);
-        $hideMenu = $user->company->id == App\Models\Company\Company::COOTRANSOL && $user->isDispatcher()  ? true : null;
+        $hideMenu = $user->company->id == App\Models\Company\Company::COOTRANSOL && $user->isDispatcher() ? true : null;
 
         return redirect(route('report-route-historic'))->with('hide-menu', $hideMenu);
     })->name('link-report-route-historic-path');
 
-    Route::get(__('url-operation')."/".__('url-vehicles')."/".__('vehicle-issues')."/current/{company}/{user}", function (Company $company, User $user){
+    Route::get(__('url-operation') . "/" . __('url-vehicles') . "/" . __('vehicle-issues') . "/current/{company}/{user}", function (Company $company, User $user) {
         Auth::login($user, true);
         return redirect(route('operation-vehicles-issues-current', ['company' => $company->id]));
     });
 
-    Route::get(__('url-operation')."/".__('url-vehicles')."/".__('vehicle-issues')."/{user}", function (User $user, Request $request){
+    Route::get(__('url-operation') . "/" . __('url-vehicles') . "/" . __('vehicle-issues') . "/{user}", function (User $user, Request $request) {
         if (Auth::guest()) Auth::login($user, true);
         return redirect(route('report-vehicles-issues'))->with(['hide-menu' => true]);
     });
