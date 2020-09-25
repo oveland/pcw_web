@@ -255,10 +255,10 @@ Route::group(['middleware' => ['auth']], function () {
 
             /* Router for recorders reports */
             Route::prefix(__('recorders'))->group(function () {
-                Route::get('/', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated');
-                Route::get('/range', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated-date-range');
-                Route::get('/show', 'PassengersRecordersReportController@show')->name('report-passengers-recorders-consolidated-date-range-search');
-                Route::get('/export', 'PassengersRecordersReportController@export')->name('report-passengers-recorders-consolidated-date-range-export');
+                Route::get('/', 'PassengersRecordersReport2Controller@index')->name('report-passengers-recorders-consolidated');
+                Route::get('/range', 'PassengersRecordersReport2Controller@index')->name('report-passengers-recorders-consolidated-date-range');
+                Route::get('/show', 'PassengersRecordersReport2Controller@show')->name('report-passengers-recorders-consolidated-date-range-search');
+                Route::get('/export', 'PassengersRecordersReport2Controller@export')->name('report-passengers-recorders-consolidated-date-range-export');
 
                 /* Router for General Reports */
                 Route::prefix(__('consolidated'))->group(function () {

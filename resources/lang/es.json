@@ -713,5 +713,9 @@
   "Consolidated passengers": "Consolidado de pasajeros",
   "Settlement daily receipt": "Recibo de liquidación diaria",
   "Group by route": "Agrupar por ruta",
-  "Station": "Estación combustible"
+  "Station": "Estación combustible",
+  "Programmed": "Programado",
+  "Mileage round trips": "Kilometraje vueltas",
+  "Mileage programmed": "Kilometraje programado",
+  "No data": "•"
 }

@@ -55,10 +55,10 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report" data-with-all="true" class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company')</option>
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company first')</option>
                                     </select>
                                 </div>
                             </div>
@@ -66,10 +66,10 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
-                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company first')</option>
+                                    <select name="route-report" id="route-report" data-with-all="true" class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company')</option>
                                     </select>
                                 </div>
                             </div>

@@ -56,10 +56,10 @@
                             <i class="fa fa-calendar" aria-hidden="true"></i><br> @lang('Date')
                         </th>
                         <th class="text-center">
-                            <i class="fa fa-flag" aria-hidden="true"></i><br> @lang('Route')
+                            <i class="fa fa-bus" aria-hidden="true"></i><br> @lang('Vehicle')
                         </th>
                         <th class="text-center">
-                            <i class="fa fa-bus" aria-hidden="true"></i><br> @lang('Vehicle')
+                            <i class="fa fa-flag" aria-hidden="true"></i><br> @lang('Route')
                         </th>
                         <th class="text-center">
                             <i class="fa fa-user" aria-hidden="true"></i><br> @lang('Driver')
@@ -68,7 +68,10 @@
                             <i class="fa fa-retweet" aria-hidden="true"></i><br> @lang('Total') <br> @lang('Round trips')
                         </th>
                         <th class="text-center">
-                            <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage')<br> @lang('Round trips')
+                            <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage round trips')
+                        </th>
+                        <th class="text-center">
+                            <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage programmed')
                         </th>
                         <th class="text-center sensor recorder">
                             <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i><br> @lang('Sensor recorder')
@@ -108,11 +111,12 @@
                         <tr class="text-center click" data-toggle="collapse" data-target="#collapse-{{ $date }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $report->date }} </td>
-                            <td>{{ $report->routeProcessed }} </td>
                             <td>{{ $report->vehicleProcessed }} </td>
+                            <td>{{ $report->routeProcessed }} </td>
                             <td class="">{{ $report->driverProcessed }} </td>
                             <td>{{ $report->roundTrips }} </td>
                             <td>{{ number_format($report->mileage, 1) }} </td>
+                            <td>{{ number_format($report->programmedMileage, 1) }} </td>
                             <td class="sensor recorder">{{ $sensorRecorder }}</td>
                             <td class="recorder text-center">
                                 <span class="{{ count($issuesByVehicles) ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
@@ -173,6 +177,7 @@
                         <td colspan="5" class="text-right text-uppercase">@lang('Totals')</td>
                         <td class="text-center recorder">{{ $passengerReport->totalRoundTrips }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalMileage,1) }}</td>
+                        <td class="text-center recorder">{{ number_format($passengerReport->totalProgrammedMileage,1) }}</td>
                         <td class="text-center sensor recorder">{{ $totalSensorRecorder->sum() }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalRecorder, 0) }}</td>
                         <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
