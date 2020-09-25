@@ -54,7 +54,7 @@ class PassengersRecordersReportController extends Controller
      * @return Factory|Application|View|void
      */
     public function show(Request $request)
-    {sleep(3);
+    {
         $company = $this->pcwAuthService->getCompanyFromRequest($request);
         $vehicle = Vehicle::find(intval($request->get('vehicle-report')));
         $driver = Driver::find(intval($request->get('driver-report')));
