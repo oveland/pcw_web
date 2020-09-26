@@ -7,7 +7,7 @@
         </div>
         <div class="panel-body p-b-15">
             <div class="form-input-flat">
-                <div class="col-md-3" v-if="admin">
+                <div class="col-md-2" v-if="admin">
                     <div class="form-group">
                         <label class="control-label">{{ $t('Company') }}</label>
                         <div class="form-group">
@@ -18,27 +18,27 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">Vehicle</label>
                         <div class="form-group">
                             <multiselect track-by="number" label="number" :options="search.vehicles"
-                                         @input="setSearch()" v-model="search.vehicle"
+										 v-model="search.vehicle"
                                          :option-height="104" :searchable="true" :allow-empty="true"
                                          :placeholder="$t('Select a vehicle')"></multiselect>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">Date report</label>
                         <div class="input-group col-md-12">
-                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" @change="setSearch()" width="100%"></date-picker>
+                            <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" width="100%"></date-picker>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">&nbsp;</label>
                         <div class="input-group col-md-12">

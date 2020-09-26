@@ -8142,14 +8142,17 @@ var render = function() {
             }
           }
         },
-        [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Search\n        ")]
+        [
+          _c("i", { staticClass: "fa fa-search" }),
+          _vm._v(" Search\n            ")
+        ]
       )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "panel-body p-b-15" }, [
       _c("div", { staticClass: "form-input-flat" }, [
         _vm.admin
-          ? _c("div", { staticClass: "col-md-3" }, [
+          ? _c("div", { staticClass: "col-md-2" }, [
               _c("div", { staticClass: "form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v(_vm._s(_vm.$t("Company")))
@@ -8189,7 +8192,7 @@ var render = function() {
             ])
           : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
+        _c("div", { staticClass: "col-md-2" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [_vm._v("Vehicle")]),
             _vm._v(" "),
@@ -8207,11 +8210,6 @@ var render = function() {
                     "allow-empty": true,
                     placeholder: _vm.$t("Select a vehicle")
                   },
-                  on: {
-                    input: function($event) {
-                      return _vm.setSearch()
-                    }
-                  },
                   model: {
                     value: _vm.search.vehicle,
                     callback: function($$v) {
@@ -8226,7 +8224,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
+        _c("div", { staticClass: "col-md-2" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [
               _vm._v("Date report")
@@ -8243,11 +8241,6 @@ var render = function() {
                     lang: "es",
                     width: "100%"
                   },
-                  on: {
-                    change: function($event) {
-                      return _vm.setSearch()
-                    }
-                  },
                   model: {
                     value: _vm.search.date,
                     callback: function($$v) {
@@ -8262,7 +8255,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
+        _c("div", { staticClass: "col-md-2" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [_vm._v(" ")]),
             _vm._v(" "),
@@ -8284,7 +8277,7 @@ var render = function() {
                   _vm._v(
                     " " +
                       _vm._s(_vm.$t("Search")) +
-                      "\n                        "
+                      "\n                            "
                   )
                 ]
               )
