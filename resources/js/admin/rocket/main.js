@@ -42,8 +42,8 @@ let adminRocketView = new Vue({
             this.searchParams = {
                 date: this.search.date,
                 vehicle: this.search.vehicle.id,
-                activate: this.search.vehicle.activate,
-                release: this.search.vehicle.release,
+                activate: this.search.activate,
+                release: this.search.release,
             };
         }
     },
