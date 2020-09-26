@@ -71,8 +71,10 @@ class ConfigProfileService
         foreach ($profileSeating->occupation as $seat) {
             $number = $seat['number'];
 
-            $activate = self::THRESHOLD_ACTIVATE;
-            $release = self::THRESHOLD_RELEASE;
+            $rActivate = request()->get('activate');
+            $rRelease = request()->get('release');
+            $activate = $rActivate ? $rActivate : self::THRESHOLD_ACTIVATE;
+            $release = $rRelease ? $rRelease : self::THRESHOLD_RELEASE;
 
 //            if (collect([15, 18])->contains(intval($number))) {
 //                $activate = 1;

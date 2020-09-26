@@ -28,7 +28,9 @@ let adminRocketView = new Vue({
             company: {},
             vehicles: [],
             vehicle: {},
-            date: moment().format("YYYY-MM-DD")
+            date: moment().format("YYYY-MM-DD"),
+            activate: null,
+            release: null,
         },
         searchParams: {}
     },
@@ -39,7 +41,9 @@ let adminRocketView = new Vue({
         setSearch: function () {
             this.searchParams = {
                 date: this.search.date,
-                vehicle: this.search.vehicle.id
+                vehicle: this.search.vehicle.id,
+                activate: this.search.vehicle.activate,
+                release: this.search.vehicle.release,
             };
         }
     },

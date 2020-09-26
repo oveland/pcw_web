@@ -38,6 +38,24 @@
                         </div>
                     </div>
                 </div>
+
+				<div class="col-md-1">
+					<div class="form-group">
+						<label class="control-label">Activate</label>
+						<div class="form-group">
+							<input type="number" name="" v-model="search.activate" class="input form-control">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-1">
+					<div class="form-group">
+						<label class="control-label">Release</label>
+						<div class="form-group">
+							<input type="number" name="" v-model="search.release" class="input form-control">
+						</div>
+					</div>
+				</div>
+
                 <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">&nbsp;</label>

@@ -701,6 +701,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -8252,6 +8270,66 @@ var render = function() {
               ],
               1
             )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-1" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { staticClass: "control-label" }, [_vm._v("Activate")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.search.activate,
+                    expression: "search.activate"
+                  }
+                ],
+                staticClass: "input form-control",
+                attrs: { type: "number", name: "" },
+                domProps: { value: _vm.search.activate },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.search, "activate", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-1" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { staticClass: "control-label" }, [_vm._v("Release")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.search.release,
+                    expression: "search.release"
+                  }
+                ],
+                staticClass: "input form-control",
+                attrs: { type: "number", name: "" },
+                domProps: { value: _vm.search.release },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.search, "release", $event.target.value)
+                  }
+                }
+              })
+            ])
           ])
         ]),
         _vm._v(" "),
@@ -21453,7 +21531,9 @@ var adminRocketView = new Vue({
       company: {},
       vehicles: [],
       vehicle: {},
-      date: moment().format("YYYY-MM-DD")
+      date: moment().format("YYYY-MM-DD"),
+      activate: null,
+      release: null
     },
     searchParams: {}
   },
@@ -21462,7 +21542,9 @@ var adminRocketView = new Vue({
     setSearch: function setSearch() {
       this.searchParams = {
         date: this.search.date,
-        vehicle: this.search.vehicle.id
+        vehicle: this.search.vehicle.id,
+        activate: this.search.vehicle.activate,
+        release: this.search.vehicle.release
       };
     }
   },
