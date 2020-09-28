@@ -107,6 +107,7 @@ class Photo extends Model implements PhotoInterface
 //            ->where('id', 44402) // Detect X
 
 //            ->whereBetween('date', ['2020-09-02 14:50:00', '2020-09-02 16:54:59'])
+//            ->limit(20)->offset(220)
             ->limit(600)
             ->get();
     }

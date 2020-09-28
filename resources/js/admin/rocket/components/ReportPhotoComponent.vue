@@ -47,6 +47,9 @@
         },
         methods: {
             load() {
+				this.seating = [];
+				this.photos = [];
+
                 Swal.fire({
                     title: this.$t('Loading'),
                     text: this.$t('Please wait'),

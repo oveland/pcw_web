@@ -325,6 +325,9 @@ class PhotoService
 
             $counterLock = 0;
             $alertLockCam = false;
+
+            $pevRekognitionCounts = null;
+
             foreach ($photos as $photo) {
 
                 $currentOccupation = $this->getOccupation($photo);
@@ -405,7 +408,8 @@ class PhotoService
                 $details->occupation->seatingReleaseStr = $seatingReleased->keys()->sort()->implode(', ');
                 $details->occupation->seatingActivatedStr = $seatingActivated->keys()->sort()->implode(', ');
 
-                $rekognitionCounts = collect($details->occupation->draws)->countBy('type');
+
+                $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts);
 
                 $historic->push((object)[
                     'id' => $photo->id,
@@ -432,10 +436,43 @@ class PhotoService
                 $prevPhoto = $photo;
                 $prevOccupation = $currentOccupation;
                 $prevDetails = $details;
+
+                $pevRekognitionCounts = $rekognitionCounts;
             }
         }
 
         return $historic;
+    }
+
+    public function processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts = null)
+    {
+        $rekognitionCounts = collect([]);
+
+        $types = ['persons', 'faces'];
+
+        $totals = collect([]);
+        foreach ($types as $type) {
+            $total = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->total : 0;
+            $totals->put($type, $total);
+        }
+
+        foreach ($types as $type) {
+            $count = collect($details->occupation->draws)->where('type', $type)->count();
+            $prevCount = $prevDetails->occupation ? collect($prevDetails->occupation->draws)->where('type', $type)->count() : 0;
+
+            $diff = $count - $prevCount;
+            $diff = $diff > 0 ? $diff : 0;
+
+            $total = $totals->get($type) + $diff;
+            $rekognitionCounts->put($type, (object)[
+                'count' => $count,
+                'total' => $total
+            ]);
+        }
+
+//        $rekognitionCounts = collect($details->occupation->draws)->countBy('type');
+
+        return $rekognitionCounts;
     }
 
 

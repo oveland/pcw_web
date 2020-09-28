@@ -53,7 +53,7 @@
 					<div class="col-md-12">
 						<p>{{ $t('Recognition') }}</p>
 						<ul class="detail">
-							<li v-for="(count, type) in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">{{ $t(type) + `: ${count}` }} </li>
+							<li v-for="(rekognition, type) in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">{{ $t(type) }}: {{ rekognition.count }} | {{ rekognition.total }} ⬆</li>
 						</ul>
 					</div>
                 </div>

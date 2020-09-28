@@ -366,6 +366,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_range_slider__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-range-slider/dist/vue-range-slider.css */ "./node_modules/vue-range-slider/dist/vue-range-slider.css");
 /* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5__);
+function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); }
+
 //
 //
 //
@@ -463,8 +465,11 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     load: function load() {
-      var _this2 = this;
+      var _Object,
+          _this2 = this;
 
+      this.seating = [];
+      this.photo = (_Object = Object, _objectDestructuringEmpty(_Object), _Object);
       sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
         title: this.$t('Loading'),
         text: this.$t('Please wait'),
@@ -598,6 +603,8 @@ __webpack_require__.r(__webpack_exports__);
     load: function load() {
       var _this = this;
 
+      this.seating = [];
+      this.photos = [];
       sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
         title: this.$t('Loading'),
         text: this.$t('Please wait'),
@@ -7394,14 +7401,26 @@ var render = function() {
                 _c(
                   "ul",
                   { staticClass: "detail" },
-                  _vm._l(_vm.photo.rekognitionCounts, function(count, type) {
+                  _vm._l(_vm.photo.rekognitionCounts, function(
+                    rekognition,
+                    type
+                  ) {
                     return _c(
                       "li",
                       {
                         staticClass: "text-capitalize text-white",
                         staticStyle: { "font-size": "1rem" }
                       },
-                      [_vm._v(_vm._s(_vm.$t(type) + ": " + count) + " ")]
+                      [
+                        _vm._v(
+                          _vm._s(_vm.$t(type)) +
+                            ": " +
+                            _vm._s(rekognition.count) +
+                            " | " +
+                            _vm._s(rekognition.total) +
+                            " ⬆"
+                        )
+                      ]
                     )
                   }),
                   0

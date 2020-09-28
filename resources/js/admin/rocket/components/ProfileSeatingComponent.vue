@@ -96,6 +96,9 @@
                 }
             },
             load() {
+				this.seating = [];
+				this.photo = {} = Object;
+
                 Swal.fire({
                     title: this.$t('Loading'),
                     text: this.$t('Please wait'),
