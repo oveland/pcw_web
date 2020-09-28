@@ -366,8 +366,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_range_slider__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-range-slider/dist/vue-range-slider.css */ "./node_modules/vue-range-slider/dist/vue-range-slider.css");
 /* harmony import */ var vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_range_slider_dist_vue_range_slider_css__WEBPACK_IMPORTED_MODULE_5__);
-function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); }
-
 //
 //
 //
@@ -465,11 +463,10 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
       }
     },
     load: function load() {
-      var _Object,
-          _this2 = this;
+      var _this2 = this;
 
       this.seating = [];
-      this.photo = (_Object = Object, _objectDestructuringEmpty(_Object), _Object);
+      this.photo = null;
       sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
         title: this.$t('Loading'),
         text: this.$t('Please wait'),
