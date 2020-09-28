@@ -168,18 +168,18 @@ class PCWExporterService
                 break;
 
             case 'passengerReportByRangeTotalFooter':
-                foreach (['F', 'G', 'H', 'I', 'J'] as $totalLetterPosition) {
+                foreach (['F', 'G', 'H', 'I', 'J', 'K'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 
                 $sheet->setCellValue("A$lastRow", "TOTAL");
 
                 for ($i = $starData; $i <= $lastRow; $i++) {
-                    $sheet->setCellValue("J$i", "=IF(G$i, I$i/G$i, 0)");
+                    $sheet->setCellValue("K$i", "=IF(G$i, J$i/G$i, 0)");
                 }
 
                 $sheet->setColumnFormat(array(
-                    "J$config->startIndex:J$lastRow" => "0.00"
+                    "K$config->startIndex:K$lastRow" => "0.00"
                 ));
 
                 $sheet = self::styleFooter($sheet, $config);
