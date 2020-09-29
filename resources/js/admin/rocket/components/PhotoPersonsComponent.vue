@@ -26,8 +26,8 @@
         <img  id="image-seating" v-if="photo.details.url" draggable="false" v-lazy="photo.details.url.encoded ? photo.details.url.encoded : photo.details.url" :width="`${image.size.width}px`" :height="`${image.size.height}px`" alt="Seating photo">
 
         <div class="container-actions text-center" v-if="photo && seating.length > 0">
-            <div class="p-10 actions">
-                <div class="md-checkbox has-success">
+            <div class="p-10 actions col-md-6">
+                <div class="md-checkbox has-success pull-right" style="width: 40%">
                     <input type="checkbox" :id="`show-seating-photo-${photo.id}${fixedSeating ? '-f':'-p'}`" class="md-check" v-model="styleSeating.show">
                     <label :for="`show-seating-photo-${photo.id}${fixedSeating ? '-f':'-p'}`">
                         <span class="inc"></span>
@@ -44,8 +44,8 @@
                 </div>
             </div>
 
-            <div class="p-10 actions">
-                <div class="md-checkbox has-warning">
+            <div class="p-10 actions col-md-6">
+                <div class="md-checkbox has-warning" style="width: 40%">
                     <input type="checkbox" :id="`show-zone-photo-${photo.id}${fixedSeating ? '-f':'-p'}`" class="md-check" v-model="styleZones.show">
                     <label :for="`show-zone-photo-${photo.id}${fixedSeating ? '-f':'-p'}`">
                         <span class="inc"></span>
@@ -173,7 +173,7 @@
 
     .container-photo .zone-detection.selected, .container-photo .zone-detection-center.selected {
         border-color: #fc0050 !important;
-        border-radius: 2px;
+        border-radius: 0;
         z-index: 10000 !important;
     }
 
@@ -187,15 +187,15 @@
 
     .container-actions .actions {
         margin: auto;
-        width: 20%;
     }
 
     .container-actions {
         position: absolute;
         bottom: 0;
-        z-index: 10000;
-        background: rgba(0, 0, 0, 0.05);
-        border-radius: 10px;
+        z-index: 100;
+        background: #1e2d3352;
+        border-radius: 0;
+		border-bottom: 1px solid white;
         margin: auto;
         width: 100%;
     }

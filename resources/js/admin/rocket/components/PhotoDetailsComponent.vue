@@ -30,7 +30,7 @@
                             <i class="fa fa-warning"></i> {{ $t('Lock alarm') }} <small style="font-size: 0.5em">{{ photo.alarms.counterLockCamera }}</small>
                         </span>
                     </p>
-                    <div class="seating-profile col=md-12">
+                    <div class="seating-profile col=md-12 p-0 p-t-10">
                         <p>{{ $t('Seating profile') }}:</p>
                         <div style="padding-left: 15px">
                             <p class="detail">
@@ -50,17 +50,31 @@
                             </p>
                         </div>
                     </div>
-					<div class="col-md-12">
-						<p>{{ $t('Recognition') }}</p>
-						<ul class="detail">
-							<li v-for="(rekognition, type) in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">{{ $t(type) }}: {{ rekognition.count }} | {{ rekognition.total }} ⬆</li>
-						</ul>
+					<div class="col-md-12 p-0 p-t-10">
+						<p>{{ $t('Recognition') }}:</p>
+						<div class="detail p-l-15">
+							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
+								<i :class="rekognition.description.icon"></i>
+								{{ rekognition.description.name }}: {{ rekognition.count }}
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 p-0 p-t-10">
+						<p>{{ $t('Recognition with persistence') }}:</p>
+						<div class="detail p-l-15">
+							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
+								<i :class="rekognition.description.icon"></i>
+								{{ rekognition.description.name }}: {{ rekognition.persistence.count }}
+							</div>
+						</div>
 					</div>
                 </div>
             </div>
 
             <div class="col-md-6 col-sm-6 col-xs-12 text-right" style="">
                 <div class="photo">
+					<p>{{ $t('Count by seating') }}</p>
                     <span v-if="!photo.details.occupation.count" class="text-warning">{{ $t('Paused count') }}</span>
                     <p>
                         <span class="title">
@@ -68,27 +82,67 @@
                         </span>
                         <span class="detail">{{ photo.passengers.totalSumOccupied }} {{ $t('Counts') }} ⬆</span>
                     </p>
-                    <p>
+                    <p class="hide">
                         <span class="title">
                             <i class="fa fa-users"></i>
                         </span>
                         <span class="detail">{{ photo.passengers.totalSumReleased }} {{ $t('Counts') }} ⬇</span>
                     </p>
                 </div>
-                <div class="passengers" v-if="photo.passengers">
-                    <ul v-if="photo.passengers.byRoundTrips.length">
-                        <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail" v-if="roundTrip.number">
-                            <p v-show="roundTrip.number">
-                                <small>
-                                    <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
-                                </small>
-                            </p>
-                        </li>
-                    </ul>
-                    <p class="detail">
-                        <small>{{ $t('Total by round trips') }}: {{ photo.passengers.total }}</small>
-                    </p>
+                <div class="passengers p-t-15">
+					<div class="col-md-12 p-0">
+						<p>{{ $t('Count by recognition') }}</p>
+						<div class="detail p-l-15">
+							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
+								<i :class="rekognition.description.icon"></i>
+								{{ rekognition.description.name }}: {{ rekognition.total }} ⬆
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 p-0 p-t-5">
+						<p>{{ $t('Count by recognition') + ' ' + $t('persistence') }}:</p>
+						<div class="detail p-l-15">
+							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
+								<i :class="rekognition.description.icon"></i>
+								{{ rekognition.description.name }}: {{ rekognition.persistence.total }} ⬆ <span class="hide">({{ rekognition.persistence.count }}, {{ rekognition.persistence.counter }}, {{ rekognition.persistence.diff }})</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 p-0 p-t-5">
+						<p>{{ $t('Max recognitions') }}:</p>
+						<div class="detail p-l-15">
+							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
+								<i :class="rekognition.description.icon"></i>
+								<span v-if="rekognition.endRoundTrip" class="text-uppercase">
+									{{ $t('Max in round trip') }} = {{ rekognition.max.value }}, ID = {{ rekognition.max.photoId }}
+								</span>
+								<span>
+									{{ $t('Max count') }}: {{ rekognition.max.detection }}
+								</span>
+							</div>
+						</div>
+					</div>
                 </div>
+
+				<div class="passengers" v-if="photo.passengers">
+					<p v-if="photo.passengers.byRoundTrips.length">{{ $t('Count in round trips') }}:</p>
+					<div class="col-md-12 p-0">
+						<ul v-if="photo.passengers.byRoundTrips.length">
+							<li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail" v-if="roundTrip.number">
+								<p v-show="roundTrip.number">
+									<small>
+										<i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
+									</small>
+								</p>
+							</li>
+						</ul>
+						<p class="detail">
+							<small>{{ $t('Total by round trips') }}: {{ photo.passengers.total }}</small>
+						</p>
+					</div>
+				</div>
             </div>
         </div>
     </div>
@@ -114,7 +168,7 @@
 
     .photo-details > div {
         width: 100%;
-        background: #1e2d33bd;
+        background: #1e2d3352;
         padding: 10px;
         height: auto;
         display: inline-table;
@@ -141,6 +195,8 @@
 
     .photo-details .passengers {
         padding: 0;
+		margin-top: 15px;
+		display: inline-block;
     }
 
     .photo-details .passengers p {

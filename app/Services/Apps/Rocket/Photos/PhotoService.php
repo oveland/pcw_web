@@ -409,7 +409,7 @@ class PhotoService
                 $details->occupation->seatingActivatedStr = $seatingActivated->keys()->sort()->implode(', ');
 
 
-                $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts);
+                $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts, $photo->id);
 
                 $historic->push((object)[
                     'id' => $photo->id,
@@ -444,33 +444,94 @@ class PhotoService
         return $historic;
     }
 
-    public function processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts = null)
+    public function processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts = null, $photoId)
     {
         $rekognitionCounts = collect([]);
 
-        $types = ['persons', 'faces'];
+        $types = [
+            'persons' => (object)[
+                'name' => __('persons'),
+                'icon' => 'fa fa-male',
+                'persistence' => (object)[
+                    'count' => 1,
+                    'empty' => 6,
+                ]
+            ],
+            'faces' => (object)[
+                'name' => __('faces'),
+                'icon' => 'icon-emoticon-smile',
+                'persistence' => (object)[
+                    'count' => 1,
+                    'empty' => 8
+                ]
+            ]
+        ];
 
-        $totals = collect([]);
-        foreach ($types as $type) {
-            $total = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->total : 0;
-            $totals->put($type, $total);
-        }
+        foreach ($types as $type => $description) {
+            $prevDraws = $prevDetails->occupation ? collect($prevDetails->occupation->draws) : collect([]);
+            $currentDraws = collect($details->occupation->draws);
 
-        foreach ($types as $type) {
-            $count = collect($details->occupation->draws)->where('type', $type)->count();
-            $prevCount = $prevDetails->occupation ? collect($prevDetails->occupation->draws)->where('type', $type)->count() : 0;
+            //$prevDraws = $prevDetails->occupation ? collect($prevDetails->occupation->draws)->where('count', true) : collect([]);
+            //$currentDraws = collect($details->occupation->draws)->where('count', true);
 
+            $prevCount = $prevDraws->where('type', $type)->count();
+            $prevTotal = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->total : 0;
+
+            $count = $currentDraws->where('type', $type)->count();
             $diff = $count - $prevCount;
             $diff = $diff > 0 ? $diff : 0;
+            $total = $prevTotal + $diff;
 
-            $total = $totals->get($type) + $diff;
+            /* With Persistence */
+
+            // Prev persistence
+            $ppCounter = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->persistence->counter : 0;
+            $ppTotal = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->persistence->total : 0;
+            $ppCount = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->persistence->count : 0;
+
+            // Current Persistence
+            $pCounter = $count == $prevCount ? $ppCounter + 1 : 0;
+            $pCount = $pCounter == $description->persistence->count ? $count : $ppCount;
+            $pDifference = $pCount - $ppCount;
+            $pDifference = $pDifference > 0 ? $pDifference : 0;
+            $pTotal = $ppTotal + $pDifference;
+
+            // Calculate max in round trip
+            $prevMaxDetection = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->max->detection : 0;
+            $prevMaxPhotoId = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->max->photoId : '';
+            $endRoundTrip = $pCounter == $description->persistence->empty && $pCount == 0 && $total > 0;
+            $maxValue = 0;
+
+            $maxPhotoId = $prevMaxPhotoId;
+            $maxDetection = $prevMaxDetection;
+            if ($count > $prevMaxDetection) {
+                $maxDetection = $count;
+                $maxPhotoId = $photoId;
+            }
+
+            if ($endRoundTrip) {
+                $maxValue = $maxDetection > 0 ? $maxDetection : 0;
+                $maxDetection = 0;
+            }
+
             $rekognitionCounts->put($type, (object)[
+                'description' => $description,
                 'count' => $count,
-                'total' => $total
+                'total' => $total,
+                'persistence' => (object)[
+                    'count' => $pCount,
+                    'counter' => $pCounter,
+                    'diff' => $pDifference,
+                    'total' => $pTotal
+                ],
+                'max' => (object)[
+                    'photoId' => $maxPhotoId,
+                    'value' => $maxValue,
+                    'endRoundTrip' => $endRoundTrip,
+                    'detection' => $maxDetection,
+                ]
             ]);
         }
-
-//        $rekognitionCounts = collect($details->occupation->draws)->countBy('type');
 
         return $rekognitionCounts;
     }

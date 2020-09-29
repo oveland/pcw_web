@@ -12,6 +12,7 @@ use App\Services\Auth\PCWAuthService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class RocketController extends Controller
@@ -59,10 +60,12 @@ class RocketController extends Controller
                 if ($vehicle) {
                     $date = $request->get('date');
                     $photos = $this->photoService->for($vehicle)->getHistoric($date);
+
                     $response->photos = $photos->sortByDesc('time')->values();
 
                     $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
                     $response->seating = $profileSeat ? $profileSeat->occupation : [];
+                    $response->maxRecognitions = $this->processMaxRecognitions($photos);
                 } else {
                     $response->success = false;
                     $response->message = __('Vehicle not found');
@@ -75,6 +78,34 @@ class RocketController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    /**
+     * @param Collection | array $photos
+     * @return Collection
+     */
+    public function processMaxRecognitions($photos)
+    {
+        $max = collect([]);
+        foreach (['persons', 'faces'] as $type) {
+            $maxRecognitions = $photos->pluck('rekognitionCounts')->pluck($type)->filter(function ($rc) {
+                return $rc->max->endRoundTrip === true;
+            })->pluck('max');
+
+            $data = collect([]);
+            foreach ($maxRecognitions as $maxRecognition) {
+                $photo = Photo::find($maxRecognition->photoId);
+                $data->push((object)[
+                    'photoId' => $photo->id,
+                    'time' => $photo->date->toTimeString(),
+                    'value' => $maxRecognition->value,
+                ]);
+            }
+
+            $max->put($type, $data->toArray());
+        }
+
+        return $max;
     }
 
     /**

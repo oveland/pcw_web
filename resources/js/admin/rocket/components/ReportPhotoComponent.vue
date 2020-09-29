@@ -1,5 +1,20 @@
 <template>
     <div class="report-photo-component" :style="`width: ${image.size.width + 6}px; margin: auto;overflow-y:auto;height:${image.size.height + 10}px`">
+		<div v-if="photos.length > 0" class="col-md-12 bg-inverse p-20 text-white">
+			<p class="text-uppercase">{{ $t('Max recognitions') }} TOTAL:</p>
+			<div class="detail p-l-15">
+				<div v-for="(recognitions, type) in maxRecognitions" class="text-capitalize text-white" style="font-size: 1rem">
+					<p class="text-capitalize m-b-0 m-t-5">{{ $t(type)}}:</p>
+					<div v-for="(max, index) in recognitions" class="p-l-15">
+						<span>
+							<small class="text-muted">{{ max.photoId }}</small>
+							{{ max.time }} • {{ $t('Round trip') }} {{ index + 1 }} = {{ max.value }}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
         <div v-for="photo in photos">
             <photo-details-component :photo="photo" style="margin-bottom: 5px"></photo-details-component>
             <photo-persons-component :photo="photo" :fixed-seating="true" :seating="seating"></photo-persons-component>
@@ -32,6 +47,7 @@
             return {
                 photos: [],
                 seating: [],
+				maxRecognitions: Object,
                 image: {
                     size: {
                         width: 1000,
@@ -68,6 +84,7 @@
                     if (data.success) {
                         this.seating = data.seating;
                         this.photos = data.photos;
+                        this.maxRecognitions = data.maxRecognitions;
                     } else {
                         gerror(data.message);
                     }
