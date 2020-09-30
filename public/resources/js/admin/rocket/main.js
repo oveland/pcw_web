@@ -702,6 +702,9 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function () {
         sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default.a.close();
       });
+    },
+    totalMax: function totalMax(recognitions) {
+      return _.sumBy(recognitions, 'value');
     }
   }
 });
@@ -8371,7 +8374,11 @@ var render = function() {
                   },
                   [
                     _c("p", { staticClass: "text-capitalize m-b-0 m-t-5" }, [
-                      _vm._v(_vm._s(_vm.$t(type)) + ":")
+                      _vm._v(
+                        _vm._s(_vm.$t(type)) +
+                          ": " +
+                          _vm._s(_vm.totalMax(recognitions))
+                      )
                     ]),
                     _vm._v(" "),
                     _vm._l(recognitions, function(max, index) {

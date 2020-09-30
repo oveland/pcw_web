@@ -4,7 +4,7 @@
 			<p class="text-uppercase">{{ $t('Max recognitions') }} TOTAL:</p>
 			<div class="detail p-l-15">
 				<div v-for="(recognitions, type) in maxRecognitions" class="text-capitalize text-white" style="font-size: 1rem">
-					<p class="text-capitalize m-b-0 m-t-5">{{ $t(type)}}:</p>
+					<p class="text-capitalize m-b-0 m-t-5">{{ $t(type)}}: {{ totalMax(recognitions) }}</p>
 					<div v-for="(max, index) in recognitions" class="p-l-15">
 						<span>
 							<small class="text-muted">{{ max.photoId }}</small>
@@ -95,6 +95,9 @@
                     Swal.close();
                 });
             },
+			totalMax(recognitions){
+            	return _.sumBy(recognitions, 'value');
+			}
         }
     }
 </script>
