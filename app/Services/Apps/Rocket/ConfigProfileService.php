@@ -48,7 +48,7 @@ class ConfigProfileService
             $config->config = $this->mergeWithProfileSeating();
             $config->save();
         } else {
-//            $config->config = $this->mergeWithProfileSeating();
+            $config->config = $this->mergeWithProfileSeating();
         }
 
         return $config;
@@ -66,13 +66,14 @@ class ConfigProfileService
 //        foreach ($config as $type => &$configType) {
 //
 //        }
-
+        
         $seatingConfig = [];
         foreach ($profileSeating->occupation as $seat) {
             $number = $seat['number'];
 
             $rActivate = request()->get('activate');
             $rRelease = request()->get('release');
+
             $activate = $rActivate ? $rActivate : self::THRESHOLD_ACTIVATE;
             $release = $rRelease ? $rRelease : self::THRESHOLD_RELEASE;
 

@@ -84,6 +84,7 @@ class SeatOccupationService
      */
     private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false)
     {
+//        dd($currentOccupied);
         foreach ($currentOccupied as $seat => $data) {
             $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
 

@@ -491,7 +491,11 @@ class PhotoService
 
             // Current Persistence
             $pCounter = $count == $prevCount ? $ppCounter + 1 : 0;
-            $pCount = $pCounter == $description->persistence->count ? $count : $ppCount;
+
+            $pCount = $pCounter == $description->persistence->count || ($ppCount < $count) ? $count : $ppCount; // Negative Persistence
+//            $pCount = $pCounter == $description->persistence->count || ($ppCount > $count) ? $count : $ppCount; // Positive Persistence
+//            $pCount = $pCounter == $description->persistence->count ? $count : $ppCount; // Both Persistence
+
             $pDifference = $pCount - $ppCount;
             $pDifference = $pDifference > 0 ? $pDifference : 0;
             $pTotal = $ppTotal + $pDifference;

@@ -153,13 +153,17 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => [0, 100],
+                            'range' => [0, 15],
                             'value' => 10
                         ],
+                        [
+                            'range' => [15, 100],
+                            'value' => 10
+                        ]
                     ],
-                    'contrast' => 5,
-                    'gamma' => 2,
-                    'sharpen' => 12
+                    'contrast' => -30,
+                    'gamma' => 1,
+                    'sharpen' => 50,
                 ],
                 'rekognition' => [
                     'rules' => [
@@ -221,12 +225,12 @@ return [
                         ],
                         [
                             'range' => [15, 100],
-                            'value' => 20
-                        ],
+                            'value' => 10
+                        ]
                     ],
-                    'contrast' => 5,
-                    'gamma' => 2,
-                    'sharpen' => 12
+                    'contrast' => -30,
+                    'gamma' => 1,
+                    'sharpen' => 50,
                 ],
                 'rekognition' => [
                     'rules' => [
