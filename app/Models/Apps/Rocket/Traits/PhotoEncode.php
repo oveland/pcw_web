@@ -84,7 +84,7 @@ trait PhotoEncode
 
                 $h = $image->height() * 0.85;
 
-                if ($withEffects && $this->effects) {
+                if ($withEffects && $this->effects && false) {
                     $avBrightness = $this->getAvgLuminance($image->encode('jpeg')->encode('data-url'));
 
                     $brightness = collect($this->effects->brightness)->filter(function ($brightness) use ($avBrightness) {

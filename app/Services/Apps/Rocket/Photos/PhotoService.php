@@ -454,7 +454,7 @@ class PhotoService
                 'icon' => 'fa fa-male',
                 'persistence' => (object)[
                     'count' => 1,
-                    'empty' => 6,
+                    'empty' => 1,
                 ]
             ],
             'faces' => (object)[
@@ -462,7 +462,7 @@ class PhotoService
                 'icon' => 'icon-emoticon-smile',
                 'persistence' => (object)[
                     'count' => 1,
-                    'empty' => 8
+                    'empty' => 1
                 ]
             ]
         ];

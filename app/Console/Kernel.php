@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
 //                ->between('05:00', '19:00');
 
             $schedule->command('concox:take-photo --camera=1')->cron('*/2 * * * *')
-                ->between('04:30', '22:00');
+                ->between('04:00', '18:00');
 
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();

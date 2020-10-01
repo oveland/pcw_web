@@ -61,7 +61,13 @@ class ImageRekognitionCommand extends Command
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
-                $photos = Photo::findAllByVehicleAndDate($vehicle, $date);
+//                $photos = Photo::findAllByVehicleAndDate($vehicle, $date);
+                $photos = Photo::where('vehicle_id', $vehicle->id)
+                    ->where('data_properties', '<>', null)
+                    ->whereDate('date', $date)
+                    ->orderBy('date')
+                    ->get();
+                
                 $total = $photos->count();
                 $index = 1;
 
@@ -87,7 +93,7 @@ class ImageRekognitionCommand extends Command
 
                     $index++;
                 }
-                $this->info("Finished!");
+                $this->info("Finished! **** ");
 //                $this->photoService->for($vehicle)->notifyToMap($date);
             } else {
                 $this->info("Plate $vehiclePlate doesnt associated with a vehicle!");
