@@ -14,15 +14,14 @@
             <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center" :class="draw.selectedClass" :title="`${ draw.type + ' | ' + (draw.largeDetection ? 'LDT: ' : 'Normal' )}: ${draw.relationSize} | ${draw.overlap ? $t('Overlap') : ''} Count: ${draw.count ? $t('YES') : $t('NO') }`"
                  :style="`height: 1px; width: 1px; top: ${draw.box.center ? draw.box.center.top : 0}%; left: ${draw.box.center ? draw.box.center.left : 0}%;border-color: ${draw.color};`">
             </div>
-            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center center-orig" :class="draw.selectedClass" :title="`Original center
-            `"
+            <div v-for="draw in photo.details.occupation.draws" class="zone-detection-center center-orig" :class="draw.selectedClass" :title="`Original center`"
                  :style="`height: 1px; width: 1px; top: ${draw.box.centerOrig ? draw.box.centerOrig.top : 0}%; left: ${draw.box.centerOrig ? draw.box.centerOrig.left : 0}%;border-color: ${draw.color};`">
             </div>
         </div>
 
         <seat-component v-if="styleSeating.show && seat.width > 0 && seat.height > 0" v-for="seat in seating" :key="seat.id" :seat.sync="seat" :seating-occupied="seatingOccupied" :style="`opacity: ${styleSeating ? styleSeating.opacity/100 : 100}`" :image="image" :fixed="fixedSeating"></seat-component>
         <seat-component v-if="busySeat.width > 0 && busySeat.height > 0" v-for="busySeat in busySeating" :key="busySeat.id + Math.random()" :seat="busySeat" :image="image" :fixed="true"></seat-component>
-        <seat-component v-if="seatOccupied && seatOccupied.width > 0 && seatOccupied.height > 0" :seat="seatOccupied" :seating-occupied="seatingOccupied" :image="image" :fixed="true"></seat-component>
+        <seat-component v-if="seatOccupied && seatOccupied.width > 0 && seatOccupied.height > 0" :seat="seatOccupied" :seating-occupied="seatingOccupied" :style="`opacity: ${styleSeating ? styleSeating.opacity/100 : 100}`" :image="image" :fixed="true"></seat-component>
         <img  id="image-seating" v-if="photo.details.url" draggable="false" v-lazy="photo.details.url.encoded ? photo.details.url.encoded : photo.details.url" :width="`${image.size.width}px`" :height="`${image.size.height}px`" alt="Seating photo">
 
         <div class="container-actions text-center" v-if="photo && seating.length > 0">

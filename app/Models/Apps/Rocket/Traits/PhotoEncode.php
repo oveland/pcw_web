@@ -84,8 +84,9 @@ trait PhotoEncode
 
                 $h = $image->height() * 0.85;
 
-                if ($withEffects && $this->effects && false) {
-                    $avBrightness = $this->getAvgLuminance($image->encode('jpeg')->encode('data-url'));
+                $avBrightness = $this->getAvgLuminance($image->encode('jpeg')->encode('data-url'));
+
+                if ($withEffects && $this->effects && intval($avBrightness) < 18) {
 
                     $brightness = collect($this->effects->brightness)->filter(function ($brightness) use ($avBrightness) {
                         $brightness = (object)$brightness;
@@ -97,6 +98,13 @@ trait PhotoEncode
                     $contrast = $this->effects->contrast;
                     $gamma = $this->effects->gamma;
                     $sharpen = $this->effects->sharpen;
+
+                    if (intval($avBrightness) < 18) {
+                        $brightness = 20;
+                        $contrast = 0;
+                        $gamma = 1;
+                        $sharpen = 0;
+                    }
 
                     $image->contrast(intval($contrast ?? 0))->gamma($gamma ?? 0)->brightness(intval($brightness ?? 0))->sharpen(intval($sharpen ?? 0));
 
@@ -113,7 +121,9 @@ trait PhotoEncode
                     });
                 }
 
-                $image->text('PCW | ' . Carbon::now()->format('Y'), 5, $h + 45, function ($font) {
+                $image->text("Avg Br: $avBrightness", 5, $h - 10, function ($font) {
+                    $font->color('#00ff00');
+                })->text("PCW@" . Carbon::now()->format('Y'), 5, $h + 45, function ($font) {
                     $font->color('#00ff00');
                 });
             }

@@ -11,7 +11,8 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\ConfigProfileService;
 use Illuminate\Support\Collection;
 
-abstract class PhotoRekognitionService
+abstract class
+PhotoRekognitionService
 {
     protected $type = 'persons';
 
@@ -175,15 +176,17 @@ abstract class PhotoRekognitionService
         $configBox = $this->config->photo->rekognition->box;
 
         $width = $boundingBox->width;
-        $heightOrig = isset($boundingBox->heightOrig) ? $boundingBox->heightOrig : $boundingBox->height;
+        $height = $boundingBox->height;
+
+        $heightOrig = isset($boundingBox->heightOrig) ? $boundingBox->heightOrig : $height;
 
         if (isset($boundingBox->center)) {
             $boundingBox->center = (object)$boundingBox->center;
             $centerOrig = (object)(isset($boundingBox->center) ? $boundingBox->center : $boundingBox->centerOrig);
         } else {
             $centerOrig = (object)[
-                'left' => $boundingBox->left + $boundingBox->width / 2,
-                'top' => $boundingBox->top + $boundingBox->height / 2,
+                'left' => $boundingBox->left + $width / 2,
+                'top' => $boundingBox->top + $heightOrig / 2,
             ];
         }
 
@@ -193,22 +196,20 @@ abstract class PhotoRekognitionService
         $overlap = false;
 
         if (isset($boundingBox->center)) {
-            $overlap = $boundingBox->height > 50 || $width > 50;
-
-            if ($centerOrig->top <= 50) {
-                $overlap = $boundingBox->height > 28 || $width > 25;
+            if ($boundingBox->center->left > 30 && $boundingBox->center->left < 60) { // Only overlaps located on center/front bottom screen
+                $overlap = ($heightOrig > 30 && $width > 30);
             }
 
-            if ($boundingBox->center->top <= 35) {
-                $overlap = $heightOrig > 40;
+            if ($boundingBox->center->top < 45) {   // For overlaps located on medium screen
+                $overlap = $overlap || ($heightOrig > 30 && $width > 13);
             }
 
-            if ($boundingBox->center->top <= 20) {
-                $overlap = $heightOrig > 30 || $width > 10;
+            if ($boundingBox->center->top < 30) { // For overlaps located on top/back screen
+                $overlap = $overlap || $heightOrig > 30 && $width > 10;
             }
         }
 
-        $overlap = false;
+//        $overlap = false;
 
         return (object)compact(['overlap', 'relationSize', 'largeDetection']);
     }

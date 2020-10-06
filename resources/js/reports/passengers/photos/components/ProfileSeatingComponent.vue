@@ -1,6 +1,6 @@
 <template>
     <div v-if="photo" class="zone-seating-component photo-header-report" :style="`width: ${image.size.width + 6}px; margin: auto`">
-        <div v-if="false">
+        <div v-if="true">
             <div class="photo">
                 <p>
                 <span class="title">
@@ -96,6 +96,9 @@
                 }
             },
             load() {
+				this.seating = [];
+				this.photo = null;
+
                 Swal.fire({
                     title: this.$t('Loading'),
                     text: this.$t('Please wait'),

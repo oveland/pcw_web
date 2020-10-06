@@ -75,7 +75,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12 text-right" style="">
                 <div class="photo">
 					<p>{{ $t('Count by seating') }}</p>
-                    <span v-if="!photo.details.occupation.count" class="text-warning">{{ $t('Paused count') }}</span>
+                    <span v-if="photo.alarms.withOverlap" class="text-warning">{{ $t('Paused count') }}</span>
                     <p>
                         <span class="title">
                             <i class="fa fa-users"></i>
@@ -133,7 +133,7 @@
 							<li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail" v-if="roundTrip.number">
 								<p v-show="roundTrip.number">
 									<small>
-										<i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
+										<small class="text-muted">{{ roundTrip.id }}</small> <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
 									</small>
 								</p>
 							</li>

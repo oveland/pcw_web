@@ -328,7 +328,7 @@ class PhotoService
 
             $pevRekognitionCounts = null;
 
-            foreach ($photos as $photo) {
+            foreach ($photos->sortBy('date') as $photo) {
 
                 $currentOccupation = $this->getOccupation($photo);
 
@@ -345,8 +345,9 @@ class PhotoService
 
                 $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);
 
-                $seatingActivated = $this->seatOccupationService->getSeatingActivated($currentOccupation->seatingOccupied);
-                $seatingReleased = $this->seatOccupationService->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied);
+                $seatingActivated = $this->seatOccupationService->getSeatingActivated($currentOccupation->seatingOccupied, $currentOccupation->withOverlap);
+                $seatingReleased = $this->seatOccupationService->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);
+
 
                 $details->occupationOrig = clone $currentOccupation;
                 $details->occupation = $currentOccupation;

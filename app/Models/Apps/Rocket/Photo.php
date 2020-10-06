@@ -107,6 +107,40 @@ class Photo extends Model implements PhotoInterface
 //            ->where('id', 44402) // Detect X
 
 //            ->whereBetween('date', ['2020-09-02 14:50:00', '2020-09-02 16:54:59'])
+
+
+            // ALAMEDA October 1st
+
+//            ->where('dispatch_register_id', 1275379) // Round trip 1
+//            ->where('dispatch_register_id', 1275564) // Round trip 2
+//            ->where('dispatch_register_id', 1275837) // Round trip 3
+//            ->where('dispatch_register_id', 1276144) // Round trip 4
+//            ->where('dispatch_register_id', 1276410) // Round trip 5
+
+            // ALAMEDA October 2nd
+//            ->where('dispatch_register_id', 1276931) // Round trip 1
+//            ->where('dispatch_register_id', 1277126) // Round trip 2
+//            ->where('dispatch_register_id', 1277408) // Round trip 3
+//            ->where('dispatch_register_id', 1277691) // Round trip 4
+//            ->where('dispatch_register_id', 1278007) // Round trip 5
+
+
+            // ALAMEDA October 3rd
+//            ->where('dispatch_register_id', 1278537) // Round trip 1
+//            ->where('dispatch_register_id', 1278662) // Round trip 2
+//            ->where('dispatch_register_id', 1278867) // Round trip 3
+//            ->where('dispatch_register_id', 1279122) // Round trip 4
+//            ->where('dispatch_register_id', 1279335) // Round trip 5
+
+
+            // ALAMEDA October 5th
+//            ->where('dispatch_register_id', 1280724) // Round trip 1
+//            ->where('dispatch_register_id', 1280886) // Round trip 2
+//            ->where('dispatch_register_id', 1281187) // Round trip 3
+//            ->where('dispatch_register_id', 1281544) // Round trip 4
+
+//                ->whereBetween('id', [47683, 47686])
+
 //            ->limit(30)->offset(220)
             ->limit(600)
             ->get();

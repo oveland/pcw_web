@@ -411,6 +411,8 @@ __webpack_require__.r(__webpack_exports__);
     load: function load() {
       var _this2 = this;
 
+      this.seating = [];
+      this.photo = null;
       sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
         title: this.$t('Loading'),
         text: this.$t('Please wait'),
@@ -544,6 +546,8 @@ __webpack_require__.r(__webpack_exports__);
     load: function load() {
       var _this = this;
 
+      this.seating = [];
+      this.photos = [];
       sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
         title: this.$t('Loading'),
         text: this.$t('Please wait'),
@@ -7135,7 +7139,7 @@ var render = function() {
                         _vm._s(_vm.photo.details.dispatchRegister.route.name)
                       )
                     ]),
-                    _vm._v(",\n                    "),
+                    _vm._v(",\n                        "),
                     _c("span", { staticClass: "detail" }, [
                       _vm._v(
                         _vm._s(_vm.$t("Round trip")) +
@@ -7143,7 +7147,7 @@ var render = function() {
                           _vm._s(_vm.photo.details.dispatchRegister.round_trip)
                       )
                     ]),
-                    _vm._v(",\n                    "),
+                    _vm._v(",\n                        "),
                     _c("span", { staticClass: "detail" }, [
                       _vm._v(
                         _vm._s(_vm.$t("Turn")) +
@@ -7164,49 +7168,9 @@ var render = function() {
                 ? undefined
                 : _vm._e(),
               _vm._v(" "),
-              _c(
-                "p",
-                {
-                  staticClass: "detail text-bold text-uppercase",
-                  class:
-                    "percent-level-" + _vm.photo.details.occupation.percentLevel
-                },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.$t("Occupation")) +
-                      ": "
-                  ),
-                  _vm.photo.details.occupation
-                    ? _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(
-                              _vm.photo.details.occupation.percent,
-                              "0.0"
-                            )
-                          ) + "%"
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.photo.alarms && _vm.photo.alarms.lockCamera
-                    ? _c(
-                        "span",
-                        { staticClass: "text-danger text-uppercase" },
-                        [
-                          _c("i", { staticClass: "fa fa-warning" }),
-                          _vm._v(" " + _vm._s(_vm.$t("Lock alarm")) + " "),
-                          _c(
-                            "small",
-                            { staticStyle: { "font-size": "0.5em" } },
-                            [_vm._v(_vm._s(_vm.photo.alarms.counterLockCamera))]
-                          )
-                        ]
-                      )
-                    : _vm._e()
-                ]
-              )
+              false
+                ? undefined
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -7225,7 +7189,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm.photo.passengers && false
+            _vm.photo.passengers
               ? _c("div", { staticClass: "passengers" }, [
                   _vm.photo.passengers.byRoundTrips.length
                     ? _c(
@@ -7259,7 +7223,7 @@ var render = function() {
                                           _vm._s(roundTrip.route) +
                                           ": " +
                                           _vm._s(roundTrip.count) +
-                                          "\n                            "
+                                          "\n                                "
                                       )
                                     ])
                                   ]
@@ -7344,24 +7308,8 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _vm._l(_vm.seating, function(seat) {
-            return _vm.styleSeating.show && seat.width > 0 && seat.height > 0
-              ? _c("seat-component", {
-                  key: seat.id,
-                  style:
-                    "opacity: " +
-                    (_vm.styleSeating ? _vm.styleSeating.opacity / 100 : 100),
-                  attrs: {
-                    seat: seat,
-                    "seating-occupied": _vm.seatingOccupied,
-                    image: _vm.image,
-                    fixed: _vm.fixedSeating
-                  },
-                  on: {
-                    "update:seat": function($event) {
-                      seat = $event
-                    }
-                  }
-                })
+            return  false
+              ? undefined
               : _vm._e()
           }),
           _vm._v(" "),
@@ -7398,100 +7346,8 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.photo && _vm.seating.length > 0
-            ? _c("div", { staticClass: "container-actions text-center" }, [
-                _c("div", { staticClass: "p-10 actions" }, [
-                  _c(
-                    "div",
-                    { staticClass: "md-checkbox has-success" },
-                    [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.styleSeating.show,
-                            expression: "styleSeating.show"
-                          }
-                        ],
-                        staticClass: "md-check",
-                        attrs: {
-                          type: "checkbox",
-                          id:
-                            "show-photo-" +
-                            _vm.photo.id +
-                            (_vm.fixedSeating ? "" : "-profile")
-                        },
-                        domProps: {
-                          checked: Array.isArray(_vm.styleSeating.show)
-                            ? _vm._i(_vm.styleSeating.show, null) > -1
-                            : _vm.styleSeating.show
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.styleSeating.show,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = null,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 &&
-                                  _vm.$set(
-                                    _vm.styleSeating,
-                                    "show",
-                                    $$a.concat([$$v])
-                                  )
-                              } else {
-                                $$i > -1 &&
-                                  _vm.$set(
-                                    _vm.styleSeating,
-                                    "show",
-                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                  )
-                              }
-                            } else {
-                              _vm.$set(_vm.styleSeating, "show", $$c)
-                            }
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          attrs: {
-                            for:
-                              "show-photo-" +
-                              _vm.photo.id +
-                              (_vm.fixedSeating ? "" : "-profile")
-                          }
-                        },
-                        [
-                          _c("span", { staticClass: "inc" }),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "check" }),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "box text-muted" })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("range-slider", {
-                        staticClass: "slider",
-                        attrs: { min: "0", max: "100", step: "1" },
-                        model: {
-                          value: _vm.styleSeating.opacity,
-                          callback: function($$v) {
-                            _vm.$set(_vm.styleSeating, "opacity", $$v)
-                          },
-                          expression: "styleSeating.opacity"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ])
-              ])
+           false
+            ? undefined
             : _vm._e()
         ],
         2
@@ -7528,9 +7384,75 @@ var render = function() {
           style: "width: " + (_vm.image.size.width + 6) + "px; margin: auto"
         },
         [
-          false
-            ? undefined
-            : _vm._e()
+          true
+            ? _c("div", [
+                _c("div", { staticClass: "photo" }, [
+                  _c("p", [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "detail" }, [
+                      _vm._v(
+                        _vm._s(_vm.$t("General count")) +
+                          ": " +
+                          _vm._s(_vm.photo.passengers.total)
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm.photo.passengers
+                  ? _c("div", { staticClass: "passengers" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.photo.passengers.byRoundTrips, function(
+                          roundTrip
+                        ) {
+                          return _c("li", { staticClass: "detail" }, [
+                            _c(
+                              "p",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: roundTrip.number,
+                                    expression: "roundTrip.number"
+                                  }
+                                ]
+                              },
+                              [
+                                _c("small", [
+                                  _c("i", { staticClass: "fa fa-exchange" }),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(roundTrip.number) +
+                                      ", " +
+                                      _vm._s(roundTrip.route) +
+                                      ": " +
+                                      _vm._s(roundTrip.count) +
+                                      "\n                        "
+                                  )
+                                ])
+                              ]
+                            )
+                          ])
+                        }),
+                        0
+                      ),
+                      _vm._v(" "),
+                      _c("p", { staticClass: "detail count-round-trips" }, [
+                        _c("small", [
+                          _vm._v(
+                            _vm._s(_vm.$t("Total by round trips")) +
+                              ": " +
+                              _vm._s(_vm.photo.passengers.total)
+                          )
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ])
+            : undefined
         ]
       )
     : _vm._e()
@@ -7651,7 +7573,10 @@ var render = function() {
             }
           }
         },
-        [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Search\n        ")]
+        [
+          _c("i", { staticClass: "fa fa-search" }),
+          _vm._v(" Search\n            ")
+        ]
       )
     ]),
     _vm._v(" "),
@@ -7716,11 +7641,6 @@ var render = function() {
                     "allow-empty": true,
                     placeholder: _vm.$t("Select a vehicle")
                   },
-                  on: {
-                    input: function($event) {
-                      return _vm.setSearch()
-                    }
-                  },
                   model: {
                     value: _vm.search.vehicle,
                     callback: function($$v) {
@@ -7751,11 +7671,6 @@ var render = function() {
                     "first-day-of-week": 1,
                     lang: "es",
                     width: "100%"
-                  },
-                  on: {
-                    change: function($event) {
-                      return _vm.setSearch()
-                    }
                   },
                   model: {
                     value: _vm.search.date,
@@ -7793,7 +7708,7 @@ var render = function() {
                   _vm._v(
                     " " +
                       _vm._s(_vm.$t("Search")) +
-                      "\n                        "
+                      "\n                            "
                   )
                 ]
               )

@@ -16,12 +16,12 @@
             </div>
         </div>
 
-        <seat-component v-if="styleSeating.show && seat.width > 0 && seat.height > 0" v-for="seat in seating" :key="seat.id" :seat.sync="seat" :seating-occupied="seatingOccupied" :style="`opacity: ${styleSeating ? styleSeating.opacity/100 : 100}`" :image="image" :fixed="fixedSeating"></seat-component>
+        <seat-component v-if="false && styleSeating.show && seat.width > 0 && seat.height > 0" v-for="seat in seating" :key="seat.id" :seat.sync="seat" :seating-occupied="seatingOccupied" :style="`opacity: ${styleSeating ? styleSeating.opacity/100 : 100}`" :image="image" :fixed="fixedSeating"></seat-component>
         <seat-component v-if="false && busySeat.width > 0 && busySeat.height > 0" v-for="busySeat in busySeating" :key="busySeat.id + Math.random()" :seat="busySeat" :image="image" :fixed="true"></seat-component>
         <seat-component v-if="false && seatOccupied && seatOccupied.width > 0 && seatOccupied.height > 0" :seat="seatOccupied" :seating-occupied="seatingOccupied" :image="image" :fixed="true"></seat-component>
         <img  id="image-seating" v-if="photo.details.url" draggable="false" v-lazy="photo.details.url.encoded ? photo.details.url.encoded : photo.details.url" :width="`${image.size.width}px`" :height="`${image.size.height}px`" alt="Seating photo">
 
-        <div class="container-actions text-center" v-if="photo && seating.length > 0">
+        <div class="container-actions text-center" v-if="false && photo && seating.length > 0">
             <div class="p-10 actions">
                 <div class="md-checkbox has-success">
                     <input type="checkbox" :id="`show-photo-${photo.id}${fixedSeating ? '':'-profile'}`" class="md-check" v-model="styleSeating.show">

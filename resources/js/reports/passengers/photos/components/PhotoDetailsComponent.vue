@@ -28,7 +28,7 @@
                     <p class="detail" v-if="false">
                         {{ $t('Seating') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.seatingOccupiedStr }}</span>
                     </p>
-                    <p class="detail text-bold text-uppercase"
+                    <p class="detail text-bold text-uppercase" v-if="false"
                        :class="`percent-level-${photo.details.occupation.percentLevel}`">
                         {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.percent | numberFormat('0.0') }}%</span>
 
@@ -48,8 +48,8 @@
                         <span class="detail">{{ photo.passengers.totalSumOccupied }} {{ $t('Counts') }}</span>
                     </p>
                 </div>
-                <div class="passengers" v-if="photo.passengers && false">
-                    <ul v-if="photo.passengers.byRoundTrips.length">
+                <div class="passengers" v-if="photo.passengers">
+					<ul v-if="photo.passengers.byRoundTrips.length">
                         <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail" v-if="roundTrip.number">
                             <p v-show="roundTrip.number">
                                 <small>

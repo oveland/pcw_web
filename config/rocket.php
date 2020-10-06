@@ -174,19 +174,19 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => [25, 50],
+                            'range' => [25, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [50, 70],
+                            'range' => [40, 60],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [70, 100],
+                            'range' => [60, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -204,12 +204,12 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 100,                            # Percent of height when Normal Detection
-                            'ld' => 95                              # Percent of height when Large Detection
+                            'nd' => 120,                            # Percent of height when Normal Detection
+                            'ld' => 150                              # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
                             'nd' => 50,                             # Percent top of point center when Normal Detection
-                            'ld' => 62                              # Percent top of point center when Large Detection
+                            'ld' => 40                              # Percent top of point center when Large Detection
                         ]
                     ]
                 ]
@@ -241,19 +241,19 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => [25, 50],
+                            'range' => [25, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [50, 70],
+                            'range' => [40, 50],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [70, 100],
+                            'range' => [50, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -272,11 +272,11 @@ return [
                     'draw' => [
                         'heightFromWidth' => [
                             'nd' => 200,                            # Percent of height when Normal Detection
-                            'ld' => 100                             # Percent of height when Large Detection
+                            'ld' => 200                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 50,                             # Percent top of point center when Normal Detection
-                            'ld' => 50                              # Percent top of point center when Large Detection
+                            'nd' => 40,                             # Percent top of point center when Normal Detection
+                            'ld' => 30                              # Percent top of point center when Large Detection
                         ]
                     ]
                 ]

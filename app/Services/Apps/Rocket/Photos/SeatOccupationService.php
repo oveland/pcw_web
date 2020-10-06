@@ -3,17 +3,12 @@
 
 namespace App\Services\Apps\Rocket\Photos;
 
-
-use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\ConfigProfileService;
 use Illuminate\Support\Collection;
 
 class SeatOccupationService
 {
-    protected const THRESHOLD_ACTIVATE = 2;
-    protected const THRESHOLD_RELEASE = 2;
-
     /**
      * @var Vehicle
      */
@@ -47,101 +42,123 @@ class SeatOccupationService
     }
 
     /**
-     * @param Collection $currentOccupied
-     * @param Collection $prevOccupied
+     * @param Collection | array $currentOccupied
+     * @param Collection | array $prevOccupied
      * @param bool $withOverlap
      */
     private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false)
     {
-        foreach ($prevOccupied as $seat => $data) {
-            $seatReleaseThreshold = $this->configSeating[$seat]['persistence']['release'];
+        if (!$withOverlap) {
+            foreach ($prevOccupied as $seat => $data) {
+                $seatReleaseThreshold = $this->configSeating[$seat]['persistence']['release'];
+                $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
 
-            $newData = collect($data);
-            $persistentCurrent = $currentOccupied->get($seat);
+                $newData = collect($data);
 
-            $counterRelease = intval($newData->get('counterRelease') ?? 0);
-            if (!$persistentCurrent || $withOverlap) {
-                $counterRelease++;
+                $persistentInCurrent = $currentOccupied->get($seat);
 
-                $newData->put('counterRelease', $counterRelease);
+                $counterRelease = intval($newData->get('counterRelease') ?? 0);
+                if (!$persistentInCurrent) {
+                    $counterRelease++;
 
-                if ($counterRelease < $seatReleaseThreshold && $newData->get('counterActivate') >= 2) {
-                    $newData->put('lockedReleased', $counterRelease);
-                    $currentOccupied->put($seat, (object)$newData->toArray());
+                    $newData->put('counterRelease', $counterRelease);
+
+                    if ($counterRelease < $seatReleaseThreshold && $newData->get('counterActivate') >= $seatActivateThreshold) {
+                        $currentOccupied->put($seat, (object)$newData->toArray());
+                    } else {
+                        $currentOccupied->forget($seat);
+                    }
                 } else {
-                    $currentOccupied->forget($seat);
+                    $currentOccupied->put($seat, (object)collect($persistentInCurrent)->put('counterRelease', 0)->toArray());
                 }
-            } else {
-                $currentOccupied->put($seat, (object)collect($persistentCurrent)->put('counterRelease', 0)->toArray());
             }
+        } else {
+            $currentOccupied = $prevOccupied;
         }
     }
 
     /**
-     * @param Collection $currentOccupied
-     * @param Collection $prevOccupied
+     * @param Collection | array $currentOccupied
+     * @param Collection | array $prevOccupied
      * @param bool $withOverlap
      */
     private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false)
     {
-//        dd($currentOccupied);
-        foreach ($currentOccupied as $seat => $data) {
-            $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
+        if (!$withOverlap) {
+            $currentOccupiedClone = clone $currentOccupied;
+            foreach ($currentOccupiedClone as $seat => $data) {
+                $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
 
-            $newData = collect($data);
-            $persistentPrev = $prevOccupied->get($seat);
+                $newData = collect($data);
 
-            $counterActivate = intval($persistentPrev->counterActivate ?? 1);
+                $persistentPrev = $prevOccupied->get($seat);
 
-            $counterRelease = $newData->get('counterRelease');
+                $counterActivate = intval($persistentPrev->counterActivate ?? 1);
 
-            if ($persistentPrev && (!$counterRelease || $counterRelease <= 0)) {
-                $counterActivate++;
+                $counterRelease = $newData->get('counterRelease');
+
+                if ($persistentPrev && (!$counterRelease || $counterRelease <= 0)) {
+                    $counterActivate++;
+                } else if (!$persistentPrev) {
+                    $counterActivate = 1;
+                }
+
+                $prevCounterActivate = $persistentPrev ? collect($persistentPrev)->get('counterActivate') : 0;
+                $risingEvent = $counterActivate > $prevCounterActivate;
+
+                $newData->put('counterActivate', $counterActivate);
+                $newData->put('initialCount', $counterActivate == $seatActivateThreshold - 2);
+                $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
+                $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent);
+                $newData->put('counted', $counterActivate >= $seatActivateThreshold);
+                $newData->put('risingEvent', $risingEvent);
+
+                $currentOccupied->put($seat, (object)$newData->toArray());
             }
-
-            $prevCounterActivate = $persistentPrev ? collect($persistentPrev)->get('counterActivate') : 0;
-            $risingEvent = $counterActivate > $prevCounterActivate;
-
-            $newData->put('counterActivate', $counterActivate);
-            $newData->put('initialCount', $counterActivate == $seatActivateThreshold - 2);
-            $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
-            $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent);
-            $newData->put('counted', $counterActivate >= $seatActivateThreshold);
-            $newData->put('risingEvent', $risingEvent);
-
-            $currentOccupied->put($seat, (object)$newData->toArray());
         }
     }
 
     /**
-     * @param Collection $currentOccupied
-     * @param Collection $prevOccupied
+     * @param Collection | array $currentOccupied
+     * @param Collection | array $prevOccupied
+     * @param false $withOverlap
      * @return Collection
      */
-    public function getSeatingReleased($currentOccupied, $prevOccupied)
+    public function getSeatingReleased($currentOccupied, $prevOccupied, $withOverlap = false)
     {
         $seatingRelease = collect([]);
-        if ($prevOccupied->count() && $prevOccupied->count() || true) {
-            foreach ($prevOccupied as $seat => $data) {
-                $inCurrentSeat = $currentOccupied->get($seat);
 
-                if (!$inCurrentSeat) {
-                    $seatingRelease->put($seat, $data);
+        if (!$withOverlap) {
+            if ($prevOccupied->count() && $prevOccupied->count() || true) {
+                foreach ($prevOccupied as $seat => $data) {
+                    $inCurrentSeat = $currentOccupied->get($seat);
+
+                    if (!$inCurrentSeat) {
+                        $seatingRelease->put($seat, $data);
+                    }
                 }
             }
         }
+
         return $seatingRelease;
     }
 
 
     /**
-     * @param Collection $currentOccupied
-     * @return Collection
+     * @param Collection | array $currentOccupied
+     * @param false $withOverlap
+     * @return mixed
      */
-    public function getSeatingActivated($currentOccupied)
+    public function getSeatingActivated($currentOccupied, $withOverlap = false)
     {
-        return $currentOccupied->filter(function ($data) {
-            return collect($data)->get('activated');
-        });
+        $seatingActivated = collect([]);
+
+        if (!$withOverlap) {
+            $seatingActivated = $currentOccupied->filter(function ($data) {
+                return collect($data)->get('activated');
+            });
+        }
+
+        return $seatingActivated;
     }
 }

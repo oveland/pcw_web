@@ -335,7 +335,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -7542,7 +7541,7 @@ var render = function() {
             _c("div", { staticClass: "photo" }, [
               _c("p", [_vm._v(_vm._s(_vm.$t("Count by seating")))]),
               _vm._v(" "),
-              !_vm.photo.details.occupation.count
+              _vm.photo.alarms.withOverlap
                 ? _c("span", { staticClass: "text-warning" }, [
                     _vm._v(_vm._s(_vm.$t("Paused count")))
                   ])
@@ -7731,6 +7730,12 @@ var render = function() {
                                     },
                                     [
                                       _c("small", [
+                                        _c(
+                                          "small",
+                                          { staticClass: "text-muted" },
+                                          [_vm._v(_vm._s(roundTrip.id))]
+                                        ),
+                                        _vm._v(" "),
                                         _c("i", {
                                           staticClass: "fa fa-exchange"
                                         }),
@@ -7943,7 +7948,7 @@ var render = function() {
                         "%;border-color: " +
                         draw.color +
                         ";",
-                      attrs: { title: "Original center\n        " }
+                      attrs: { title: "Original center" }
                     })
                   })
                 ],
@@ -7986,6 +7991,9 @@ var render = function() {
           _vm.seatOccupied.width > 0 &&
           _vm.seatOccupied.height > 0
             ? _c("seat-component", {
+                style:
+                  "opacity: " +
+                  (_vm.styleSeating ? _vm.styleSeating.opacity / 100 : 100),
                 attrs: {
                   seat: _vm.seatOccupied,
                   "seating-occupied": _vm.seatingOccupied,

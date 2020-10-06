@@ -47,6 +47,9 @@
         },
         methods: {
             load() {
+				this.seating = [];
+				this.photos = [];
+
                 Swal.fire({
                     title: this.$t('Loading'),
                     text: this.$t('Please wait'),
@@ -59,7 +62,8 @@
                     allowEscapeKey: false,
                     showConfirmButton: false
                 });
-                axios.get(`${this.apiUrl}/report/historic`, {params: this.searchParams}).then(response => {
+
+				axios.get(`${this.apiUrl}/report/historic`, {params: this.searchParams}).then(response => {
                     const data = response.data;
 
                     if (data.success) {
