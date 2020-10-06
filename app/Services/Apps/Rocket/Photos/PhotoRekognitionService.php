@@ -196,6 +196,10 @@ PhotoRekognitionService
         $overlap = false;
 
         if (isset($boundingBox->center)) {
+//            if ($boundingBox->center->top < 60) {   // For overlaps located on medium screen
+//
+//            }
+
             if ($boundingBox->center->left > 30 && $boundingBox->center->left < 60) { // Only overlaps located on center/front bottom screen
                 $overlap = ($heightOrig > 30 && $width > 30);
             }
@@ -205,7 +209,7 @@ PhotoRekognitionService
             }
 
             if ($boundingBox->center->top < 30) { // For overlaps located on top/back screen
-                $overlap = $overlap || $heightOrig > 30 && $width > 10;
+                $overlap = $overlap || ($heightOrig > 30 && $width > 10);
             }
         }
 
