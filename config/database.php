@@ -109,6 +109,14 @@ return [
             'username' => env('BEADB_USERNAME_PAPAGAYO', 'BEADMIN'),
             'password' => env('BEADB_PASSWORD_PAPAGAYO', 'bea00001'),
         ],
+
+        'BEA_MONTEBELLO' => [
+            'company_id' => App\Models\Company\Company::MONTEBELLO,
+            'driver' => 'firebird',
+            'path' => env('BEADB_PATH_MONTEBELLO'),
+            'username' => env('BEADB_USERNAME_MONTEBELLO', 'BEADMIN'),
+            'password' => env('BEADB_PASSWORD_MONTEBELLO', 'bea00001'),
+        ],
     ],
 
     /*
