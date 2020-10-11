@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Aws\Command;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -40,7 +41,9 @@ class Kernel extends ConsoleKernel
         /* Commands for routes and dispatch registers */
         Commands\CloseDispatchRegistersCommand::class,
 
-        Commands\Tools\FixMileageCommand::class
+        Commands\Tools\FixMileageCommand::class,
+
+        Commands\DB\MaintenanceCommand::class
     ];
 
     /**
