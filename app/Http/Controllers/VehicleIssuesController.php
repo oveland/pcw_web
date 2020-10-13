@@ -61,11 +61,14 @@ class VehicleIssuesController extends Controller
     public function show(Request $request)
     {
         $dateReport = $request->get('date-report');
+        $withEndDate = $request->get('with-end-date');
+        $dateEndReport = $withEndDate ? $request->get('date-end-report') : $dateReport;
+
         $vehicleReport = $request->get('vehicle-report');
         $sortDescending = $request->get('sort-desc');
         $company = $this->auth->getCompanyFromRequest($request);
 
-        $report = $this->buildReport($company, $vehicleReport, $dateReport, $sortDescending);
+        $report = $this->buildReport($company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending);
 
         if ($request->get('export')) $this->novelty->export($report);
 
@@ -84,15 +87,17 @@ class VehicleIssuesController extends Controller
      * @param Company $company
      * @param $vehicleReport
      * @param $dateReport
+     * @param $withEndDate
+     * @param $dateEndReport
      * @param bool $sortDescending
      * @return object
      */
-    public function buildReport(Company $company, $vehicleReport, $dateReport, $sortDescending = false)
+    public function buildReport(Company $company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending = false)
     {
         $vehicles = ($vehicleReport == 'all') ? $company->vehicles : $company->vehicles()->where('id', $vehicleReport)->get();
 
         $vehicleIssues = VehicleIssue::whereIn('vehicle_id', $vehicles->pluck('id'));
-        if ($dateReport) $vehicleIssues = $vehicleIssues->whereDate('date', $dateReport);
+        $vehicleIssues = $vehicleIssues->whereBetween('date', ["$dateReport 00:00:00", "$dateEndReport 23:59:59"]);
         $vehicleIssues = $vehicleIssues->get()->sortBy('date', 0, $sortDescending);
 
 
@@ -100,6 +105,8 @@ class VehicleIssuesController extends Controller
             'company' => $company,
             'vehicleReport' => $vehicleReport,
             'dateReport' => $dateReport,
+            'withEndDate' => $withEndDate,
+            'dateEndReport' => $dateEndReport,
             'vehicleIssues' => $vehicleIssues,
             'isNotEmpty' => $vehicleIssues->isNotEmpty(),
             'sortDescending' => $sortDescending,
@@ -166,21 +173,21 @@ class VehicleIssuesController extends Controller
                         $init = true;
                         $vehicleIsActive = false;
                         $issueTypeId = VehicleIssueType::IN;
-                        $observations = __('Vehicle')." desactivado. $observations";
+                        $observations = __('Vehicle') . " desactivado. $observations";
                         break;
                     case 'ACTIVADO':
                         $vehicleIsActive = true;
                         $issueTypeId = VehicleIssueType::OUT;
-                        $observations = __('Vehicle')." activado. $observations";
+                        $observations = __('Vehicle') . " activado. $observations";
                         break;
                 }
 
                 if ($init) {
-                    if($firstInit){
+                    if ($firstInit) {
                         $vehicle->active = true;
                         $vehicle->in_repair = false;
                         $firstInit = false;
-                    }else{
+                    } else {
                         $vehicle->active = $vehicleIsActive;
                         $vehicle->in_repair = $vehicleIsInRepair;
                     }
