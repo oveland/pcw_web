@@ -12,6 +12,7 @@ namespace App\Services\Reports\Routes;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
+use App\Models\Vehicles\Speeding;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -81,7 +82,7 @@ class SpeedingService
         }
 
         $allSpeeding = $allSpeeding
-            ->with(['vehicle', 'dispatchRegister'])
+            ->with(['vehicle', 'dispatchRegister', 'addressLocation'])
             ->orderBy('date')->get();
 
         $allSpeeding = $allSpeeding

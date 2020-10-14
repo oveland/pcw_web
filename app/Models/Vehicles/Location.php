@@ -178,15 +178,15 @@ class Location extends Model
      */
     public function addressLocation()
     {
-        return $this->hasOne(AddressLocation::class);
+        return $this->hasOne(AddressLocation::class, 'location_id', 'id');
     }
 
     public function getAddress($refresh = false)
     {
         $addressLocation = $this->addressLocation;
-        return "";
+//        return "";
 
-        if ($refresh && !$addressLocation) {
+        if ($refresh || !$addressLocation) {
             $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude);
             $this->addressLocation()->create([
                 'address' => $address,

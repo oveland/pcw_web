@@ -132,7 +132,7 @@ class MaintenanceCommand extends Command
 //        $this->info("       - $query");
 //        DB::statement($query);
 
-        $query = "INSERT INTO overspeed (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations WHERE date > '2020-07-01' AND speeding IS TRUE";
+        $query = "INSERT INTO overspeed (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations WHERE date BETWEEN '2020-10-14 00:00:00' AND '2020-10-14 10:00:00' AND speeding IS TRUE";
         $this->info("       - $query");
         DB::statement($query);
 
