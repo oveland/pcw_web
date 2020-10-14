@@ -37,8 +37,8 @@ class MaintenanceCommand extends Command
     {
         return collect([
             [
-                'from' => '2020-03-15',
-                'to' => '2020-03-31',
+                'from' => '2020-04-01',
+                'to' => '2020-04-30',
                 'tables' => [
                     'locations' => [
                         'release' => true
@@ -48,42 +48,30 @@ class MaintenanceCommand extends Command
                     ],
                 ]
             ],
-//            [
-//                'from' => '2020-04-01',
-//                'to' => '2020-04-30',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => true
-//                    ],
-//                    'reports' => [
-//                        'release' => true
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2020-05-01',
-//                'to' => '2020-05-31',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => true
-//                    ],
-//                    'reports' => [
-//                        'release' => true
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2020-06-01',
-//                'to' => '2020-06-30',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => true
-//                    ],
-//                    'reports' => [
-//                        'release' => true
-//                    ],
-//                ]
-//            ],
+            [
+                'from' => '2020-05-01',
+                'to' => '2020-05-31',
+                'tables' => [
+                    'locations' => [
+                        'release' => true
+                    ],
+                    'reports' => [
+                        'release' => true
+                    ],
+                ]
+            ],
+            [
+                'from' => '2020-06-01',
+                'to' => '2020-06-30',
+                'tables' => [
+                    'locations' => [
+                        'release' => true
+                    ],
+                    'reports' => [
+                        'release' => true
+                    ],
+                ]
+            ],
 //            [
 //                'from' => '2020-07-01',
 //                'to' => '2020-07-31',
@@ -133,14 +121,22 @@ class MaintenanceCommand extends Command
         $now = Carbon::now();
         $this->info('Executing db maintenance at ' . $now->toDateTimeString());
 
-        $maintenanceData = $this->getMaintenanceData();
+//        $maintenanceData = $this->getMaintenanceData();
+//
+//        $maintenanceData->each(function ($maintenance) {
+//            $maintenance = json_decode(json_encode($maintenance), FALSE); // To Object
+//            $this->process($maintenance);
+//        });
 
-        $maintenanceData->each(function ($maintenance) {
-            $maintenance = json_decode(json_encode($maintenance), FALSE); // To Object
-            $this->process($maintenance);
-        });
+//        $query = "CREATE TABLE overspeed AS TABLE locations WITH NO DATA";
+//        $this->info("       - $query");
+//        DB::statement($query);
 
-        $this->info("Script response: ");
+        $query = "INSERT INTO overspeed (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations WHERE date > '2020-07-01' AND speeding IS TRUE";
+        $this->info("       - $query");
+        DB::statement($query);
+
+        $this->info("Maintenance finished at " . Carbon::now()->toDateTimeString());
 
     }
 
@@ -149,28 +145,33 @@ class MaintenanceCommand extends Command
         $tables = $maintenance->tables;
 
         foreach ($tables as $table => $options) {
-            $this->processTable($table, $maintenance->from, $maintenance->to, $options->release);
+            $hasBackup = isset($options->hasBackup) ? $options->hasBackup : false;
+            $this->processTable($table, $maintenance->from, $maintenance->to, $options->release, $hasBackup);
         }
     }
 
-    public function processTable($table, $from, $to, $release = false)
+    public function processTable($table, $from, $to, $release = false, $hasBackup = false)
     {
         $this->info("   Processing table: $table...");
         $tableBackup = $this->getTableBackup($table, $to);
 
-        $query = "CREATE TABLE $tableBackup AS SELECT * FROM $table WHERE date BETWEEN '$from' AND '$to'";
-        $this->info("       - $query");
+        if (!$hasBackup) {
+            $query = "CREATE TABLE $tableBackup AS SELECT * FROM $table WHERE date BETWEEN '$from' AND '$to'";
+            $this->info("       - $query");
 
-        DB::statement($query);
-
-        $this->buildBackup($table, $from, $to);
-
-        $query = "DROP TABLE $tableBackup";
-        $this->info("       - $query");
-
-        if ($release) {
-            $this->releaseTable($table, $from, $to);
+            DB::statement($query);
         }
+
+//        $backup = $this->buildBackup($table, $from, $to);
+
+//        if ($backup) {
+//            $query = "DROP TABLE $tableBackup";
+//            $this->info("       - $query");
+//        }
+//
+//        if ($release && $backup) {
+//            $this->releaseTable($table, $from, $to);
+//        }
     }
 
     public function buildBackup($table, $from, $to)
@@ -178,8 +179,10 @@ class MaintenanceCommand extends Command
         $this->info("   Processing backup table: $table...");
         $tableBackup = $this->getTableBackup($table, $to);
 
-        $script = shell_exec("cd app/Console/Shell/DB/Maintenance && sh backup.sh $tableBackup $from $to");
+        $script = shell_exec("cd app/Console/Shell/DB/Maintenance && /bin/bash backup.sh $tableBackup $from $to");
         $this->info("       - $script");
+
+        return $script === 'true' || $script === true;
     }
 
     public function releaseTable($table, $from, $to)
@@ -189,10 +192,9 @@ class MaintenanceCommand extends Command
         $query = "DELETE FROM $table WHERE date BETWEEN '$from' AND '$to'";
         $this->info("       - $query");
 
-        $tableBackup = $this->getTableBackup($table, $to);
-        $query = "DROP TABLE IF EXISTS $tableBackup";
-        $this->info("       - $query");
-
+//        $tableBackup = $this->getTableBackup($table, $to);
+//        $query = "DROP TABLE IF EXISTS $tableBackup";
+//        $this->info("       - $query");
 
         DB::statement($query);
     }

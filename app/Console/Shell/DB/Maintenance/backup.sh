@@ -9,7 +9,7 @@ function log(){
 
 # INIT SCRIPT
 
-FILE_LOG=log.txt
+FILE_LOG=/backups/movilidad/log.txt
 
 TABLE=$1
 DATE_BACKUP_FROM=$2
@@ -50,6 +50,8 @@ aws s3 mv ${PATH_BACKUP}/${ZIP_FILE_NAME} s3://${AWS_S3_BUCKET_BACKUP_DATABASE}
 
 log " ••• Backup for table ${TABLE} finished successfully! •••" >> ${FILE_LOG}
 
-echo "\n********************************************* \n" >> ${FILE_LOG}
+log "\n********************************************* \n" >> ${FILE_LOG}
 
-echo "Finished successfully at $(date +"%r")!"
+log "Finished successfully at $(date +"%r")!"
+
+echo "true";
