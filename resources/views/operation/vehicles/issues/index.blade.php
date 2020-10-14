@@ -57,16 +57,31 @@
                             </div>
                             @endif
 
-                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-                                <div class="form-group m-0">
-                                    <label for="date-report" class="control-label">@lang('Date report')</label>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="date-report" class="control-label field-required">
+                                        @lang('Date')
+                                    </label>
+                                    <label class="text-bold">
+                                        &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
+                                    </label>
                                     <div class="input-group date" id="datetimepicker-report">
-                                        <input name="date-report" id="date-report" type="text" class="form-control" placeholder="En todas la fechas" value=""/>
+                                        <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
                                     </div>
-                                    <span class="fa fa-times btn-default" onclick="$('#date-report').val('').change()" style="position: absolute;right: 6.3rem;z-index: 10000;top: 3.5rem"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 date-end-container" style="display: none">
+                                <div class="form-group">
+                                    <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                                    <div class="input-group date" id="datetimepicker-report">
+                                        <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -150,6 +165,13 @@
                     mainContainer.slideUp(100);
                 }).change();
             @endif
+
+            $('#with-end-date').change(function(){
+                const dec =  $('.date-end-container').slideUp();
+                if ($(this).is(':checked')) {
+                    dec.slideDown();
+                }
+            });
         });
     </script>
 @endsection

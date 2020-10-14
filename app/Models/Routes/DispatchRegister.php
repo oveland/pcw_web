@@ -225,8 +225,7 @@ class DispatchRegister extends Model
 
     public function getParsedDate()
     {
-        if ($this->date == null) dd($this->id, $this->date);
-        return Carbon::createFromFormat(config('app.date_format'), $this->date);
+        return Carbon::createFromFormat('Y-m-d', $this->date);
     }
 
     public function scopeWhereVehicle($query, Vehicle $vehicle = null)
