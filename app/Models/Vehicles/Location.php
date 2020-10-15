@@ -63,7 +63,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read AddressLocation $addressLocation
  * @property string|null $ard_off_road
  * @method static Builder|Location whereArdOffRoad($value)
- * @property string|null $date
  */
 class Location extends Model
 {
