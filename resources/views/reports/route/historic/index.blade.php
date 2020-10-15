@@ -142,6 +142,7 @@
         <!-- end search form -->
         <hr class="hr">
         <!-- begin content report -->
+        <div class="loading-report col-md-12"></div>
         <div class="report-container col-md-12">
             <div class="col-md-12 col-sm-12 col-xs-12 range-reports">
                 <div class="text-center" style="position: absolute;width: 100%">
@@ -200,6 +201,7 @@
     <script type="application/javascript">
         let reportRouteHistoric = null;
         let reportContainer = $('.report-container');
+        let loadingReport = $('.loading-report');
         $('.menu-routes, .menu-report-route-historic').addClass('active-animated');
 
         const vehicleReport = '{{ $vehicleReport }}';
@@ -248,7 +250,9 @@
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    reportContainer.empty().show().html($('#animated-loading').html());
+
+                    reportContainer.hide();
+                    loadingReport.fadeIn();
                     reportRouteHistoric.clearMap();
                     $.ajax({
                         url: $(this).attr('action'),
@@ -270,6 +274,7 @@
                         },
                         complete:function(){
                             form.find('.btn-search-report').removeClass(loadingClass);
+                            loadingReport.hide();
                             reportContainer.slideDown();
                         }
                     });
@@ -339,6 +344,8 @@
                     },100);
                 }
             });
+
+            loadingReport.html($('#animated-loading').html()).hide();
         });
     </script>
 @endsection
