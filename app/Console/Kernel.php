@@ -78,6 +78,7 @@ class Kernel extends ConsoleKernel
 
         /* Close the fake dispatch registers */
         $schedule->command('dispatch-registers:close')->dailyAt('00:05');
+//        $schedule->command('db:refresh-locations-views')->dailyAt('00:05');
     }
 
     /**
