@@ -65,7 +65,7 @@ return [
             'prefix' => '',
             'schema' => 'public',
             'sslmode' => 'prefer',
-            'timezone'  => 'America/Bogota',
+            'timezone' => 'America/Bogota',
         ],
 
         'GPS_MONTH' => [
@@ -132,5 +132,19 @@ return [
 
     ],
 
-    'total_pagination' => env('DB_TOTAL_PAGINATE',15),
+    'total_pagination' => env('DB_TOTAL_PAGINATE', 15),
+
+    'maintenance' => [
+        'locations' => [
+            'fragments' => [
+                'tables' => 6,
+                'days' => 5,
+                'indexes' => [
+                    'date',
+                    'vehicle_id',
+                    'dispatch_register_id'
+                ]
+            ]
+        ]
+    ]
 ];

@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use Aws\Command;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -43,7 +42,8 @@ class Kernel extends ConsoleKernel
 
         Commands\Tools\FixMileageCommand::class,
 
-        Commands\DB\MaintenanceCommand::class
+        Commands\DB\MaintenanceCommand::class,
+        Commands\DB\RefreshLocationsViews::class,
     ];
 
     /**

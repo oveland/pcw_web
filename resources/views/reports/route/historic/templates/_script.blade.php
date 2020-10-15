@@ -93,17 +93,17 @@
             $('.map-report-historic').css('height', (window.innerHeight - 100));
 
             $.each(report.historic, (i, reportLocation) => {
-                let historicInfoWindow = this.createInfoWindow(reportLocation);
+                // let historicInfoWindow = this.createInfoWindow(reportLocation);
                 let marker = this.addHistoricMarker(reportLocation);
-                marker.addListener('click', () => {
-                    historicInfoWindow.open(this.map, marker);
-                    $('.historic-info-map').parent().css('overflow', 'hidden');
-                });
+                // marker.addListener('click', () => {
+                //     historicInfoWindow.open(this.map, marker);
+                //     $('.historic-info-map').parent().css('overflow', 'hidden');
+                // });
 
                 this.historicLocations.push({
                     marker: marker,
                     //shadowMarker: this.addShadowMarker(reportLocation),
-                    infoWindow: historicInfoWindow,
+                    // infoWindow: historicInfoWindow,
                     reportLocation: reportLocation
                 });
             });
@@ -247,7 +247,7 @@
             this.paintHistoricPathTo(index);
 
             const marker = historicLocation.marker;
-            const infoWindow = historicLocation.infoWindow;
+            // const infoWindow = historicLocation.infoWindow;
             const reportLocation = historicLocation.reportLocation;
 
             const svg = this.processSVGIcon(reportLocation);
@@ -279,14 +279,14 @@
                 });
             }
 
-            if (this.currentLocation && this.currentLocation.infoWindow.getMap()) {
-                this.currentLocation.infoWindow.close();
-                infoWindow.open(this.map, this.markerBus);
-            } else {
-                //this.markerBus.addListener('click', () => {
-                //    infoWindow.open(this.map, this.markerBus);
-                //});
-            }
+            // if (this.currentLocation && this.currentLocation.infoWindow.getMap()) {
+            //     this.currentLocation.infoWindow.close();
+            //     infoWindow.open(this.map, this.markerBus);
+            // } else {
+            //     //this.markerBus.addListener('click', () => {
+            //     //    infoWindow.open(this.map, this.markerBus);
+            //     //});
+            // }
 
             if (!map.getBounds().contains(this.markerBus.getPosition())) {
                 this.map.panTo(this.markerBus.getPosition());

@@ -13,17 +13,19 @@ class CreateLocationsMaterializedView extends Migration
      */
     public function up()
     {
-        $params = $this->params();
+        $tables = config('database.maintenance.locations.fragments.tables');
+        $days = config('database.maintenance.locations.fragments.days');
+        $indexes = config('database.maintenance.locations.fragments.indexes');
 
-        foreach (range(1, $params->tables) as $table) {
-            $from = $params->days * $table;
-            $to = $params->days * ($table - 1) + 1;
+        foreach (range(1, $tables) as $table) {
+            $from = $days * $table;
+            $to = $days * ($table - 1) + 1;
             $viewName = "locations_$table";
             $sql = "CREATE MATERIALIZED VIEW $viewName AS (SELECT * FROM locations WHERE date BETWEEN current_date - $from AND current_date - $to) WITH NO DATA";
             dump($sql);
             DB::statement($sql);
 
-            foreach ($params->indexes as $indexColumn) {
+            foreach ($indexes as $indexColumn) {
                 $indexName = $viewName . "_" . $indexColumn . "_index";
                 $sqlIndex = "CREATE INDEX $indexName ON $viewName ($indexColumn DESC);";
                 DB::statement($sqlIndex);
@@ -33,7 +35,8 @@ class CreateLocationsMaterializedView extends Migration
 
         $sql = "CREATE TABLE locations_0 AS SELECT * FROM locations WHERE TRUE IS FALSE WITH NO DATA";
         DB::statement($sql);
-        foreach ($params->indexes as $indexColumn) {
+        dump($sql);
+        foreach ($indexes as $indexColumn) {
             $indexName = "locations_0_" . $indexColumn . "_index";
             $sqlIndex = "CREATE INDEX $indexName ON locations_0 ($indexColumn DESC);";
             DB::statement($sqlIndex);
@@ -48,9 +51,9 @@ class CreateLocationsMaterializedView extends Migration
      */
     public function down()
     {
-        $params = $this->params();
+        $tables = config('database.maintenance.locations.fragments.tables');
 
-        foreach (range(1, $params->tables) as $table) {
+        foreach (range(1, $tables) as $table) {
             $viewName = "locations_$table";
             $sql = "DROP MATERIALIZED VIEW IF EXISTS $viewName";
             DB::statement($sql);
@@ -60,18 +63,5 @@ class CreateLocationsMaterializedView extends Migration
         $sql = "DROP TABLE IF EXISTS locations_0";
         DB::statement($sql);
         dump($sql);
-    }
-
-    public function params()
-    {
-        return (object)[
-            'tables' => 6,
-            'days' => 5,
-            'indexes' => [
-                'date',
-                'vehicle_id',
-                'dispatch_register_id'
-            ]
-        ];
     }
 }
