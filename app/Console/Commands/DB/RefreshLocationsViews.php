@@ -40,15 +40,15 @@ class RefreshLocationsViews extends Command
     {
         $tables = config('database.maintenance.locations.fragments.tables');
 
-        foreach (range(1, $tables) as $table) {
-            $viewName = "locations_$table";
-            $sql = "REFRESH MATERIALIZED VIEW $viewName";
-            DB::statement($sql);
-            $this->info($sql);
-        }
+//        foreach (range(1, $tables) as $table) {
+//            $viewName = "locations_$table";
+//            $sql = "REFRESH MATERIALIZED VIEW $viewName";
+//            DB::statement($sql);
+//            $this->info($sql);
+//        }
 
-        $sql = "TRUNCATE TABLE locations_0";
-        DB::statement($sql);
-        $this->info($sql);
+//        $sql = "TRUNCATE TABLE locations_0";
+//        DB::statement($sql);
+//        $this->info($sql);
     }
 }
