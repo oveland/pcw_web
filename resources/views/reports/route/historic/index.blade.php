@@ -248,7 +248,7 @@
                 e.preventDefault();
                 if (form.isValid()) {
                     form.find('.btn-search-report').addClass(loadingClass);
-                    reportContainer.slideUp(100);
+                    reportContainer.empty().show().html($('#animated-loading').html());
                     reportRouteHistoric.clearMap();
                     $.ajax({
                         url: $(this).attr('action'),
