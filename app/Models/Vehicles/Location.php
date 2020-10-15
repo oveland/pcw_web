@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Vehicles\Location
  *
  * @property int $id
  * @property int $version
- * @property string|null| Carbon  $date
+ * @property string|null| Carbon $date
  * @property Carbon $date_created
  * @property int|null $dispatch_register_id
  * @property float|null $distance
@@ -50,6 +51,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $vehicle_status_id
  * @method static Builder|Location whereVehicleStatusId($value)
  * @method static Builder|DispatchRegister witOffRoads()
+ * @method static Builder forDate($date)
  * @property bool|null $speeding
  * @property-read DispatchRegister|null $dispatchRegister
  * @method static Builder|Location validCoordinates()
@@ -201,10 +203,32 @@ class Location extends Model
     public function getTotalOffRoad($routeId)
     {
         $routeId = $routeId ? $routeId : ($this->dispatch_register_id ? $this->dispatchRegister->route->id : 'empty');
-        
+
         $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
 
         return isset($ardOffRoad[$routeId]) ? $ardOffRoad[$routeId]['tt'] : 0;
     }
 
+
+    public function scopeForDate(Builder $query, $withDate)
+    {
+        $tableName = 'locations';
+
+        $format = Str::contains($withDate, "-") ? 'Y-m-d' : 'd/m/Y';
+        $date = Carbon::createFromFormat($format, $withDate);
+
+        $diffDays = Carbon::now()->diffInDays($date);
+
+        if ($diffDays == 0) {
+            $tableName .= "_$diffDays";
+        } else {
+            $indexView = floor(($diffDays - 1) / 5) + 1;
+
+            if ($indexView <= 6) {
+                $tableName .= "_$indexView";
+            }
+        }
+
+        return $query->from($tableName);
+    }
 }

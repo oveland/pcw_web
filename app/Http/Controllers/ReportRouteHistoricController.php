@@ -78,15 +78,12 @@ class ReportRouteHistoricController extends Controller
     {
         $vehicle = Vehicle::find($vehicleReport);
 
-        $model = ($dateReport == Carbon::now()->toDateString()) ? LocationToday::class : Location::class;
-
-        $locations = $model::whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
+        $locations = Location::forDate($dateReport)->whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
             ->where('vehicle_id', $vehicleReport)
             ->with(['vehicle', 'dispatchRegister', 'vehicleStatus'])
             ->orderBy('date');
 
-            $locations = $locations->get();
-
+        $locations = $locations->get();
 
         $dataLocations = collect([]);
 
