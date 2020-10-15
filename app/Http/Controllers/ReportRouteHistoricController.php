@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicles\Location;
+use App\Models\Vehicles\LocationToday;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Auth;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -76,11 +78,14 @@ class ReportRouteHistoricController extends Controller
     {
         $vehicle = Vehicle::find($vehicleReport);
 
-        $locations = Location::whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
+        $model = ($dateReport == Carbon::now()->toDateString()) ? LocationToday::class : Location::class;
+
+        $locations = $model::whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
             ->where('vehicle_id', $vehicleReport)
             ->with(['vehicle', 'dispatchRegister', 'vehicleStatus'])
-            ->orderBy('date')
-            ->get();
+            ->orderBy('date');
+
+            $locations = $locations->get();
 
 
         $dataLocations = collect([]);

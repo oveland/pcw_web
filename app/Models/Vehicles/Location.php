@@ -67,6 +67,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Location extends Model
 {
+    protected $table = 'locations_2020_10_14';
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 
@@ -100,7 +102,7 @@ class Location extends Model
      */
     public function dispatchRegister()
     {
-        return $this->belongsTo(DispatchRegister::class);
+        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id');
     }
 
     /**
@@ -142,7 +144,7 @@ class Location extends Model
 
     public function vehicle()
     {
-        return $this->belongsTo(Vehicle::class);
+        return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
     }
 
     public function vehicleStatus()

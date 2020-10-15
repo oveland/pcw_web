@@ -65,7 +65,7 @@ class SpeedingService
     {
         $initialDate = trim($initialDate);
         $finalDate = trim($finalDate);
-        $allSpeeding = Location::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
+        $allSpeeding = Speeding::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
 
         if ($routeReport == 'all' || !$routeReport) {
             $vehicles = $company->vehicles();
@@ -105,7 +105,7 @@ class SpeedingService
      */
     function byDispatchRegister(DispatchRegister $dispatchRegister)
     {
-        $allSpeedingByDispatchRegister = Location::withSpeeding()
+        $allSpeedingByDispatchRegister = Speeding::withSpeeding()
             ->where('dispatch_register_id', $dispatchRegister->id)
             ->orderBy('date')
             ->get();
