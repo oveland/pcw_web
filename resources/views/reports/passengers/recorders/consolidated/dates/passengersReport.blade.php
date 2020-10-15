@@ -123,7 +123,7 @@
                             <td>{{ number_format($report->differenceMileage, 1) }} </td>
                             <td class="sensor recorder">{{ $sensorRecorder }}</td>
                             <td class="recorder text-center">
-                                <span class="{{ count($issuesByVehicles) ? "text-warning click":""  }}" data-toggle="tooltip" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
+                                <span class="{{ count($issuesByVehicles) ? "text-warning click tooltips":""  }}" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
                                       onclick="{{ count($issuesByVehicles) ? "$('#issue-$date').collapse('show');":""  }}">
                                     {{ number_format($recorder, 0) }}
                                 </span>

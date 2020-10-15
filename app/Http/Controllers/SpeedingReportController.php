@@ -116,7 +116,7 @@ class SpeedingReportController extends Controller
                             __('Date') => $speeding->date->toDateString(),                                 # B CELL
                             __('Time') => $speeding->time->toTimeString(),                                 # B CELL
                             __('Speed') => number_format($speed,2, ',', ''),# E CELL
-                            __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
+                            __('Address') => $speeding->getAddress()# E CELL
                         ];
                     }
 
@@ -151,7 +151,7 @@ class SpeedingReportController extends Controller
                     __('Time') => $speeding->time->toTimeString(),                 # C CELL
                     __('Vehicle') => $vehicle->number,                             # B CELL
                     __('Speed') => number_format($speed,2, ',', ''),# E CELL
-                    __('Address') => Geolocation::getAddressFromCoordinates($speeding->latitude, $speeding->longitude)# E CELL
+                    __('Address') => $speeding->getAddress()# E CELL
                 ];
             }
 
@@ -173,7 +173,7 @@ class SpeedingReportController extends Controller
      */
     public function getAddressFromCoordinates(Location $location)
     {
-        return Geolocation::getAddressFromCoordinates($location->latitude, $location->longitude);
+        return $location->getAddress();
     }
 
     /**

@@ -16,8 +16,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 
-;
-
 /**
  * App\Models\Users\User
  *
@@ -179,6 +177,7 @@ class User extends Authenticatable
             523994798,
             423994798,
             2018101065,
+            723994798
         ];
 
         return in_array($this->id, $usersCanAdmin) || $this->isAdmin();
@@ -208,6 +207,7 @@ class User extends Authenticatable
             523994798,
             423994798,
             2018101065,
+            723994798
         ];
 
         return (in_array($this->id, $usersCanSendSMS) && $this->canAdminGPS()) || $this->isSuperAdmin();
