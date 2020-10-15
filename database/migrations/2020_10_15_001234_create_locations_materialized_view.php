@@ -19,7 +19,7 @@ class CreateLocationsMaterializedView extends Migration
 
         foreach (range(1, $tables) as $table) {
             $from = $days * $table;
-            $to = $days * ($table - 1) + 1;
+            $to = $days * ($table - 1);
             $viewName = "locations_$table";
             $sql = "CREATE MATERIALIZED VIEW $viewName AS (SELECT * FROM locations WHERE date BETWEEN current_date - $from AND current_date - $to) WITH NO DATA";
             dump($sql);
