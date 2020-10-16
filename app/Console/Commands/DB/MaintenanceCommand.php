@@ -36,42 +36,42 @@ class MaintenanceCommand extends Command
     public function getMaintenanceData()
     {
         return collect([
-            [
-                'from' => '2020-04-01',
-                'to' => '2020-04-30',
-                'tables' => [
-                    'locations' => [
-                        'release' => true
-                    ],
-                    'reports' => [
-                        'release' => true
-                    ],
-                ]
-            ],
-            [
-                'from' => '2020-05-01',
-                'to' => '2020-05-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => true
-                    ],
-                    'reports' => [
-                        'release' => true
-                    ],
-                ]
-            ],
-            [
-                'from' => '2020-06-01',
-                'to' => '2020-06-30',
-                'tables' => [
-                    'locations' => [
-                        'release' => true
-                    ],
-                    'reports' => [
-                        'release' => true
-                    ],
-                ]
-            ],
+//            [
+//                'from' => '2020-04-01',
+//                'to' => '2020-04-30',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => true
+//                    ],
+//                    'reports' => [
+//                        'release' => true
+//                    ],
+//                ]
+//            ],
+//            [
+//                'from' => '2020-05-01',
+//                'to' => '2020-05-31',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => true
+//                    ],
+//                    'reports' => [
+//                        'release' => true
+//                    ],
+//                ]
+//            ],
+//            [
+//                'from' => '2020-06-01',
+//                'to' => '2020-06-30',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => true
+//                    ],
+//                    'reports' => [
+//                        'release' => true
+//                    ],
+//                ]
+//            ],
 //            [
 //                'from' => '2020-07-01',
 //                'to' => '2020-07-31',
@@ -127,12 +127,13 @@ class MaintenanceCommand extends Command
 //            $maintenance = json_decode(json_encode($maintenance), FALSE); // To Object
 //            $this->process($maintenance);
 //        });
-
-//        $query = "CREATE TABLE overspeed AS TABLE locations WITH NO DATA";
+//
+//        $query = "INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road)
+//                    SELECT * FROM locations_2020_10_16";
 //        $this->info("       - $query");
 //        DB::statement($query);
 
-        $query = "INSERT INTO overspeed (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations WHERE date BETWEEN '2020-10-14 00:00:00' AND '2020-10-14 10:00:00' AND speeding IS TRUE";
+        $query = "INSERT INTO off_roads (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations WHERE date >= '2020-09-15' AND off_road IS TRUE";
         $this->info("       - $query");
         DB::statement($query);
 

@@ -79,12 +79,20 @@ class OffRoadService
          */
 
         $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)->get();
-        $allOffRoads = Location::witOffRoads()
-            ->whereBetween('date', [$initialDate, $finalDate])
+        $allOffRoads = Location::witOffRoads();
+
+
+        if (explode(' ', $initialDate)[0] == explode(' ', $finalDate)[0]) {
+            $allOffRoads = $allOffRoads->forDate($initialDate);
+        }
+
+
+        $allOffRoads = $allOffRoads->whereBetween('date', [$initialDate, $finalDate])
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
             ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.route'])
-            ->orderBy('date')
-            ->get();
+            ->orderBy('date');
+
+        $allOffRoads = $allOffRoads->get();
 
         $allOffRoads = $allOffRoads
             ->filter(function (Location $o) use ($initialDate, $finalDate) {
@@ -126,7 +134,7 @@ class OffRoadService
      */
     function offRoadsByVehicle(Vehicle $vehicle, $dateReport)
     {
-        return Location::whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
+        return Location::forDate($dateReport)->whereBetween('date', [$dateReport . ' 00:00:00', $dateReport . ' 23:59:59'])
             ->witOffRoads()
             ->where('vehicle_id', $vehicle->id)
             ->orderBy('date')
@@ -141,7 +149,7 @@ class OffRoadService
      */
     function byDispatchRegister(DispatchRegister $dispatchRegister)
     {
-        $allOffRoadsByDispatchRegister = Location::witOffRoads()
+        $allOffRoadsByDispatchRegister = Location::forDate($dispatchRegister->getParsedDate()->toDateString())->witOffRoads()
             ->where('dispatch_register_id', $dispatchRegister->id)
             ->orderBy('date')
             ->get();

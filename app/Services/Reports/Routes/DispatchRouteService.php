@@ -104,7 +104,14 @@ class DispatchRouteService
     public function locationsReports(DispatchRegister $dispatchRegister, Location $centerOnLocation = null)
     {
         //$reports = $dispatchRegister->reports()->with('location')->get();
-        $locations = $dispatchRegister->locations()->with('report')->get();
+//        $locations = $dispatchRegister->locations()->with('report');
+
+        $locations = Location::forDate($dispatchRegister->getParsedDate()->toDateString())
+            ->with('report')
+            ->where('dispatch_register_id', $dispatchRegister->id);
+
+        $locations = $locations->get();
+
         $locationsReports = (object)['empty' => $locations->isEmpty(), 'notEmpty' => $locations->isNotEmpty()];
 
         if ($locations->isNotEmpty()) {
@@ -215,7 +222,12 @@ class DispatchRouteService
 
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
                 $vehicle = $dispatchRegister->vehicle;
-                $locations = $dispatchRegister->locations;
+//                $locations = $dispatchRegister->locations()->get();
+
+                $locations = Location::forDate($dispatchRegister->date)
+                    ->where('dispatch_register_id', $dispatchRegister->id)
+                    ->orderBy('date')
+                    ->get();
 
                 if ($locations->isNotEmpty()) {
                     $speedingLocations = $locations->where('speeding', true);

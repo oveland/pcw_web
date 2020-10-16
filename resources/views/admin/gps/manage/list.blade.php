@@ -233,7 +233,7 @@
                                                                 </div>
                                                             </div>
                                                             <label for="command-gps" class="control-label col-md-12 field-required text-right">@lang('Commands')</label>
-                                                            <textarea id="command-gps" {{ Auth::user()->isSuperAdmin2() ? "" : "readonly" }} name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
+                                                            <textarea id="command-gps" {{ Auth::user()->isSuperAdmin() ? "" : "readonly" }} name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="tab-pane fade" id="nav-pills-justified-2">
