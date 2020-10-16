@@ -92,7 +92,7 @@ class OffRoadService
             ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.route'])
             ->orderBy('date');
 
-            $allOffRoads = $allOffRoads->get();
+        $allOffRoads = $allOffRoads->get();
 
         $allOffRoads = $allOffRoads
             ->filter(function (Location $o) use ($initialDate, $finalDate) {
