@@ -50,8 +50,8 @@ use Illuminate\Support\Str;
  * @mixin Eloquent
  * @property int|null $vehicle_status_id
  * @method static Builder|Location whereVehicleStatusId($value)
- * @method static Builder|DispatchRegister witOffRoads()
- * @method static Builder forDate($date)
+ * @method static Builder|Location witOffRoads()
+ * @method static Builder|Location forDate($date)
  * @property bool|null $speeding
  * @property-read DispatchRegister|null $dispatchRegister
  * @method static Builder|Location validCoordinates()
