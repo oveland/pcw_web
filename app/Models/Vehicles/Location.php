@@ -13,6 +13,54 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
+trait BindsDynamically
+{
+    protected $connection = null;
+    protected $table = null;
+
+    public function bind(string $connection, string $table)
+    {
+        $this->setConnection($connection);
+        $this->setTable($table);
+    }
+
+    public function newInstance($attributes = [], $exists = false)
+    {
+        // Overridden in order to allow for late table binding.
+
+        $model = parent::newInstance($attributes, $exists);
+        $model->setTable($this->table);
+
+        return $model;
+    }
+
+    public function scopeForDate(Builder $query, $withDate)
+    {
+        $tableName = 'locations';
+
+        $withDate = explode(' ', $withDate)[0];
+
+        $format = Str::contains($withDate, "-") ? 'Y-m-d' : 'd/m/Y';
+        $date = Carbon::createFromFormat($format, $withDate);
+
+        $diffDays = Carbon::now()->diffInDays($date);
+
+        if ($diffDays == 0) {
+            $tableName .= "_$diffDays";
+        } else {
+            $indexView = floor(($diffDays - 1) / 5) + 1;
+
+            if ($indexView <= 6) {
+                $tableName .= "_$indexView";
+            }
+        }
+
+        $this->setTable($tableName);
+
+        return $query->from($tableName);
+    }
+}
+
 /**
  * App\Models\Vehicles\Location
  *
@@ -68,7 +116,7 @@ use Illuminate\Support\Str;
  */
 class Location extends Model
 {
-    protected $table = 'locations_2020_10_14';
+    use BindsDynamically;
 
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
@@ -207,28 +255,5 @@ class Location extends Model
         $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
 
         return isset($ardOffRoad[$routeId]) ? $ardOffRoad[$routeId]['tt'] : 0;
-    }
-
-
-    public function scopeForDate(Builder $query, $withDate)
-    {
-        $tableName = 'locations';
-
-        $format = Str::contains($withDate, "-") ? 'Y-m-d' : 'd/m/Y';
-        $date = Carbon::createFromFormat($format, $withDate);
-
-        $diffDays = Carbon::now()->diffInDays($date);
-
-        if ($diffDays == 0) {
-            $tableName .= "_$diffDays";
-        } else {
-            $indexView = floor(($diffDays - 1) / 5) + 1;
-
-            if ($indexView <= 6) {
-                $tableName .= "_$indexView";
-            }
-        }
-
-        return $query->from($tableName);
     }
 }

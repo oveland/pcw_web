@@ -196,7 +196,7 @@ class DispatchRegister extends Model
      */
     public function locations($order = 'asc')
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', $order);
+        return $this->hasMany(new Location(), 'dispatch_register_id', 'id')->orderBy('date', $order);
     }
 
     /**

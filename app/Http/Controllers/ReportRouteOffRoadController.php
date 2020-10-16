@@ -85,8 +85,7 @@ class ReportRouteOffRoadController extends Controller
      */
     public function getAddressFromCoordinates(Location $location)
     {
-        sleep(1); // Because google (Free layer) only lets 50 request/second
-        return Geolocation::getAddressFromCoordinates($location->latitude, $location->longitude);
+        return $location->getAddress();
     }
 
     /**
