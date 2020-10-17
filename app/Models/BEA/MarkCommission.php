@@ -32,6 +32,8 @@ use Illuminate\Support\Carbon;
  * @property int $mark_id
  * @method static Builder|MarkCommission whereMarkId($value)
  * @property-read \App\Models\BEA\Mark $mark
+ * @property int|null $vehicle_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\MarkCommission whereVehicleId($value)
  */
 class MarkCommission extends Model
 {

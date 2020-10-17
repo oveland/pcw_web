@@ -2,6 +2,8 @@
 
 namespace App\Services\API\Apps\Concox;
 
+use App\Models\Apps\Concox\PhotoRequest;
+use App\Models\Vehicles\Vehicle;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
 use App\Services\Apps\Concox\ConcoxService;
@@ -45,11 +47,34 @@ class APIConcoxService implements APIAppsInterface
     {
         switch ($this->service) {
             case 'take-photo':
-                $camera = $this->request->get('camera');
+                $vehicle = Vehicle::find(1207); // Vehicle 322 Alameda
 
-                $response = $this->concox->takePhoto($camera);
-                sleep(30);
-                $this->concox->syncPhotos($camera, 60, 30);
+                $lastPhotoRequest = PhotoRequest::where('vehicle_id', $vehicle->id)->first();
+
+                $now = Carbon::now();
+                if (!$lastPhotoRequest || $now->diffInSeconds($lastPhotoRequest->date) >= 30) {
+                    $camera = $this->request->get('camera');
+
+                    $response = $this->concox->takePhoto($camera);
+                    sleep(30);
+                    $this->concox->syncPhotos($camera, 60, 30);
+
+                    if (!$lastPhotoRequest) {
+                        $lastPhotoRequest = new PhotoRequest();
+                    }
+
+                    $lastPhotoRequest->date = $now;
+                    $lastPhotoRequest->vehicle()->associate($vehicle);
+                    $lastPhotoRequest->type = 'front';
+                    $lastPhotoRequest->params = explode('?', $this->request->getRequestUri())[1] ?? '';
+
+                    $lastPhotoRequest->save();
+                } else {
+                    $response = collect([
+                        'success' => false,
+                        'message' => 'Out of limit request'
+                    ]);
+                }
 
                 return response()->json($response->toArray());
             case 'get-photo':

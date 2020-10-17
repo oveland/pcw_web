@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|ConfigProfile whereUpdatedAt($value)
  * @method static Builder|ConfigProfile whereVehicleId($value)
  * @mixin Eloquent
+ * @property-read \App\Models\Vehicles\Vehicle $vehicle
  */
 class ConfigProfile extends Model
 {
