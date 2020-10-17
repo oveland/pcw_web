@@ -5,6 +5,7 @@ namespace App\Services\API\Apps\Concox;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
 use App\Services\Apps\Concox\ConcoxService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -47,6 +48,9 @@ class APIConcoxService implements APIAppsInterface
                 $camera = $this->request->get('camera');
 
                 $response = $this->concox->takePhoto($camera);
+                sleep(30);
+                $this->concox->syncPhotos($camera, 60, 30);
+
                 return response()->json($response->toArray());
             case 'get-photo':
                 $camera = $this->request->get('camera');
@@ -79,8 +83,6 @@ class APIConcoxService implements APIAppsInterface
                 $limit = $this->request->get('limit');
 
                 $response = $this->concox->syncPhotos($camera, $minutesAgo, $limit);
-
-                dd($response);
 
                 return response()->json($response->toArray());
                 break;

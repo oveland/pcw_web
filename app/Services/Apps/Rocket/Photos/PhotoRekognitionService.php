@@ -55,7 +55,7 @@ PhotoRekognitionService
         $data = (object)$data;
         $drawsProcessed = collect([]);
 
-        if ($data) {
+        if ($data && isset($data->draws)) {
             foreach ($data->draws as $draw) {
                 $drawsProcessed->push($this->processDraw($draw, $data->type));
             }
@@ -66,6 +66,8 @@ PhotoRekognitionService
                 'persons' => $drawsProcessed->where('count', true)->count(),
             ];
         }
+
+        return null;
     }
 
     /**
