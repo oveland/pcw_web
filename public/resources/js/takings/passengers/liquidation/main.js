@@ -963,6 +963,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -980,10 +982,8 @@ __webpack_require__.r(__webpack_exports__);
       mainContainer.fadeIn();
       this.search.date = moment().format("YYYY-MM-DD"); // this.search.date = '2020-02-27';
 
-      var companySearch = this.search.company;
-      companySearch = {
-        id: 30
-      };
+      var companySearch = this.search.company; // companySearch = {id:30};
+
       axios.get(this.urlParams, {
         params: {
           company: companySearch ? companySearch.id : null
@@ -12317,7 +12317,20 @@ var render = function() {
               1
             )
           ])
-        ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-lg btn-purple",
+            on: {
+              click: function($event) {
+                return _vm.getSearchParams()
+              }
+            }
+          },
+          [_vm._v("TEST")]
+        )
       ])
     ])
   ])

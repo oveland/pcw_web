@@ -55,6 +55,8 @@
                         </div>
                     </div>
                 </div>
+
+				<button class="btn btn-lg btn-purple" @click="getSearchParams()">TEST</button>
             </div>
         </div>
     </div>
@@ -79,7 +81,7 @@
                 this.search.date = moment().format("YYYY-MM-DD");
                 // this.search.date = '2020-02-27';
                 let companySearch = this.search.company;
-                companySearch = {id:30};
+                // companySearch = {id:30};
                 axios.get(this.urlParams, {
                     params: {
                         company: companySearch ? companySearch.id : null,
