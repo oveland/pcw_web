@@ -89,10 +89,10 @@
                         this.search.vehicles = data.vehicles;
                         this.search.companies = data.companies;
 
-                        this.search.company = _.find(this.search.companies, function(c){
-                            //return c.id === data.company.id;
-                            return c.id === 30;
-                        });
+                        // this.search.company = _.find(this.search.companies, function(c){
+                        //     //return c.id === data.company.id;
+                        //     return c.id === 30;
+                        // });
 
                         // this.search.vehicle = _.find(this.search.vehicles, function(c){
                         //     return c.id === 1953;

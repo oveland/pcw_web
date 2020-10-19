@@ -991,11 +991,11 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         var data = response.data;
         _this.search.vehicles = data.vehicles;
-        _this.search.companies = data.companies;
-        _this.search.company = _.find(_this.search.companies, function (c) {
-          //return c.id === data.company.id;
-          return c.id === 30;
-        }); // this.search.vehicle = _.find(this.search.vehicles, function(c){
+        _this.search.companies = data.companies; // this.search.company = _.find(this.search.companies, function(c){
+        //     //return c.id === data.company.id;
+        //     return c.id === 30;
+        // });
+        // this.search.vehicle = _.find(this.search.vehicles, function(c){
         //     return c.id === 1953;
         // });
 
