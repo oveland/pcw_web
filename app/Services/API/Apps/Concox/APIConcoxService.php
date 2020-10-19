@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 
 class APIConcoxService implements APIAppsInterface
 {
@@ -53,22 +54,23 @@ class APIConcoxService implements APIAppsInterface
 
                 $now = Carbon::now();
                 if (!$lastPhotoRequest || $now->diffInSeconds($lastPhotoRequest->date) >= 30) {
-                    $camera = $this->request->get('camera');
-
-                    $response = $this->concox->takePhoto($camera);
-                    sleep(30);
-                    $this->concox->syncPhotos($camera, 60, 30);
-
-                    if (!$lastPhotoRequest) {
-                        $lastPhotoRequest = new PhotoRequest();
-                    }
-
                     $lastPhotoRequest->date = $now;
                     $lastPhotoRequest->vehicle()->associate($vehicle);
                     $lastPhotoRequest->type = 'front';
                     $lastPhotoRequest->params = explode('?', $this->request->getRequestUri())[1] ?? '';
-
                     $lastPhotoRequest->save();
+
+                    $camera = $this->request->get('camera');
+
+                    $response = $this->concox->takePhoto($camera);
+                    Log::info("Take photo for vehicle ".$vehicle->number);
+                    sleep(30);
+                    $this->concox->syncPhotos($camera, 60, 30);
+                    Log::info("Sync photos for vehicle ".$vehicle->number);
+
+                    if (!$lastPhotoRequest) {
+                        $lastPhotoRequest = new PhotoRequest();
+                    }
                 } else {
                     $response = collect([
                         'success' => false,
