@@ -111,8 +111,9 @@ class BEASyncService
 
         $vehicles = BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS");
 
+        $detectedVehicles = collect([]);
         foreach ($vehicles as $vehicleBEA) {
-            $this->validateVehicle($vehicleBEA->CAU_IDAUTOBUS, $vehicleBEA);
+            $this->validateVehicle($vehicleBEA->CAU_IDAUTOBUS, $vehicleBEA, $detectedVehicles);
         }
 
         $maxSequence = Vehicle::max('id') + 1;
@@ -356,7 +357,7 @@ class BEASyncService
             if ($routeBEA) {
                 $route = new Route();
                 $route->bea_id = $routeBEA->CRU_IDRUTA;
-                $route->name = $routeBEA->CRU_DESCRIPCION;
+                $route->name = "BEA | $routeBEA->CRU_DESCRIPCION";
                 $route->distance = 0;
                 $route->road_time = 0;
                 $route->url = 'none';
@@ -409,21 +410,41 @@ class BEASyncService
      * @return Vehicle|integer|null
      * @throws Exception
      */
-    private function validateVehicle($vehicleBEAId, $data = null)
+    private function validateVehicle($vehicleBEAId, $data = null, &$detectedVehicles)
     {
+        $onlyMigrate = $this->company->id == Company::MONTEBELLO ? collect(range(2453, 2467)) : null;
+
         $vehicle = Vehicle::where('bea_id', $vehicleBEAId)->where('company_id', $this->company->id)->first();
 
         if ($vehicleBEAId) {
             if (!$vehicle) {
                 $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
-                $vehicle = $this->company->vehicles->where(function (Vehicle $v) use ($vehicleBEA) {
+
+                if ($onlyMigrate) {
+                    if (!$onlyMigrate->contains(intval($vehicleBEA->CAU_NUMECONOM)) && intval($vehicleBEA->CAU_NUMECONOM) != 24610) {
+                        return null;
+                    }
+                }
+
+                $vehicle = $this->company->vehicles->filter(function (Vehicle $v) use ($vehicleBEA) {
                     return Str::upper(str_replace('-', '', $v->plate)) == Str::upper(str_replace('-', '', $vehicleBEA->CAU_PLACAS)) || Str::upper($v->number) == Str::upper($vehicleBEA->CAU_NUMECONOM);
                 })->first();
 
                 if ($vehicle) {
+                    $duplicated = $detectedVehicles->get($vehicle->id);
+
+                    $routeDefault = $vehicle->dispatcherVehicle ? $vehicle->dispatcherVehicle->route->name : '';
+//                    dump("  For BEA ID = $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS >> FOUND VEHICLE: id $vehicle->id, number $vehicle->number ($vehicle->plate) and Route = $routeDefault " . ($duplicated ? " ***** DUPLICATED *******" : ""));
+
                     $vehicle->bea_id = $vehicleBEAId;
                     $vehicle->save();
+
+                    $detectedVehicles->put($vehicle->id, $vehicle);
+                } else {
+//                    dump("  Vehicle with id $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS is not migrated yet");
                 }
+            } else {
+//                dump("  Vehicle with id $vehicleBEAId, already migrated!  $vehicle->number ($vehicle->plate)");
             }
 
             if (!$vehicle) {

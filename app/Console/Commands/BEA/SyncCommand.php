@@ -46,7 +46,9 @@ class SyncCommand extends Command
         if ($company) {
             $beaService = App::makeWith('bea.service', ['company' => $company->id, 'console' => true]);
 
+            $beaService->sync->routes();
             $beaService->sync->vehicles();
+            $beaService->sync->drivers();
 
         } else {
             $this->info('Company id not found');

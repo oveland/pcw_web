@@ -50,7 +50,7 @@ class TakingsPassengersLiquidationController extends Controller
         $this->exporter = $exporter;
 
         $this->middleware(function ($request, $next) {
-            $this->beaService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)]);
+            $this->beaService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)->id]);
             return $next($request);
         });
     }
