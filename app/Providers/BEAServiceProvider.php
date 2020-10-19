@@ -45,8 +45,7 @@ class BEAServiceProvider extends ServiceProvider
         $this->app->bind('bea.service', function ($app, $params) {
             $user = Auth::user();
 
-            $company = !$user  || $user->isAdmin() ? $params['company'] : $user->company;
-
+            $company = !$user  || $user->isAdmin() || $params['console'] ? Company::find($params['company']) : $user->company;
             $repository = new BEARepository($company);
             $report = new BEAReportService();
 

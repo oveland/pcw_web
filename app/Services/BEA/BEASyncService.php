@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class BEASyncService
 {
@@ -412,32 +413,46 @@ class BEASyncService
     {
         $vehicle = Vehicle::where('bea_id', $vehicleBEAId)->where('company_id', $this->company->id)->first();
 
-        if (!$vehicle && $vehicleBEAId) {
-            $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
+        if ($vehicleBEAId) {
+            if (!$vehicle) {
+                $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
+                $vehicle = $this->company->vehicles->where(function (Vehicle $v) use ($vehicleBEA) {
+                    return Str::upper(str_replace('-', '', $v->plate)) == Str::upper(str_replace('-', '', $vehicleBEA->CAU_PLACAS)) || Str::upper($v->number) == Str::upper($vehicleBEA->CAU_NUMECONOM);
+                })->first();
 
-            if ($vehicleBEA) {
-                $vehicle = new Vehicle();
-                $duplicatedPlates = BEADB::for($this->company)->select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
-
-                if ($duplicatedPlates->TOTAL > 1) $vehicleBEA->CAU_PLACAS = "$vehicleBEA->CAU_PLACAS-$vehicleBEA->CAU_NUMECONOM";
-
-                if ($vehicleBEA->CAU_PLACAS) {
-                    $vehicle->id = Vehicle::max('id') + 1;
-                    $vehicle->bea_id = $vehicleBEA->CAU_IDAUTOBUS;
-                    $vehicle->plate = $vehicleBEA->CAU_PLACAS;
-                    $vehicle->number = $vehicleBEA->CAU_NUMECONOM;
-                    $vehicle->company_id = $this->company->id;
-                    $vehicle->active = true;
-                    $vehicle->in_repair = false;
-
-                    if (!$vehicle->save()) {
-                        throw new Exception("Error saving VEHICLE with id: $vehicleBEA->CAU_IDAUTOBUS");
-                    } else {
-                        $this->checkVehicleParams($vehicle);
-                    }
+                if ($vehicle) {
+                    $vehicle->bea_id = $vehicleBEAId;
+                    $vehicle->save();
                 }
+            }
+
+            if (!$vehicle) {
+                $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
+
+                if ($vehicleBEA) {
+                    $vehicle = new Vehicle();
+                    $duplicatedPlates = BEADB::for($this->company)->select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
+
+                    if ($duplicatedPlates->TOTAL > 1) $vehicleBEA->CAU_PLACAS = "$vehicleBEA->CAU_PLACAS-$vehicleBEA->CAU_NUMECONOM";
+
+                    if ($vehicleBEA->CAU_PLACAS) {
+                        $vehicle->id = Vehicle::max('id') + 1;
+                        $vehicle->bea_id = $vehicleBEA->CAU_IDAUTOBUS;
+                        $vehicle->plate = $vehicleBEA->CAU_PLACAS;
+                        $vehicle->number = $vehicleBEA->CAU_NUMECONOM;
+                        $vehicle->company_id = $this->company->id;
+                        $vehicle->active = true;
+                        $vehicle->in_repair = false;
+
+                        if (!$vehicle->save()) {
+                            throw new Exception("Error saving VEHICLE with id: $vehicleBEA->CAU_IDAUTOBUS");
+                        } else {
+                            $this->checkVehicleParams($vehicle);
+                        }
+                    }
 
 
+                }
             }
         }
 
