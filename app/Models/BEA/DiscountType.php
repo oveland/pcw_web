@@ -31,11 +31,13 @@ use Illuminate\Support\Carbon;
  * @property int|null $uid
  * @method static Builder|DiscountType whereUid($value)
  * @property int $company_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BEA\DiscountType whereCompanyId($value)
+ * @method static Builder|DiscountType whereCompanyId($value)
  */
 class DiscountType extends Model
 {
     protected $table = 'bea_discount_types';
+
+    protected $fillable = ['uid', 'name', 'icon', 'description', 'default', 'company_id'];
 
     function getDateFormat()
     {
