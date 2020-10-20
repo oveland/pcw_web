@@ -410,7 +410,7 @@ class BEASyncService
      * @return Vehicle|integer|null
      * @throws Exception
      */
-    private function validateVehicle($vehicleBEAId, $data = null, &$detectedVehicles)
+    private function validateVehicle($vehicleBEAId, $data = null, &$detectedVehicles = null)
     {
         $onlyMigrate = $this->company->id == Company::MONTEBELLO ? collect(range(2453, 2467)) : null;
 
@@ -431,7 +431,7 @@ class BEASyncService
                 })->first();
 
                 if ($vehicle) {
-                    $duplicated = $detectedVehicles->get($vehicle->id);
+                    $duplicated = $detectedVehicles ? $detectedVehicles->get($vehicle->id) : null;
 
                     $routeDefault = $vehicle->dispatcherVehicle ? $vehicle->dispatcherVehicle->route->name : '';
 //                    dump("  For BEA ID = $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS >> FOUND VEHICLE: id $vehicle->id, number $vehicle->number ($vehicle->plate) and Route = $routeDefault " . ($duplicated ? " ***** DUPLICATED *******" : ""));
@@ -439,7 +439,9 @@ class BEASyncService
                     $vehicle->bea_id = $vehicleBEAId;
                     $vehicle->save();
 
-                    $detectedVehicles->put($vehicle->id, $vehicle);
+                    if ($detectedVehicles) {
+                        $detectedVehicles->put($vehicle->id, $vehicle);
+                    }
                 } else {
 //                    dump("  Vehicle with id $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS is not migrated yet");
                 }
@@ -564,7 +566,7 @@ class BEASyncService
     {
         $routes = $this->repository->getAllRoutes();
         $discountTypes = $this->repository->getAllDiscountTypes();
-
+        
         foreach ($routes as $route) {
             $trajectories = $this->repository->getTrajectoriesByRoute($route->id);
             foreach ($trajectories as $trajectory) {
