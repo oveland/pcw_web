@@ -4,6 +4,7 @@ namespace App\Services\BEA;
 
 use App\Facades\BEADB;
 use App\Models\BEA\Commission;
+use App\Models\BEA\DiscountType;
 use App\Models\BEA\GlobalCosts;
 use App\Models\BEA\Discount;
 use App\Models\BEA\ManagementCost;
@@ -566,7 +567,7 @@ class BEASyncService
     {
         $routes = $this->repository->getAllRoutes();
         $discountTypes = $this->repository->getAllDiscountTypes();
-        
+
         foreach ($routes as $route) {
             $trajectories = $this->repository->getTrajectoriesByRoute($route->id);
             foreach ($trajectories as $trajectory) {
@@ -587,6 +588,81 @@ class BEASyncService
                         ]);
                     }
                 }
+            }
+        }
+    }
+
+    public function discountTypes()
+    {
+        $types = [
+            'Mobility auxilio' => (object)[
+                'uid' => 1,
+                'icon' => 'fa fa-user text-warning',
+                'min' => 2000,
+                'max' => 5000,
+            ],
+            'Fuel' => (object)[
+                'uid' => 2,
+                'icon' => 'fa fa-tachometer',
+                'min' => 30000,
+                'max' => 36000,
+            ],
+            'Operative Expenses' => (object)[
+                'uid' => 3,
+                'icon' => 'fa fa-hint text-warning',
+                'min' => 2000,
+                'max' => 5000,
+            ],
+            'Tolls' => (object)[
+                'uid' => 4,
+                'icon' => 'fa fa-ticket',
+                'min' => 8000,
+                'max' => 12000,
+            ]
+        ];
+
+        foreach ($types as $name => $type) {
+            $exists = DiscountType::where('company_id', $this->company->id)->where('uid', $type->uid)->first();
+
+            if (!$exists) {
+                DiscountType::create([
+                    'uid' => $type->uid,
+                    'name' => __(ucfirst($name)),
+                    'icon' => $type->icon,
+                    'description' => __('Discount by') . " " . __(ucfirst($name)),
+                    'default' => random_int($type->min, $type->max),
+                    'company_id' => $this->company->id
+                ]);
+            }
+        }
+    }
+
+    public function commissions()
+    {
+        $routes = $this->repository->getAllRoutes();
+
+        $criteria = [
+            0 => (object)[
+                'type' => 'percent',
+                'value' => 15,
+            ],
+            1 => (object)[
+                'type' => 'fixed',
+                'value' => 500,
+            ]
+        ];
+
+        foreach ($routes as $index => $route) {
+            $c = $criteria[0];
+
+            $exists = Commission::where('route_id', $route->id)->first();
+
+            if (!$exists) {
+                Commission::create([
+                    'route_id' => $route->id,
+                    'type' => $c->type,
+                    'value' => $c->value,
+                ]);
             }
         }
     }

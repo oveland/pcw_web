@@ -50,6 +50,15 @@ class SyncCommand extends Command
             $beaService->sync->vehicles();
             $beaService->sync->drivers();
 
+            $vehicles = $beaService->repository->getAllVehicles();
+
+            $beaService->sync->discountTypes();
+            foreach ($vehicles as $vehicle) {
+                $beaService->sync->checkDiscountsFor($vehicle);
+                $beaService->sync->checkPenaltiesFor($vehicle);
+            }
+            $beaService->sync->commissions();
+
         } else {
             $this->info('Company id not found');
         }
