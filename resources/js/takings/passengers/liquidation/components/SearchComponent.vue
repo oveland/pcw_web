@@ -55,8 +55,6 @@
                         </div>
                     </div>
                 </div>
-
-				<button class="btn btn-lg btn-purple" @click="getSearchParams()">TEST</button>
             </div>
         </div>
     </div>

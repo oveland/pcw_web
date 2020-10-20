@@ -963,8 +963,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12317,20 +12315,7 @@ var render = function() {
               1
             )
           ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-lg btn-purple",
-            on: {
-              click: function($event) {
-                return _vm.getSearchParams()
-              }
-            }
-          },
-          [_vm._v("TEST")]
-        )
+        ])
       ])
     ])
   ])
