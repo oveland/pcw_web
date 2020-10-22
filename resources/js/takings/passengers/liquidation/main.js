@@ -72,7 +72,9 @@ let liquidationView = new Vue({
             byTurns: [],
             otherDiscounts: [],
             discountsByTurns: [],
-            observations: ""
+            observations: "",
+            realTaken: 0,
+            pendingBalance: 0
         }
     },
     computed: {

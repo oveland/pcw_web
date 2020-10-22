@@ -94,15 +94,6 @@
                 </div>
             </modal>
         </div>
-
-
-
-        <hr class="m-t-10 m-b-10">
-
-        <div class="" style="font-size: 1.1em !important;">
-            <label for="observations" class="control-label">{{ $t('Observations') }}</label>
-            <textarea id="observations" :readonly="readonly" :disabled="readonly" rows="2" class="form-control" v-model="liquidation.observations" style="resize: vertical;min-height: 30px !important;"></textarea>
-        </div>
     </div>
 </template>
 

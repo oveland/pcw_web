@@ -110,6 +110,15 @@
                                                         <div class="table-responsive phase-container col-md-12 m-t-10">
                                                             <summary-component :url-export="urlExport" :marks="marks" :liquidation.sync="liquidation" :totals="totals" :search="search"></summary-component>
 
+															<hr class="m-t-10 m-b-10">
+
+															<div class="col-md-8 col-md-offset-2">
+																<div class="col-md-12">
+																	<label for="observations" class="control-label">{{ $t('Observations') }}</label>
+																	<textarea id="observations" rows="2" class="form-control" v-model="liquidation.observations" style="resize: vertical;min-height: 30px !important;"></textarea>
+																</div>
+															</div>
+
                                                             <div class="text-center col-md-12 col-sm-12 col-xs-12 m-10" v-show="!control.processing">
                                                                 <button class="btn btn-circle yellow-crusta btn-outline f-s-13 uppercase" @click="liquidate" :disabled="totals.totalBea === 0">
                                                                     <i class="icon-layers"></i> {{ $t('Liquidate') }}

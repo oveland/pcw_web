@@ -177,6 +177,30 @@
                                                         <div id="step-liquidate-detail-list" class="tab-pane fade">
                                                             <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidationDetail.id)" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation" :search="search"></summary-component>
+
+																<hr class="m-t-10 m-b-10">
+
+																<div class="col-md-8 col-md-offset-2">
+																	<div class="col-md-6">
+																		<label for="real-taken">{{ $t('Real taken') }}:</label>
+																		<div class="input-icon">
+																			<i class="fa fa-dollar font-green"></i>
+																			<input id="real-taken" type="number" class="form-control input-other-discount disabled" disabled v-model="liquidationDetail.liquidation.realTaken">
+																		</div>
+																	</div>
+																	<div class="col-md-6">
+																		<label for="pending-balance">{{ $t('Pending balance') }}:</label>
+																		<div class="input-icon">
+																			<i class="fa fa-dollar font-green"></i>
+																			<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" :value="pendingBalance()">
+																		</div>
+																	</div>
+
+																	<div class="col-md-12 p-t-15">
+																		<label for="observations" class="control-label">{{ $t('Observations') }}</label>
+																		<textarea id="observations" rows="2" class="form-control disabled" disabled v-model="liquidationDetail.liquidation.observations" style="resize: vertical;min-height: 30px !important;"></textarea>
+																	</div>
+																</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -224,8 +248,7 @@
     import VueFriendlyIframe from 'vue-friendly-iframe';
     import TableComponent from "./TableComponent";
 
-
-    export default {
+	export default {
         name: 'TakingsListComponent',
         props: {
             urlList: String,
@@ -309,7 +332,15 @@
                 }).then(function () {
 
                 });
-            }
+            },
+			pendingBalance(){
+				return this.thousandRound(this.liquidationDetail.totals.totalDispatch) - this.liquidationDetail.liquidation.realTaken;
+			},
+			thousandRound(value) {
+				const absValue = Math.abs(value);
+
+				return (value < 0 ? -1 : 1) * Math.round(absValue / 1000) * 1000;
+			}
         },
         components: {
             TableComponent,

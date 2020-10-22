@@ -176,13 +176,37 @@
                                                         <div id="step-liquidate-detail" class="tab-pane fade">
                                                             <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
-                                                                <div class="text-center col-md-12 col-sm-12 col-xs-12 m-10">
-                                                                    <button v-if="!control.enableSaving && !control.processing" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken"
-																		>
+
+																<hr class="m-t-10 m-b-10">
+
+																<div class="col-md-8 col-md-offset-2">
+																	<div class="col-md-6">
+																		<label for="real-taken">{{ $t('Real taken') }}:</label>
+																		<div class="input-icon">
+																			<i class="fa fa-dollar font-green"></i>
+																			<input id="real-taken" type="number" class="form-control input-other-discount" v-model="liquidation.liquidation.realTaken">
+																		</div>
+																	</div>
+																	<div class="col-md-6">
+																		<label for="pending-balance">{{ $t('Pending balance') }}:</label>
+																		<div class="input-icon">
+																			<i class="fa fa-dollar font-green"></i>
+																			<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" v-model="pendingBalance">
+																		</div>
+																	</div>
+
+																	<div class="col-md-12 p-t-15">
+																		<label for="observations" class="control-label">{{ $t('Observations') }}</label>
+																		<textarea id="observations" rows="2" class="form-control" v-model="liquidation.liquidation.observations" style="resize: vertical;min-height: 30px !important;"></textarea>
+																	</div>
+																</div>
+
+																<div class="text-center col-md-12 col-sm-12 col-xs-12 m-10">
+                                                                    <button v-if="!control.processing" class="btn btn-circle blue btn-outline f-s-13 uppercase" @click="takings()" :disabled="liquidation.taken">
                                                                         <i class="fa fa-suitcase"></i> {{ $t('Taking') }}
                                                                     </button>
-                                                                    <button v-if="control.enableSaving" class="btn btn-circle green btn-outline f-s-13 uppercase tooltips" @click="updateLiquidation"
-																			:data-title="$t('Before takings, pleas save the changes by Other discounts')">
+                                                                    <button v-if="control.enableSaving && false" class="btn btn-circle green btn-outline f-s-13 uppercase tooltips" @click="updateLiquidation"
+																			:data-title="$t('Before takings, pleas save the changes')">
                                                                         <i class="fa fa-save"></i> {{ $t('Save') }}
                                                                     </button>
                                                                 </div>
@@ -232,7 +256,7 @@
 
     import Swal from 'sweetalert2/dist/sweetalert2.min'
 
-    export default {
+	export default {
         name: 'TakingsComponent',
         props: {
             urlList: String,
@@ -273,7 +297,11 @@
                 this.showPrintArea = false;
                 this.linkToPrintLiquidation = '';
                 this.searchTakingsReport();
-            }
+            },
+			liquidation: function () {
+				this.liquidation.liquidation.realTaken = this.thousandRound(this.liquidation.totals.totalDispatch);
+				console.log("this.liquidation.liquidation.realTaken = ", this.liquidation.liquidation.realTaken);
+			}
         },
         computed:{
             totals: function () {
@@ -306,7 +334,10 @@
 
                 this.liquidation.totals = totals;
                 return this.liquidation.totals;
-            }
+            },
+			pendingBalance(){
+            	return this.thousandRound(this.liquidation.totals.totalDispatch) - this.liquidation.liquidation.realTaken;
+			}
         },
         methods: {
             updateLiquidation: function () {
@@ -314,7 +345,7 @@
 
                 Swal.fire({
                     title: this.$t('Processing'),
-                    text: this.$t('Please wait'),
+                    text: this.$t('Saving changes'),
                     onBeforeOpen: () => {
                         Swal.showLoading();
                     },
@@ -368,10 +399,11 @@
                 }
             },
             takings: function () {
+				this.updateLiquidation();
 
                 Swal.fire({
                     title: this.$t('Processing'),
-                    text: this.$t('Please wait'),
+                    text: this.$t('Generating taking register'),
                     onBeforeOpen: () => {
                         Swal.showLoading();
                     },
@@ -461,6 +493,11 @@
 
 				return discounts;
 			},
+			thousandRound(value) {
+				const absValue = Math.abs(value);
+
+				return (value < 0 ? -1 : 1) * Math.round(absValue / 1000) * 1000;
+			}
         },
         components: {
             TableComponent,
