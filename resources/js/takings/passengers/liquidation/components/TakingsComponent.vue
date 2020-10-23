@@ -177,21 +177,33 @@
                                                             <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
 
-																<hr class="m-t-10 m-b-10">
-
-																<div class="col-md-8 col-md-offset-2">
-																	<div class="col-md-6">
-																		<label for="real-taken">{{ $t('Real taken') }}:</label>
+																<div class="col-md-10 col-md-offset-1">
+																	<div class="col-md-4">
+																		<label for="real-taken">{{ $t('Real taken') }}</label>
 																		<div class="input-icon">
 																			<i class="fa fa-dollar font-green"></i>
-																			<input id="real-taken" type="number" class="form-control input-other-discount" v-model="liquidation.liquidation.realTaken">
+																			<input id="real-taken" type="number" class="form-control input-other-discount" v-model.number="liquidation.liquidation.realTaken">
 																		</div>
 																	</div>
-																	<div class="col-md-6">
-																		<label for="pending-balance">{{ $t('Pending balance') }}:</label>
+																	<div class="col-md-4 balance">
+																		<label for="previous-balance">{{ $t('Previous balance') }}</label>
+																		<div class="input-icon input-group">
+																			<i class="fa fa-dollar font-green" style="z-index: 3 !important;"></i>
+																			<input id="previous-balance" disabled type="number" class="form-control input-other-discount disabled" :class="liquidation.liquidation.forgivableBalance ? 'forgivable' : ''" :value="previousBalance">
+																			<span class="input-group-addon tooltips" :data-title="$t('Condone')"
+																				  v-if="!liquidation.liquidation.forgivableBalance && previousBalance > 0" @click="liquidation.liquidation.forgivableBalance = true">
+																				<i class="icon-present"></i>
+																			</span>
+																			<span class="input-group-addon bg-green-meadow" v-if="liquidation.liquidation.forgivableBalance && previousBalance > 0" @click="liquidation.liquidation.forgivableBalance = false">
+																				<i class="icon-present" style="color: white"></i>
+																			</span>
+																		</div>
+																	</div>
+																	<div class="col-md-4">
+																		<label for="pending-balance">{{ $t('New pending balance') }}</label>
 																		<div class="input-icon">
 																			<i class="fa fa-dollar font-green"></i>
-																			<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" v-model="pendingBalance">
+																			<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" :value="pendingBalance">
 																		</div>
 																	</div>
 
@@ -281,6 +293,7 @@
                     vehicle: {},
                     date: '',
                     liquidation: {},
+					prevLiquidation : {},
                     totals: {},
                     user: {},
                     marks: [],
@@ -299,8 +312,7 @@
                 this.searchTakingsReport();
             },
 			liquidation: function () {
-				this.liquidation.liquidation.realTaken = this.thousandRound(this.liquidation.totals.totalDispatch);
-				console.log("this.liquidation.liquidation.realTaken = ", this.liquidation.liquidation.realTaken);
+				this.liquidation.liquidation.realTaken = parseInt(this.thousandRound(this.liquidation.totals.totalDispatch));
 			}
         },
         computed:{
@@ -335,8 +347,14 @@
                 this.liquidation.totals = totals;
                 return this.liquidation.totals;
             },
-			pendingBalance(){
-            	return this.thousandRound(this.liquidation.totals.totalDispatch) - this.liquidation.liquidation.realTaken;
+			previousBalance() {
+				let prevLiquidation = this.liquidation.prevLiquidation;
+            	return prevLiquidation ? prevLiquidation.pendingBalance : 0;
+			},
+			pendingBalance() {
+				this.liquidation.liquidation.pendingBalance = this.thousandRound(this.liquidation.totals.totalDispatch) - this.liquidation.liquidation.realTaken
+						+ (this.liquidation.liquidation.forgivableBalance ? 0 : this.previousBalance);
+				return this.liquidation.liquidation.pendingBalance;
 			}
         },
         methods: {
@@ -518,4 +536,20 @@
     .header-preview{
         font-size: 1.2em !important;
     }
+
+	input.forgivable{
+		text-decoration: line-through;
+		color: #e38800;
+		transition: ease all 1s;
+	}
+
+	.balance .input-group-addon {
+		cursor: pointer;
+	}
+
+	.balance .input-group-addon:hover{
+		box-shadow: 0 0 1px 5px #0000000a;
+		z-index:10000 !important;
+		transition: ease all 0.2s;
+	}
 </style>

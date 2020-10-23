@@ -799,5 +799,9 @@
   "Real taken": "Real recaudado",
   "Saving changes": "Guardando cambios",
   "Generating taking register": "Generando registro de recaudo",
-  "Pending balance": "Saldo pendiente"
+  "Pending balance": "Saldo pendiente",
+  "New pending balance": "Nuevo saldo pendiente",
+  "Previous balance": "Saldo anterior",
+  "Condone": "Condonar",
+  "Condoned": "Condonado"
 }

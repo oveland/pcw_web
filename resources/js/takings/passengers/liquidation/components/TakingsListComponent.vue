@@ -178,21 +178,32 @@
                                                             <div class="table-responsive phase-container col-md-12 m-t-10">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidationDetail.id)" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation" :search="search"></summary-component>
 
-																<hr class="m-t-10 m-b-10">
-
 																<div class="col-md-8 col-md-offset-2">
-																	<div class="col-md-6">
-																		<label for="real-taken">{{ $t('Real taken') }}:</label>
-																		<div class="input-icon">
-																			<i class="fa fa-dollar font-green"></i>
-																			<input id="real-taken" type="number" class="form-control input-other-discount disabled" disabled v-model="liquidationDetail.liquidation.realTaken">
+																	<div class="col-md-12 p-0" v-if="liquidationDetail.liquidation.realTaken > 0">
+																		<div class="col-md-4">
+																			<label for="real-taken">{{ $t('Real taken') }}</label>
+																			<div class="input-icon">
+																				<i class="fa fa-dollar font-green"></i>
+																				<input id="real-taken" type="number" class="form-control input-other-discount disabled" disabled v-model="liquidationDetail.liquidation.realTaken">
+																			</div>
 																		</div>
-																	</div>
-																	<div class="col-md-6">
-																		<label for="pending-balance">{{ $t('Pending balance') }}:</label>
-																		<div class="input-icon">
-																			<i class="fa fa-dollar font-green"></i>
-																			<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" :value="pendingBalance()">
+																		<div class="col-md-4">
+																			<label for="previous-balance">{{ $t('Previous balance') }}</label>
+																			<div class="input-icon input-group">
+																				<i class="fa fa-dollar font-green" style="z-index: 3 !important;"></i>
+																				<input id="previous-balance" disabled type="number" class="form-control input-other-discount disabled" :class=" liquidationDetail.liquidation.forgivableBalance ? 'forgivable' : ''" :value="previousBalance">
+																				<span class="input-group-addon bg-green-meadow tooltips" :data-title="$t('Condoned')"
+																					  v-if="liquidationDetail.liquidation.forgivableBalance && previousBalance > 0">
+																				<i class="icon-present" style="color: white"></i>
+																			</span>
+																			</div>
+																		</div>
+																		<div class="col-md-4">
+																			<label for="pending-balance">{{ $t('New pending balance') }}</label>
+																			<div class="input-icon">
+																				<i class="fa fa-dollar font-green"></i>
+																				<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" :value="pendingBalance">
+																			</div>
 																		</div>
 																	</div>
 
@@ -281,8 +292,17 @@
                 this.showPrintArea = false;
                 this.linkToPrintLiquidation = '';
                 this.searchTakingListReport();
-            }
+            },
         },
+		computed: {
+			previousBalance() {
+				let prevLiquidation = this.liquidationDetail.prevLiquidation;
+				return prevLiquidation ? prevLiquidation.pendingBalance : 0;
+			},
+			pendingBalance() {
+				return this.liquidationDetail.liquidation.pendingBalance;
+			}
+		},
         methods: {
             exportLiquidation(all){
                 this.showPrintArea = true;
@@ -333,14 +353,11 @@
 
                 });
             },
-			pendingBalance(){
-				return this.thousandRound(this.liquidationDetail.totals.totalDispatch) - this.liquidationDetail.liquidation.realTaken;
-			},
 			thousandRound(value) {
 				const absValue = Math.abs(value);
 
 				return (value < 0 ? -1 : 1) * Math.round(absValue / 1000) * 1000;
-			}
+			},
         },
         components: {
             TableComponent,

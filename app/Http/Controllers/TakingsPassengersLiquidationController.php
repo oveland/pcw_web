@@ -492,7 +492,7 @@ class TakingsPassengersLiquidationController extends Controller
 
                 if ($validator->errors()->count()) {
                     $response->error = true;
-                    $response->message = '<hr> ✗ '.collect($validator->errors())->flatten()->implode('<br> ✗ ');
+                    $response->message = '<hr> ✗ ' . collect($validator->errors())->flatten()->implode('<br> ✗ ');
                 } else {
                     if ($newCost->create ?? null) {
                         $cost = new ManagementCost([
@@ -639,6 +639,11 @@ class TakingsPassengersLiquidationController extends Controller
                             };
                         }
                     }
+
+                    if ($vehicle->company->id === Company::MONTEBELLO) {
+                        $this->takings($liquidation);
+                    }
+
                 } else {
                     $response->success = false;
                     $response->message = __('Error at generate liquidation register');

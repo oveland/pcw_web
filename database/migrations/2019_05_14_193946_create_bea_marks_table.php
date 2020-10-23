@@ -41,7 +41,7 @@ class CreateBeaMarksTable extends Migration
             /* Table relations */
             $table->foreign('turn_id')->references('id')->on('bea_turns')->onDelete('cascade');
             $table->foreign('trajectory_id')->references('id')->on('bea_trajectories')->onDelete('cascade');
-            $table->foreign('liquidation_id')->references('id')->on('bea_liquidations')->onDelete('cascade');
+            $table->foreign('liquidation_id')->references('id')->on('bea_liquidations');
         });
     }
 

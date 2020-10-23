@@ -100,7 +100,14 @@ class BEAService
         $liquidations = Liquidation::where('vehicle_id', $vehicleId)
             ->whereDate('date', $date)
             ->with(['user', 'marks', 'vehicle', 'marks.turn.vehicle', 'marks.turn.route', 'marks.turn.driver', 'marks.trajectory'])
+            ->orderBy('date')
             ->get();
+
+        $prevLiquidation = Liquidation::where('vehicle_id', $vehicleId)
+            ->where('date', '<', $date)
+            ->orderByDesc('date')
+            ->limit(1)
+            ->first();
 
         foreach ($liquidations as $liquidation) {
             if ($liquidation->marks->isNotEmpty()) {
@@ -114,6 +121,7 @@ class BEAService
                     'takingUser' => $liquidation->taken ? $liquidation->takingUser : null,
                     'takingDate' => $liquidation->taken ? $liquidation->taking_date->toDateTimeString() : null,
                     'liquidation' => $liquidation->liquidation,
+                    'prevLiquidation' => $prevLiquidation->liquidation ?? null,
                     'totals' => $liquidation->totals,
                     'marks' => $this->processResponseMarks($liquidation->marks),
                 ]);
