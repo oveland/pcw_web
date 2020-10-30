@@ -288,22 +288,26 @@ class BEASyncService
     {
         $turn = Turn::where('bea_id', $turnBEAId)->where('company_id', $this->company->id)->first();
 
-        if (!$turn && $turnBEAId) {
+        if ($turnBEAId) {
             $turnBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO = $turnBEAId")->first();
             if ($turnBEA) {
-                $route = $this->validateRoute($turnBEA->ATR_IDRUTA);
-                $driver = $this->validateDriver($turnBEA->ATR_IDCONDUCTOR);
-                $vehicle = $this->validateVehicle($turnBEA->ATR_IDAUTOBUS);
+                if (!$turn) {
+                    $turn = new Turn();
+                }
 
-                $turn = new Turn();
-                $turn->company_id = $this->company->id;
-                $turn->bea_id = $turnBEA->ATR_IDTURNO;
-                $turn->route_id = $route->id;
-                $turn->driver_id = $driver ? $driver->id : null;
-                $turn->vehicle_id = $vehicle->id;
+                if (!$turn->driver_id || !$turn->route_id || !$turn->vehicle_id) {
+                    $route = $this->validateRoute($turnBEA->ATR_IDRUTA);
+                    $driver = $this->validateDriver($turnBEA->ATR_IDCONDUCTOR);
+                    $vehicle = $this->validateVehicle($turnBEA->ATR_IDAUTOBUS);
+                    $turn->company_id = $this->company->id;
+                    $turn->bea_id = $turnBEA->ATR_IDTURNO;
+                    $turn->route_id = $route->id;
+                    $turn->driver_id = $driver ? $driver->id : null;
+                    $turn->vehicle_id = $vehicle->id;
 
-                if (!$turn->save()) {
-                    throw new Exception("Error saving TURN with id: $turnBEA->ATR_IDTURNO");
+                    if (!$turn->save()) {
+                        throw new Exception("Error saving TURN with id: $turnBEA->ATR_IDTURNO");
+                    }
                 }
             }
         }
@@ -383,21 +387,24 @@ class BEASyncService
      */
     private function validateDriver($driverBEAId, $data = null)
     {
-        $driver = Driver::where('bea_id', $driverBEAId)->where('company_id', $this->company->id)->first();
+        $driver = null;
+        if ($driverBEAId) {
+            $driver = Driver::where('bea_id', $driverBEAId)->where('company_id', $this->company->id)->first();
 
-        if (!$driver && $driverBEAId) {
-            $driverBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverBEAId")->first();
-            if ($driverBEA) {
-                $driver = new Driver();
-                $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
-                $driver->first_name = $driverBEA->CCO_NOMBRE;
-                $driver->last_name = "$driverBEA->CCO_APELLIDOP $driverBEA->CCO_APELLIDOM";
-                $driver->identity = $driverBEA->CCO_CLAVECOND;
-                $driver->company_id = $this->company->id;
-                $driver->active = true;
+            if (!$driver) {
+                $driverBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverBEAId")->first();
+                if ($driverBEA) {
+                    $driver = new Driver();
+                    $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
+                    $driver->first_name = $driverBEA->CCO_NOMBRE;
+                    $driver->last_name = "$driverBEA->CCO_APELLIDOP $driverBEA->CCO_APELLIDOM";
+                    $driver->identity = $driverBEA->CCO_CLAVECOND;
+                    $driver->company_id = $this->company->id;
+                    $driver->active = true;
 
-                if (!$driver->saveData()) {
-                    throw new Exception("Error on validation save DRIVER with id: $driverBEA->CCO_IDCONDUCTOR");
+                    if (!$driver->saveData()) {
+                        throw new Exception("Error on validation save DRIVER with id: $driverBEA->CCO_IDCONDUCTOR");
+                    }
                 }
             }
         }

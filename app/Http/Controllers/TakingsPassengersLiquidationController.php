@@ -147,18 +147,9 @@ class TakingsPassengersLiquidationController extends Controller
 
     public function searchMarksBEA(Request $request)
     {
-//        dd('ESTES');
-
-//        $vehicle = Vehicle::where('number', $request->get('vehicle'))->where('company_id', Company::COODETRANS)->first();
-//        if (!$vehicle) dd('Not vehicle found for request');
-
-//        $marks = BEADB::for(Company::MONTEBELLO)->select("SELECT * FROM A_MARCA WHERE AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = $vehicle->bea_id) AND AMR_FHINICIO BETWEEN '2020-02-27 00:00:00' AND '2020-02-27 23:59:59' AND AMR_IDDERROTERO IS NOT NULL ORDER BY AMR_FHINICIO");
-        $marks = BEADB::for(Company::find(Company::MONTEBELLO))->select("SELECT * FROM C_AUTOBUS");
-//        $marks = BEADB::for(Company::find(Company::MONTEBELLO))->select("SELECT * FROM C_RUTA");
-        dD($marks->pluck('CAU_PLACAS', 'CAU_NUMECONOM'));
-
-
-        dd($marks);
+//        $data = BEADB::for(Company::find(Company::MONTEBELLO))->select("SELECT * FROM C_CONDUCTOR");
+        $data = BEADB::for(Company::find(Company::MONTEBELLO))->select("SELECT FIRST 10 * FROM A_TURNO WHERE ATR_IDCONDUCTOR IS NOT NULL ORDER BY ATR_IDTURNO DESC");
+        dd($data);
     }
 
     public function test(Request $request)
@@ -641,7 +632,7 @@ class TakingsPassengersLiquidationController extends Controller
                     }
 
                     if ($vehicle->company->id === Company::MONTEBELLO) {
-                        $this->takings($liquidation);
+//                        $this->takings($liquidation);
                     }
 
                 } else {
