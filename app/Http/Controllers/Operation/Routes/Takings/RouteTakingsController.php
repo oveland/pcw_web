@@ -65,6 +65,10 @@ class RouteTakingsController extends Controller
             $dispatchRegister = DispatchRegister::find($id);
         }
 
+        $lastRoute = DispatchRegister::completed()->where('date', '<', $date)->where('vehicle_id', $vehicle->id)->orderByDesc('id')->first()->route;
+
+        $dispatchRegister->route()->associate($lastRoute);
+
         return view('operation.routes.takings.form', compact(['dispatchRegister']));
     }
 

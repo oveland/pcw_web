@@ -144,6 +144,7 @@
                                             {{ '--:--:--' }}
                                         @endif
                                     </th>
+
                                     <th class="bg-inverse text-capitalize text-muted" style="border-right: 10px solid {{ $dispatchRegister->departureFringe->style_color }}">
                                         {{ $dispatchRegister->departureFringe->name }} <br>
                                         <small>{{ $dispatchRegister->departureFringe->dayType->description }}</small>
