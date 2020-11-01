@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\DB;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -38,6 +39,9 @@ class RefreshLocationsViews extends Command
      */
     public function handle()
     {
+        $now = Carbon::now();
+        $this->info('Executing db refresh locations views at ' . $now->toDateTimeString());
+
         $tables = config('database.maintenance.locations.fragments.tables');
 
         foreach (range(1, $tables) as $table) {
@@ -47,8 +51,9 @@ class RefreshLocationsViews extends Command
             $this->info($sql);
         }
 
-//        $sql = "TRUNCATE TABLE locations_0";
-//        DB::statement($sql);
-//        $this->info($sql);
+        $sql = "TRUNCATE TABLE locations_0";
+        DB::statement($sql);
+        $this->info($sql);
+        $this->info("Refresh locations views finished at " . Carbon::now()->toDateTimeString());
     }
 }
