@@ -5,12 +5,8 @@ namespace App\Services\BEA;
 use App\Models\BEA\Liquidation;
 use App\Models\BEA\Mark;
 use App\Models\BEA\Turn;
-use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use App\Services\BEA\Reports\BEAReportService;
-use BEADB;
-use DB;
-use Exception;
 use Illuminate\Support\Collection;
 
 class BEAService
@@ -36,10 +32,6 @@ class BEAService
      */
     public $sync;
 
-    /**
-     * @var integer
-     */
-    private $companyID;
     /**
      * @var BEAReportService
      */
@@ -164,10 +156,9 @@ class BEAService
 
     /**
      * @param $date
-     * @param $type
      * @return object
      */
-    function getConsolidatedDailyReport($date, $type)
+    function getConsolidatedDailyReport($date)
     {
         return $this->report->buildConsolidatedDailyReport($this->repository->company, $date);
     }
@@ -203,7 +194,7 @@ class BEAService
     }
 
     /**
-     * @param Collection $marks
+     * @param Collection|array $marks
      * @return Collection
      */
     private function processResponseMarks($marks)

@@ -31,7 +31,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|Mark[] $marks
  * @property-read User|null $user
  * @method static Builder|Liquidation whereCreatedAt($value)
- * @method static Builder|Liquidation whereDate($value)
+ * @method static Builder|Liquidation whereDate($column, $value)
  * @method static Builder|Liquidation whereId($value)
  * @method static Builder|Liquidation whereLiquidation($value)
  * @method static Builder|Liquidation whereTotals($value)

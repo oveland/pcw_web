@@ -5,61 +5,94 @@
 			<thead>
 			<tr class="inverse">
 				<th>
-					<i class="fa fa-calendar text-muted"></i><br>
-					<span>{{ $t('Date') }}</span>
+					<small>
+						<i class="fa fa-calendar text-muted"></i><br>
+						<span>{{ $t('Date') }}</span>
+					</small>
 				</th>
 				<th class="">
-					<i class="fa fa-car text-muted"></i><br>
-					{{ $t('Vehicle') }}
+					<small>
+						<i class="fa fa-car text-muted"></i><br>
+						{{ $t('Vehicle') }}
+					</small>
+				</th>
+				<th class="" width="1%">
+					<small>
+						<i class="fa fa-user text-muted"></i><br>
+						{{ $t('Driver code') }}
+					</small>
 				</th>
 				<th colspan="2">
-					<i class="fa fa-flag text-muted"></i><br>
-					<span>{{ $t('Route') }}</span>
-					<span><i class="fa fa-retweet"></i> {{ $t('Round Trip') }}</span>
+					<small>
+						<i class="fa fa-flag text-muted"></i><br>
+						<span>{{ $t('Route') }} | {{ $t('Round Trip') }}</span>
+					</small>
 				</th>
 				<th class="text-center" colspan="2">
-					<i class="fa fa-compass text-muted"></i><br>
+					<small>
+						<i class="fa fa-compass text-muted"></i><br>
 						<span>{{ $t('Recorders') }}</span>
+					</small>
 				</th>
 				<th class="text-center">
-					<i class="fa fa-users text-muted"></i><br>
-					<span>{{ $t('Passengers') }}</span>
+					<small>
+						<i class="fa fa-users text-muted"></i><br>
+						<span>{{ $t('Passengers') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Total production') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Total production') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Control') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Control') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Fuel') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Fuel') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Fuel gallons') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Fuel gallons') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Station') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Station') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Various') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Various') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Others') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Others') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Net production') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Net production') }}</span>
+					</small>
 				</th>
 				<th>
-					<i class="icon-briefcase"></i><br>
-					<span class="">{{ $t('Observations') }}</span>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Observations') }}</span>
+					</small>
 				</th>
 			</tr>
 			</thead>
@@ -67,16 +100,19 @@
 			<tbody>
 			<tr v-for="r in report" :class="r.passengers.recorders.count < 0 ? 'bg-danger' : ''">
 				<th class="bg-inverse text-white text-center">
-					<span>{{ r.date }}</span>
+					<small>{{ r.date }}</small>
 				</th>
 				<th class="bg-inverse text-white text-center">
-					<span>{{ r.vehicle.number }}</span>
+					<small>{{ r.vehicle.number }}</small>
+				</th>
+				<th class="bg-inverse text-white text-center">
+					<small class="tooltips" :title="r.driverName">{{ r.driverCode }}</small>
 				</th>
 				<th v-if="r.forNormalTakings" class="bg-inverse text-white text-center">
-					<span>{{ r.route.name }}</span>
+					<small>{{ r.route.name }}</small>
 				</th>
 				<th v-if="r.forNormalTakings" class="bg-inverse text-white text-center">
-					<span><i class="fa fa-retweet"></i> <span>{{ r.roundTrip }}</span></span>
+					<small><i class="fa fa-retweet"></i> <span>{{ r.roundTrip }}</span></small>
 				</th>
 				<th v-if="r.forNormalTakings" class="text-center">
 					<small>{{ r.passengers.recorders.start }}</small>
@@ -85,7 +121,7 @@
 					<small>{{ r.passengers.recorders.end }}</small>
 				</th>
 				<th v-if="r.forNormalTakings" class="text-center">
-					<span>{{ r.passengers.recorders.count }}</span>
+					<small>{{ r.passengers.recorders.count }}</small>
 				</th>
 				<td colspan="5" v-if="r.onlyControlTakings" class="text-center" :class="r.onlyControlTakings ? 'text-success' : ''">
 					<small>
@@ -96,96 +132,96 @@
 				</td>
 
 				<td class="text-right">
-					<span>{{ r.takings.totalProduction | numberFormat('$0,0') }}</span>
+					<small>{{ r.takings.totalProduction | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ r.takings.control | numberFormat('$0,0')}}</span>
+					<small>{{ r.takings.control | numberFormat('$0,0')}}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ r.takings.fuel | numberFormat('$0,0') }}</span>
+					<small>{{ r.takings.fuel | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ r.takings.fuelGallons.toFixed(2) }}</span>
+					<small>{{ r.takings.fuelGallons.toFixed(2) }}</small>
 				</td>
 				<td class="text-left">
-					<span>{{ r.takings.stationFuel }}</span>
+					<small>{{ r.takings.stationFuel }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ r.takings.bonus | numberFormat('$0,0') }}</span>
+					<small>{{ r.takings.bonus | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ r.takings.others | numberFormat('$0,0') }}</span>
+					<small>{{ r.takings.others | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-bold text-right">
-					<span>{{ r.takings.netProduction | numberFormat('$0,0') }}</span>
+					<small>{{ r.takings.netProduction | numberFormat('$0,0') }}</small>
 				</td>
-				<td class="text-info p-l-20" width="30%">
-					<span>{{ r.takings.observations }}</span>
+				<td class="text-info p-l-20">
+					<small>{{ r.takings.observations }}</small>
 				</td>
 			</tr>
 
 			<tr>
-				<td colspan="15" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
+				<td colspan="16" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
 			</tr>
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
-				<td colspan="6" class="bg-inverse text-white text-right text-bold text-uppercase">
-					<i class="fa fa-sliders text-muted"></i> {{ $t('Average') }}
+				<td colspan="7" class="bg-inverse text-white text-right text-bold text-uppercase">
+					<small><i class="fa fa-sliders text-muted"></i> {{ $t('Average') }}</small>
 				</td>
 				<td class="text-center text-bold">
-					{{ averages.passengers }}
+					<small>{{ averages.passengers }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ averages.totalProduction | numberFormat('$0,0') }}</span>
+					<small>{{ averages.totalProduction | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ averages.control | numberFormat('$0,0')}}</span>
+					<small>{{ averages.control | numberFormat('$0,0')}}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ averages.fuel | numberFormat('$0,0') }}</span>
+					<small>{{ averages.fuel | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ averages.fuelGallons.toFixed(2) }}</span>
+					<small>{{ averages.fuelGallons.toFixed(2) }}</small>
 				</td>
 				<td class="text-right">
 				</td>
 				<td class="text-right">
-					<span>{{ averages.bonus | numberFormat('$0,0') }}</span>
+					<small>{{ averages.bonus | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-right">
-					<span>{{ averages.others | numberFormat('$0,0') }}</span>
+					<small>{{ averages.others | numberFormat('$0,0') }}</small>
 				</td>
 				<td class="text-bold text-right">
-					<span>{{ averages.netProduction | numberFormat('$0,0') }}</span>
+					<small>{{ averages.netProduction | numberFormat('$0,0') }}</small>
 				</td>
 			</tr>
 			</tbody>
 			<tfoot>
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
-				<th colspan="6" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
-					<i class="icon-layers"></i> {{ $t('Totals') }}
+				<th colspan="7" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
+					<small><i class="icon-layers"></i> {{ $t('Totals') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-center text-bold" style="font-size: 1.1em !important;">
-					{{ totals.passengers }}
+					<small>{{ totals.passengers }}</small>
 				</th>
 				<th class="bg-inverse text-white text-right">
-					<span>{{ totals.totalProduction | numberFormat('$0,0') }}</span>
+					<small>{{ totals.totalProduction | numberFormat('$0,0') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-right">
-					<span>{{ totals.control | numberFormat('$0,0')}}</span>
+					<small>{{ totals.control | numberFormat('$0,0')}}</small>
 				</th>
 				<th class="bg-inverse text-white text-right">
-					<span>{{ totals.fuel | numberFormat('$0,0') }}</span>
+					<small>{{ totals.fuel | numberFormat('$0,0') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-right">
-					<span>{{ totals.fuelGallons.toFixed(2) }}</span>
+					<small>{{ totals.fuelGallons.toFixed(2) }}</small>
 				</th>
 				<th class="bg-inverse text-right">
 				</th>
 				<th class="bg-inverse text-white text-right">
-					<span>{{ totals.bonus | numberFormat('$0,0') }}</span>
+					<small>{{ totals.bonus | numberFormat('$0,0') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-right">
-					<span>{{ totals.others | numberFormat('$0,0') }}</span>
+					<small>{{ totals.others | numberFormat('$0,0') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-bold text-right">
 					<span>{{ totals.netProduction | numberFormat('$0,0') }}</span>
@@ -221,6 +257,13 @@ export default {
 		report: Array,
 		totals: Object,
 		averages: Object
+	},
+	watch: {
+		report(){
+			setTimeout(()=>{
+				$('.tooltips').tooltip();
+			},1000);
+		}
 	},
 	methods: {}
 }

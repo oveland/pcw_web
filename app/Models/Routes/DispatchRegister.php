@@ -434,6 +434,7 @@ class DispatchRegister extends Model
 
             'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
             'driverName' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
+            'driverCode' => $this->driver_code ? $this->driver_code : __('Unassigned'),
 
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
             'passengers' => $passengers,

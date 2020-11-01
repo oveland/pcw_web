@@ -76,10 +76,10 @@ class PCWProprietaryService implements APIAppsInterface
         $proprietary = Proprietary::find($this->request->get('proprietary'));
         $this->checkSession($proprietary);
         $date = $this->request->get('date');
-        $type = $this->request->get('type');
+//        $type = $this->request->get('type');
         $beaService = App::makeWith('bea.service', ['company' => $proprietary->company_id]);
 
-        $reportComplete = $beaService->getConsolidatedDailyReport($date, $type);
+        $reportComplete = $beaService->getConsolidatedDailyReport($date);
         $report = collect([]);
 
         $markWithOtherDiscounts = collect([]);

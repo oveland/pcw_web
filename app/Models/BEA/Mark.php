@@ -16,8 +16,8 @@ use Illuminate\Support\Collection;
  * @property int $turn_id
  * @property int $trajectory_id
  * @property Carbon|string $date
- * @property string $initial_time
- * @property string $final_time
+ * @property Carbon|string $initial_time
+ * @property Carbon|string $final_time
  * @property int $passengers_up
  * @property int $passengers_down
  * @property int $locks
@@ -39,7 +39,7 @@ use Illuminate\Support\Collection;
  * @method static Builder|Mark whereAuxiliaries($value)
  * @method static Builder|Mark whereBoarded($value)
  * @method static Builder|Mark whereCreatedAt($value)
- * @method static Builder|Mark whereDate($value)
+ * @method static Builder|Mark whereDate($column, $value)
  * @method static Builder|Mark whereFinalTime($value)
  * @method static Builder|Mark whereId($value)
  * @method static Builder|Mark whereImBeaMax($value)
@@ -235,13 +235,11 @@ class Mark extends Model
         $markDiscounts = $this->markDiscounts;
         if ($this->liquidated && $markDiscounts->isNotEmpty()) return $markDiscounts;
 
-        $discounts = Discount::with(['vehicle', 'route', 'trajectory', 'discountType'])
+        return Discount::with(['vehicle', 'route', 'trajectory', 'discountType'])
             ->where('vehicle_id', $turn->vehicle->id)
             ->where('route_id', $turn->route->id)
             ->where('trajectory_id', $this->trajectory ? $this->trajectory->id : null)
             ->get();
-
-        return $discounts;
     }
 
     /**

@@ -55,19 +55,20 @@ class TakingsTotalsExport implements FromCollection, ShouldAutoSize, Responsable
                     __('N°') => count($dataExcel) + 1,                                                              # A CELL
                     __('Date') => $date,                                                                            # B CELL
                     __('Vehicle') => $firstDr->vehicle->number,                                                     # C CELL
-                    __('Routes') => $routesNames,                                                                   # D CELL
-                    __('Round trips') => $roundTrips,                                                               # E CELL
-                    __('Start recorder') => $firstDr->passengers->recorders->start,                                 # F CELL
-                    __('End recorder') => $lastDr->passengers->recorders->end,                                      # G CELL
-                    __('Passengers') => $totals->passengers,                                                        # H CELL
-                    __('Total production') => intval($totals->totalProduction),                                     # I CELL
-                    __('Control') => intval($totals->control),                                                      # J CELL
-                    __('Fuel') => intval($totals->fuel),                                                            # K CELL
-                    __('Fuel gallons') => number_format($totals->fuelGallons, 2),                          # L CELL
-                    __('Various') => intval($totals->bonus),                                                        # M CELL
-                    __('Others') => intval($totals->others),                                                        # N CELL
-                    __('Net production') => intval($totals->netProduction),                                         # O CELL
-                    __('Observations') => $observations,                                                            # P CELL
+                    __('Driver code') => $firstDr->driverCode,                                                      # D CELL
+                    __('Routes') => $routesNames,                                                                   # E CELL
+                    __('Round trips') => $roundTrips,                                                               # F CELL
+                    __('Start recorder') => $firstDr->passengers->recorders->start,                                 # G CELL
+                    __('End recorder') => $lastDr->passengers->recorders->end,                                      # H CELL
+                    __('Passengers') => $totals->passengers,                                                        # I CELL
+                    __('Total production') => intval($totals->totalProduction),                                     # J CELL
+                    __('Control') => intval($totals->control),                                                      # K CELL
+                    __('Fuel') => intval($totals->fuel),                                                            # L CELL
+                    __('Fuel gallons') => number_format($totals->fuelGallons, 2),                          # M CELL
+                    __('Various') => intval($totals->bonus),                                                        # N CELL
+                    __('Others') => intval($totals->others),                                                        # O CELL
+                    __('Net production') => intval($totals->netProduction),                                         # P CELL
+                    __('Observations') => $observations,                                                            # Q CELL
                 ];
             }
         }
@@ -106,22 +107,22 @@ class TakingsTotalsExport implements FromCollection, ShouldAutoSize, Responsable
         $workSheet = $spreadsheet->getDelegate();
 
         foreach (range($config->row->data->start, $config->row->data->end) as $row) {
-            $workSheet->setCellValue("O$row", "=I$row-J$row-K$row-M$row-N$row");
+            $workSheet->setCellValue("P$row", "=J$row-K$row-L$row-N$row-O$row");
         }
 
-        $workSheet->setCellValue('G' . $config->row->data->next, 'TOTAL');
-        $workSheet->getStyle('G' . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        foreach (['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'] as $totalLetterPosition) {
+        $workSheet->setCellValue('H' . $config->row->data->next, 'TOTAL');
+        $workSheet->getStyle('H' . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        foreach (['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'] as $totalLetterPosition) {
             $workSheet->setCellValue($totalLetterPosition . $config->row->data->next, '=SUM(' . $totalLetterPosition . $config->row->data->start . ':' . $totalLetterPosition . $config->row->data->end . ')');
 
             $workSheet->getStyle($totalLetterPosition . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD);
             $workSheet->getStyle($totalLetterPosition . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
         }
 
-        $workSheet->getStyle('H' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
-        $workSheet->getStyle('L' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
+        $workSheet->getStyle('I' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
+        $workSheet->getStyle('M' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
 
-        foreach (['C', 'E', 'H', 'L'] as $cell) {
+        foreach (['C', 'D', 'F', 'I', 'M'] as $cell) {
             $this->setCenter($workSheet, $cell);
         }
 
@@ -135,16 +136,16 @@ class TakingsTotalsExport implements FromCollection, ShouldAutoSize, Responsable
     public function columnFormats(): array
     {
         return [
-            'E' => NumberFormat::FORMAT_NUMBER,
             'F' => NumberFormat::FORMAT_NUMBER,
-            'G' => NumberFormat::FORMAT_NUMBER,
-            'I' => NumberFormat::FORMAT_CURRENCY_USD,
+            'H' => NumberFormat::FORMAT_NUMBER,
+            'I' => NumberFormat::FORMAT_NUMBER,
             'J' => NumberFormat::FORMAT_CURRENCY_USD,
             'K' => NumberFormat::FORMAT_CURRENCY_USD,
-            'L' => NumberFormat::FORMAT_NUMBER_00,
-            'M' => NumberFormat::FORMAT_CURRENCY_USD,
+            'L' => NumberFormat::FORMAT_CURRENCY_USD,
+            'M' => NumberFormat::FORMAT_NUMBER_00,
             'N' => NumberFormat::FORMAT_CURRENCY_USD,
             'O' => NumberFormat::FORMAT_CURRENCY_USD,
+            'P' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 
