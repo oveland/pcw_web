@@ -114,21 +114,23 @@ class Geolocation
      * @param $longitude
      * @return mixed
      */
-    public static function getAddressFromCoordinates($latitude, $longitude)
+    public static function getAddressFromCoordinates($latitude, $longitude, $force = false)
     {
+        if (!$force) return "";
         $address = "";
-//        if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90) return $address . "*";
-//        $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=" . config('road.google_api_token');
-//
-//        try {
-//            $client = new Client();
-//            $response = $client->get($url)->getBody()->getContents();
-//            $data = (object)json_decode($response, true);
-//            $result = (object)collect($data->results)->first();
-//
-//            $address = collect(explode(",", $result->formatted_address))->take(3)->implode(",");
-//        } catch (\Exception $e) {
-//        }
+
+        if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90) return $address . "*";
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=" . config('road.google_api_token');
+
+        try {
+            $client = new Client();
+            $response = $client->get($url)->getBody()->getContents();
+            $data = (object)json_decode($response, true);
+            $result = (object)collect($data->results)->first();
+
+            $address = collect(explode(",", $result->formatted_address))->take(3)->implode(",");
+        } catch (\Exception $e) {
+        }
 
         return $address;
     }

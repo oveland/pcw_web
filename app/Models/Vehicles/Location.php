@@ -232,17 +232,22 @@ class Location extends Model
         return $this->hasOne(AddressLocation::class, 'location_id', 'id');
     }
 
-    public function getAddress($refresh = false)
+    public function getAddress($refresh = false, $force = false)
     {
         $addressLocation = $this->addressLocation;
 //        return "";
 
-        if ($refresh || !$addressLocation) {
-            $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude);
-            $this->addressLocation()->create([
-                'address' => $address,
-                'status' => 0,
-            ]);
+        if ($refresh || !$addressLocation || !$addressLocation->address) {
+            $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude, $force);
+            if($addressLocation){
+                $addressLocation->address = $address;
+                $addressLocation->save();
+            }else{
+                $this->addressLocation()->create([
+                    'address' => $address,
+                    'status' => 0,
+                ]);
+            }
         }
 
         return $addressLocation ? $addressLocation->address : $address;

@@ -85,7 +85,7 @@ class ReportRouteOffRoadController extends Controller
      */
     public function getAddressFromCoordinates(Location $location)
     {
-        return $location->getAddress();
+        return $location->getAddress(false, true);
     }
 
     /**

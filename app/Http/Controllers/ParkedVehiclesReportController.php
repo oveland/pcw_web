@@ -119,7 +119,7 @@ class ParkedVehiclesReportController extends Controller
     public function getAddressFromCoordinates(ParkingReport $parkingReport)
     {
         sleep(1); // Because google (Free layer) only lets 50 request/second
-        return Geolocation::getAddressFromCoordinates($parkingReport->latitude, $parkingReport->longitude);
+        return Geolocation::getAddressFromCoordinates($parkingReport->latitude, $parkingReport->longitude, true);
     }
 
     /**
