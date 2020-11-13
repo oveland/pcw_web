@@ -37,12 +37,16 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Discount whereUpdatedAt($value)
  * @method static Builder|Discount whereValue($value)
  * @method static Builder|Discount whereVehicleId($value)
+ * @property bool $required
+ * @method static Builder|Discount whereRequired($value)
+ * @property bool $optional
+ * @method static Builder|Discount whereOptional($value)
  */
 class Discount extends Model
 {
     protected $table = 'bea_discounts';
 
-    protected $fillable = ['vehicle_id', 'route_id', 'trajectory_id', 'discount_type_id', 'value'];
+    protected $fillable = ['vehicle_id', 'route_id', 'trajectory_id', 'discount_type_id', 'value', 'required', 'optional'];
 
     function getDateFormat()
     {
@@ -79,5 +83,20 @@ class Discount extends Model
     function discountType()
     {
         return $this->belongsTo(DiscountType::class);
+    }
+
+    public function getAPIFields()
+    {
+        return (object)[
+            'id' => $this->id,
+            'discount_type_id' => $this->discount_type_id,
+            'discount_type' => $this->discountType->getAPIFields(),
+            'discountType' => $this->discountType->getAPIFields(),
+            'value' => $this->value,
+            'required' => $this->required,
+            'optional' => $this->optional,
+            'createdAt' => $this->created_at->toDateTimeString(),
+            'updatedAt' => $this->updated_at->toDateTimeString()
+        ];
     }
 }

@@ -804,5 +804,8 @@
   "Previous balance": "Saldo anterior",
   "Condone": "Condonar",
   "Condoned": "Condonado",
-  "Driver code": "Código conductor"
+  "Driver code": "Código conductor",
+  "Provisions": "Provisiones",
+  "Required": "Obligatorio",
+  "Optional": "Opcional"
 }

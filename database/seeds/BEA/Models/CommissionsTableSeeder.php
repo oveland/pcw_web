@@ -34,6 +34,10 @@ class CommissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->sync->commissions();
+        $vehicles = $this->company->activeVehicles;
+
+        foreach ($vehicles as $vehicle) {
+            $this->sync->checkCommissionsFor($vehicle);
+        }
     }
 }

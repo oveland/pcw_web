@@ -76,6 +76,9 @@
 																		<i class="fa fa-dollar text-muted"></i><br> {{ $t('Value') }}
 																	</th>
 																	<th class="col-md-2">
+																		<i class="fa fa-dollar text-muted"></i><br> {{ $t('Optional') }}
+																	</th>
+																	<th class="col-md-2">
 																		<i class="fa fa-calendar text-muted"></i><br> {{ $t('Updated at') }}
 																	</th>
 																	<th class="col-md-2">
@@ -94,7 +97,16 @@
 																		{{ discount.value | numberFormat('$0,0') }}
 																	</td>
 																	<td class="text-center">
-																		<span class="tooltips" :data-title="$t('Updated at')">{{ discount.updated_at }}</span>
+																		<div class="md-checkbox has-success" style="display: unset">
+																			<input type="checkbox" :id="'checkbox' + discount.id" class="md-check" disabled v-model="discount.optional">
+																			<label :for="'checkbox' + discount.id">
+																				<span class="inc"></span>
+																				<span class="check"></span>
+																			</label>
+																		</div>
+																	</td>
+																	<td class="text-center">
+																		<span class="tooltips" :data-title="$t('Updated at')">{{ discount.updatedAt }}</span>
 																	</td>
 																	<td class="text-center">
 																		<button v-if="!editing" class="btn btn-sm blue-hoki btn-outline sbold uppercase btn-circle tooltips" :title="$t('Edit')" @click="editDiscount(discount)"
@@ -137,7 +149,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
                                         <input id="edit-discount-value" type="text" class="form-control" :placeholder="$t('Value')" autofocus v-model="editingDiscount.value">
@@ -146,6 +158,20 @@
                                     </div>
                                 </div>
                             </div>
+							<div class="col-md-3">
+								<div class="form-group form-md-line-input has-success">
+									<div class="input-icon">
+										<div class="md-checkbox has-success">
+											<input type="checkbox" id="edit-discount-required" class="md-check" v-model="editingDiscount.optional">
+											<label for="edit-discount-required">
+												<span></span>
+												<span class="check"></span>
+												<span class="box"></span> {{ $t('Optional') }}
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
                             <div class="col-md-12">
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">

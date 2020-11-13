@@ -57,9 +57,10 @@ class BEAService
     }
 
     /**
+     * @param false $api
      * @return object
      */
-    function getLiquidationParams()
+    function getLiquidationParams($api = false)
     {
         $vehicles = $this->repository->getAllVehicles();
 

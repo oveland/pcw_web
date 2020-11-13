@@ -108,6 +108,8 @@ class Mark extends Model
 
     protected $dates = ['date'];
 
+    public $discountsParams = [];
+
     protected static function boot()
     {
         parent::boot();
@@ -152,6 +154,29 @@ class Mark extends Model
                 $mark->markPenalties()->createMany($markPenalties);
             }
         });
+
+        static::saved(function (Mark $mark) {
+            $mark->refresh();
+            if ($mark->liquidated && !$mark->taken) {
+                $markDiscounts = $mark->discounts;
+
+                foreach ($mark->discountsParams as $discountParams) {
+                    $markDiscount = $markDiscounts->filter(function (MarkDiscount $md) use ($discountParams) {
+                        return $md->discountType->uid === $discountParams->discount_type->uid;
+                    })->first();
+
+                    if ($markDiscount) {
+                        $markDiscount->required = $discountParams->required;
+                        $markDiscount->save();
+                    }
+                }
+            }
+        });
+    }
+
+    public function setDiscountsParams($iscountsParams)
+    {
+        $this->discountsParams = json_decode(json_encode($iscountsParams, JSON_FORCE_OBJECT), false);;
     }
 
     public function getInitialTimeAttribute()

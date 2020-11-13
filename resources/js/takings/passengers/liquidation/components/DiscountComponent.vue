@@ -50,9 +50,12 @@
 					<td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
 					<td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
 					<td class="text-right col-md-3">
-						<div v-for="discount in orderBy(mark.discounts, 'discount_type_id')" v-if="discount">
-							<span :data-original-title="discount.discount_type.description" class="tooltips">
-								<i :class="discount.discount_type.icon"></i> {{ discount.value | numberFormat('$0,0') }}
+						<div v-for="discount in orderBy(mark.discounts, 'discount_type.uid')" v-if="discount" :data-original-title="discount.discount_type.description + (discount.optional ? (' ' + $t('Optional') + ': $' + discount.value) : '')" class="tooltips">
+							<span>
+								<label :for="'checkbox-' + mark.id + '-' + discount.id">
+									<i :class="discount.discount_type.icon"></i> {{ discount.required ? discount.value : 0 | numberFormat('$0,0') }}
+								</label>
+								<input v-if="discount.optional" type="checkbox" :id="'checkbox-' + mark.id + '-' + discount.id" class="md-check" v-model="discount.required" :disabled="mark.liquidated">
 							</span><br>
 						</div>
 						<div v-if="!readonly" class="divider-other-discount">
@@ -106,7 +109,7 @@
                 <td class="text-center">{{ totals.totalBea | numberFormat('$0,0') }}</td>
                 <td class="text-center">{{ totals.totalGrossBea | numberFormat('$0,0') }}</td>
                 <td class="text-right">
-                    <div v-for="totalDiscount in orderBy(liquidation.discountsByTurns, 'discount.discount_type_id')" v-if="totalDiscount">
+                    <div v-for="totalDiscount in orderBy(discountsByTurns, 'discount.discount_type.uid')">
                         <span :data-original-title="totalDiscount.discount.discount_type.description" class="tooltips">
                             <i :class="totalDiscount.discount.discount_type.icon"></i> {{ totalDiscount.value | numberFormat('$0,0') }}
                         </span><br>
@@ -191,6 +194,36 @@
             totals: Object,
             control: Object
         },
+		computed: {
+			discountsByTurns: function () {
+				let discountsByTurns = [];
+
+				if (this.marks.length) {
+					const markWithMaxDiscounts = _.maxBy(this.marks, function (mark) {
+						return Object.keys(mark.discounts).length;
+					});
+					if (markWithMaxDiscounts) {
+						_.forEach(markWithMaxDiscounts.discounts, (discount) => {
+							const totalByTypeDiscount = _.sumBy(this.marks, function (mark) {
+								const markDiscount = _.find(mark.discounts, function (discountFilter) {
+									return discountFilter.discount_type.uid === discount.discount_type.uid
+								});
+
+								return markDiscount && markDiscount.required ? markDiscount.value : 0;
+							});
+
+							discountsByTurns.push({
+								type_uid: discount.discount_type.uid,
+								discount: discount,
+								value: totalByTypeDiscount,
+							});
+						});
+					}
+				}
+
+				return discountsByTurns;
+			},
+		},
         methods: {
             show () {
                 this.$modal.show('modal-show-file-discount');

@@ -316,7 +316,7 @@
 			}
         },
         computed:{
-            totals: function () {
+			totals: function () {
 
 				this.liquidation.liquidation.byTurns = [];
 				_.forEach(this.liquidation.marks, (mark) => {
@@ -481,25 +481,31 @@
 					byOperativeExpenses: 0,
 					byTolls: 0,
 					byOthers: 0,
+					byProvisions: 0,
 					total: 0
 				};
 
 				_.each(mark.discounts, function (discount) {
+					const value = discount.required ? discount.value : 0;
+
 					switch (discount.discount_type.uid) {
 						case window.ml.discountTypes.auxiliary:
-							discounts.byMobilityAuxilio = discount.value;
+							discounts.byMobilityAuxilio = value;
 							break;
 						case window.ml.discountTypes.fuel:
-							discounts.byFuel = discount.value;
+							discounts.byFuel = value;
 							break;
 						case window.ml.discountTypes.operative:
-							discounts.byOperativeExpenses = discount.value;
+							discounts.byOperativeExpenses = value;
 							break;
 						case window.ml.discountTypes.toll:
-							discounts.byTolls = discount.value;
+							discounts.byTolls = value;
+							break;
+						case window.ml.discountTypes.provisions:
+							discounts.byProvisions = value;
 							break;
 					}
-					discounts.total += discount.value;
+					discounts.total += value;
 				});
 
 				const others = _.filter(this.liquidation.liquidation.otherDiscounts, function (other) {

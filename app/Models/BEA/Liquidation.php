@@ -135,7 +135,7 @@ class Liquidation extends Model
 
     public function setLiquidationAttribute($liquidation)
     {
-        $liquidation = collect((object) $liquidation);
+        $liquidation = collect((object) $liquidation)->forget('discountsByTurns');
 
         $otherDiscounts = $liquidation['otherDiscounts'];
 

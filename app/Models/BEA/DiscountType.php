@@ -32,15 +32,33 @@ use Illuminate\Support\Carbon;
  * @method static Builder|DiscountType whereUid($value)
  * @property int $company_id
  * @method static Builder|DiscountType whereCompanyId($value)
+ * @property bool $required
+ * @method static Builder|DiscountType whereRequired($value)
+ * @property bool $optional
+ * @method static Builder|DiscountType whereOptional($value)
  */
 class DiscountType extends Model
 {
     protected $table = 'bea_discount_types';
 
-    protected $fillable = ['uid', 'name', 'icon', 'description', 'default', 'company_id'];
+    protected $fillable = ['uid', 'name', 'icon', 'description', 'default', 'company_id', 'required', 'optional'];
 
     function getDateFormat()
     {
         return config('app.simple_date_time_format');
+    }
+
+    public function getAPIFields()
+    {
+        return (object)[
+            'id' => $this->id,
+            'uid' => $this->uid,
+            'name' => $this->name,
+            'icon' => $this->icon,
+            'description' => $this->description,
+            'default' => $this->default,
+            'required' => $this->required,
+            'optional' => $this->optional,
+        ];
     }
 }

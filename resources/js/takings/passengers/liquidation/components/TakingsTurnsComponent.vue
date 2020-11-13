@@ -137,28 +137,31 @@
                         byMobilityAuxilio: 0,
                         byFuel: 0,
                         byOperativeExpenses: 0,
-                        byTolls: 0,
+						byTolls: 0,
+						byProvisions: 0,
                         total: 0
                     };
 
-                    _.each(mark.discounts, function (discount) {
-
-                        switch (discount.discount_type.uid) {
-                            case window.ml.discountTypes.auxiliary:
-                                discounts.byMobilityAuxilio = discount.value;
-                                break;
-                            case window.ml.discountTypes.fuel:
-                                discounts.byFuel = discount.value;
-                                break;
-                            case window.ml.discountTypes.operative:
-                                discounts.byOperativeExpenses = discount.value;
-                                break;
-                            case window.ml.discountTypes.toll:
-                                discounts.byTolls = discount.value;
-                                break;
-                        }
-                        discounts.total += discount.value;
-                    });
+					_.each(mark.discounts, function (discount) {
+						switch (discount.discount_type.uid) {
+							case window.ml.discountTypes.auxiliary:
+								discounts.byMobilityAuxilio = discount.value;
+								break;
+							case window.ml.discountTypes.fuel:
+								discounts.byFuel = discount.value;
+								break;
+							case window.ml.discountTypes.operative:
+								discounts.byOperativeExpenses = discount.value;
+								break;
+							case window.ml.discountTypes.toll:
+								discounts.byTolls = discount.value;
+								break;
+							case window.ml.discountTypes.provisions:
+								discounts.byProvisions = discount.value;
+								break;
+						}
+						discounts.total += discount.value;
+					});
 
                     return discounts;
                 },

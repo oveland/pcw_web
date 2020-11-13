@@ -93,7 +93,7 @@
                                                 <div class="tab-content">
                                                     <div id="step-discounts" class="tab-pane fade in active">
                                                         <div class="table-responsive phase-container col-md-12 m-t-10">
-                                                            <discount-component :control.sync="control" :marks="marks" :totals="totals" :liquidation.sync="liquidation"></discount-component>
+                                                            <discount-component :control.sync="control" :marks.sync="marks" :totals="totals" :liquidation.sync="liquidation"></discount-component>
                                                         </div>
                                                     </div>
                                                     <div id="step-penalties" class="tab-pane fade">
@@ -218,7 +218,7 @@
                     vehicle: this.search.vehicle.id,
                     liquidation: this.liquidation,
                     totals: this.totals,
-                    marks: _.map(this.marks, 'id'),
+                    marks: _.mapValues(_.keyBy(this.marks, 'id'), 'discounts'),
                     falls: {
                         get: getFalls,
                         pay: payFalls,

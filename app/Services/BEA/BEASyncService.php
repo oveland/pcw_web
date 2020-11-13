@@ -492,24 +492,11 @@ class BEASyncService
 
     private function checkVehicleParams(Vehicle $vehicle)
     {
-        if ($vehicle) {
-            $this->checkDiscountsFor($vehicle);
-
-            $penalties = Penalty::where('vehicle_id', $referenceVehicle->id)->get();
-            foreach ($penalties as $penalty) {
-                $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $penalty->route->id)->first();
-
-                if (!$exists) {
-                    $new = new Penalty();
-                    $new->vehicle_id = $vehicle->id;
-                    $new->route_id = $penalty->route_id;
-                    $new->type = $penalty->type;
-                    $new->value = $penalty->value;
-
-                    if (!$new->save()) $ok = false;
-                }
-            }
-        }
+        $this->discountTypes();
+        $this->checkDiscountsFor($vehicle);
+        $this->checkCommissionsFor($vehicle);
+        $this->checkPenaltiesFor($vehicle);
+        $this->checkManagementCostsFor($vehicle);
     }
 
     public function checkCommissionsFor(Vehicle $vehicle)
@@ -524,7 +511,7 @@ class BEASyncService
                     'vehicle_id' => $vehicle->id,
                     'route_id' => $route->id,
                     'type' => 'percent',
-                    'value' => 15,
+                    'value' => 0,
                 ]);
             }
         }
@@ -542,7 +529,7 @@ class BEASyncService
                     'vehicle_id' => $vehicle->id,
                     'route_id' => $route->id,
                     'type' => 'boarding',
-                    'value' => 3000,
+                    'value' => 0,
                 ]);
             }
         }
@@ -591,7 +578,9 @@ class BEASyncService
                             'vehicle_id' => $vehicle->id,
                             'route_id' => $route->id,
                             'trajectory_id' => $trajectory->id,
-                            'value' => $discountType->default
+                            'value' => $discountType->default,
+                            'required' => $discountType->required,
+                            'optional' => $discountType->optional,
                         ]);
                     }
                 }
@@ -605,27 +594,38 @@ class BEASyncService
             'Mobility auxilio' => (object)[
                 'uid' => 1,
                 'icon' => 'fa fa-user text-warning',
-                'min' => 2000,
-                'max' => 5000,
+                'default' => 0,
+                'required' => true,
+                'optional' => false,
             ],
             'Fuel' => (object)[
                 'uid' => 2,
                 'icon' => 'fa fa-tachometer',
-                'min' => 30000,
-                'max' => 36000,
+                'default' => 0,
+                'required' => true,
+                'optional' => false,
             ],
             'Operative Expenses' => (object)[
                 'uid' => 3,
                 'icon' => 'fa fa-hint text-warning',
-                'min' => 2000,
-                'max' => 5000,
+                'default' => 0,
+                'required' => true,
+                'optional' => false,
             ],
             'Tolls' => (object)[
                 'uid' => 4,
                 'icon' => 'fa fa-ticket',
-                'min' => 8000,
-                'max' => 12000,
-            ]
+                'default' => 0,
+                'required' => true,
+                'optional' => false,
+            ],
+            'Provisions' => (object)[
+                'uid' => 5,
+                'icon' => 'fa fa-money',
+                'default' => 0,
+                'required' => false,
+                'optional' => true,
+            ],
         ];
 
         foreach ($types as $name => $type) {
@@ -637,39 +637,15 @@ class BEASyncService
                     'name' => __(ucfirst($name)),
                     'icon' => $type->icon,
                     'description' => __('Discount by') . " " . __(ucfirst($name)),
-                    'default' => random_int($type->min, $type->max),
-                    'company_id' => $this->company->id
+                    'default' => $type->default,
+                    'company_id' => $this->company->id,
+                    'required' => $type->required,
+                    'optional' => $type->optional,
                 ]);
-            }
-        }
-    }
-
-    public function commissions()
-    {
-        $routes = $this->repository->getAllRoutes();
-
-        $criteria = [
-            0 => (object)[
-                'type' => 'percent',
-                'value' => 15,
-            ],
-            1 => (object)[
-                'type' => 'fixed',
-                'value' => 500,
-            ]
-        ];
-
-        foreach ($routes as $index => $route) {
-            $c = $criteria[0];
-
-            $exists = Commission::where('route_id', $route->id)->first();
-
-            if (!$exists) {
-                Commission::create([
-                    'route_id' => $route->id,
-                    'type' => $c->type,
-                    'value' => $c->value,
-                ]);
+            } else {
+//                $exists->required = $type->required;
+//                $exists->optional = $type->optional;
+//                $exists->save();
             }
         }
     }

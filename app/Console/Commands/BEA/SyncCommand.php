@@ -14,7 +14,7 @@ class SyncCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bea:sync {--company=21}';
+    protected $signature = 'bea:sync {--company=21} {--type=all}';
 
     /**
      * The console command description.
@@ -46,18 +46,21 @@ class SyncCommand extends Command
         if ($company) {
             $beaService = App::makeWith('bea.service', ['company' => $company->id, 'console' => true]);
 
-            $beaService->sync->routes();
-            $beaService->sync->vehicles();
-            $beaService->sync->drivers();
+            $type = $this->option('type');
 
-            $vehicles = $beaService->repository->getAllVehicles();
+            if ($type === 'all') {
+                $beaService->sync->routes();
+                $beaService->sync->vehicles();
+                $beaService->sync->drivers();
 
-            $beaService->sync->discountTypes();
-            foreach ($vehicles as $vehicle) {
-                $beaService->sync->checkDiscountsFor($vehicle);
-                $beaService->sync->checkPenaltiesFor($vehicle);
+                $vehicles = $beaService->repository->getAllVehicles();
+                foreach ($vehicles as $vehicle) {
+                    $beaService->sync->checkVehicleParams($vehicle);
+                }
+            } else {
+                $beaService->sync->$type();
             }
-            $beaService->sync->commissions();
+
 
         } else {
             $this->info('Company id not found');

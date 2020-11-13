@@ -294,7 +294,7 @@ class TakingsPassengersLiquidationController extends Controller
 
                 $this->beaService->sync->checkDiscountsFor($vehicle);
 
-                return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory));
+                return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory, true));
                 break;
             case __('costs'):
                 $vehicle = Vehicle::find($request->get('vehicle'));
@@ -306,7 +306,7 @@ class TakingsPassengersLiquidationController extends Controller
                 return response()->json($costs->where('uid', '<>', ManagementCost::PAYROLL_ID)->values()->toArray());
                 break;
             default:
-                return response()->json($this->beaService->getLiquidationParams());
+                return response()->json($this->beaService->getLiquidationParams(true));
                 break;
         }
     }
@@ -383,6 +383,7 @@ class TakingsPassengersLiquidationController extends Controller
 
                     if ($options->default) {
                         $discount->value = $discountToEdit->value;
+                        $discount->optional = $discountToEdit->optional;
                         if (!$discount->save()) {
                             $response->error = true;
                             $response->message .= "<br> - " . __("Discount :name unable to update", ['name' => $discountToEdit->discount_type->name]);
@@ -398,6 +399,7 @@ class TakingsPassengersLiquidationController extends Controller
 
                                 if ($discountFromCustom) {
                                     $discountFromCustom->value = $discountToEdit->value;
+                                    $discountFromCustom->optional = $discountToEdit->optional;
 
                                     if (!$discountFromCustom->save()) {
                                         $response->error = true;
@@ -576,11 +578,11 @@ class TakingsPassengersLiquidationController extends Controller
 
         DB::beginTransaction();
         $dataLiquidation = collect($request->get('liquidation'));
-        $marksID = collect($request->get('marks'));
+        $marks = collect($request->get('marks'));
         $falls = collect($request->get('falls'));
 
         $liquidation = new Liquidation();
-        $liquidation->date = Mark::find($marksID->first())->date;
+        $liquidation->date = Mark::find($marks->keys()->first())->date;
         $liquidation->vehicle_id = $request->get('vehicle');
         $liquidation->liquidation = $dataLiquidation;
 
@@ -605,10 +607,13 @@ class TakingsPassengersLiquidationController extends Controller
             $response->success = false;
             $response->message = __('There are turns no liquidated in :date fot this vehicle', ['date' => $lastMarksNoLiquidated->date->toDateString()]);
         } else {
-            if ($marksID->count()) {
+            if ($marks->count()) {
                 if ($liquidation->save()) {
-                    foreach ($marksID as $markId) {
+                    foreach ($marks as $markId => $discountsParams) {
                         $mark = Mark::find($markId);
+
+                        $mark->setDiscountsParams($discountsParams);
+
                         if ($mark) {
                             $mark->liquidated = true;
                             $mark->taken = false;
@@ -630,11 +635,6 @@ class TakingsPassengersLiquidationController extends Controller
                             };
                         }
                     }
-
-                    if ($vehicle->company->id === Company::MONTEBELLO) {
-//                        $this->takings($liquidation);
-                    }
-
                 } else {
                     $response->success = false;
                     $response->message = __('Error at generate liquidation register');

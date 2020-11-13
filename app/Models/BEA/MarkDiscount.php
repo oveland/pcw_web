@@ -40,12 +40,16 @@ use Illuminate\Support\Carbon;
  * @property int $mark_id
  * @method static Builder|MarkDiscount whereMarkId($value)
  * @property-read Mark $mark
+ * @property bool $required
+ * @property bool $optional
+ * @method static Builder|MarkDiscount whereOptional($value)
+ * @method static Builder|MarkDiscount whereRequired($value)
  */
 class MarkDiscount extends Model
 {
     protected $table = 'bea_mark_discounts';
 
-    protected $fillable = ['vehicle_id', 'route_id', 'trajectory_id', 'discount_type_id', 'value'];
+    protected $fillable = ['vehicle_id', 'route_id', 'trajectory_id', 'discount_type_id', 'value', 'required', 'optional'];
 
     function getDateFormat()
     {
