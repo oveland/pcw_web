@@ -8,7 +8,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- ================== BEGIN BASE CSS STYLE ================== -->
-<link href="{{asset('http://fonts.googleapis.com/css?family=Nunito:400,300,700')}}" rel="stylesheet" id="fontFamilySrc"/>
+<link href="{{asset('https://fonts.googleapis.com/css?family=Nunito:400,300,700')}}" rel="stylesheet" id="fontFamilySrc"/>
 <link href="{{asset('assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet"/>

@@ -26,7 +26,7 @@
                 </div>
             </li>
             <li class="">
-                <a href="http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" target="_blank" class="faa-parent animated-hover">
+                <a href="https://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" target="_blank" class="faa-parent animated-hover">
                     <i class="fa fa-home faa-vertical"></i>
                     <span>@lang('Home')</span>
                 </a>

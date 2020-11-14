@@ -40,7 +40,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <div class="page-footer">
     <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>2020</b> <i class="fa fa-rocket"></i> PCW @
-        <a href="http://pcwtecnologia.com" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>
+        <a href="https://pcwtecnologia.com" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>

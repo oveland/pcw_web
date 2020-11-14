@@ -60,7 +60,7 @@ class GPSCheckServerCommand extends Command
     {
         $isServerOK = false;
         try {
-            $client = new Client(['base_uri' => 'http://server.pcwserviciosgps.com']);
+            $client = new Client(['base_uri' => 'https://server.pcwserviciosgps.com']);
             $response = $client->get('/');
 
             if ($response->getStatusCode() == 200) $isServerOK = true;

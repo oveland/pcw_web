@@ -139,7 +139,7 @@
                                             </a>
                                         </div>
                                     @else
-                                        <a href="http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=descargarReciboFinal&empresa={{ $report->vehicle->company->short_name }}&ui={{ Auth::user()->id }}&n_carro={{ $report->vehicle->number }}&placa={{ $report->vehicle->plate }}&fecha_sel={{ $report->date }}"
+                                        <a href="https://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=descargarReciboFinal&empresa={{ $report->vehicle->company->short_name }}&ui={{ Auth::user()->id }}&n_carro={{ $report->vehicle->number }}&placa={{ $report->vehicle->plate }}&fecha_sel={{ $report->date }}"
                                            target="_blank" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase tooltips" data-html="true"
                                            data-title="<i class='fa fa-users'></i> @lang('Settlement receipt')">
                                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
