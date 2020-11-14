@@ -36,78 +36,20 @@ class MaintenanceCommand extends Command
     public function getMaintenanceData()
     {
         return collect([
-//            [
-//                'from' => '2020-04-01',
-//                'to' => '2020-04-30',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => true
-//                    ],
-//                    'reports' => [
-//                        'release' => true
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2020-05-01',
-//                'to' => '2020-05-31',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => true
-//                    ],
-//                    'reports' => [
-//                        'release' => true
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2020-06-01',
-//                'to' => '2020-06-30',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => true
-//                    ],
-//                    'reports' => [
-//                        'release' => true
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2020-07-01',
-//                'to' => '2020-07-31',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => false
-//                    ],
-//                    'reports' => [
-//                        'release' => false
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2020-08-01',
-//                'to' => '2020-08-31',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => false
-//                    ],
-//                    'reports' => [
-//                        'release' => false
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2020-09-01',
-//                'to' => '2020-09-30',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => false
-//                    ],
-//                    'reports' => [
-//                        'release' => false
-//                    ],
-//                ]
-//            ],
+            [
+                'from' => '2020-07-01',
+                'to' => '2020-07-31',
+                'tables' => [
+                    'locations' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                    ],
+                    'reports' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                    ],
+                ]
+            ],
         ]);
     }
 
@@ -121,21 +63,17 @@ class MaintenanceCommand extends Command
         $now = Carbon::now();
         $this->info('Executing db maintenance at ' . $now->toDateTimeString());
 
-//        $maintenanceData = $this->getMaintenanceData();
-//
-//        $maintenanceData->each(function ($maintenance) {
-//            $maintenance = json_decode(json_encode($maintenance), FALSE); // To Object
-//            $this->process($maintenance);
-//        });
-//
+        $maintenanceData = $this->getMaintenanceData();
+
+        $maintenanceData->each(function ($maintenance) {
+            $maintenance = json_decode(json_encode($maintenance), FALSE); // To Object
+            $this->process($maintenance);
+        });
+
 //        $query = "INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road)
 //                    SELECT * FROM locations_2020_10_16";
 //        $this->info("       - $query");
 //        DB::statement($query);
-
-        $query = "INSERT INTO off_roads (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations WHERE date >= '2020-09-15' AND off_road IS TRUE";
-        $this->info("       - $query");
-        DB::statement($query);
 
         $this->info("Maintenance finished at " . Carbon::now()->toDateTimeString());
 
@@ -163,16 +101,16 @@ class MaintenanceCommand extends Command
             DB::statement($query);
         }
 
-//        $backup = $this->buildBackup($table, $from, $to);
+        $backup = $this->buildBackup($table, $from, $to);
 
-//        if ($backup) {
-//            $query = "DROP TABLE $tableBackup";
-//            $this->info("       - $query");
-//        }
-//
-//        if ($release && $backup) {
-//            $this->releaseTable($table, $from, $to);
-//        }
+        if ($backup) {
+            $query = "DROP TABLE $tableBackup";
+            $this->info("       - $query");
+        }
+
+        if ($release && $backup) {
+            $this->releaseTable($table, $from, $to);
+        }
     }
 
     public function buildBackup($table, $from, $to)
@@ -192,11 +130,11 @@ class MaintenanceCommand extends Command
 
         $query = "DELETE FROM $table WHERE date BETWEEN '$from' AND '$to'";
         $this->info("       - $query");
+//        DB::statement($query);
 
-//        $tableBackup = $this->getTableBackup($table, $to);
-//        $query = "DROP TABLE IF EXISTS $tableBackup";
-//        $this->info("       - $query");
-
+        $tableBackup = $this->getTableBackup($table, $to);
+        $query = "DROP TABLE IF EXISTS $tableBackup";
+        $this->info("       - $query");
         DB::statement($query);
     }
 

@@ -78,6 +78,7 @@ class ReportMileageDateRangeController extends Controller
             $vehicles = $vehicles->where('tags', 'like', "%$vehicleReport%");
         }
 
+
         $vehicles = $vehicles->get();
 
         $reports = collect([]);
@@ -97,7 +98,7 @@ class ReportMileageDateRangeController extends Controller
         foreach ($vehicles as $vehicle) {
             foreach ($dateRange as $date) {
                 $date = $date->toDateString();
-                $key = ($vehicle->active ? 'A' : 'B') . "$vehicle->id $date";
+                $key = ($vehicle->active ? 'A' : 'B') . str_pad($vehicle->number, 5, '0', STR_PAD_LEFT) ."-$date";
 
                 $lastLocation = isset($lastLocationsByVehicles[$vehicle->id]) ? $lastLocationsByVehicles[$vehicle->id]->filter(function ($ll) use ($date, $vehicle) {
                     return $ll->date->toDateString() == $date;
