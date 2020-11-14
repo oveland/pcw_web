@@ -33,6 +33,9 @@
                 <th class="col-md-2">
                     <i class="fa fa-dollar text-muted"></i> <i class="fa fa-exchange text-muted"></i><br> {{ $t('Falls') }}
                 </th>
+				<th class="col-md-2">
+					<i class="fa fa-dollar text-muted"></i><br> {{ $t('Bonuses') }}
+				</th>
                 <th class="col-md-3">
                     <i class="fa fa-dollar text-muted"></i><br> {{ $t('Commissions by turn') }}
                 </th>
@@ -58,6 +61,11 @@
                     </div>
                     <div class="input-icon tooltips" data-placement="left" :data-title="'<i class=\'fa fa-angle-double-left font-blue\'></i>' + $t('Get fall')" data-html="true">
                         <i class="fa fa-angle-double-left font-blue"></i> <input type="number" min="0" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Get fall')" v-model.number="mark.getFall">
+                    </div>
+                </td>
+				<td class="text-center">
+                    <div class="input-icon m-b-5">
+                        <i class="fa fa-dollar font-green"></i> <input type="number" min="0" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Bonuses')" v-model.number="mark.payFall">
                     </div>
                 </td>
                 <td class="text-center col-md-3">

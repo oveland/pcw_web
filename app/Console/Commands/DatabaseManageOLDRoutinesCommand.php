@@ -38,11 +38,11 @@ class DatabaseManageOLDRoutinesCommand extends Command
      */
     public function handle()
     {
-        $client = new Client(['base_uri' => 'http://admin.pcwserviciosgps.com']);
+        $client = new Client(['base_uri' => 'https://admin.pcwserviciosgps.com']);
         $response = $client->get('php/migrarContadorHistorialSeisMeses.php');
         dump($response->getBody()->getContents());
 
-        $client = new Client(['base_uri' => 'http://www.pcwserviciosgps.com']);
+        $client = new Client(['base_uri' => 'https://www.pcwserviciosgps.com']);
         $response = $client->get('pcw_gps/php/administrar_correos/enviar.php');
         dd($response->getBody()->getContents());
     }
