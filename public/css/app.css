@@ -11,7 +11,7 @@ body *:not(i) {
 }
 
 .map-header-bg {
-    background: url(http://ne.pcwserviciosgps.com/img/map-bg.jpg) top center fixed !important;
+    background: url(https://ne.pcwserviciosgps.com/img/map-bg.jpg) top center fixed !important;
 }
 
 .m-auto {
