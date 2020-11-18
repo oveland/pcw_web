@@ -26,6 +26,12 @@ $(document).ready(function () {
         $('[data-toggle="popover"]').popover();
 
         initPanelCollapse();
+
+        $('.default-select2').select2({
+            formatResult: select2OptionFormat,
+            formatSelection: select2OptionFormat,
+            escapeMarkup: function(m) { return m; }
+        });
     });
 
     $(document).ajaxError(function (event, request, settings) {
@@ -50,7 +56,21 @@ $(document).ready(function () {
         format: "YYYY-MM-DD HH:mm:ss",
     });
 
-    $('.default-select2').select2();
+    function select2OptionFormat(option) {
+        var originalOption = option.element;
+        if ($(originalOption).data('html')) {
+            return $(originalOption).data('html');
+        }
+        return option.text;
+    }
+
+    $('.default-select2').select2({
+        formatResult: select2OptionFormat,
+        formatSelection: select2OptionFormat,
+        escapeMarkup: function(m) { return m; }
+    });
+
+
     $('[data-toggle="tooltip"]').tooltip({
         container: 'body'
     });

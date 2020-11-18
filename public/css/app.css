@@ -1135,10 +1135,10 @@ span.icon-report {
 }
 
 .table-report th > i {
-    font-size: 200%;
-    color: rgba(211, 211, 211, 0.16);
+    font-size: 150%;
+    color: rgba(211, 211, 211, 0.53);
     position: relative;
-    top: 4px;
+    top: 0px;
     float: unset;
 }
 

@@ -113,6 +113,7 @@ trait BindsDynamically
  * @property-read AddressLocation $addressLocation
  * @property string|null $ard_off_road
  * @method static Builder|Location whereArdOffRoad($value)
+ * @property string|null $date
  */
 class Location extends Model
 {
@@ -239,10 +240,10 @@ class Location extends Model
 
         if ($refresh || !$addressLocation || !$addressLocation->address) {
             $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude, $force);
-            if($addressLocation){
+            if ($addressLocation) {
                 $addressLocation->address = $address;
                 $addressLocation->save();
-            }else{
+            } else {
                 $this->addressLocation()->create([
                     'address' => $address,
                     'status' => 0,

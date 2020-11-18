@@ -1,3 +1,7 @@
+@php
+    $selected = $selected ?? "";
+@endphp
+
 @if(empty($vehicles))
     <option value="">@lang('No vehicles found')</option>
 @else
@@ -5,12 +9,12 @@
         <option value="all">@lang('All')</option>
     @endif
     @if( $withOnlyActive ?? false )
-        <option value="active">@lang('Only active')</option>
+        <option value="active" {{ $selected == 'active' ? 'selected' : '' }}>@lang('Only active')</option>
     @endif
 
     @if( $tags ?? false )
         @foreach($tags as $tag)
-            <option value="{{ $tag->id }}">{{ __($tag->name)  }}</option>
+            <option value="{{ $tag->id }}" {{ $selected == $tag->id ? 'selected' : '' }}>{{ __($tag->name)  }}</option>
         @endforeach
     @endif
 
@@ -21,6 +25,6 @@
     @endphp
 
     @foreach($vehicles as $vehicle)
-        <option value="{{ $vehicle->id }}">#{{ $vehicle->number }} | {{ $vehicle->plate }}</option>
+        <option value="{{ $vehicle->id }}" {{ $selected == $vehicle->id ? 'selected' : '' }}>#{{ $vehicle->number }} | {{ $vehicle->plate }}</option>
     @endforeach
 @endif

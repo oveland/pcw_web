@@ -44,6 +44,7 @@ class Kernel extends ConsoleKernel
 
         Commands\DB\MaintenanceCommand::class,
         Commands\DB\RefreshLocationsViews::class,
+        Commands\Vehicles\Binnacles\NotificationCommand::class,
     ];
 
     /**

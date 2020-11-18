@@ -343,7 +343,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 </li>
 
                 @if( Auth::user() && Auth::user()->canAdmin())
-                    <li class="nav-item start {{ $baseMenu == __('url-administration')?'active-animated':'' }}">
+                    <li class="nav-item start {{ $baseMenu == __('url-administration') ? 'active-animated' : '' }}">
                         <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
                             <i class="fa fa-cogs faa-horizontal"></i>
                             <span>@lang('Administration')</span>
@@ -408,7 +408,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     </li>
                 @endif
 
-                <li class="nav-item {{ $baseMenu == __('url-operation')?'active-animated':'' }}">
+                <li class="nav-item {{ $baseMenu == __('url-operation') ? 'active-animated' : '' }}">
                     <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
                         <i class="fa fa-life-ring faa-spin"></i>
                         <span>@lang('Operation')</span>
@@ -430,10 +430,25 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item menu-operation-vehicles">
+                            <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
+                                <i class="fa fa-bus faa-passing"></i>
+                                @lang('Vehicles')
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="nav-item menu-operation-vehicles-binnacle">
+                                    <a href="{{ route('operation-vehicles-binnacle') }}" class="faa-parent animated-hover nav-link">
+                                        <i class="icon-bag faa-burst" aria-hidden="true"></i>
+                                        @lang('Binnacle')
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
 
-                <li class="nav-item {{ $baseMenu == __('reports')?'active-animated':'' }}">
+                <li class="nav-item {{ $baseMenu == __('reports') ? 'active-animated' : '' }}">
                     <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
                         <i class="fa fa-area-chart faa-horizontal"></i>
                         <span>@lang('Reports')</span>
@@ -686,7 +701,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     </ul>
                 </li>
 
-                <li class="nav-item {{ $baseMenu == __('takings')?'active-animated':'' }}">
+                <li class="nav-item {{ $baseMenu == __('takings') ? 'active-animated' : '' }}">
                     <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
                         <i class="fa fa-dollar faa-horizontal"></i>
                         <span>@lang('Takings')</span>

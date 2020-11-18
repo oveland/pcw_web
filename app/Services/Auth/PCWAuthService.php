@@ -6,6 +6,7 @@ namespace App\Services\Auth;
 use App\Http\Controllers\GeneralController;
 use App\Models\Company\Company;
 use App\Models\Routes\Route;
+use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
 use Auth;
 use Illuminate\Http\Request;
@@ -17,6 +18,12 @@ class PCWAuthService
      * @var GeneralController
      */
     private $generalController;
+
+    /**
+     * @var User
+     */
+    public $user;
+
 
     public function __construct(GeneralController $generalController)
     {
@@ -38,15 +45,15 @@ class PCWAuthService
      */
     public function getAccessProperties(Company $company = null)
     {
-        $user = Auth::user();
-        $company = $user->isAdmin() && $company ? $company : $user->company;
+        $this->user = Auth::user();
+        $company = $this->user->isAdmin() && $company ? $company : $this->user->company;
 
         return (object)[
             'company' => $company,
-            'companies' => $user->isAdmin() ? Company::active()->get() : collect([]),
+            'companies' => $this->user->isAdmin() ? Company::active()->get() : collect([]),
             'drivers' => $company->activeDrivers,
             'routes' => $this->generalController->getRoutesFromCompany($company),
-            'vehicles' => $user->assignedVehicles($company)
+            'vehicles' => $this->user->assignedVehicles($company)
         ];
     }
 

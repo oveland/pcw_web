@@ -38,8 +38,12 @@ License: You must have a valid license purchased only from themeforest(the above
 </div>
 <!-- BEGIN FOOTER -->
 
+@if(isset($mail))
+    <br><hr><br>
+@endif
+
 <div class="page-footer">
-    <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>2020</b> <i class="fa fa-rocket"></i> PCW @
+    <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>{{ date('Y') }}</b> <i class="fa fa-rocket"></i> PCW @
         <a href="https://pcwtecnologia.com" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>
     </div>
     <div class="scroll-to-top">
@@ -47,7 +51,9 @@ License: You must have a valid license purchased only from themeforest(the above
     </div>
 </div>
 <!-- END FOOTER -->
-@include('template.metronic.plugins')
+@if(!isset($mail))
+    @include('template.metronic.plugins')
+@endif
 </body>
 
 </html>

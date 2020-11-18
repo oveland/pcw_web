@@ -7,6 +7,7 @@ use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\Dispatch;
 use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
+use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use DB;
@@ -60,6 +61,7 @@ use Auth;
  * @method static Builder|Company whereSpeedingThreshold($value)
  * @property string|null $default_kmz_url
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereDefaultKmzUrl($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\User[] $users
  */
 class Company extends Model
 {
@@ -140,14 +142,14 @@ class Company extends Model
         $user = Auth::user();
         $routes = $this->hasMany(Route::class)->orderBy('name');
 
-        if($user){
+        if ($user) {
             if ($user->isProprietary()) {
                 $assignedVehicles = $user->assignedVehicles(null, true);
                 $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
-            }else{
-                if(!$user->isAdmin()){
+            } else {
+                if (!$user->isAdmin()) {
                     $userRoutes = $user->getUserRoutes($this);
-                    $routes = $routes->whereIn( 'id',  $userRoutes->pluck('id'));
+                    $routes = $routes->whereIn('id', $userRoutes->pluck('id'));
                 }
             }
         }
@@ -271,5 +273,13 @@ class Company extends Model
     public function hasADD()
     {
         return collect([self::MONTEBELLO])->contains($this->id);
+    }
+
+    /**
+     * @return HasMany | User []
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class)->where('active', true);
     }
 }

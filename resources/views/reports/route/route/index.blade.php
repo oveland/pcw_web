@@ -228,6 +228,7 @@
 
         let form = $('.form-search-report');
         let reportContainer = $('.report-container');
+        let modalBinnacle = $('#modal-vehicles-binnacle');
 
         $(document).ready(function () {
             form.submit(function (e) {
@@ -245,6 +246,7 @@
                         },
                         complete:function(){
                             form.find('.btn-search-report').removeClass(loadingClass);
+                            modalBinnacle.modal('hide');
                         },
                         error: function (data) {
                             reportContainer.empty().fadeIn();

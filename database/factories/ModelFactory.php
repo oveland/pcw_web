@@ -11,8 +11,12 @@
 |
 */
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+/** @var Factory $factory */
+
+use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Factory;
+
+$factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [

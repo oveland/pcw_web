@@ -335,6 +335,11 @@ class DispatchRegister extends Model
     {
         if ($this->inProgress()) {
             $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+
+            if (!$currentSensor || !isset($currentSensor->sensorCounter)) {
+                return 0;
+            }
+
             $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
             return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
         }
@@ -357,6 +362,11 @@ class DispatchRegister extends Model
     {
         if ($this->inProgress()) {
             $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+
+            if (!$currentSensor || !isset($currentSensor->sensorRecorderCounter)) {
+                return 0;
+            }
+
             $hasReset = ($currentSensor->sensorRecorderCounter < $this->initial_sensor_recorder);
             return $currentSensor->sensorRecorderCounter - ($hasReset ? 0 : $this->initial_sensor_recorder);
         }
