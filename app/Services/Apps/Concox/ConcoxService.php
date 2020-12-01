@@ -190,10 +190,11 @@ class ConcoxService
                 if ($gpsVehicle || true) {
 
 
-//                    $vehicle = $gpsVehicle->vehicle; // TODO: implement logic for associate Imei Concox with vehicle
-//                    $vehicle = Vehicle::find(2150); // Vehicle 87 Yumbeños
-//                    $vehicle = Vehicle::find(1905); // Vehicle 1325 Tupal
-                    $vehicle = Vehicle::find(1207); // Vehicle 322 Alameda
+//                    $vehicle = $gpsVehicle->vehicle; //   TODO: implement logic for associate Imei Concox with vehicle
+//                    $vehicle = Vehicle::find(2150); //    87 Yumbeños
+                    $vehicle = Vehicle::find(1199); //  566 Yumbeños
+//                    $vehicle = Vehicle::find(1905); //    1325 Tupal
+//                    $vehicle = Vehicle::find(1207); //    322 Alameda
 
                     $year = collect($photoData)->get(2);
                     $month = collect($photoData)->get(3);

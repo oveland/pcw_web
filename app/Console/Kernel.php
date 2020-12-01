@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
 //            $schedule->command('rocket:take-photo --vehicle-plate=VCI-427')->cron('*/2 * * * *');
 //                ->between('05:00', '19:00');
 
-            $schedule->command('concox:take-photo --camera=1')->cron('*/2 * * * *')->between('03:48', '19:00');
+            $schedule->command('concox:take-photo --camera=1')->cron('*/2 * * * *')->between('05:00', '22:00');
 
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
