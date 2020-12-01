@@ -190,6 +190,8 @@ class PhotoService
                         'id' => $dr,
                         'number' => $dispatchRegister->round_trip,
                         'route' => $dispatchRegister->route->name,
+                        'from' => $dispatchRegister->departure_time,
+                        'to' => $dispatchRegister->arrival_time,
                         'count' => $lastHistoricByTurn->passengers->totalInRoundTrip,
 
                         'prevCount' => $firstHistoricByTurn->passengers->totalInRoundTrip,
@@ -367,6 +369,8 @@ class PhotoService
 
                 $roundTrip = null;
                 $routeName = null;
+                $from = null;
+                $to = null;
 
                 $dr = $photo->dispatchRegister;
                 $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prevPhoto->dispatch_register_id || $prevPhoto->id == $photo->id;
@@ -384,6 +388,8 @@ class PhotoService
                 if ($dr) {
                     $roundTrip = $dr->round_trip;
                     $routeName = $dr->route->name;
+                    $from = $dr->departure_time;
+                    $to = $dr->arrival_time;
 //                    $totalPersons += $firstPhotoInRoundTrip ? $currentOccupation->seatingOccupied->count() : $newPersons;
                     $totalPersons += $newPersons;
                 }
@@ -392,6 +398,8 @@ class PhotoService
                     'id' => $dr ? $dr->id : null,
                     'number' => $roundTrip,
                     'route' => $routeName,
+                    'from' => $from,
+                    'to' => $to,
                     'persons' => $personsByRoundTrip,
                     'count' => $personsByRoundTrip,
 

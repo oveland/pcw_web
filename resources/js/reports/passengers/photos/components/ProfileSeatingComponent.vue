@@ -13,8 +13,8 @@
                 <ul>
                     <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail">
                         <p v-show="roundTrip.number">
-                            <small>
-                                <i class="fa fa-exchange"></i> {{ roundTrip.number }}, {{ roundTrip.route }}: {{ roundTrip.count }}
+                            <small class="text-uppercase">
+                                {{ $t('Round trip') }} {{ roundTrip.number }} ({{ roundTrip.from }} - {{ roundTrip.to }}) ➤ {{ roundTrip.route }}: {{ roundTrip.count }}
                             </small>
                         </p>
                     </li>

@@ -7421,12 +7421,17 @@ var render = function() {
                                 ]
                               },
                               [
-                                _c("small", [
-                                  _c("i", { staticClass: "fa fa-exchange" }),
+                                _c("small", { staticClass: "text-uppercase" }, [
                                   _vm._v(
-                                    " " +
+                                    "\n                            " +
+                                      _vm._s(_vm.$t("Round trip")) +
+                                      " " +
                                       _vm._s(roundTrip.number) +
-                                      ", " +
+                                      " (" +
+                                      _vm._s(roundTrip.from) +
+                                      " - " +
+                                      _vm._s(roundTrip.to) +
+                                      ") ➤ " +
                                       _vm._s(roundTrip.route) +
                                       ": " +
                                       _vm._s(roundTrip.count) +
