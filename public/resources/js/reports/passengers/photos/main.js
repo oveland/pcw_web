@@ -7403,7 +7403,7 @@ var render = function() {
                 _vm.photo.passengers
                   ? _c("div", { staticClass: "passengers" }, [
                       _c(
-                        "ul",
+                        "ol",
                         _vm._l(_vm.photo.passengers.byRoundTrips, function(
                           roundTrip
                         ) {
@@ -7448,7 +7448,13 @@ var render = function() {
                       _c("p", { staticClass: "detail count-round-trips" }, [
                         _c("small", [
                           _vm._v(
-                            _vm._s(_vm.$t("Total by round trips")) +
+                            _vm._s(_vm.$t("Total")) +
+                              " " +
+                              _vm._s(_vm.photo.passengers.byRoundTrips.length) +
+                              " " +
+                              _vm._s(_vm.$t("round trips")) +
+                              ", " +
+                              _vm._s(_vm.$t("passengers")) +
                               ": " +
                               _vm._s(_vm.photo.passengers.total)
                           )
@@ -7588,7 +7594,7 @@ var render = function() {
     _c("div", { staticClass: "panel-body p-b-15" }, [
       _c("div", { staticClass: "form-input-flat" }, [
         _vm.admin
-          ? _c("div", { staticClass: "col-md-3" }, [
+          ? _c("div", { staticClass: "col-md-2" }, [
               _c("div", { staticClass: "form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v(_vm._s(_vm.$t("Company")))
@@ -7628,7 +7634,7 @@ var render = function() {
             ])
           : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
+        _c("div", { staticClass: "col-md-2" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [_vm._v("Vehicle")]),
             _vm._v(" "),
@@ -7660,7 +7666,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
+        _c("div", { staticClass: "col-md-2" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [
               _vm._v("Date report")
@@ -7691,7 +7697,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
+        _c("div", { staticClass: "col-md-2" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [_vm._v(" ")]),
             _vm._v(" "),

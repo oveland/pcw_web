@@ -10,7 +10,7 @@
                 </p>
             </div>
             <div class="passengers" v-if="photo.passengers">
-                <ul>
+                <ol>
                     <li v-for="roundTrip in photo.passengers.byRoundTrips" class="detail">
                         <p v-show="roundTrip.number">
                             <small class="text-uppercase">
@@ -18,9 +18,9 @@
                             </small>
                         </p>
                     </li>
-                </ul>
+                </ol>
                 <p class="detail count-round-trips">
-                    <small>{{ $t('Total by round trips') }}: {{ photo.passengers.total }}</small>
+                    <small>{{ $t('Total') }} {{ photo.passengers.byRoundTrips.length }} {{ $t('round trips') }}, {{ $t('passengers') }}: {{ photo.passengers.total }}</small>
                 </p>
             </div>
         </div>

@@ -7,7 +7,7 @@
         </div>
         <div class="panel-body p-b-15">
             <div class="form-input-flat">
-                <div class="col-md-3" v-if="admin">
+                <div class="col-md-2" v-if="admin">
                     <div class="form-group">
                         <label class="control-label">{{ $t('Company') }}</label>
                         <div class="form-group">
@@ -18,7 +18,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">Vehicle</label>
                         <div class="form-group">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">Date report</label>
                         <div class="input-group col-md-12">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">&nbsp;</label>
                         <div class="input-group col-md-12">
