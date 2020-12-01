@@ -14,12 +14,14 @@ use App\Models\Apps\Rocket\CurrentPhoto;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
+use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\PerfilSeat;
 use Carbon\Carbon;
 use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Image;
 use Storage;
@@ -90,7 +92,8 @@ class PhotoService
             $photo->vehicle()->associate($this->vehicle);
 
             $currentLocation = $this->vehicle->currentLocation;
-            $photo->dispatch_register_id = $currentLocation->dispatch_register_id ?? null;
+            $dr = $this->findDispatchRegisterByPhoto($photo);
+            $photo->dispatch_register_id = $dr ? $dr->id : null;
             $photo->location_id = $currentLocation->location_id ?? null;
 
             $image = $this->decodeImageData($data->get('img'));
@@ -193,6 +196,9 @@ class PhotoService
                         'from' => $dispatchRegister->departure_time,
                         'to' => $dispatchRegister->arrival_time,
                         'count' => $lastHistoricByTurn->passengers->totalInRoundTrip,
+                        'firstHistoricByTurn' => $firstHistoricByTurn,
+                        'historic' => collect($historicByTurn)->only(['time', 'passengers']),
+                        'lastHistoricByTurn' => $lastHistoricByTurn,
 
                         'prevCount' => $firstHistoricByTurn->passengers->totalInRoundTrip,
                         'currentCount' => $lastHistoricByTurn->passengers->totalInRoundTrip,
@@ -306,6 +312,29 @@ class PhotoService
     }
 
     /**
+     * @param Photo $photo
+     * @return DispatchRegister
+     */
+    public function findDispatchRegisterByPhoto(Photo $photo)
+    {
+        $dr = $photo->vehicle->currentLocation->dispatchRegister;
+
+        if ($dr && !($photo->date->toDateString() == $dr->date && $photo->date->toTimeString() >= $dr->departure_time && $photo->date->toTimeString() <= $dr->arrival_time)) {
+            $dr = null;
+        }
+
+        if (!$dr) {
+            $dr = DispatchRegister::where('date', $photo->date->toDateString())
+                ->where('vehicle_id', $photo->vehicle->id)
+                ->where('departure_time', '<=', $photo->date)
+                ->where('arrival_time', '>=', $photo->date)
+                ->active()->first();
+        }
+
+        return $dr;
+    }
+
+    /**
      * @param null $date
      * @return Collection
      */
@@ -373,6 +402,16 @@ class PhotoService
                 $to = null;
 
                 $dr = $photo->dispatchRegister;
+
+                if ($dr === null) {
+                    $dr = $this->findDispatchRegisterByPhoto($photo);
+                    if ($dr) {
+                        $photo->dispatchRegister()->associate($dr);
+                        $photo->save();
+                        $photo->refresh();
+                    }
+                }
+
                 $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prevPhoto->dispatch_register_id || $prevPhoto->id == $photo->id;
 
 
@@ -422,7 +461,7 @@ class PhotoService
 
                 $historic->push((object)[
                     'id' => $photo->id,
-                    'time' => $photo->date->format('H:i:s') . '' . $photo->id,
+                    'time' => $photo->date->format('H:i:s.u') . '' . $photo->id,
                     'drId' => $photo->dispatch_register_id,
                     'details' => $details,
                     'rekognitionCounts' => $rekognitionCounts,
