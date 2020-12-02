@@ -218,7 +218,7 @@ class PhotoService
                     'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
                     'totalSumOccupied' => $historic->count() ? $historic->last()->passengers->totalSumOccupied : 0,
                     'totalSumReleased' => $historic->count() ? $historic->last()->passengers->totalSumReleased : 0
-                ],
+                ]
             ];
         }
 
@@ -343,6 +343,7 @@ class PhotoService
         $historic = collect([]);
 
         $photos = Photo::findAllByVehicleAndDate($this->vehicle, $date ? $date : Carbon::now());
+//            ->where('id', 53717);
 
         if ($photos->isNotEmpty()) {
             $prevPhoto = $photos->first();
@@ -403,14 +404,14 @@ class PhotoService
 
                 $dr = $photo->dispatchRegister;
 
-                if ($dr === null) {
-                    $dr = $this->findDispatchRegisterByPhoto($photo);
-                    if ($dr) {
-                        $photo->dispatchRegister()->associate($dr);
-                        $photo->save();
-                        $photo->refresh();
-                    }
-                }
+//                if ($dr === null) {
+//                    $dr = $this->findDispatchRegisterByPhoto($photo);
+//                    if ($dr) {
+//                        $photo->dispatchRegister()->associate($dr);
+//                        $photo->save();
+//                        $photo->refresh();
+//                    }
+//                }
 
                 $firstPhotoInRoundTrip = $photo->dispatch_register_id != $prevPhoto->dispatch_register_id || $prevPhoto->id == $photo->id;
 

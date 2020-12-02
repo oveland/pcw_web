@@ -67,17 +67,17 @@ class ConcoxService
         $accessToken = $this->auth->getAccessToken();
 
         $from = request()->get('from');
-        $from = $from ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString().$from)->setTimezone('UTC')->toDateTimeString() : null;
+        $from = $from ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::yesterday()->toDateString() . $from)->setTimezone('UTC')->toDateTimeString() : null;
 
         $to = request()->get('to');
-        $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString().$to)->setTimezone('UTC')->toDateTimeString() : null;
-
-        if(request()->get('dump')){
-            dump($from, $to, $page);
-        }
+        $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::yesterday()->toDateString() . $to)->setTimezone('UTC')->toDateTimeString() : null;
 
         $starTime = $from ? $from : Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString();
         $endTime = $to ? $to : Carbon::now('UTC')->toDateTimeString();
+
+        if (request()->get('dump')) {
+            dump("starTime = $starTime", " endTime = $endTime", "limit = $limit", "page = $page");
+        }
 
         if ($accessToken) {
             $this->auth->setPrivateParams([
@@ -98,8 +98,8 @@ class ConcoxService
                 $photos = collect($request->get('result'))->sortByDesc('create_time');
             }
 
-            if(request()->get('dump')){
-                dd($photos);
+            if (request()->get('dump')) {
+                dump($request, $photos);
             }
 
         }
@@ -161,9 +161,10 @@ class ConcoxService
      * @param string $camera
      * @param int $minutesAgo
      * @param int $limit
+     * @param int $page
      * @return Collection
      */
-    public function syncPhotos($camera = '1', $minutesAgo = 3, $limit = 2)
+    public function syncPhotos($camera = '1', $minutesAgo = 3, $limit = 2, $page = 0)
     {
         $response = collect([
             'success' => true,
@@ -172,7 +173,7 @@ class ConcoxService
         ]);
 
         $photoService = new PhotoService();
-        $photos = $this->getPhoto($camera, $minutesAgo, $limit);
+        $photos = $this->getPhoto($camera, $minutesAgo, $limit, $page);
 
         $messages = collect([]);
         foreach ($photos as $photo) {
@@ -223,6 +224,10 @@ class ConcoxService
                     $response->put('success', $successSaved);
                     if (!$successSaved) {
                         $response->put('message', $saved->response->message);
+                    }
+
+                    if (request()->get('dump')) {
+                        dump($saved);
                     }
 
                 } else {
