@@ -8,7 +8,7 @@ use App\Models\Vehicles\Vehicle;
 
 class ConfigProfileService
 {
-    protected const THRESHOLD_ACTIVATE = 4;
+    protected const THRESHOLD_ACTIVATE = 2;
     protected const THRESHOLD_RELEASE = 3;
 
     /**

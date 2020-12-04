@@ -8,6 +8,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\API\Apps\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Collection;
 use Image;
 
@@ -67,10 +68,10 @@ class ConcoxService
         $accessToken = $this->auth->getAccessToken();
 
         $from = request()->get('from');
-        $from = $from ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::yesterday()->toDateString() . $from)->setTimezone('UTC')->toDateTimeString() : null;
+        $from = $from ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString() . $from)->setTimezone('UTC')->toDateTimeString() : null;
 
         $to = request()->get('to');
-        $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::yesterday()->toDateString() . $to)->setTimezone('UTC')->toDateTimeString() : null;
+        $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString() . $to)->setTimezone('UTC')->toDateTimeString() : null;
 
         $starTime = $from ? $from : Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString();
         $endTime = $to ? $to : Carbon::now('UTC')->toDateTimeString();
@@ -176,6 +177,9 @@ class ConcoxService
         $photos = $this->getPhoto($camera, $minutesAgo, $limit, $page);
 
         $messages = collect([]);
+
+        $messages->push("Sync " . count($photos) . " photos = minutesAgo = $minutesAgo, limit = $limit, page = $page");
+
         foreach ($photos as $photo) {
             $fileUrl = $photo->file_URL;
             $fileUrlData = explode("/", $fileUrl);
@@ -206,28 +210,35 @@ class ConcoxService
 
                     $photoDate = Carbon::createFromFormat('YmdHis', "$year$month$day$hour$minutes$seconds");
 
-                    $image = Image::make($fileUrl)
+                    sleep(1); // for prevent overload limit request to Jimilab Open API
+
+                    try {
+                        $image = Image::make($fileUrl)
 //                        ->rotate(180)
-                        ->encode('data-url');
+                            ->encode('data-url');
 
-                    $data = [
-                        'date' => $photoDate->toDateTimeString(),
-                        'img' => $image,
-                        'type' => 'concox',
-                        'side' => $photo->camera,
-                        'uid' => $photoUId
-                    ];
+                        $data = [
+                            'date' => $photoDate->toDateTimeString(),
+                            'img' => $image,
+                            'type' => 'concox',
+                            'side' => $photo->camera,
+                            'uid' => $photoUId
+                        ];
 
-                    $photoService->for($vehicle);
-                    $saved = $photoService->saveImageData($data);
-                    $successSaved = $saved->response->success;
-                    $response->put('success', $successSaved);
-                    if (!$successSaved) {
-                        $response->put('message', $saved->response->message);
-                    }
+                        $photoService->for($vehicle);
+                        $saved = $photoService->saveImageData($data);
+                        $successSaved = $saved->response->success;
+                        $response->put('success', $successSaved);
+                        if (!$successSaved || true) {
+                            $messages->push($photoDate->toTimeString() . " " . $saved->response->message);
+                        }
 
-                    if (request()->get('dump')) {
-                        dump($saved);
+                        if (request()->get('dump')) {
+                            dump($saved->response);
+                        }
+                    } catch (Exception $e) {
+                        $response->put('success', false);
+                        $messages->push("Error sync photo $fileUrl" . $e->getMessage());
                     }
 
                 } else {
