@@ -35,7 +35,7 @@
             <div class="portlet-body">
                 <div class="tab-pane fade active in" id="tab-report-photos">
                     <profile-seating-component :search-params="searchParams" api-url="{{ route('report.passengers.photos') }}"></profile-seating-component>
-                    <report-photo-component :search-params="searchParams" api-url="{{ route('report.passengers.photos') }}"></report-photo-component>
+                    <report-photo-component v-if="search.loadPhotos" :search-params="searchParams" api-url="{{ route('report.passengers.photos') }}"></report-photo-component>
                 </div>
             </div>
         </div>

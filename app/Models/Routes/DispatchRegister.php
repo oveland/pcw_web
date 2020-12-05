@@ -389,7 +389,7 @@ class DispatchRegister extends Model
             ->get();
     }
 
-    public function getAPIFields()
+    public function getAPIFields($short = false)
     {
         $passengers = (object)[
             'recorders' => (object)[
@@ -403,6 +403,28 @@ class DispatchRegister extends Model
         $driveName = $driver ? $driver->fullName() : __('Unassigned');
 
         $takings = $this->takings;
+
+        if($short){
+            return (object)[
+                'id' => $this->id,
+                'date' => $this->getParsedDate()->toDateString(),
+                'turn' => $this->turn,
+
+                'round_trip' => $this->round_trip,
+                'roundTrip' => $this->round_trip,
+
+                'departure_time' => $this->departure_time,
+                'departureTime' => $this->departure_time,
+
+                'arrival_time_scheduled' => $this->arrival_time_scheduled,
+                'arrivalTimeScheduled' => $this->arrival_time_scheduled,
+
+                'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
+                'arrivalTime' => $this->complete() ? $this->arrival_time : '--:--:--',
+
+                'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
+            ];
+        }
 
         return (object)[
             'id' => $this->id,

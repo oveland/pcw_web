@@ -28,7 +28,8 @@ let adminRocketView = new Vue({
             company: {},
             vehicles: [],
             vehicle: {},
-            date: moment().format("YYYY-MM-DD")
+            date: moment().format("YYYY-MM-DD"),
+            loadPhotos: false
         },
         searchParams: {}
     },

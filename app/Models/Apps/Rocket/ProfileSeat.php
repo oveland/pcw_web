@@ -78,10 +78,12 @@ class ProfileSeat extends Model
      */
     function scopeFindByVehicle(Builder $query, Vehicle $vehicle)
     {
-        $profileSeat = $query->where('vehicle_id', $vehicle->id)->first();
-        $profileSeat = $profileSeat ? $profileSeat : new ProfileSeat();
-        $profileSeat->vehicle()->associate($vehicle);
-        $profileSeat->save();
+        $profileSeat = $query->with('vehicle')->where('vehicle_id', $vehicle->id)->first();
+        if (!$profileSeat) {
+            $profileSeat = new ProfileSeat();
+            $profileSeat->vehicle()->associate($vehicle);
+            $profileSeat->save();
+        }
         return $profileSeat;
     }
 }

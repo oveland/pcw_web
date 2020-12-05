@@ -4,12 +4,14 @@
 namespace App\Models\Apps\Rocket\Traits;
 
 
+use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Photos\PhotoRekognitionService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use App;
 
@@ -21,7 +23,9 @@ trait PhotoGlobals
      */
     public function photoRekognitionService($type)
     {
-        return App::make("rocket.photo.rekognition.$type", ['vehicle' => $this->vehicle]);
+        $profileSeating = $this->vehicle->profile_seating;
+
+        return App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating]);
     }
 
     public function getDateAttribute($date)
@@ -80,7 +84,7 @@ trait PhotoGlobals
             'side' => Str::ucfirst(__($this->side)),
             'type' => Str::ucfirst(__($this->type)),
             'vehicle_id' => $this->vehicle_id,
-            'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
+            'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields(true) : null,
             'persons' => $this->data,
             'occupation' => null
         ];

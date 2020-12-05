@@ -2,7 +2,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading hide">
             <button type="button" class="btn btn-success btn-sm btn-search-report" @click="setSearch()">
-                <i class="fa fa-search"></i> Search
+                <i class="fa fa-search"></i> {{ $t('Search') }}
             </button>
         </div>
         <div class="panel-body p-b-15">
@@ -20,7 +20,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="control-label">Vehicle</label>
+                        <label class="control-label">{{ $t('Vehicle') }}</label>
                         <div class="form-group">
                             <multiselect track-by="number" label="number" :options="search.vehicles"
 										 v-model="search.vehicle"
@@ -32,12 +32,26 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="control-label">Date report</label>
+                        <label class="control-label">{{ $t('Date') }}</label>
                         <div class="input-group col-md-12">
                             <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" width="100%"></date-picker>
                         </div>
                     </div>
                 </div>
+				<div class="col-md-2">
+					<div class="form-group">
+						<label class="control-label">{{ $t('Options') }}</label>
+						<div class="input-group col-md-12 p-t-5">
+							<div class="md-checkbox">
+								<input type="checkbox" v-model="search.loadPhotos" id="check-show-photos" class="md-check">
+								<label for="check-show-photos">
+									<span class="inc"></span>
+									<span class="check"></span>
+									<span class="box"></span> {{ $t('Load photos') }} </label>
+							</div>
+						</div>
+					</div>
+				</div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">&nbsp;</label>

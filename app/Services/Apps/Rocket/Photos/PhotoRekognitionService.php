@@ -31,19 +31,25 @@ PhotoRekognitionService
      */
     public $config;
 
+    /**
+     * @var ProfileSeat
+     */
+    private $profileSeating;
+
 
     /**
      * PhotoRekognitionService constructor.
-     * @param Vehicle $vehicle
      * @param PhotoZone $zoneDetected
+     * @param ProfileSeat $profileSeating
      */
-    function __construct(Vehicle $vehicle, PhotoZone $zoneDetected)
+    function __construct(PhotoZone $zoneDetected, ProfileSeat $profileSeating)
     {
-        $this->vehicle = $vehicle;
+        $this->vehicle = $profileSeating->vehicle;
         $this->zoneDetected = $zoneDetected;
 
-        $configService = new ConfigProfileService($vehicle);
+        $configService = new ConfigProfileService($this->vehicle);
         $this->config = $configService->type($this->type);
+        $this->profileSeating = $profileSeating;
     }
 
     /**
@@ -225,18 +231,22 @@ PhotoRekognitionService
     function processOccupation(PhotoInterface $photo)
     {
         $occupation = $this->getDataOccupation($photo);
-        $profileSeating = ProfileSeat::findByVehicle($this->vehicle);
-
-        return $this->occupationParams($profileSeating, $occupation);
+        return $this->occupationParams($occupation);
     }
 
     /**
-     * @param $profileSeating
      * @param $occupation
      * @return object
      */
-    function occupationParams($profileSeating, $occupation)
+    function occupationParams($occupation)
     {
+        $profileSeating = $this->profileSeating;
+
+        if (!$profileSeating) {
+            $profileSeating = $this->vehicle->profile_seating;
+            \Log::info("Load ProfileSeat!!");
+        }
+
         $occupation = (object)$occupation;
 
         $personDraws = collect([]);

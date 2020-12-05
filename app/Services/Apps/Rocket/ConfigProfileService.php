@@ -17,12 +17,24 @@ class ConfigProfileService
     private $vehicle;
 
     /**
+     * @var ProfileSeat
+     */
+    private $profileSeat;
+
+    /**
+     * @var ConfigProfile
+     */
+    private $configProfile;
+
+    /**
      * ConfigProfileService constructor.
      * @param Vehicle $vehicle
      */
     function __construct(Vehicle $vehicle)
     {
         $this->vehicle = $vehicle;
+        $this->profileSeat = $vehicle->profile_seating;
+        $this->configProfile = $vehicle->configProfile;
     }
 
     /**
@@ -40,7 +52,7 @@ class ConfigProfileService
      */
     public function get()
     {
-        $config = ConfigProfile::where('vehicle_id', $this->vehicle->id)->first();
+        $config = $this->configProfile;
 
         if (!$config) {
             $config = new ConfigProfile();
@@ -61,14 +73,12 @@ class ConfigProfileService
     {
         $config = config('rocket.' . $this->vehicle->company_id);
 
-        $profileSeating = $this->getProfileSeating();
-
 //        foreach ($config as $type => &$configType) {
 //
 //        }
-        
+
         $seatingConfig = [];
-        foreach ($profileSeating->occupation as $seat) {
+        foreach ($this->profileSeat->occupation as $seat) {
             $number = $seat['number'];
 
             $rActivate = request()->get('activate');
@@ -90,13 +100,5 @@ class ConfigProfileService
         $config['seating'] = $seatingConfig;
 
         return $config;
-    }
-
-    /**
-     * @return ProfileSeat
-     */
-    function getProfileSeating()
-    {
-        return ProfileSeat::findByVehicle($this->vehicle);
     }
 }

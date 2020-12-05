@@ -89,9 +89,10 @@ class Photo extends Model implements PhotoInterface
      */
     function scopeFindAllByVehicleAndDate(Builder $query, Vehicle $vehicle, $date)
     {
-        return $query
-            ->where('vehicle_id', $vehicle->id)
+        $query =  $query
+//            ->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
             ->whereDate('date', $date)
+            ->where('vehicle_id', $vehicle->id)
             ->orderBy('date')
 
             //->where('id' , '>', 44452) // Empty
@@ -143,6 +144,9 @@ class Photo extends Model implements PhotoInterface
 
 //            ->limit(30)->offset(220)
             ->limit(600)
+            ->with(['dispatchRegister', 'vehicle'])
             ->get();
+
+        return $query;
     }
 }

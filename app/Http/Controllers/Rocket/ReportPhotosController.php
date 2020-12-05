@@ -62,7 +62,7 @@ class ReportPhotosController extends Controller
                     $photos = $this->photoService->for($vehicle)->getHistoric($date);
                     $response->photos = $photos->sortByDesc('time')->values();
 
-                    $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
+                    $profileSeat = $vehicle->profile_seating;
                     $response->seating = $profileSeat ? $profileSeat->occupation : [];
                 } else {
                     $response->success = false;
@@ -160,7 +160,6 @@ class ReportPhotosController extends Controller
 //                    $photo = Photo::find(14210); // 5 / 5       (1, 5, 12, 16, 18)
 
 
-
 //                        $photo->processRekognition(true, 'persons_and_faces');
 //                        $photo->save();
 
@@ -168,7 +167,7 @@ class ReportPhotosController extends Controller
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
 
-                    $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
+                    $profileSeat = $vehicle->profile_seating;
                     $response->seating = $profileSeat ? $profileSeat->occupation : [];
                 } else {
                     $response->success = false;

@@ -54,7 +54,7 @@ class ConfigProfile extends Model
      * @param $type
      * @return object
      */
-    function type($type): object
+    function type($type)
     {
         return (object)collect($this->config)->get($type);
     }

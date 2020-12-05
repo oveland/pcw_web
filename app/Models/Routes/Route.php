@@ -61,8 +61,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $control_points_count
  * @property-read int|null $current_dispatch_registers_count
  * @property-read int|null $sub_routes_count
- * * @property-read RouteTariff $tariff
- * @property-read \RouteTariff $tariff
+ * @property-read RouteTariff $tariff
+ * @property-read RouteTariff|null $routeTariff
  */
 class Route extends Model
 {
@@ -131,12 +131,16 @@ class Route extends Model
      */
     function subRoutes()
     {
-        if( $this->as_group ){
+        if ($this->as_group) {
             return $this->hasMany(Route::class)->active();
-        }
-        else{
+        } else {
             return $this->hasMany(Route::class)->where('id', $this->id);
         }
+    }
+
+    public function routeTariff()
+    {
+        return $this->hasOne(RouteTariff::class);
     }
 
     /**
@@ -144,7 +148,7 @@ class Route extends Model
      */
     function getTariffAttribute()
     {
-        $tariff = RouteTariff::where('route_id', $this->id)->first();
+        $tariff = $this->routeTariff;
         if (!$tariff) {
             $tariff = new RouteTariff();
             $tariff->route()->associate($this);

@@ -21,7 +21,6 @@ use Carbon\Carbon;
 use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Image;
 use Storage;
@@ -50,6 +49,17 @@ class PhotoService
     private $seatOccupationService;
 
 
+    /**
+     * @var ProfileSeat
+     */
+    private $profileSeating;
+
+    /**
+     * @var Collection
+     */
+    private $recognitionServices;
+
+
     function __construct()
     {
         $this->storage = Storage::disk(self::DISK);
@@ -63,6 +73,13 @@ class PhotoService
     {
         $this->vehicle = $vehicle;
         $this->seatOccupationService = new SeatOccupationService($vehicle);
+        $this->profileSeating = $vehicle->profile_seating;
+
+        $this->recognitionServices = collect([]);
+
+        foreach (['persons', 'faces'] as $type) {
+            $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $this->profileSeating]));
+        }
 
         return $this;
     }
@@ -232,12 +249,11 @@ class PhotoService
         switch ($type) {
             case 'persons':
             case 'faces':
-                return $this->getRekognitionService($type)->processOccupation($photo);
+                return $this->recognitionServices->get($type)->processOccupation($photo);
                 break;
             case 'persons_and_faces':
-                $profileSeating = ProfileSeat::findByVehicle($this->vehicle);
-                $personsRekognition = $this->getRekognitionService('persons');
-                $facesRekognition = $this->getRekognitionService('faces');
+                $personsRekognition = $this->recognitionServices->get('persons');
+                $facesRekognition = $this->recognitionServices->get('faces');
 
                 $personsOccupation = $personsRekognition->processOccupation($photo);
                 $facesOccupation = $facesRekognition->processOccupation($photo);
@@ -251,7 +267,7 @@ class PhotoService
                 $occupation = $this->filterDrawsInsideOverlap($occupation);
 //                $occupation->type = $type;
 
-                return $personsRekognition->occupationParams($profileSeating, $occupation);
+                return $personsRekognition->occupationParams($occupation);
 
                 break;
         }
@@ -646,14 +662,5 @@ class PhotoService
         } catch (FileNotFoundException $e) {
             return null;
         }
-    }
-
-    /**
-     * @param string $type
-     * @return PhotoRekognitionService
-     */
-    function getRekognitionService($type = self::REKOGNITION_TYPE)
-    {
-        return App::make("rocket.photo.rekognition.$type", ['vehicle' => $this->vehicle]);
     }
 }

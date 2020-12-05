@@ -2,6 +2,8 @@
 
 namespace App\Models\Vehicles;
 
+use App\Models\Apps\Rocket\ConfigProfile;
+use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\BEA\ManagementCost;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
@@ -67,6 +69,9 @@ use Sofa\Eloquence\Mappable;
  * @property-read int|null $maintenance_count
  * @property-read int|null $peak_and_plate_count
  * @property string $plate
+ * @property-read ConfigProfile|null $configProfile
+ * @property-read ProfileSeat $profile_seating
+ * @property-read \App\Models\Apps\Rocket\ProfileSeat|null $profileSeat
  */
 class Vehicle extends Model
 {
@@ -200,5 +205,35 @@ class Vehicle extends Model
     public function costsBEA()
     {
         return $this->hasMany(ManagementCost::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function configProfile()
+    {
+        return $this->hasOne(ConfigProfile::class);
+    }
+
+    /**
+     * @return HasOne | ProfileSeat
+     */
+    function profileSeat()
+    {
+        return $this->hasOne(ProfileSeat::class);
+    }
+
+    /**
+     * @return ProfileSeat
+     */
+    public function getProfileSeatingAttribute()
+    {
+        $profileSeat = $this->profileSeat;
+        if (!$profileSeat) {
+            $profileSeat = new ProfileSeat();
+            $profileSeat->vehicle()->associate($this);
+            $profileSeat->save();
+        }
+        return $profileSeat;
     }
 }
