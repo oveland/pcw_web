@@ -9,7 +9,7 @@ use App\Models\Vehicles\Vehicle;
 class ConfigProfileService
 {
     protected const THRESHOLD_ACTIVATE = 2;
-    protected const THRESHOLD_RELEASE = 3;
+    protected const THRESHOLD_RELEASE = 2;
 
     /**
      * @var Vehicle
@@ -87,10 +87,20 @@ class ConfigProfileService
             $activate = $rActivate ? $rActivate : self::THRESHOLD_ACTIVATE;
             $release = $rRelease ? $rRelease : self::THRESHOLD_RELEASE;
 
-//            if (collect([15, 18])->contains(intval($number))) {
-//                $activate = 1;
-//                $release = 2;
-//            }
+            if (collect([1, 2, 3, 4, 5, 6, 7, 8])->contains(intval($number))) {
+                $activate = 4;
+                $release = 1;
+            }
+
+            if (collect([9, 10, 11, 12, 13, 14, 19, 20, 21,22, 23])->contains(intval($number))) {
+                $activate = 5;
+                $release = 5;
+            }
+
+            if (collect([15, 16, 17, 18, ])->contains(intval($number))) {
+                $activate = 1;
+                $release = 3;
+            }
 
             $seatingConfig[$number] = [
                 'persistence' => compact(['activate', 'release'])
