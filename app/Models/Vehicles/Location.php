@@ -3,6 +3,7 @@
 namespace App\Models\Vehicles;
 
 use App\Http\Controllers\Utils\Geolocation;
+use App\Models\Passengers\Passenger;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
 use Carbon\Carbon;
@@ -111,6 +112,7 @@ trait BindsDynamically
  * @method static Builder|Location whereCurrentMileage($value)
  * @method static Builder|Location withSpeeding()
  * @property-read AddressLocation $addressLocation
+ * @property-read Passenger $passenger
  * @property string|null $ard_off_road
  * @method static Builder|Location whereArdOffRoad($value)
  * @property string|null $date
@@ -231,6 +233,14 @@ class Location extends Model
     public function addressLocation()
     {
         return $this->hasOne(AddressLocation::class, 'location_id', 'id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function passenger()
+    {
+        return $this->hasOne(Passenger::class, 'location_id', 'id')->orderByDesc('id');
     }
 
     public function getAddress($refresh = false, $force = false)

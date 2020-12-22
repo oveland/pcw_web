@@ -45,8 +45,9 @@ class BinnacleService
 
         DB::beginTransaction();
 
-        $binnacle = $binnacle ? $binnacle : new Binnacle(['date' => Carbon::now()]);
+        $binnacle = $binnacle ? $binnacle : new Binnacle();
         $binnacle = $binnacle->fill([
+            'date' => $request->get('date'),
             'observations' => $request->get('observations')
         ]);
 

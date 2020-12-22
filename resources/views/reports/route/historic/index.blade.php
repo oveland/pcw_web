@@ -27,6 +27,27 @@
             font-size: 0.8em !important;
             margin-bottom: 5px !important;
         }
+
+        .btn-passengers-info {
+            width: 10%;
+            position: absolute !important;
+            left: 45%;
+            bottom: -45px;
+            font-size: 1.5rem !important;
+        }
+        
+        @media only screen and (max-width: 600px) {
+  
+  
+        .btn-passengers-info {
+            width: 50%;
+            position: absolute !important;
+            left: 25%;
+            bottom: -45px;
+            font-size: 1.5rem !important;
+        }
+  
+}
     </style>
 @endsection
 
@@ -151,18 +172,28 @@
                     </label>
                 </div>
                 <input id="range_reports" type="text" />
-                <p class="help-block text-white show-info">
+                <p class="help-block text-white show-info text-center" style="display: flex">
                     <small class="col-md-4 col-sm-12 col-xs-12 p-0 text-left">
                         <span><i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')</span>
                         <span class="hidden-xs">
                             @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
                         </span>
                     </small>
+
+                    @if(true && (Auth::user()->isAdmin() || Auth::user()->company_id == 17))
+                    <span class="btn btn-lime btn- btn-circle btn-passengers-info tooltips" title="@lang('Period') | @lang('Average') (s)">
+                        <i class="fa fa-users"></i> <span class="total-passengers"></span> @lang('Passengers')
+                    </span>
+                    @endif
+
                     <small class="col-md-8 col-sm-12 col-xs-12 p-0 text-right">
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Time')">
+                    
+                        <span class="btn btn-default btn- btn-circle btn-historic-info tooltips" title="@lang('Time')" style="font-size: 1.5rem !important;">
                             <i class="fa fa-clock-o"></i> <span class="time"></span>
                         </span>
+                    
+                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
+                       
 
                         @if(Auth::user()->isAdmin())
                         <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Period') | @lang('Average') (s)">

@@ -596,11 +596,17 @@ class DispatchRegister extends Model
 
     public function getPassengersAttribute()
     {
+        $count = intval($this->end_recorder) - intval($this->start_recorder);
+
+        if($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000){
+            $count = (1000000 - intval($this->start_recorder)) + intval($this->end_recorder);
+        }
+
         return (object)[
             'recorders' => (object)[
                 'start' => $this->start_recorder,
                 'end' => $this->end_recorder,
-                'count' => intval($this->end_recorder) - intval($this->start_recorder),
+                'count' => $count,
                 'mileage' => $this->mileage
             ]
         ];

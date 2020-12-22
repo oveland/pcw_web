@@ -53,8 +53,10 @@
                                     <th class="bg-inverse text-white">
                                         {{ $vehicle->number }}
                                     </th>
-                                    <td>
-                                        <label class="label label-{{ $type->css_class }} tooltips" data-title="{{ $type->description }}">{{ $type->name }}</label>
+                                    <td class="text-left">
+                                        <label class="label-type tooltips" data-title="{{ $type->description }}">
+                                            <i class='fa fa-circle text-{{ $type->css_class }}'></i> {{ $type->name }}
+                                        </label>
                                     </td>
                                     <td class="binnacle-observations text-left">{{ $binnacle->observations }}</td>
                                     <td>{{ $binnacle->date->toDateString() }}</td>

@@ -66,7 +66,7 @@
     </div>
 </div>
 
-<div class="form-group">
+<div class="form-group hide">
     <label for="notification-period" class="control-label col-md-4 field-required">@lang('Every (days)')</label>
     <div class="col-md-6">
         <input type="number" name="notification-period" id="notification-period" class="form-control col-md-12" value="{{ $binnacle ? $binnacle->notification->period : 30 }}">

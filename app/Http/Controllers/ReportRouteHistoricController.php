@@ -80,13 +80,15 @@ class ReportRouteHistoricController extends Controller
 
         $locations = Location::forDate($dateReport)->whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
             ->where('vehicle_id', $vehicleReport)
-            ->with(['vehicle', 'dispatchRegister', 'vehicleStatus'])
+            ->with(['vehicle', 'dispatchRegister', 'vehicleStatus', 'passenger'])
             ->orderBy('date');
         $locations = $locations->get();
 
         $dataLocations = collect([]);
 
         $lastLocation = $locations->first();
+
+        $totalPassengers = 0;
 
         foreach ($locations as $location) {
             $dispatchRegister = $location->dispatchRegister;
@@ -98,6 +100,8 @@ class ReportRouteHistoricController extends Controller
                 //$averagePeriod = intval($dataLocations->average('period')); // CAUTION this line take some long time!
                 $averagePeriod = "--";
             }
+
+            $totalPassengers = $location->passenger && $totalPassengers <= $location->passenger->total ? $location->passenger->total : $totalPassengers;
 
             $dataLocations->push((object)[
                 'time' => $location->date->format('H:i:s'),
@@ -122,8 +126,10 @@ class ReportRouteHistoricController extends Controller
                     'mainClass' => $location->vehicleStatus->main_class,
                 ],
                 'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
-                'vehicle' => $location->vehicle->getAPIFields()
+                'vehicle' => $location->vehicle->getAPIFields(),
+                'totalPassengers' => $totalPassengers
             ]);
+
             $lastLocation = $location;
         }
 

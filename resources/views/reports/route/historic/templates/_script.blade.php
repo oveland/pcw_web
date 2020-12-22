@@ -297,7 +297,7 @@
             const routeLabel = this.showInfo.find('.route');
             if (reportLocation.dispatchRegister) {
                 const dr = reportLocation.dispatchRegister;
-                routeLabel.text(dr.id + " " + dr.route.name).parent().fadeIn();
+                routeLabel.text(dr.route.name).parent().fadeIn();
                 this.showInfo.find('.mileage-route').text(reportLocation.routeDistance);
                 if (reportLocation.offRoad) {
                     routeLabel.parent().addClass('btn-danger').attr('title', '@lang('Off road vehicle')');
@@ -313,6 +313,7 @@
             this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
             this.showInfo.find('.speed').text(reportLocation.speed);
             this.showInfo.find('.current-mileage').text(reportLocation.currentMileage);
+            this.showInfo.find('.total-passengers').text(reportLocation.totalPassengers);
             if (reportLocation.speeding) {
                 this.showInfo.find('.speed').parent().addClass('btn-warning');
             } else {

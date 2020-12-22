@@ -5,6 +5,13 @@
         .issue-observations::first-letter{
             text-transform: uppercase;
         }
+
+        .label-type {
+            font-size: 1.3rem !important;
+            padding: 10px;
+            background: #d3d3d375;
+            margin: 0;
+        }
     </style>
 @endsection
 
@@ -57,7 +64,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="date-report" class="control-label field-required">
-                                        @lang('Date')
+                                        @lang('Expiration date')
                                     </label>
                                     <label class="text-bold">
                                         &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
@@ -100,7 +107,7 @@
                                         <div class="has-warning">
                                             <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                                 <label class="text-bold">
-                                                    <input id="sort-desc" class="vehicle-options" name="sort-desc" type="checkbox" value="true" checked> @lang('Show since the most recent')
+                                                    <input id="sort-desc" class="vehicle-options" name="sort-desc" type="checkbox" value="true" checked> @lang('Sort by date')
                                                 </label>
                                             </div>
                                         </div>
