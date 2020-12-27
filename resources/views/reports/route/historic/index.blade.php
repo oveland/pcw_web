@@ -9,12 +9,20 @@
     <!-- END PAGE LEVEL PLUGINS -->
 
     <style>
+        .btn-time {
+            font-size: 1.2rem !important;
+            color: #5200cb;
+            box-shadow: 0 0 2px 3px #ff00d394 !important;
+        }
+
         .range-reports {
             z-index: 1;
             padding-top: 10px;
             padding-bottom: 5px;
-            background: rgba(0, 12, 35, 0.59);
+            background: rgba(37, 37, 37, 0.7);
             color: white;
+            position: absolute;
+            width: 100%;
         }
 
         .range-reports .irs-bar, .range-reports .irs-bar-edge, .range-reports .irs-single {
@@ -28,26 +36,70 @@
             margin-bottom: 5px !important;
         }
 
-        .btn-passengers-info {
-            width: 10%;
-            position: absolute !important;
-            left: 45%;
-            bottom: -45px;
-            font-size: 1.5rem !important;
+        .passengers-frame-container, .passengers-frame {
+            clear: left !important;
+            background: #4c4c4c;
+            font-family: Consolas, monaco, monospace !important;
+            padding-right: 10px;
+            padding-left: 10px;
+            font-size: 1.1rem;
+            color: lightgrey;
+            margin-top: 5px;
+            border-radius: 5px
         }
-        
+
+        .btn-passengers-info {
+            width: 100%;
+            display: block;
+            /*position: absolute !important;*/
+            right: 0;
+            /*top: 82px;*/
+            font-size: 1.5rem !important;
+            border-radius: 0px !important;
+            z-index: 100000 !important;
+            transition: all ease-in-out 1s !important;
+        }
+
+        .passengers-label {
+            display: block;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .btn-passengers-info {
+
+            }
+        }
+
         @media only screen and (max-width: 600px) {
-  
-  
-        .btn-passengers-info {
-            width: 50%;
-            position: absolute !important;
-            left: 25%;
-            bottom: -45px;
-            font-size: 1.5rem !important;
+            .range-reports {
+                background: rgba(37, 37, 37, 0.45);
+                color: white;
+            }
+
+            .show-info-last{
+                padding-top: 5px !important;
+            }
+
+            .passengers-label {
+                display: inline-flex;
+                padding-left: 5px;
+            }
+
+            .passengers-label span{
+                margin-left: 5px;
+            }
+
+            .panel {
+                box-shadow: none;
+            }
+            .panel .panel-body {
+                padding: 0;
+            }
+
+            .form-actions{
+                text-align: center !important;
+            }
         }
-  
-}
     </style>
 @endsection
 
@@ -90,7 +142,7 @@
                         @endif
 
                         @if(Auth::user()->canSelectRouteReport())
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                     <div class="form-group">
@@ -138,14 +190,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-6">
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-actions">
                             <div class="form-group">
-                                <label class="control-label"><br></label>
+                                <label class="control-label hidden-xs"><br></label>
                                 <div class="form-group">
                                     <button id="search" type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report">
                                         <i class="fa fa-map-o"></i> @lang('Search')
                                     </button>
-                                    <a href="#" class="btn btn-lime btn-export form-export" style="display: none">
+                                    <a href="#" class="btn btn-lime btn-export form-export" style="display: nonse">
                                         <i class="fa fa-file-excel-o"></i> @lang('Export')
                                     </a>
                                 </div>
@@ -165,49 +217,87 @@
         <!-- begin content report -->
         <div class="loading-report col-md-12"></div>
         <div class="report-container col-md-12">
-            <div class="col-md-12 col-sm-12 col-xs-12 range-reports">
-                <div class="text-center" style="position: absolute;width: 100%">
-                    <label for="range_reports">
-                        <small class="text-muted">Deslice para reproducir recorrido</small>
-                    </label>
+            <div class="col-md-12 col-sm-12 col-xs-12" style="display: grid">
+                <div class="range-reports col-md-12">
+                    <div class="text-center" style="position: absolute;width: 100%">
+                        <label for="range_reports">
+                            <small class="text-muted">Deslice para reproducir recorrido</small>
+                        </label>
+                    </div>
+                    <input id="range_reports" type="text" />
+                    <div class="help-block text-white show-info m-b-0">
+                        <div class="col-md-4 col-sm-12 col-xs-12 p-0 hidden-xs">
+                            <span>
+                                <i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')
+                            </span>
+                            <span>
+                                @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
+                            </span>
+                        </div>
+
+                        <div class="col-md-4 col-sm-12 col-xs-12 p-0 text-center">
+                            <span class="btn btn-default btn- btn-circle btn-historic-info btn-time tooltips" title="@lang('Time') GPS">
+                                <i class="fa fa-clock-o"></i> <span class="time"></span>
+                            </span>
+
+                            @if(true && (Auth::user()->isAdmin() || Auth::user()->company_id == 17))
+                                <div class="btn-passengers-info tooltips active" title="@lang('Count passengers')">
+                                    <span class="passengers-label">
+                                        <i class="fa fa-users"></i> <span class="hidden-xs">@lang('Total'):</span> <span class="passengers-total"></span>
+                                    </span>
+                                    <small class="passengers-label">
+                                        <i class="fa fa-angle-double-up"></i> <span class="hidden-xs">@lang('Ascents'):</span> <span class="passengers-total-ascents"></span>
+                                    </small>
+
+                                    <small class="passengers-label">
+                                        <i class="fa fa-angle-double-down"></i> <span class="hidden-xs">@lang('Descents'):</span> <span class="passengers-total-descents"></span>
+                                    </small>
+
+                                    @if(Auth::user()->isAdmin())
+                                        <small class="passengers-label">
+                                            <span class="passengers-frame-container">
+                                                <i class="fa fa-clock-o"></i>
+                                                <span class="passengers-frame p-0">Frame counter</span>
+                                            </span>
+                                        </small>
+                                    @endif
+
+                                    <span class="passengers-within-round-trip hide" style="display: block;border-top: 1px solid white;margin-top: 5px ">
+                                        <small class="passengers-label">
+                                            <span class="passengers-route-name"></span>: <span class="passengers-route-in"></span> (<span class="passengers-route-out"></span>)
+                                        </small>
+
+                                        <small class="passengers-label">
+                                            <i class="fa fa-angle-double-up"></i> <span class="hidden-xs">@lang('Ascents'):</span> <span class="passengers-route-ascents"></span>
+                                        </small>
+
+                                        <small class="passengers-label">
+                                            <i class="fa fa-angle-double-down"></i> <span class="hidden-xs">@lang('Descents'):</span> <span class="passengers-route-descents"></span>
+                                        </small>
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
+
+
+                        <div class="col-md-4 col-sm-12 col-xs-12 p-0 text-right show-info-last">
+                            <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
+
+                            @if(Auth::user()->isAdmin() && false)
+                                <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Period') | @lang('Average') (s)">
+                                    <i class="ion-android-stopwatch"></i> <span class="period"></span>s | <span class="average-period"></span>s
+                                </span>
+                            @endif
+
+                            <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Speed')"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
+                            <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Mileage') @lang('in the day')"><i class='fa fa-road'></i> <span class="current-mileage">0</span> Km</span>
+                            <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle tooltips" title="@lang('Vehicle status')"><i class='fa fa-send'></i></span>
+                        </div>
+                    </div>
                 </div>
-                <input id="range_reports" type="text" />
-                <p class="help-block text-white show-info text-center" style="display: flex">
-                    <small class="col-md-4 col-sm-12 col-xs-12 p-0 text-left">
-                        <span><i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')</span>
-                        <span class="hidden-xs">
-                            @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
-                        </span>
-                    </small>
-
-                    @if(true && (Auth::user()->isAdmin() || Auth::user()->company_id == 17))
-                    <span class="btn btn-lime btn- btn-circle btn-passengers-info tooltips" title="@lang('Period') | @lang('Average') (s)">
-                        <i class="fa fa-users"></i> <span class="total-passengers"></span> @lang('Passengers')
-                    </span>
-                    @endif
-
-                    <small class="col-md-8 col-sm-12 col-xs-12 p-0 text-right">
-                    
-                        <span class="btn btn-default btn- btn-circle btn-historic-info tooltips" title="@lang('Time')" style="font-size: 1.5rem !important;">
-                            <i class="fa fa-clock-o"></i> <span class="time"></span>
-                        </span>
-                    
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
-                       
-
-                        @if(Auth::user()->isAdmin())
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Period') | @lang('Average') (s)">
-                            <i class="ion-android-stopwatch"></i> <span class="period"></span>s | <span class="average-period"></span>s
-                        </span>
-                        @endif
-
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Speed')"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Mileage') @lang('in the day')"><i class='fa fa-road'></i> <span class="current-mileage">0</span> Km</span>
-                        <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle tooltips" title="@lang('Vehicle status')"><i class='fa fa-send'></i></span>
-                    </small>
-                </p>
             </div>
-            <div id="google-map-light-dream" class="col-md-12 col-sm-12 col-xs-12 p-0 map-report-historic" style="height: 1000px"></div>
+
+            <div id="google-map-light-dream" class="col-md-12 col-sm-12 col-xs-12 p-0 map-report-historic"></div>
         </div>
         <!-- end content report -->
     </div>
@@ -270,7 +360,7 @@
                     loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
                         loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
                             SlidingMarker.initializeGlobally();
-                            $('.map-report-historic').css('height', (window.innerHeight - 150));
+                            fitHeight('#google-map-light-dream');
                         });
                     });
                 });

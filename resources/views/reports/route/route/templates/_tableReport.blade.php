@@ -58,7 +58,8 @@
                 </small>
             </th>
         @endif
-        @if( false )
+
+        @if($company->hasSensorCounter())
             <th>
                 <i class="fa fa-users text-muted"></i><br>
                 <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
@@ -66,6 +67,16 @@
                     @lang('Sensor')
                 </small>
             </th>
+
+            <th>
+                <i class="fa fa-users text-muted"></i><br>
+                <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
+                <small class="text-muted">
+                    @lang('Sensor TOTAL')
+                </small>
+            </th>
+        @endif
+        @if(false)
             <th>
                 <i class="fa fa-users text-muted"></i><br>
                 <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
@@ -89,6 +100,7 @@
         $averageRouteTime = '00:00:00';
 
         $totalPassengersBySensor = 0;
+        $totalPassengersBySensorTotal = 0;
         $totalPassengersBySensorRecorder = 0;
     @endphp
 
@@ -105,9 +117,10 @@
 
             $totalPassengersByRecorder = $historyCounter->totalPassengersByRoute;
             $totalPassengersBySensor +=$dispatchRegister->passengersBySensor;
+            $totalPassengersBySensorTotal +=$dispatchRegister->passengersBySensorTotal;
             $totalPassengersBySensorRecorder +=$dispatchRegister->passengersBySensorRecorder;
 
-            $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0) && !$withEndDate?true:false;
+            $invalid = ($totalPassengersByRecorder > 1000 || $totalPassengersByRecorder < 0) && !$withEndDate ? true : false;
 
             $offRoadPercent = $dispatchRegister->getOffRoadPercent();
 
@@ -257,16 +270,28 @@
                 </td>
             @endif
 
-            @if( false )
+            @if($company->hasSensorCounter())
                 <td width="10%" class="text-center">
-                    <span class="tooltips" data-title="@lang('Round trip')">
+                    <span class="tooltips {{ $dispatchRegister->passengersBySensor > 30 ? 'label label-warning' : '' }} " data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
                         {{ $dispatchRegister->passengersBySensor }}
                     </span>
                     <hr class="m-0">
-                    <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
+                    <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
                         {{ $totalPassengersBySensor }}
                     </small>
                 </td>
+
+                <td width="10%" class="text-center">
+                    <span class="tooltips {{ $dispatchRegister->passengersBySensorTotal > 30 ? 'label label-warning' : '' }} " data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
+                        {{ $dispatchRegister->passengersBySensorTotal }}
+                    </span>
+                    <hr class="m-0">
+                    <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
+                        {{ $totalPassengersBySensorTotal }}
+                    </small>
+                </td>
+            @endif
+            @if( false )
                 <td width="10%" class="text-center">
                     <span class="tooltips" data-title="@lang('Round trip')">
                         {{ $dispatchRegister->passengersBySensorRecorder }}

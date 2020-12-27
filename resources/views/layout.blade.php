@@ -34,21 +34,22 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- BEGIN LOGO -->
         <div class="page-logo">
             <a href="{{ url('/')  }}" class="m-t-5 m-r-5 text-center animated">
-                <span class="text-white f-s-16">PCW</span><span class="text-success f-s-22">SMS</span>
+                <span class="text-white f-s-16 hidden-xs">PCW</span><span class="text-success f-s-22">SMS</span>
             </a>
-            <div class="menu-toggler sidebar-toggler-old pull-right hide"></div>
+            <div class="menu-toggler sidebar-toggler pull-right hide"></div>
         </div>
         <!-- END LOGO -->
         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
         <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
-           data-target=".navbar-collapse"> </a>
+           data-target=".navbar-collapse">
+        </a>
         <!-- END RESPONSIVE MENU TOGGLER -->
         <!-- BEGIN TOP NAVIGATION MENU -->
         <div class="col-md-offset-3 col-sm-6 col-md-3 col-xs-12">
             @include('flash::message')
         </div>
         <div class="top-menu">
-            <ul class="nav navbar-nav pull-right" style="padding-top: 4px">
+            <ul class="nav navbar-nav pull-right" style="padding-top: 2px">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-extended dropdown-notification hide" id="header_notification_bar">
@@ -291,6 +292,52 @@ License: You must have a valid license purchased only from themeforest(the above
 <div class="clearfix"></div>
 <!-- END HEADER & CONTENT DIVIDER -->
 <!-- BEGIN CONTAINER -->
+
+<style>
+    .page-sidebar-menu li i {
+        /*padding: 8px;*/
+        /*font-size: 2.5rem !important;*/
+    }
+
+    .page-sidebar-menu li a {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .page-sidebar-menu li a span {
+        margin-left: 20px;
+    }
+
+    .sub-menu a i {
+        margin-right: 15px;
+    }
+
+    @media (min-width: 992px){
+        .page-sidebar-menu li span{
+            display: block !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle {
+            background-color: transparent !important;
+        }
+    }
+
+    .page-sidebar-menu.page-sidebar-menu-closed li span {
+        display: none;
+        color: white;
+    }
+
+    .top-menu {
+        position: absolute !important;
+        right: 50px !important;
+        background: transparent !important;
+    }
+</style>
+
+
+
 <div class="page-container">
     <!-- BEGIN SIDEBAR -->
     <div class="page-sidebar-wrapper">
@@ -306,20 +353,19 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
             <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
 
-            <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 0">
+            <ul class="page-sidebar-menu page-sidebar-menu-hover-submenu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="100">
                 <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
-                <li class="sidebar-toggler-wrapper hide">
+                <li class="sidebar-toggler-wrapper">
                     <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
                     <div class="sidebar-toggler"></div>
                     <!-- END SIDEBAR TOGGLER BUTTON -->
                 </li>
-                <br>
-                <li class="nav-item start">
-                    <a href="http://www.pcwserviciosgps.com/pcw_gps/php/inicio.php" target="_blank" class="faa-parent animated-hover nav-link">
-                        <i class="fa fa-home faa-vertical"></i>
-                        <span>Inicio</span>
-                    </a>
 
+                <li class="nav-item start">
+                    <a href="{{ auth()->user()->company->link }}" target="_blank" class="faa-parent animated-hover nav-link">
+                        <i class="fa fa-map-o faa-vertical"></i>
+                        <span class="text-bold text-white">@lang('Mapa | GPS')</span>
+                    </a>
                 </li>
                 <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
                 <li class="sidebar-search-wrapper hide">
@@ -352,7 +398,6 @@ License: You must have a valid license purchased only from themeforest(the above
                         <ul class="sub-menu">
                             <li class="nav-item menu-administration-vehicles">
                                 <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
-                                    <b class="caret pull-right"></b>
                                     <i class="fa fa-bus faa-vertical"></i>
                                     @lang('Vehicles')
                                     <span class="arrow"></span>
@@ -417,14 +462,14 @@ License: You must have a valid license purchased only from themeforest(the above
                     <ul class="sub-menu">
                         <li class="nav-item menu-operation-dispatch">
                             <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
-                                <i class="fa fa-rocket faa-passing"></i>
+                                <i class="fa fa-rocket faa-float"></i>
                                 @lang('Dispatch')
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
                                 <li class="nav-item menu-operation-dispatch-automatic">
                                     <a href="{{ route('operation-dispatch-auto-dispatcher') }}" class="faa-parent animated-hover nav-link">
-                                        <i class="fa fa-play faa-burst" aria-hidden="true"></i>
+                                        <i class="fa fa-magic faa-burst" aria-hidden="true"></i>
                                         @lang('Automatic')
                                     </a>
                                 </li>
@@ -439,7 +484,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <ul class="sub-menu">
                                 <li class="nav-item menu-operation-vehicles-binnacle">
                                     <a href="{{ route('operation-vehicles-binnacle') }}" class="faa-parent animated-hover nav-link">
-                                        <i class="icon-bag faa-burst" aria-hidden="true"></i>
+                                        <i class="icon-bag faa-tada" aria-hidden="true"></i>
                                         @lang('Binnacle')
                                     </a>
                                 </li>
@@ -471,7 +516,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                 <li class="nav-item menu-routes-takings">
                                     <a href="{{ route('reports.routes.takings')  }}" class="faa-parent animated-hover nav-link">
-                                        <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
+                                        <i class="icon-briefcase faa-ring"></i>
                                         @lang('Takings')
                                     </a>
                                 </li>
@@ -1471,6 +1516,23 @@ License: You must have a valid license purchased only from themeforest(the above
 </div>
 <!-- END FOOTER -->
 @include('template.metronic.plugins')
+
+<script>
+    $(document).ready(function (){
+        const selectorIcons = '.page-sidebar-menu.page-sidebar-menu-closed li';
+
+        $('body').on('mouseenter', selectorIcons, function(){
+            $(this).find('a span').style('display', 'block !important');
+        }).on('mouseleave', selectorIcons, function(){
+            $(this).find('a span').hide();
+        }).on('click', '.sidebar-toggler', function() {
+            // setTimeout(()=>{
+            //     $(selectorIcons).mouseenter();
+            // },500);
+        });
+    });
+</script>
+
 </body>
 
 </html>

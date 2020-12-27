@@ -89,10 +89,23 @@ class ReportRouteHistoricController extends Controller
         $lastLocation = $locations->first();
 
         $totalPassengers = 0;
+        $totalPassengersInRoundTrip = 0;
+        $totalPassengersOutRoundTrip = 0;
+        $prevTotalPassengers = 0;
+
+        $totalAscents = 0;
+        $totalAscentsInRoundTrip = 0;
+        $prevTotalAscentsInRoundTrip = 0;
+
+        $totalDescents = 0;
+        $totalDescentsInRoundTrip = 0;
+        $prevTotalDescentsInRoundTrip = 0;
+
+        $frameCounter = '';
 
         foreach ($locations as $location) {
             $dispatchRegister = $location->dispatchRegister;
-
+            
             $period = '';
             $averagePeriod = '';
             if (Auth::user()->isAdmin()) {
@@ -100,8 +113,51 @@ class ReportRouteHistoricController extends Controller
                 //$averagePeriod = intval($dataLocations->average('period')); // CAUTION this line take some long time!
                 $averagePeriod = "--";
             }
+            
+            $passenger = $location->passenger;
 
-            $totalPassengers = $location->passenger && $totalPassengers <= $location->passenger->total ? $location->passenger->total : $totalPassengers;
+            if ($passenger) {
+                $frameCounter = $passenger->frame ? $passenger->date->toTimeString()." • ".$passenger->frame : $frameCounter;
+
+                if ($totalPassengers <= $passenger->total) {
+                    $totalPassengers = $passenger->total;
+                }
+
+                if ($totalAscents <= $passenger->total_ascents) {
+                    $totalAscents = $passenger->total_ascents;
+                }
+
+                if ($totalDescents <= $passenger->total_descents) {
+                    $totalDescents = $passenger->total_descents;
+                }
+
+                if ($dispatchRegister) {
+                    if ($totalPassengersInRoundTrip <= $passenger->in_round_trip) {
+                        $totalPassengersInRoundTrip = $passenger->in_round_trip;
+                    }
+
+                    if ($totalPassengersOutRoundTrip <= $passenger->out_round_trip) {
+                        $totalPassengersOutRoundTrip = $passenger->out_round_trip;
+                    }
+
+                    if ($totalAscentsInRoundTrip <= $passenger->ascents_in_round_trip) {
+                        $totalAscentsInRoundTrip = $passenger->ascents_in_round_trip;
+                    }
+
+                    if ($totalDescentsInRoundTrip <= $passenger->descents_in_round_trip) {
+                        $totalDescentsInRoundTrip = $passenger->descents_in_round_trip;
+                    }
+                } else {
+                    $totalPassengersInRoundTrip = 0;
+                    $totalPassengersOutRoundTrip = 0;
+
+                    $totalAscentsInRoundTrip = 0;
+                    $totalDescentsInRoundTrip = 0;
+                }
+            }
+
+            $countedAscents = $prevTotalAscentsInRoundTrip !== $totalAscentsInRoundTrip;
+            $countedDescents = $prevTotalDescentsInRoundTrip !== $totalDescentsInRoundTrip;
 
             $dataLocations->push((object)[
                 'time' => $location->date->format('H:i:s'),
@@ -127,9 +183,24 @@ class ReportRouteHistoricController extends Controller
                 ],
                 'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
                 'vehicle' => $location->vehicle->getAPIFields(),
-                'totalPassengers' => $totalPassengers
+                'passengers' => (object)[
+                    'total' => $totalPassengers,
+                    'inRoundTrip' => $totalPassengersInRoundTrip,
+                    'outRoundTrip' => $totalPassengersOutRoundTrip,
+                    'totalAscents' => $totalAscents,
+                    'totalDescents' => $totalDescents > $totalAscents ? $totalAscents : $totalDescents,
+                    'ascentsInRoundTrip' => $totalAscentsInRoundTrip,
+                    'descentsInRoundTrip' => $totalDescentsInRoundTrip > $totalAscentsInRoundTrip ? $totalAscentsInRoundTrip : $totalDescentsInRoundTrip,
+                    'counted' => ($countedAscents || $countedDescents),
+                    'countedAscents' => $countedAscents,
+                    'countedDescents' => $countedDescents,
+                    'frame' => $frameCounter
+                ],
             ]);
 
+            $prevTotalPassengers = $totalPassengers;
+            $prevTotalAscentsInRoundTrip = $totalAscentsInRoundTrip;
+            $prevTotalDescentsInRoundTrip = $totalDescentsInRoundTrip;
             $lastLocation = $location;
         }
 

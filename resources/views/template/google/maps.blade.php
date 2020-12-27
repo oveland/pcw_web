@@ -58,9 +58,9 @@
     function initializeMap(callback) {
         destroyMap();
 
-        let windowHeight = window.innerHeight - 40;
+        let windowHeight = window.innerHeight - 120;
         $('#modal-route-report .modal-dialog').css('height', windowHeight+"px");
-        $('#google-map-light-dream').html('').empty().css('height', ((windowHeight - 30 - $('#modal-route-report .modal-header').height())+"px"));
+        $('#google-map-light-dream').html('').empty().css('height', ((windowHeight - $('#modal-route-report .modal-header').height())+"px"));
 
         setTimeout(function(){
             let mapOptions = {

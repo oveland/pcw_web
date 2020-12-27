@@ -41,6 +41,7 @@ trait CounterBySensor
         $issues = collect([]);
 
         $totalBySensor = 0;
+        $totalAllBySensor = 0;
         $totalByRecorder = 0;
         $totalBySensorRecorder = 0;
 
@@ -53,6 +54,9 @@ trait CounterBySensor
         foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
             $totalBySensorByRoundTrip = $dispatchRegister->passengersBySensor;
             $totalBySensor += $totalBySensorByRoundTrip;
+
+            $totalAllBySensorByRoundTrip = $dispatchRegister->passengersBySensorTotal;
+            $totalAllBySensor += $totalAllBySensorByRoundTrip;
 
             $totalBySensorRecorderByRoundTrip = $dispatchRegister->passengersBySensorRecorder;
             $totalBySensorRecorder += $totalBySensorRecorderByRoundTrip;
@@ -80,6 +84,9 @@ trait CounterBySensor
 
                 'totalBySensorByRoundTrip' => $totalBySensorByRoundTrip,
                 'totalBySensorByRoute' => $totalBySensor,
+
+                'totalAllBySensorByRoundTrip' => $totalAllBySensorByRoundTrip,
+                'totalAllBySensorByRoute' => $totalAllBySensor,
 
                 'totalByRecorderByRoundTrip' => $totalByRecorderByRoundTrip,
                 'totalByRecorderByRoute' => $totalByRecorder,
@@ -124,6 +131,7 @@ trait CounterBySensor
                 'passengersByRecorder' => $totalBySensorRecorder,       // Passengers By Recorder is the sensor recorder
                 'passengersBySensorRecorder' => $totalBySensorRecorder, // Passengers by Sensor recorder
                 'passengersBySensor' => $totalBySensor,                 // Passengers by Sensor
+                'passengersAllBySensor' => $totalAllBySensor,                 // Passengers by Sensor
 
                 'start_recorder' => $startRecorder,
                 'firstStartRecorder' => $firstStartRecorder,

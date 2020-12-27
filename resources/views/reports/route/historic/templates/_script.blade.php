@@ -16,6 +16,9 @@
             this.iconPowerOffSVG = 'M400 54.1c63 45 104 118.6 104 201.9 0 136.8-110.8 247.7-247.5 248C120 504.3 8.2 393 8 256.4 7.9 173.1 48.9 99.3 111.8 54.2c11.7-8.3 28-4.8 35 7.7L162.6 90c5.9 10.5 3.1 23.8-6.6 31-41.5 30.8-68 79.6-68 134.9-.1 92.3 74.5 168.1 168 168.1 91.6 0 168.6-74.2 168-169.1-.3-51.8-24.7-101.8-68.1-134-9.7-7.2-12.4-20.5-6.5-30.9l15.8-28.1c7-12.4 23.2-16.1 34.8-7.8zM296 264V24c0-13.3-10.7-24-24-24h-32c-13.3 0-24 10.7-24 24v240c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24z';
             this.iconParkedOffSVG = 'M326.3 218.8c0 20.5-16.7 37.2-37.2 37.2h-70.3v-74.4h70.3c20.5 0 37.2 16.7 37.2 37.2zM504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-128.1-37.2c0-47.9-38.9-86.8-86.8-86.8H169.2v248h49.6v-74.4h70.3c47.9 0 86.8-38.9 86.8-86.8z';
             this.iconWithOutGPSSVG = 'M216 288h-48c-8.84 0-16 7.16-16 16v192c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V304c0-8.84-7.16-16-16-16zM88 384H40c-8.84 0-16 7.16-16 16v96c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16v-96c0-8.84-7.16-16-16-16zm256-192h-48c-8.84 0-16 7.16-16 16v288c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V208c0-8.84-7.16-16-16-16zm128-96h-48c-8.84 0-16 7.16-16 16v384c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V112c0-8.84-7.16-16-16-16zM600 0h-48c-8.84 0-16 7.16-16 16v480c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16V16c0-8.84-7.16-16-16-16z';
+            this.iconPassenger = 'M96 0c35.346 0 64 28.654 64 64s-28.654 64-64 64-64-28.654-64-64S60.654 0 96 0m48 144h-11.36c-22.711 10.443-49.59 10.894-73.28 0H48c-26.51 0-48 21.49-48 48v136c0 13.255 10.745 24 24 24h16v136c0 13.255 10.745 24 24 24h64c13.255 0 24-10.745 24-24V352h16c13.255 0 24-10.745 24-24V192c0-26.51-21.49-48-48-48z';
+            this.iconPassengerInOut = 'M96,128A64,64,0,1,0,32,64,64,64,0,0,0,96,128Zm0,176.08a44.11,44.11,0,0,1,13.64-32L181.77,204c1.65-1.55,3.77-2.31,5.61-3.57A63.91,63.91,0,0,0,128,160H64A64,64,0,0,0,0,224v96a32,32,0,0,0,32,32V480a32,32,0,0,0,32,32h64a32,32,0,0,0,32-32V383.61l-50.36-47.53A44.08,44.08,0,0,1,96,304.08ZM480,128a64,64,0,1,0-64-64A64,64,0,0,0,480,128Zm32,32H448a63.91,63.91,0,0,0-59.38,40.42c1.84,1.27,4,2,5.62,3.59l72.12,68.06a44.37,44.37,0,0,1,0,64L416,383.62V480a32,32,0,0,0,32,32h64a32,32,0,0,0,32-32V352a32,32,0,0,0,32-32V224A64,64,0,0,0,512,160ZM444.4,295.34l-72.12-68.06A12,12,0,0,0,352,236v36H224V236a12,12,0,0,0-20.28-8.73L131.6,295.34a12.4,12.4,0,0,0,0,17.47l72.12,68.07A12,12,0,0,0,224,372.14V336H352v36.14a12,12,0,0,0,20.28,8.74l72.12-68.07A12.4,12.4,0,0,0,444.4,295.34Z';
+
 
 
             this.showInfo = $('.show-info');
@@ -27,11 +30,14 @@
 
             let scale = .02;
             let zIndex = 10;
-            let pathSVG = this.iconPathSVG;
+            let animation = null;
+            let path = this.iconPathSVG;
             let fillColor = '#04bf8a';
-            let strokeColor = '#0f678a';
-            let x = 220;
-            let y = 250;
+            let strokeColor = '#00445f';
+            let anchor = {
+                x: 220,
+                y: 250
+            };
 
             if (reportLocation.offRoad) {
                 fillColor = '#6a000e';
@@ -42,32 +48,32 @@
 
             if(reportLocation.vehicleStatus.id === 6 && !dr){
                 rotation = 0;
-                pathSVG = this.iconPowerOffSVG;
+                path = this.iconPowerOffSVG;
                 fillColor = '#bf1308';
                 strokeColor = '#c2c2c2';
                 scale = .035;
                 zIndex = 100;
-                x = 250;
-                y = 280;
+                anchor.x = 250;
+                anchor.y = 280;
             }
             else if(reportLocation.vehicleStatus.id === 3){
                 rotation = 0;
-                pathSVG = this.iconParkedOffSVG;
+                path = this.iconParkedOffSVG;
                 fillColor = '#1300ce';
                 strokeColor = 'rgb(181,181,181)';
                 scale = .038;
                 zIndex = 100;
-                x = 250;
-                y = 280;
+                anchor.x = 250;
+                anchor.y = 280;
             }else if(reportLocation.vehicleStatus.id === 5){
                 rotation = 0;
-                pathSVG = this.iconWithOutGPSSVG;
+                path = this.iconWithOutGPSSVG;
                 fillColor = '#fffd06';
                 strokeColor = '#d4760a';
                 scale = .03;
                 zIndex = 100;
-                x = 250;
-                y = 280;
+                anchor.x = 250;
+                anchor.y = 280;
             }
             else if (reportLocation.speeding) {
                 fillColor = '#ffe415';
@@ -75,22 +81,48 @@
                 zIndex = 100;
             }
 
-            return {
-                path: pathSVG,
-                rotation: rotation,
-                fillColor : fillColor,
-                strokeColor : strokeColor,
-                scale: scale,
-                zIndex: zIndex,
-                anchor:{
-                    x: x,
-                    y: y,
+            if (reportLocation.passengers.counted) {
+                rotation = 0;
+                path = this.iconPassenger;
+
+
+                fillColor = '#b3ff00';
+                strokeColor = '#7e002e';
+
+                if (reportLocation.passengers.countedAscents && reportLocation.passengers.countedDescents) {
+                    path = this.iconPassengerInOut;
+                    fillColor = '#00f5ff';
+                    strokeColor = '#000b47';
+                } else {
+                    if (reportLocation.passengers.countedAscents) {
+                        fillColor = '#b3ff00';
+                        strokeColor = '#7e002e';
+                    } else if (reportLocation.passengers.countedDescents) {
+                        fillColor = '#ff6900';
+                        strokeColor = '#530000';
+                    }
                 }
+
+
+                scale = .060;
+                zIndex = 1000;
+                // animation = google.maps.Animation.BOUNCE;
+            }
+
+            return {
+                path,
+                rotation,
+                fillColor,
+                strokeColor,
+                animation,
+                scale,
+                zIndex,
+                anchor
             };
         }
 
         processHistoricReportData(report) {
-            $('.map-report-historic').css('height', (window.innerHeight - 100));
+            // fitHeight('#google-map-light-dream');
 
             $.each(report.historic, (i, reportLocation) => {
                 // let historicInfoWindow = this.createInfoWindow(reportLocation);
@@ -158,6 +190,7 @@
                 map: null,
                 icon: icon,
                 zIndex: svg.zIndex,
+                animation: svg.animation,
                 position: {lat: parseFloat(r.latitude), lng: parseFloat(r.longitude)}
             });
         }
@@ -266,6 +299,7 @@
             if (this.markerBus) {
                 this.markerBus.setPosition(marker.getPosition());
                 this.markerBus.setIcon(icon);
+                this.markerBus.setAnimation(svg.animation);
             } else {
 
                 this.markerBus = new google.maps.Marker({
@@ -273,6 +307,7 @@
                     position: marker.getPosition(),
                     icon: icon,
                     duration: 200,
+                    animation: svg.animation,
                     easing: "swing",
                     title: marker.getTitle(),
                     shadow: ""
@@ -304,7 +339,11 @@
                 } else {
                     routeLabel.parent().removeClass('btn-danger').attr('title', '@lang('In route')');
                 }
+
+                $('.passengers-within-round-trip').removeClass('hide');
+                this.showInfo.find('.passengers-route-name').text(dr.route.name);
             } else {
+                $('.passengers-within-round-trip').addClass('hide');
                 routeLabel.parent().hide();
             }
 
@@ -313,7 +352,16 @@
             this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
             this.showInfo.find('.speed').text(reportLocation.speed);
             this.showInfo.find('.current-mileage').text(reportLocation.currentMileage);
-            this.showInfo.find('.total-passengers').text(reportLocation.totalPassengers);
+            this.showInfo.find('.passengers-total').text(reportLocation.passengers.total);
+            this.showInfo.find('.passengers-frame').text(reportLocation.passengers.frame);
+            this.showInfo.find('.passengers-route-in').text(reportLocation.passengers.inRoundTrip);
+            this.showInfo.find('.passengers-route-out').text(reportLocation.passengers.outRoundTrip);
+            this.showInfo.find('.passengers-total-ascents').text(reportLocation.passengers.totalAscents);
+            this.showInfo.find('.passengers-total-descents').text(reportLocation.passengers.totalDescents);
+
+            this.showInfo.find('.passengers-route-ascents').text(reportLocation.passengers.ascentsInRoundTrip);
+            this.showInfo.find('.passengers-route-descents').text(reportLocation.passengers.descentsInRoundTrip);
+
             if (reportLocation.speeding) {
                 this.showInfo.find('.speed').parent().addClass('btn-warning');
             } else {

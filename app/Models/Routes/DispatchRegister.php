@@ -6,6 +6,7 @@ use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Passengers\CurrentSensorPassengers;
+use App\Models\Passengers\Passenger;
 use App\Models\Users\User;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\ParkingReport;
@@ -334,17 +335,31 @@ class DispatchRegister extends Model
     public function getPassengersBySensorAttribute()
     {
         if ($this->inProgress()) {
-            $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+            $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
 
-            if (!$currentSensor || !isset($currentSensor->sensorCounter)) {
+            if (!$lastPassenger) {
                 return 0;
             }
 
-            $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
-            return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
+            return $lastPassenger->total - $this->initial_sensor_counter;
         }
         $hasReset = ($this->final_sensor_counter < $this->initial_sensor_counter);
         return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
+    }
+
+    public function getPassengersBySensorTotalAttribute()
+    {
+        if ($this->inProgress()) {
+            $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
+
+            if (!$lastPassenger) {
+                return 0;
+            }
+
+            return $lastPassenger->total - $this->initial_front_sensor_counter;
+        }
+        $hasReset = ($this->final_sensor_counter < $this->initial_front_sensor_counter);
+        return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_front_sensor_counter));
     }
 
     public function getInitialPassengersBySensorRecorderAttribute()

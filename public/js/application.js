@@ -153,3 +153,11 @@ function gerror(message) {
 function hideSideBar() {
     $('.menu-toggler.sidebar-toggler').click();
 }
+
+function fitHeight(cssSelector, min) {
+    let h = window.innerHeight - $('#google-map-light-dream').offset().top - $('.page-footer')[0].scrollHeight - 15;
+    min = min ? min : 500;
+    h = h < min ? window.innerHeight - 50 : h
+
+    $(cssSelector).css('height', h.toString() + 'px');
+}

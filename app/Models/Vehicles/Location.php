@@ -154,7 +154,7 @@ class Location extends Model
      */
     public function dispatchRegister()
     {
-        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id');
+        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id')->active();
     }
 
     /**

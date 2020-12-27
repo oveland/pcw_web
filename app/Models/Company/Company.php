@@ -60,8 +60,8 @@ use Auth;
  * @method static Builder|Company whereMaxSpeedingThreshold($value)
  * @method static Builder|Company whereSpeedingThreshold($value)
  * @property string|null $default_kmz_url
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Company\Company whereDefaultKmzUrl($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\User[] $users
+ * @method static Builder|Company whereDefaultKmzUrl($value)
+ * @property-read Collection|User[] $users
  */
 class Company extends Model
 {
@@ -181,9 +181,6 @@ class Company extends Model
 
     /*
      * What companies that have seat sensor counter
-     *
-     * Alameda
-     *
      * @return bool
      */
     public function isIntermunicipal()
@@ -194,8 +191,6 @@ class Company extends Model
     /*
      * What companies that have seat sensor counter
      *
-     * Alameda
-     *
      * @return bool
      */
     public function hasRecorderCounter()
@@ -204,10 +199,17 @@ class Company extends Model
     }
 
     /*
+     * What companies that have sensor counter
+     *
+     * @return bool
+     */
+    public function hasSensorCounter()
+    {
+        return collect([self::YUMBENOS])->contains($this->id);
+    }
+
+    /*
      * What companies that have Control Point Events Active for send mail report events daily
-     *
-     * Alameda
-     *
     */
     public function hasControlPointEventsActive()
     {
@@ -224,9 +226,6 @@ class Company extends Model
 
     /*
      * What companies that have seat sensor counter
-     *
-     * Cootransol
-     *
     */
     public function hasSeatSensorCounter()
     {
