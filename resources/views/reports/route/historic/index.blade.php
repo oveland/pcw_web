@@ -454,7 +454,7 @@
         let trackInterval = null;
         let controls = $('.play-controls');
 
-        // controls.hide();
+        controls.hide();
 
         let reportRouteHistoric = null;
         let reportContainer = $('.report-container');
@@ -529,7 +529,7 @@
                                     btnExport.fadeIn();
 
                                     maxTrack = report.total;
-                                    controls.fadeIn();
+                                    controls.fadeIn(2000);
                                     play();
                                 }
                                 btnExport.attr('href', report.exportLink);
