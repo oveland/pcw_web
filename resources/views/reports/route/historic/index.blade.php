@@ -347,15 +347,15 @@
                                         <i class="fa fa-step-backward faa-passing-reverse"></i>
                                     </span>
 
-                                    <span class="btn btn-default btn- btn-circle btn-play tooltips" title="@lang('Play')"  onclick="pause()">
+                                    <span class="btn btn-default btn- btn-circle btn-play tooltipss" title="@lang('Play')"  onclick="pause()">
                                         <i class="fa fa-play faa-flash animated"></i> <span class="time"></span>
                                     </span>
 
-                                    <span class="btn btn-default btn- btn-circle btn-pause tooltips" title="@lang('Pause')" onclick="play()">
+                                    <span class="btn btn-default btn- btn-circle btn-pause tooltipss" title="@lang('Pause')" onclick="play()">
                                         <i class="fa fa-pause faa-flash animated"></i> <span class="time"></span>
                                     </span>
 
-                                    <span class="btn btn-default btn-xs btn-circle btn-forward tooltips m-0 faa-parent animated-hover" data-placement="right" title="@lang('Forward')"  onclick="forward(maxTrack/10, true)">
+                                    <span class="btn btn-default btn-xs btn-circle btn-forward tooltipss m-0 faa-parent animated-hover" data-placement="right" title="@lang('Forward')"  onclick="forward(maxTrack/10, true)">
                                         <i class="fa fa-step-forward faa-passing"></i>
                                     </span>
                                 </div>
@@ -367,7 +367,7 @@
 
 
                             @if(true && (Auth::user()->isAdmin() || Auth::user()->company_id == 17))
-                                <div class="col-md-12 col-xs-12 btn-passengers-info tooltips active" data-placement="bottom" title="@lang('Count passengers')">
+                                <div class="col-md-12 col-xs-12 btn-passengers-info tooltipss active" data-placement="bottom" title="@lang('Count passengers')">
                                     <span class="passengers-label">
                                         <i class="fa fa-users"></i> <span class="hidden-xs">@lang('Total'):</span> <span class="passengers-total"></span>
                                     </span>
