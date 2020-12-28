@@ -29,6 +29,11 @@
                 background: initial !important;
             }
         }
+
+        .btn-login {
+            background-image: linear-gradient(to right, #002d3c, #005566, #008073, #00aa5c, #3fcf04) !important;
+            color: white;
+        }
     </style>
 @endsection
 
@@ -74,7 +79,7 @@
                 </div>
                 <div class="row m-b-20">
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-success btn-lg btn-block">
+                        <button type="submit" class="btn btn-login btn-success btn-lg btn-block">
                             @lang('Login') <i class="fa fa-sign-in"></i>
                         </button>
                     </div>

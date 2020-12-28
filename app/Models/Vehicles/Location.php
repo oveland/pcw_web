@@ -39,22 +39,22 @@ trait BindsDynamically
     {
         $tableName = 'locations';
 
-//        $withDate = explode(' ', $withDate)[0];
-//
-//        $format = Str::contains($withDate, "-") ? 'Y-m-d' : 'd/m/Y';
-//        $date = Carbon::createFromFormat($format, $withDate);
-//
-//        $diffDays = Carbon::now()->diffInDays($date);
-//
-//        if ($diffDays == 0) {
-//            $tableName .= "_$diffDays";
-//        } else {
-//            $indexView = floor(($diffDays - 1) / 5) + 1;
-//
-//            if ($indexView <= 6) {
-//                $tableName .= "_$indexView";
-//            }
-//        }
+        $withDate = explode(' ', $withDate)[0];
+
+        $format = Str::contains($withDate, "-") ? 'Y-m-d' : 'd/m/Y';
+        $date = Carbon::createFromFormat($format, $withDate);
+
+        $diffDays = Carbon::now()->diffInDays($date);
+
+        if ($diffDays == 0) {
+            $tableName .= "_$diffDays";
+        } else {
+            $indexView = floor(($diffDays - 1) / 5) + 1;
+
+            if ($indexView <= 6) {
+                $tableName .= "_$indexView";
+            }
+        }
 
         $this->setTable($tableName);
 
