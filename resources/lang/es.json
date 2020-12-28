@@ -745,5 +745,7 @@
   "Binnacle vehicle notifications": "Notificaciones bitácora de vehículos",
   "Vehicle notifications": "Notificaciones de vehículos",
   "Sort by date": "Ordenar por fecha",
-  "Count passengers": "Conteo de pasajeros"
+  "Count passengers": "Conteo de pasajeros",
+  "Backward": "Retroceder",
+  "Forward": "Adelantar"
 }

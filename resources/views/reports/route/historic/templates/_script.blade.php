@@ -29,7 +29,7 @@
             rotation = rotation > 0 ? rotation - 90 : (this.markerBus ? this.markerBus.getIcon().rotation : rotation);
 
             let scale = .02;
-            let zIndex = 10;
+            let zIndex = 1000;
             let animation = null;
             let path = this.iconPathSVG;
             let fillColor = '#04bf8a';
@@ -293,13 +293,15 @@
                 scale: .045,
                 strokeWeight: 2,
                 anchor: new google.maps.Point(svg.anchor.x, svg.anchor.y),
-                rotation: svg.rotation
+                rotation: svg.rotation,
+                zIndex: 10000,
             };
 
             if (this.markerBus) {
                 this.markerBus.setPosition(marker.getPosition());
                 this.markerBus.setIcon(icon);
                 this.markerBus.setAnimation(svg.animation);
+                this.markerBus.setZIndex(10000);
             } else {
 
                 this.markerBus = new google.maps.Marker({
@@ -310,7 +312,8 @@
                     animation: svg.animation,
                     easing: "swing",
                     title: marker.getTitle(),
-                    shadow: ""
+                    shadow: "",
+                    zIndex: 10000,
                 });
             }
 

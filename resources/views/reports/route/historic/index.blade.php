@@ -9,17 +9,122 @@
     <!-- END PAGE LEVEL PLUGINS -->
 
     <style>
-        .btn-time {
+        .slider-player .irs-single {
+            top: 15px;
+            padding-top: 8px;
+            border-radius: 40px;
+            width: auto;
+            height: 30px;
+            min-width: 35px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 100;
+            box-shadow: 0 0 0px 2px #7a0045;
+            background-image: linear-gradient(to right, #73008a, #9c0087, #bf0081, #df0077, #f9006b) !important;
+        }
+
+        .slider-player .irs-bar-edge {
+            background: #73008a !important;
+        }
+
+        .slider-player .irs-bar {
+            background-image: linear-gradient(to right, #73008a, #6c35ab, #5d54c8, #6c35ab, #73008a) !important;
+        }
+
+        .slider-player .irs-single::after {
+            border: none !important;
+        }
+
+        .speed-player .irs {
+            height: 18px !important;
+            margin-top: 5px;
+            margin-bottom: 5px !important;
+        }
+
+        .speed-player .irs-single {
+            top: 2px;
+            padding-top: 8px;
+            border-radius: 40px;
+            width: 15px;
+            height: 15px;
+            text-align: center;
+            font-size: 0rem;
+            font-weight: bold;
+            z-index: 100;
+            box-shadow: 0 0 2px 1px #f90052;
+            background: #ff9600 !important;
+            background-image: linear-gradient(to right, #bdff00, #edcd00); !important;
+        }
+
+        .speed-player .irs-bar {
+            background-image: linear-gradient(to right, #8aff00, #d4cf00, #fb9900, #ff5b1c, #f90052) !important;
+        }
+
+        .speed-player .irs-bar-edge {
+            background: #8aff00 !important;
+        }
+
+        .speed-player .irs-bar-edge, .speed-player .irs-line-left {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .speed-player .irs-max, .speed-player .irs-min, .speed-player .irs-from, .speed-player .irs-to {
+            display: none;
+        }
+
+        .speed-player .irs-line-left, .speed-player .irs-line-rigth, .speed-player .irs-line-mid {
+            height: 8px;
+        }
+
+        .speed-player .irs-line, .speed-player .irs-bar, .speed-player .irs-bar-edge, .speed-player .irs-slider {
+            top: 5px;
+            height: 8px;
+        }
+
+        .speed-player .irs-line, .speed-player .irs-bar, .speed-player {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .speed-player .irs-single::after {
+            border: none !important;
+            background: yellow !important;
+        }
+
+        .play-controls {
+            margin-bottom: 5px;
+        }
+
+        .play-controls .btn {
             font-size: 1.2rem !important;
-            color: #5200cb;
-            box-shadow: 0 0 2px 3px #ff00d394 !important;
+            color: #609aac;
+            box-shadow: 0 0 0px 3px #df0077 !important;
+            margin: 3px !important;
+            transition: all ease-in-out 1s !important;
+        }
+
+        .play-controls .btn-pause {
+            color: #b750a5;
+            box-shadow: 0 0 0px 3px #df0077 !important;
+        }
+
+        .play-controls .btn-xs {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+
+        .play-controls .btn {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
         }
 
         .range-reports {
             z-index: 1;
             padding-top: 10px;
             padding-bottom: 5px;
-            background: rgba(37, 37, 37, 0.7);
+            background: rgba(37, 37, 37, 0.6);
             color: white;
             position: absolute;
             width: 100%;
@@ -54,14 +159,12 @@
             /*position: absolute !important;*/
             right: 0;
             /*top: 82px;*/
-            font-size: 1.5rem !important;
-            border-radius: 0px !important;
-            z-index: 100000 !important;
-            transition: all ease-in-out 1s !important;
+            font-size: 1.7rem !important;
         }
 
         .passengers-label {
             display: block;
+            text-shadow: 0px 3px 2px #190043;
         }
 
         @media only screen and (max-width: 1200px) {
@@ -218,13 +321,15 @@
         <div class="loading-report col-md-12"></div>
         <div class="report-container col-md-12">
             <div class="col-md-12 col-sm-12 col-xs-12" style="display: grid">
-                <div class="range-reports col-md-12">
-                    <div class="text-center" style="position: absolute;width: 100%">
-                        <label for="range_reports">
-                            <small class="text-muted">Deslice para reproducir recorrido</small>
-                        </label>
+                <div class="range-reports col-md-12" style="display: grid">
+                    <div class="slider-player">
+                        <div class="text-center" style="position: absolute;width: 100%; top: 10px">
+                            <label for="slider-player">
+                                <small class="text-muted">Deslice para reproducir recorrido</small>
+                            </label>
+                        </div>
+                        <input id="slider-player" type="text" />
                     </div>
-                    <input id="range_reports" type="text" />
                     <div class="help-block text-white show-info m-b-0">
                         <div class="col-md-4 col-sm-12 col-xs-12 p-0 hidden-xs">
                             <span>
@@ -236,12 +341,33 @@
                         </div>
 
                         <div class="col-md-4 col-sm-12 col-xs-12 p-0 text-center">
-                            <span class="btn btn-default btn- btn-circle btn-historic-info btn-time tooltips" title="@lang('Time') GPS">
-                                <i class="fa fa-clock-o"></i> <span class="time"></span>
-                            </span>
+                            <div class="play-controls text-center">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover" data-placement="left" title="@lang('Backward')"  onclick="backward(maxTrack/10, true)">
+                                        <i class="fa fa-step-backward faa-passing-reverse"></i>
+                                    </span>
+
+                                    <span class="btn btn-default btn- btn-circle btn-play tooltips" title="@lang('Play')"  onclick="pause()">
+                                        <i class="fa fa-play faa-flash animated"></i> <span class="time"></span>
+                                    </span>
+
+                                    <span class="btn btn-default btn- btn-circle btn-pause tooltips" title="@lang('Pause')" onclick="play()">
+                                        <i class="fa fa-pause faa-flash animated"></i> <span class="time"></span>
+                                    </span>
+
+                                    <span class="btn btn-default btn-xs btn-circle btn-forward tooltips m-0 faa-parent animated-hover" data-placement="right" title="@lang('Forward')"  onclick="forward(maxTrack/10, true)">
+                                        <i class="fa fa-step-forward faa-passing"></i>
+                                    </span>
+                                </div>
+
+                                <div class="speed-player col-lg-6 col-lg-offset-3 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
+                                    <input id="speed-player" type="text"/>
+                                </div>
+                            </div>
+
 
                             @if(true && (Auth::user()->isAdmin() || Auth::user()->company_id == 17))
-                                <div class="btn-passengers-info tooltips active" title="@lang('Count passengers')">
+                                <div class="col-md-12 col-xs-12 btn-passengers-info tooltips active" data-placement="bottom" title="@lang('Count passengers')">
                                     <span class="passengers-label">
                                         <i class="fa fa-users"></i> <span class="hidden-xs">@lang('Total'):</span> <span class="passengers-total"></span>
                                     </span>
@@ -254,7 +380,7 @@
                                     </small>
 
                                     @if(Auth::user()->isAdmin())
-                                        <small class="passengers-label">
+                                        <small class="passengers-label" style="display: block">
                                             <span class="passengers-frame-container">
                                                 <i class="fa fa-clock-o"></i>
                                                 <span class="passengers-frame p-0">Frame counter</span>
@@ -320,6 +446,16 @@
     <template id="marker-animation-scripts"></template>
 
     <script type="application/javascript">
+        // Play controls:
+        let track = 0;
+        let period = 150;
+        let tracking = false;
+        let maxTrack = 0;
+        let trackInterval = null;
+        let controls = $('.play-controls');
+
+        // controls.hide();
+
         let reportRouteHistoric = null;
         let reportContainer = $('.report-container');
         let loadingReport = $('.loading-report');
@@ -370,6 +506,7 @@
                 let btnExport = $('.btn-export').fadeOut();
                 e.preventDefault();
                 if (form.isValid()) {
+                    stop();
                     form.find('.btn-search-report').addClass(loadingClass);
 
                     reportContainer.hide();
@@ -381,16 +518,23 @@
                         success: function (report) {
                             reportRouteHistoric.processHistoricReportData(report);
 
-                            $('#range_reports').data("ionRangeSlider").update({
+                            $('#slider-player').data("ionRangeSlider").update({
                                 min: 0,
                                 max: report.total,
-                                from: report.total
+                                from: 0
                             });
 
                             setTimeout(()=>{
-                                if( report.total > 0 )btnExport.fadeIn();
+                                if( report.total > 0 ) {
+                                    btnExport.fadeIn();
+
+                                    maxTrack = report.total;
+                                    controls.fadeIn();
+                                    play();
+                                }
                                 btnExport.attr('href', report.exportLink);
                             },1000);
+
                             hideSideBar();
                         },
                         complete:function(){
@@ -436,10 +580,9 @@
                 //max_interval: 48,
                 prefix: "<i class='fa fa-clock-o'></i> ",
                 skin: "modern",
-                grid: false,
                 decorate_both: true,
                 prettify: true,
-                keyboard: true,
+                keyboard: false,
                 grid_num: 10,
                 values_separator: " → ",
                 onChange: function (slider) {
@@ -447,26 +590,143 @@
                 }
             });
 
-            $('#range_reports').ionRangeSlider({
-                keyboard: true,
+            $('#slider-player').ionRangeSlider({
+                skin: "round",
+                grid: true,
+                prettify: true,
+                keyboard: false,
                 min: 0,
                 max: 1,
                 from: 0,
                 step: 1,
-                onChange: function(slide){
+                onStart: function(data) {
+
+                },
+                onUpdate: function (slide) {
                     reportRouteHistoric.updateBusMarker(slide.from);
                 },
+                onChange: function(slide){
+                    if (tracking) pause(true);
+                    reportRouteHistoric.updateBusMarker(slide.from);
+                    // setTrack(slide.from);
+                },
                 onFinish: function(slide){
-                    setTimeout(()=>{
-                        reportRouteHistoric.updateBusMarker(slide.from);
-                        setTimeout(()=>{
-                            reportRouteHistoric.updateBusMarker(slide.from);
-                        },500);
-                    },100);
+                    track = slide.from;
+                    if (tracking) play();
+                }
+            });
+
+            $('#speed-player').ionRangeSlider({
+                skin: "round",
+                keyboard: false,
+                min: 50,
+                max: 500,
+                from: 280,
+                step: 1,
+                onStart: function(data) {
+                    period = 280;
+                },
+                onUpdate: function (slide) {
+
+                },
+                onChange: function(slide){
+                    period = 500 - slide.from;
+                    play();
+                },
+                onFinish: function(slide){
+
                 }
             });
 
             loadingReport.html($('#animated-loading').html()).hide();
+
+            $('body').on('mousedown', '.range-reports .irs-line', function() {
+                pause(true);
+            }).on('mousedown', '.range-reports .irs-bar', function() {
+                pause(true);
+            }).on('mousedown', '.range-reports .irs-single', function() {
+                pause(true);
+            });
         });
+
+        var min = 0;
+        var max = 1000;
+        var marks = [0, 1];
+
+        function convertToPercent(num) {
+            return (num - min) / (max - min) * 100;
+        }
+
+        function addMarks($slider) {
+            var html = '';
+            var left = 0;
+            var left_p = "";
+            var i;
+
+            for (i = 0; i < marks.length; i++) {
+                left = convertToPercent(marks[i]);
+                left_p = left + "%";
+                html += '<span class="showcase__mark" style="left: ' + left_p + '">';
+                html += marks[i];
+                html += '</span>';
+            }
+
+            $slider.append(html);
+        }
+
+        function play() {
+            tracking = true;
+            clearTrack();
+            setTrackInterval(period, 1);
+
+            controls.find('.btn-pause').hide();
+            controls.find('.btn-play').show();
+        }
+
+        function stop(setTracking) {
+            pause(setTracking);
+            setTrack(0);
+        }
+
+        function pause(setTracking) {
+            tracking = setTracking ? setTracking : false;
+            clearTrack();
+
+            controls.find('.btn-pause').show();
+            controls.find('.btn-play').hide();
+        }
+
+
+        function backward(times, force) {
+            let back = track - (times ? times : 1);
+            back = back >= 0 ? back : track;
+            setTrack(back, force);
+        }
+
+        function forward(times, force) {
+            let next = track + (times ? times : 1);
+            if (next <= maxTrack) {
+                setTrack(next, force);
+            } else {
+                pause(true);
+            }
+        }
+
+        function setTrack(from, force) {
+            track = from;
+            if (tracking || force) $('#slider-player').data("ionRangeSlider").update({from});
+        }
+
+        function setTrackInterval(period, fw) {
+            trackInterval = setInterval(() => {
+                forward(fw);
+            }, period);
+        }
+
+        function clearTrack() {
+            if (trackInterval) {
+                clearInterval(trackInterval);
+            }
+        }
     </script>
 @endsection
