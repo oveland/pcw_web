@@ -10,14 +10,15 @@
 
     <style>
         .slider-player .irs-single {
-            top: 15px;
-            padding-top: 8px;
+            top: 20px;
+            padding-top: 3px;
+            height: 20px;
+            font-size: 1rem;
+
             border-radius: 40px;
             width: auto;
-            height: 30px;
             min-width: 35px;
             text-align: center;
-            font-size: 1.2rem;
             font-weight: bold;
             z-index: 100;
             box-shadow: 0 0 0px 2px #7a0045;
@@ -174,6 +175,13 @@
         }
 
         @media only screen and (max-width: 600px) {
+            .slider-player .irs-single {
+                top: 19px;
+                padding-top: 5px;
+                height: 25px;
+                font-size: 1.2rem;
+            }
+
             .range-reports {
                 background: rgba(37, 37, 37, 0.45);
                 color: white;
@@ -201,6 +209,15 @@
 
             .form-actions{
                 text-align: center !important;
+            }
+
+            .report-container{
+                padding: 0 !important;
+            }
+
+            .range-reports {
+                padding-left: 30px !important;
+                padding-right: 30px !important;
             }
         }
     </style>
@@ -343,19 +360,19 @@
                         <div class="col-md-4 col-sm-12 col-xs-12 p-0 text-center">
                             <div class="play-controls text-center">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover" data-placement="left" title="@lang('Backward')"  onclick="backward(maxTrack/10, true)">
+                                    <span class="btn btn-default btn-xs btn-circle btn-backward tooltipss m-0 faa-parent animated-hover" data-placement="left" title="@lang('Backward')"  onclick="backward(maxTrack/10, true)" ontouchstart="backward(maxTrack/10, true)">
                                         <i class="fa fa-step-backward faa-passing-reverse"></i>
                                     </span>
 
-                                    <span class="btn btn-default btn- btn-circle btn-play tooltipss" title="@lang('Play')"  onclick="pause()">
+                                    <span class="btn btn-default btn- btn-circle btn-play tooltipss" title="@lang('Play')"  onclick="pause()" ontouchstart="pause()">
                                         <i class="fa fa-play faa-flash animated"></i> <span class="time"></span>
                                     </span>
 
-                                    <span class="btn btn-default btn- btn-circle btn-pause tooltipss" title="@lang('Pause')" onclick="play()">
+                                    <span class="btn btn-default btn- btn-circle btn-pause tooltipss" title="@lang('Pause')" onclick="play()" ontouchstart="play()">
                                         <i class="fa fa-pause faa-flash animated"></i> <span class="time"></span>
                                     </span>
 
-                                    <span class="btn btn-default btn-xs btn-circle btn-forward tooltipss m-0 faa-parent animated-hover" data-placement="right" title="@lang('Forward')"  onclick="forward(maxTrack/10, true)">
+                                    <span class="btn btn-default btn-xs btn-circle btn-forward tooltipss m-0 faa-parent animated-hover" data-placement="right" title="@lang('Forward')"  onclick="forward(maxTrack/10, true)" ontouchstart="forward(maxTrack/10, true)">
                                         <i class="fa fa-step-forward faa-passing"></i>
                                     </span>
                                 </div>
@@ -555,6 +572,12 @@
                 $('#company-report').change(function () {
                     loadSelectVehicleReport($(this).val(), false, vehicleReport, autoLoad);
                     loadSelectRouteReport($(this).val());
+
+                    $('.btn-passengers-info').hide();
+                    if( $(this).val() == 17 ) {
+                        $('.btn-passengers-info').slideDown();
+                    }
+
                 }).val(companyReport ? companyReport : 14).change();
             @else
                 $('#route-report').change();
@@ -645,6 +668,8 @@
             }).on('mousedown', '.range-reports .irs-bar', function() {
                 pause(true);
             }).on('mousedown', '.range-reports .irs-single', function() {
+                pause(true);
+            }).on('touchstart', '.range-reports .irs-single', function() {
                 pause(true);
             });
         });
