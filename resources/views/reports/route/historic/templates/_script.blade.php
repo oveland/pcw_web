@@ -22,6 +22,8 @@
 
 
             this.showInfo = $('.show-info');
+
+            this.trips = {};
         }
 
         processSVGIcon(reportLocation){
@@ -345,10 +347,15 @@
 
                 $('.passengers-within-round-trip').removeClass('hide');
                 this.showInfo.find('.passengers-route-name').text(dr.route.name);
+
+
             } else {
                 $('.passengers-within-round-trip').addClass('hide');
                 routeLabel.parent().hide();
             }
+            
+            this.trips = reportLocation.passengers.trips;
+            this.processTrips(index);
 
             this.showInfo.find('.time').text(reportLocation.time);
             this.showInfo.find('.period').text(reportLocation.period);
@@ -377,6 +384,23 @@
             );
 
             $('.gm-style-iw-c, .gm-style-iw-d').css('max-height', '300px').css('height', '270px');
+        }
+
+        processTrips(index) {
+            let html = "<ol>";
+
+            const sorted = _.sortBy(this.trips, 'departureTime');
+
+            for(const drId in sorted) {
+                const trip = sorted[drId];
+                if( trip.index <= index ){
+                    html += `<li><small><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</small></li>`;
+                }
+            }
+
+            html += "</ol>";
+
+            $('.info-trips').empty().html(html);
         }
 
         createInfoWindow(r) {

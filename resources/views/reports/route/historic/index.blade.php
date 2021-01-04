@@ -6,6 +6,8 @@
     <link href="{{ asset('assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.skinFlat.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/global/plugins/bootstrap-summernote/summernote.css') }}" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
     <!-- END PAGE LEVEL PLUGINS -->
 
     <style>
@@ -355,6 +357,29 @@
                             <span>
                                 @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
                             </span>
+
+                            @if(true && (Auth::user()->isAdmin() || Auth::user()->company_id == 17))
+                            <div class="m-t-10 p-10" style="background: #00000030; width: auto;padding-right: 30px !important; display: table; border-radius: 10px;transition: all ease 500ms">
+                                <h5 class="text-bold">
+                                 <i class="fa fa-users"></i>   @lang('Histórico de pasajeros')
+                                </h5>
+                                <div class="info-trips"></div>
+
+                                <span class="passengers-within-round-trip hide text-center" style="display: block;border-top: 1px solid white;margin-top: 5px ">
+                                    <small class="passengers-label hide">
+                                        <span class="passengers-route-name"></span>: <span class="passengers-route-in"></span> (<span class="passengers-route-out"></span>)
+                                    </small>
+
+                                    <small class="passengers-label">
+                                        <i class="fa fa-angle-double-up"></i> <span class="hidden-xs">@lang('Ascents'):</span> <span class="passengers-route-ascents"></span>
+                                    </small>
+
+                                    <small class="passengers-label">
+                                        <i class="fa fa-angle-double-down"></i> <span class="hidden-xs">@lang('Descents'):</span> <span class="passengers-route-descents"></span>
+                                    </small>
+                                </span>
+                            </div>
+                            @endif
                         </div>
 
                         <div class="col-md-4 col-sm-12 col-xs-12 p-0 text-center">
@@ -405,7 +430,7 @@
                                         </small>
                                     @endif
 
-                                    <span class="passengers-within-round-trip hide" style="display: block;border-top: 1px solid white;margin-top: 5px ">
+                                    <span class="passengers-within-round-trip hide text-center hidden-md hidden-lg hidden-sm" style="display: block;border-top: 1px solid white;margin-top: 5px ">
                                         <small class="passengers-label">
                                             <span class="passengers-route-name"></span>: <span class="passengers-route-in"></span> (<span class="passengers-route-out"></span>)
                                         </small>
