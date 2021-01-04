@@ -137,7 +137,7 @@ class MigrationController extends Controller
     {
         /*if ($request->get('delete')) {
             $deleted = DB::delete('DELETE FROM companies');
-            dd($deleted . ' registers has ben deleted!');;
+            dd($deleted . ' registers has ben deleted!');
         }*/
 
         $totalCreated = 0;
@@ -193,15 +193,15 @@ class MigrationController extends Controller
     {
         /*if ($request->get('delete')) {
             $deleted = DB::delete('DELETE FROM routes');
-            dd($deleted . ' registers has ben deleted!');;
+            dd($deleted . ' registers has ben deleted!');
         }*/
 
         $this->migrateCompanies($request, false);
         $this->migrateDispatches($request, false);
 
         DB::statement("
-            UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER 
-            FROM control_points WHERE route_id = ruta.id_rutas 
+            UPDATE ruta SET distancia = (SELECT (distance_from_dispatch/1000)::INTEGER
+            FROM control_points WHERE route_id = ruta.id_rutas
             ORDER BY distance_from_dispatch DESC LIMIT 1) WHERE id_rutas IN (" . implode(',', $this->getRoutesForMigrate($request)) . ")
         ");
 
@@ -270,7 +270,7 @@ class MigrationController extends Controller
     {
         if ($request->get('delete')) {
             $deleted = DB::delete('DELETE FROM dispatches');
-            dd($deleted . ' registers has ben deleted!');;
+            dd($deleted . ' registers has ben deleted!');
         }
 
         $totalCreated = 0;
@@ -323,7 +323,7 @@ class MigrationController extends Controller
     {
         if ($request->get('delete')) {
             $deleted = DB::delete('DELETE FROM users');
-            dd($deleted . ' registers has ben deleted!');;
+            dd($deleted . ' registers has ben deleted!');
         }
 
         $totalCreated = 0;
@@ -371,7 +371,7 @@ class MigrationController extends Controller
     {
         if ($request->get('delete')) {
 //            $deleted = DB::delete('DELETE FROM gps_vehicles');
-//            dump($deleted . ' registers has ben deleted from gps_vehicles!');;
+//            dump($deleted . ' registers has ben deleted from gps_vehicles!');
 //            $deleted = DB::delete('DELETE FROM vehicles');
 //            dd($deleted . ' registers has ben deleted!');
         }
@@ -594,33 +594,33 @@ class MigrationController extends Controller
         foreach ($this->getRoutesForMigrate($request) as $route) {
             $controlPointTimesByDays = collect(
                 DB::select("
-                    SELECT 
+                    SELECT
                       tpc.id_tiempos_punto_control id,
                       tpc.id_punto_control control_point_id,
-                      pc.orden, 
-                      pc.nombre, 
-                      tpc.tiempo1 time1, 
-                      tpc.tiempo2 time2, 
-                      tpc.tiempo3 time3, 
-                      tpc.tiempo4 time4, 
-                      tpc.tiempo5 time5, 
-                      tpc.tiempo6 time6, 
-                      tpc.tiempo7 time7, 
-                      tpc.tiempo8 time8, 
-                      tpc.tiempo9 time9, 
-                      tpc.tiempo10 time10, 
-                      tpc.tiempo11 time11, 
-                      tpc.tiempo12 time12, 
-                      tpc.tiempo13 time13, 
-                      tpc.tiempo14 time14, 
-                      tpc.tiempo15 time15, 
-                      tpc.tipo_dia day_type, 
-                      tpc.id_ruta route_id 
-                    FROM 
-                      puntos_control_ruta AS pc, 
-                      tiempos_punto_control AS tpc 
+                      pc.orden,
+                      pc.nombre,
+                      tpc.tiempo1 time1,
+                      tpc.tiempo2 time2,
+                      tpc.tiempo3 time3,
+                      tpc.tiempo4 time4,
+                      tpc.tiempo5 time5,
+                      tpc.tiempo6 time6,
+                      tpc.tiempo7 time7,
+                      tpc.tiempo8 time8,
+                      tpc.tiempo9 time9,
+                      tpc.tiempo10 time10,
+                      tpc.tiempo11 time11,
+                      tpc.tiempo12 time12,
+                      tpc.tiempo13 time13,
+                      tpc.tiempo14 time14,
+                      tpc.tiempo15 time15,
+                      tpc.tipo_dia day_type,
+                      tpc.id_ruta route_id
+                    FROM
+                      puntos_control_ruta AS pc,
+                      tiempos_punto_control AS tpc
                     WHERE tpc.id_punto_control = pc.secpuntos_control_ruta AND pc.id_ruta = $route
-                    GROUP BY pc.secpuntos_control_ruta, tpc.id_tiempos_punto_control  
+                    GROUP BY pc.secpuntos_control_ruta, tpc.id_tiempos_punto_control
                     ORDER BY tpc.tipo_dia, pc.orden"
                 )
             )->groupBy('day_type');

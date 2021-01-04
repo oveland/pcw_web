@@ -228,7 +228,7 @@
                 text-align: center !important;
             }
 
-            .report-container{
+            .historic-container{
                 padding: 0 !important;
             }
 
@@ -357,7 +357,8 @@
         <hr class="hr">
         <!-- begin content report -->
         <div class="loading-report col-md-12"></div>
-        <div class="report-container col-md-12">
+
+        <div class="historic-container col-md-12">
             <div class="col-md-12 col-sm-12 col-xs-12 p-0" style="display: grid">
                 <div class="range-reports col-md-12" style="display: grid">
                     <div class="slider-player">
@@ -515,10 +516,12 @@
         let trackInterval = null;
         let controls = $('.play-controls');
 
+        fitHeight('#google-map-light-dream');
+
         controls.hide();
 
         let reportRouteHistoric = null;
-        let reportContainer = $('.report-container');
+        let reportContainer = $('.historic-container');
         let loadingReport = $('.loading-report');
         $('.menu-routes, .menu-report-route-historic').addClass('active-animated');
 
@@ -570,13 +573,14 @@
                     stop();
                     form.find('.btn-search-report').addClass(loadingClass);
 
-                    reportContainer.hide();
+                    // reportContainer.hide();
                     loadingReport.fadeIn();
                     reportRouteHistoric.clearMap();
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
                         success: function (report) {
+                            fitHeight('#google-map-light-dream');
                             reportRouteHistoric.processHistoricReportData(report);
 
                             $('#slider-player').data("ionRangeSlider").update({
@@ -609,7 +613,7 @@
 
             $('#route-report').change(function () {
                 loadSelectVehicleReportFromRoute($(this).val(), vehicleReport, autoLoad);
-                reportContainer.slideUp(100);
+                // reportContainer.slideUp(100);
             });
 
             @if(Auth::user()->isAdmin())
