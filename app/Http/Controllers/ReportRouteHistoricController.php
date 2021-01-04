@@ -102,10 +102,11 @@ class ReportRouteHistoricController extends Controller
         $prevTotalDescentsInRoundTrip = 0;
 
         $frameCounter = '';
+        $trips = [];
 
-        foreach ($locations as $location) {
+        foreach ($locations as $index => $location) {
             $dispatchRegister = $location->dispatchRegister;
-            
+
             $period = '';
             $averagePeriod = '';
             if (Auth::user()->isAdmin()) {
@@ -113,11 +114,11 @@ class ReportRouteHistoricController extends Controller
                 //$averagePeriod = intval($dataLocations->average('period')); // CAUTION this line take some long time!
                 $averagePeriod = "--";
             }
-            
+
             $passenger = $location->passenger;
 
             if ($passenger) {
-                $frameCounter = $passenger->frame ? $passenger->date->toTimeString()." • ".$passenger->frame : $frameCounter;
+                $frameCounter = $passenger->frame ? $passenger->date->toTimeString() . " • " . $passenger->frame : $frameCounter;
 
                 if ($totalPassengers <= $passenger->total) {
                     $totalPassengers = $passenger->total;
@@ -147,6 +148,17 @@ class ReportRouteHistoricController extends Controller
                     if ($totalDescentsInRoundTrip <= $passenger->descents_in_round_trip) {
                         $totalDescentsInRoundTrip = $passenger->descents_in_round_trip;
                     }
+
+                    $trips[$dispatchRegister->id] = [
+                        "index" => $index,
+                        "routeName" => $dispatchRegister->route->name,
+                        "roundTrip" => $dispatchRegister->round_trip,
+                        "departureTime" => $dispatchRegister->departure_time,
+                        "passengers" => [
+                            "total" => $totalPassengers,
+                            "inRoundTrip" => $totalPassengersInRoundTrip,
+                        ]
+                    ];
                 } else {
                     $totalPassengersInRoundTrip = 0;
                     $totalPassengersOutRoundTrip = 0;
@@ -194,7 +206,8 @@ class ReportRouteHistoricController extends Controller
                     'counted' => ($countedAscents || $countedDescents),
                     'countedAscents' => $countedAscents,
                     'countedDescents' => $countedDescents,
-                    'frame' => $frameCounter
+                    'frame' => $frameCounter,
+                    'trips' => $trips
                 ],
             ]);
 
