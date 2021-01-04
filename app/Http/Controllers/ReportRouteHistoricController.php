@@ -89,6 +89,7 @@ class ReportRouteHistoricController extends Controller
         $lastLocation = $locations->first();
 
         $totalPassengers = 0;
+        $totalInRoundTrips = 0;
         $totalPassengersInRoundTrip = 0;
         $totalPassengersOutRoundTrip = 0;
         $prevTotalPassengers = 0;
@@ -148,17 +149,22 @@ class ReportRouteHistoricController extends Controller
                     if ($totalDescentsInRoundTrip <= $passenger->descents_in_round_trip) {
                         $totalDescentsInRoundTrip = $passenger->descents_in_round_trip;
                     }
+                    
 
-                    $trips[$dispatchRegister->id] = [
+                    $trips[$dispatchRegister->id] = (object) [
                         "index" => $index,
                         "routeName" => $dispatchRegister->route->name,
                         "roundTrip" => $dispatchRegister->round_trip,
                         "departureTime" => $dispatchRegister->departure_time,
-                        "passengers" => [
+                        "passengers" => (object) [
                             "total" => $totalPassengers,
                             "inRoundTrip" => $totalPassengersInRoundTrip,
                         ]
                     ];
+                    
+                    $totalInRoundTrips = collect($trips)->sum( function($t) {
+                    return $t->passengers->inRoundTrip;
+                    });
                 } else {
                     $totalPassengersInRoundTrip = 0;
                     $totalPassengersOutRoundTrip = 0;
@@ -197,6 +203,7 @@ class ReportRouteHistoricController extends Controller
                 'vehicle' => $location->vehicle->getAPIFields(),
                 'passengers' => (object)[
                     'total' => $totalPassengers,
+                    'totalInRoundTrips' => $totalInRoundTrips,
                     'inRoundTrip' => $totalPassengersInRoundTrip,
                     'outRoundTrip' => $totalPassengersOutRoundTrip,
                     'totalAscents' => $totalAscents,

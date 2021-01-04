@@ -354,8 +354,8 @@
                 routeLabel.parent().hide();
             }
             
-            this.trips = reportLocation.passengers.trips;
-            this.processTrips(index);
+      
+            this.processTrips(reportLocation.passengers, index);
 
             this.showInfo.find('.time').text(reportLocation.time);
             this.showInfo.find('.period').text(reportLocation.period);
@@ -386,7 +386,9 @@
             $('.gm-style-iw-c, .gm-style-iw-d').css('max-height', '300px').css('height', '270px');
         }
 
-        processTrips(index) {
+        processTrips(passengers, index) {
+            this.trips = passengers.trips;
+        
             let html = "<ol>";
 
             const sorted = _.sortBy(this.trips, 'departureTime');
@@ -401,6 +403,9 @@
             html += "</ol>";
 
             $('.info-trips').empty().html(html);
+            
+            $('.info-trips-total').empty().html(passengers.totalInRoundTrips
+            );
         }
 
         createInfoWindow(r) {

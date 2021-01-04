@@ -169,6 +169,15 @@
             display: block;
             text-shadow: 0px 3px 2px #190043;
         }
+        
+        .info-trips-container {
+            background: #00000030;
+            width: auto;
+            padding-right: 30px !important;
+            display: table;
+            border-radius: 10px;
+            transition: all ease 500ms;
+        }
 
         @media only screen and (max-width: 1200px) {
             .btn-passengers-info {
@@ -177,16 +186,22 @@
         }
 
         @media only screen and (max-width: 600px) {
+            .range-reports {
+            z-index: 1;
+            padding-top: 10px;
+            padding-bottom: 5px;
+            background: rgba(37, 37, 37, 0.9);
+            color: white;
+            position: relative;
+            width: 100%;
+            margin: 0 !important;
+            }
+        
             .slider-player .irs-single {
                 top: 19px;
                 padding-top: 5px;
                 height: 25px;
                 font-size: 1.2rem;
-            }
-
-            .range-reports {
-                background: rgba(37, 37, 37, 0.45);
-                color: white;
             }
 
             .show-info-last{
@@ -218,8 +233,12 @@
             }
 
             .range-reports {
-                padding-left: 30px !important;
-                padding-right: 30px !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+            
+            .info-trips-container {
+                width: 100%;
             }
         }
     </style>
@@ -339,10 +358,10 @@
         <!-- begin content report -->
         <div class="loading-report col-md-12"></div>
         <div class="report-container col-md-12">
-            <div class="col-md-12 col-sm-12 col-xs-12" style="display: grid">
+            <div class="col-md-12 col-sm-12 col-xs-12 p-0" style="display: grid">
                 <div class="range-reports col-md-12" style="display: grid">
                     <div class="slider-player">
-                        <div class="text-center" style="position: absolute;width: 100%; top: 10px">
+                        <div class="text-center hidden-xs" style="position: absolute;width: 100%; top: 10px">
                             <label for="slider-player">
                                 <small class="text-muted">Deslice para reproducir recorrido</small>
                             </label>
@@ -350,22 +369,22 @@
                         <input id="slider-player" type="text" />
                     </div>
                     <div class="help-block text-white show-info m-b-0">
-                        <div class="col-md-4 col-sm-12 col-xs-12 p-0 hidden-xs">
-                            <span>
+                        <div class="col-md-4 col-sm-12 col-xs-12 p-0 hidden-sxs">
+                            <span class="hidden-xs">
                                 <i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')
                             </span>
-                            <span>
+                            <span class="hidden-xs">
                                 @lang('between') <i class="fa fa-clock-o"></i> <span class="time-from">--:--:--</span> - <i class="fa fa-clock-o"></i> <span class="time-to">--:--:--</span>
                             </span>
 
                             @if(true && (Auth::user()->isAdmin() || Auth::user()->company_id == 17))
-                            <div class="m-t-10 p-10" style="background: #00000030; width: auto;padding-right: 30px !important; display: table; border-radius: 10px;transition: all ease 500ms">
+                            <div class="m-t-10 p-10 info-trips-container">
                                 <h5 class="text-bold">
-                                 <i class="fa fa-users"></i>   @lang('Histórico de pasajeros')
+                                 <i class="fa fa-users"></i>   @lang('Histórico de pasajeros'): <span class="info-trips-total">0</span>
                                 </h5>
                                 <div class="info-trips"></div>
 
-                                <span class="passengers-within-round-trip hide text-center" style="display: block;border-top: 1px solid white;margin-top: 5px ">
+                                <span class="passengers-within-round-trip hhide text-center" style="display: block;border-top: 1px solid white;margin-top: 5px ">
                                     <small class="passengers-label hide">
                                         <span class="passengers-route-name"></span>: <span class="passengers-route-in"></span> (<span class="passengers-route-out"></span>)
                                     </small>
