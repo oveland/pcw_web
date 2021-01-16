@@ -64,7 +64,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="date-report" class="control-label field-required">
-                                        @lang('Expiration date')
+                                        @lang('Date')
                                     </label>
                                     <label class="text-bold">
                                         &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')

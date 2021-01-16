@@ -7,7 +7,7 @@
     <link href="{{ asset('assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/global/plugins/bootstrap-summernote/summernote.css') }}" rel="stylesheet" type="text/css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <script src="https://www.pcwserviciosgps.com/plugins/lodash.min.js"></script>
     <!-- END PAGE LEVEL PLUGINS -->
 
     <style>
@@ -169,7 +169,7 @@
             display: block;
             text-shadow: 0px 3px 2px #190043;
         }
-        
+
         .info-trips-container {
             background: #00000030;
             width: auto;
@@ -196,7 +196,7 @@
             width: 100%;
             margin: 0 !important;
             }
-        
+
             .slider-player .irs-single {
                 top: 19px;
                 padding-top: 5px;
@@ -236,7 +236,7 @@
                 padding-left: 20px !important;
                 padding-right: 20px !important;
             }
-            
+
             .info-trips-container {
                 width: 100%;
             }
@@ -556,9 +556,9 @@
         $(document).ready(function () {
             initializeMap(() => {
                 reportRouteHistoric = new ReportRouteHistoric(map);
-                loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js", function(){
-                    loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/vendor/markerAnimate.js", function(){
-                        loadScript("https://cdnjs.cloudflare.com/ajax/libs/marker-animate-unobtrusive/0.2.8/SlidingMarker.min.js", function(){
+                loadScript("https://www.pcwserviciosgps.com/google/plugins/jquery.easing.min.js", function(){
+                    loadScript("https://www.pcwserviciosgps.com/google/plugins/markerAnimate.js", function(){
+                        loadScript("https://www.pcwserviciosgps.com/google/plugins/SlidingMarker.min.js", function(){
                             SlidingMarker.initializeGlobally();
                             fitHeight('#google-map-light-dream');
                         });

@@ -90,7 +90,7 @@
                         </th>
 
                         @if($company->hasRecorderCounter())
-                            <th class="text-center sensor recorder">
+                            <th class="text-center hide">
                                 <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i><br> @lang('Sensor recorder')
                             </th>
                             <th class="text-center recorder">
@@ -152,7 +152,7 @@
                             <td>{{ number_format($report->differenceMileage, 1) }} </td>
 
                             @if($company->hasRecorderCounter())
-                                <td class="sensor recorder">{{ $sensorRecorder }}</td>
+                                <td class="hide">{{ $sensorRecorder }}</td>
                                 <td class="recorder text-center">
                                     <span class="{{ count($issuesByVehicles) ? "text-warning click tooltips":""  }}" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
                                           onclick="{{ count($issuesByVehicles) ? "$('#issue-$date').collapse('show');":""  }}">
