@@ -205,7 +205,7 @@ class Company extends Model
      */
     public function hasSensorCounter()
     {
-        return collect([self::YUMBENOS])->contains($this->id);
+        return collect([self::YUMBENOS, self::ALAMEDA])->contains($this->id) || auth()->user()->isAdmin();
     }
 
     /*

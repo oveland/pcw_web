@@ -254,9 +254,11 @@ License: You must have a valid license purchased only from themeforest(the above
 
                         <span class="username">
                             <i class="icon-user"></i>
-                            @if(Auth::user())
-                                {{ Auth::user()->name }}
-                            @endif
+                            <span class="hidden-xs">
+                                @if(Auth::user())
+                                    {{ Auth::user()->name }}
+                                @endif
+                            </span>
                         </span>
                         <i class="fa fa-angle-down"></i>
                     </a>
@@ -1507,7 +1509,7 @@ License: You must have a valid license purchased only from themeforest(the above
 </template>
 
 <div class="page-footer">
-    <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>2020</b> <i class="fa fa-rocket"></i> PCW @
+    <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>{{ date('Y') }}</b> <i class="fa fa-rocket"></i> PCW @
         <a href="https://pcwtecnologia.com" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>
     </div>
     <div class="scroll-to-top">

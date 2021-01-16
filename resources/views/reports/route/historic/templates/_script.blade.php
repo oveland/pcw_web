@@ -22,8 +22,6 @@
 
 
             this.showInfo = $('.show-info');
-
-            this.trips = {};
         }
 
         processSVGIcon(reportLocation){
@@ -158,7 +156,7 @@
             if (this.historicLocations.length) {
                 this.updateBusMarker(report.total - 1);
                 setTimeout(() => {
-                    $("html, body").animate({scrollTop: $(".range-reports").offset().top - 40}, 1000);
+                    $("html, body").animate({scrollTop: $(".range-reports").offset().top}, 1000);
                     const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
                     if (kmzUrl) {
                         this.kmlLayer = new google.maps.KmlLayer({
@@ -275,6 +273,20 @@
             });
         }
 
+        showPhoto(index) {
+            const historicLocation = this.historicLocations[index];
+            if (!historicLocation) return false;
+            const reportLocation = historicLocation.reportLocation;
+
+            if(reportLocation.photo.id) {
+                const url = `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${ reportLocation.photo.id }&with-effect=true&encode=png`;
+
+                $('#photo-show').hide();
+                $('#photo-loading').show();
+                $('#photo').hide().attr('src', url);
+            }
+        }
+
         updateBusMarker(index) {
             const historicLocation = this.historicLocations[index];
             if (!historicLocation) return false;
@@ -337,7 +349,9 @@
             const routeLabel = this.showInfo.find('.route');
             if (reportLocation.dispatchRegister) {
                 const dr = reportLocation.dispatchRegister;
-                routeLabel.text(dr.route.name).parent().fadeIn();
+
+                if(reportLocation.vehicle.id != 1199) routeLabel.text(dr.route.name).parent().fadeIn();
+
                 this.showInfo.find('.mileage-route').text(reportLocation.routeDistance);
                 if (reportLocation.offRoad) {
                     routeLabel.parent().addClass('btn-danger').attr('title', '@lang('Off road vehicle')');
@@ -353,14 +367,17 @@
                 $('.passengers-within-round-trip').addClass('hide');
                 routeLabel.parent().hide();
             }
-            
-      
-            this.processTrips(reportLocation.passengers, index);
+
+
+            this.processTrips(reportLocation, index);
 
             this.showInfo.find('.time').text(reportLocation.time);
             this.showInfo.find('.period').text(reportLocation.period);
             this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
             this.showInfo.find('.speed').text(reportLocation.speed);
+
+            this.showInfo.find('.photo').text(reportLocation.photo.id);
+
             this.showInfo.find('.current-mileage').text(reportLocation.currentMileage);
             this.showInfo.find('.passengers-total').text(reportLocation.passengers.total);
             this.showInfo.find('.passengers-frame').text(reportLocation.passengers.frame);
@@ -368,6 +385,9 @@
             this.showInfo.find('.passengers-route-out').text(reportLocation.passengers.outRoundTrip);
             this.showInfo.find('.passengers-total-ascents').text(reportLocation.passengers.totalAscents);
             this.showInfo.find('.passengers-total-descents').text(reportLocation.passengers.totalDescents);
+
+            this.showInfo.find('.photo-passengers-total').text(reportLocation.photo.passengers);
+            this.showInfo.find('.photo-passengers-trip').text(reportLocation.photo.passengersTrip);
 
             this.showInfo.find('.passengers-route-ascents').text(reportLocation.passengers.ascentsInRoundTrip);
             this.showInfo.find('.passengers-route-descents').text(reportLocation.passengers.descentsInRoundTrip);
@@ -384,26 +404,50 @@
             );
 
             $('.gm-style-iw-c, .gm-style-iw-d').css('max-height', '300px').css('height', '270px');
+
+            if(parseInt(reportLocation.photo.id) > 0) {
+                $('#photo-show').show();
+            } else {
+                $('#photo-show').hide();
+            }
+
+            $('#photo-loading').hide();
+            $('#photo').hide();
+            $('.photo-info').hide();
         }
 
-        processTrips(passengers, index) {
-            this.trips = passengers.trips;
-        
-            let html = "<ol>";
+        processTrips(reportLocation, index) {
+            const dr = reportLocation.dispatchRegister;
+            const passengers = reportLocation.passengers;
+            const trips = passengers.trips;
 
-            const sorted = _.sortBy(this.trips, 'departureTime');
+            let html = "<ol class='m-0'>";
+
+            const sorted = _.sortBy(trips, 'departureTime');
+            let iterations = sorted.length;
+
+            if(iterations && dr) {
+                $('.passengers-route-ascents').parent().show();
+                $('.passengers-route-descents').parent().show();
+            }else {
+                $('.passengers-route-ascents').parent().hide();
+                $('.passengers-route-descents').parent().hide();
+            }
 
             for(const drId in sorted) {
                 const trip = sorted[drId];
+
+                const classLast = (!--iterations && dr) ? 'active' : '';
+
                 if( trip.index <= index ){
-                    html += `<li><small><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</small></li>`;
+                    html += `<li class="${classLast}"><small><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</small></li>`;
                 }
             }
 
             html += "</ol>";
 
             $('.info-trips').empty().html(html);
-            
+
             $('.info-trips-total').empty().html(passengers.totalInRoundTrips
             );
         }
