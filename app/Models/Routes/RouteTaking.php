@@ -2,6 +2,7 @@
 
 namespace App\Models\Routes;
 
+use App\Models\Company\Company;
 use App\Models\Users\User;
 use Carbon\Carbon;
 use Eloquent;
@@ -137,8 +138,14 @@ class RouteTaking extends Model
      */
     public function stationFuel()
     {
+        $stations = self::STATIONS_FUEL;
+
+        if ($this->dispatchRegister->route && $this->dispatchRegister->route->company->id == Company::YUMBENOS) {
+            $stations = ['Estación 1', 'Estación 2', 'Estación 3'];
+        }
+
         if ($this->station_fuel_id) {
-            return self::STATIONS_FUEL[$this->station_fuel_id];
+            return $stations[$this->station_fuel_id];
         }
         return "";
     }

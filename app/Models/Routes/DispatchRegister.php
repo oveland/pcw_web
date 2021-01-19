@@ -619,9 +619,7 @@ class DispatchRegister extends Model
 
     public function getPassengersByRecorder()
     {
-        $company = $this->route->company;
-
-        if($company->id == Company::YUMBENOS){
+        if ($this->route && $this->route->company->id == Company::YUMBENOS) {
             return $this->getPassengersBySensor();
         }
 
