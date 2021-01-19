@@ -1,3 +1,7 @@
+@php
+    $company = $dispatchRegister->route->company
+@endphp
+
 <div class="row">
     <div class="col-md-12">
         <div class="well row">
@@ -15,14 +19,23 @@
                         <i class="icon-directions"></i> <strong>@lang('Round trip'):</strong>
                         <span>{{ $dispatchRegister->round_trip }}</span>
                     </h5>
-                    <h5>
-                        <i class="fa fa-users"></i> <strong>@lang('Total') @lang('passengers'):</strong>
-                        <span>{{ $dispatchRegister->passengers->recorders->count }}</span>
-                    </h5>
-                    <h5>
-                        <i class="icon-compass"></i> <strong>@lang('Recorders'):</strong>
-                        <span>{{ $dispatchRegister->passengers->recorders->start }} - {{ $dispatchRegister->passengers->recorders->end }}</span>
-                    </h5>
+                    @if($company->id == $company->hasRecorderCounter())
+                        <h5>
+                            <i class="fa fa-users"></i> <strong>@lang('Total') @lang('passengers'):</strong>
+                            <span>{{ $dispatchRegister->passengers->recorders->count }}</span>
+                        </h5>
+                    @else
+                        <h5>
+                            <i class="fa fa-users"></i> <strong>@lang('Total') @lang('passengers'):</strong>
+                            <span>{{ $dispatchRegister->passengers->sensor->count }}</span>
+                        </h5>
+                    @endif
+                    @if($company->id == $company->hasRecorderCounter())
+                        <h5>
+                            <i class="icon-compass"></i> <strong>@lang('Recorders'):</strong>
+                            <span>{{ $dispatchRegister->passengers->recorders->start }} - {{ $dispatchRegister->passengers->recorders->end }}</span>
+                        </h5>
+                    @endif
                     <h5 style="border-top: 1px solid lightgray;" class="m=t-10 p-t-10">
                         <i class="fa fa-dollar"></i><i class="fa fa-user"></i><strong>@lang('Passenger tariff'):</strong>
                         <span>${{ number_format($dispatchRegister->takings->passenger_tariff, 0) }}</span>
