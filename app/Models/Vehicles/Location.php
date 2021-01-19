@@ -272,4 +272,9 @@ class Location extends Model
 
         return isset($ardOffRoad[$routeId]) ? $ardOffRoad[$routeId]['tt'] : 0;
     }
+
+    public function photo()
+    {
+        return $this->hasOne(PhotoLocation::class);
+    }
 }

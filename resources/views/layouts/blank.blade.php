@@ -42,6 +42,12 @@ License: You must have a valid license purchased only from themeforest(the above
     <br><hr><br>
 @endif
 
+<template id="animated-loading">
+    <div class="col-md-12 text-center">
+        <img class="" alt="@lang('Loading')..." src="https://www.pcwserviciosgps.com/files/loading.svg" height="200px">
+    </div>
+</template>
+
 <div class="page-footer">
     <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>{{ date('Y') }}</b> <i class="fa fa-rocket"></i> PCW @
         <a href="https://pcwtecnologia.com" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>

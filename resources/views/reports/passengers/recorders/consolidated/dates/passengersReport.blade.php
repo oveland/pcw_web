@@ -152,7 +152,8 @@
                             <td>{{ number_format($report->differenceMileage, 1) }} </td>
 
                             @if($company->hasRecorderCounter())
-                                <td class="hide">{{ $sensorRecorder }}</td>
+                                <td class="hide">
+                                {{ $sensorRecorder }}</td>
                                 <td class="recorder text-center">
                                     <span class="{{ count($issuesByVehicles) ? "text-warning click tooltips":""  }}" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
                                           onclick="{{ count($issuesByVehicles) ? "$('#issue-$date').collapse('show');":""  }}">
@@ -225,7 +226,7 @@
                         <td class="text-center recorder">{{ number_format($passengerReport->totalDifferenceMileage,1) }}</td>
 
                         @if($company->hasRecorderCounter())
-                            <td class="text-center sensor recorder">{{ $totalSensorRecorder->sum() }}</td>
+                            <td class="text-center sensor recorder hide">{{ $totalSensorRecorder->sum() }}</td>
                             <td class="text-center recorder">{{ number_format($passengerReport->totalRecorder, 0) }}</td>
                         @endif
 
