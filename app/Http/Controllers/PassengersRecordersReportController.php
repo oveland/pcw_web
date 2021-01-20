@@ -65,11 +65,12 @@ class PassengersRecordersReportController extends Controller
         $groupByVehicle = $request->get('group-by-vehicle');
         $groupByRoute = $request->get('group-by-route');
         $groupByDate = $request->get('group-by-date');
+        $groupByDriver = $request->get('group-by-driver');
 
         if ($dateEndReport < $dateReport) return view('partials.dates.invalidRange');
         if (Carbon::parse($dateReport)->diffInDays(Carbon::parse($dateEndReport)) > self::LIMIT_DATE_RANGE) return view('partials.dates.rangeTooHigh', ['limit' => self::LIMIT_DATE_RANGE]);
 
-        $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle, $groupByRoute, $groupByDate);
+        $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle, $groupByRoute, $groupByDate, $groupByDriver);
 
         if ($request->get('export')) return $this->export($passengerReport);
 
@@ -89,7 +90,7 @@ class PassengersRecordersReportController extends Controller
      * @param null $groupByDate
      * @return object
      */
-    public function buildPassengerReport(Company $company, Route $route = null, Vehicle $vehicle = null, Driver $driver = null, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle = null, $groupByRoute = null, $groupByDate = null)
+    public function buildPassengerReport(Company $company, Route $route = null, Vehicle $vehicle = null, Driver $driver = null, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle = null, $groupByRoute = null, $groupByDate = null, $groupByDriver = null)
     {
         $dateRange = PCWTime::dateRange(Carbon::parse($dateReport), Carbon::parse($dateEndReport));
 
@@ -111,47 +112,151 @@ class PassengersRecordersReportController extends Controller
         foreach ($dateRange as $date) {
             $dispatchRegisters = $allDispatchRegisters->where('date', $date->toDateString());
 
-//            $firstRoute = $dispatchRegisters->count() ? $dispatchRegisters->sortBy('departure_time')->first()->route : null;
-//            $programmedRoundTrips = self::PROGRAMMED_ROUND_TRIPS;
-
-
             $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
 
             $reportsByVehicles = collect([]);
-            foreach ($dispatchRegistersByVehicles as $vehicleId => $dr) {
-
+            foreach ($dispatchRegistersByVehicles as $vehicleId => $drv) {
+                $drv = collect($drv);
                 $vehicleByDate = Vehicle::find($vehicleId);
-                $dr = collect($dr);
 
-                $firstRoute = $dr->sortBy('departure_time')->first()->route;
+                $firstRoute = $drv->sortBy('departure_time')->first()->route;
 
-                $dispatchRegistersByRoutes = $dr->sortBy(function ($d) {
+                $dispatchRegistersByRoutes = $drv->sortBy(function ($d) {
                     return $d->route->name;
                 })->groupBy('route_id');
 
-                $totalRoutes = $dispatchRegistersByRoutes->count();
-                $index = 1;
-                $roundTripsCounter = 0;
 
                 $reportsByRoutes = collect([]);
                 foreach ($dispatchRegistersByRoutes as $routeId => $drr) {
-
+                    $drr = collect($drr);
                     $routeByDateAndVehicle = Route::find($routeId);
 
-                    $countRoundTrips = collect($drr)->count();
+                    $dispatchRegistersByDrivers = $drr->sortBy(function (DispatchRegister $d) {
+                        $driver = $d->driver;
+                        return $driver ? $driver->full_name : $d->driver_code;
+                    })->groupBy(function (DispatchRegister $dg) {
+                        return $dg->driver ? $dg->driver->id : $dg->driver_code;
+                    });
 
-                    $programmedRoundTrips = $index != $totalRoutes ? $countRoundTrips : (self::PROGRAMMED_ROUND_TRIPS - $roundTripsCounter);
+                    $totalRoutes = $dispatchRegistersByDrivers->count();
+                    $index = 1;
+                    $roundTripsCounter = 0;
 
-                    $roundTripsCounter += $countRoundTrips;
-                    $index++;
+                    $reportsByDrivers = collect([]);
 
-                    $reportsByRoute = $this->buildReport($date, $routeByDateAndVehicle, $vehicleByDate, $driver, $drr, $programmedRoundTrips, $firstRoute);
-                    $reportsByRoutes = $reportsByRoutes->merge($reportsByRoute);
+                    foreach ($dispatchRegistersByDrivers as $driverCodeOrID => $drd) {
+                        $drd = collect($drd);
+                        $driverByDateAndVehicleAndRoute = Driver::findByIdOrCode($driverCodeOrID, $company->id)->get()->first();
+
+                        if (!$driverByDateAndVehicleAndRoute) {
+                            $driverByDateAndVehicleAndRoute = new Driver();
+                            $driverByDateAndVehicleAndRoute->id = $driverCodeOrID;
+                            $driverByDateAndVehicleAndRoute->code = $driverCodeOrID;
+                            $driverByDateAndVehicleAndRoute->first_name = '';
+                            $driverByDateAndVehicleAndRoute->last_name = '';
+                        }
+
+                        $countRoundTrips = $drd->count();
+
+                        $programmedRoundTrips = $index != $totalRoutes ? $countRoundTrips : (self::PROGRAMMED_ROUND_TRIPS - $roundTripsCounter);
+
+                        $roundTripsCounter += $countRoundTrips;
+
+                        $reportsByDriver = $this->buildReport($date, $routeByDateAndVehicle, $vehicleByDate, $driverByDateAndVehicleAndRoute, $drd, $programmedRoundTrips, $firstRoute);
+                        $reportsByDrivers = $reportsByDrivers->merge($reportsByDriver);
+
+                        $index++;
+                    }
+
+                    if (!$groupByDriver && $reportsByDrivers->count()) {
+                        $ungrouped = collect([]);
+                        foreach ($reportsByDrivers->groupBy('vehicleId') as $vehicleFilterId => $rv) {
+                            foreach ($rv->groupBy('routeId') as $routeFilterId => $r) {
+                                $mileage = $r->sum('mileage');
+                                $totalByRecorder = $r->sum('totalByRecorder');
+                                $IPK = $mileage > 0 ? $totalByRecorder / $mileage : 0;
+
+                                $programmedMileage = $r->sum('programmedMileage');
+                                $differenceMileage = $mileage - $programmedMileage;
+
+                                $ungrouped->push((object)[
+                                    'date' => $date->toDateString(),
+                                    'totalByRecorder' => $totalByRecorder,
+                                    'totalBySensor' => $r->sum('totalBySensor'),
+                                    'totalAllBySensor' => $r->sum('totalAllBySensor'),
+                                    'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
+                                    'issues' => $r->pluck('issues')->collapse(),
+                                    'roundTrips' => $r->sum('roundTrips'),
+                                    'mileage' => $mileage,
+                                    'programmedMileage' => $programmedMileage,
+                                    'differenceMileage' => $differenceMileage,
+                                    'IPK' => $IPK,
+                                    'frame' => '',
+                                    'routeId' => $r->pluck('routeId')->first(),
+                                    'route' => $r->pluck('route')->first(),
+                                    'vehicleId' => $r->pluck('vehicleId')->first(),
+                                    'vehicle' => $r->pluck('vehicle')->first(),
+                                    'driverId' => $driver ? $driver->id : '',
+                                    'driver' => $driver,
+                                    'routeProcessed' => $r->pluck('routeProcessed')->first(),
+                                    'vehicleProcessed' => $r->pluck('vehicleProcessed')->first(),
+                                    'driverProcessed' => $driver ? $driver->code . ' | ' . $driver->fullName() : __('All'),
+                                ]);
+                            }
+                        }
+                        $reportsByDrivers = $ungrouped;
+                    }
+
+                    $reportsByRoutes = $reportsByRoutes->merge($reportsByDrivers);
                 }
 
                 if (!$groupByRoute && $reportsByRoutes->count()) {
                     $ungrouped = collect([]);
-                    foreach ($reportsByRoutes->groupBy('vehicleId') as $vehicleFilterId => $r) {
+                    foreach ($reportsByRoutes->groupBy('vehicleId') as $vehicleFilterId => $rv) {
+                        foreach ($rv->groupBy('driverId') as $driverFilterId => $r) {
+                            $mileage = $r->sum('mileage');
+                            $totalByRecorder = $r->sum('totalByRecorder');
+                            $IPK = $mileage > 0 ? $totalByRecorder / $mileage : 0;
+
+                            $programmedMileage = $r->sum('programmedMileage');
+                            $differenceMileage = $mileage - $programmedMileage;
+
+                            $ungrouped->push((object)[
+                                'date' => $date->toDateString(),
+                                'totalByRecorder' => $totalByRecorder,
+                                'totalBySensor' => $r->sum('totalBySensor'),
+                                'totalAllBySensor' => $r->sum('totalAllBySensor'),
+                                'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
+                                'issues' => $r->pluck('issues')->collapse(),
+                                'roundTrips' => $r->sum('roundTrips'),
+                                'mileage' => $mileage,
+                                'programmedMileage' => $programmedMileage,
+                                'differenceMileage' => $differenceMileage,
+                                'IPK' => $IPK,
+                                'frame' => '',
+                                'routeId' => $route->id ?? 0,
+                                'route' => $route,
+                                'vehicleId' => $r->pluck('vehicleId')->first(),
+                                'vehicle' => $r->pluck('vehicle')->first(),
+                                'driverId' => $r->pluck('driverId')->first(),
+                                'driver' => $r->pluck('driver')->first(),
+                                'routeProcessed' => $route ? $route->name : __('All'),
+                                'vehicleProcessed' => $r->pluck('vehicleProcessed')->first(),
+                                'driverProcessed' => $r->pluck('driverProcessed')->first(),
+                            ]);
+                        }
+                    }
+                    $reportsByRoutes = $ungrouped;
+                }
+
+                $reportsByVehicles = $reportsByVehicles->merge($reportsByRoutes);
+            }
+
+            if (!$groupByVehicle && $reportsByVehicles->count()) {
+                $ungrouped = collect([]);
+
+                foreach ($reportsByVehicles->groupBy('routeId') as $routeFilterId => $rr) {
+                    foreach ($rr->groupBy('driverId') as $driverFilterId => $r) {
                         $mileage = $r->sum('mileage');
                         $totalByRecorder = $r->sum('totalByRecorder');
                         $IPK = $mileage > 0 ? $totalByRecorder / $mileage : 0;
@@ -172,62 +277,22 @@ class PassengersRecordersReportController extends Controller
                             'differenceMileage' => $differenceMileage,
                             'IPK' => $IPK,
                             'frame' => '',
-                            'routeId' => $route->id ?? 0,
-                            'route' => $route,
-                            'vehicleId' => $vehicleFilterId,
-                            'vehicle' => $vehicleByDate,
-                            'driver' => $driver,
-                            'routeProcessed' => $route ? $route->name : __('All'),
-                            'vehicleProcessed' => $vehicleByDate ? $vehicleByDate->number : __('All'),
-                            'driverProcessed' => $driver ? $driver->code . ' | ' . $driver->fullName() : __('All'),
+                            'routeId' => $r->pluck('routeId')->first(),
+                            'route' => $r->pluck('route')->first(),
+                            'vehicleId' => $vehicle->id ?? 0,
+                            'vehicle' => $vehicle,
+                            'driverId' => $r->pluck('driverId')->first(),
+                            'driver' => $r->pluck('driver')->first(),
+                            'routeProcessed' => $r->pluck('routeProcessed')->first(),
+                            'vehicleProcessed' => $vehicle ? $vehicle->number : __('All'),
+                            'driverProcessed' => $r->pluck('driverProcessed')->first(),
                         ]);
                     }
-                    $reportsByRoutes = $ungrouped;
-                }
-
-                $reportsByVehicles = $reportsByVehicles->merge($reportsByRoutes);
-            }
-
-            if (!$groupByVehicle && $reportsByVehicles->count()) {
-                $ungrouped = collect([]);
-
-                foreach ($reportsByVehicles->groupBy('routeId') as $routeFilterId => $r) {
-                    $routeFilter = Route::find($routeFilterId);
-
-                    $mileage = $r->sum('mileage');
-                    $totalByRecorder = $r->sum('totalByRecorder');
-                    $IPK = $mileage > 0 ? $totalByRecorder / $mileage : 0;
-
-                    $programmedMileage = $r->sum('programmedMileage');
-                    $differenceMileage = $mileage - $programmedMileage;
-
-                    $ungrouped->push((object)[
-                        'date' => $date->toDateString(),
-                        'totalByRecorder' => $totalByRecorder,
-                        'totalBySensor' => $r->sum('totalBySensor'),
-                        'totalAllBySensor' => $r->sum('totalAllBySensor'),
-                        'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
-                        'issues' => $r->pluck('issues')->collapse(),
-                        'roundTrips' => $r->sum('roundTrips'),
-                        'mileage' => $mileage,
-                        'programmedMileage' => $programmedMileage,
-                        'differenceMileage' => $differenceMileage,
-                        'IPK' => $IPK,
-                        'frame' => '',
-                        'routeId' => $routeFilterId,
-                        'route' => $routeFilter,
-                        'vehicleId' => $vehicle->id ?? 0,
-                        'vehicle' => $vehicle,
-                        'driver' => $driver,
-                        'routeProcessed' => $routeFilter ? $routeFilter->name : __('All'),
-                        'vehicleProcessed' => $vehicle ? $vehicle->number : __('All'),
-                        'driverProcessed' => $driver ? $driver->code . ' | ' . $driver->fullName() : __('All'),
-                    ]);
                 }
                 $reportsByVehicles = $ungrouped;
             }
 
-            if ($reportsByVehicles->isEmpty()) {
+            if ($reportsByVehicles->isEmpty() && false) {
                 $reportsByVehicles->push((object)[
                     'date' => $date->toDateString(),
                     'totalByRecorder' => 0,
@@ -260,41 +325,40 @@ class PassengersRecordersReportController extends Controller
             $dateRangeStr = $dateRange->first()->toDateString() . " a " . $dateRange->last()->toDateString();
 
             $ungrouped = collect([]);
-            foreach ($reports->groupBy('vehicleId') as $vehicleFilterId => $r) {
-                $vehicleFilter = Vehicle::find($vehicleFilterId);
+            foreach ($reports->groupBy('vehicleId') as $vehicleFilterId => $rv) {
+                foreach ($rv->groupBy('routeId') as $routeFilterId => $rr) {
+                    foreach ($rr->groupBy('driverId') as $driverFilterId => $rd) {
+                        $mileage = $rd->sum('mileage');
+                        $totalByRecorder = $rd->sum('totalByRecorder');
+                        $IPK = $mileage > 0 ? $totalByRecorder / $mileage : 0;
 
-                foreach ($r->groupBy('routeId') as $routeFilterId => $rr) {
-                    $routeFilter = Route::find($routeFilterId);
+                        $programmedMileage = $rd->sum('programmedMileage');
+                        $differenceMileage = $mileage - $programmedMileage;
 
-                    $mileage = $rr->sum('mileage');
-                    $totalByRecorder = $rr->sum('totalByRecorder');
-                    $IPK = $mileage > 0 ? $totalByRecorder / $mileage : 0;
-
-                    $programmedMileage = $rr->sum('programmedMileage');
-                    $differenceMileage = $mileage - $programmedMileage;
-
-                    $ungrouped->push((object)[
-                        'date' => $dateRangeStr,
-                        'totalByRecorder' => $totalByRecorder,
-                        'totalBySensor' => $rr->sum('totalBySensor'),
-                        'totalAllBySensor' => $rr->sum('totalAllBySensor'),
-                        'totalBySensorRecorder' => $rr->sum('totalBySensorRecorder'),
-                        'issues' => $rr->pluck('issues')->collapse(),
-                        'roundTrips' => $rr->sum('roundTrips'),
-                        'mileage' => $mileage,
-                        'programmedMileage' => $programmedMileage,
-                        'differenceMileage' => $differenceMileage,
-                        'IPK' => $IPK,
-                        'frame' => '',
-                        'routeId' => $routeFilterId,
-                        'route' => $routeFilter,
-                        'vehicleId' => $vehicleFilterId,
-                        'vehicle' => $vehicleFilter,
-                        'driver' => $driver,
-                        'routeProcessed' => $routeFilter ? $routeFilter->name : __('All'),
-                        'vehicleProcessed' => $vehicleFilter ? $vehicleFilter->number : __('All'),
-                        'driverProcessed' => $driver ? $driver->code . ' | ' . $driver->fullName() : __('All'),
-                    ]);
+                        $ungrouped->push((object)[
+                            'date' => $dateRangeStr,
+                            'totalByRecorder' => $totalByRecorder,
+                            'totalBySensor' => $rd->sum('totalBySensor'),
+                            'totalAllBySensor' => $rd->sum('totalAllBySensor'),
+                            'totalBySensorRecorder' => $rd->sum('totalBySensorRecorder'),
+                            'issues' => $rd->pluck('issues')->collapse(),
+                            'roundTrips' => $rd->sum('roundTrips'),
+                            'mileage' => $mileage,
+                            'programmedMileage' => $programmedMileage,
+                            'differenceMileage' => $differenceMileage,
+                            'IPK' => $IPK,
+                            'frame' => '',
+                            'routeId' => $rd->pluck('routeId')->first(),
+                            'route' => $rd->pluck('route')->first(),
+                            'vehicleId' => $rd->pluck('vehicleId')->first(),
+                            'vehicle' => $rd->pluck('vehicle')->first(),
+                            'driverId' => $rd->pluck('driverId')->first(),
+                            'driver' => $rd->pluck('driver')->first(),
+                            'routeProcessed' => $rd->pluck('routeProcessed')->first(),
+                            'vehicleProcessed' => $rd->pluck('vehicleProcessed')->first(),
+                            'driverProcessed' => $rd->pluck('driverProcessed')->first(),
+                        ]);
+                    }
                 }
             }
 
@@ -331,6 +395,7 @@ class PassengersRecordersReportController extends Controller
             'groupByVehicle' => $groupByVehicle,
             'groupByRoute' => $groupByRoute,
             'groupByDate' => $groupByDate,
+            'groupByDriver' => $groupByDriver,
             'withEndDate' => $withEndDate,
             'issues' => $allIssues,
             'canLiquidate' => ($groupByVehicle || $vehicle) && !$route && !$groupByRoute && $groupByDate
@@ -362,6 +427,7 @@ class PassengersRecordersReportController extends Controller
      * @param $dispatchRegisters
      * @param int $programmedRoundTrips
      * @param null $firstRoute
+     * @param bool $includeEmptyValues
      * @return Collection
      */
     private function buildReport($date, $route, $vehicle, $driver, $dispatchRegisters, $programmedRoundTrips = self::PROGRAMMED_ROUND_TRIPS, $firstRoute = null, $includeEmptyValues = false)
@@ -396,6 +462,7 @@ class PassengersRecordersReportController extends Controller
                 'route' => $route,
                 'vehicleId' => $vehicle->id ?? null,
                 'vehicle' => $vehicle,
+                'driverId' => $driver->id ?? null,
                 'driver' => $driver,
                 'routeProcessed' => $route ? $route->name : __('All'),
                 'vehicleProcessed' => $vehicle ? $vehicle->number : ($driver ? ($recorder->lastVehicleNumber ?? '') : __('All')),

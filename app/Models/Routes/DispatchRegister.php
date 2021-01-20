@@ -151,6 +151,7 @@ use Illuminate\Support\Str;
  * @property-read DispatchTariff $tariff
  * @property-read RouteTariff $fuel_tariff
  * @property-read mixed $mileage
+ * @property-read mixed $passengers_by_sensor_total
  */
 class DispatchRegister extends Model
 {
@@ -237,7 +238,11 @@ class DispatchRegister extends Model
 
     public function scopeWhereDriver($query, Driver $driver = null)
     {
-        if ($driver) $query = $query->where('driver_code', $driver->code);
+        if ($driver) $query = $query->where(function ($q) use ($driver) {
+            return $q->where('driver_code', $driver->code)->orWhere('driver_id', $driver->id);
+        });
+
+//        dd($query->toSql(), $query->getBindings(), $query->get());
         return $query;
     }
 
@@ -625,7 +630,7 @@ class DispatchRegister extends Model
 
         $count = intval($this->end_recorder) - intval($this->start_recorder);
 
-        if($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000){
+        if ($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000) {
             $count = (1000000 - intval($this->start_recorder)) + intval($this->end_recorder);
         }
 

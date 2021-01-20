@@ -122,13 +122,16 @@
                                     <div class="has-warning">
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
+                                                <input id="group-by-date" name="group-by-date" type="checkbox" checked><i class="fa fa-calendar"></i> @lang('By date')
+                                            </label>
+                                            <label class="text-bold">
                                                 <input id="group-by-vehicle" name="group-by-vehicle" type="checkbox" checked><i class="fa fa-bus"></i>  @lang('By vehicle')
                                             </label>
                                             <label class="text-bold">
                                                 <input id="group-by-route" name="group-by-route" type="checkbox"><i class="fa fa-flag"></i> @lang('By route')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="group-by-date" name="group-by-date" type="checkbox" checked><i class="fa fa-calendar"></i> @lang('By date')
+                                                    <input id="group-by-driver" name="group-by-driver" type="checkbox"><i class="fa fa-user"></i> @lang('By driver')
                                             </label>
                                         </div>
                                     </div>
@@ -178,7 +181,7 @@
                 }
             });
 
-            $('#date-report, #date-end-report, #group-by-vehicle, #group-by-route, #group-by-date').change(function () {
+            $('#date-report, #date-end-report, #group-by-date, #group-by-vehicle, #group-by-route, #group-by-driver').change(function () {
                 mainContainer.hide();
             });
 

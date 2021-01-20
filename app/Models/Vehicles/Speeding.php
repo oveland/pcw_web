@@ -18,6 +18,8 @@ namespace App\Models\Vehicles;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location witOffRoads()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location withSpeeding()
  * @mixin \Eloquent
+ * @property-read \App\Models\Passengers\Passenger $passenger
+ * @property-read \App\Models\Vehicles\PhotoLocation $photo
  */
 class Speeding extends Location
 {

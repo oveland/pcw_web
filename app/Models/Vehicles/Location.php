@@ -116,6 +116,7 @@ trait BindsDynamically
  * @property string|null $ard_off_road
  * @method static Builder|Location whereArdOffRoad($value)
  * @property string|null $date
+ * @property-read \App\Models\Vehicles\PhotoLocation $photo
  */
 class Location extends Model
 {
