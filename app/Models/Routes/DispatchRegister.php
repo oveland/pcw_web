@@ -391,17 +391,7 @@ class DispatchRegister extends Model
 
     public function getAPIFields($short = false)
     {
-        $passengers = (object)[
-            'recorders' => (object)[
-                'start' => $this->start_recorder,
-                'end' => $this->end_recorder,
-                'count' => intval($this->end_recorder) - intval($this->start_recorder),
-            ]
-        ];
-
-        $driver = $this->driver;
-        $driveName = $driver ? $driver->fullName() : __('Unassigned');
-
+        $passengers = $this->passengers;
         $takings = $this->takings;
 
         if($short){
@@ -416,15 +406,25 @@ class DispatchRegister extends Model
                 'departure_time' => $this->departure_time,
                 'departureTime' => $this->departure_time,
 
+                'routeTime' => $this->getRouteTime(),
+
                 'arrival_time_scheduled' => $this->arrival_time_scheduled,
                 'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
                 'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
                 'arrivalTime' => $this->complete() ? $this->arrival_time : '--:--:--',
 
-                'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
+                'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+
+                'passengers' => $passengers,
+                'takings' => $takings ? $takings->getAPIFields() : [],
+                'onlyControlTakings' => $this->onlyControlTakings(),
+                'forNormalTakings' => $this->forNormalTakings()
             ];
         }
+
+        $driver = $this->driver;
+        $driveName = $driver ? $driver->fullName() : __('Unassigned');
 
         return (object)[
             'id' => $this->id,
@@ -454,8 +454,8 @@ class DispatchRegister extends Model
             'vehicle_id' => $this->vehicle_id,
             'status' => $this->status,
 
-            'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
-            'driverName' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
+            'driver_name' => $driveName,
+            'driverName' => $driveName,
             'driverCode' => $this->driver_code ? $this->driver_code : __('Unassigned'),
 
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
@@ -625,11 +625,38 @@ class DispatchRegister extends Model
     public function getPassengersAttribute()
     {
         return (object)[
-            'recorders' => (object)[
-                'start' => $this->start_recorder,
-                'end' => $this->end_recorder,
-                'count' => intval($this->end_recorder) - intval($this->start_recorder),
-            ]
+            'recorders' => $this->getPassengersByRecorder(),
+            'sensor' => $this->getPassengersBySensor()
+        ];
+    }
+
+    public function getPassengersByRecorder()
+    {
+        if($this->route && $this->route->company_id == Company::YUMBENOS){
+            return $this->getPassengersBySensor();
+        }
+
+        $count = intval($this->end_recorder) - intval($this->start_recorder);
+
+        if($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000){
+            $count = (1000000 - intval($this->start_recorder)) + intval($this->end_recorder);
+        }
+
+        return (object)[
+            'start' => $this->start_recorder,
+            'end' => $this->end_recorder,
+            'count' => $count,
+            'mileage' => $this->mileage
+        ];
+    }
+
+    public function getPassengersBySensor()
+    {
+        return (object)[
+            'start' => $this->initial_sensor_counter,
+            'end' => $this->final_sensor_counter,
+            'count' => $this->passengersBySensor,
+            'mileage' => $this->mileage
         ];
     }
 
@@ -651,8 +678,10 @@ class DispatchRegister extends Model
         }
 
         if (!$this->onlyControlTakings()) {
+            $passengers = $this->getPassengersByRecorder()->count;
+
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
-            $takings->total_production = $takings->passenger_tariff * $this->passengers->recorders->count;
+            $takings->total_production = $takings->passenger_tariff * $passengers;
         }
 
         $takings->fuel_tariff = $takings->fuelTariff($this->route);

@@ -49,13 +49,19 @@ class APIConcoxService implements APIAppsInterface
         switch ($this->service) {
             case 'take-photo':
 //                $vehicle = Vehicle::find(1207); // Vehicle 322 Alameda
-                $vehicle = Vehicle::find(1199); // Vehicle 566 Yumbe?os
+                $vehicle = Vehicle::find(1217); // Vehicle 375 Alameda
+//                $vehicle = Vehicle::find(1199); // Vehicle 566 Yumbe?os
 
                 $lastPhotoRequest = PhotoRequest::where('vehicle_id', $vehicle->id)->first();
 
                 $now = Carbon::now();
                 if (!$lastPhotoRequest || $now->diffInSeconds($lastPhotoRequest->date) >= 30) {
-                    $lastPhotoRequest->date = $now;
+
+                    if (!$lastPhotoRequest) {
+                        $lastPhotoRequest = new PhotoRequest();
+                    }
+
+                    $lastPhotoRequest->date = $now->toDateTimeString();
                     $lastPhotoRequest->vehicle()->associate($vehicle);
                     $lastPhotoRequest->type = 'front';
                     $lastPhotoRequest->params = explode('?', $this->request->getRequestUri())[1] ?? '';
@@ -69,9 +75,7 @@ class APIConcoxService implements APIAppsInterface
                     $this->concox->syncPhotos($camera, 60, 30);
                     Log::info("Sync photos for vehicle ".$vehicle->number);
 
-                    if (!$lastPhotoRequest) {
-                        $lastPhotoRequest = new PhotoRequest();
-                    }
+
                 } else {
                     $response = collect([
                         'success' => false,

@@ -66,19 +66,18 @@ class APIReportService implements APIWebInterface
     {
         $vehicleRequest = $this->request->get('vehicle');
         $routeRequest = $this->request->get('route');
-        $finalDate = $this->request->get('final-date');
+        $finalDate = $this->request->get('final-date') ? $this->request->get('final-date') : $this->request->get('date-end');
+        $onlyTotals = $this->request->get('only-totals');
 
         $vehicle = Vehicle::find($vehicleRequest);
         $company = $vehicle ? $vehicle->company : Company::find(Company::ALAMEDA);  // TODO: Need control for all vehicles
-        if($this->request->get('dump')){
-//            dd($company);
-        }
+
         $this->dispatchService = new DispatchService($company);
 
         $date = $this->request->get('date');
 
         if ($date) {
-            $report = $this->dispatchService->getTakingsReport($date, $finalDate, $routeRequest, $vehicleRequest);
+            $report = $this->dispatchService->getTakingsReport($date, $finalDate, $routeRequest, $vehicleRequest, 'detailed', $onlyTotals);
 
             return response()->json([
                 'error' => false,

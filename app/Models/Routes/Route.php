@@ -114,10 +114,10 @@ class Route extends Model
         return $this->belongsTo(Dispatch::class);
     }
 
-    public function getAPIFields()
+    public function getAPIFields($short = false)
     {
         $dataAPI = array();
-        $dataAPI['company'] = $this->company->getAPIFields();
+        if (!$short) $dataAPI['company'] = $this->company->getAPIFields();
         $dataAPI['name'] = $this->name;
         $dataAPI['distance'] = $this->distance;
         $dataAPI['road_time'] = $this->road_time;

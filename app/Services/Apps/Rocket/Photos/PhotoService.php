@@ -333,23 +333,15 @@ class PhotoService
      */
     public function findDispatchRegisterByPhoto(Photo $photo)
     {
-        $dr = null;
-//        $dr = $photo->vehicle->currentLocation->dispatchRegister;
-//
-//        if ($dr && !($photo->date->toDateString() == $dr->date && $photo->date->toTimeString() >= $dr->departure_time && $photo->date->toTimeString() <= $dr->arrival_time)) {
-//            $dr = null;
-//        }
+        $dr = DispatchRegister::where('date', $photo->date->toDateString())
+            ->where('vehicle_id', $photo->vehicle->id)
+            ->where('departure_time', '<=', $photo->date->toTimeString())
+//                ->where('arrival_time', '>=', $photo->date->toTimeString())
+            ->orderByDesc('departure_time')
+            ->active()->first();
 
-        if (!$dr) {
-            $dr = DispatchRegister::where('date', $photo->date->toDateString())
-                ->where('vehicle_id', $photo->vehicle->id)
-                ->where('departure_time', '<=', $photo->date)
-//                ->where('arrival_time', '>=', $photo->date)
-                ->active()->first();
-
-            if ($dr && $dr->arrival_time && $dr->arrival_time < $photo->date->toTimeString()) {
-                $dr = null;
-            }
+        if ($dr && $dr->complete() && $dr->arrival_time < $photo->date->toTimeString()) {
+            return null;
         }
 
         return $dr;

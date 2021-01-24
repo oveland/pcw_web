@@ -34,6 +34,8 @@ class DispatchService
     function getTurns($initialDate, $finalDate = null, $route = null, $vehicle = null, $typeTurns = 'completed')
     {
         $dr = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->company, $initialDate, $finalDate, $route, $vehicle)->type($typeTurns)
+            ->with('route')
+            ->with('vehicle')
             ->with('routeTakings')
             ->get();
 
@@ -50,9 +52,10 @@ class DispatchService
      * @param null $route
      * @param null $vehicle
      * @param string $type
+     * @param bool $onlyTotals
      * @return object | array
      */
-    public function getTakingsReport($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'detailed')
+    public function getTakingsReport($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'detailed', $onlyTotals = false)
     {
         switch ($type) {
             case 'totals':
@@ -71,7 +74,7 @@ class DispatchService
                         $turnsByDates = $turnsByVehicle->groupBy('date');
 
                         foreach ($turnsByDates as $date => $turnsByDate) {
-                            $reportByDate->put($date, $this->getData($turnsByDate));
+                            $reportByDate->put($date, $this->getData($turnsByDate, $onlyTotals));
                         }
                         $report->put($vehicleId, $reportByDate->toArray());
                     }
@@ -83,7 +86,7 @@ class DispatchService
                 $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
 
                 if ($turns->isNotEmpty()) {
-                    return $this->getData($turns);
+                    return $this->getData($turns, $onlyTotals);
                 }
                 break;
         }
@@ -92,15 +95,16 @@ class DispatchService
     }
 
     /**
-     * @param Collection $dispatchRegisters
+     * @param Collection | array $dispatchRegisters
+     * @param bool $onlyTotals
      * @return object
      */
-    private function getData($dispatchRegisters)
+    private function getData($dispatchRegisters, $onlyTotals = false)
     {
         return (object)[
-            'report' => $dispatchRegisters,
+            'report' => $onlyTotals ? [] : $dispatchRegisters,
             'totals' => $this->getTotals($dispatchRegisters),
-            'averages' => $this->getAverages($dispatchRegisters),
+            'averages' => $onlyTotals ? [] : $this->getAverages($dispatchRegisters),
         ];
     }
 
@@ -111,12 +115,12 @@ class DispatchService
     private function getTotals($dispatchRegisters)
     {
         $totalObservations = "";
-        $withRoundTrip = $dispatchRegisters->first()->date != $dispatchRegisters->last()->date;
+//        $withRoundTrip = $dispatchRegisters->first()->date != $dispatchRegisters->last()->date;
 
-        foreach ($dispatchRegisters as $d) {
-            $observations = $d->takings->observations;
-            if ($observations) $totalObservations .= ($withRoundTrip ? "\n$d->date " : '') . __('Round trip') . " $d->roundTrip: $observations. ";
-        }
+//        foreach ($dispatchRegisters as $d) {
+//            $observations = $d->takings->observations;
+//            if ($observations) $totalObservations .= ($withRoundTrip ? "\n$d->date " : '') . __('Round trip') . " $d->roundTrip: $observations. ";
+//        }
 
         return [
             'passengers' => $dispatchRegisters->sum(function ($d) {

@@ -47,7 +47,7 @@ class ConcoxService
 
             $request = $this->auth->request();
 
-            if ($request->get('code') == 0) {
+            if ($request->get('code') == 0 || true) {
                 $response = collect($request->get('result'));
             }
         }
@@ -67,11 +67,13 @@ class ConcoxService
         $photos = collect([]);
         $accessToken = $this->auth->getAccessToken();
 
+        $date = request()->get('date') ? Carbon::createFromFormat('Y-m-d', request()->get('date')) : Carbon::now();
+
         $from = request()->get('from');
-        $from = $from ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString() . $from)->setTimezone('UTC')->toDateTimeString() : null;
+        $from = $from ? Carbon::createFromFormat('Y-m-dH:i:s', $date->toDateString() . $from)->setTimezone('UTC')->toDateTimeString() : null;
 
         $to = request()->get('to');
-        $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', Carbon::now()->toDateString() . $to)->setTimezone('UTC')->toDateTimeString() : null;
+        $to = $to ? Carbon::createFromFormat('Y-m-dH:i:s', $date->toDateString() . $to)->setTimezone('UTC')->toDateTimeString() : null;
 
         $starTime = $from ? $from : Carbon::now('UTC')->subMinutes($minutesAgo)->toDateTimeString();
         $endTime = $to ? $to : Carbon::now('UTC')->toDateTimeString();
@@ -143,7 +145,7 @@ class ConcoxService
 
         if ($accessToken) {
             $this->auth->setPrivateParams([
-                'method' => 'jimi.open.instruction.list',
+                'method' => 'jimi.device.alarm.list',
                 'access_token' => $accessToken->access_token,
                 'imei' => '351777095427025'
             ]);
@@ -197,9 +199,10 @@ class ConcoxService
 
 //                    $vehicle = $gpsVehicle->vehicle; //   TODO: implement logic for associate Imei Concox with vehicle
 //                    $vehicle = Vehicle::find(2150); //    87 Yumbeños
-                    $vehicle = Vehicle::find(1199); //  566 Yumbeños
+//                    $vehicle = Vehicle::find(1199); //  566 Yumbeños
 //                    $vehicle = Vehicle::find(1905); //    1325 Tupal
 //                    $vehicle = Vehicle::find(1207); //    322 Alameda
+                    $vehicle = Vehicle::find(1217); //    375 Alameda
 
                     $year = collect($photoData)->get(2);
                     $month = collect($photoData)->get(3);
