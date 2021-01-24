@@ -5987,15 +5987,9 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              (!_vm.search.vehicle || !_vm.search.vehicle.id) &&
-              _vm.search.date &&
-              !_vm.search.dateRange
-                ? _c("li", { staticClass: "divider" })
-                : _vm._e(),
+              _vm.search.date ? _c("li", { staticClass: "divider" }) : _vm._e(),
               _vm._v(" "),
-              (!_vm.search.vehicle || !_vm.search.vehicle.id) &&
-              _vm.search.date &&
-              !_vm.search.dateRange
+              _vm.search.date
                 ? _c("li", [
                     _c(
                       "a",
@@ -6007,8 +6001,7 @@ var render = function() {
                             "&vehicle=" +
                             (_vm.search.vehicle ? _vm.search.vehicle.id : "") +
                             "&fecha_sel=" +
-                            _vm.search.date +
-                            "&date-end",
+                            _vm.search.date,
                           target: "_blank"
                         }
                       },
