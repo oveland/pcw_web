@@ -36,7 +36,7 @@ class ControlPointService
     {
         $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $route->id, $vehicleReport)->active()
 //        $dispatchRegisters = DispatchRegister::active()->whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $route->id, $vehicleReport)
-            ->select('id')
+            ->select(['id', 'departure_fringe_id'])
             ->orderByDesc('departure_time')
             ->get();
 
