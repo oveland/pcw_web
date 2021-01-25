@@ -55,6 +55,35 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label for="date-report" class="control-label field-required">
+                                    @lang('Date')
+                                </label>
+                                <label class="text-bold">
+                                    &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
+                                </label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 date-end-container" style="display: none;">
+                            <div class="form-group">
+                                <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                                <div class="input-group date" id="datetimepicker-report">
+                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
                                     <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12">
@@ -82,35 +111,6 @@
                                     <select name="driver-report" id="driver-report" class="default-select2 form-control col-md-12" data-with-all="true">
                                         <option value="null">@lang('Select a company first')</option>
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="date-report" class="control-label field-required">
-                                    @lang('Date')
-                                </label>
-                                <label class="text-bold">
-                                    &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
-                                </label>
-                                <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
-                                    <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 date-end-container" style="display: none;">
-                            <div class="form-group">
-                                <label for="date-end-report" class="control-label">@lang('Date end')</label>
-                                <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
-                                    <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
                                 </div>
                             </div>
                         </div>
