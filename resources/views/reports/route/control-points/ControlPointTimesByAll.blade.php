@@ -153,7 +153,9 @@
                                         @php
                                             $controlPoint = $reportByControlPoint->controlPoint;
                                             $controlPointAverage->put($controlPoint->id, $controlPointAverage->get($controlPoint->id) + $reportByControlPoint->timeMeasuredInSeconds);
-                                            $lastScheduled->put($controlPoint->id, $reportByControlPoint->timeScheduled);
+                                            if( $reportByControlPoint->hasReport ){
+                                                $lastScheduled->put($controlPoint->id, $reportByControlPoint->timeScheduled);
+                                            }
                                         @endphp
                                         @if( $reportByControlPoint->hasReport )
                                             <td class="text-center td-info" style="background: {{  $query->paintProfile ? $reportByControlPoint->backgroundProfile : "white" }};">
