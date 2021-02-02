@@ -45,7 +45,7 @@ class GeolocationPassengersReportController extends Controller
                 'total' => $passenger->total,
                 'totalFrontSensor' => $passenger->total_front_sensor,
                 'totalBackSensor' => $passenger->total_back_sensor,
-                'totalCount' => $passenger->totalCount(),
+                'totalCount' => $passenger->counted,
                 'latitude' => $passenger->latitude,
                 'longitude' => $passenger->longitude,
                 'frame' => $passenger->frame,

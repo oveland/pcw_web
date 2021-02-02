@@ -152,6 +152,8 @@ use Illuminate\Support\Str;
  * @property-read RouteTariff $fuel_tariff
  * @property-read mixed $mileage
  * @property-read mixed $passengers_by_sensor_total
+ * @property int|null $driver_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDriverId($value)
  */
 class DispatchRegister extends Model
 {

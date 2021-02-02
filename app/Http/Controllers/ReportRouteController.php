@@ -110,7 +110,7 @@ class ReportRouteController extends Controller
             ->whereIn('vehicle_id', $vehiclesId)
             ->where('current_mileage', '>', $thresholdKm * 1000)
             ->where('current_mileage', '<', 700 * 1000)
-            ->get()->filter(function ($ll) {
+            ->get()->filter(function (LastLocation $ll) {
                 return $ll->gpsIsOK();
             });
 

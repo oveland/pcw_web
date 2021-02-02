@@ -523,16 +523,25 @@
                                     <small class="text-warning">
                                         <i class="fa fa-angle-double-down"></i> <span class="passengers-total-descents"></span>
                                     </small>)
+
+
+                                    <span class="label label-warning tooltips" title="@lang('Total charge')">
+                                        <small style="font-weight: bold !important;color: white;font-size: 1.1rem;"><i class="fa fa-dollar"></i> <span class="hidden-xs hide">@lang('Total charge'):</span> <span class="passengers-total-charge"></span></small>
+                                    </span>
                                 </h5>
                                 <div style="display: flex">
                                     <div class="info-trips"></div>
                                     <div style="align-items: flex-end; display: flex;padding-left: 5px">
                                         <small class="passengers-label text-lime" style="display: none">
-                                            <i class="fa fa-angle-double-up"></i> <span class="hidden-xs">@lang('Ascents'):</span> <span class="passengers-route-ascents"></span>
+                                            <i class="fa fa-angle-double-up"></i> <span class="hidden-xs hide">@lang('Ascents'):</span> <span class="passengers-route-ascents"></span>
                                         </small>
 
                                         <small class="passengers-label text-warning" style="display: none">
-                                            <i class="fa fa-angle-double-down"></i> <span class="hidden-xs">@lang('Descents'):</span> <span class="passengers-route-descents"></span>
+                                            <i class="fa fa-angle-double-down"></i> <span class="hidden-xs hide">@lang('Descents'):</span> <span class="passengers-route-descents"></span>
+                                        </small>
+
+                                        <small class="passengers-label text-info tooltips" style="display: none;margin-left: 5px" title="@lang('Tariff')">
+                                            <i class="fa fa-tag"></i> <span class="passengers-route-tariff"></span>
                                         </small>
                                     </div>
                                 </div>

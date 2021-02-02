@@ -89,6 +89,10 @@ class ReportRouteHistoricController extends Controller
         $lastLocation = $locations->first();
 
         $totalPassengers = 0;
+
+        $totalCharge = 0;
+        $tariff = 0;
+
         $totalPassengersOnPhoto = 0;
         $passengersTripOnPhoto = 0;
         $totalInRoundTrips = 0;
@@ -143,6 +147,9 @@ class ReportRouteHistoricController extends Controller
                     $totalDescents = $passenger->total_descents;
                 }
 
+                $totalCharge = $passenger->total_charge;
+                $tariff = $passenger->tariff;
+
                 if ($dispatchRegister) {
                     if ($passengersInRoundTrip <= $passenger->in_round_trip || $newTurn) {
                         $passengersInRoundTrip = $passenger->in_round_trip;
@@ -169,7 +176,12 @@ class ReportRouteHistoricController extends Controller
                         "passengers" => (object) [
                             "total" => $totalPassengers,
                             "inRoundTrip" => $passengersInRoundTrip,
-                        ]
+
+                            'counted' => $passenger->counted,
+                            'tariff' => $tariff,
+                            'charge' => $passenger->charge,
+                            'totalCharge' => $totalCharge,
+                        ],
                     ];
 
                     $totalInRoundTrips = collect($trips)->sum( function($t) {
@@ -200,6 +212,11 @@ class ReportRouteHistoricController extends Controller
                         "passengers" => (object) [
                             "total" => $totalPassengers,
                             "inRoundTrip" => $passengersInRoundTrip,
+
+                            'counted' => 0,
+                            'tariff' => $tariff,
+                            'charge' => 0,
+                            'totalCharge' => $totalCharge,
                         ]
                     ];
                 }
@@ -251,7 +268,10 @@ class ReportRouteHistoricController extends Controller
                     'countedAscents' => $countedAscents,
                     'countedDescents' => $countedDescents,
                     'frame' => $frameCounter,
-                    'trips' => $trips
+                    'trips' => $trips,
+
+                    'tariff' => $tariff,
+                    'totalCharge' => $totalCharge
                 ],
                 'photo' => (object) [
                     'id' => $photoId,

@@ -60,7 +60,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed hexSeats
  * @method static Builder|Passenger whereFringeId($value)
  * @property int|null $history_seat_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereHistorySeatId($value)
+ * @method static Builder|Passenger whereHistorySeatId($value)
+ * @property int|null $in_round_trip
+ * @property int|null $out_round_trip
+ * @property int|null $total_ascents
+ * @property int|null $total_descents
+ * @property int|null $ascents_in_round_trip
+ * @property int|null $descents_in_round_trip
+ * @property int $counted
+ * @property int $tariff
+ * @property int $charge
+ * @property int $total_charge
+ * @method static Builder|Passenger whereAscentsInRoundTrip($value)
+ * @method static Builder|Passenger whereCharge($value)
+ * @method static Builder|Passenger whereCounted($value)
+ * @method static Builder|Passenger whereDescentsInRoundTrip($value)
+ * @method static Builder|Passenger whereInRoundTrip($value)
+ * @method static Builder|Passenger whereOutRoundTrip($value)
+ * @method static Builder|Passenger whereTariff($value)
+ * @method static Builder|Passenger whereTotalAscents($value)
+ * @method static Builder|Passenger whereTotalCharge($value)
+ * @method static Builder|Passenger whereTotalDescents($value)
  */
 class Passenger extends Model
 {
@@ -132,10 +152,5 @@ class Passenger extends Model
     public function vehicleStatus()
     {
         return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id', 'id_status');
-    }
-
-    public function totalCount()
-    {
-        return ($this->total - $this->total_prev);
     }
 }

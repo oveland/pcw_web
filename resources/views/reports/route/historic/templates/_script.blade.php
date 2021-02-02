@@ -392,6 +392,10 @@
             this.showInfo.find('.passengers-route-ascents').text(reportLocation.passengers.ascentsInRoundTrip);
             this.showInfo.find('.passengers-route-descents').text(reportLocation.passengers.descentsInRoundTrip);
 
+            this.showInfo.find('.passengers-route-tariff').text(reportLocation.passengers.tariff);
+            this.showInfo.find('.passengers-total-charge').text(reportLocation.passengers.totalCharge);
+
+
             if (reportLocation.speeding) {
                 this.showInfo.find('.speed').parent().addClass('btn-warning');
             } else {
@@ -421,18 +425,20 @@
             const passengers = reportLocation.passengers;
             const trips = passengers.trips;
 
-            let html = "<ol class='m-0'>";
-
             const sorted = _.sortBy(trips, 'departureTime');
             let iterations = sorted.length;
 
             if(iterations && dr) {
                 $('.passengers-route-ascents').parent().show();
                 $('.passengers-route-descents').parent().show();
+                $('.passengers-route-tariff').parent().show();
             }else {
                 $('.passengers-route-ascents').parent().hide();
                 $('.passengers-route-descents').parent().hide();
+                $('.passengers-route-tariff').parent().hide();
             }
+
+            let html = "<ol class='m-0'>";
 
             for(const drId in sorted) {
                 const trip = sorted[drId];
@@ -440,7 +446,11 @@
                 const classLast = (!--iterations && dr) ? 'active' : '';
 
                 if( trip.index <= index ){
-                    html += `<li class="${classLast}"><small><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</small></li>`;
+                    html += `<li class="${classLast}">
+                        <small>
+                            <span><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</span>
+                        </small>
+                    </li>`;
                 }
             }
 

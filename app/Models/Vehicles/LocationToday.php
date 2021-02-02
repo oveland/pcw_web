@@ -54,6 +54,8 @@ namespace App\Models\Vehicles;
  * @property-read \App\Models\Routes\Report $report
  * @property-read \App\Models\Vehicles\Vehicle|null $vehicle
  * @property-read \App\Models\Vehicles\VehicleStatus|null $vehicleStatus
+ * @property-read \App\Models\Passengers\Passenger $passenger
+ * @property-read \App\Models\Vehicles\PhotoLocation $photo
  */
 class LocationToday extends Location
 {
