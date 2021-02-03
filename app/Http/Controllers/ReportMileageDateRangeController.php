@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\LastLocation;
 use App\Models\Company\Company;
+use App\Models\Vehicles\ReportVehicleStatus;
+use App\Models\Vehicles\VehicleStatusReport;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use App\Services\PCWTime;
@@ -122,14 +124,39 @@ class ReportMileageDateRangeController extends Controller
                     $mileage = 0;
                 }
 
+                $observations = '';
+                $vehicleStatus = '';
+                $vehicleIsActive = $lastLocation ? $lastLocation->vehicle_active : false;
+
+                if($lastLocation) {
+                    $vehicleStatus = $lastLocation->vehicle_active ? __('Active') : __('Inactive');
+                }else {
+                    $vehicleStatusReport = ReportVehicleStatus::where('date','<=',$date)
+                        ->where('vehicle_id', $vehicle->id)
+                        ->orderByDesc('id')
+                        ->first();
+
+                    if($vehicleStatusReport){
+                        $vehicleStatus = $vehicleStatusReport->getParsedStatus();
+                        $vehicleIsActive = $vehicleStatus != __('Inactive');
+                        $observations = $vehicleStatusReport->observations;
+                    }else{
+                        $vehicleIsActive = false;
+                        $vehicleStatus = __('Inactive');
+
+                        $observations = __('No GPS reports found');
+                    }
+                }
+
                 $reports->put($key,
                     (object)[
                         'key' => $key,
                         'vehicleId' => $vehicle->id,
                         'vehiclePlate' => $vehicle->plate,
                         'vehicleNumber' => $vehicle->number,
-                        'vehicleIsActive' => $lastLocation ? $lastLocation->vehicle_active : false,
-                        'vehicleStatus' => $lastLocation ? ($lastLocation->vehicle_active ? __('Active') : __('Inactive')) : __('No GPS reports found'),
+                        'vehicleIsActive' => $vehicleIsActive,
+                        'vehicleStatus' => $vehicleStatus,
+                        'observations' => $observations,
                         'reportVehicleStatus' => $lastLocation ? $lastLocation->reportVehicleStatus : null,
                         'date' => $date,
                         'mileage' => $mileage,

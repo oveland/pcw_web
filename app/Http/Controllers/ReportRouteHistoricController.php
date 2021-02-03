@@ -89,6 +89,7 @@ class ReportRouteHistoricController extends Controller
         $lastLocation = $locations->first();
 
         $totalPassengers = 0;
+        $prevTotalPassengers = 0;
 
         $totalCharge = 0;
         $tariff = 0;
@@ -222,8 +223,11 @@ class ReportRouteHistoricController extends Controller
                 }
             }
 
-            $countedAscents = $prevTotalAscentsInRoundTrip !== $totalAscentsInRoundTrip;
-            $countedDescents = $prevTotalDescentsInRoundTrip !== $totalDescentsInRoundTrip;
+//            $countedAscents = $prevTotalAscentsInRoundTrip !== $totalAscentsInRoundTrip;
+//            $countedDescents = $prevTotalDescentsInRoundTrip !== $totalDescentsInRoundTrip;
+
+            $countedAscents = $prevTotalPassengers !== $totalPassengers;
+            $countedDescents = false;
 
             if($location->photo) {
                 $photoId = $location->photo->id;
@@ -283,6 +287,7 @@ class ReportRouteHistoricController extends Controller
 
             $prevTotalAscentsInRoundTrip = $totalAscentsInRoundTrip;
             $prevTotalDescentsInRoundTrip = $totalDescentsInRoundTrip;
+            $prevTotalPassengers = $totalPassengers;
             $lastLocation = $location;
         }
 

@@ -87,8 +87,8 @@
                                         @endif
                                         <span class="badge badge-{{ $report->vehicleIsActive ? 'success' : 'warning' }} tooltips" data-html="true" title="{{ $infoReportVehicleStatus }}" style="text-transform:none">
                                             {{ $report->vehicleStatus }}
-                                            @if($infoReportVehicleStatus)
-                                                <i class="fa fa-exclamation-circle"></i>
+                                            @if($report->observations)
+                                                <i class="fa fa-exclamation-circle"></i> {{ $report->observations }}
                                             @endif
                                         </span>
                                     </td>

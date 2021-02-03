@@ -2,6 +2,8 @@
 
 namespace App\Models\Vehicles;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,19 +17,35 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status
  * @property string $updated_by
  * @property string|null $observations
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereDateTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereObservations($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereUpdatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereVehicleId($value)
- * @mixin \Eloquent
+ * @method static Builder|ReportVehicleStatus whereDate($value)
+ * @method static Builder|ReportVehicleStatus whereDateTime($value)
+ * @method static Builder|ReportVehicleStatus whereId($value)
+ * @method static Builder|ReportVehicleStatus whereObservations($value)
+ * @method static Builder|ReportVehicleStatus whereStatus($value)
+ * @method static Builder|ReportVehicleStatus whereTime($value)
+ * @method static Builder|ReportVehicleStatus whereUpdatedBy($value)
+ * @method static Builder|ReportVehicleStatus whereVehicleId($value)
+ * @mixin Eloquent
  * @property int|null $updated_user_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\ReportVehicleStatus whereUpdatedUserId($value)
+ * @method static Builder|ReportVehicleStatus whereUpdatedUserId($value)
  */
 class ReportVehicleStatus extends Model
 {
     protected $table = 'report_vehicle_status';
+
+    public function getParsedStatus()
+    {
+        switch ($this->status) {
+            case 'ACTIVADO':
+            case 'EN TRANSITO':
+                return __('Active');
+                break;
+            case 'EN TALLER':
+                return __('In repair');
+                break;
+            case 'DESACTIVADO':
+                return __('Inactive');
+                break;
+        }
+    }
 }

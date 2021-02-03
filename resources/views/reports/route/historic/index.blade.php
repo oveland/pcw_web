@@ -500,11 +500,11 @@
                                         <span class="passengers-label">
                                             <i class="fa fa-users"></i> <span class="hidden-xs">@lang('Total'):</span> <span class="passengers-total"></span>
                                         </span>
-                                        <small class="passengers-label">
+                                        <small class="passengers-label hide">
                                             <i class="fa fa-angle-double-up"></i> <span class="hidden-xs">@lang('Ascents'):</span> <span class="passengers-total-ascents"></span>
                                         </small>
 
-                                        <small class="passengers-label">
+                                        <small class="passengers-label hide">
                                             <i class="fa fa-angle-double-down"></i> <span class="hidden-xs">@lang('Descents'):</span> <span class="passengers-total-descents"></span>
                                         </small>
                                     </div>
@@ -517,10 +517,10 @@
                                 <h5 class="text-bold">
                                     <i class="fa fa-users"></i>   @lang('Histórico de pasajeros'):
                                     <span class="info-trips-total">0</span> (<span class="passengers-total"></span>
-                                    <small class="text-lime">
+                                    <small class="text-lime hide">
                                         <i class="fa fa-angle-double-up"></i> <span class="passengers-total-ascents"></span>
                                     </small>
-                                    <small class="text-warning">
+                                    <small class="text-warning hide">
                                         <i class="fa fa-angle-double-down"></i> <span class="passengers-total-descents"></span>
                                     </small>)
 
@@ -532,11 +532,11 @@
                                 <div style="display: flex">
                                     <div class="info-trips"></div>
                                     <div style="align-items: flex-end; display: flex;padding-left: 5px">
-                                        <small class="passengers-label text-lime" style="display: none">
+                                        <small class="passengers-label text-lime hide" style="display: none">
                                             <i class="fa fa-angle-double-up"></i> <span class="hidden-xs hide">@lang('Ascents'):</span> <span class="passengers-route-ascents"></span>
                                         </small>
 
-                                        <small class="passengers-label text-warning" style="display: none">
+                                        <small class="passengers-label text-warning hide" style="display: none">
                                             <i class="fa fa-angle-double-down"></i> <span class="hidden-xs hide">@lang('Descents'):</span> <span class="passengers-route-descents"></span>
                                         </small>
 
