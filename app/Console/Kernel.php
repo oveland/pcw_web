@@ -27,30 +27,8 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('telescope:prune')->daily();
 
-//            $schedule->command('rocket:take-photo --vehicle-plate=VCK-542')->cron('*/2 * * * *');
-//                ->between('05:00', '22:00');
-//            $schedule->command('rocket:release-busy --vehicle-plate=VCK-542')->hourly()->between('06:00', '18:00');
-
-//            $schedule->command('rocket:take-photo --vehicle-plate=VQA-312')->cron('*/2 * * * *');
-//                ->between('05:00', '22:00');
-//            $schedule->command('rocket:release-busy --vehicle-plate=VQA-312')->hourly()->between('06:00', '18:00');
-
-//            $schedule->command('rocket:take-photo --vehicle-plate=WDK-885')->cron('*/2 * * * *');
-//                ->between('05:00', '22:00');
-//            $schedule->command('rocket:release-busy --vehicle-plate=WDK-885')->hourly()->between('06:00', '18:00');
-
-//            $schedule->command('rocket:take-photo --vehicle-plate=VPF-273')->cron('*/2 * * * *');
-//                ->between('05:00', '22:00');
-//            $schedule->command('rocket:release-busy --vehicle-plate=WDK-885')->hourly()->between('06:00', '18:00');
-
-//            $schedule->command('rocket:take-photo --vehicle-plate=DEM-001')->cron('*/2 * * * *');
-//            $schedule->command('rocket:take-photo --vehicle-plate=DEM-002')->cron('*/2 * * * *');
-
-//            $schedule->command('rocket:take-photo --vehicle-plate=VCI-427')->cron('*/2 * * * *');
-//                ->between('05:00', '19:00');
-
-            $schedule->command('concox:take-photo --camera=1')->everyFiveMinutes()->between('04:00', '20:00');
-//           $schedule->command('concox:take-photo --camera=1')->cron('*/3 * * * *')->between('04:00', '20:00');
+            $schedule->command('concox:take-photo --camera=1')->everyFiveMinutes()->between('04:00', '23:00');
+//           $schedule->command('concox:take-photo --camera=1')->cron('*/3 * * * *')->between('04:00', '23:00');
 
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();

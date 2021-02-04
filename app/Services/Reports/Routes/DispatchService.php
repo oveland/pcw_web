@@ -115,12 +115,12 @@ class DispatchService
     private function getTotals($dispatchRegisters)
     {
         $totalObservations = "";
-//        $withRoundTrip = $dispatchRegisters->first()->date != $dispatchRegisters->last()->date;
+        $withRoundTrip = $dispatchRegisters->first()->date != $dispatchRegisters->last()->date;
 
-//        foreach ($dispatchRegisters as $d) {
-//            $observations = $d->takings->observations;
-//            if ($observations) $totalObservations .= ($withRoundTrip ? "\n$d->date " : '') . __('Round trip') . " $d->roundTrip: $observations. ";
-//        }
+        foreach ($dispatchRegisters as $d) {
+            $observations = $d->takings->observations;
+            if ($observations) $totalObservations .= ($withRoundTrip ? "\n$d->date " : '') . __('Round trip') . " $d->roundTrip: $observations. ";
+        }
 
         return [
             'passengers' => $dispatchRegisters->sum(function ($d) {

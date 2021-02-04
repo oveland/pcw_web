@@ -152,7 +152,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
  * @property-read \RouteTariff $tariff
- * @property-read \App\Models\Routes\RouteTaking|null $routeTakings
+ * @property-read RouteTaking|null $routeTakings
+ * @property int|null $initial_charge
+ * @property int|null $final_charge
+ * @method static Builder|DispatchRegister whereFinalCharge($value)
+ * @method static Builder|DispatchRegister whereInitialCharge($value)
  */
 class DispatchRegister extends Model
 {
@@ -681,13 +685,22 @@ class DispatchRegister extends Model
             $passengers = $this->getPassengersByRecorder()->count;
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
-            $takings->total_production = $takings->passenger_tariff * $passengers;
+
+            $totalProduction = $takings->passenger_tariff * $passengers;
+
+            if ($this->route && $this->route->company_id == Company::YUMBENOS) {
+                $totalProduction = $this->final_charge - $this->initial_charge;
+            }
+
+            $takings->total_production = $totalProduction;
         }
 
         $takings->fuel_tariff = $takings->fuelTariff($this->route);
         $takings->fuel_gallons = $takings->fuel_tariff > 0 ? $takings->fuel / $takings->fuel_tariff : 0;
 
         $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others - $takings->bonus;
+
+        $takings->save();
 
         return $takings;
     }

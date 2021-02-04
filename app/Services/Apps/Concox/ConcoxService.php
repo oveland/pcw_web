@@ -202,8 +202,10 @@ class ConcoxService
 //                    $vehicle = Vehicle::find(1199); //  566 Yumbeños
 //                    $vehicle = Vehicle::find(1905); //    1325 Tupal
 //                    $vehicle = Vehicle::find(1207); //    322 Alameda
-                    $vehicle = Vehicle::find(1217); //    375 Alameda
+                  //  $vehicle = Vehicle::find(1217); //    375 Alameda
 
+
+$vehicle = Vehicle::find(2136); //  70 Yumbeños
                     $year = collect($photoData)->get(2);
                     $month = collect($photoData)->get(3);
                     $day = collect($photoData)->get(4);
