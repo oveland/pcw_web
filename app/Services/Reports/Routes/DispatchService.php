@@ -123,9 +123,36 @@ class DispatchService
         }
 
         return [
-            'passengers' => $dispatchRegisters->sum(function ($d) {
-                return $d->passengers->recorders->count;
-            }),
+            'passengers' => [
+                'recorders' => [
+                    'count' => $dispatchRegisters->sum(function ($d) {
+                        return $d->passengers->recorders->count;
+                    })
+                ],
+                'sensor' => [
+                    'count' => $dispatchRegisters->sum(function ($d) {
+                        return $d->passengers->sensor->count;
+                    }),
+                    'tariff' => [
+                        'a' => [
+                            'totalCharge' => $dispatchRegisters->sum(function ($d) {
+                                return $d->passengers->sensor->tariff->a->totalCharge;
+                            }),
+                            'totalCounted' => $dispatchRegisters->sum(function ($d) {
+                                return $d->passengers->sensor->tariff->a->totalCounted;
+                            })
+                        ],
+                        'b' => [
+                            'totalCharge' => $dispatchRegisters->sum(function ($d) {
+                                return $d->passengers->sensor->tariff->b->totalCharge;
+                            }),
+                            'totalCounted' => $dispatchRegisters->sum(function ($d) {
+                                return $d->passengers->sensor->tariff->b->totalCounted;
+                            })
+                        ],
+                    ]
+                ]
+            ],
             'totalProduction' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->totalProduction;
             }),
@@ -164,9 +191,36 @@ class DispatchService
     private function getAverages($dispatchRegisters)
     {
         return [
-            'passengers' => intval($dispatchRegisters->average(function ($d) {
-                return $d->passengers->recorders->count;
-            })),
+            'passengers' => [
+                'recorders' => [
+                    'count' => intval($dispatchRegisters->average(function ($d) {
+                        return $d->passengers->recorders->count;
+                    }))
+                ],
+                'sensor' => [
+                    'count' => intval($dispatchRegisters->average(function ($d) {
+                        return $d->passengers->sensor->count;
+                    })),
+                    'tariff' => [
+                        'a' => [
+                            'totalCharge' => $dispatchRegisters->average(function ($d) {
+                                return $d->passengers->sensor->tariff->a->totalCharge;
+                            }),
+                            'totalCounted' => intval($dispatchRegisters->average(function ($d) {
+                                return $d->passengers->sensor->tariff->a->totalCounted;
+                            }))
+                        ],
+                        'b' => [
+                            'totalCharge' => $dispatchRegisters->average(function ($d) {
+                                return $d->passengers->sensor->tariff->b->totalCharge;
+                            }),
+                            'totalCounted' => intval($dispatchRegisters->average(function ($d) {
+                                return $d->passengers->sensor->tariff->b->totalCounted;
+                            }))
+                        ],
+                    ]
+                ]
+            ],
             'totalProduction' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->totalProduction;
             }),

@@ -34,6 +34,24 @@
 						<span>{{ $t('Recorders') }}</span>
 					</small>
 				</th>
+				<th class="text-center" colspan="2">
+					<small>
+						<i class="fa fa-compass text-muted"></i><br>
+						<span>{{ $t('Tariffs') }}</span>
+					</small>
+					<div class="col-md-12 p-0">
+						<div class="col-md-6 col-sm-6 col-xs-6">
+							<small>
+								<i class="fa fa-dollar"></i> 1600
+							</small>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-6">
+							<small>
+								<i class="fa fa-dollar"></i> 2100
+							</small>
+						</div>
+					</div>
+				</th>
 				<th class="text-center">
 					<small>
 						<i class="fa fa-users text-muted"></i><br>
@@ -120,6 +138,16 @@
 				<th v-if="r.forNormalTakings" class="text-center">
 					<small>{{ r.passengers.recorders.end }}</small>
 				</th>
+
+				<th v-if="r.forNormalTakings" class="text-center">
+					<small v-if="r.passengers.sensor.tariff.a">{{ r.passengers.sensor.tariff.a.totalCounted }}</small> •
+					<small class="text-muted" v-if="r.passengers.sensor.tariff.a">{{ r.passengers.sensor.tariff.a.totalCharge | numberFormat('$0,0') }}</small>
+				</th>
+				<th v-if="r.forNormalTakings" class="text-center">
+					<small v-if="r.passengers.sensor.tariff.b">{{ r.passengers.sensor.tariff.b.totalCounted }}</small> •
+					<small class="text-muted" v-if="r.passengers.sensor.tariff.a">{{ r.passengers.sensor.tariff.b.totalCharge | numberFormat('$0,0') }}</small>
+				</th>
+
 				<th v-if="r.forNormalTakings" class="text-center">
 					<small>{{ r.passengers.recorders.count }}</small>
 				</th>
@@ -161,14 +189,25 @@
 			</tr>
 
 			<tr>
-				<td colspan="16" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
+				<td colspan="18" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
 			</tr>
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
 				<td colspan="7" class="bg-inverse text-white text-right text-bold text-uppercase">
 					<small><i class="fa fa-sliders text-muted"></i> {{ $t('Average') }}</small>
 				</td>
+
+				<th v-if="true" class="text-center">
+					<small>{{ averages.passengers.sensor.tariff.a.totalCounted }}</small> •
+					<small class="text-muted">{{ averages.passengers.sensor.tariff.a.totalCharge | numberFormat('$0,0') }}</small>
+				</th>
+
+				<th v-if="true" class="text-center">
+					<small>{{ averages.passengers.sensor.tariff.b.totalCounted }}</small> •
+					<small class="text-muted">{{ averages.passengers.sensor.tariff.b.totalCharge | numberFormat('$0,0') }}</small>
+				</th>
+
 				<td class="text-center text-bold">
-					<small>{{ averages.passengers }}</small>
+					<small>{{ averages.passengers.recorders.count }}</small>
 				</td>
 				<td class="text-right">
 					<small>{{ averages.totalProduction | numberFormat('$0,0') }}</small>
@@ -200,8 +239,19 @@
 				<th colspan="7" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
 					<small><i class="icon-layers"></i> {{ $t('Totals') }}</small>
 				</th>
+
+				<th v-if="true" class="bg-inverse text-white text-center">
+					<small>{{ totals.passengers.sensor.tariff.a.totalCounted }}</small> •
+					<small>{{ totals.passengers.sensor.tariff.a.totalCharge | numberFormat('$0,0') }}</small>
+				</th>
+
+				<th v-if="true" class="bg-inverse text-white text-center">
+					<small>{{ totals.passengers.sensor.tariff.b.totalCounted }}</small> •
+					<small>{{ totals.passengers.sensor.tariff.b.totalCharge | numberFormat('$0,0') }}</small>
+				</th>
+
 				<th class="bg-inverse text-white text-center text-bold" style="font-size: 1.1em !important;">
-					<small>{{ totals.passengers }}</small>
+					<small>{{ totals.passengers.recorders.count }}</small>
 				</th>
 				<th class="bg-inverse text-white text-right">
 					<small>{{ totals.totalProduction | numberFormat('$0,0') }}</small>

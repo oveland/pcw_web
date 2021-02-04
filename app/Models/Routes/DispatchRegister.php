@@ -6,6 +6,7 @@ use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Passengers\CurrentSensorPassengers;
+use App\Models\Passengers\Passenger;
 use App\Models\Users\User;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\ParkingReport;
@@ -157,6 +158,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $final_charge
  * @method static Builder|DispatchRegister whereFinalCharge($value)
  * @method static Builder|DispatchRegister whereInitialCharge($value)
+ * @property int|null $driver_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDriverId($value)
  */
 class DispatchRegister extends Model
 {
@@ -398,7 +401,7 @@ class DispatchRegister extends Model
         $passengers = $this->passengers;
         $takings = $this->takings;
 
-        if($short){
+        if ($short) {
             return (object)[
                 'id' => $this->id,
                 'date' => $this->getParsedDate()->toDateString(),
@@ -636,13 +639,13 @@ class DispatchRegister extends Model
 
     public function getPassengersByRecorder()
     {
-        if($this->route && $this->route->company_id == Company::YUMBENOS){
+        if ($this->route && $this->route->company_id == Company::YUMBENOS) {
             return $this->getPassengersBySensor();
         }
 
         $count = intval($this->end_recorder) - intval($this->start_recorder);
 
-        if($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000){
+        if ($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000) {
             $count = (1000000 - intval($this->start_recorder)) + intval($this->end_recorder);
         }
 
@@ -656,11 +659,29 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensor()
     {
+        $tariffs = collect(\DB::select("
+            SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
+            FROM passengers
+            WHERE dispatch_register_id = $this->id
+            GROUP BY tariff
+            ORDER BY tariff
+        "));
+
+        $default = (object)[
+            'tariff' => 0,
+            'totalCounted' => 0,
+            'totalCharge' => 0,
+        ];
+
         return (object)[
             'start' => $this->initial_sensor_counter,
             'end' => $this->final_sensor_counter,
             'count' => $this->passengersBySensor,
-            'mileage' => $this->mileage
+            'mileage' => $this->mileage,
+            'tariff' => (object)[
+                'a' => (object) ($tariffs->get(0) ? $tariffs->get(0) : $default),
+                'b' => (object) ($tariffs->get(1) ? $tariffs->get(1) : $default),
+            ]
         ];
     }
 

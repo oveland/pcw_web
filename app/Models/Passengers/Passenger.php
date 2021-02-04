@@ -64,6 +64,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed hexSeats
  * @property int|null $history_seat_id
  * @method static Builder|Passenger whereHistorySeatId($value)
+ * @property int|null $in_round_trip
+ * @property int|null $out_round_trip
+ * @property int|null $total_ascents
+ * @property int|null $total_descents
+ * @property int|null $ascents_in_round_trip
+ * @property int|null $descents_in_round_trip
+ * @property int $counted
+ * @property int $tariff
+ * @property int $charge
+ * @property int $total_charge
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereAscentsInRoundTrip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereCharge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereCounted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereDescentsInRoundTrip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereInRoundTrip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereOutRoundTrip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTariff($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalAscents($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalCharge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalDescents($value)
  */
 class Passenger extends Model
 {
