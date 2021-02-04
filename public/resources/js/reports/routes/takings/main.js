@@ -6619,7 +6619,7 @@ var render = function() {
                           ])
                         : _vm._e(),
                       _vm._v(" "),
-                      r.forNormalTakings
+                      r.forNormalTakings && _vm.options.showSensor
                         ? _c("th", { staticClass: "text-center" }, [
                             r.passengers.sensor.tariff.a
                               ? _c("small", [
@@ -6647,7 +6647,7 @@ var render = function() {
                           ])
                         : _vm._e(),
                       _vm._v(" "),
-                      r.forNormalTakings
+                      r.forNormalTakings && _vm.options.showSensor
                         ? _c("th", { staticClass: "text-center" }, [
                             r.passengers.sensor.tariff.b
                               ? _c("small", [

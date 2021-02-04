@@ -142,11 +142,11 @@
 					<small>{{ r.passengers.recorders.end }}</small>
 				</th>
 
-				<th v-if="r.forNormalTakings" class="text-center">
+				<th v-if="r.forNormalTakings && options.showSensor" class="text-center">
 					<small v-if="r.passengers.sensor.tariff.a">{{ r.passengers.sensor.tariff.a.totalCounted }}</small> •
 					<small class="text-muted" v-if="r.passengers.sensor.tariff.a">{{ r.passengers.sensor.tariff.a.totalCharge | numberFormat('$0,0') }}</small>
 				</th>
-				<th v-if="r.forNormalTakings" class="text-center">
+				<th v-if="r.forNormalTakings && options.showSensor" class="text-center">
 					<small v-if="r.passengers.sensor.tariff.b">{{ r.passengers.sensor.tariff.b.totalCounted }}</small> •
 					<small class="text-muted" v-if="r.passengers.sensor.tariff.a">{{ r.passengers.sensor.tariff.b.totalCharge | numberFormat('$0,0') }}</small>
 				</th>
