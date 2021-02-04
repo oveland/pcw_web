@@ -35,6 +35,7 @@ let camerasReportView = new Vue({
         report: [],
         totals: {},
         averages: {},
+        options: {},
         search: {
             companies: [],
             company: {},
@@ -71,6 +72,7 @@ let camerasReportView = new Vue({
                 this.report = data.report;
                 this.totals = data.totals;
                 this.averages = data.averages;
+                this.options = data.options;
             }).catch(function (error) {
                 console.log(error);
             }).then(function () {

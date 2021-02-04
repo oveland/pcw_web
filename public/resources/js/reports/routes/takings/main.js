@@ -1487,6 +1487,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
@@ -1499,7 +1502,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     report: Array,
     totals: Object,
-    averages: Object
+    averages: Object,
+    options: Object
   },
   watch: {
     report: function report() {
@@ -6400,33 +6404,37 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c(
-                  "th",
-                  { staticClass: "text-center", attrs: { colspan: "2" } },
-                  [
-                    _c("small", [
-                      _c("i", { staticClass: "fa fa-compass text-muted" }),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(_vm.$t("Recorders")))])
-                    ])
-                  ]
-                ),
+                _vm.options.showRecorders
+                  ? _c(
+                      "th",
+                      { staticClass: "text-center", attrs: { colspan: "2" } },
+                      [
+                        _c("small", [
+                          _c("i", { staticClass: "fa fa-compass text-muted" }),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("span", [_vm._v(_vm._s(_vm.$t("Recorders")))])
+                        ])
+                      ]
+                    )
+                  : _vm._e(),
                 _vm._v(" "),
-                _c(
-                  "th",
-                  { staticClass: "text-center", attrs: { colspan: "2" } },
-                  [
-                    _c("small", [
-                      _c("i", { staticClass: "fa fa-compass text-muted" }),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(_vm.$t("Tariffs")))])
-                    ]),
-                    _vm._v(" "),
-                    _vm._m(0)
-                  ]
-                ),
+                _vm.options.showSensor
+                  ? _c(
+                      "th",
+                      { staticClass: "text-center", attrs: { colspan: "2" } },
+                      [
+                        _c("small", [
+                          _c("i", { staticClass: "fa fa-compass text-muted" }),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("span", [_vm._v(_vm._s(_vm.$t("Tariffs")))])
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(0)
+                      ]
+                    )
+                  : _vm._e(),
                 _vm._v(" "),
                 _c("th", { staticClass: "text-center" }, [
                   _c("small", [
@@ -6533,7 +6541,19 @@ var render = function() {
                       _c(
                         "th",
                         { staticClass: "bg-inverse text-white text-center" },
-                        [_c("small", [_vm._v(_vm._s(r.date))])]
+                        [
+                          _c("small", [_vm._v(_vm._s(r.date))]),
+                          _vm._v(" "),
+                          _c("div", [
+                            _c("small", { staticClass: "text-muted" }, [
+                              _vm._v(
+                                _vm._s(r.departureTime) +
+                                  " - " +
+                                  _vm._s(r.arrivalTime)
+                              )
+                            ])
+                          ])
+                        ]
                       ),
                       _vm._v(" "),
                       _c(
@@ -6583,7 +6603,7 @@ var render = function() {
                           )
                         : _vm._e(),
                       _vm._v(" "),
-                      r.forNormalTakings
+                      r.forNormalTakings && _vm.options.showRecorders
                         ? _c("th", { staticClass: "text-center" }, [
                             _c("small", [
                               _vm._v(_vm._s(r.passengers.recorders.start))
@@ -6591,7 +6611,7 @@ var render = function() {
                           ])
                         : _vm._e(),
                       _vm._v(" "),
-                      r.forNormalTakings
+                      r.forNormalTakings && _vm.options.showRecorders
                         ? _c("th", { staticClass: "text-center" }, [
                             _c("small", [
                               _vm._v(_vm._s(r.passengers.recorders.end))
@@ -6786,7 +6806,7 @@ var render = function() {
                       {
                         staticClass:
                           "bg-inverse text-white text-right text-bold text-uppercase",
-                        attrs: { colspan: "7" }
+                        attrs: { colspan: _vm.options.showRecorders ? 7 : 5 }
                       },
                       [
                         _c("small", [
@@ -6796,7 +6816,7 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    true
+                    _vm.options.showSensor
                       ? _c("th", { staticClass: "text-center" }, [
                           _c("small", [
                             _vm._v(
@@ -6819,9 +6839,9 @@ var render = function() {
                             )
                           ])
                         ])
-                      : undefined,
+                      : _vm._e(),
                     _vm._v(" "),
-                    true
+                    _vm.options.showSensor
                       ? _c("th", { staticClass: "text-center" }, [
                           _c("small", [
                             _vm._v(
@@ -6844,7 +6864,7 @@ var render = function() {
                             )
                           ])
                         ])
-                      : undefined,
+                      : _vm._e(),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-center text-bold" }, [
                       _c("small", [
@@ -6942,7 +6962,7 @@ var render = function() {
                       staticClass:
                         "bg-inverse text-white text-right text-bold uppercase",
                       staticStyle: { "font-size": "1.1em !important" },
-                      attrs: { colspan: "7" }
+                      attrs: { colspan: _vm.options.showRecorders ? 7 : 5 }
                     },
                     [
                       _c("small", [
@@ -6952,7 +6972,7 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  true
+                  _vm.options.showSensor
                     ? _c(
                         "th",
                         { staticClass: "bg-inverse text-white text-center" },
@@ -6979,9 +6999,9 @@ var render = function() {
                           ])
                         ]
                       )
-                    : undefined,
+                    : _vm._e(),
                   _vm._v(" "),
-                  true
+                  _vm.options.showSensor
                     ? _c(
                         "th",
                         { staticClass: "bg-inverse text-white text-center" },
@@ -7008,7 +7028,7 @@ var render = function() {
                           ])
                         ]
                       )
-                    : undefined,
+                    : _vm._e(),
                   _vm._v(" "),
                   _c(
                     "th",
@@ -19931,6 +19951,7 @@ var camerasReportView = new Vue({
     report: [],
     totals: {},
     averages: {},
+    options: {},
     search: {
       companies: [],
       company: {},
@@ -19968,6 +19989,7 @@ var camerasReportView = new Vue({
         _this.report = data.report;
         _this.totals = data.totals;
         _this.averages = data.averages;
+        _this.options = data.options;
       })["catch"](function (error) {
         console.log(error);
       }).then(function () {

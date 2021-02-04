@@ -28,13 +28,13 @@
 						<span>{{ $t('Route') }} | {{ $t('Round Trip') }}</span>
 					</small>
 				</th>
-				<th class="text-center" colspan="2">
+				<th class="text-center" colspan="2" v-if="options.showRecorders">
 					<small>
 						<i class="fa fa-compass text-muted"></i><br>
 						<span>{{ $t('Recorders') }}</span>
 					</small>
 				</th>
-				<th class="text-center" colspan="2">
+				<th class="text-center" colspan="2" v-if="options.showSensor">
 					<small>
 						<i class="fa fa-compass text-muted"></i><br>
 						<span>{{ $t('Tariffs') }}</span>
@@ -119,6 +119,9 @@
 			<tr v-for="r in report" :class="r.passengers.recorders.count < 0 ? 'bg-danger' : ''">
 				<th class="bg-inverse text-white text-center">
 					<small>{{ r.date }}</small>
+					<div>
+						<small class="text-muted">{{ r.departureTime }} - {{ r.arrivalTime }}</small>
+					</div>
 				</th>
 				<th class="bg-inverse text-white text-center">
 					<small>{{ r.vehicle.number }}</small>
@@ -132,10 +135,10 @@
 				<th v-if="r.forNormalTakings" class="bg-inverse text-white text-center">
 					<small><i class="fa fa-retweet"></i> <span>{{ r.roundTrip }}</span></small>
 				</th>
-				<th v-if="r.forNormalTakings" class="text-center">
+				<th v-if="r.forNormalTakings && options.showRecorders" class="text-center">
 					<small>{{ r.passengers.recorders.start }}</small>
 				</th>
-				<th v-if="r.forNormalTakings" class="text-center">
+				<th v-if="r.forNormalTakings && options.showRecorders" class="text-center">
 					<small>{{ r.passengers.recorders.end }}</small>
 				</th>
 
@@ -192,16 +195,16 @@
 				<td colspan="18" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
 			</tr>
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
-				<td colspan="7" class="bg-inverse text-white text-right text-bold text-uppercase">
+				<td :colspan=" options.showRecorders ? 7 : 5" class="bg-inverse text-white text-right text-bold text-uppercase">
 					<small><i class="fa fa-sliders text-muted"></i> {{ $t('Average') }}</small>
 				</td>
 
-				<th v-if="true" class="text-center">
+				<th v-if="options.showSensor" class="text-center">
 					<small>{{ averages.passengers.sensor.tariff.a.totalCounted }}</small> •
 					<small class="text-muted">{{ averages.passengers.sensor.tariff.a.totalCharge | numberFormat('$0,0') }}</small>
 				</th>
 
-				<th v-if="true" class="text-center">
+				<th v-if="options.showSensor" class="text-center">
 					<small>{{ averages.passengers.sensor.tariff.b.totalCounted }}</small> •
 					<small class="text-muted">{{ averages.passengers.sensor.tariff.b.totalCharge | numberFormat('$0,0') }}</small>
 				</th>
@@ -236,16 +239,16 @@
 			</tbody>
 			<tfoot>
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
-				<th colspan="7" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
+				<th :colspan=" options.showRecorders ? 7 : 5" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
 					<small><i class="icon-layers"></i> {{ $t('Totals') }}</small>
 				</th>
 
-				<th v-if="true" class="bg-inverse text-white text-center">
+				<th v-if="options.showSensor" class="bg-inverse text-white text-center">
 					<small>{{ totals.passengers.sensor.tariff.a.totalCounted }}</small> •
 					<small>{{ totals.passengers.sensor.tariff.a.totalCharge | numberFormat('$0,0') }}</small>
 				</th>
 
-				<th v-if="true" class="bg-inverse text-white text-center">
+				<th v-if="options.showSensor" class="bg-inverse text-white text-center">
 					<small>{{ totals.passengers.sensor.tariff.b.totalCounted }}</small> •
 					<small>{{ totals.passengers.sensor.tariff.b.totalCharge | numberFormat('$0,0') }}</small>
 				</th>
@@ -306,7 +309,8 @@ export default {
 	props: {
 		report: Array,
 		totals: Object,
-		averages: Object
+		averages: Object,
+		options: Object
 	},
 	watch: {
 		report(){

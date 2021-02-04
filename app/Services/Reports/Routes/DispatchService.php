@@ -102,6 +102,10 @@ class DispatchService
     private function getData($dispatchRegisters, $onlyTotals = false)
     {
         return (object)[
+            'options' => [
+                'showRecorders' => $this->company->hasRecorderCounter(),
+                'showSensor' => $this->company->hasSeatSensorCounter(),
+            ],
             'report' => $onlyTotals ? [] : $dispatchRegisters,
             'totals' => $this->getTotals($dispatchRegisters),
             'averages' => $onlyTotals ? [] : $this->getAverages($dispatchRegisters),
