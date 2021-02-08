@@ -153,7 +153,11 @@ use Illuminate\Support\Str;
  * @property-read mixed $mileage
  * @property-read mixed $passengers_by_sensor_total
  * @property int|null $driver_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDriverId($value)
+ * @method static Builder|DispatchRegister whereDriverId($value)
+ * @property int|null $initial_charge
+ * @property int|null $final_charge
+ * @method static Builder|DispatchRegister whereFinalCharge($value)
+ * @method static Builder|DispatchRegister whereInitialCharge($value)
  */
 class DispatchRegister extends Model
 {
@@ -626,7 +630,7 @@ class DispatchRegister extends Model
 
     public function getPassengersByRecorder()
     {
-        if ($this->route && $this->route->company->id == Company::YUMBENOS) {
+        if ($this->route && $this->route->company_id == Company::YUMBENOS) {
             return $this->getPassengersBySensor();
         }
 
@@ -670,13 +674,22 @@ class DispatchRegister extends Model
             $passengers = $this->getPassengersByRecorder()->count;
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
-            $takings->total_production = $takings->passenger_tariff * $passengers;
+
+            $totalProduction = $takings->passenger_tariff * $passengers;
+
+            if ($this->route && $this->route->company_id == Company::YUMBENOS) {
+                $totalProduction = $this->final_charge - $this->initial_charge;
+            }
+
+            $takings->total_production = $totalProduction;
         }
 
         $takings->fuel_tariff = $takings->fuelTariff($this->route);
         $takings->fuel_gallons = $takings->fuel_tariff > 0 ? $takings->fuel / $takings->fuel_tariff : 0;
 
         $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others - $takings->bonus;
+
+        $takings->save();
 
         return $takings;
     }
