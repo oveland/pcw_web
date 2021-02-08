@@ -93,6 +93,7 @@ class ReportRouteHistoricController extends Controller
 
         $totalCharge = 0;
         $tariff = 0;
+        $tariffCharges = [];
 
         $totalPassengersOnPhoto = 0;
         $passengersTripOnPhoto = 0;
@@ -169,12 +170,12 @@ class ReportRouteHistoricController extends Controller
                     }
 
 
-                    $trips[$dispatchRegister->id] = (object) [
+                    $trips[$dispatchRegister->id] = (object)[
                         "index" => $index,
                         "routeName" => $dispatchRegister->route->name,
                         "roundTrip" => $dispatchRegister->round_trip,
                         "departureTime" => $dispatchRegister->departure_time,
-                        "passengers" => (object) [
+                        "passengers" => (object)[
                             "total" => $totalPassengers,
                             "inRoundTrip" => $passengersInRoundTrip,
 
@@ -185,9 +186,20 @@ class ReportRouteHistoricController extends Controller
                         ],
                     ];
 
-                    $totalInRoundTrips = collect($trips)->sum( function($t) {
-                    return $t->passengers->inRoundTrip;
+                    $totalInRoundTrips = collect($trips)->sum(function ($t) {
+                        return $t->passengers->inRoundTrip;
                     });
+
+                    if ($tariff) {
+                        $counted = ($totalPassengers - $prevTotalPassengers);
+                        $tariffCharges[$tariff] = (object)[
+                            'tariff' => $tariff,
+                            'charge' => $passenger->charge,
+                            'counted' => $counted,
+                            'totalCounted' => (isset($tariffCharges[$tariff]) ? $tariffCharges[$tariff]->totalCounted : 0) + $counted,
+                            'totalCharge' => (isset($tariffCharges[$tariff]) ? $tariffCharges[$tariff]->totalCharge : 0) + ($counted * $tariff),
+                        ];
+                    }
                 } else {
                     $passengersInRoundTrip = 0;
                     $passengersOutRoundTrip = 0;
@@ -196,7 +208,7 @@ class ReportRouteHistoricController extends Controller
                     $totalDescentsInRoundTrip = 0;
                 }
             } else {
-                if($newTurn) {
+                if ($newTurn) {
                     $passengersInRoundTrip = 0;
                     $passengersOutRoundTrip = 0;
 
@@ -205,12 +217,12 @@ class ReportRouteHistoricController extends Controller
                 }
 
                 if ($dispatchRegister) {
-                    $trips[$dispatchRegister->id] = (object) [
+                    $trips[$dispatchRegister->id] = (object)[
                         "index" => $index,
                         "routeName" => $dispatchRegister->route->name,
                         "roundTrip" => $dispatchRegister->round_trip,
                         "departureTime" => $dispatchRegister->departure_time,
-                        "passengers" => (object) [
+                        "passengers" => (object)[
                             "total" => $totalPassengers,
                             "inRoundTrip" => $passengersInRoundTrip,
 
@@ -229,7 +241,7 @@ class ReportRouteHistoricController extends Controller
             $countedAscents = $prevTotalPassengers !== $totalPassengers;
             $countedDescents = false;
 
-            if($location->photo) {
+            if ($location->photo) {
                 $photoId = $location->photo->id;
                 $totalPassengersOnPhoto = $totalPassengers;
                 $passengersTripOnPhoto = $passengersInRoundTrip;
@@ -275,9 +287,10 @@ class ReportRouteHistoricController extends Controller
                     'trips' => $trips,
 
                     'tariff' => $tariff,
-                    'totalCharge' => $totalCharge
+                    'totalCharge' => $totalCharge,
+                    'tariffCharges' => $tariffCharges,
                 ],
-                'photo' => (object) [
+                'photo' => (object)[
                     'id' => $photoId,
                     'index' => $index,
                     'passengers' => $totalPassengersOnPhoto,

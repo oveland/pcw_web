@@ -370,6 +370,7 @@
 
 
             this.processTrips(reportLocation, index);
+            this.processTariffCharges(reportLocation);
 
             this.showInfo.find('.time').text(reportLocation.time);
             this.showInfo.find('.period').text(reportLocation.period);
@@ -391,9 +392,6 @@
 
             this.showInfo.find('.passengers-route-ascents').text(reportLocation.passengers.ascentsInRoundTrip);
             this.showInfo.find('.passengers-route-descents').text(reportLocation.passengers.descentsInRoundTrip);
-
-            this.showInfo.find('.passengers-route-tariff').text(reportLocation.passengers.tariff);
-            this.showInfo.find('.passengers-total-charge').text(reportLocation.passengers.totalCharge);
 
 
             if (reportLocation.speeding) {
@@ -420,10 +418,34 @@
             $('.photo-info').hide();
         }
 
+        processTariffCharges(reportLocation){
+            const passengers = reportLocation.passengers;
+            const tariffCharges = passengers.tariffCharges;
+
+            const sorted = _.sortBy(tariffCharges, 'tariff');
+
+            let html = "<div>";
+            for(const tariff in sorted) {
+                const charge = sorted[tariff];
+                html += `<div>
+                        <small>
+                            <span><i class="fa fa-dollar"></i> ${charge.tariff} • ${ charge.totalCounted } • ${charge.totalCharge}</span>
+                        </small>
+                    </div>`;
+            }
+
+            html += "</ul>";
+
+            this.showInfo.find('.passengers-tariff-charges').empty().html(html);
+            this.showInfo.find('.passengers-route-tariff').text(reportLocation.passengers.tariff);
+            this.showInfo.find('.passengers-total-charge').text(reportLocation.passengers.totalCharge);
+        }
+
         processTrips(reportLocation, index) {
             const dr = reportLocation.dispatchRegister;
             const passengers = reportLocation.passengers;
             const trips = passengers.trips;
+
 
             const sorted = _.sortBy(trips, 'departureTime');
             let iterations = sorted.length;
@@ -458,8 +480,7 @@
 
             $('.info-trips').empty().html(html);
 
-            $('.info-trips-total').empty().html(passengers.totalInRoundTrips
-            );
+            $('.info-trips-total').empty().html(passengers.totalInRoundTrips);
         }
 
         createInfoWindow(r) {

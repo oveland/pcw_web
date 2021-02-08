@@ -346,13 +346,9 @@ class DispatchRegister extends Model
     public function getPassengersBySensorAttribute()
     {
         if ($this->inProgress()) {
-            $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
-
-            if (!$lastPassenger) {
-                return 0;
-            }
-
-            return $lastPassenger->total - $this->initial_sensor_counter;
+            $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+            $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
+            return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
         }
         $hasReset = ($this->final_sensor_counter < $this->initial_sensor_counter);
         return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
@@ -504,23 +500,14 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @param DispatchRegister $query
+     * @param Builder | DispatchRegister $query
      * @param Company $company
-     * @param null $routeId
+     * @param $routeId
+     * @return Builder | DispatchRegister
      */
     public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
     {
-        $query->where(function ($query) use ($company, $routeId) {
-            $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
-
-            if ($company->hasADD()) {
-                $query = $query->orWhere('route_id', intval($routeId));
-            } else if ($routeId != 'all') {
-                $query = $query->where('route_id', intval($routeId));
-            }
-
-            return $query;
-        });
+        return $query->whereCompanyAndRouteAndVehicle($company, $routeId);
     }
 
     /**
@@ -534,8 +521,11 @@ class DispatchRegister extends Model
     {
         $user = Auth::user();
 
+        if ($user && $routeId == 'all') {
+            $query = $query->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
+        }
+
         return $query
-            ->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'))
             ->where(function ($query) use ($company, $routeId, $vehicleId) {
                 if ($vehicleId == 'all' || $vehicleId == null) {
                     $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
@@ -583,7 +573,6 @@ class DispatchRegister extends Model
             ->with('driver')
             ->with('user');
     }
-
 
     public function getOffRoadPercent()
     {
@@ -650,12 +639,35 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensor()
     {
+        $tariffs = collect(\DB::select("
+            SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
+            FROM passengers
+            WHERE dispatch_register_id = $this->id
+            GROUP BY tariff
+            ORDER BY tariff
+        "));
+
+        $default = (object)[
+            'tariff' => 0,
+            'totalCounted' => 0,
+            'totalCharge' => 0,
+        ];
+
         return (object)[
             'start' => $this->initial_sensor_counter,
             'end' => $this->final_sensor_counter,
             'count' => $this->passengersBySensor,
-            'mileage' => $this->mileage
+            'mileage' => $this->mileage,
+            'tariff' => (object)[
+                'a' => (object) ($tariffs->get(0) ? $tariffs->get(0) : $default),
+                'b' => (object) ($tariffs->get(1) ? $tariffs->get(1) : $default),
+            ]
         ];
+    }
+
+    public function routeTakings()
+    {
+        return $this->hasOne(RouteTaking::class);
     }
 
     /**
@@ -663,7 +675,7 @@ class DispatchRegister extends Model
      */
     public function getTakingsAttribute()
     {
-        $takings = RouteTaking::findByDr($this);
+        $takings = $this->routeTakings;
 
         if (!$takings) {
             $takings = new RouteTaking();

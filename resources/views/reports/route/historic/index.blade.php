@@ -514,7 +514,7 @@
 
                         @if(Auth::user()->company->hasSensorCounter())
                             <div class="m-t-5 p-10 p-t-0 info-trips-container" style="display: none">
-                                <h5 class="text-bold">
+                                <h5 class="text-bold m-b-0">
                                     <i class="fa fa-users"></i>   @lang('Histórico de pasajeros'):
                                     <span class="info-trips-total">0</span> (<span class="passengers-total"></span>
                                     <small class="text-lime hide">
@@ -523,12 +523,18 @@
                                     <small class="text-warning hide">
                                         <i class="fa fa-angle-double-down"></i> <span class="passengers-total-descents"></span>
                                     </small>)
-
-
-                                    <span class="label label-warning tooltips" title="@lang('Total charge')">
-                                        <small style="font-weight: bold !important;color: white;font-size: 1.1rem;"><i class="fa fa-dollar"></i> <span class="hidden-xs hide">@lang('Total charge'):</span> <span class="passengers-total-charge"></span></small>
-                                    </span>
                                 </h5>
+                                <div class="text-center">
+                                    <div class="label label-warning tooltips" title="@lang('Total charge')" style="display: inline-block;margin-top: 5px">
+                                        <small style="font-weight: bold !important;color: white;font-size: 1.1rem;">
+                                            <i class="fa fa-dollar"></i> <span class="hidden-xs hide">@lang('Total charge'):</span> <span class="passengers-total-charge"></span>
+                                        </small>
+                                        <hr class="m-0">
+                                        <small style="font-weight: bold !important;color: white;font-size: 1.1rem;" class="passengers-tariff-charges">
+
+                                        </small>
+                                    </div>
+                                </div>
                                 <div style="display: flex">
                                     <div class="info-trips"></div>
                                     <div style="align-items: flex-end; display: flex;padding-left: 5px">
