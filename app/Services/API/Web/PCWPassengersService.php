@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class PCWPassengersService implements APIWebInterface
 {
@@ -64,6 +65,7 @@ class PCWPassengersService implements APIWebInterface
         $allDispatchRegisters = DispatchRegister::active()
             ->whereIn('route_id', $routes->pluck('id'))
             ->where('date', $dateReport)
+            ->where('vehicle_id', Vehicle::where('number', '566')->first()->id)
             ->with('vehicle')
             ->with('route')
             ->orderBy('id')
@@ -80,12 +82,16 @@ class PCWPassengersService implements APIWebInterface
             $recorderHistory = $recorder ? $this->getRecorderHistory($recorder->history) : [];
 
             $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
+
+            $currentCharges = collect(DB::select("SELECT * FROM current_tariff_charges WHERE vehicle_id = $vehicle->id"));
+
             $reports[] = (object)[
                 'vehicle_id' => $vehicleId,
                 'passengers' => (object)[
                     'recorder' => $recorder ? $recorder->passengersByRecorder : 0,
                     'recorderHistory' => $recorderHistory,
                     'sensor' => $sensor->passengersBySensor,
+                    'currentCharges' => $currentCharges,
                     'sensorRecorder' => $sensor->passengersBySensorRecorder,
                     'timeRecorder' => $recorder->timeRecorder,
                     'timeSensor' => $currentSensor->timeSensor,
