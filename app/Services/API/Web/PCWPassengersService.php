@@ -65,7 +65,7 @@ class PCWPassengersService implements APIWebInterface
         $allDispatchRegisters = DispatchRegister::active()
             ->whereIn('route_id', $routes->pluck('id'))
             ->where('date', $dateReport)
-            ->where('vehicle_id', Vehicle::where('number', '566')->first()->id)
+//            ->where('vehicle_id', Vehicle::where('number', '566')->first()->id)
             ->with('vehicle')
             ->with('route')
             ->orderBy('id')
