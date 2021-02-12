@@ -50,9 +50,10 @@ class APIConcoxService implements APIAppsInterface
             case 'take-photo':
 //                $vehicle = Vehicle::find(1207); // Vehicle 322 Alameda
                 //$vehicle = Vehicle::find(1217); // Vehicle 375 Alameda
-//                $vehicle = Vehicle::find(1199); // Vehicle 566 Yumbe?os
+//                $vehicle = Vehicle::find(1199); // Vehicle 566 YB
+                $vehicle = Vehicle::find(2271); // Vehicle TS1 TS
 
- $vehicle = Vehicle::find(2136); // Vehicle 566 Yumbe?os
+// $vehicle = Vehicle::find(2136); // Vehicle 70 YB
 
                 $lastPhotoRequest = PhotoRequest::where('vehicle_id', $vehicle->id)->first();
 

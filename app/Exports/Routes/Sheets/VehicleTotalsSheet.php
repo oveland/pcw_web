@@ -53,7 +53,7 @@ class VehicleTotalsSheet implements FromCollection, ShouldAutoSize, Responsable,
                 __('Round trips') => $roundTrips,                                                               # G CELL
                 __('Start recorder') => $firstDr->passengers->recorders->start,                                 # H CELL
                 __('End recorder') => $lastDr->passengers->recorders->end,                                      # I CELL
-                __('Passengers') => $totals->passengers,                                                        # J CELL
+                __('Passengers') => $totals->passengers->recorders->count,                                                        # J CELL
                 __('Total production') => intval($totals->totalProduction),                                     # K CELL
                 __('Control') => intval($totals->control),                                                      # L CELL
                 __('Fuel') => intval($totals->fuel),                                                            # M CELL

@@ -127,8 +127,8 @@ class DispatchService
         }
 
         return [
-            'passengers' => [
-                'recorders' => [
+            'passengers' => (object)[
+                'recorders' => (object)[
                     'count' => $dispatchRegisters->sum(function ($d) {
                         return $d->passengers->recorders->count;
                     })
@@ -137,8 +137,8 @@ class DispatchService
                     'count' => $dispatchRegisters->sum(function ($d) {
                         return $d->passengers->sensor->count;
                     }),
-                    'tariff' => [
-                        'a' => [
+                    'tariff' => (object)[
+                        'a' => (object)[
                             'totalCharge' => $dispatchRegisters->sum(function ($d) {
                                 return $d->passengers->sensor->tariff->a->totalCharge;
                             }),
@@ -146,7 +146,7 @@ class DispatchService
                                 return $d->passengers->sensor->tariff->a->totalCounted;
                             })
                         ],
-                        'b' => [
+                        'b' => (object)[
                             'totalCharge' => $dispatchRegisters->sum(function ($d) {
                                 return $d->passengers->sensor->tariff->b->totalCharge;
                             }),
@@ -195,18 +195,18 @@ class DispatchService
     private function getAverages($dispatchRegisters)
     {
         return [
-            'passengers' => [
-                'recorders' => [
+            'passengers' => (object)[
+                'recorders' => (object)[
                     'count' => intval($dispatchRegisters->average(function ($d) {
                         return $d->passengers->recorders->count;
                     }))
                 ],
-                'sensor' => [
+                'sensor' => (object)[
                     'count' => intval($dispatchRegisters->average(function ($d) {
                         return $d->passengers->sensor->count;
                     })),
-                    'tariff' => [
-                        'a' => [
+                    'tariff' => (object)[
+                        'a' => (object)[
                             'totalCharge' => $dispatchRegisters->average(function ($d) {
                                 return $d->passengers->sensor->tariff->a->totalCharge;
                             }),
@@ -214,7 +214,7 @@ class DispatchService
                                 return $d->passengers->sensor->tariff->a->totalCounted;
                             }))
                         ],
-                        'b' => [
+                        'b' => (object)[
                             'totalCharge' => $dispatchRegisters->average(function ($d) {
                                 return $d->passengers->sensor->tariff->b->totalCharge;
                             }),

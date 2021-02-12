@@ -200,12 +200,13 @@ class ConcoxService
 //                    $vehicle = $gpsVehicle->vehicle; //   TODO: implement logic for associate Imei Concox with vehicle
 //                    $vehicle = Vehicle::find(2150); //    87 Yumbeños
 //                    $vehicle = Vehicle::find(1199); //  566 Yumbeños
+                    $vehicle = Vehicle::find(2271); //  TS! TS
 //                    $vehicle = Vehicle::find(1905); //    1325 Tupal
 //                    $vehicle = Vehicle::find(1207); //    322 Alameda
                   //  $vehicle = Vehicle::find(1217); //    375 Alameda
 
 
-$vehicle = Vehicle::find(2136); //  70 Yumbeños
+//$vehicle = Vehicle::find(2136); //  70 Yumbeños
                     $year = collect($photoData)->get(2);
                     $month = collect($photoData)->get(3);
                     $day = collect($photoData)->get(4);
@@ -244,6 +245,7 @@ $vehicle = Vehicle::find(2136); //  70 Yumbeños
                     } catch (Exception $e) {
                         $response->put('success', false);
                         $messages->push("Error sync photo $fileUrl" . $e->getMessage());
+                        dd($e);
                     }
 
                 } else {

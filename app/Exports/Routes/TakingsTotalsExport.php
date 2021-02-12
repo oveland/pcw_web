@@ -60,7 +60,7 @@ class TakingsTotalsExport implements FromCollection, ShouldAutoSize, Responsable
                     __('Round trips') => $roundTrips,                                                               # F CELL
                     __('Start recorder') => $firstDr->passengers->recorders->start,                                 # G CELL
                     __('End recorder') => $lastDr->passengers->recorders->end,                                      # H CELL
-                    __('Passengers') => $totals->passengers,                                                        # I CELL
+                    __('Passengers') => $totals->passengers->recorders->count,                                                        # I CELL
                     __('Total production') => intval($totals->totalProduction),                                     # J CELL
                     __('Control') => intval($totals->control),                                                      # K CELL
                     __('Fuel') => intval($totals->fuel),                                                            # L CELL
