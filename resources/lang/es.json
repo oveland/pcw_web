@@ -810,5 +810,15 @@
   "Optional": "Opcional",
   "Bonuses": "Bonificaciones",
   "Load photos": "Cargar fotos",
-  "Tariffs": "Tarifas"
+  "Tariffs": "Tarifas",
+  "No registers for liquidation yet": "Sin registros a liquidar aún",
+  "Register advance": "Registrar anticipo",
+  "Advance": "Anticipo",
+  "advance": "anticipo",
+  "Advances": "Anticipos",
+  "advances": "anticipos",
+  "Saving advance": "Guardando anticipo",
+  "Advance saved successfully": "Anticipo registrado correctamente",
+  "Error setting advance": "Error al registrar anticipo",
+  "Enter a valid number": "Ingrese un número válido"
 }

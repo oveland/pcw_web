@@ -393,6 +393,10 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/test', 'TakingsPassengersLiquidationController@test')->name('takings-passengers-liquidation-test');
             });
 
+            Route::prefix(__('advance'))->group(function () {
+                Route::post('/set/{vehicle}', 'TakingsPassengersLiquidationController@setAdvances')->name('takings-passengers-advance-set');
+            });
+
             Route::prefix(__('url-params'))->group(function () {
                 Route::get('/{name}', 'TakingsPassengersLiquidationController@getParams')->name('takings-passengers-liquidation-params');
                 Route::post('/{name}/'.__('save'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-set');

@@ -60,6 +60,7 @@ let liquidationView = new Vue({
     data: {
         flag: false,
         urlList: String,
+        urlGetAdvance: String,
         vehicles: [],
         search: {
             companies: [],
@@ -77,6 +78,7 @@ let liquidationView = new Vue({
             realTaken: 0,
             pendingBalance: 0,
             forgivableBalance: false,
+            advance: 0
         }
     },
     computed: {
@@ -217,6 +219,15 @@ let liquidationView = new Vue({
                     this.marks = data.data;
                     this.liquidation.otherDiscounts = [];
                     this.liquidation.observations = "";
+
+
+                    axios.get(this.urlGetAdvance, {
+                        params: {
+                            vehicle: this.searchParams.vehicle,
+                        }
+                    }).then(response => {
+                        this.liquidation.advance = response.data;
+                    });
                 }).catch((error) => {
                     Swal.fire({
                         title: 'Error!',
@@ -316,13 +327,11 @@ let liquidationView = new Vue({
         },
     },
     watch: {
-        marks: function () {
-            console.log('Maracas cambian');
-            
-        }
+
     },
     mounted: function () {
         this.urlList = this.$el.attributes.url.value;
+        this.urlGetAdvance = this.$el.attributes.urlgetadvance.value;
     },
 });
 

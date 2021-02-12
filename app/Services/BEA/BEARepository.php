@@ -32,7 +32,8 @@ class BEARepository
      */
     function getAllVehicles()
     {
-        return $this->company->activeVehicles()->where('bea_id', '>', 0)->get();
+//        return $this->company->activeVehicles()->where('bea_id', '>', 0)->get();
+        return $this->company->activeVehicles()->get();
     }
 
     /**

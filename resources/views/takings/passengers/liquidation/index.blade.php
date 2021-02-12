@@ -28,7 +28,7 @@
 
 @section('content')
     <!-- begin row -->
-    <div id="liquidation" class="row p-t-10" url="{{ route('takings-passengers-search-liquidation') }}">
+    <div id="liquidation" class="row p-t-10" url="{{ route('takings-passengers-search-liquidation') }}" urlgetadvance="{{  route('takings-passengers-liquidation-params',['name' => __('advance')]) }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
             <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('takings-passengers-liquidation-params',['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
@@ -71,10 +71,10 @@
                                 </div>
                             </div>
                             <div class="portlet-body">
-                                <div class="tab-content panel p-0">
+                                <div class="tab-content p-0">
                                     @if( Auth::user()->canML('liquidate') )
                                         <div id="table-liquidations" class="tab-pane fade active in">
-                                            <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
+                                            <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" url-set-advance="{{ route('takings-passengers-advance-set', ['vehicle' => 'ID']) }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
                                         </div>
                                     @endif
                                     @if( Auth::user()->canML('takings') )

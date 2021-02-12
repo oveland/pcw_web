@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('telescope:prune')->daily();
 
-           $schedule->command('concox:take-photo --camera=1')->everyFiveMinutes()->between('04:00', '23:00');
+           $schedule->command('concox:take-photo --camera=1')->everyFiveMinutes()->between('05:00', '2:00');
 //           $schedule->command('concox:take-photo --camera=1')->cron('*/3 * * * *')->between('04:00', '23:00');
 
         } else {

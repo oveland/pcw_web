@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Facades\BEADB;
+use App\Models\BEA\Advance;
 use App\Models\BEA\Commission;
 use App\Models\BEA\Discount;
 use App\Models\BEA\Liquidation;
@@ -304,6 +305,14 @@ class TakingsPassengersLiquidationController extends Controller
                 $costs = $this->beaService->repository->getManagementCosts($vehicle);
 
                 return response()->json($costs->where('uid', '<>', ManagementCost::PAYROLL_ID)->values()->toArray());
+                break;
+            case __('advance'):
+                $vehicle = Vehicle::find($request->get('vehicle'));
+                if (!$vehicle) {
+                    return 0;
+                }
+                return Advance::findByVehicle($vehicle)->value;
+
                 break;
             default:
                 return response()->json($this->beaService->getLiquidationParams(true));
@@ -635,6 +644,11 @@ class TakingsPassengersLiquidationController extends Controller
                             };
                         }
                     }
+
+                    $advance = Advance::findByVehicle($vehicle);
+                    $advance->liquidation()->associate($liquidation);
+                    $advance->liquidated = true;
+                    $advance->save();
                 } else {
                     $response->success = false;
                     $response->message = __('Error at generate liquidation register');
@@ -722,5 +736,27 @@ class TakingsPassengersLiquidationController extends Controller
         DB::commit();
 
         return response()->json($response);
+    }
+
+    public function setAdvances(Vehicle $vehicle, Request $request)
+    {
+        $response = (object)[
+            'success' => true,
+            'message' => __('Advance saved successfully'),
+            'value' => 0
+        ];
+
+        $advance = Advance::findByVehicle($vehicle);
+        $advance->value = round(preg_replace("/[^0-9.]/", "", $request->get('value')));
+
+        if (!$advance->save()) {
+            $response->success = false;
+            $response->message = __('Error setting advance');
+        } else {
+            $response->value = $advance->value;
+        }
+
+        return response()->json($response);
+
     }
 }

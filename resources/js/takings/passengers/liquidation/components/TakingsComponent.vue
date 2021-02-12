@@ -178,14 +178,23 @@
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
 
 																<div class="col-md-10 col-md-offset-1">
-																	<div class="col-md-4">
+																	<div class="col-md-3">
 																		<label for="real-taken">{{ $t('Real taken') }}</label>
 																		<div class="input-icon">
 																			<i class="fa fa-dollar font-green"></i>
 																			<input id="real-taken" type="number" class="form-control input-other-discount" v-model.number="liquidation.liquidation.realTaken">
 																		</div>
 																	</div>
-																	<div class="col-md-4 balance">
+
+																	<div class="col-md-3" v-if="liquidation.liquidation.advance">
+																		<label for="advance-summary">{{ $t('Advance') }}</label>
+																		<div class="input-group">
+																			<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ liquidation.liquidation.advance | numberFormat('$0,0') }}</span>
+																			<input type="number" disabled="disabled" class="form-control" id="advance-summary" style="color: white;caret-color: red;padding-left: 25px">
+																		</div>
+																	</div>
+
+																	<div class="col-md-3 balance">
 																		<label for="previous-balance">{{ $t('Previous balance') }}</label>
 																		<div class="input-icon input-group">
 																			<i class="fa fa-dollar font-green" style="z-index: 3 !important;"></i>
@@ -199,7 +208,7 @@
 																			</span>
 																		</div>
 																	</div>
-																	<div class="col-md-4">
+																	<div class="col-md-3">
 																		<label for="pending-balance">{{ $t('New pending balance') }}</label>
 																		<div class="input-icon">
 																			<i class="fa fa-dollar font-green"></i>
@@ -353,7 +362,7 @@
 			},
 			pendingBalance() {
 				this.liquidation.liquidation.pendingBalance = this.thousandRound(this.liquidation.totals.totalDispatch) - this.liquidation.liquidation.realTaken
-						+ (this.liquidation.liquidation.forgivableBalance ? 0 : this.previousBalance);
+						+ (this.liquidation.liquidation.forgivableBalance ? 0 : this.previousBalance) - this.liquidation.liquidation.advance;
 				return this.liquidation.liquidation.pendingBalance;
 			}
         },

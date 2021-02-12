@@ -2,6 +2,32 @@
     <div class="">
         <div class="table-responsive">
             <table-component :search.sync="search" :marks="marks" :totals="totals"></table-component>
+
+			<div v-if="!marks.length">
+				<div class="alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3">
+					<div class="col-md-12">
+						<div class="col-md-12">
+							<h4><strong>{{ $t('No registers for liquidation yet') }}</strong></h4>
+							<hr class="hr">
+						</div>
+
+						<div class="col-md-6 col-md-offset-3">
+							<div class="form-group">
+								<label for="advances">{{ $t('Advance') }}</label>
+								<div class="input-group">
+
+									<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ liquidation.advance | numberFormat('$0,0') }}</span>
+
+									<input type="number" class="form-control" id="advances" v-model.number="liquidation.advance" style="color: white;caret-color: red;padding-left: 25px">
+									<span class="input-group-addon btn bg-warning tooltips" @click="setAdvance" :data-title="$t('Save')" style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;">
+										<i class="fa fa-save" style="color: white !important;"></i>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
 
         <div class="modal fade" id="modal-generate-liquidation" role="basic" aria-hidden="true">
@@ -112,7 +138,15 @@
 
 															<hr class="m-t-10 m-b-10">
 
-															<div class="col-md-8 col-md-offset-2">
+															<div class="col-md-10 col-md-offset-1" v-if="liquidation.advance">
+																<div class="col-md-4">
+																	<label for="advance-summary">{{ $t('Advance') }}</label>
+																	<div class="input-group">
+																		<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ liquidation.advance | numberFormat('$0,0') }}</span>
+																		<input type="number" disabled="disabled" class="form-control" id="advance-summary" style="color: white;caret-color: red;padding-left: 25px">
+																	</div>
+																</div>
+
 																<div class="col-md-12">
 																	<label for="observations" class="control-label">{{ $t('Observations') }}</label>
 																	<textarea id="observations" rows="2" class="form-control" v-model="liquidation.observations" style="resize: vertical;min-height: 30px !important;"></textarea>
@@ -154,6 +188,8 @@
         props: {
             urlLiquidate: String,
             urlExport: String,
+            urlSetAdvance: String,
+            urlGetAdvance: String,
             search: Object,
             marks: Array,
             totals: Object,
@@ -244,7 +280,49 @@
                         this.control.processing = false;
                     }, 500);
                 });
-            }
+            },
+			setAdvance: function () {
+
+            	if(!this.liquidation.advance){
+					gwarning(this.$t('Enter a valid number'));
+            		return;
+				}
+
+				App.blockUI({target: '#table-liquidations', animate: true});
+
+				Swal.fire({
+					title: this.$t('Processing'),
+					text: this.$t('Saving advance'),
+					onBeforeOpen: () => {
+						Swal.showLoading();
+					},
+					heightAuto: true,
+					allowOutsideClick: false,
+					allowEscapeKey: false,
+					showConfirmButton: false
+				});
+				this.control.processing = true;
+
+				axios.post(this.urlSetAdvance.replace('ID', this.search.vehicle.id), {
+					value: this.liquidation.advance
+				}).then(response => {
+					const data = response.data;
+					if( data.success ){
+						this.control.enableSaving = false;
+						gsuccess(data.message);
+						this.liquidation.advance = data.value;
+					}else{
+						gerror(data.message);
+					}
+				}).catch( (error) => {
+					gerror(this.$t('Error setting advance'));
+					console.log(error);
+				}).then( () => {
+					App.unblockUI('#table-liquidations');
+					this.control.processing = false;
+					Swal.close();
+				});
+			},
         }
     }
 </script>
