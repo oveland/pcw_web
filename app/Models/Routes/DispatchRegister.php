@@ -173,6 +173,11 @@ class DispatchRegister extends Model
         return config('app.simple_date_time_format');
     }
 
+    public function getTimeAttribute($time)
+    {
+        return explode('.', $time)[0];
+    }
+
     public function getDepartureTimeAttribute($departure_time)
     {
         return StrTime::toString($departure_time);
@@ -410,16 +415,16 @@ class DispatchRegister extends Model
                 'round_trip' => $this->round_trip,
                 'roundTrip' => $this->round_trip,
 
-                'departure_time' => $this->departure_time,
-                'departureTime' => $this->departure_time,
+                'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+                'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
 
                 'routeTime' => $this->getRouteTime(),
 
                 'arrival_time_scheduled' => $this->arrival_time_scheduled,
                 'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-                'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
-                'arrivalTime' => $this->complete() ? $this->arrival_time : '--:--:--',
+                'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
+                'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
                 'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
 
@@ -441,14 +446,14 @@ class DispatchRegister extends Model
             'round_trip' => $this->round_trip,
             'roundTrip' => $this->round_trip,
 
-            'departure_time' => $this->departure_time,
-            'departureTime' => $this->departure_time,
+            'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
 
             'arrival_time_scheduled' => $this->arrival_time_scheduled,
             'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-            'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
-            'arrivalTime' => $this->complete() ? $this->arrival_time : '--:--:--',
+            'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
+            'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
             'difference_time' => $this->arrival_time_difference,
             'differenceTime' => $this->arrival_time_difference,

@@ -118,6 +118,15 @@ return [
             'password' => env('BEADB_PASSWORD_MONTEBELLO', 'bea00001'),
         ],
 
+        'BEA_ALAMEDA' => [
+//            'company_id' => App\Models\Company\Company::ALAMEDA,
+            'company_id' => 0,
+            'driver' => 'firebird',
+            'path' => env('BEADB_PATH_ALAMEDA'),
+            'username' => env('BEADB_USERNAME_ALAMEDA', 'BEADMIN'),
+            'password' => env('BEADB_PASSWORD_ALAMEDA', 'bea00001'),
+        ],
+
         'PCW' => [
             'company_id' => App\Models\Company\Company::PCW,
             'driver' => 'firebird',
