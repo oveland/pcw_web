@@ -263,6 +263,10 @@ class BEASyncService
         $passengersBEA = $passengersUp > $passengersDown ? $passengersUp : $passengersDown;
         $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 2500;
 
+        if($this->company->id == Company::ALAMEDA) {
+            $totalBEA = $passengersBEA * 2200;
+        }
+
         // Synchronized models
         $turn = $this->validateTurn($markBEA->AMR_IDTURNO);
         $trajectory = $this->validateTrajectory($markBEA->AMR_IDDERROTERO);
