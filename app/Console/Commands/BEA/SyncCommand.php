@@ -6,6 +6,7 @@ use App;
 use App\Models\Company\Company;
 use Exception;
 use Illuminate\Console\Command;
+use Log;
 
 class SyncCommand extends Command
 {
@@ -43,6 +44,8 @@ class SyncCommand extends Command
     {
         $company = Company::find($this->option('company'));
 
+        $this->info("BEA sync for company: $company->name");
+
         if ($company) {
             $beaService = App::makeWith('bea.service', ['company' => $company->id, 'console' => true]);
 
@@ -52,6 +55,8 @@ class SyncCommand extends Command
                 $beaService->sync->routes();
                 $beaService->sync->vehicles();
                 $beaService->sync->drivers();
+
+                $beaService->sync->trajectories();
 
                 $vehicles = $beaService->repository->getAllVehicles();
                 foreach ($vehicles as $vehicle) {
@@ -67,5 +72,17 @@ class SyncCommand extends Command
         }
 
         return null;
+    }
+
+    /**
+     * @param null $string
+     * @param null $verbosity
+     */
+    public function info($string = null, $verbosity = null)
+    {
+        if ($string) {
+            parent::info($string, $verbosity);
+            Log::channel('bea')->info($string);
+        }
     }
 }

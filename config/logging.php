@@ -44,6 +44,12 @@ return [
             'level' => 'debug',
         ],
 
+        'bea' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/bea.log'),
+            'level' => 'debug',
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

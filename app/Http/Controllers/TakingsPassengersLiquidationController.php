@@ -382,6 +382,7 @@ class TakingsPassengersLiquidationController extends Controller
                 $response = (object)[
                     'error' => false,
                     'message' => __('Discount edited successfully'),
+                    'data' => []
                 ];
 
                 $saveOptions = json_decode(json_encode($request->get('options')), FALSE);
@@ -389,6 +390,8 @@ class TakingsPassengersLiquidationController extends Controller
                 $discount = Discount::find($discountToEdit->id);
                 if ($discount) {
                     $options = $this->processSaveOptionsDiscount($discount, $saveOptions);
+
+                    $data = collect([]);
 
                     if ($options->default) {
                         $discount->value = $discountToEdit->value;
@@ -404,11 +407,13 @@ class TakingsPassengersLiquidationController extends Controller
                                     ->where('vehicle_id', $vehicle->id)
                                     ->where('trajectory_id', $trajectory->id)
                                     ->where('discount_type_id', $discountToEdit->discount_type_id)
-                                    ->first();;
+                                    ->first();
 
                                 if ($discountFromCustom) {
                                     $discountFromCustom->value = $discountToEdit->value;
                                     $discountFromCustom->optional = $discountToEdit->optional;
+
+                                    $data->push(" Vehicle $vehicle->number,  $trajectory->name,  Discount $discountFromCustom->id ");
 
                                     if (!$discountFromCustom->save()) {
                                         $response->error = true;
@@ -422,6 +427,8 @@ class TakingsPassengersLiquidationController extends Controller
                             }
                         }
                     }
+
+                    $response->data = $data->toArray();
                 } else {
                     $response->error = true;
                     $response->message .= "<br> - " . __("Discount :name doesn't exists in the system", ['name' => $discountToEdit->discount_type->name]);

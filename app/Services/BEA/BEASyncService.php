@@ -21,6 +21,7 @@ use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Log;
 
 class BEASyncService
 {
@@ -73,6 +74,8 @@ class BEASyncService
 
         } catch (Exception $e) {
             if ($this->vehicle && $this->date) DB::select("SELECT refresh_bea_marks_turns_numbers_function(" . $this->vehicle->id . ", '$this->date')");
+
+            throw new Exception('Error BEA sync last data! • '. $e->getMessage());
         }
     }
 
@@ -93,6 +96,8 @@ class BEASyncService
         $maxSequence = collect(DB::select("SELECT max(id) max FROM bea_turns"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE bea_turns_id_seq RESTART WITH $maxSequence");
 
+        $this->log("Sync " . $turns->count() . " $turns from BEA");
+
         foreach ($turns as $turnBEA) {
             $this->validateTurn($turnBEA->ATR_IDTURNO, $turnBEA);
         }
@@ -111,6 +116,8 @@ class BEASyncService
         DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
 
         $vehicles = BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS");
+
+        $this->log("Sync " . $vehicles->count() . " vehicles from BEA");
 
         $detectedVehicles = collect([]);
         foreach ($vehicles as $vehicleBEA) {
@@ -132,6 +139,8 @@ class BEASyncService
 
         $drivers = BEADB::select("SELECT * FROM C_CONDUCTOR");
 
+        $this->log("Sync " . $drivers->count() . " drivers from BEA");
+
         foreach ($drivers as $driverBEA) {
             $this->validateDriver($driverBEA->CCO_IDCONDUCTOR, $driverBEA);
         }
@@ -146,11 +155,19 @@ class BEASyncService
      */
     public function routes()
     {
+        $maxSequence = collect(DB::select("SELECT max(id_rutas) max FROM ruta"))->first()->max + 1;
+        DB::statement("ALTER SEQUENCE routes_id_seq RESTART WITH $maxSequence");
+
         $routes = BEADB::for($this->company)->select("SELECT * FROM C_RUTA");
+
+        $this->log("Sync " . $routes->count() . " routes from BEA");
 
         foreach ($routes as $routeBEA) {
             $this->validateRoute($routeBEA->CRU_IDRUTA, $routeBEA);
         }
+
+        $maxSequence = Route::max('id') + 1;
+        DB::statement("ALTER SEQUENCE ruta_id_rutas_seq RESTART WITH $maxSequence");
     }
 
     /**
@@ -164,6 +181,8 @@ class BEASyncService
 
 
         $trajectories = BEADB::for($this->company)->select("SELECT * FROM C_DERROTERO");
+
+        $this->log("Sync " . $trajectories->count() . " trajectories from BEA");
 
         foreach ($trajectories as $trajectoryBEA) {
             $this->validateTrajectory($trajectoryBEA->CDR_IDDERROTERO, $trajectoryBEA);
@@ -369,6 +388,10 @@ class BEASyncService
                 $route->company_id = $this->company->id;
                 $route->dispatch_id = 46;
                 $route->active = true;
+                $route->created_at = Carbon::now();
+                $route->updated_at = Carbon::now();
+
+                $this->log("Migrated route with bea_id = $route->bea_id");
 
                 if (!$route->save()) {
                     throw new Exception("Error on validation save ROUTE with id: $routeBEA->CRU_IDRUTA");
@@ -393,17 +416,36 @@ class BEASyncService
 
             if (!$driver) {
                 $driverBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverBEAId")->first();
-                if ($driverBEA) {
-                    $driver = new Driver();
-                    $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
-                    $driver->first_name = $driverBEA->CCO_NOMBRE;
-                    $driver->last_name = "$driverBEA->CCO_APELLIDOP $driverBEA->CCO_APELLIDOM";
-                    $driver->identity = $driverBEA->CCO_CLAVECOND;
-                    $driver->company_id = $this->company->id;
-                    $driver->active = true;
 
-                    if (!$driver->saveData()) {
-                        throw new Exception("Error on validation save DRIVER with id: $driverBEA->CCO_IDCONDUCTOR");
+                if ($driverBEA) {
+
+                    $driver = $this->company->drivers->filter(function (Driver $d) use ($driverBEA) {
+                        return trim(Str::upper($d->code)) == trim(Str::upper($driverBEA->CCO_CLAVECOND));
+                    })->first();
+
+                    if ($driver) {
+                        $this->log("  Driver for bea_id = $driverBEAId, code $driverBEA->CCO_CLAVECOND >> SYNC driver: id $driver->id, code $driver->code ($driver->full_name)");
+
+                        $driver->bea_id = $driverBEAId;
+                        $driver->saveData();
+                    } else {
+                        $this->log("  Driver with bea_id $driverBEAId, code $driverBEA->CCO_CLAVECOND is not migrated yet");
+
+                        $driver = new Driver();
+                        $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
+                        $driver->first_name = $driverBEA->CCO_NOMBRE;
+                        $driver->last_name = "$driverBEA->CCO_APELLIDOP $driverBEA->CCO_APELLIDOM";
+                        $driver->identity = $driverBEA->CCO_CLAVECOND;
+                        $driver->company_id = $this->company->id;
+                        $driver->active = true;
+
+                        if (!$driver->saveData()) {
+                            $error = "Error on validation save DRIVER with id: $driverBEA->CCO_IDCONDUCTOR";
+                            $this->log($error);
+                            throw new Exception($error);
+                        } else {
+                            $this->log("Migrated driver with bea_id = $driver->bea_id");
+                        }
                     }
                 }
             }
@@ -422,67 +464,62 @@ class BEASyncService
     {
         $onlyMigrate = $this->company->id == Company::MONTEBELLO ? collect(range(2453, 2467)) : null;
 
-        $vehicle = Vehicle::where('bea_id', $vehicleBEAId)->where('company_id', $this->company->id)->first();
-
+        $vehicle = null;
         if ($vehicleBEAId) {
-            if (!$vehicle) {
-                $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
-
-                if ($onlyMigrate) {
-                    if (!$onlyMigrate->contains(intval($vehicleBEA->CAU_NUMECONOM)) && intval($vehicleBEA->CAU_NUMECONOM) != 24610) {
-                        return null;
-                    }
-                }
-
-                $vehicle = $this->company->vehicles->filter(function (Vehicle $v) use ($vehicleBEA) {
-                    return Str::upper(str_replace('-', '', $v->plate)) == Str::upper(str_replace('-', '', $vehicleBEA->CAU_PLACAS)) || Str::upper($v->number) == Str::upper($vehicleBEA->CAU_NUMECONOM);
-                })->first();
-
-                if ($vehicle) {
-                    $duplicated = $detectedVehicles ? $detectedVehicles->get($vehicle->id) : null;
-
-                    $routeDefault = $vehicle->dispatcherVehicle ? $vehicle->dispatcherVehicle->route->name : '';
-//                    dump("  For BEA ID = $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS >> FOUND VEHICLE: id $vehicle->id, number $vehicle->number ($vehicle->plate) and Route = $routeDefault " . ($duplicated ? " ***** DUPLICATED *******" : ""));
-
-                    $vehicle->bea_id = $vehicleBEAId;
-                    $vehicle->save();
-
-                    if ($detectedVehicles) {
-                        $detectedVehicles->put($vehicle->id, $vehicle);
-                    }
-                } else {
-//                    dump("  Vehicle with id $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS is not migrated yet");
-                }
-            } else {
-//                dump("  Vehicle with id $vehicleBEAId, already migrated!  $vehicle->number ($vehicle->plate)");
-            }
+            $vehicle = Vehicle::where('bea_id', $vehicleBEAId)->where('company_id', $this->company->id)->first();
 
             if (!$vehicle) {
                 $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
 
                 if ($vehicleBEA) {
-                    $vehicle = new Vehicle();
-                    $duplicatedPlates = BEADB::for($this->company)->select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
-
-                    if ($duplicatedPlates->TOTAL > 1) $vehicleBEA->CAU_PLACAS = "$vehicleBEA->CAU_PLACAS-$vehicleBEA->CAU_NUMECONOM";
-
-                    if ($vehicleBEA->CAU_PLACAS) {
-                        $vehicle->id = Vehicle::max('id') + 1;
-                        $vehicle->bea_id = $vehicleBEA->CAU_IDAUTOBUS;
-                        $vehicle->plate = $vehicleBEA->CAU_PLACAS;
-                        $vehicle->number = $vehicleBEA->CAU_NUMECONOM;
-                        $vehicle->company_id = $this->company->id;
-                        $vehicle->active = true;
-                        $vehicle->in_repair = false;
-
-                        if (!$vehicle->save()) {
-                            throw new Exception("Error saving VEHICLE with id: $vehicleBEA->CAU_IDAUTOBUS");
-                        } else {
-                            $this->checkVehicleParams($vehicle);
+                    if ($onlyMigrate) {
+                        if (!$onlyMigrate->contains(intval($vehicleBEA->CAU_NUMECONOM)) && intval($vehicleBEA->CAU_NUMECONOM) != 24610) {
+                            return null;
                         }
                     }
 
+                    $vehicle = $this->company->vehicles->filter(function (Vehicle $v) use ($vehicleBEA) {
+                        return Str::upper(str_replace('-', '', $v->plate)) == Str::upper(str_replace('-', '', $vehicleBEA->CAU_PLACAS)) || Str::upper($v->number) == Str::upper($vehicleBEA->CAU_NUMECONOM);
+                    })->first();
 
+                    if ($vehicle) {
+                        $duplicated = $detectedVehicles ? $detectedVehicles->get($vehicle->id) : null;
+
+                        $routeDefault = $vehicle->dispatcherVehicle ? $vehicle->dispatcherVehicle->route->name : '';
+                        $this->log("  Vehicle For bea_id = $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS >> SYNC vehicle: id $vehicle->id, number $vehicle->number ($vehicle->plate) and Route = $routeDefault " . ($duplicated ? " ***** DUPLICATED *******" : ""));
+
+                        $vehicle->bea_id = $vehicleBEAId;
+                        $vehicle->save();
+
+                        if ($detectedVehicles) {
+                            $detectedVehicles->put($vehicle->id, $vehicle);
+                        }
+                    } else {
+                        $this->log("  Vehicle with bea_id $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS is not migrated yet");
+
+                        $vehicle = new Vehicle();
+                        $duplicatedPlates = BEADB::for($this->company)->select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
+
+                        if ($duplicatedPlates->TOTAL > 1) $vehicleBEA->CAU_PLACAS = "$vehicleBEA->CAU_PLACAS-$vehicleBEA->CAU_NUMECONOM";
+
+                        if ($vehicleBEA->CAU_PLACAS) {
+                            $vehicle->id = Vehicle::max('id') + 1;
+                            $vehicle->bea_id = $vehicleBEA->CAU_IDAUTOBUS;
+                            $vehicle->plate = $vehicleBEA->CAU_PLACAS;
+                            $vehicle->number = $vehicleBEA->CAU_NUMECONOM;
+                            $vehicle->company_id = $this->company->id;
+                            $vehicle->active = true;
+                            $vehicle->in_repair = false;
+
+                            $this->log("Migrated vehicle with bea_id = $vehicle->bea_id");
+
+                            if (!$vehicle->save()) {
+                                throw new Exception("Error saving VEHICLE with id: $vehicleBEA->CAU_IDAUTOBUS");
+                            } else {
+                                $this->checkVehicleParams($vehicle);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -490,8 +527,10 @@ class BEASyncService
         return $vehicle;
     }
 
-    private function checkVehicleParams(Vehicle $vehicle)
+    function checkVehicleParams(Vehicle $vehicle)
     {
+        $this->log("        Checking all params for vehicle $vehicle->number");
+
         $this->discountTypes();
         $this->checkDiscountsFor($vehicle);
         $this->checkCommissionsFor($vehicle);
@@ -648,5 +687,10 @@ class BEASyncService
 //                $exists->save();
             }
         }
+    }
+
+    private function log($message)
+    {
+        Log::channel('bea')->info($this->company->short_name . " • " . $message);
     }
 }

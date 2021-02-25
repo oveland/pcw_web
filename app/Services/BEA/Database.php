@@ -7,6 +7,7 @@ namespace App\Services\BEA;
 use App\Models\Company\Company;
 use Exception;
 use Illuminate\Support\Collection;
+use Log;
 
 class Database
 {
@@ -37,11 +38,12 @@ class Database
 
     function prepareConnection()
     {
+        $cx = $this->getDataConnection();
         try {
-            $cx = $this->getDataConnection();
             $this->connection = ibase_connect($cx['path'], $cx['username'], $cx['password']);
         } catch (Exception $x) {
             $this->connection = null;
+            Log::channel('bea')->error('Error on database connection. Params = '.json_encode($cx).'. Message: '.$x->getMessage());
         }
     }
 

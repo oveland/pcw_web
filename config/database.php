@@ -119,8 +119,7 @@ return [
         ],
 
         'BEA_ALAMEDA' => [
-//            'company_id' => App\Models\Company\Company::ALAMEDA,
-            'company_id' => 0,
+            'company_id' => App\Models\Company\Company::ALAMEDA,
             'driver' => 'firebird',
             'path' => env('BEADB_PATH_ALAMEDA'),
             'username' => env('BEADB_USERNAME_ALAMEDA', 'BEADMIN'),
