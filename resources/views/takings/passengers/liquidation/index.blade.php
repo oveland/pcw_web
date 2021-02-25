@@ -157,7 +157,7 @@
             },1000);
 
             $("#modal-params-manager").on('hidden.bs.modal', function () {
-                $('.btn-search-report').click();
+                // $('.btn-search-report').click();
             });
         });
     </script>
