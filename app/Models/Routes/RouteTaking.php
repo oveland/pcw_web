@@ -52,6 +52,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read User|null $user
  * @property int|null $station_fuel_id
  * @method static Builder|RouteTaking whereStationFuelId($value)
+ * @property int|null $advance
+ * @property int|null $balance
+ * @method static Builder|RouteTaking whereAdvance($value)
+ * @method static Builder|RouteTaking whereBalance($value)
  */
 class RouteTaking extends Model
 {
@@ -62,7 +66,7 @@ class RouteTaking extends Model
     ];
 
     protected $guarded = ['total_production', 'fuel_gallons', 'net_production'];
-    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "observations", "station_fuel_id"];
+    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "advance", "balance", "observations", "station_fuel_id"];
 
     public function getDateFormat()
     {
@@ -111,6 +115,21 @@ class RouteTaking extends Model
         return $route ? $route->tariff->fuel : 0;
     }
 
+    public function getTotalProductionAttribute()
+    {
+        return $this->dispatchRegister->complete() ? intval($this->attributes['total_production']) : 0;
+    }
+
+    function setBalanceAttribute($value)
+    {
+        $this->attributes['balance'] = intval($this->net_production) - intval($this->advance);
+    }
+
+    function getBalanceAttribute()
+    {
+        return intval($this->net_production) - intval($this->advance);
+    }
+
     /**
      * @return object
      */
@@ -125,6 +144,8 @@ class RouteTaking extends Model
             'fuel' => $this->fuel,
             'others' => $this->others,
             'bonus' => $this->bonus,
+            'advance' => $this->advance,
+            'balance' => $this->balance,
             'netProduction' => $this->net_production,
             'observations' => $this->observations,
             'user' => $this->user,

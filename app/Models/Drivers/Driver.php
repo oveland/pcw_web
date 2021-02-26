@@ -68,6 +68,8 @@ class Driver extends Model
 
     public function scopeFindByIdOrCode($query, $idOrCode, $companyId)
     {
+        $idOrCode = $idOrCode ? $idOrCode : 0;
+
         return $query->where(function ($query) use ($idOrCode) {
             return $query->where('id', $idOrCode)->orWhere('code', $idOrCode);
         })->where('company_id', $companyId);

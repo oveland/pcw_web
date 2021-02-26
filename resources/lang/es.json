@@ -750,5 +750,7 @@
   "Count passengers": "Conteo de pasajeros",
   "Backward": "Retroceder",
   "Forward": "Adelantar",
-  "Total charge": "Total cargos"
+  "Total charge": "Total cargos",
+  "Advance": "Anticipo",
+  "Balance": "Saldo"
 }
