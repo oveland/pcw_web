@@ -4,15 +4,17 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="well row">
-            <h4>
-                <i class="fa fa-bus"></i> <strong>@lang('Vehicle'):</strong>
-                <span>{{ $dispatchRegister->vehicle->number }}</span>
-            </h4>
-            <h4>
-                <i class="fa fa-calendar"></i>
-                <span>{{ $dispatchRegister->date }}</span>
-            </h4>
+        <div class="well row m-b-0">
+            <div class="col-md-12 row">
+                <h4 class="pull-left m-0">
+                    <i class="fa fa-bus"></i> <strong>@lang('Vehicle'):</strong>
+                    <span>{{ $dispatchRegister->vehicle->number }}</span>
+                </h4>
+                <h4 class="pull-right m-0">
+                    <i class="fa fa-calendar"></i>
+                    <span>{{ $dispatchRegister->date }}</span>
+                </h4>
+            </div>
             @if(!$dispatchRegister->onlyControlTakings())
                 <div class="col-md-12">
                     <h5>
@@ -36,20 +38,28 @@
                             <span>{{ $dispatchRegister->passengers->recorders->start }} - {{ $dispatchRegister->passengers->recorders->end }}</span>
                         </h5>
                     @endif
-                    <h5 style="border-top: 1px solid lightgray;" class="m=t-10 p-t-10">
-                        <i class="fa fa-dollar"></i><i class="fa fa-user"></i><strong>@lang('Passenger tariff'):</strong>
-                        <span>${{ number_format($dispatchRegister->takings->passenger_tariff, 0) }}</span>
-                    </h5>
-                    <h5>
-                        <i class="fa fa-dollar"></i><i class="fa fa-flask"></i><strong>@lang('Fuel tariff'):</strong>
-                        <span>${{ number_format($dispatchRegister->takings->fuel_tariff, 1) }}</span>
-                    </h5>
+                    <div style="border-top: 1px solid lightgray;" class="m=t-10 p-t-10">
+                        <h5 class="pull-left">
+                            <i class="fa fa-dollar"></i><i class="fa fa-user"></i><strong>@lang('Passenger tariff'):</strong>
+                            <span>${{ number_format($dispatchRegister->takings->passenger_tariff, 0) }}</span>
+                        </h5>
+                        <h5 class="pull-right">
+                            <i class="fa fa-dollar"></i><i class="fa fa-flask"></i><strong>@lang('Fuel tariff'):</strong>
+                            <span>${{ number_format($dispatchRegister->takings->fuel_tariff, 1) }}</span>
+                        </h5>
+                    </div>
                 </div>
             @endif
         </div>
     </div>
 
-    <div class="col-md-8 col-md-offset-2">
+    @if(!$dispatchRegister->complete())
+        <div class="bg-warning text-white p-10 text-center" style="display: flow-root">
+            <i class="fa fa-bus faa-passing animated"></i> <strong>@lang('Turno no completado')</strong>
+        </div>
+    @endif
+
+    <div class="col-md-8 col-md-offset-2 p-t-15">
         <form class="form-horizontal form-taking-passengers" role="form"
               action="{{ route('operation-routes-takings-taking', ['dispatchRegister' => $dispatchRegister->id]) }}"
               data-dr="{{ $dispatchRegister->id }}">
@@ -94,7 +104,7 @@
                 </div>
             </div>
             @if(!$dispatchRegister->onlyControlTakings())
-            <div class="form-group">
+            <div class="form-group m-b-0">
                 <label for="fuel" class="col-md-5 control-label">@lang('Station')</label>
                 <div class="col-md-7">
                     <div class="md-radio-list">
@@ -140,7 +150,7 @@
 
             <hr class="hr no-padding">
 
-            <div class="form-group has-success">
+            <div class="form-group has-success m-t-30 m-b-30">
                 <label for="net-production" class="col-md-5 control-label">@lang('Net production')</label>
                 <div class="col-md-7">
                     <div class="input-icon">
@@ -150,7 +160,32 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <hr class="hr no-padding">
+
+            <div class="form-group has-info">
+                <label for="net-production" class="col-md-5 control-label text-primary">@lang('Advance')</label>
+                <div class="col-md-7">
+                    <div class="input-icon">
+                        <i class="fa fa-dollar"></i>
+                        <input type="number" class="form-control input-circle-right disabled" id="advance_takings" name="advance" value="{{ $dispatchRegister->takings->advance }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group has-success">
+                <label for="net-production" class="col-md-5 control-label text-uppercase">@lang('Balance')</label>
+                <div class="col-md-7">
+                    <div class="input-icon">
+                        <i class="fa fa-dollar"></i>
+                        <input type="number" disabled class="form-control input-circle-right disabled" id="balance_takings" name="balance" value="{{ $dispatchRegister->takings->balance }}">
+                    </div>
+                </div>
+            </div>
+
+
+            <hr class="hr no-padding">
+
+            <div class="form-group m-t-30 m-b-30">
                 <label for="observations" class="col-md-5 control-label">@lang('Observations')</label>
                 <div class="col-md-7">
                     <div class="input-icon">
@@ -246,6 +281,7 @@
         let control = $(this).parents('form').find('#control_takings').val();
         let others = $(this).parents('form').find('#others_takings').val();
         let bonus = $(this).parents('form').find('#bonus_takings').val();
+        let advance = $(this).parents('form').find('#advance_takings').val();
 
         let fuel = $(this).parents('form').find('#fuel_takings').val();
         const fuelTariff = parseFloat({{ $dispatchRegister->takings->fuel_tariff }});
@@ -255,8 +291,12 @@
         control = control ? control : 0;
         fuel = fuel ? fuel : 0;
         others = others ? others : 0;
+        advance = advance ? advance : 0;
 
-        $(this).parents('form').find('#net_production_takings').val(totalProduction - control - fuel - others - bonus);
+        let netProduction = totalProduction - control - fuel - others - bonus;
+
+        $(this).parents('form').find('#net_production_takings').val(netProduction);
+        $(this).parents('form').find('#balance_takings').val(netProduction - advance);
         $(this).parents('form').find('#fuel_gallons_takings').val(fuelGallons.toFixed(2));
     });
 

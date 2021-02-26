@@ -49,6 +49,7 @@ class RouteTakingsController extends Controller
         if( $company->id == Company::YUMBENOS ){
             $fuelStations = ['Estación 1', 'Estación 2', 'Estación 3'];
         }
+
         return view('operation.routes.takings.form', compact(['dispatchRegister', 'fuelStations']));
     }
 

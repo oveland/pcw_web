@@ -20,6 +20,7 @@ class RouteTakingsService
         $takings->fill($data);
 
         $takings->taken = $takings->total_production > 0;
+        $takings->balance = $takings->net_production - $takings->advance;
 
         $takings->user()->associate(Auth::user());
 

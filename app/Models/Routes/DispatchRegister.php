@@ -54,7 +54,8 @@ use Illuminate\Support\Str;
  * @method static Builder|DispatchRegister whereArrivalTimeDifference($value)
  * @method static Builder|DispatchRegister whereArrivalTimeScheduled($value)
  * @method static Builder|DispatchRegister whereCanceled($value)
- * @method static Builder|DispatchRegister whereDate($value)
+ * @method static Builder|DispatchRegister whereDate($column, $operator, $value = null, $boolean = 'and')
+ * @method static Builder|DispatchRegister whereBetween($column, $values, $boolean = 'and', $not = false)
  * @method static Builder|DispatchRegister whereDepartureTime($value)
  * @method static Builder|DispatchRegister whereDispatchId($value)
  * @method static Builder|DispatchRegister whereEndRecorder($value)
@@ -85,7 +86,9 @@ use Illuminate\Support\Str;
  * @property-read Collection|Speeding[] $speedingReport
  * @method static Builder|DispatchRegister whereArrivalFringeId($value)
  * @method static Builder|DispatchRegister whereDepartureFringeId($value)
+ * @method static Builder|DispatchRegister type($type)
  * @method static Builder|DispatchRegister completed()
+ * @method static Builder|DispatchRegister cancelled()
  * @property int|null $available_vehicles
  * @property int|null $initial_sensor_counter
  * @property string|null $initial_frame_sensor_counter
@@ -116,13 +119,13 @@ use Illuminate\Support\Str;
  * @property int|null $final_back_sensor_counter
  * @property-read mixed $passengers_by_sensor
  * @property-read mixed $passengers_by_sensor_recorder
+ * @method static Builder|DispatchRegister findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId)
  * @method static Builder|DispatchRegister whereFinalBackSensorCounter($value)
  * @method static Builder|DispatchRegister whereFinalFrontSensorCounter($value)
  * @method static Builder|DispatchRegister whereFinalTimeSensorCounter($value)
  * @method static Builder|DispatchRegister whereInitialBackSensorCounter($value)
  * @method static Builder|DispatchRegister whereInitialFrontSensorCounter($value)
  * @method static Builder|DispatchRegister whereInitialTimeSensorCounter($value)
- * @method static Builder|DispatchRegister findAllByDateAndVehicleAndRoute($date, $vehicleId, $routeId)
  * @property-read mixed $final_passengers_by_sensor_recorder
  * @property-read mixed $initial_passengers_by_sensor_recorder
  * @method static Builder|DispatchRegister whereFinalCounterObs($value)
@@ -143,26 +146,33 @@ use Illuminate\Support\Str;
  * @property-read mixed $total_off_road
  * @method static Builder|DispatchRegister whereDriver(Driver $driver = null)
  * @method static Builder|DispatchRegister whereVehicle(Vehicle $vehicle = null)
+ * @property-read int|null $control_point_time_reports_count
+ * @property-read int|null $off_roads_count
+ * @property-read int|null $parking_report_count
+ * @property-read int|null $reports_count
+ * @property-read int|null $speeding_report_count
  * @property int|null $edit_user_id
  * @property string|null $edited_info
  * @method static Builder|DispatchRegister whereEditUserId($value)
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
- * @property-read DispatchTariff $tariff
+ * @property-read \RouteTariff $tariff
  * @property-read RouteTariff $fuel_tariff
  * @property-read mixed $mileage
  * @property-read mixed $passengers_by_sensor_total
- * @property int|null $driver_id
- * @method static Builder|DispatchRegister whereDriverId($value)
+ * @property-read RouteTaking|null $routeTakings
  * @property int|null $initial_charge
  * @property int|null $final_charge
  * @method static Builder|DispatchRegister whereFinalCharge($value)
  * @method static Builder|DispatchRegister whereInitialCharge($value)
+ * @property int|null $driver_id
+ * @method static Builder|DispatchRegister whereDriverId($value)
  */
 class DispatchRegister extends Model
 {
     const IN_PROGRESS = "En camino";
     const COMPLETE = "Terminó";
+    const CANCELLED = "No terminó";
     const TAKINGS = "takings";
 
     function getDateFormat()
@@ -181,6 +191,11 @@ class DispatchRegister extends Model
         }
 
         return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0])->toDateString();
+    }
+
+    public function getTimeAttribute($time)
+    {
+        return explode('.', $time)[0];
     }
 
     public function getDepartureTimeAttribute($departure_time)
@@ -204,7 +219,7 @@ class DispatchRegister extends Model
      */
     public function locations($order = 'asc')
     {
-        return $this->hasMany(new Location(), 'dispatch_register_id', 'id')->orderBy('date', $order);
+        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', $order);
     }
 
     /**
@@ -273,10 +288,38 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @param DispatchRegister $query
-     * @param null $completedTurns
+     * @param Builder | DispatchRegister $query
+     * @param $type
      * @return mixed
      */
+    public function scopeType($query, $type)
+    {
+        switch ($type) {
+            case 'completed':
+                return $query->completed();
+                break;
+            case 'active':
+                return $query->active();
+                break;
+            case 'cancelled':
+                return $query->cancelled();
+                break;
+            case 'takings':
+                return $query->where(function ($query) use ($type) {
+                    $query->completed()->orWhere('status', $type);
+                });
+                break;
+            default:
+                return $query;
+                break;
+        }
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where('status', 'like', $this::CANCELLED . '%');
+    }
+
     public function scopeActive($query, $completedTurns = null)
     {
         if ($completedTurns) {
@@ -404,16 +447,16 @@ class DispatchRegister extends Model
 
 
     /**
-     * @param DispatchRegister $query
+     * @param DispatchRegister | Builder $query
      * @param $date
      * @param $vehicleId
      * @param $routeId
      * @return mixed
      */
-    public function scopeFindAllByDateAndVehicleAndRoute($query, $date, $vehicleId, $routeId)
+    public function scopeFindAllByDateAndVehicleAndRoute($query, $date, $vehicleId = null, $routeId = null)
     {
         return $query->completed()
-            ->where('date', $date)
+            ->whereDateOrRange($date)
             ->where('vehicle_id', $vehicleId)
             ->where('route_id', $routeId)
             ->orderBy('round_trip')
@@ -425,24 +468,90 @@ class DispatchRegister extends Model
         return $this->status === self::TAKINGS;
     }
 
-    public function getAPIFields()
+    public function forNormalTakings()
     {
+        return !$this->onlyControlTakings();
+    }
+
+    public function getAPIFields($short = false)
+    {
+        $passengers = $this->passengers;
+        $takings = $this->takings;
+
+        if ($short) {
+            return (object)[
+                'id' => $this->id,
+                'date' => $this->getParsedDate()->toDateString(),
+                'turn' => $this->turn,
+
+                'round_trip' => $this->round_trip,
+                'roundTrip' => $this->round_trip,
+
+                'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+                'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+
+                'routeTime' => $this->getRouteTime(),
+
+                'arrival_time_scheduled' => $this->arrival_time_scheduled,
+                'arrivalTimeScheduled' => $this->arrival_time_scheduled,
+
+                'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
+                'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+
+                'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+
+                'passengers' => $passengers,
+                'takings' => $takings ? $takings->getAPIFields() : [],
+                'onlyControlTakings' => $this->onlyControlTakings(),
+                'forNormalTakings' => $this->forNormalTakings(),
+
+                'forTakings' => $this->onlyControlTakings(),
+                'mileage' => $this->mileage
+            ];
+        }
+
+        $driver = $this->driver;
+        $driveName = $driver ? $driver->fullName() : __('Unassigned');
+
         return (object)[
             'id' => $this->id,
             'date' => $this->getParsedDate()->toDateString(),
             'turn' => $this->turn,
+
             'round_trip' => $this->round_trip,
-            'departure_time' => $this->departure_time,
+            'roundTrip' => $this->round_trip,
+
+            'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+
             'arrival_time_scheduled' => $this->arrival_time_scheduled,
-            'arrival_time' => $this->complete() ? $this->arrival_time : '--:--:--',
+            'arrivalTimeScheduled' => $this->arrival_time_scheduled,
+
+            'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
+            'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+
             'difference_time' => $this->arrival_time_difference,
+            'differenceTime' => $this->arrival_time_difference,
+
             'route_time' => $this->getRouteTime(),
+            'routeTime' => $this->getRouteTime(),
+
             'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
             'vehicle' => $this->vehicle->getAPIFields(),
+            'vehicle_id' => $this->vehicle_id,
             'status' => $this->status,
-            'driver_id' => $this->driver ? $this->driver->id : null,
-            'driver_name' => $this->driver ? $this->driver->fullName() : __('Unassigned'),
+
+            'driver_name' => $driveName,
+            'driverName' => $driveName,
+            'driverCode' => $this->driver_code ? $this->driver_code : __('Unassigned'),
+
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
+
+            'passengers' => $passengers,
+            'takings' => $takings ? $takings->getAPIFields() : [],
+            'onlyControlTakings' => $this->onlyControlTakings(),
+            'forNormalTakings' => $this->forNormalTakings(),
+
             'forTakings' => $this->onlyControlTakings(),
             'mileage' => $this->mileage
         ];
@@ -623,7 +732,7 @@ class DispatchRegister extends Model
             return $this->getPassengersBySensor();
         }
 
-        $count = intval($this->end_recorder) - intval($this->start_recorder);
+        $count = $this->complete() ? intval($this->end_recorder) - intval($this->start_recorder) : 0;
 
         if ($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000) {
             $count = (1000000 - intval($this->start_recorder)) + intval($this->end_recorder);
