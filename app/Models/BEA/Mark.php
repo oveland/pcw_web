@@ -274,7 +274,7 @@ class Mark extends Model
     function getTotalBeaAttribute()
     {
         if($this->company_id == Company::ALAMEDA) {
-            return $this->attributes['total_bea'] * 2200;
+            return $this->attributes['passengers_bea'] * 2200;
         }
 
         return (($this->im_bea_max + $this->im_bea_min) / 2) * self::BEA_CTE;
