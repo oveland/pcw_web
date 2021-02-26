@@ -59,7 +59,9 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
                 __('Various') => intval($report->takings->bonus),                                                   # O CELL
                 __('Others') => intval($report->takings->others),                                                   # P CELL
                 __('Net production') => intval($report->takings->netProduction),                                    # Q CELL
-                __('Observations') => $observations,                                                                # R CELL
+                __('Advance') => intval($report->takings->advance),                                                 # R CELL
+                __('Balance') => intval($report->takings->balance),                                                 # S CELL
+                __('Observations') => $observations,                                                                # T CELL
             ];
         }
 
@@ -95,11 +97,12 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
 
         foreach (range($config->row->data->start, $config->row->data->end) as $row) {
             $workSheet->setCellValue("Q$row", "=J$row-K$row-L$row-O$row-P$row");
+            $workSheet->setCellValue("S$row", "=Q$row-R$row");
         }
 
         $workSheet->setCellValue('H' . $config->row->data->next, 'TOTAL');
         $workSheet->getStyle('H' . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        foreach (['I', 'J', 'K', 'L', 'M', 'O', 'P', 'Q'] as $totalLetterPosition) {
+        foreach (['I', 'J', 'K', 'L', 'M', 'O', 'P', 'Q', 'R', 'S'] as $totalLetterPosition) {
             $workSheet->setCellValue($totalLetterPosition . $config->row->data->next, '=SUM(' . $totalLetterPosition . $config->row->data->start . ':' . $totalLetterPosition . $config->row->data->end . ')');
 
             $workSheet->getStyle($totalLetterPosition . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD);
@@ -129,6 +132,9 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
             'M' => NumberFormat::FORMAT_NUMBER_00,
             'O' => NumberFormat::FORMAT_CURRENCY_USD,
             'P' => NumberFormat::FORMAT_CURRENCY_USD,
+            'Q' => NumberFormat::FORMAT_CURRENCY_USD,
+            'R' => NumberFormat::FORMAT_CURRENCY_USD,
+            'S' => NumberFormat::FORMAT_CURRENCY_USD,
         ];
     }
 

@@ -178,6 +178,12 @@ class DispatchService
             'netProduction' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->netProduction;
             }),
+            'advance' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->advance;
+            }),
+            'balance' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->balance;
+            }),
             'routeTime' => StrTime::segToStrTime($dispatchRegisters->sum(function ($d) {
                 return StrTime::toSeg($d->routeTime);
             })),
@@ -245,6 +251,12 @@ class DispatchService
             }),
             'netProduction' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->netProduction;
+            }),
+            'advance' => $dispatchRegisters->average(function ($d) {
+                return $d->takings->advance;
+            }),
+            'balance' => $dispatchRegisters->average(function ($d) {
+                return $d->takings->balance;
             }),
             'routeTime' => StrTime::segToStrTime($dispatchRegisters->average(function ($d) {
                 return StrTime::toSeg($d->routeTime);

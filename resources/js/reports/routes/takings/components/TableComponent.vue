@@ -109,6 +109,18 @@
 				<th>
 					<small>
 						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Advance') }}</span>
+					</small>
+				</th>
+				<th>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ $t('Balance') }}</span>
+					</small>
+				</th>
+				<th>
+					<small>
+						<i class="icon-briefcase"></i><br>
 						<span class="">{{ $t('Observations') }}</span>
 					</small>
 				</th>
@@ -186,13 +198,19 @@
 				<td class="text-bold text-right">
 					<small>{{ r.takings.netProduction | numberFormat('$0,0') }}</small>
 				</td>
+				<td class="text-bold text-right">
+					<small>{{ r.takings.advance | numberFormat('$0,0') }}</small>
+				</td>
+				<td class="text-bold text-right">
+					<small>{{ r.takings.balance | numberFormat('$0,0') }}</small>
+				</td>
 				<td class="text-info p-l-20">
 					<small>{{ r.takings.observations }}</small>
 				</td>
 			</tr>
 
 			<tr>
-				<td colspan="18" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
+				<td colspan="20" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
 			</tr>
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
 				<td :colspan=" options.showRecorders ? 7 : 5" class="bg-inverse text-white text-right text-bold text-uppercase">
@@ -234,6 +252,12 @@
 				</td>
 				<td class="text-bold text-right">
 					<small>{{ averages.netProduction | numberFormat('$0,0') }}</small>
+				</td>
+				<td class="text-bold text-right">
+					<small>{{ averages.advance | numberFormat('$0,0') }}</small>
+				</td>
+				<td class="text-bold text-right">
+					<small>{{ averages.balance | numberFormat('$0,0') }}</small>
 				</td>
 			</tr>
 			</tbody>
@@ -278,6 +302,12 @@
 				</th>
 				<th class="bg-inverse text-white text-bold text-right">
 					<span>{{ totals.netProduction | numberFormat('$0,0') }}</span>
+				</th>
+				<th class="bg-inverse text-white text-bold text-right">
+					<span>{{ totals.advance | numberFormat('$0,0') }}</span>
+				</th>
+				<th class="bg-inverse text-white text-bold text-right">
+					<span>{{ totals.balance | numberFormat('$0,0') }}</span>
 				</th>
 			</tr>
 			</tfoot>

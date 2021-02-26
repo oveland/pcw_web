@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Routes\DispatchRegister
@@ -73,6 +73,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $driver_code
  * @property mixed $departure_fringe
  * @property mixed $arrival_fringe
+ * @method static Builder|DispatchRegister active($completedTurns = null)
  * @method static Builder|DispatchRegister whereDriverCode($value)
  * @property-read mixed $passengers
  * @property-read Driver|null $driver
@@ -86,7 +87,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|DispatchRegister whereArrivalFringeId($value)
  * @method static Builder|DispatchRegister whereDepartureFringeId($value)
  * @method static Builder|DispatchRegister type($type)
- * @method static Builder|DispatchRegister active()
  * @method static Builder|DispatchRegister completed()
  * @method static Builder|DispatchRegister cancelled()
  * @property int|null $available_vehicles
@@ -137,11 +137,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|DispatchRegister newModelQuery()
  * @method static Builder|DispatchRegister newQuery()
  * @method static Builder|DispatchRegister query()
- * @method static Builder|DispatchRegister whereDateOrRange($initialDate, $finalDate = null)
  * @method static Builder|DispatchRegister whereCompanyAndRouteId(Company $company, $routeId = null)
+ * @method static Builder|DispatchRegister whereDateOrRange($initialDate, $finalDate = null)
  * @method static Builder|DispatchRegister whereCompanyAndRouteAndVehicle(Company $company, $route = null, $vehicle = null)
- * @method static Builder|DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(Company $company, $date, $routeId = null, $vehicleId = null)
  * @method static Builder|DispatchRegister whereCompanyAndDateRangeAndRouteIdAndVehicleId(Company $company, $initialDate, $finalDate = null, $routeId = null, $vehicleId = null)
+ * @method static Builder|DispatchRegister whereCompanyAndDateAndRouteIdAndVehicleId(Company $company, $date, $routeId = null, $vehicleId = null)
+ * @property-read mixed $route_time
+ * @property-read mixed $total_off_road
+ * @method static Builder|DispatchRegister whereDriver(Driver $driver = null)
+ * @method static Builder|DispatchRegister whereVehicle(Vehicle $vehicle = null)
  * @property-read int|null $control_point_time_reports_count
  * @property-read int|null $off_roads_count
  * @property-read int|null $parking_report_count
@@ -153,13 +157,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
  * @property-read \RouteTariff $tariff
+ * @property-read RouteTariff $fuel_tariff
+ * @property-read mixed $mileage
+ * @property-read mixed $passengers_by_sensor_total
  * @property-read RouteTaking|null $routeTakings
  * @property int|null $initial_charge
  * @property int|null $final_charge
  * @method static Builder|DispatchRegister whereFinalCharge($value)
  * @method static Builder|DispatchRegister whereInitialCharge($value)
  * @property int|null $driver_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\DispatchRegister whereDriverId($value)
+ * @method static Builder|DispatchRegister whereDriverId($value)
  */
 class DispatchRegister extends Model
 {
@@ -171,6 +178,19 @@ class DispatchRegister extends Model
     function getDateFormat()
     {
         return config('app.simple_date_time_format');
+    }
+
+    /**
+     * @param $date
+     * @return string
+     */
+    public function getDateAttribute($date)
+    {
+        if (Str::contains($date, '-')) {
+            return Carbon::createFromFormat('Y-m-d', explode(' ', $date)[0])->toDateString();
+        }
+
+        return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0])->toDateString();
     }
 
     public function getTimeAttribute($time)
@@ -228,7 +248,23 @@ class DispatchRegister extends Model
 
     public function getParsedDate()
     {
-        return Carbon::createFromFormat(config('app.date_format'), $this->date);
+        return Carbon::createFromFormat('Y-m-d', $this->date);
+    }
+
+    public function scopeWhereVehicle($query, Vehicle $vehicle = null)
+    {
+        if ($vehicle) $query = $query->where('vehicle_id', $vehicle->id);
+        return $query;
+    }
+
+    public function scopeWhereDriver($query, Driver $driver = null)
+    {
+        if ($driver) $query = $query->where(function ($q) use ($driver) {
+            return $q->where('driver_code', $driver->code)->orWhere('driver_id', $driver->id);
+        });
+
+//        dd($query->toSql(), $query->getBindings(), $query->get());
+        return $query;
     }
 
     public function driver()
@@ -236,19 +272,19 @@ class DispatchRegister extends Model
         return $this->belongsTo(Driver::class, 'driver_code', 'code');
     }
 
+    public function driverName()
+    {
+        $driver = $this->driver;
+        return $driver ? $driver->fullName() : ($this->driver_code ? $this->driver_code : __('Not assigned'));
+    }
+
+    /**
+     * @param DispatchRegister $query
+     * @return mixed
+     */
     public function scopeCompleted($query)
     {
         return $query->where('status', $this::COMPLETE);
-    }
-
-    public function onlyControlTakings()
-    {
-        return $this->status === self::TAKINGS;
-    }
-
-    public function forNormalTakings()
-    {
-        return !$this->onlyControlTakings();
     }
 
     /**
@@ -320,9 +356,14 @@ class DispatchRegister extends Model
         return $this->hasMany(ControlPointTimeReport::class)->orderBy('date', 'asc');
     }
 
-    public function getRouteTime()
+    public function getRouteTime($withZero = false)
     {
-        return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : '--:--:--';
+        return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : ($withZero ? '00:00:00' : '--:--:--');
+    }
+
+    public function getRouteTimeAttribute()
+    {
+        return $this->getRouteTime(true);
     }
 
     public function departureFringe()
@@ -356,6 +397,21 @@ class DispatchRegister extends Model
         return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
     }
 
+    public function getPassengersBySensorTotalAttribute()
+    {
+        if ($this->inProgress()) {
+            $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
+
+            if (!$lastPassenger) {
+                return 0;
+            }
+
+            return $lastPassenger->total - $this->initial_front_sensor_counter;
+        }
+        $hasReset = ($this->final_sensor_counter < $this->initial_front_sensor_counter);
+        return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_front_sensor_counter));
+    }
+
     public function getInitialPassengersBySensorRecorderAttribute()
     {
         $hasReset = ($this->final_sensor_recorder < $this->initial_sensor_recorder);
@@ -371,6 +427,11 @@ class DispatchRegister extends Model
     {
         if ($this->inProgress()) {
             $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+
+            if (!$currentSensor || !isset($currentSensor->sensorRecorderCounter)) {
+                return 0;
+            }
+
             $hasReset = ($currentSensor->sensorRecorderCounter < $this->initial_sensor_recorder);
             return $currentSensor->sensorRecorderCounter - ($hasReset ? 0 : $this->initial_sensor_recorder);
         }
@@ -383,6 +444,7 @@ class DispatchRegister extends Model
         if (!$reference || $reference == 0) $reference = 1;
         return number_format((100 - $value * 100 / $reference), 1, '.', '');
     }
+
 
     /**
      * @param DispatchRegister | Builder $query
@@ -399,6 +461,16 @@ class DispatchRegister extends Model
             ->where('route_id', $routeId)
             ->orderBy('round_trip')
             ->get();
+    }
+
+    public function onlyControlTakings()
+    {
+        return $this->status === self::TAKINGS;
+    }
+
+    public function forNormalTakings()
+    {
+        return !$this->onlyControlTakings();
     }
 
     public function getAPIFields($short = false)
@@ -431,7 +503,10 @@ class DispatchRegister extends Model
                 'passengers' => $passengers,
                 'takings' => $takings ? $takings->getAPIFields() : [],
                 'onlyControlTakings' => $this->onlyControlTakings(),
-                'forNormalTakings' => $this->forNormalTakings()
+                'forNormalTakings' => $this->forNormalTakings(),
+
+                'forTakings' => $this->onlyControlTakings(),
+                'mileage' => $this->mileage
             ];
         }
 
@@ -471,10 +546,14 @@ class DispatchRegister extends Model
             'driverCode' => $this->driver_code ? $this->driver_code : __('Unassigned'),
 
             'dispatcherName' => $this->user ? $this->user->name : __('Unassigned'),
+
             'passengers' => $passengers,
             'takings' => $takings ? $takings->getAPIFields() : [],
             'onlyControlTakings' => $this->onlyControlTakings(),
-            'forNormalTakings' => $this->forNormalTakings()
+            'forNormalTakings' => $this->forNormalTakings(),
+
+            'forTakings' => $this->onlyControlTakings(),
+            'mileage' => $this->mileage
         ];
     }
 
@@ -634,6 +713,11 @@ class DispatchRegister extends Model
         return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
+    public function getTotalOffRoadAttribute()
+    {
+        return $this->getTotalOffRoad();
+    }
+
     public function getPassengersAttribute()
     {
         return (object)[
@@ -648,7 +732,7 @@ class DispatchRegister extends Model
             return $this->getPassengersBySensor();
         }
 
-        $count = intval($this->end_recorder) - intval($this->start_recorder);
+        $count = $this->complete() ? intval($this->end_recorder) - intval($this->start_recorder) : 0;
 
         if ($count < 0 && intval($this->end_recorder) < 1000 && intval($this->start_recorder) > 900000) {
             $count = (1000000 - intval($this->start_recorder)) + intval($this->end_recorder);
@@ -729,6 +813,12 @@ class DispatchRegister extends Model
         $takings->save();
 
         return $takings;
+    }
+
+    public function getMileageAttribute()
+    {
+//        return ($this->end_odometer - $this->start_odometer) / 1000;
+        return $this->route->distance_in_km;
     }
 
     const CREATED_AT = 'date_created';

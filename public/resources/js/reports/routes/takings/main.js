@@ -1490,6 +1490,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
@@ -6522,6 +6552,24 @@ var render = function() {
                     _c("i", { staticClass: "icon-briefcase" }),
                     _c("br"),
                     _vm._v(" "),
+                    _c("span", {}, [_vm._v(_vm._s(_vm.$t("Advance")))])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("small", [
+                    _c("i", { staticClass: "icon-briefcase" }),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("span", {}, [_vm._v(_vm._s(_vm.$t("Balance")))])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("th", [
+                  _c("small", [
+                    _c("i", { staticClass: "icon-briefcase" }),
+                    _c("br"),
+                    _vm._v(" "),
                     _c("span", {}, [_vm._v(_vm._s(_vm.$t("Observations")))])
                   ])
                 ])
@@ -6788,6 +6836,26 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
+                      _c("td", { staticClass: "text-bold text-right" }, [
+                        _c("small", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(r.takings.advance, "$0,0")
+                            )
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-bold text-right" }, [
+                        _c("small", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(r.takings.balance, "$0,0")
+                            )
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
                       _c("td", { staticClass: "text-info p-l-20" }, [
                         _c("small", [_vm._v(_vm._s(r.takings.observations))])
                       ])
@@ -6941,6 +7009,26 @@ var render = function() {
                               _vm.averages.netProduction,
                               "$0,0"
                             )
+                          )
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-bold text-right" }, [
+                      _c("small", [
+                        _vm._v(
+                          _vm._s(
+                            _vm._f("numberFormat")(_vm.averages.advance, "$0,0")
+                          )
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-bold text-right" }, [
+                      _c("small", [
+                        _vm._v(
+                          _vm._s(
+                            _vm._f("numberFormat")(_vm.averages.balance, "$0,0")
                           )
                         )
                       ])
@@ -7146,6 +7234,38 @@ var render = function() {
                         )
                       ])
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "bg-inverse text-white text-bold text-right"
+                    },
+                    [
+                      _c("span", [
+                        _vm._v(
+                          _vm._s(
+                            _vm._f("numberFormat")(_vm.totals.advance, "$0,0")
+                          )
+                        )
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "bg-inverse text-white text-bold text-right"
+                    },
+                    [
+                      _c("span", [
+                        _vm._v(
+                          _vm._s(
+                            _vm._f("numberFormat")(_vm.totals.balance, "$0,0")
+                          )
+                        )
+                      ])
+                    ]
                   )
                 ]
               )
@@ -7219,7 +7339,7 @@ var staticRenderFns = [
       _c("td", {
         staticClass: "bg-inverse",
         staticStyle: { height: "10px !important", padding: "0" },
-        attrs: { colspan: "18" }
+        attrs: { colspan: "20" }
       })
     ])
   },
