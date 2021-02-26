@@ -61,6 +61,10 @@ class GPSCheckStatusCommand extends Command
                 'timeOn' => $gpsTimeForNOReportPowerOn,
                 'timeOff' => $gpsTimeForNOReportPowerOff,
             ],
+            Company::SOTRAVALLE => (object)[
+                'timeOn' => $gpsTimeForNOReportPowerOn,
+                'timeOff' => $gpsTimeForNOReportPowerOff,
+            ],
             Company::MONTEBELLO => (object)[
                 'timeOn' => $gpsTimeForNOReportPowerOn,
                 'timeOff' => $gpsTimeForNOReportPowerOff,

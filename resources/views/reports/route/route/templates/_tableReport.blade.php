@@ -203,9 +203,9 @@
             </td>
 
             <td width="10%" class="text-center">
-                <small class="tooltips text-bold" data-title="@lang('Arrival Time')"  data-placement="left">
+                <span class="tooltips" data-title="@lang('Arrival Time')"  data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time) }}
-                </small>
+                </span><br>
                 <small class="tooltips text-muted" data-title="@lang('Arrival Time Scheduled')" data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}
                 </small>
