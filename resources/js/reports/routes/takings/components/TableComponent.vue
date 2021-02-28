@@ -200,9 +200,13 @@
 				</td>
 				<td class="text-bold text-right">
 					<small>{{ r.takings.advance | numberFormat('$0,0') }}</small>
+					<br>
+					<small class="text-muted tooltips" :data-title="$t('Passengers advance')">{{ r.takings.passengersAdvance | numberFormat('0.0') }}</small>
 				</td>
 				<td class="text-bold text-right">
 					<small>{{ r.takings.balance | numberFormat('$0,0') }}</small>
+					<br>
+					<small class="text-muted tooltips" :data-title="$t('Passengers balance')">{{ r.takings.passengersBalance | numberFormat('0.0') }}</small>
 				</td>
 				<td class="text-info p-l-20">
 					<small>{{ r.takings.observations }}</small>
@@ -255,9 +259,13 @@
 				</td>
 				<td class="text-bold text-right">
 					<small>{{ averages.advance | numberFormat('$0,0') }}</small>
+					<br>
+					<small class="text-muted tooltips" :data-title="$t('Passengers advance')"><i class="fa fa-users"></i> {{ averages.passengersAdvance | numberFormat('0.0') }}</small>
 				</td>
 				<td class="text-bold text-right">
 					<small>{{ averages.balance | numberFormat('$0,0') }}</small>
+					<br>
+					<small class="text-muted 	tooltips" :data-title="$t('Passengers balance')"> <i class="fa fa-users"></i>{{ averages.passengersBalance | numberFormat('0.0') }}</small>
 				</td>
 			</tr>
 			</tbody>
@@ -305,9 +313,13 @@
 				</th>
 				<th class="bg-inverse text-white text-bold text-right">
 					<span>{{ totals.advance | numberFormat('$0,0') }}</span>
+					<br>
+					<small class="tooltips" :data-title="$t('Passengers advance')"><i class="fa fa-users"></i> {{ totals.passengersAdvance | numberFormat('0.0') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-bold text-right">
 					<span>{{ totals.balance | numberFormat('$0,0') }}</span>
+					<br>
+					<small class="tooltips" :data-title="$t('Passengers balance')"><i class="fa fa-users"></i> {{ totals.passengersBalance | numberFormat('0.0') }}</small>
 				</th>
 			</tr>
 			</tfoot>

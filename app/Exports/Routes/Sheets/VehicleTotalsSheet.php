@@ -62,8 +62,10 @@ class VehicleTotalsSheet implements FromCollection, ShouldAutoSize, Responsable,
                 __('Others') => intval($totals->others),                                                        # O CELL
                 __('Net production') => intval($totals->netProduction),                                         # P CELL
                 __('Advance') => intval($totals->advance),                                                      # Q CELL
-                __('Balance') => intval($totals->balance),                                                      # R CELL
-                __('Observations') => $observations,                                                            # S CELL
+                __('Passengers advance') => intval($totals->passengersAdvance),                                 # R CELL
+                __('Balance') => intval($totals->balance),                                                      # S CELL
+                __('Passengers balance') => intval($totals->passengersBalance),                                 # T CELL
+                __('Observations') => $observations,                                                            # U CELL
             ];
         }
 
@@ -98,12 +100,14 @@ class VehicleTotalsSheet implements FromCollection, ShouldAutoSize, Responsable,
 
         foreach (range($config->row->data->start, $config->row->data->end) as $row) {
             $workSheet->setCellValue("P$row", "=J$row-K$row-L$row-N$row-O$row");
-            $workSheet->setCellValue("R$row", "=P$row-Q$row");
+            $workSheet->setCellValue("S$row", "=P$row-Q$row");
+            $workSheet->setCellValue("R$row", "=Q$row/(J$row/I$row)");
+            $workSheet->setCellValue("T$row", "=I$row-R$row");
         }
 
         $workSheet->setCellValue('H' . $config->row->data->next, 'TOTAL');
         $workSheet->getStyle('H' . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        foreach (['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $totalLetterPosition) {
+        foreach (['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'] as $totalLetterPosition) {
             $workSheet->setCellValue($totalLetterPosition . $config->row->data->next, '=SUM(' . $totalLetterPosition . $config->row->data->start . ':' . $totalLetterPosition . $config->row->data->end . ')');
 
             $workSheet->getStyle($totalLetterPosition . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD);
@@ -112,6 +116,8 @@ class VehicleTotalsSheet implements FromCollection, ShouldAutoSize, Responsable,
 
         $workSheet->getStyle('I' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
         $workSheet->getStyle('M' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
+        $workSheet->getStyle('R' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
+        $workSheet->getStyle('T' . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
 
         $this->setStyleSheetWithFooter($spreadsheet);
         $this->setGlobalStyleSheet($spreadsheet);
@@ -142,7 +148,9 @@ class VehicleTotalsSheet implements FromCollection, ShouldAutoSize, Responsable,
             'O' => NumberFormat::FORMAT_CURRENCY_USD,
             'P' => NumberFormat::FORMAT_CURRENCY_USD,
             'Q' => NumberFormat::FORMAT_CURRENCY_USD,
-            'R' => NumberFormat::FORMAT_CURRENCY_USD,
+            'R' => NumberFormat::FORMAT_NUMBER_00,
+            'S' => NumberFormat::FORMAT_CURRENCY_USD,
+            'T' => NumberFormat::FORMAT_NUMBER_00,
         ];
     }
 

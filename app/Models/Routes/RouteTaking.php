@@ -56,6 +56,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $balance
  * @method static Builder|RouteTaking whereAdvance($value)
  * @method static Builder|RouteTaking whereBalance($value)
+ * @property-read mixed $passengers_advance
+ * @property-read mixed $passengers_balance
  */
 class RouteTaking extends Model
 {
@@ -120,6 +122,18 @@ class RouteTaking extends Model
         return $this->dispatchRegister->complete() ? intval($this->attributes['total_production']) : 0;
     }
 
+    public function getPassengersAdvanceAttribute()
+    {
+        $passengerTariff = $this->passenger_tariff;
+        return $passengerTariff ? intval($this->advance) / intval($passengerTariff) : 0;
+    }
+
+    public function getPassengersBalanceAttribute()
+    {
+        $totalPassengers = $this->dispatchRegister->passengers->recorders->count;
+        return intval($totalPassengers) - $this->passengers_advance;
+    }
+
     function setBalanceAttribute($value)
     {
         $this->attributes['balance'] = intval($this->net_production) - intval($this->advance);
@@ -145,6 +159,8 @@ class RouteTaking extends Model
             'others' => $this->others,
             'bonus' => $this->bonus,
             'advance' => $this->advance,
+            'passengersAdvance' => $this->passengers_advance,
+            'passengersBalance' => $this->passengers_balance,
             'balance' => $this->balance,
             'netProduction' => $this->net_production,
             'observations' => $this->observations,

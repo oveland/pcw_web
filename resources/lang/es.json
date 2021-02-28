@@ -820,5 +820,7 @@
   "Saving advance": "Guardando anticipo",
   "Advance saved successfully": "Anticipo registrado correctamente",
   "Error setting advance": "Error al registrar anticipo",
-  "Enter a valid number": "Ingrese un número válido"
+  "Enter a valid number": "Ingrese un número válido",
+  "Passengers advance": "Pasajeros anticipo",
+  "Passengers balance": "Pasajeros CxC"
 }

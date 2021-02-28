@@ -184,6 +184,12 @@ class DispatchService
             'balance' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->balance;
             }),
+            'passengersAdvance' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->passengersAdvance;
+            }),
+            'passengersBalance' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->passengersBalance;
+            }),
             'routeTime' => StrTime::segToStrTime($dispatchRegisters->sum(function ($d) {
                 return StrTime::toSeg($d->routeTime);
             })),
@@ -254,6 +260,12 @@ class DispatchService
             }),
             'advance' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->advance;
+            }),
+            'passengersAdvance' => $dispatchRegisters->average(function ($d) {
+                return $d->takings->passengersAdvance;
+            }),
+            'passengersBalance' => $dispatchRegisters->average(function ($d) {
+                return $d->takings->passengersBalance;
             }),
             'balance' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->balance;
