@@ -3,6 +3,8 @@
 @endphp
 
 <div class="row">
+    <input type="hidden" id="tariff_passenger" value="{{ intval($dispatchRegister->takings->passenger_tariff) }}">
+    <input type="hidden" id="total_passengers" value="{{ intval($dispatchRegister->passengers->recorders->count) }}">
     <div class="col-md-12">
         <div class="well row m-b-0">
             <div class="col-md-12 row">
@@ -165,9 +167,12 @@
             <div class="form-group has-info">
                 <label for="net-production" class="col-md-5 control-label text-primary">@lang('Advance')</label>
                 <div class="col-md-7">
-                    <div class="input-icon">
+                    <div class="input-icon input-group tooltips" title="@lang('Passengers') @lang('Advance')" data-placement="right">
                         <i class="fa fa-dollar"></i>
-                        <input type="number" class="form-control input-circle-right disabled" id="advance_takings" name="advance" value="{{ $dispatchRegister->takings->advance }}">
+                        <input type="number" class="form-control disabled" id="advance_takings" name="advance" value="{{ $dispatchRegister->takings->advance }}">
+                        <span class="input-group-addon">
+                            <i class="fa fa-users"></i> <span id="passengers_advance">{{ $dispatchRegister->takings->passengersAdvance }}</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -175,13 +180,15 @@
             <div class="form-group has-success">
                 <label for="net-production" class="col-md-5 control-label text-uppercase">@lang('Balance')</label>
                 <div class="col-md-7">
-                    <div class="input-icon">
+                    <div class="input-icon input-group">
                         <i class="fa fa-dollar"></i>
-                        <input type="number" disabled class="form-control input-circle-right disabled" id="balance_takings" name="balance" value="{{ $dispatchRegister->takings->balance }}">
+                        <input type="number" disabled class="form-control disabled" id="balance_takings" name="balance" value="{{ $dispatchRegister->takings->balance }}">
+                        <span class="input-group-addon">
+                            <i class="fa fa-users" style="color: #0b4d3f"></i> <span id="passengers_balance">{{ $dispatchRegister->takings->passengersBalance }}</span>
+                        </span>
                     </div>
                 </div>
             </div>
-
 
             <hr class="hr no-padding">
 
@@ -196,7 +203,6 @@
                     </div>
                 </div>
             </div>
-
 
             <hr>
             <div class="form-group">
@@ -277,6 +283,9 @@
     });
 
     formTakingsPassengers.find('input.form-control').change(function () {
+        let tariffPassenger = $('#tariff_passenger').val();
+        let totalPassengers = $('#total_passengers').val();
+
         let totalProduction = $(this).parents('form').find('#total_production_takings').val();
         let control = $(this).parents('form').find('#control_takings').val();
         let others = $(this).parents('form').find('#others_takings').val();
@@ -294,10 +303,14 @@
         advance = advance ? advance : 0;
 
         let netProduction = totalProduction - control - fuel - others - bonus;
+        let passengersAdvance = tariffPassenger ? advance / tariffPassenger : 0;
+        let passengersBalance = totalPassengers - passengersAdvance;
 
         $(this).parents('form').find('#net_production_takings').val(netProduction);
         $(this).parents('form').find('#balance_takings').val(netProduction - advance);
         $(this).parents('form').find('#fuel_gallons_takings').val(fuelGallons.toFixed(2));
+        $(this).parents('form').find('#passengers_advance').text(passengersAdvance.toFixed(1));
+        $(this).parents('form').find('#passengers_balance').text(passengersBalance.toFixed(1));
     });
 
     formTakingsPassengers.find('input.form-control').keyup(function () {
@@ -305,6 +318,9 @@
     });
 
     $('.tooltips').tooltip();
+    setTimeout(() => {
+        $('#advance_takings').change();
+    }, 100);
 </script>
 
 <style>
