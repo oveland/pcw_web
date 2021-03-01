@@ -28,6 +28,9 @@
                         @php($lastDispatchRegister = $issue->lastDispatchRegister)
                         <li class="">
                             <div class="info" class="tooltips" data-title="{{ $dispatchRegister->status }}">
+                                <p class="text-muted text-center">
+                                    <small class="text-bold">{{ $issue->field }}</small>
+                                </p>
                                 <h4>
                                     <i class="fa fa-calendar"></i>
                                     {{ $dispatchRegister->date }}
@@ -97,16 +100,33 @@
                                         <i class="fa fa-clock-o"></i>
                                         {{ $lastDispatchRegister->departure_time }}
                                     </p>
+
                                     <p class="tooltips hide text-{{  $issue->field == __('Start Recorder')?'issue':'' }}" data-title="@lang('Start Recorder') @lang('prev')">
                                         <i class="fa fa-arrow-circle-right"></i>
                                         {{ $lastDispatchRegister->start_recorder }}
                                     </p>
-                                    <p class="tooltips" data-title="@lang('End Recorder') @lang('prev')">
+
+
+                                    <p class="tooltips hide" data-title="@lang('End Recorder') @lang('prev')">
                                         <i class="fa fa-arrow-circle-left"></i>
                                         <span class="text-warning">
                                             {{ $lastDispatchRegister->end_recorder }}
                                         </span>
                                     </p>
+                                    <div class="tooltips text-warning box-edit" data-title="@lang('End Recorder')">
+                                        <span class="box-info">
+                                            <i class="fa fa-arrow-circle-left"></i>
+                                            <span>
+                                                {{ $lastDispatchRegister->end_recorder }}
+                                            </span>
+                                        </span>
+                                        <div class="box-edit" style="display: none">
+                                            <input id="edit-end-recorder-{{ $lastDispatchRegister->id }}" title="@lang('End Recorder')" name="" type="number"
+                                                   data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $lastDispatchRegister->id }}" data-field="@lang('end_recorder')"
+                                                   class="input-sm form-control edit-input-recorder" value="{{ $lastDispatchRegister->end_recorder }}">
+                                        </div>
+                                    </div>
+
                                 @endif
                             </div>
                             <div class="action hide">
