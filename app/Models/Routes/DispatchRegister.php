@@ -818,7 +818,7 @@ class DispatchRegister extends Model
     public function getMileageAttribute()
     {
 //        return ($this->end_odometer - $this->start_odometer) / 1000;
-        return $this->route->distance_in_km;
+        return $this->route ? $this->route->distance_in_km : 0;
     }
 
     const CREATED_AT = 'date_created';
