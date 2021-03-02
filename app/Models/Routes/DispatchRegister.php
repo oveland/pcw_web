@@ -388,8 +388,8 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensorAttribute()
     {
-        if ($this->inProgress()) {
-            $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+        $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+        if ($this->inProgress() && $currentSensor && isset($currentSensor->sensorCounter)) {
             $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
             return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
         }

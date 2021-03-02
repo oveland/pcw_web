@@ -66,6 +66,7 @@ trait CounterByRecorder
             $lastEndRecorder = $lastDispatchRegisterByVehicle->end_recorder;
 
             $startRecorder = $firstStartRecorder;
+
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
                 $passengersByRoundTrip = 0;
                 $endRecorder = 0;
@@ -77,8 +78,8 @@ trait CounterByRecorder
 //                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
 
 
-                    if ($startRecorder == 0) {
-                        if ($classifyByRoute) {
+                    if ($startRecorder == 0 || true) {
+                        if ($classifyByRoute || true) {
                             $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
                                 ->where('date', '=', $dispatchRegister->date)
                                 ->where('id', '<', $dispatchRegister->id)
@@ -213,8 +214,10 @@ trait CounterByRecorder
                 $issueField = __('A high count');
             } else if ($passengersByRoundTrip < 0) {
                 $issueField = __('A negative count');
-            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder && $vehicleId != 1234) {
-                $issueField = __('A Start Recorder less than the last End Recorder') . ' ' . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
+            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder) {
+                $start = $startRecorder;
+                $endLast = $lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 ? $lastDispatchRegister->end_recorder : 0;
+                $issueField = __('A Start Recorder less than the last End Recorder') . " ($start < $endLast)." . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
                 $badStartRecorder = true;
             }/* else if ($passengersByRoundTrip < config('counter.recorder.threshold_low_count')) {
                 $issueField = __('Low count') . ' < ' . config('counter.recorder.threshold_low_count');
