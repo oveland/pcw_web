@@ -749,12 +749,14 @@ class DispatchRegister extends Model
     public function getPassengersBySensor()
     {
         $tariffs = collect(\DB::select("
-            SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
+            SELECT tariff, sum(counted) \"totalCounted\", sum(charge) \"totalCharge\"
             FROM passengers
             WHERE dispatch_register_id = $this->id
             GROUP BY tariff
             ORDER BY tariff
         "));
+
+        $totalCharge = $tariffs->sum('totalCharge');
 
         $default = (object)[
             'tariff' => 0,
@@ -762,14 +764,20 @@ class DispatchRegister extends Model
             'totalCharge' => 0,
         ];
 
+        $tariffA = $tariffs->where('tariff', 1600)->first();
+        $tariffB = $tariffs->where('tariff', 2100)->first();
+        $tariff0 = $tariffs->where('tariff', 0)->first();
+
         return (object)[
             'start' => $this->initial_sensor_counter,
             'end' => $this->final_sensor_counter,
             'count' => $this->passengersBySensor,
             'mileage' => $this->mileage,
+            'totalCharge' => $totalCharge,
             'tariff' => (object)[
-                'a' => (object) ($tariffs->get(0) ? $tariffs->get(0) : $default),
-                'b' => (object) ($tariffs->get(1) ? $tariffs->get(1) : $default),
+                'a' => (object)($tariffA ? $tariffA : $default),
+                'b' => (object)($tariffB ? $tariffB : $default),
+                '0' => (object)($tariff0 ? $tariff0 : $default),
             ]
         ];
     }
@@ -792,14 +800,15 @@ class DispatchRegister extends Model
         }
 
         if (!$this->onlyControlTakings()) {
-            $passengers = $this->getPassengersByRecorder()->count;
+            $passengers = $this->getPassengersByRecorder();
+            $totalPassengers = $passengers->count;
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
 
-            $totalProduction = $takings->passenger_tariff * $passengers;
+            $totalProduction = $takings->passenger_tariff * $totalPassengers;
 
             if ($this->route && $this->route->company_id == Company::YUMBENOS) {
-                $totalProduction = $this->final_charge - $this->initial_charge;
+                $totalProduction = $passengers->totalCharge;
             }
 
             $takings->total_production = $totalProduction;

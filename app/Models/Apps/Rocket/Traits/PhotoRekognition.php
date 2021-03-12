@@ -58,6 +58,6 @@ trait PhotoRekognition
         $image = $this->getImage('png', true);
 
         $column = "data_$type";
-        $this->$column = $rekognition->sefFile($image)->process($type);
+       // $this->$column = $rekognition->sefFile($image)->process($type);
     }
 }
