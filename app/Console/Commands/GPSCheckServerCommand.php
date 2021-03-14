@@ -3,10 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\API\SMS;
+use App\Services\Server\GPSService;
 use Carbon\Carbon;
 use DB;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class GPSCheckServerCommand extends Command
 {
@@ -51,16 +53,50 @@ class GPSCheckServerCommand extends Command
     public function handle()
     {
         $this->issues = collect([]);
+
         $this->checkGPSServer();
         $this->checkDatabaseServer();
+        $this->checkTCPConnections();
+
         $this->sendAlerts();
+    }
+
+    public function checkTCPConnections()
+    {
+        $connectionsOK = true;
+
+        $gpsService = new GPSService();
+        $ip = '52.38.73.219';
+        $ports = [
+//            914 => 'Coban Photo',
+            912 => 'Coban',
+            990 => 'Skypatrol',
+            999 => 'Ruptela',
+//            9999 => 'Ruptela Aux',
+            991 => 'Meitrack',
+            994 => 'Antares',
+        ];
+
+        foreach ($ports as $port => $server) {
+//            $this->log("Testing TCP $port ($server)...");
+            $test = $gpsService->testConnection($ip, $port);
+            if (!$test) {
+                $connectionsOK = false;
+
+                $this->issues->push("TCP Port $port ($server) is down! $this->now");
+            }
+
+//            $this->log("    - $server Ok = $test");
+        }
+
+        return $connectionsOK;
     }
 
     public function checkGPSServer()
     {
         $isServerOK = false;
         try {
-            $client = new Client(['base_uri' => 'https://server.pcwserviciosgps.com']);
+            $client = new Client(['base_uri' => 'https://server.pcwserviciosgps.com/']);
             $response = $client->get('/');
 
             if ($response->getStatusCode() == 200) $isServerOK = true;
@@ -68,7 +104,7 @@ class GPSCheckServerCommand extends Command
         }
 
         if (!$isServerOK) {
-            $this->issues->push("GPS server id down! $this->now");
+            $this->issues->push("GPS server is down! $this->now");
         }
     }
 
@@ -96,11 +132,19 @@ class GPSCheckServerCommand extends Command
 
     public function sendAlerts()
     {
-        foreach ($this->issues as $issue){
+        foreach ($this->issues as $issue) {
             foreach (self::ALERT_SMS_NUMBERS as $number) {
-                $this->info($issue);
+                $this->log($issue);
                 SMS::sendCommand($issue, $number);
             }
         }
+    }
+
+    public function log($message)
+    {
+        $this->info(" $this->now • $message");
+
+        Log::useDailyFiles(storage_path() . '/logs/check.server.log', 3);
+        Log::info($message);
     }
 }

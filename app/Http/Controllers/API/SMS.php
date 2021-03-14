@@ -16,17 +16,53 @@ use Illuminate\Support\Facades\Log;
 
 class SMS
 {
+
+    public static function sendCommand1($sms, $phone)
+    {
+        $ch = curl_init();
+
+        $post = array(
+            'account' => config('sms.api_id'),
+            'apiKey' => config('sms.api_key'),
+            'token' => config('sms.api_token'),
+            'toNumber' => $phone,
+            'sms' => $sms,
+            'flash' => 0,
+            'isPriority' => 1,
+            'sc' => '210522',
+            'sendDate' => time()
+        );
+
+        $url = "https://api101.hablame.co/api/sms/v2.1/send/";
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+
+        $response = curl_exec($ch);
+
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
     public static function sendCommand($sms, $phone)
     {
-        $ref = Carbon::now()->format("YmdHis");
-        $url = 'https://api.hablame.co/sms/envio/';
+        $url = 'https://api101.hablame.co/api/sms/v2.1/send/';
+//        $url = 'https://api102.hablame.co/api/sms/v2.1/send/';
         $data = array(
-            'cliente' => config('sms.api_id'),
-            'api' => config('sms.api_key'),
-            'numero' => $phone,
+            'account' => config('sms.api_id'),
+            'apiKey' => config('sms.api_key'),
+            'token' => config('sms.api_token'),
+            'toNumber' => $phone,
             'sms' => $sms,
-            'fecha' => '',
-            'referencia' => "PCW.$ref." . str_limit(str_replace(" ", "_", $sms), 10),
+            'flash' => 0,
+            'isPriority' => 1,
+            'sc' => '210522',
+            'sendDate' => time()
         );
 
         $options = array(
@@ -67,8 +103,8 @@ class SMS
         }
 
         $response['log'] = $responseLog . " $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
-        //Log::useDailyFiles(storage_path().'/logs/sms.log',10);
-        //Log::info($response['log']);
+        Log::useDailyFiles(storage_path() . '/logs/sms.log', 10);
+        Log::info($response['log']);
 
         return (object)$response;
     }

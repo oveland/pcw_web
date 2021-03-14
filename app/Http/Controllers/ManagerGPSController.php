@@ -428,7 +428,7 @@ class ManagerGPSController extends Controller
 
                 $length = strlen($smsCommand);
 
-                $dump .= ("$smsCommand \n $length Chars (" . ($responseSMS['resultado'] === 0 ? "successfully" : "error") . ")") . "\n\n";
+                $dump .= ("$smsCommand \n $length Chars (" . ($responseSMS['status'] === '1x000' ? "successfully" : $responseSMS['error_description']) . ")") . "\n\n";
                 sleep(1);
             }
             $dump .= "-------------- TOTAL SMS SENT: $totalSent --------------\n";
