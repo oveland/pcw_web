@@ -123,7 +123,7 @@ class Company extends Model
     public function userVehicles($routeId = null)
     {
         $user = Auth::user();
-        $vehicles = $user->assignedVehicles($this);
+        $vehicles = $user ? $user->assignedVehicles($this) : $this->activeVehicles;
         if ($this->hasADD() && $routeId && $routeId != 'all') {
             $route = Route::find($routeId);
             if ($route) {
@@ -167,7 +167,7 @@ class Company extends Model
     }
 
     /**
-     * @param $query
+     * @param Eloquent $query
      * @return mixed
      */
     public function scopeActive($query)
@@ -175,6 +175,10 @@ class Company extends Model
         return $query->where('active', '=', true)->orderBy('short_name');
     }
 
+    /**
+     * @param Eloquent $query
+     * @return mixed
+     */
     public function scopeFindAllActive($query)
     {
         return $query->where('active', '=', true)->orderBy('short_name', 'asc')->get();
@@ -234,7 +238,7 @@ class Company extends Model
     }
 
     /**
-     * @return HasMany
+     * @return HasMany | Driver
      */
     public function drivers()
     {

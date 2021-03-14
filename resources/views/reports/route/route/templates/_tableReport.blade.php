@@ -178,7 +178,8 @@
             @endif
 
             <td class="text-center">
-                {{ $strTime->toString($dispatchRegister->departure_time) }}<br>
+                <span class="tooltips" title="Registrado a las {{ $strTime->toString($dispatchRegister->time) }}">{{ $strTime->toString($dispatchRegister->departure_time) }}</span>
+                <br>
                 <small class="tooltips text-info" data-title="@lang('Vehicles without route')" data-placement="bottom">
                     {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
                 </small>

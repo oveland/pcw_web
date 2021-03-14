@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    @if(!$dispatchRegister->complete())
+    @if(!$dispatchRegister->complete() && !$dispatchRegister->onlyControlTakings())
         <div class="bg-warning text-white p-10 text-center" style="display: flow-root">
             <i class="fa fa-bus faa-passing animated"></i> <strong>@lang('Turno no completado')</strong>
         </div>
@@ -305,6 +305,9 @@
         let netProduction = totalProduction - control - fuel - others - bonus;
         let passengersAdvance = tariffPassenger ? advance / tariffPassenger : 0;
         let passengersBalance = totalPassengers - passengersAdvance;
+
+        passengersAdvance = passengersAdvance ? passengersAdvance : 0;
+        passengersBalance = passengersBalance ? passengersBalance : 0;
 
         $(this).parents('form').find('#net_production_takings').val(netProduction);
         $(this).parents('form').find('#balance_takings').val(netProduction - advance);

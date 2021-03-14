@@ -145,6 +145,9 @@ class PassengersRecordersReportController extends Controller
                     $reportsByDrivers = collect([]);
 
                     foreach ($dispatchRegistersByDrivers as $driverCodeOrID => $drd) {
+
+                        $driverCodeOrID = intval($driverCodeOrID);
+
                         $drd = collect($drd);
                         $driverByDateAndVehicleAndRoute = $driverCodeOrID ? Driver::findByIdOrCode($driverCodeOrID, $company->id)->get()->first() : null;
 
