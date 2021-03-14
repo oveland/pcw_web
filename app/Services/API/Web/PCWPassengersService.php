@@ -61,40 +61,46 @@ class PCWPassengersService implements APIWebInterface
      */
     public function buildPassengersReport(Company $company, $dateReport)
     {
-        $routes = $company->routes;
-        $allDispatchRegisters = DispatchRegister::active()
-            ->whereIn('route_id', $routes->pluck('id'))
-            ->where('date', $dateReport)
-//            ->where('vehicle_id', Vehicle::where('number', '566')->first()->id)
+        $allDispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, 'all', 'all')
+            ->active()
             ->with('vehicle')
             ->with('route')
             ->orderBy('id')
             ->get();
 
-        $passengerBySensor = CounterBySensor::report($allDispatchRegisters);
-        $passengerByRecorder = CounterByRecorder::report($allDispatchRegisters);
+        $passengersReport = CounterBySensor::report($allDispatchRegisters);
 
         $reports = array();
-        foreach ($passengerBySensor->report as $vehicleId => $sensor) {
-            $vehicle = Vehicle::find($vehicleId);
+        foreach ($passengersReport->report as $vehicleId => $sensor) {
+            $vehicle = $sensor->vehicle;
 
-            $recorder = isset($passengerByRecorder->report["$vehicleId"]) ? $passengerByRecorder->report["$vehicleId"] : null;
-            $recorderHistory = $recorder ? $this->getRecorderHistory($recorder->history) : [];
-
+            $countHistory = $this->getRecorderHistory($sensor->history);
             $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
 
-            $currentCharges = collect(DB::select("SELECT * FROM current_tariff_charges WHERE vehicle_id = $vehicle->id"));
+            $currentCharges = collect(DB::select("SELECT id, tariff, charge, total_counted, (tariff * total_counted) total_charge FROM current_tariff_charges WHERE vehicle_id = $vehicle->id"));
+
+//            $currentCharges2 = collect(DB::select("
+//                SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
+//                FROM passengers
+//                WHERE vehicle_id = 1199 and date >= current_Date and dispatch_register_id is not null and tariff > 0
+//                GROUP BY tariff
+//                ORDER BY tariff
+//            "));
+
+            if($vehicleId == 1199 && request()->get('d')) {
+//                dd('Ehesss', $currentCharges, $currentCharges2);
+            }
 
             $reports[] = (object)[
                 'vehicle_id' => $vehicleId,
                 'passengers' => (object)[
-                    'recorder' => $recorder ? $recorder->passengersByRecorder : 0,
-                    'recorderHistory' => $recorderHistory,
+                    'recorder' => $sensor->passengersByRecorder,
+                    'recorderHistory' => $countHistory,
                     'sensor' => $sensor->passengersBySensor,
                     'sensorAll' => $sensor->passengersAllBySensor,
                     'currentCharges' => $currentCharges,
                     'sensorRecorder' => $sensor->passengersBySensorRecorder,
-                    'timeRecorder' => $recorder->timeRecorder,
+                    'timeRecorder' => $sensor->timeRecorder,
                     'timeSensor' => $currentSensor->timeSensor,
                     'dateSensor' => $currentSensor->date,
                     'timeSensorRecorder' => $currentSensor->timeSensorRecorder,

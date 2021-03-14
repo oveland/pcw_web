@@ -1,6 +1,6 @@
 
 @if(count($dispatchRegistersByVehicles))
-    <div class="col-md-12 alert alert-info p-t-5 container-alert-new-values" style="display: none">
+    <div class="alert alert-info p-t-5 container-alert-new-values" style="display: none;position: absolute;z-index: 10;">
         <strong>
             <i class="fa fa-exclamation"></i> @lang('Registers updated')
         </strong>
