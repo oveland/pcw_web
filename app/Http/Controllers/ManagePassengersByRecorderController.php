@@ -33,6 +33,20 @@ class ManagePassengersByRecorderController extends Controller
                 }
                 return "Nothing to do";
                 break;
+            case 'cancelTurn':
+                $user = Auth::user();
+
+                if ($user->canEditRecorders()) {
+                    $id = $request->get('id');
+
+                    $success = DB::update("UPDATE registrodespacho SET observaciones = 'No terminó. Cancelado NE', edit_user_id = $user->id, edited_info = edited_info || 'User $user->id > Cancela turno desde NE, ', ignore_trigger = TRUE WHERE id_registro = $id");
+
+                    return Response::json([
+                        'success' => $success,
+                    ]);
+                }
+                return "Nothing to do";
+                break;
             default:
                 return "Nothing to do";
                 break;
