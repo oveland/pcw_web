@@ -77,6 +77,9 @@
                             <i class="fa fa-user" aria-hidden="true"></i><br> @lang('Driver')
                         </th>
                         <th class="text-center">
+                            <i class="fa fa-car" aria-hidden="true"></i><br> @lang('Total') <br> @lang('vehicles')
+                        </th>
+                        <th class="text-center">
                             <i class="fa fa-retweet" aria-hidden="true"></i><br> @lang('Total') <br> @lang('Round trips')
                         </th>
                         <th class="text-center">
@@ -146,6 +149,7 @@
                             <td>{{ $report->vehicleProcessed }} </td>
                             <td>{{ $report->routeProcessed }} </td>
                             <td class="">{{ $report->driverProcessed }} </td>
+                            <td>{{ $report->totalVehicles }} </td>
                             <td>{{ $report->roundTrips }} </td>
                             <td>{{ number_format($report->mileage, 1) }} </td>
                             <td>{{ number_format($report->programmedMileage, 1) }} </td>
@@ -220,6 +224,7 @@
                     @endforeach
                     <tr class="inverse bg-inverse text-white">
                         <td colspan="5" class="text-right text-uppercase">@lang('Totals')</td>
+                        <td class="text-center recorder">{{ $passengerReport->totalVehicles }}</td>
                         <td class="text-center recorder">{{ $passengerReport->totalRoundTrips }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalMileage,1) }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalProgrammedMileage,1) }}</td>

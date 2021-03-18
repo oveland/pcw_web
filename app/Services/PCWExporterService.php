@@ -20,15 +20,16 @@ class PCWExporterService
      * General exporter table from view
      *
      * @param $dataExport
+     * @param null $options
      */
-    public static function excel($dataExport)
+    public static function excel($dataExport, $options = null)
     {
         $dataExport = (object)$dataExport;
 
-        Excel::create($dataExport->fileName, function ($excel) use ($dataExport) {
+        Excel::create($dataExport->fileName, function ($excel) use ($dataExport, $options) {
             /* SHEETS */
             $excel = self::createHeaders($excel, $dataExport);
-            $excel = self::createSheet($excel, $dataExport);
+            $excel = self::createSheet($excel, $dataExport, false, $options);
         })->export('xlsx');
     }
 
@@ -36,17 +37,18 @@ class PCWExporterService
      * Save excel file and returns storage path
      *
      * @param $dataExport
+     * @param null $options
      * @return string
      */
-    public static function store($dataExport)
+    public static function store($dataExport, $options = null)
     {
         $dataExport = (object)$dataExport;
         $fileName = str_replace([' ', '-'], '_', $dataExport->fileName);
         $fileExtension = 'xlsx';
-        $excel = Excel::create($fileName, function ($excel) use ($dataExport) {
+        $excel = Excel::create($fileName, function ($excel) use ($dataExport, $options) {
             /* SHEETS */
             $excel = self::createHeaders($excel, $dataExport);
-            $excel = self::createSheet($excel, $dataExport);
+            $excel = self::createSheet($excel, $dataExport, false, $options);
         })->store($fileExtension);
 
         return "$excel->storagePath/$fileName.$fileExtension";
@@ -62,10 +64,10 @@ class PCWExporterService
         return $excel;
     }
 
-    public static function createSheet($excel, $dataExport, $disableFilters = false)
+    public static function createSheet($excel, $dataExport, $disableFilters = false, $options = null)
     {
         $sheetTitle = isset($dataExport->sheetTitle) ? $dataExport->sheetTitle : $dataExport->subTitle;
-        return $excel->sheet($sheetTitle, function ($sheet) use ($dataExport, $disableFilters) {
+        return $excel->sheet($sheetTitle, function ($sheet) use ($dataExport, $disableFilters, $options) {
             $startIndex = 3;
             $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '...'];
 
@@ -80,7 +82,7 @@ class PCWExporterService
             $sheet->setCellValue('A2', $dataExport->subTitle);
             $sheet->fromArray($dataExport->data, null, 'A3', true, true);
 
-            $sheet = self::sheetCustomReport($sheet, $config);
+            $sheet = self::sheetCustomReport($sheet, $config, $options);
 
             /* GENEREAL STYLE */
             $sheet->setOrientation('landscape');
@@ -144,7 +146,7 @@ class PCWExporterService
         });
     }
 
-    public static function sheetCustomReport($sheet, $config)
+    public static function sheetCustomReport($sheet, $config, $options = null)
     {
         $lastRow = $config->totalRows + 1;
         $starData = $config->startIndex + 1;
@@ -168,18 +170,19 @@ class PCWExporterService
                 break;
 
             case 'passengerReportByRangeTotalFooter':
-                foreach (['F', 'G', 'H', 'I', 'J', 'K'] as $totalLetterPosition) {
+                foreach (['G', 'H', 'I', 'J', 'K', 'L'] as $totalLetterPosition) {
                     $sheet->setCellValue($totalLetterPosition . $lastRow, "=SUM($totalLetterPosition$starData:$totalLetterPosition$config->totalRows)");
                 }
 
                 $sheet->setCellValue("A$lastRow", "TOTAL");
+                $sheet->setCellValue("F$lastRow", $options['totalVehicles']);
 
                 for ($i = $starData; $i <= $lastRow; $i++) {
-                    $sheet->setCellValue("K$i", "=IF(G$i, J$i/G$i, 0)");
+                    $sheet->setCellValue("L$i", "=IF(G$i, K$i/H$i, 0)");
                 }
 
                 $sheet->setColumnFormat(array(
-                    "K$config->startIndex:K$lastRow" => "0.00"
+                    "L$config->startIndex:L$lastRow" => "0.00"
                 ));
 
                 $sheet = self::styleFooter($sheet, $config);

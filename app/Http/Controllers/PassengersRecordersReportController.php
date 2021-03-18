@@ -106,6 +106,8 @@ class PassengersRecordersReportController extends Controller
             return $dr->vehicle->number;
         });
 
+        $totalVehicles = $allDispatchRegisters->pluck('vehicle');
+
         $reports = collect([]);
 
         $dateRange = collect($dateRange);
@@ -189,6 +191,7 @@ class PassengersRecordersReportController extends Controller
                                     'totalAllBySensor' => $r->sum('totalAllBySensor'),
                                     'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
                                     'issues' => $r->pluck('issues')->collapse(),
+                                    'totalVehicles' => $r->pluck('vehicleId')->unique()->count(),
                                     'roundTrips' => $r->sum('roundTrips'),
                                     'mileage' => $mileage,
                                     'programmedMileage' => $programmedMileage,
@@ -231,6 +234,7 @@ class PassengersRecordersReportController extends Controller
                                 'totalAllBySensor' => $r->sum('totalAllBySensor'),
                                 'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
                                 'issues' => $r->pluck('issues')->collapse(),
+                                'totalVehicles' => $r->pluck('vehicleId')->unique()->count(),
                                 'roundTrips' => $r->sum('roundTrips'),
                                 'mileage' => $mileage,
                                 'programmedMileage' => $programmedMileage,
@@ -274,6 +278,7 @@ class PassengersRecordersReportController extends Controller
                             'totalAllBySensor' => $r->sum('totalAllBySensor'),
                             'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
                             'issues' => $r->pluck('issues')->collapse(),
+                            'totalVehicles' => $r->pluck('vehicleId')->unique()->count(),
                             'roundTrips' => $r->sum('roundTrips'),
                             'mileage' => $mileage,
                             'programmedMileage' => $programmedMileage,
@@ -303,6 +308,7 @@ class PassengersRecordersReportController extends Controller
                     'totalAllBySensor' => 0,
                     'totalBySensorRecorder' => 0,
                     'issues' => collect([]),
+                    'totalVehicles' => 0,
                     'roundTrips' => 0,
                     'mileage' => 0,
                     'programmedMileage' => 0,
@@ -345,6 +351,7 @@ class PassengersRecordersReportController extends Controller
                             'totalAllBySensor' => $rd->sum('totalAllBySensor'),
                             'totalBySensorRecorder' => $rd->sum('totalBySensorRecorder'),
                             'issues' => $rd->pluck('issues')->collapse(),
+                            'totalVehicles' => $rd->sum('totalVehicles'),
                             'roundTrips' => $rd->sum('roundTrips'),
                             'mileage' => $mileage,
                             'programmedMileage' => $programmedMileage,
@@ -374,6 +381,7 @@ class PassengersRecordersReportController extends Controller
 
         $IPK = $reports->sum('mileage') > 0 ? $reports->sum('totalByRecorder') / $reports->sum('mileage') : 0;
 
+
         return (object)[
             'route' => $route,
             'routeReport' => $route ? $route->id : 'all',
@@ -390,6 +398,7 @@ class PassengersRecordersReportController extends Controller
             'totalAllBySensor' => $reports->sum('totalAllBySensor'),
             'totalRecorder' => $reports->sum('totalByRecorder'),
             'totalSensorRecorder' => $reports->sum('totalBySensorRecorder'),
+            'totalVehicles' => $totalVehicles->unique('id')->count(),
             'totalRoundTrips' => $reports->sum('roundTrips'),
             'totalMileage' => $reports->sum('mileage'),
             'totalProgrammedMileage' => $reports->sum('programmedMileage'),
@@ -496,12 +505,13 @@ class PassengersRecordersReportController extends Controller
                 __('Route') => $report->routeProcessed,                     # C CELL
                 __('Vehicle') => $report->vehicleProcessed,                 # D CELL
                 __('Driver') => $report->driverProcessed,                   # E CELL
-                __('Total round trips') => $report->roundTrips,             # F CELL
-                __('Mileage round trips') => $report->mileage,              # G CELL
-                __('Mileage programmed') => $report->programmedMileage,     # H CELL
-                __('Difference mileage') => $report->differenceMileage,     # I CELL
-                __('Recorder') => $report->totalByRecorder,                 # J CELL
-                __('IPK') => $report->IPK,                                  # K CELL
+                __('Total vehicles') => $report->totalVehicles,             # F CELL
+                __('Total round trips') => $report->roundTrips,             # G CELL
+                __('Mileage round trips') => $report->mileage,              # H CELL
+                __('Mileage programmed') => $report->programmedMileage,     # I CELL
+                __('Difference mileage') => $report->differenceMileage,     # J CELL
+                __('Recorder') => $report->totalByRecorder,                 # K CELL
+                __('IPK') => $report->IPK,                                  # L CELL
             ]);
 //            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
             $dataExcel[] = $data->toArray();
@@ -516,6 +526,8 @@ class PassengersRecordersReportController extends Controller
             'subTitle' => str_limit(__("Passengers per dates"), 28),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
+        ], [
+            'totalVehicles' => $passengerReport->totalVehicles
         ]);
     }
 

@@ -119,7 +119,7 @@ class RouteTaking extends Model
 
     public function getTotalProductionAttribute()
     {
-        return $this->dispatchRegister->complete() ? intval($this->attributes['total_production']) : 0;
+        return $this->dispatchRegister && $this->dispatchRegister->complete() ? intval($this->attributes['total_production']) : 0;
     }
 
     public function getPassengersAdvanceAttribute()
