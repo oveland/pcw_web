@@ -93,7 +93,7 @@ class MigrationControlPointController extends Controller
         foreach ($coordinates as $coordinate) {
             $coordinate = (object)$coordinate;
             if ($request->get('with-extras')) $content .= "$coordinate->index > $coordinate->latitude, $coordinate->longitude > $coordinate->distance\n";
-            else $content .= "$coordinate->latitude, $coordinate->longitude\n";
+            else $content .= "          $coordinate->longitude,$coordinate->latitude,0\n";
 
         }
 

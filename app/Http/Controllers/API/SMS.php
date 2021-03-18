@@ -76,6 +76,7 @@ class SMS
         $result = json_decode((file_get_contents($url, false, $context)), true);
 
         return $result;
+        return (object)['status' => false];
     }
 
     public static function sendResetCommandToVehicle($vehicle)
