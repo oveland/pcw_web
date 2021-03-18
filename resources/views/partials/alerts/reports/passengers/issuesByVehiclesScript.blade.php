@@ -30,11 +30,14 @@
                 var id = el.data('id');
                 var field = el.data('field');
                 var value = el.data('value');
+                var confirm = el.data('confirm');
 
-                var confirm = window.confirm(`Confirm edit id = ${id}: field ${field} = ${value}.`);
+                var confirm = window.confirm(confirm ? confirm : `Confirm edit id = ${id}: field ${field} = ${value}.`);
 
                 if (confirm) {
-                    editFieldDr(url, id);
+                    editFieldDr(url, id, null, null, function () {
+                        $('.btn-search-report').click();
+                    });
                 }
             });
         });

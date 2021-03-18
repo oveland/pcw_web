@@ -339,6 +339,7 @@
 
                         <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
                                 data-original-title="@lang('Cancel turn')" data-placement="bottom"
+                                data-confirm="@lang('Confirm action for discard dispatch turn')"
                                 data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}" data-id="{{ $dispatchRegister->id }}">
                             <i class="fa fa-times faa-shake"></i>
                         </button>
