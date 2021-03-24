@@ -29,8 +29,24 @@
                             <th class="text-center"><i class="fa fa-car" aria-hidden="true"></i><br>@lang('Vehicle')</th>
                             <th class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i><br>@lang('Type')</th>
                             <th class="text-center"><i class="icon-bag" aria-hidden="true"></i><br>@lang('Observations')</th>
-                            <th class="text-center"><i class="fa fa-calendar" aria-hidden="true"></i><br>@lang('Expiration date')</th>
-                            <th class="text-center"><i class="fa fa-calendar" aria-hidden="true"></i><br>@lang('Notification date')</th>
+                            <th class="text-center">
+                                <i class="fa fa-calendar" aria-hidden="true"></i> @lang('Expiration date')
+                            </th>
+                            <th class="text-center">
+                                <i class="fa fa-calendar" aria-hidden="true"></i> @lang('Notification date')
+                            </th>
+                            <th class="text-center">
+                                <i class="fa fa-road" aria-hidden="true"></i> @lang('Mileage')<br>
+                                <small class="text-muted">
+                                    @lang('Current') / @lang('Expiration')
+                                </small>
+                            </th>
+                            <th class="text-center">
+                                <i class="fa fa-road" aria-hidden="true"></i> @lang('Notification mileage')<br>
+                                <small class="text-muted">
+                                    @lang('Current') / @lang('Notification')
+                                </small>
+                            </th>
                             <th class="text-center"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-bell faa-ring animated" aria-hidden="true"></i><br>@lang('Notification users')</th>
                             <th class="text-center"><i class="fa fa-user" aria-hidden="true"></i><br>@lang('Created')</th>
                             <th class="text-center"><i class="fa fa-rocket" aria-hidden="true"></i><br>@lang('Actions')</th>
@@ -51,7 +67,8 @@
                                 @endphp
                                 <tr class="text-center">
                                     <th class="bg-inverse text-white">
-                                        {{ $vehicle->number }}
+                                        {{ $vehicle->number }}<br>
+                                        <small class="text-muted">{{ $vehicle->plate }}</small>
                                     </th>
                                     <td class="text-left">
                                         <label class="label-type tooltips" data-title="{{ $type->description }}">
@@ -59,8 +76,22 @@
                                         </label>
                                     </td>
                                     <td class="binnacle-observations text-left">{{ $binnacle->observations }}</td>
-                                    <td>{{ $binnacle->date->toDateString() }}</td>
-                                    <td>{{ $notification ? $notification->date->toDateString() : $binnacle->date->toDateString() }}</td>
+                                    <td>
+                                        @if($binnacle->date)
+                                            {{ $binnacle->date->toDateString() }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($notification && $notification->date)
+                                            {{ $notification->date->toDateString() }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ $binnacle->mileage ? number_format($binnacle->getMileageTraveled(), 1)." Km /" : '' }} {{ $binnacle->mileage ? "$binnacle->mileage Km" : '' }}
+                                    </td>
+                                    <td>
+                                        {{ $binnacle->mileage ? number_format($binnacle->getMileageTraveled(), 1)." Km /" : '' }} {{ $notification->mileage ? "$notification->mileage Km" : '' }}
+                                    </td>
                                     <td class="text-left">
                                         @foreach($notificationUsers as $notificationUser)
                                             @php

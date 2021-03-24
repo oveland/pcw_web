@@ -9,6 +9,7 @@ jQuery.fn.extend({
         showAlert = showAlert === undefined ? true : showAlert;
         var isValid = true;
         var el = $(this);
+        $(el).find('label').css('color', 'unset');
         $(el).find('.field-required:visible').each(function (i, e) {
             var labelFor = $(e).attr('for');
             if (labelFor) {
@@ -87,7 +88,7 @@ function input_validate(element_id, text_validate) {
     var elementValue = $("#" + element_id).val();
     if (elementValue == undefined) elementValue = $('input[name="' + element_id + '"]').val();
     if (is_not_null(elementValue)) {
-        $("label[for='" + element_id + "']").css('color', '');
+        $("label[for='" + element_id + "']").css('color', 'unset');
         return true;
     }
     else {
@@ -111,7 +112,7 @@ function input_validate_parent(parent, element_id, text_validate) {
     if (elementValue == undefined) elementValue = $(parent).find('input[name="' + element_id + '"]').val();
 
     if (is_not_null(elementValue)) {
-        $("label[for='" + element_id + "']").css('color', '');
+        $("label[for='" + element_id + "']").css('color', 'unset');
         return true;
     }
     else {
@@ -124,12 +125,12 @@ function input_validate_parent(parent, element_id, text_validate) {
 function is_valid(element) {
     var id = $(element).attr('id');
     if (id == undefined) id = $(element).attr('name');
-    $("label[for='" + id + "']").css('color', '').html(labelsForValidation[id + 'Label']);
+    $("label[for='" + id + "']").css('color', 'unset').html(labelsForValidation[id + 'Label']);
 }
 
 //b.1).Función para resstablecer el label de un elemento a su estado inicial con implementación en a.3)
 function is_valid_parent(parent, element) {
     var id = $(parent).find(element).attr('id');
     if (id == undefined) id = $(parent).find(element).attr('name');
-    $("label[for='" + id + "']").css('color', '').html(labelsForValidation[id + 'Label']);
+    $("label[for='" + id + "']").css('color', 'unset').html(labelsForValidation[id + 'Label']);
 }

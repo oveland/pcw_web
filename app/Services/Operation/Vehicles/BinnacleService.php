@@ -32,8 +32,8 @@ class BinnacleService
      */
     public function process(Binnacle $binnacle = null, Request $request)
     {
-        $action = $binnacle ? 'updated' : 'created';
-        $update = !!$binnacle;
+        $action = 'updated';
+        $update = true;
 
         $response = collect([
             'success' => true,
@@ -45,9 +45,21 @@ class BinnacleService
 
         DB::beginTransaction();
 
-        $binnacle = $binnacle ? $binnacle : new Binnacle();
+        if (!$binnacle) {
+            $binnacle = new Binnacle();
+
+            $currentLocation = $vehicle->currentLocation;
+
+            $binnacle->mileageOdometer = $currentLocation->odometer;
+            $binnacle->mileageRoute = $currentLocation->mileage_route;
+
+            $action = 'created';
+            $update = false;
+        }
+
         $binnacle = $binnacle->fill([
             'date' => $request->get('date'),
+            'mileage' => $request->get('mileage'),
             'observations' => $request->get('observations')
         ]);
 
@@ -55,18 +67,22 @@ class BinnacleService
         $binnacle->user()->associate(Auth::user());
         $binnacle->type()->associate($type);
 
+
         if (!$binnacle->save()) {
             $response->put('success', false);
             $response->put('message', __("Binnacle register not $action"));
         } else {
             $notificationData = [
                 'date' => $request->get('notification-date'),
+                'mileage' => $request->get('notification-mileage'),
                 'period' => $request->get('notification-period'),
                 'day_of_month' => $request->get('day_of_month'),
                 'day_of_week' => $request->get('day_of_week')
             ];
 
-            if (!$binnacle->notification()->save($update ? $binnacle->notification->fill($notificationData) : new Notification($notificationData))) {
+            $notification = $update ? $binnacle->notification->fill($notificationData) : new Notification($notificationData);
+
+            if (!$binnacle->notification()->save($notification)) {
                 $response->put('success', false);
                 $response->put('message', __("Binnacle notification not $action"));
             } else {
@@ -137,17 +153,18 @@ class BinnacleService
      */
     public function currentNotifications(Company $company = null)
     {
+        $notifications = Notification::with(['binnacle', 'notificationUsers'])->where(function ($query) {
+            $query->whereDate('date', Carbon::now())->orWhere('mileage', '>', 0);
+        })->get();
 
-        $now = Carbon::now();
+        $notifications = $notifications->filter(function (Notification $n) use ($company) {
+            $binnacle = $n->binnacle;
 
-        $notifications = Notification::with(['binnacle', 'notificationUsers'])->whereDate('date', $now)->get();
+            $companyNotifications = $company ? $company->vehicles->contains($binnacle->vehicle->id) : true;
+            $notificationsByMileage = $binnacle->mileage && !$binnacle->notification->date ? $binnacle->isNotifiableByMileage() : true;
 
-        if ($company) {
-            $vehicles = $company->vehicles->pluck('id');
-            $notifications = $notifications->filter(function (Notification $n) use ($vehicles) {
-                return $vehicles->contains($n->binnacle->vehicle->id);
-            });
-        }
+            return $companyNotifications && $notificationsByMileage;
+        });
 
         return $notifications->sortBy('date');
     }
@@ -165,8 +182,9 @@ class BinnacleService
     {
         $vehicles = ($vehicleReport == 'all') ? $company->vehicles : $company->vehicles()->where('id', $vehicleReport)->get();
 
-        $binnacles = Binnacle::whereIn('vehicle_id', $vehicles->pluck('id'));
-        $binnacles = $binnacles->whereBetween('date', ["$dateReport 00:00:00", "$dateEndReport 23:59:59"])->get()->sortBy('date', 0, $sortDescending);
+        $binnacles = Binnacle::whereIn('vehicle_id', $vehicles->pluck('id'))->where(function ($query) use ($dateReport, $dateEndReport) {
+            $query->whereBetween('date', ["$dateReport 00:00:00", "$dateEndReport 23:59:59"])->orWhere('mileage', '>', 0);
+        })->get();
 
         return (object)[
             'company' => $company,
@@ -174,7 +192,7 @@ class BinnacleService
             'dateReport' => $dateReport,
             'withEndDate' => $withEndDate,
             'dateEndReport' => $dateEndReport,
-            'binnacles' => $binnacles,
+            'binnacles' => $binnacles->sortBy('date', 0, $sortDescending),
             'isNotEmpty' => $binnacles->isNotEmpty(),
             'sortDescending' => $sortDescending,
         ];

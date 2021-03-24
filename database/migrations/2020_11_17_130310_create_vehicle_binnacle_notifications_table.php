@@ -16,7 +16,7 @@ class CreateVehicleBinnacleNotificationsTable extends Migration
         Schema::create('vehicle_binnacle_notifications', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('binnacle_id');
-            $table->timestamp('date');
+            $table->timestamp('date')->nullable();
             $table->integer('period')->default(0)->nullable();
             $table->integer('day_of_month')->default(0)->nullable();
             $table->integer('day_of_week')->default(0)->nullable();

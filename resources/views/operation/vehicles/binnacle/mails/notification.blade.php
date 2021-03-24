@@ -27,6 +27,9 @@
                         <th bgcolor="#00283b" style="padding: 10px 0 10px 0;text-align: center; vertical-align: middle;color: #d0d0d0"><i class="icon-bag" aria-hidden="true"></i>@lang('Observations')</th>
                         <th bgcolor="#00283b" style="padding: 10px 0 10px 0;text-align: center; vertical-align: middle;color: #d0d0d0"><i class="fa fa-calendar" aria-hidden="true"></i>@lang('Expiration date')</th>
                         <th bgcolor="#00283b" style="padding: 10px 0 10px 0;text-align: center; vertical-align: middle;color: #d0d0d0"><i class="fa fa-calendar" aria-hidden="true"></i>@lang('Notification date')</th>
+                        <th bgcolor="#00283b" style="padding: 10px 0 10px 0;text-align: center; vertical-align: middle;color: #d0d0d0"><i class="fa fa-calendar" aria-hidden="true"></i>@lang('Expiration mileage')</th>
+                        <th bgcolor="#00283b" style="padding: 10px 0 10px 0;text-align: center; vertical-align: middle;color: #d0d0d0"><i class="fa fa-calendar" aria-hidden="true"></i>@lang('Notification mileage')</th>
+                        <th bgcolor="#00283b" style="padding: 10px 0 10px 0;text-align: center; vertical-align: middle;color: #d0d0d0"><i class="fa fa-calendar" aria-hidden="true"></i>@lang('Mileage traveled')</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -48,8 +51,17 @@
                                     <label class="label label-{{ $type->css_class }} tooltips" data-title="{{ $type->description }}">{{ $type->name }}</label>
                                 </td>
                                 <td style="padding: 10px;text-align: left; vertical-align: middle">{{ $binnacle->observations }}</td>
-                                <td>{{ $binnacle->date->toDateString() }}</td>
-                                <td>{{ $notification ? $notification->date->toDateString() : $binnacle->date->toDateString() }}</td>
+                                <td>{{ $binnacle->date ? $binnacle->date->toDateString() : '' }}</td>
+                                <td>{{ $notification && $notification->date ? $notification->date->toDateString() : '' }}</td>
+                                <td>
+                                    {{ $binnacle->mileage ? "$binnacle->mileage Km" : '' }}
+                                </td>
+                                <td>
+                                    {{ $notification->mileage ? "$notification->mileage Km" : '' }}
+                                </td>
+                                <td>
+                                    {{ $binnacle->mileage ? number_format($binnacle->getMileageTraveled(), 1)." Km" : '' }}
+                                </td>
                             </tr>
                         @endforeach
                     @endforeach

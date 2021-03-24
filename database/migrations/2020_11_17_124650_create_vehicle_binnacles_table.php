@@ -15,7 +15,7 @@ class CreateVehicleBinnaclesTable extends Migration
     {
         Schema::create('vehicle_binnacles', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('date')->useCurrent();
+            $table->timestamp('date')->nullable()->useCurrent();
             $table->integer('type_id');
             $table->bigInteger('vehicle_id');
             $table->bigInteger('user_id');
