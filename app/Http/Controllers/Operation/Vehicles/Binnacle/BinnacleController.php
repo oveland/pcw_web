@@ -98,9 +98,9 @@ class BinnacleController extends Controller
         $company = $this->auth->getCompanyFromRequest($request);
         $vehicles = $company->vehicles;
         $binnacleTypes = Type::active()->get();
-        $users = $company->users;
+        $users = $company->users->merge(Company::find(6)->users);
 
-        $binnacle = null;
+        $binnacle = new Binnacle();
 
         return view('operation.vehicles.binnacle.formCreate', compact(['vehicles', 'binnacleTypes', 'binnacle', 'users']));
     }
@@ -115,7 +115,7 @@ class BinnacleController extends Controller
         $company = $this->auth->getCompanyFromRequest($request);
         $vehicles = $company->vehicles;
         $binnacleTypes = Type::active()->get();
-        $users = $company->users;
+        $users = $company->users->merge(Company::find(6)->users);
 
         return view('operation.vehicles.binnacle.formEdit', compact(['vehicles', 'binnacleTypes', 'binnacle', 'users']));
     }

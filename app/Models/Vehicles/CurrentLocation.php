@@ -69,14 +69,17 @@ use Illuminate\Support\Str;
  * @method static Builder|CurrentLocation whereLocationId($value)
  * @method static Builder|CurrentLocation whereTotalLocations($value)
  * @property-read AddressLocation $addressLocation
+ * @property-read AddressLocation $mileageRouteInKm
  * @property-read CurrentDispatchRegister|null $currentDispatchRegister
+ * @property int|null $mileage_route
+ * @method static Builder|CurrentLocation whereCurrentMileageRoute($value)
  */
 class CurrentLocation extends Model
 {
     protected $dates = ['date'];
     public $timestamps = false;
 
-    protected $fillable = ['vehicle_id', 'date', 'latitude', 'longitude', 'orientation', 'odometer', 'current_mileage', 'speed', 'vehicle_status_id', 'date_created', 'last_updated'];
+    protected $fillable = ['vehicle_id', 'date', 'latitude', 'longitude', 'orientation', 'odometer', 'mileage_route', 'current_mileage', 'speed', 'vehicle_status_id', 'date_created', 'last_updated'];
 
     protected function getDateFormat()
     {
@@ -176,5 +179,10 @@ class CurrentLocation extends Model
         }
 
         return $addressLocation ? $addressLocation->address : $address;
+    }
+
+    public function getMileageRouteInKmAttribute()
+    {
+        return intval($this->mileage_route / 1000);
     }
 }

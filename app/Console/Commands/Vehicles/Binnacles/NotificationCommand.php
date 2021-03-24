@@ -61,7 +61,7 @@ class NotificationCommand extends Command
                 $mail = new NotificationMail($binnacles);
                 $mailTo = $user->email;
 
-//                $mailTo = 'oiva.pcw@gmail.com';
+                $mailTo = 'oiva.pcw@gmail.com';
 
                 $rta = Mail::to($mailTo)->send($mail);
             }

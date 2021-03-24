@@ -754,5 +754,11 @@
   "Advance": "Anticipo",
   "Balance": "CxC",
   "Cancel turn": "Cancelar turno",
-  "Confirm action for discard dispatch turn": "Confirme la acción para descartar el turno"
+  "Confirm action for discard dispatch turn": "Confirme la acción para descartar el turno",
+  "Expiration mileage": "Kilometraje vencimiento",
+  "Notification mileage": "Kilometraje para notificación",
+  "Current mileage": "Kilometraje actual",
+  "Expiration": "Vencimiento",
+  "Current": "Actual",
+  "Mileage traveled": "Kilometraje recorrido"
 }

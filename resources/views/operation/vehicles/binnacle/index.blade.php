@@ -124,7 +124,7 @@
         <div class="main-container col-md-12"></div>
         <!-- end content operation -->
 
-        <div class="modal fade" id="modal-binnacle-create" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-create') }}">
+        <div class="modal fade modal-binnacle" id="modal-binnacle-create" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-create') }}">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header p-20">
@@ -140,7 +140,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal-binnacle-edit" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-edit', ['binnacle' => 'ID']) }}">
+        <div class="modal fade modal-binnacle" id="modal-binnacle-edit" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-edit', ['binnacle' => 'ID']) }}">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header p-20">
@@ -156,7 +156,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal-binnacle-delete" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-delete', ['binnacle' => 'ID']) }}">
+        <div class="modal fade modal-binnacle" id="modal-binnacle-delete" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-delete', ['binnacle' => 'ID']) }}">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header p-20">
@@ -236,6 +236,8 @@
         });
 
         function loadBinnacleFormCreate(){
+            $('.modal-binnacle').find('.modal-body').empty();
+
             modalBinnacleCreate.find('.modal-body').load(modalBinnacleCreate.data('url'), {
                 company: $('#company-report').val()
             });
@@ -243,6 +245,8 @@
         }
 
         function loadBinnacleFormEdit(id){
+            $('.modal-binnacle').find('.modal-body').empty();
+
             const url = modalBinnacleEdit.data('url').toString();
             modalBinnacleEdit.find('.modal-body').load(url.replace('ID', id), {
                 company: $('#company-report').val()
@@ -251,6 +255,8 @@
         }
 
         function loadBinnacleFormDelete(id){
+            $('.modal-binnacle').find('.modal-body').empty();
+
             const url = modalBinnacleDelete.data('url').toString();
             modalBinnacleDelete.find('.modal-body').load(url.replace('ID', id), {});
             modalBinnacleDelete.modal('show');

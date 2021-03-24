@@ -3,6 +3,8 @@
 namespace App\Models\Vehicles\Binnacles;
 
 use App\Models\Users\User;
+use App\Models\Vehicles\CurrentLocation;
+use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Eloquent;
@@ -33,13 +35,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Type $type
  * @property-read User $user
  * @property-read Vehicle $vehicle
- * @property-read \App\Models\Vehicles\Binnacles\Notification $notification
+ * @property-read Notification $notification
+ * @property int|null $mileage
+ * @method static Builder|Binnacle whereMileage($value)
+ * @property int|null $mileageOdometer
+ * @property int|null $mileageRoute
+ * @method static Builder|Binnacle whereMileageOdometer($value)
+ * @method static Builder|Binnacle whereMileageRoute($value)
+ * @property-read mixed $mileage_traveled_odometer
+ * @property-read mixed $mileage_traveled_route
  */
 class Binnacle extends Model
 {
     protected $table = 'vehicle_binnacles';
 
-    protected $fillable = ['date', 'type_id', 'vehicle_id', 'user_id', 'observations'];
+    protected $fillable = ['date', 'type_id', 'vehicle_id', 'user_id', 'observations', 'mileage'];
 
     protected function getDateFormat()
     {
@@ -53,6 +63,7 @@ class Binnacle extends Model
 
     public function getDateAttribute($date)
     {
+        if (!$date) return null;
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
@@ -72,6 +83,25 @@ class Binnacle extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
+    public function getMileageTraveled()
+    {
+        return $this->mileage_traveled_route;
+    }
+
+    public function getMileageTraveledOdometerAttribute()
+    {
+        $currentLocation = $this->vehicle->currentLocation;
+
+        return ($currentLocation->odometer - $this->mileageOdometer) / 1000;
+    }
+
+    public function getMileageTraveledRouteAttribute()
+    {
+        $currentLocation = $this->vehicle->currentLocation;
+
+        return ($currentLocation->mileage_route - $this->mileageRoute) / 1000;
+    }
+
     /**
      * @return BelongsTo | User
      */
@@ -83,5 +113,10 @@ class Binnacle extends Model
     public function notification()
     {
         return $this->hasOne(Notification::class, 'binnacle_id', 'id');
+    }
+
+    public function isNotifiableByMileage()
+    {
+        return $this->mileage && $this->getMileageTraveled() >= $this->notification->mileage;
     }
 }

@@ -32,12 +32,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|Notification whereUpdatedAt($value)
  * @property-read Binnacle $binnacle
  * @property-read Collection|NotificationUser[] $notificationUsers
+ * @property int|null $mileage
+ * @method static Builder|Notification whereMileage($value)
  */
 class Notification extends Model
 {
     protected $table = 'vehicle_binnacle_notifications';
 
-    protected $fillable = ['binnacle_id', 'date', 'period', 'day_of_month', 'day_of_week'];
+    protected $fillable = ['binnacle_id', 'date', 'period', 'day_of_month', 'day_of_week', 'mileage'];
 
     protected function getDateFormat()
     {
@@ -46,6 +48,7 @@ class Notification extends Model
 
     public function getDateAttribute($date)
     {
+        if(!$date) return null;
         return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0]);
     }
 
