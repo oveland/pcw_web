@@ -307,7 +307,7 @@
             <td width="15%" class="text-center">
                 @if( Auth::user()->canMakeTakings() )
                 <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal" onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
-                   class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips"
+                   class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"
                    data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')" data-html="true">
                     <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
                     <i class="fa fa-dollar faa-vertical" style="margin-right: 0px; margin-left: 0"></i>
@@ -333,17 +333,20 @@
                         <a href="#modal-report-log"
                            data-toggle="modal" data-placement="bottom"
                            onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
-                           class="btn btn-xs btn-danger faa-parent animated-hover tooltips btn-circle" data-original-title="@lang('Show report details')">
+                           class="btn btn-xs btn-info faa-parent animated-hover tooltips btn-circle" data-original-title="@lang('Show report details')">
                             <i class="fa fa-code faa-pulse"></i>
                         </a>
+
+                        <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
+                                data-original-title="@lang('Cancel turn')" data-placement="bottom"
+                                data-confirm="@lang('Confirm action for discard dispatch turn')"
+                                data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}" data-id="{{ $dispatchRegister->id }}">
+                            <i class="fa fa-times faa-shake"></i>
+                        </button>
                     @endif
 
                     @if( Auth::user()->isSuperAdmin() )
-                        @php
-                            $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
-                            $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total;
-                        @endphp
-                        <small class="badge tooltips" data-original-title="@lang('Locations') / @lang('Reports')" data-placement="bottom">{!! $totalLocations !!} / {!! $totalReports !!}</small>
+                        <small class="badge tooltips" data-original-title="@lang('Locations') / @lang('Reports')" data-placement="bottom">{!! $dispatchRegister->locations()->count() !!} / {!! $dispatchRegister->reports()->count() !!}</small>
                     @endif
                 </div>
             </td>

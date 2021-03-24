@@ -752,5 +752,7 @@
   "Forward": "Adelantar",
   "Total charge": "Total cargos",
   "Advance": "Anticipo",
-  "Balance": "CxC"
+  "Balance": "CxC",
+  "Cancel turn": "Cancelar turno",
+  "Confirm action for discard dispatch turn": "Confirme la acción para descartar el turno"
 }
