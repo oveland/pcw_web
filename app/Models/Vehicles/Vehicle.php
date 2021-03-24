@@ -121,8 +121,16 @@ class Vehicle extends Model
         return "$this->number <i class='fa fa-hand-o-right'></i> $this->plate";
     }
 
-    public function getAPIFields(CurrentLocation $currentLocation = null)
+    public function getAPIFields(CurrentLocation $currentLocation = null, $short = false)
     {
+        if ($short) {
+            return (object)[
+                'id' => $this->id,
+                'number' => $this->number,
+                'plate' => $this->plate
+            ];
+        }
+
         $currentLocation = $currentLocation ? $currentLocation : ($this->currentLocation ? $this->currentLocation : null);
         $vehicleStatus = $currentLocation ? $currentLocation->vehicleStatus : null;
 
@@ -217,7 +225,8 @@ class Vehicle extends Model
     /**
      * @return CurrentVehicleIssue | HasOne
      */
-    public function currentIssue(){
+    public function currentIssue()
+    {
         return $this->hasOne(CurrentVehicleIssue::class);
     }
 
@@ -229,7 +238,7 @@ class Vehicle extends Model
     {
         $currentIssue = $this->currentIssue;
 
-        if (!$currentIssue){
+        if (!$currentIssue) {
             $currentIssue = new CurrentVehicleIssue([
                 'vehicle_id' => $this->id,
             ]);

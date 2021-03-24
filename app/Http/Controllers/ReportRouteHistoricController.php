@@ -80,7 +80,7 @@ class ReportRouteHistoricController extends Controller
 
         $locations = Location::forDate($dateReport)->whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
             ->where('vehicle_id', $vehicleReport)
-            ->with(['vehicle', 'dispatchRegister', 'vehicleStatus', 'passenger', 'photo'])
+            ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.driver', 'vehicleStatus', 'passenger', 'photo'])
             ->orderBy('date');
         $locations = $locations->get();
 
@@ -269,8 +269,8 @@ class ReportRouteHistoricController extends Controller
                     'iconClass' => $location->vehicleStatus->icon_class,
                     'mainClass' => $location->vehicleStatus->main_class,
                 ],
-                'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields() : null,
-                'vehicle' => $location->vehicle->getAPIFields(),
+                'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getRouteFields() : null,
+                'vehicle' => $location->vehicle->getAPIFields(null, true),
                 'passengers' => (object)[
                     'total' => $totalPassengers,
                     'totalInRoundTrips' => $totalInRoundTrips,
@@ -310,7 +310,7 @@ class ReportRouteHistoricController extends Controller
             'dateReport' => $dateReport,
             'initialTime' => $initialTime,
             'finalTime' => $finalTime,
-            'vehicle' => $vehicle->getAPIFields(),
+            'vehicle' => $vehicle->getAPIFields(null, true),
             'historic' => $dataLocations,
             'total' => $totalLocations,
             'from' => $totalLocations ? $dataLocations->first()->time : '--:--',

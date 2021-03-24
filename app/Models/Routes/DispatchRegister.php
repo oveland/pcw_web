@@ -473,10 +473,26 @@ class DispatchRegister extends Model
         return !$this->onlyControlTakings();
     }
 
+    public function getRouteFields() {
+        $driver = $this->driver;
+        $driveName = $driver ? $driver->fullName() : __('Unassigned');
+        return (object) [
+            'id' => $this->id,
+            'turn' => $this->turn,
+            'roundTrip' => $this->round_trip,
+            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'driverName' => $driveName,
+            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+        ];
+    }
+
     public function getAPIFields($short = false)
     {
         $passengers = $this->passengers;
+//        $passengers = null;
+        
         $takings = $this->takings;
+//        $takings = null;
 
         if ($short) {
             return (object)[
@@ -536,8 +552,8 @@ class DispatchRegister extends Model
             'route_time' => $this->getRouteTime(),
             'routeTime' => $this->getRouteTime(),
 
-            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
-            'vehicle' => $this->vehicle->getAPIFields(),
+            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+            'vehicle' => $this->vehicle->getAPIFields(null, true),
             'vehicle_id' => $this->vehicle_id,
             'status' => $this->status,
 
@@ -748,19 +764,21 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensor()
     {
-        $tariffs = collect(\DB::select("
+        /*$tariffs = collect(\DB::select("
             SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
             FROM passengers
             WHERE dispatch_register_id = $this->id
             GROUP BY tariff
             ORDER BY tariff
-        "));
+        "));*/
+      
 
         $default = (object)[
             'tariff' => 0,
             'totalCounted' => 0,
             'totalCharge' => 0,
-        ];
+        ];  
+       $tariffs = collect([$default, $default]);
 
         return (object)[
             'start' => $this->initial_sensor_counter,
@@ -769,7 +787,7 @@ class DispatchRegister extends Model
             'mileage' => $this->mileage,
             'tariff' => (object)[
                 'a' => (object) ($tariffs->get(0) ? $tariffs->get(0) : $default),
-                'b' => (object) ($tariffs->get(1) ? $tariffs->get(1) : $default),
+                'b' => (object) ($tariffs->get(1) ? $tariffs->get(1) : $default),            
             ]
         ];
     }

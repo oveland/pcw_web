@@ -486,14 +486,14 @@
         createInfoWindow(r) {
             let infoDispatchRegister = '';
             let height = '200px';
-            if (r.dispatchRegister) {
-                let dr = r.dispatchRegister;
+            let dr = r.dispatchRegister;
+            if (dr) {
                 infoDispatchRegister = "" +
                     "<small class='text-bold'><i class='fa fa-flag text-muted'></i> @lang('Route'): " + dr.route.name + "</small><br>" +
-                    "<small class='text-bold'><i class='fa fa-retweet text-muted'></i> @lang('Round Trip'): " + dr.round_trip + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-retweet text-muted'></i> @lang('Round Trip'): " + dr.roundTrip + "</small><br>" +
                     "<small class='text-bold'><i class='fa fa-list-ol text-muted'></i> @lang('Turn'): " + dr.turn + "</small><br>" +
-                    "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> @lang('Dispatched'): " + dr.departure_time + "</small><br>" +
-                    "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): " + dr.driver_name + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> @lang('Dispatched'): " + dr.departureTime + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): " + dr.driverName + "</small><br>" +
                     "<hr class='hr'>";
 
                 let height = '250px';
