@@ -450,6 +450,8 @@ class PassengersRecordersReportController extends Controller
 
         $programmedMileage = $this->getProgrammedMileage($dispatchRegisters, $programmedRoundTrips, $firstRoute);
 
+        $totalVehicles = $dispatchRegisters->pluck('vehicle');
+
         if ($dispatchRegisters->count() || $includeEmptyValues) {
             $mileage = $recorder->mileage ?? 0;
             $totalRoundTrips = $recorder->totalRoundTrips ?? 0;
@@ -464,6 +466,7 @@ class PassengersRecordersReportController extends Controller
                 'totalAllBySensor' => $sensor->totalAllBySensor ?? 0,
                 'totalBySensorRecorder' => $sensor->totalBySensorRecorder ?? 0,
                 'issues' => collect($recorder ? $recorder->issues : []),
+                'totalVehicles' => $totalVehicles->unique('id')->count(),
                 'roundTrips' => $totalRoundTrips,
                 'mileage' => $mileage,
                 'programmedMileage' => $programmedMileage,
