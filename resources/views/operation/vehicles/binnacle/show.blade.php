@@ -87,10 +87,38 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $binnacle->mileage ? number_format($binnacle->getMileageTraveled(), 1)." Km /" : '' }} {{ $binnacle->mileage ? "$binnacle->mileage Km" : '' }}
+                                        <div class="text-left" style="display: inline-block">
+                                            @if($binnacle->mileage)
+                                                @if(Auth::user()->isSuperAdmin())
+                                                    <span class="tooltips" title="Km Route" data-placement="left">
+                                                        {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$binnacle->mileage Km" }}
+                                                    </span>
+                                                    <br>
+                                                    <small class="tooltips text-bold text-muted" title="Km Odometer" data-placement="left">
+                                                        {{ number_format($binnacle->getMileageTraveled(true), 1)." Km" }}
+                                                    </small>
+                                                @else
+                                                    {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$binnacle->mileage Km" }}
+                                                @endif
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>
-                                        {{ $binnacle->mileage ? number_format($binnacle->getMileageTraveled(), 1)." Km /" : '' }} {{ $notification->mileage ? "$notification->mileage Km" : '' }}
+                                        <div class="text-left" style="display: inline-block">
+                                            @if($binnacle->mileage && $notification->mileage)
+                                                @if(Auth::user()->isSuperAdmin())
+                                                    <span class="tooltips" title="Km Route" data-placement="left">
+                                                        {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$notification->mileage Km" }}
+                                                    </span>
+                                                    <br>
+                                                    <small class="tooltips text-bold text-muted" title="Km Odometer" data-placement="left">
+                                                        {{ number_format($binnacle->getMileageTraveled(true), 1)." Km" }}
+                                                    </small>
+                                                @else
+                                                    {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$notification->mileage Km" }}
+                                                @endif
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="text-left">
                                         @foreach($notificationUsers as $notificationUser)
