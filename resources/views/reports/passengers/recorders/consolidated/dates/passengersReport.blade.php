@@ -4,6 +4,42 @@
     $company = $passengerReport->company;
 @endphp
 @if(count($reports))
+    <style>
+        @media (min-width: 600px) {
+            .table {
+                position: relative !important;
+                background: white;
+                border: 1px  black !important;
+            }
+
+            .table th {
+                position: sticky !important;
+                position: -webkit-sticky !important;
+                z-index: 2 !important;
+                top: 46px !important; /* Don't forget this, required for the stickiness */
+                box-shadow: -3px 6px 6px 1px rgba(0, 0, 0, 0.8);
+                border: 1px #2b3643 !important;
+            }
+
+            .table tfoot td {
+                position: sticky !important;
+                position: -webkit-sticky !important;
+                z-index: 2 !important;
+                bottom: 34px !important; /* Don't forget this, required for the stickiness */
+                box-shadow: -3px 6px 6px 1px rgba(0, 0, 0, 0.8);
+                background: #2b3643f7;
+                border: 1px #2b3643 !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .table-responsive-xs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+
+
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -56,7 +92,7 @@
                 </div>
             @endif
 
-            <div id="all-report-tab" class="table-responsive table-report tab-pane active fade in">
+            <div id="all-report-tab" class="table-responsive-xs table-report tab-pane active fade in">
                 <!-- begin table -->
                 <table class="table table-bordered table-striped table-hover table-valign-middle">
                     <thead>
@@ -78,6 +114,9 @@
                         </th>
                         <th class="text-center">
                             <i class="fa fa-car" aria-hidden="true"></i><br> @lang('Total') <br> @lang('vehicles')
+                        </th>
+                        <th class="text-center">
+                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i><br> @lang('Total') <br> @lang('days')
                         </th>
                         <th class="text-center">
                             <i class="fa fa-retweet" aria-hidden="true"></i><br> @lang('Total') <br> @lang('Round trips')
@@ -150,6 +189,7 @@
                             <td>{{ $report->routeProcessed }} </td>
                             <td class="">{{ $report->driverProcessed }} </td>
                             <td>{{ $report->totalVehicles }} </td>
+                            <td>{{ $report->totalDates }} </td>
                             <td>{{ $report->roundTrips }} </td>
                             <td>{{ number_format($report->mileage, 1) }} </td>
                             <td>{{ number_format($report->programmedMileage, 1) }} </td>
@@ -222,9 +262,14 @@
                         </tr>
                         @endif
                     @endforeach
+                    </tbody>
+                    <tfoot>
                     <tr class="inverse bg-inverse text-white">
                         <td colspan="5" class="text-right text-uppercase">@lang('Totals')</td>
                         <td class="text-center recorder">{{ $passengerReport->totalVehicles }}</td>
+                        <td class="text-center">
+                            {{ $passengerReport->totalDates }} {{ __(trans_choice('day|days', $passengerReport->totalDates))  }}
+                        </td>
                         <td class="text-center recorder">{{ $passengerReport->totalRoundTrips }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalMileage,1) }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalProgrammedMileage,1) }}</td>
@@ -245,7 +290,7 @@
                             <td class="text-center {{ $passengerReport->canLiquidate ? '' : 'hide' }}"></td>
                         @endif
                     </tr>
-                    </tbody>
+                    </tfoot>
                 </table>
                 <!-- end table -->
             </div>

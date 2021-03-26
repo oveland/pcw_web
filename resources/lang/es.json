@@ -760,5 +760,9 @@
   "Current mileage": "Kilometraje actual",
   "Expiration": "Vencimiento",
   "Current": "Actual",
-  "Mileage traveled": "Kilometraje recorrido"
+  "Mileage traveled": "Kilometraje recorrido",
+  "day|days": "día|días",
+  "days": "días",
+  "dates": "fechas",
+  "Total days": "Total días"
 }
