@@ -216,9 +216,11 @@ class OffRoadService
 
         $offRoadByDispatchRegisters = $offRoadMove->groupBy('dispatch_register_id');
 
+        $includeAll = $offRoadsByVehicle->first()->vehicle->company_id == Company::ALAMEDA;
+
         foreach ($offRoadByDispatchRegisters as $offRoadByDispatchRegister) {
 
-            if ($truncateTimeFromDispatchRegister || true) {
+            if ($truncateTimeFromDispatchRegister || !$includeAll) {
                 $dispatchRegister = $offRoadByDispatchRegister->first()->dispatchRegister;
                 if ($dispatchRegister) {
                     $date = $dispatchRegister->getParsedDate()->toDateString();
@@ -228,14 +230,17 @@ class OffRoadService
 
             // Detect off road event as first location with off road in more than 5 minutes
             foreach ($offRoadByDispatchRegister as $offRoad) {
-                if (!$lastOffRoad || $offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:02:00') {
+
+//                dump($offRoad->vehicle->number);
+
+                if (!$lastOffRoad || $offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:03:00') {
                     $firstOffRoadOnGroup = $offRoad;
                     $totalByGroup = 1;
                 } else if ($totalByGroup > 0) {
                     $totalByGroup++;
                 }
 
-                if ($totalByGroup > 3) {
+                if ($totalByGroup > 3 || ($includeAll && $totalByGroup >= 1)) {
                     if ($firstOffRoadOnGroup->isTrueOffRoad()) {
                         $offRoadsEvents->push($firstOffRoadOnGroup);
                     }
