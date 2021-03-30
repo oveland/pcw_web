@@ -130,7 +130,7 @@
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                 {{ $route->name }}
-                @if($dispatchRegister->hasValidOffRoad())
+                @if($dispatchRegister->hasValidOffRoad() && $offRoadPercent)
                     <br>
                     <div class="m-t-10">
                         <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
