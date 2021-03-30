@@ -70,7 +70,26 @@
                                     $driver = $dispatchRegister->driver;
                                 @endphp
                                 <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">
+                                        {{ $loop->iteration }}
+                                        <br>
+                                        @php
+                                            $offRoadPercent = $dispatchRegister->getOffRoadPercent();
+                                        @endphp
+                                        <div class="m-t-10">
+                                            <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
+                                                {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
+                                                @if(Auth::user()->isSuperAdmin())
+                                                    @php
+                                                        $invalidGPSPercent = $dispatchRegister->invalidGPSPercent();
+                                                    @endphp
+                                                    @if($invalidGPSPercent)
+                                                        • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
+                                                    @endif
+                                                @endif
+                                            </label>
+                                        </div>
+                                    </td>
                                     <td class="text-center">{{ $offRoad->date->toDatetimeString() }}</td>
                                     <td class="text-center">{{ $dispatchRegister->route->name }}</td>
                                     <td class="text-center">{{ $dispatchRegister->round_trip }}</td>

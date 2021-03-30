@@ -12,6 +12,7 @@ use App\Models\Vehicles\Location;
 use App\Models\Vehicles\ParkingReport;
 use App\Models\Vehicles\Speeding;
 use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleStatus;
 use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -699,12 +700,28 @@ class DispatchRegister extends Model
             ->with('user');
     }
 
+    public function hasValidOffRoad()
+    {
+        $offRoadPercent = $this->getOffRoadPercent();
+        $invalidGPSPercent = $this->invalidGPSPercent();
+
+        return $offRoadPercent < 2 && $invalidGPSPercent < 2 || $offRoadPercent >= 2;
+    }
+
     public function getOffRoadPercent()
     {
         $totalLocations = $this->locations()->count();
         $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
 
         return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0;
+    }
+
+    public function invalidGPSPercent()
+    {
+        $totalLocations = $this->locations()->count();
+        $totalInvalidGPS = $totalLocations ? $this->locations()->where('vehicle_status_id', VehicleStatus::WITHOUT_GPS_SIGNAL)->count() : 0;
+
+        return $totalInvalidGPS ? number_format(100 * $totalInvalidGPS / $totalLocations, 1, '.', '') : 0;
     }
 
     public function getRouteDistance($withFormat = false)

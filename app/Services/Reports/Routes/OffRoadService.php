@@ -89,7 +89,7 @@ class OffRoadService
 
         $allOffRoads = $allOffRoads->whereBetween('date', [$initialDate, $finalDate])
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-            ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.route'])
+            ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.route', 'dispatchRegister.driver'])
             ->orderBy('date');
 
         $allOffRoads = $allOffRoads->get();
@@ -200,11 +200,13 @@ class OffRoadService
         $offRoadsEvents = collect([]);
         if (!count($offRoadsByVehicle)) return $offRoadsEvents;
 
+        $includeAll = $offRoadsByVehicle->first()->vehicle->company_id == Company::ALAMEDA;
+
         // Filter locations with signification movement
         $lastOffRoad = null;
         $offRoadMove = collect([]);
         foreach ($offRoadsByVehicle as $offRoad) {
-            if ($lastOffRoad && Geolocation::getDistance($offRoad->latitude, $offRoad->longitude, $lastOffRoad->latitude, $lastOffRoad->longitude) > 10) {
+            if ($lastOffRoad && Geolocation::getDistance($offRoad->latitude, $offRoad->longitude, $lastOffRoad->latitude, $lastOffRoad->longitude) > 10 || (!$lastOffRoad && $includeAll)) {
                 $offRoadMove->push($offRoad);
             }
             $lastOffRoad = $offRoad;
@@ -216,38 +218,37 @@ class OffRoadService
 
         $offRoadByDispatchRegisters = $offRoadMove->groupBy('dispatch_register_id');
 
-        $includeAll = $offRoadsByVehicle->first()->vehicle->company_id == Company::ALAMEDA;
 
         foreach ($offRoadByDispatchRegisters as $offRoadByDispatchRegister) {
+            $dispatchRegister = $offRoadByDispatchRegister->first()->dispatchRegister;
 
-            if ($truncateTimeFromDispatchRegister || !$includeAll) {
-                $dispatchRegister = $offRoadByDispatchRegister->first()->dispatchRegister;
-                if ($dispatchRegister) {
+            if ($dispatchRegister && $dispatchRegister->hasValidOffRoad()) {
+                if ($truncateTimeFromDispatchRegister || !$includeAll) {
                     $date = $dispatchRegister->getParsedDate()->toDateString();
                     $offRoadByDispatchRegister = $offRoadByDispatchRegister->where('date', '<=', "$date $dispatchRegister->arrival_time_scheduled");
                 }
-            }
 
-            // Detect off road event as first location with off road in more than 5 minutes
-            foreach ($offRoadByDispatchRegister as $offRoad) {
+                // Detect off road event as first location with off road in more than 5 minutes
+                foreach ($offRoadByDispatchRegister as $offRoad) {
 
 //                dump($offRoad->vehicle->number);
 
-                if (!$lastOffRoad || $offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:03:00') {
-                    $firstOffRoadOnGroup = $offRoad;
-                    $totalByGroup = 1;
-                } else if ($totalByGroup > 0) {
-                    $totalByGroup++;
-                }
-
-                if ($totalByGroup > 3 || ($includeAll && $totalByGroup >= 1)) {
-                    if ($firstOffRoadOnGroup->isTrueOffRoad()) {
-                        $offRoadsEvents->push($firstOffRoadOnGroup);
+                    if (!$lastOffRoad || $offRoad->date->diff($lastOffRoad->date)->format('%H:%I:%S') > '00:03:00') {
+                        $firstOffRoadOnGroup = $offRoad;
+                        $totalByGroup = 1;
+                    } else if ($totalByGroup > 0) {
+                        $totalByGroup++;
                     }
-                    $totalByGroup = 0;
-                }
 
-                $lastOffRoad = $offRoad;
+                    if ($totalByGroup > 3 || ($includeAll && $totalByGroup >= 1)) {
+                        if ($firstOffRoadOnGroup->isTrueOffRoad()) {
+                            $offRoadsEvents->push($firstOffRoadOnGroup);
+                        }
+                        $totalByGroup = 0;
+                    }
+
+                    $lastOffRoad = $offRoad;
+                }
             }
         }
 

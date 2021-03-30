@@ -130,10 +130,19 @@
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
                 {{ $route->name }}
-                @if($offRoadPercent)
+                @if($dispatchRegister->hasValidOffRoad())
+                    <br>
                     <div class="m-t-10">
                         <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
                             {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
+                            @if(Auth::user()->isSuperAdmin())
+                                @php
+                                    $invalidGPSPercent = $dispatchRegister->invalidGPSPercent();
+                                @endphp
+                                @if($invalidGPSPercent)
+                                    • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
+                                @endif
+                            @endif
                         </label>
                     </div>
                 @endif
