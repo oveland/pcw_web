@@ -124,6 +124,9 @@ class Route extends Model
             return (object)[
                 'id' => $this->id,
                 'name' => $this->name,
+                'company' => (object)[
+                    'short_name' => $this->company->short_name
+                ],
             ];
         }
 
