@@ -73,6 +73,8 @@ use Illuminate\Support\Str;
  * @property-read CurrentDispatchRegister|null $currentDispatchRegister
  * @property int|null $mileage_route
  * @method static Builder|CurrentLocation whereCurrentMileageRoute($value)
+ * @property-read mixed $mileage_route_in_km
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\CurrentLocation whereMileageRoute($value)
  */
 class CurrentLocation extends Model
 {
