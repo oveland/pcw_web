@@ -14,6 +14,12 @@
         a.bg-warning:focus {
             background-color: #cb840c
         }
+
+        .car-ss {
+            position: absolute;
+            top: -10px;
+            right: -5px;
+        }
     </style>
 @endsection
 

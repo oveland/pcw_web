@@ -30,6 +30,12 @@
                                    data-original-title="{{ $vehicle->plate }}">
                                     <i class="fa fa-car f-s-8 pull-right icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
                                     <strong>{{ $vehicle->number }}</strong>
+
+                                    @if(Auth::user()->isSuperAdmin())
+                                        <span class="car-ss car-ss-percent-{{ $vehicleId }} hide">
+                                            <i class="fa fa-signal faa-flash animated"></i>
+                                        </span>
+                                    @endif
                                 </a>
                             </li>
                         @endforeach

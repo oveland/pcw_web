@@ -102,6 +102,8 @@
         $totalPassengersBySensor = 0;
         $totalPassengersBySensorTotal = 0;
         $totalPassengersBySensorRecorder = 0;
+
+        $maxInvalidGPSPercent = 0;
     @endphp
 
     @foreach( $dispatchRegisters as $dispatchRegister )
@@ -138,6 +140,9 @@
                             @if(Auth::user()->isSuperAdmin())
                                 @php
                                     $invalidGPSPercent = $dispatchRegister->invalidGPSPercent();
+                                    if($invalidGPSPercent > $maxInvalidGPSPercent) {
+                                        $maxInvalidGPSPercent = $invalidGPSPercent;
+                                    }
                                 @endphp
                                 @if($invalidGPSPercent)
                                     • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
@@ -364,11 +369,19 @@
             $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time;
         @endphp
 
-        @if($offRoadPercent)
-            <script>
+        <script>
+            @if($offRoadPercent)
                 $('.icon-car-{{$vehicle->id}}').removeClass('f-s-8').addClass('text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-passing animated');
-            </script>
-        @endif
+            @endif
+
+            @if($maxInvalidGPSPercent)
+                console.log(parseFloat('{{ $maxInvalidGPSPercent }}'));
+                if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
+                    $('.car-ss-percent-{{$vehicle->id}}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < 0.8 ? 'white': 'danger' }} faa-pulse animated');
+                }
+            @endif
+        </script>
+
     @endforeach
     @if($dispatchRegisters->count())
     <tr>
