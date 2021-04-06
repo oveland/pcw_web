@@ -171,7 +171,7 @@ Route::group(['middleware' => ['auth']], function () {
 
             /* Takings route report */
             Route::prefix(__('takings'))->group(function () {
-                Route::get('/', 'Reports\Routes\Takings\TakingsController@index')->name('reports.routes.takings');
+                Route::get('/', 'Reports\Routes\Takings\TakingsController@index')->name('reports.routes.takings.index');
                 Route::get(__('search'), 'Reports\Routes\Takings\TakingsController@search')->name('reports.routes.takings.search');
                 Route::get(__('export'), 'Reports\Routes\Takings\TakingsController@export')->name('reports.routes.takings.export');
 
@@ -491,7 +491,7 @@ Route::prefix(__('link'))->group(function () {
                 Route::get('/{user}', function (User $user){
                     Auth::login($user, true);
 
-                    return redirect(route('reports.routes.takings'))->with('hide-menu', true);
+                    return redirect(route('reports.routes.takings.index'))->with('hide-menu', true);
                 })->name('link.reports.routes.takings');
             });
         });
