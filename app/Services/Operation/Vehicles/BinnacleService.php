@@ -35,11 +35,6 @@ class BinnacleService
         $action = 'updated';
         $update = true;
 
-        $response = collect([
-            'success' => true,
-            'message' => __("Binnacle register $action successfully")
-        ]);
-
         $vehicle = Vehicle::find($request->get('vehicle'));
         $type = Type::find($request->get('type'));
 
@@ -56,6 +51,11 @@ class BinnacleService
             $action = 'created';
             $update = false;
         }
+
+        $response = collect([
+            'success' => true,
+            'message' => __("Binnacle register $action successfully")
+        ]);
 
         $binnacle = $binnacle->fill([
             'date' => $request->get('date'),
@@ -192,7 +192,7 @@ class BinnacleService
             'dateReport' => $dateReport,
             'withEndDate' => $withEndDate,
             'dateEndReport' => $dateEndReport,
-            'binnacles' => $binnacles->sortBy('date', 0, $sortDescending),
+            'binnacles' => $binnacles->sortBy('date', 0, $sortDescending)->sortBy('id'),
             'isNotEmpty' => $binnacles->isNotEmpty(),
             'sortDescending' => $sortDescending,
         ];

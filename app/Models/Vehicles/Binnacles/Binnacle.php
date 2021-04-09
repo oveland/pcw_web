@@ -83,12 +83,21 @@ class Binnacle extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function getMileageTraveled($withOdometer = false)
+    public function getMileageTraveled($type = 'greater')
     {
-        if ($withOdometer) {
-            return $this->mileage_traveled_odometer;
+        $mileageByOdometer = $this->mileage_traveled_odometer;
+        $mileageByRoute = $this->mileage_traveled_route;
+
+        switch ($type) {
+            case 'route':
+                return $mileageByRoute;
+                break;
+            case 'odometer':
+                return $mileageByOdometer;
+                break;
         }
-        return $this->mileage_traveled_route;
+        
+        return $mileageByOdometer > $mileageByRoute ? $mileageByOdometer : $mileageByRoute;
     }
 
     public function getMileageTraveledOdometerAttribute()
