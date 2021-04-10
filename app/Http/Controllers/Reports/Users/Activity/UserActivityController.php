@@ -62,7 +62,7 @@ class UserActivityController extends Controller
     {
         $logs = AccessLog::where('date', '=', Carbon::createFromFormat('Y-m-d', $date))->with('user')->orderBy('time', 'asc')->get();
 
-        $pdf = PDF::loadView('reports.users.activity.logins', ['logs' => $logs, 'date' => $date]);
+        $pdf = PDF::loadView('reports.users.activity.access', ['logs' => $logs, 'date' => $date]);
         $date = str_replace('-', '', $date);
         return $pdf->download("Reporte_Accesos_$date.pdf");
     }

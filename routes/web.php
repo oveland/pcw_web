@@ -337,7 +337,7 @@ Route::group(['middleware' => ['auth']], function () {
                 /* Routes for logs */
                 Route::get('/', 'Reports\Users\Activity\UserActivityController@index')->name('report.users.activity');
                 Route::get('/show', 'Reports\Users\Activity\UserActivityController@show')->name('report.users.activity.search');
-                Route::get('/export/logins/{date}', 'Reports\Users\Activity\UserActivityController@exportLogin')->name('report.users.activity.export.logins');
+                Route::get('/export/logins/{date}', 'Reports\Users\Activity\UserActivityController@exportLogins')->name('report.users.activity.export.logins');
             });
         });
 

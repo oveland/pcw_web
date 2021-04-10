@@ -36,7 +36,7 @@
                         <i class="fa fa-search"></i> @lang('Search')
                     </button>
 
-                    <button class="btn btn-danger btn-sm btn-search-report" onclick="downloadLogins()">
+                    <button type="button" class="btn btn-danger btn-sm btn-download-logins">
                         <i class="fa fa-file-pdf-o"></i> @lang('Download login report')
                     </button>
                 </div>
@@ -159,20 +159,22 @@
                         dec.slideDown();
                     }
                 });
+
+                $('.btn-download-logins').click(function (){
+                    downloadLogins();
+                });
             });
 
             function downloadLogins() {
-                if (form.isValid()) {
-                    const url = form.data('url-export-logins');
-                    const date = $('#date-report').val();
+                const url = form.data('url-export-logins');
+                const date = $('#date-report').val();
 
-                    form.find('.btn-search-report').addClass(loadingClass);
-                    setTimeout(function () {
-                        form.find('.btn-search-report').removeClass(loadingClass);
-                    }, 1000);
+                form.find('.btn-search-report').addClass(loadingClass);
+                setTimeout(function () {
+                    form.find('.btn-search-report').removeClass(loadingClass);
+                }, 1000);
 
-                    window.location.href = url + '/' + date;
-                }
+                window.location.href = url + '/' + date;
             }
         });
 
