@@ -77,7 +77,7 @@ class ActivityLogService
     {
         return ActivityLog::whereDateRangeAndUser($dateStart, $dateEnd, $user)
             ->where('route_name', '<>', 'null')
-            ->whereIn('user_id', $company->users)
+            ->whereIn('user_id', $company->users->pluck('id'))
             ->orderBy('created_at')
             ->get();
     }
