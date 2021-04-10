@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Routes\Route;
-use App\Services\Reports\Users\ActivityLogService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class Activity
+class SuperAdmin
 {
     /**
      * Handle an incoming request.
@@ -18,12 +17,11 @@ class Activity
      */
     public function handle(Request $request, Closure $next)
     {
-        $request->merge([
-            'request_id' => uniqid()
-        ]);
+        if (Auth::user()->isSuperAdmin()) {
+            return $next($request);
+        }
 
-        ActivityLogService::log($request);
-
-        return $next($request);
+        abort(403);
+        return null;
     }
 }

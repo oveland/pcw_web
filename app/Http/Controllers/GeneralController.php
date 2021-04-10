@@ -31,6 +31,18 @@ class GeneralController extends Controller
         return view('partials.selects.routes', compact(['routes', 'withAll', 'withNone', 'defaultKmzUrl']));
     }
 
+    public function loadSelectUsers(Request $request)
+    {
+        $users = collect([]);
+        $company = $this->getCompany($request);
+        $withAll = $request->get('withAll');
+        $withName = $request->get('withName');
+
+        if ($company) $users = $company->users->merge(Company::find(Company::PCW)->users);
+
+        return view('partials.selects.users', compact(['users', 'withAll', 'withName']));
+    }
+
     public function loadSelectControlPoints(Request $request)
     {
         $controlPoints = [];

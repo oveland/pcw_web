@@ -711,17 +711,17 @@ License: You must have a valid license purchased only from themeforest(the above
                         </li>
 
                         @if( Auth::user() && Auth::user()->isAdmin() )
-                            <li class="nav-item menu-logs">
+                            <li class="nav-item menu-reports-users">
                                 <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                     <i class="fa fa-user faa-vertical"></i>
                                     @lang('Users')
                                     <span class="arrow"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item menu-logs">
-                                        <a href="{{ route('report-user-access-log')  }}">
+                                    <li class="nav-item menu-reports-users-activity">
+                                        <a href="{{ route('report.users.activity')  }}">
                                             <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                            @lang('Access log')
+                                            @lang('Activity')
                                         </a>
                                     </li>
                                 </ul>

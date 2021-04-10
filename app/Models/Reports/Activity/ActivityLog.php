@@ -38,6 +38,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read User|null $user
  * @method static Builder|ActivityLog whereRouteName($value)
  * @method static Builder|ActivityLog whereUrl($value)
+ * @method static Builder|ActivityLog whereDateOrRange($dateStart, $dateEnd = null)
+ * @method static Builder|ActivityLog whereDateRangeAndUser($dateStart, $dateEnd = null, $user = null)
  */
 class ActivityLog extends Model
 {
@@ -49,5 +51,47 @@ class ActivityLog extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @param Builder | ActivityLog $query
+     * @param $dateStart
+     * @param null $dateEnd
+     * @param null $user
+     * @return ActivityLog|Builder
+     */
+    public function scopeWhereDateRangeAndUser($query, $dateStart, $dateEnd = null, $user = null)
+    {
+        return $query->whereDateOrRange($dateStart, $dateEnd)->whereUserId($user);
+    }
+
+    /**
+     * @param Builder | ActivityLog $query
+     * @param string $dateStart
+     * @param string | null $dateEnd
+     * @return ActivityLog | Builder
+     */
+    public function scopeWhereDateOrRange($query, string $dateStart, $dateEnd = null)
+    {
+        if ($dateEnd) {
+            $query = $query->whereBetween('created_at', [explode(' ', $dateStart)[0], explode(' ', $dateEnd)[0].' 23:59:59']);
+        } else {
+            $query = $query->whereDate('created_at', explode(' ', $dateStart)[0]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param Builder | ActivityLog $query
+     * @param null $userId
+     * @return ActivityLog | Builder
+     */
+    public function scopeWhereUserId($query, $userId = null)
+    {
+        if ($userId && $userId != 'all') {
+            $query = $query->where('user_id', $userId);
+        }
+        return $query;
     }
 }

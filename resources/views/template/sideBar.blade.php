@@ -357,7 +357,7 @@
                         </a>
                         <ul class="sub-menu">
                             <li class="has-sub menu-logs">
-                                <a href="{{ route('report-user-access-log')  }}">
+                                <a href="{{ route('report.users.activity')  }}">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i>
                                     @lang('Access log')
                                 </a>

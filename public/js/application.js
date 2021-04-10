@@ -151,7 +151,19 @@ function gerror(message) {
 }
 
 function hideSideBar() {
-    $('.menu-toggler.sidebar-toggler').click();
+    var body = $('body');
+    var sidebarMenu = $('.page-sidebar-menu');
+
+    body.addClass("page-sidebar-closed");
+    sidebarMenu.addClass("page-sidebar-menu-closed");
+    if (body.hasClass("page-sidebar-fixed")) {
+        sidebarMenu.trigger("mouseleave");
+    }
+    if ($.cookie) {
+        $.cookie('sidebar_closed', '1');
+    }
+
+    $(window).trigger('resize');
 }
 
 function fitHeight(cssSelector, min) {

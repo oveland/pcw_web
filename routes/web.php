@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
     /* Routes for general actions */
     Route::prefix(__('general'))->group(function () {
         Route::any('/load-select-routes', 'GeneralController@loadSelectRoutes')->name('general-load-select-routes');
+        Route::any('/load-select-users', 'GeneralController@loadSelectUsers')->name('general-load-select-users');
         Route::any('/load-select-control-points', 'GeneralController@loadSelectControlPoints')->name('general-load-select-control-points');
         Route::any('/load-select-fringes', 'GeneralController@loadSelectFringes')->name('general-load-select-fringes');
         Route::any('/load-select-drivers', 'GeneralController@loadSelectDrivers')->name('general-load-select-drivers');
@@ -332,10 +333,11 @@ Route::group(['middleware' => ['auth']], function () {
 
         /* Access log report */
         Route::prefix(__('users'))->group(function () {
-            Route::prefix(__('access-log'))->group(function () {
+            Route::prefix(__('activity'))->group(function () {
                 /* Routes for logs */
-                Route::get('/', 'AccessLogController@index')->name('report-user-access-log');
-                Route::get('/{date}', 'AccessLogController@report')->name('report-user-access-log-export');
+                Route::get('/', 'Reports\Users\Activity\UserActivityController@index')->name('report.users.activity');
+                Route::get('/show', 'Reports\Users\Activity\UserActivityController@show')->name('report.users.activity.search');
+                Route::get('/export/logins/{date}', 'Reports\Users\Activity\UserActivityController@exportLogin')->name('report.users.activity.export.logins');
             });
         });
 

@@ -6,6 +6,7 @@ namespace App\Services\Reports\Users;
 
 use App\Models\Reports\Activity\IgnoreUrl;
 use App\Models\Reports\Activity\ActivityLog;
+use FontLib\TrueType\Collection;
 use Illuminate\Http\Request;
 
 class ActivityLogService
@@ -55,12 +56,26 @@ class ActivityLogService
         return null;
     }
 
-    public static function getRouteName(Request $request)
+    private static function getRouteName(Request $request)
     {
         $laravelRoute = collect(\Route::getRoutes()->getRoutesByName())->filter(function ($r, $routeName) use ($request) {
             return $request->routeIs($routeName);
         });
 
         return $laravelRoute->keys()->first();
+    }
+
+    /**
+     * @param $dateStart
+     * @param null $dateEnd
+     * @param null $user
+     * @return ActivityLog[] | Collection
+     */
+    public function report($dateStart, $dateEnd = null, $user = null)
+    {
+        return ActivityLog::whereDateRangeAndUser($dateStart, $dateEnd, $user)
+            ->where('route_name', '<>', 'null')
+            ->orderBy('created_at')
+            ->get();
     }
 }

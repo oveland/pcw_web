@@ -11,6 +11,18 @@
         });
     }
 
+    function loadSelectUserReport(company) {
+        let userSelect = $('#user-report');
+        userSelect.html($('#select-loading').html()).trigger('change.select2');
+        userSelect.load('{{ route('general-load-select-users') }}', {
+            company: company,
+            withAll: userSelect.data('with-all'),
+            withName: userSelect.data('with-name'),
+        }, function () {
+            userSelect.trigger('change.select2');
+        });
+    }
+
     function loadSelectControlPointReport(route) {
         let controlPointSelect = $('#control-point-report');
         controlPointSelect.html($('#select-loading').html()).trigger('change.select2');

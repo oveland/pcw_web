@@ -609,7 +609,7 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @param Buider | DispatchRegister $query
+     * @param Builder | DispatchRegister $query
      * @param string $initialDate
      * @param string | null $finalDate
      * @return DispatchRegister | Builder

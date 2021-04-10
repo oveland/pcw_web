@@ -110,4 +110,15 @@ class PCWAuthService
 
         return $route ? $route->subRoutes : ($routeRequest == 'all' ? $company->activeRoutes : collect([]));
     }
+
+    /**
+     * @param Request $request
+     * @return User[]|Collection
+     */
+    public function getUsersFromRequest(Request $request)
+    {
+        $company = $this->getCompanyFromRequest($request);
+
+        return $company->users;
+    }
 }

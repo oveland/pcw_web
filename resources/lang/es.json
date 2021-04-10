@@ -765,5 +765,7 @@
   "days": "días",
   "dates": "fechas",
   "Total days": "Total días",
-  "Traveled": "Recorrido"
+  "Traveled": "Recorrido",
+  "Download login report": "Descargar reporte de accesos",
+  "activity": "actividad"
 }
