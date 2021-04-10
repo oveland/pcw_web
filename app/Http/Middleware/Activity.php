@@ -18,9 +18,9 @@ class Activity
      */
     public function handle(Request $request, Closure $next)
     {
-        $request->merge([
-            'request_id' => uniqid()
-        ]);
+//        $request->merge([
+//            'request_id' => uniqid()
+//        ]);
 
         ActivityLogService::log($request);
 

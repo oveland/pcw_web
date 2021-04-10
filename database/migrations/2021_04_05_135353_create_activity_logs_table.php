@@ -14,7 +14,7 @@ class CreateActivityLogsTable extends Migration
     public function up()
     {
         Schema::create('activity_logs', function (Blueprint $table) {
-            $table->increments('id');
+            $table->unsignedBigInteger('id');
             $table->string('route_name', 512)->nullable();
             $table->string('category1', 100)->nullable();
             $table->string('category2', 100)->nullable();
@@ -24,7 +24,7 @@ class CreateActivityLogsTable extends Migration
             $table->string('method', 20)->nullable();
             $table->string('agent', 512)->nullable();
 
-            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
 
             $table->timestamps();
         });
