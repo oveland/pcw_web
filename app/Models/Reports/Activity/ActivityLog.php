@@ -53,6 +53,11 @@ class ActivityLog extends Model
         return $this->belongsTo(User::class);
     }
 
+    protected function getDateFormat()
+    {
+        return config('app.date_time_format');
+    }
+
     /**
      * @param Builder | ActivityLog $query
      * @param $dateStart
