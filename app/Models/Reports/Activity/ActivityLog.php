@@ -55,7 +55,7 @@ class ActivityLog extends Model
 
     protected function getDateFormat()
     {
-        return config('app.date_time_format');
+        return config('app.simple_date_time_format');
     }
 
     /**
