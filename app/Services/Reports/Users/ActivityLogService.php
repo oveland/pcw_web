@@ -50,7 +50,7 @@ class ActivityLogService
 
         $segments = collect($request->segments());
 
-        if (!$ignoredRoute && $segments->first() != 'link') {
+        if (!$ignoredRoute && $segments->first() != 'link' || $segments->contains('login')) {
             return $request;
         }
 
