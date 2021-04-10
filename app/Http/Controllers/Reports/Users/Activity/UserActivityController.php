@@ -47,12 +47,13 @@ class UserActivityController extends Controller
     public function show(Request $request)
     {
         $queryString = $request->getQueryString();
+        $company = $this->auth->getCompanyFromRequest($request);
         $dateStart = $request->get('date-report');
         $withDateEnd = $request->get('with-end-date');
         $dateEnd = $withDateEnd ? $request->get('date-end-report') : null;
         $user = $request->get('user-report');
 
-        $report = $this->service->report($dateStart, $dateEnd, $user);
+        $report = $this->service->report($company, $dateStart, $dateEnd, $user);
 
         return view('reports.users.activity.show', compact(['report', 'queryString']));
     }

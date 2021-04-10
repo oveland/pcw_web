@@ -4,6 +4,7 @@
 namespace App\Services\Reports\Users;
 
 
+use App\Models\Company\Company;
 use App\Models\Reports\Activity\IgnoreUrl;
 use App\Models\Reports\Activity\ActivityLog;
 use FontLib\TrueType\Collection;
@@ -66,15 +67,17 @@ class ActivityLogService
     }
 
     /**
+     * @param Company $company
      * @param $dateStart
      * @param null $dateEnd
      * @param null $user
      * @return ActivityLog[] | Collection
      */
-    public function report($dateStart, $dateEnd = null, $user = null)
+    public function report(Company $company, $dateStart, $dateEnd = null, $user = null)
     {
         return ActivityLog::whereDateRangeAndUser($dateStart, $dateEnd, $user)
             ->where('route_name', '<>', 'null')
+            ->whereIn('user_id', $company->users)
             ->orderBy('created_at')
             ->get();
     }
