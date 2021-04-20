@@ -148,7 +148,7 @@ class Route extends Model
         if ($this->as_group) {
             return $this->hasMany(Route::class)->active();
         } else {
-            return $this->hasMany(Route::class)->where('id', $this->id);
+            return $this->hasMany(Route::class)->orWhere('id', $this->id);
         }
     }
 
