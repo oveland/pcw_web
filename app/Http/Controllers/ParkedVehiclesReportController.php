@@ -70,7 +70,24 @@ class ParkedVehiclesReportController extends Controller
             ->with(['vehicle', 'dispatchRegister'])
             ->get();
 
-        $parkedReports = $parkedReports->sortBy(function ($pr) {
+        $dispatches = $company->dispatches;
+
+        $parkedReportsFiltered = collect([]);
+        foreach ($parkedReports->take(5) as $report) {
+            $exclude = false;
+            foreach ($dispatches as $dispatch) {
+                $distanceToDispatch = Geolocation::getDistance($dispatch->latitude, $dispatch->longitude, $report->latitude, $report->longitude);
+                if ($distanceToDispatch <= $dispatch->radio_geofence) {
+                    $exclude = true;
+                }
+            }
+
+            if (!$exclude) {
+                $parkedReportsFiltered->push($report);
+            }
+        }
+
+        $parkedReports = $parkedReportsFiltered->sortBy(function ($pr) {
             return $pr->vehicle->number . '-' . $pr->id;
         });
 
