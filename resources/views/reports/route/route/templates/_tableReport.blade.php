@@ -126,7 +126,17 @@
 
             $offRoadPercent = $dispatchRegister->getOffRoadPercent();
 
-            $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true))
+            $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true));
+
+
+            $invalidGPSPercent = 0;
+            if(Auth::user()->isSuperAdmin()){
+                $invalidGPSPercent = $dispatchRegister->invalidGPSPercent();
+
+                if($invalidGPSPercent > $maxInvalidGPSPercent) {
+                    $maxInvalidGPSPercent = $invalidGPSPercent;
+                }
+            }
         @endphp
         <tr>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
@@ -139,10 +149,7 @@
                             {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
                             @if(Auth::user()->isSuperAdmin())
                                 @php
-                                    $invalidGPSPercent = $dispatchRegister->invalidGPSPercent();
-                                    if($invalidGPSPercent > $maxInvalidGPSPercent) {
-                                        $maxInvalidGPSPercent = $invalidGPSPercent;
-                                    }
+
                                 @endphp
                                 @if($invalidGPSPercent)
                                     • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
@@ -150,6 +157,15 @@
                             @endif
                         </label>
                     </div>
+                @elseif(Auth::user()->isSuperAdmin() && $invalidGPSPercent)
+                <br>
+                <div class="m-t-10">
+                    <label class="label label-{{ $invalidGPSPercent < 0.8 ? 'warning': 'danger' }} tooltips" data-placement="bottom" title="@lang('GPS with issues')">
+                        @if($invalidGPSPercent)
+                            • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
+                        @endif
+                    </label>
+                </div>
                 @endif
             </th>
             <th width="5%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">

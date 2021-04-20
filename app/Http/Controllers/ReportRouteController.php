@@ -102,7 +102,7 @@ class ReportRouteController extends Controller
 
         if ($dateReport >= Carbon::now()->toDateString()) return view('partials.alerts.onlyPreviousDate');
 
-        if($vehicleReport && $vehicleReport != 'all') $vehiclesId = [$vehicleReport];
+        if ($vehicleReport && $vehicleReport != 'all') $vehiclesId = [$vehicleReport];
         else $vehiclesId = $company->activeVehicles->pluck('id');
 
         $lastLocations = LastLocation::with('vehicle')
@@ -143,7 +143,9 @@ class ReportRouteController extends Controller
      */
     public function chart(DispatchRegister $dispatchRegister, Request $request)
     {
-        sleep(0.5);
+        if ($dispatchRegister->locations()->count() < 100) { // TODO: While fix bug on chart map view when report loads fast
+            sleep(2);
+        }
         $centerOnLocation = ($request->get('centerOnLocation')) ? Location::find(($request->get('centerOnLocation'))) : null;
         return response()->json($this->routeService->dispatch->locationsReports($dispatchRegister, $centerOnLocation));
     }
