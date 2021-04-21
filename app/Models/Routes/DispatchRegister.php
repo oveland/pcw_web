@@ -474,10 +474,11 @@ class DispatchRegister extends Model
         return !$this->onlyControlTakings();
     }
 
-    public function getRouteFields() {
+    public function getRouteFields()
+    {
         $driver = $this->driver;
         $driveName = $driver ? $driver->fullName() : __('Unassigned');
-        return (object) [
+        return (object)[
             'id' => $this->id,
             'turn' => $this->turn,
             'roundTrip' => $this->round_trip,
@@ -491,7 +492,7 @@ class DispatchRegister extends Model
     {
         $passengers = $this->passengers;
 //        $passengers = null;
-        
+
         $takings = $this->takings;
 //        $takings = null;
 
@@ -645,12 +646,6 @@ class DispatchRegister extends Model
      */
     public function scopeWhereCompanyAndRouteAndVehicle($query, Company $company, $routeId = null, $vehicleId = null)
     {
-        $user = Auth::user();
-
-        if ($user && $routeId == 'all') {
-            $query = $query->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
-        }
-
         return $query
             ->where(function ($query) use ($company, $routeId, $vehicleId) {
                 if ($vehicleId == 'all' || $vehicleId == null) {
@@ -659,11 +654,28 @@ class DispatchRegister extends Model
                     $query = $query->where('vehicle_id', $vehicleId);
                 }
 
-                if ($company->hasADD() && $vehicleId == 'all') {
-                    $query = $query->orWhere('route_id', intval($routeId));
-                } else if ($routeId != 'all' && $routeId != null) {
-                    $query = $query->where('route_id', intval($routeId));
-                }
+                $query->where(function (Builder $subQuery) use ($company, $routeId, $vehicleId) {
+                    $user = Auth::user();
+
+                    if ($user && $routeId == 'all') {
+                        $subQuery = $subQuery->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
+                    }
+
+                    if ($routeId != null && $routeId != 'all') {
+                        if ($company->hasADD() && $vehicleId == 'all') {
+                            $subQuery = $subQuery->orWhere('route_id', intval($routeId));
+                        } else {
+                            $subQuery = $subQuery->where('route_id', intval($routeId));
+                        }
+
+                        $route = Route::find($routeId);
+                        if ($route->as_group) {
+                            $subQuery = $subQuery->orWhereIn('route_id', $route->subRoutes->pluck('id'));
+                        }
+                    }
+
+                    return $subQuery;
+                });
 
                 return $query;
             });
@@ -788,14 +800,14 @@ class DispatchRegister extends Model
             GROUP BY tariff
             ORDER BY tariff
         "));*/
-      
+
 
         $default = (object)[
             'tariff' => 0,
             'totalCounted' => 0,
             'totalCharge' => 0,
-        ];  
-       $tariffs = collect([$default, $default]);
+        ];
+        $tariffs = collect([$default, $default]);
 
         return (object)[
             'start' => $this->initial_sensor_counter,
@@ -803,8 +815,8 @@ class DispatchRegister extends Model
             'count' => $this->passengersBySensor,
             'mileage' => $this->mileage,
             'tariff' => (object)[
-                'a' => (object) ($tariffs->get(0) ? $tariffs->get(0) : $default),
-                'b' => (object) ($tariffs->get(1) ? $tariffs->get(1) : $default),            
+                'a' => (object)($tariffs->get(0) ? $tariffs->get(0) : $default),
+                'b' => (object)($tariffs->get(1) ? $tariffs->get(1) : $default),
             ]
         ];
     }

@@ -60,11 +60,17 @@ class DispatchRouteService
      */
     public function all($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
     {
-        return DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport)
+        $q = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport)
             ->active($completedTurns)
             ->orderBy('date')
-            ->orderBy('departure_time')
-            ->get();
+            ->orderBy('departure_time');
+
+        if(request()->get('d')){
+            dump("dateReport = ", $dateReport);
+            dd($q->toSql(), $q->getBindings());
+        }
+
+        return $q->get();
     }
 
     /**
