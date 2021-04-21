@@ -14,7 +14,7 @@ class GPSRestartCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'gps:restart {company=all}';
+    protected $signature = 'gps:restart {--company=all}';
 
     /**
      * The console command description.
