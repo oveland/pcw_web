@@ -64,7 +64,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('vehicles:binnacle:notify')->dailyAt('22:40');
 
 
-        $schedule->command('gps:restart')->dailyAt('12:00');
+//        $schedule->command('gps:restart')->dailyAt('12:00');
         $schedule->command('gps:restart --company=37')->everyFiveMinutes();
         $schedule->command('gps:check-status')->everyMinute();
 
