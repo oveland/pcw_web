@@ -93,7 +93,7 @@ class SMS
             $command = $simGPS->getResetCommand();
 
             $responseSMS = self::sendCommand($command, $simGPS->sim);
-            $response['success'] = $responseSMS["resultado"] === 0;
+            $response['success'] = $responseSMS['status'] === '1x000';
 
             if ($response['success']) $responseLog = "Send SMS for:";
             else $responseLog = "Message not tx for:";
