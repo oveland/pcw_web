@@ -69,7 +69,7 @@ class EventsReportMail extends Mailable
     {
         $pathToConsolidatesReportFiles = $this->makeFiles();
 
-        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " • " . __('Report events daily') ." ".$this->company->name." ". " | $this->dateReport ".($this->production ? '':'> Para revisar'));
+        $email = $this->view('email.reports.consolidated.daily')->subject(__('Route') . " • " . __('Report events daily') ." ".$this->company->short_name." ". " | $this->dateReport ".($this->production ? '':'> Para revisar'));
         if ($pathToConsolidatesReportFiles->isNotEmpty()) {
             foreach ($pathToConsolidatesReportFiles as $pathToConsolidatesReportFile) {
                 $email->attach($pathToConsolidatesReportFile);
