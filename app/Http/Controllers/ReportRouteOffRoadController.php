@@ -6,6 +6,7 @@ use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\OffRoadService;
+use DB;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Excel;
@@ -105,5 +106,13 @@ class ReportRouteOffRoadController extends Controller
     {
         $location->status = 'FOR';
         $location->save();
+
+        DB::statement("UPDATE locations_0 SET status = 'FOR' WHERE id = $location->id");
+        DB::statement("UPDATE locations_1 SET status = 'FOR' WHERE id = $location->id");
+        DB::statement("UPDATE locations_2 SET status = 'FOR' WHERE id = $location->id");
+        DB::statement("UPDATE locations_3 SET status = 'FOR' WHERE id = $location->id");
+        DB::statement("UPDATE locations_4 SET status = 'FOR' WHERE id = $location->id");
+        DB::statement("UPDATE locations_5 SET status = 'FOR' WHERE id = $location->id");
+        DB::statement("UPDATE locations_6 SET status = 'FOR' WHERE id = $location->id");
     }
 }
