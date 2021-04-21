@@ -58,10 +58,13 @@ class GPSRestartCommand extends Command
               v.id vehicle_id,
               m.name vehicle_plate
             FROM markers AS m
-              JOIN vehicles AS v ON (v.plate = m.name AND (v.company_id = 12 OR v.company_id = 14 OR v.company_id = 17 OR v.company_id = 21 OR v.company_id = 28) )
+              JOIN vehicles AS v ON (v.plate = m.name )
               JOIN status_vehi AS sv ON (sv.id_status = m.status)              
             WHERE
               m.fecha > current_date - $backDaysForSendSms AND (m.fecha||' '||m.hora)::TIMESTAMP < (current_timestamp - '$backTimeForSendSMS'::INTERVAL) AND (m.status = 1 OR m.status = 5) AND v.in_repair IS FALSE AND v.active IS TRUE
+              
+              AND (v.company_id = 14 OR v.company_id = 17 OR v.company_id = 21 OR v.company_id = 28 or v.company_id = 37)
+              
               $companyQuery
               ORDER BY sv.des_status, (m.fecha||' '||m.hora)::TIMESTAMP DESC
         ";
