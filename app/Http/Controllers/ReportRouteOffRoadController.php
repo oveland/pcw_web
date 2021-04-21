@@ -108,11 +108,6 @@ class ReportRouteOffRoadController extends Controller
         $location->save();
 
         DB::statement("UPDATE locations_0 SET status = 'FOR' WHERE id = $location->id");
-        DB::statement("UPDATE locations_1 SET status = 'FOR' WHERE id = $location->id");
-        DB::statement("UPDATE locations_2 SET status = 'FOR' WHERE id = $location->id");
-        DB::statement("UPDATE locations_3 SET status = 'FOR' WHERE id = $location->id");
-        DB::statement("UPDATE locations_4 SET status = 'FOR' WHERE id = $location->id");
-        DB::statement("UPDATE locations_5 SET status = 'FOR' WHERE id = $location->id");
-        DB::statement("UPDATE locations_6 SET status = 'FOR' WHERE id = $location->id");
+        DB::statement("REFRESH MATERIALIZED VIEW locations_1");
     }
 }
