@@ -13,6 +13,7 @@ use App\Models\Vehicles\SimGPS;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SMS
 {
@@ -88,7 +89,7 @@ class SMS
             'log' => ''
         ];
 
-        if ($simGPS) {
+        if ($simGPS && (Str::startsWith($simGPS->sim, "31") || Str::startsWith($simGPS->sim, "32") || Str::startsWith($simGPS->sim, "30"))) {
             //$command = $simGPS->gps_type == 'COBAN' ? "reset123456" : 'AT$RESET';
             $command = $simGPS->getResetCommand();
 
@@ -100,10 +101,10 @@ class SMS
 
             $responseLog .= " $simGPS->sim $simGPS->gps_type => $command: ";
         } else {
-            $responseLog = "No found SIM for:";
+            $responseLog = "No found or invalid SIM for vehicle :";
         }
 
-        $response['log'] = $responseLog . " $vehicle->id | $vehicle->plate | $vehicle->number | $company->short_name";
+        $response['log'] = $responseLog . " Id: $vehicle->id •  $vehicle->plate $vehicle->number | SIM: $simGPS->sim | $company->short_name";
         Log::useDailyFiles(storage_path() . '/logs/sms.log', 10);
         Log::info($response['log']);
 
