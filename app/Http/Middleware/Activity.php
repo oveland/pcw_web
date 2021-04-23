@@ -22,7 +22,7 @@ class Activity
 //            'request_id' => uniqid()
 //        ]);
 
-        ActivityLogService::log($request);
+//        ActivityLogService::log($request);
 
         return $next($request);
     }
