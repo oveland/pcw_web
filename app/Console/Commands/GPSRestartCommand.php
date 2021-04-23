@@ -42,24 +42,27 @@ class GPSRestartCommand extends Command
     {
         $backDaysForSendSms = config('sms.back_days_for_send_sms');
         $backTimeForSendSMS = config('sms.back_time_for_send_sms');
-        $company = $this->argument('company');
+        $company = $this->option('company');
         $companyQuery = $company == 'all'?'':" AND v.company_id = $company";
 
         $query = "
             SELECT
               m.id id,
               (m.fecha||' '||m.hora)::TIMESTAMP date,
+              sv.des_status status_name,
+              v.id vehicle_id,
+              v.number vehicle,
+              v.active,
+              v.in_repair,
+              c.short_name company,
               m.lat latitude,
               m.lng longitude,
               m.orientacion orientation,
-              m.velocidad speed,
-              m.status status,
-              sv.des_status status_name,
-              v.id vehicle_id,
-              m.name vehicle_plate
+              m.velocidad speed
             FROM markers AS m
               JOIN vehicles AS v ON (v.plate = m.name )
               JOIN status_vehi AS sv ON (sv.id_status = m.status)              
+              JOIN companies AS c ON (c.id = v.company_id)              
             WHERE
               m.fecha > current_date - $backDaysForSendSms AND (m.fecha||' '||m.hora)::TIMESTAMP < (current_timestamp - '$backTimeForSendSMS'::INTERVAL) AND (m.status = 1 OR m.status = 5) AND v.in_repair IS FALSE AND v.active IS TRUE
               
@@ -70,6 +73,8 @@ class GPSRestartCommand extends Command
         ";
 
         $downGPSList = DB::select($query);
+
+        dd($downGPSList);
 
         if(count($downGPSList)){
             foreach ($downGPSList as $downGPS) {
