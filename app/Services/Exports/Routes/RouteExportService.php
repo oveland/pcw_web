@@ -221,7 +221,7 @@ class RouteExportService
 
 
                     $dataExcel = array();
-                    $typeReport = 'consolidatedRouteReport';
+                    $linkColumn = 'G';
 
                     foreach ($reportVehicleByRoute as $reportByVehicle) {
                         $vehicle = $reportByVehicle->vehicle;
@@ -239,18 +239,26 @@ class RouteExportService
                             __('Driver') => $dispatchRegister->driverName(),                                                # D CELL
                             __('Off Roads') => $reportByVehicle->totalOffRoads,                                             # E CELL
                             __('Off roads details') => "$details->offRoadReportString",                                     # F CELL
-                            __('Speeding') => $reportByVehicle->totalSpeeding,                                              # G CELL
-                            __('Speeding details') => $details->speedingReportString,                                       # H CELL
                         ]);
+
+                        if ($company->hasSpeedingEventsActive()) {
+                            $dataExcelColumns->put(__('Speeding'), $reportByVehicle->totalSpeeding);                        # G CELL
+                            $dataExcelColumns->put(__('Speeding details'), $details->speedingReportString);                 # H CELL
+                            $linkColumn = 'I';
+                        }
 
                         if ($company->hasControlPointEventsActive()) {
                             $dataExcelColumns->put(__('Delay control points'), $reportByVehicle->controlPointReportTotal);  # I CELL
                             $dataExcelColumns->put(__('Control points details'), $details->delayControlPointsReportString); # J CELL
-                            $typeReport = 'consolidatedRouteReportWithControlPoint';
+                            if ($linkColumn == 'G') {
+                                $linkColumn = 'I';
+                            } else {
+                                $linkColumn = 'K';
+                            }
                         }
 
 
-                        $dataExcelColumns->put(__('Details'), $link);                                                       # I/K CELL
+                        $dataExcelColumns->put(__('Details'), $link);                                                       # G/I/K CELL
 
                         $dataExcel[] = $dataExcelColumns->toArray();
                     }
@@ -262,12 +270,12 @@ class RouteExportService
                             'subTitle' => "$date",
                             'sheetTitle' => "$route->name",
                             'data' => $dataExcel,
-                            'type' => $typeReport
+                            'type' => 'consolidatedRouteReport'
                         ];
 
                         /* SHEETS */
                         $excel = PCWExporterService::createHeaders($excel, $dataExport);
-                        $excel = PCWExporterService::createSheet($excel, $dataExport, true);
+                        $excel = PCWExporterService::createSheet($excel, $dataExport, true, ['linkColumn' => $linkColumn]);
                     }
                 } else {
                     dump("No reports found for $route->name on date $date");

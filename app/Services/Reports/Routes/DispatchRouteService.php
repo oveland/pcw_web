@@ -65,7 +65,7 @@ class DispatchRouteService
             ->orderBy('date')
             ->orderBy('departure_time');
 
-        if(request()->get('d')){
+        if (request()->get('d')) {
             dump("dateReport = ", $dateReport);
             dd($q->toSql(), $q->getBindings());
         }
@@ -93,8 +93,8 @@ class DispatchRouteService
             });
         }
 
-        $data = $dispatchRegisters->sortBy(function ($dr){
-            return "$dr->date-".$dr->vehicle->number."$dr->departure_time";
+        $data = $dispatchRegisters->sortBy(function ($dr) {
+            return "$dr->date-" . $dr->vehicle->number . "$dr->departure_time";
         })->groupBy('vehicle_id');
 
         return $data;
@@ -238,9 +238,13 @@ class DispatchRouteService
                 if ($locations->isNotEmpty()) {
                     $speedingLocations = $locations->where('speeding', true);
 
+                    $offRoadReport = collect([]);
+                    $speedingReport = collect([]);
+                    $controlPointReport = collect([]);
+
                     $offRoadReport = $this->offRoad->groupByFirstOffRoad($locations);
-                    $speedingReport = $this->speeding->groupByFirstSpeedingEvent($speedingLocations);
-                    $controlPointReport = $this->controlPoints->reportWithDelay($dispatchRegister);
+                    if ($company->hasSpeedingEventsActive()) $speedingReport = $this->speeding->groupByFirstSpeedingEvent($speedingLocations);
+                    if ($company->hasControlPointEventsActive()) $controlPointReport = $this->controlPoints->reportWithDelay($dispatchRegister);
 
                     $totalOffRoads = $offRoadReport->count();
                     $totalSpeeding = $speedingReport->count();
@@ -293,8 +297,8 @@ class DispatchRouteService
             ->where('id', '<>', 183); // TODO: Let route 183 when all parameters are configured
 
         foreach ($routes as $route) {
-            $dispatchRegisters = $allDispatchRegisters->where('route_id', $route->id)->sortBy(function ($dr){
-                return "$dr->date-".$dr->vehicle->number."$dr->departure_time";
+            $dispatchRegisters = $allDispatchRegisters->where('route_id', $route->id)->sortBy(function ($dr) {
+                return "$dr->date-" . $dr->vehicle->number . "$dr->departure_time";
             });
             $reportVehicleByRoute = $this->getConsolidatedDataDispatches($dispatchRegisters, $company)->where('hasEvent', true);
 

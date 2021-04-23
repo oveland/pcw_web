@@ -220,7 +220,16 @@ class Company extends Model
     */
     public function hasControlPointEventsActive()
     {
-        return collect([self::ALAMEDA])->contains($this->id);
+        return collect([])->contains($this->id);
+    }
+
+    /*
+     * What companies that have Control Point Events Active for send mail report events daily
+    */
+    public function hasSpeedingEventsActive()
+    {
+        return $this->id != self::ALAMEDA;
+//        return collect([])->contains($this->id);
     }
 
     /**

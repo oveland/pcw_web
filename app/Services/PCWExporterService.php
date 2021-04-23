@@ -296,15 +296,16 @@ class PCWExporterService
             case 'consolidatedRouteReport':
                 $startIndex = $config->startIndex + 1;
                 $rows = range($config->startIndex + 1, $config->totalRows, 1);
+                $linkColumn = $options['linkColumn'];
                 foreach ($rows as $row) {
-                    $cell = $sheet->getCell("I$row");
+                    $cell = $sheet->getCell("$linkColumn$row");
                     $cellLink = $cell->getValue();
 
                     $cell->getHyperlink()->setUrl($cellLink);
                     $cell->setValueExplicit(__('Chart'));
                 }
 
-                $sheet->cells("I$startIndex:I$config->totalRows", function ($cells) {
+                $sheet->cells("$linkColumn$startIndex:$linkColumn$config->totalRows", function ($cells) {
                     $cells->setValignment('center');
                     $cells->setAlignment('center');
                     $cells->setBackground('#0a0a15');
@@ -365,50 +366,6 @@ class PCWExporterService
                 $sheet->setColumnFormat(array(
                     "G$config->startIndex:H$lastRow" => "0.00"
                 ));
-
-                break;
-
-            case 'consolidatedRouteReportWithControlPoint':
-                $startIndex = $config->startIndex + 1;
-                $rows = range($config->startIndex + 1, $config->totalRows, 1);
-                foreach ($rows as $row) {
-                    $cell = $sheet->getCell("K$row");
-                    $cellLink = $cell->getValue();
-
-                    $cell->getHyperlink()->setUrl($cellLink);
-                    $cell->setValueExplicit(__('Chart'));
-                }
-
-                $sheet->cells("K$startIndex:K$config->totalRows", function ($cells) {
-                    $cells->setValignment('center');
-                    $cells->setAlignment('center');
-                    $cells->setBackground('#0a0a15');
-                    $cells->setFontColor(self::$fontColorInverse);
-                    $cells->setFont(array(
-                        'family' => 'Calibri',
-                        'size' => '13',
-                        'bold' => true,
-                        'italic' => true,
-                        'underline' => \PHPExcel_Style_Font::UNDERLINE_SINGLE
-                    ));
-                });
-
-                $sheet->cells("A$config->startIndex:A$config->totalRows", function ($cells) {
-                    $cells->setAlignment('center');
-                });
-                $sheet->cells("B$config->startIndex:B$config->totalRows", function ($cells) {
-                    $cells->setAlignment('center');
-                });
-                $sheet->cells("C$config->startIndex:C$config->totalRows", function ($cells) {
-                    $cells->setAlignment('center');
-                });
-
-                $sheet->cells("G$config->startIndex:G$config->totalRows", function ($cells) {
-                    $cells->setAlignment('center');
-                });
-                $sheet->cells("I$config->startIndex:I$config->totalRows", function ($cells) {
-                    $cells->setAlignment('center');
-                });
 
                 break;
 
