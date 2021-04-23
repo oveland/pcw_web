@@ -128,7 +128,9 @@ class Company extends Model
             $route = Route::find($routeId);
             if ($route) {
                 $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::whereIn('route_id', $route->subRoutes->pluck('id'))->get()->pluck('vehicle_id');
-                $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+                if ($vehiclesIdFromDispatcherVehicles->count()) {
+                    $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+                }
             }
         }
 
