@@ -355,7 +355,7 @@
 
                 <div class="p-t-5">
                     @if( Auth::user()->isSuperAdmin() )
-                        <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs btn-warning faa-parent animated-hover btn-circle tooltips"
+                        <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
                                 data-original-title="@lang('Execute DAR')" data-placement="bottom">
                             <i class="fa fa-cogs faa-pulse"></i>
                         </button>
