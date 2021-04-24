@@ -47,7 +47,7 @@ trait BindsDynamically
         $diffDays = Carbon::now()->diffInDays($date);
 
         if ($diffDays == 0) {
-            $tableName .= "_$diffDays";
+//            $tableName .= "_$diffDays";
         } else {
             $indexView = floor(($diffDays - 1) / 5) + 1;
 
