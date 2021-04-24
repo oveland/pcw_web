@@ -141,7 +141,9 @@
         <tr>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
-                {{ $route->name }}
+
+
+                <span class="{{ $dispatchRegister->processedByARD() ? 'label label-lime label-lg' : '' }}">{{ $route->name }}</span>
                 @if($dispatchRegister->hasValidOffRoad() && $offRoadPercent)
                     <br>
                     <div class="m-t-10">
@@ -459,7 +461,15 @@
 </script>
 
 <style>
-    #modal-takings-passengers button.close{
+    #modal-takings-passengers button.close {
         margin: 10px !important;
+    }
+
+    .label-lime {
+        background: #74a400;
+    }
+
+    .label-lg {
+        font-size: 1.4rem !important;
     }
 </style>

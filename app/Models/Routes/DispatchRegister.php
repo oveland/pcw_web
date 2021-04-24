@@ -30,6 +30,7 @@ use Illuminate\Support\Str;
  * @property string|null $date
  * @property string|null $time
  * @property int|null $route_id
+ * @property int|null $ard_route_id
  * @property int|null $type_of_day
  * @property int|null $turn
  * @property int|null $round_trip
@@ -866,6 +867,11 @@ class DispatchRegister extends Model
     {
 //        return ($this->end_odometer - $this->start_odometer) / 1000;
         return $this->route ? $this->route->distance_in_km : 0;
+    }
+
+    public function processedByARD()
+    {
+        return $this->ard_route_id && $this->ard_route_id != $this->route_id && auth()->user()->isAdmin();
     }
 
     const CREATED_AT = 'date_created';
