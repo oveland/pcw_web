@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 /**
@@ -874,6 +875,13 @@ class DispatchRegister extends Model
         return $this->ard_route_id && $this->ard_route_id != $this->route_id && auth()->user()->isAdmin();
     }
 
+    /**
+     * @return HasOne | DispatcherVehicle
+     */
+    public function dispatcherVehicle()
+    {
+        return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')->where('dispatch_id', $this->dispatch_id);
+    }
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }

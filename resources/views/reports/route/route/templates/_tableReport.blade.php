@@ -142,11 +142,19 @@
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
 
+                @if($dispatchRegister->processedByARD())
+                    @php
+                        $dv = $dispatchRegister->dispatcherVehicle;
+                    @endphp
+                    <span class="label label-lime label-lg">{{ $route->name }}</span>
+                    <small class="text-muted" style="margin-top: 12px;display: block">{{ $dv ? $dv->route->name : '---' }}</small>
+                @else
+                    <span>{{ $route->name }}</span>
+                @endif
 
-                <span class="{{ $dispatchRegister->processedByARD() ? 'label label-lime label-lg' : '' }}">{{ $route->name }}</span>
+
                 @if($dispatchRegister->hasValidOffRoad() && $offRoadPercent)
-                    <br>
-                    <div class="m-t-10">
+                    <div class="m-t-5">
                         <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
                             {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
                             @if(Auth::user()->isSuperAdmin())
@@ -160,8 +168,7 @@
                         </label>
                     </div>
                 @elseif(Auth::user()->isSuperAdmin() && $invalidGPSPercent)
-                <br>
-                <div class="m-t-10">
+                <div class="m-t-5">
                     <label class="label label-{{ $invalidGPSPercent < 0.8 ? 'warning': 'danger' }} tooltips" data-placement="bottom" title="@lang('GPS with issues')">
                         @if($invalidGPSPercent)
                             • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>

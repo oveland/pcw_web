@@ -120,7 +120,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 options with-route">
+                        <div class="col-md-3 options with-route">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
@@ -135,6 +135,14 @@
                                             <label class="text-bold">
                                                 <input id="no-taken-turns" name="no-taken-turns" type="checkbox" value="no-taken-turns"> @lang('No taken turns')
                                             </label>
+                                            @if(Auth::user()->isAdmin())
+                                                <label class="text-bold">
+                                                    <input id="ard-turns" name="ard-turns" type="checkbox" value="true"> @lang('ARD turns')
+                                                </label>
+                                                <label class="text-bold">
+                                                    <input id="ard-pending" name="ard-pending" type="checkbox" value="true"> @lang('ARD pending')
+                                                </label>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

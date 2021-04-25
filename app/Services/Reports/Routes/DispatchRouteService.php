@@ -65,9 +65,12 @@ class DispatchRouteService
             ->orderBy('date')
             ->orderBy('departure_time');
 
-        if (request()->get('d')) {
-            dump("dateReport = ", $dateReport);
-            dd($q->toSql(), $q->getBindings());
+        if (request()->get('ard-turns')) {
+            $q = $q->whereRaw('ard_route_id <> route_id');
+        }
+
+        if (request()->get('ard-pending')) {
+            $q = $q->where('process_ard', true);
         }
 
         return $q->get();

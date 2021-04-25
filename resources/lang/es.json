@@ -767,5 +767,7 @@
   "Total days": "Total días",
   "Traveled": "Recorrido",
   "Download login report": "Descargar reporte de accesos",
-  "activity": "actividad"
+  "activity": "actividad",
+  "ARD turns": "Turnos DAR",
+  "ARD pending": "Pendiente DAR"
 }
