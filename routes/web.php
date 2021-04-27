@@ -144,6 +144,7 @@ Route::group(['middleware' => ['auth']], function () {
                     return redirect(route('report-dispatch'));
                 })->name('report-route');
                 Route::get('/show', 'ReportRouteController@show')->name('report-route-search');
+                Route::get('/ts', 'ReportRouteController@ts')->name('report-route-ts');
                 Route::any(__('url-chart') . '/{dispatchRegister}', 'ReportRouteController@chart')->name('report-route-chart');
                 Route::any(__('url-chart') . '/{dispatchRegister}/{location}', 'ReportRouteController@chartView')->name('report-route-chart-view');
                 Route::any('/off_road/{dispatchRegister}', 'ReportRouteController@offRoadReport')->name('report-route-off-road');

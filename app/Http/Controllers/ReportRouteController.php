@@ -52,6 +52,17 @@ class ReportRouteController extends Controller
     }
 
     /**
+     * @return Factory|View
+     */
+    public function ts()
+    {
+        $accessProperties = $this->authService->getAccessProperties();
+        $companies = $accessProperties->companies;
+        $vehicles = $accessProperties->vehicles;
+        return view('reports.route.route.ts', compact(['companies', 'vehicles']));
+    }
+
+    /**
      * @param Request $request
      * @return Factory|View
      */
