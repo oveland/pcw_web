@@ -314,6 +314,10 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('photos'))->group(function () {
                 Route::get('/', 'Rocket\ReportPhotosController@index')->name('report.passengers.photos');
             });
+
+            Route::prefix(__('video'))->group(function () {
+                Route::get('/', 'Rocket\ReportPhotosController@video')->name('report.passengers.video');
+            });
         });
 
         /* Routes for drivers report */
