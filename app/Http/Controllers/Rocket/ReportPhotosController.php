@@ -28,9 +28,13 @@ class ReportPhotosController extends Controller
      */
     public function index(Request $request)
     {
+        if (app()->environment() == 'production') {
+            return redirect('http://dev.pcwserviciosgps.com/reportes/pasajeros/fotos');
+        }
+
         $user = Auth::user();
         $link = config('app.beta_server_url')."/link/reportes/pasajeros/fotos/$user->id"; // TODO: Change when BETA migrated fully to NE domain
 
-        return view('partials.iframe', compact('link'));
+        return view('partials.iframeTS', compact('link'));
     }
 }
