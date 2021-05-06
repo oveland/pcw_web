@@ -37,7 +37,11 @@ class ReportRouteHistoricController extends Controller
         $vehicles = $access->vehicles;
 
         $dateReport = $request->get('d');
-        $vehicleReport = $request->get('v');
+        $vehicleReport = Vehicle::where('number', request()->get('n'))
+            ->where('company_id', 14)->first();
+        $vehicleReport = $vehicleReport ? $vehicleReport->id : null;
+
+        $vehicleReport = $vehicleReport ? $vehicleReport : $request->get('v');
         $companyReport = $request->get('c');
         $initialTime = $request->get('i');
         $finalTime = $request->get('f');

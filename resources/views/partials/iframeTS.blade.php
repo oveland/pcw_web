@@ -2,33 +2,28 @@
 
 @section('stylesheets')
     <style>
-        .page-content{
-            padding: 0 !important;
-        }
         .opacity-0 {
             opacity: 0;
-        }
-
-        .page-header.navbar.navbar-fixed-top, .page-header.navbar.navbar-static-top {
-            z-index: 10001 !important;
         }
     </style>
 @endsection
 
 @section('content')
-    <!-- begin breadcrumb -->
-    <ol class="breadcrumb pull-right">
-        <li><a href="javascript:;">@lang('Reports')</a></li>
-        <li class="active">@lang('Video')</li>
-    </ol>
-    <!-- end breadcrumb -->
-    <!-- begin page-header -->
-    <h1 class="page-header">@lang('Reports')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Video')</small>
-    </h1>
+    <div class="col-md-12">
+        <div style="position: absolute;width: 100%;top: 10px;z-index: 100000">
+            <!-- begin breadcrumb -->
+            <ol class="breadcrumb pull-right">
+                <li><a href="javascript:;">@lang('Reports')</a></li>
+                <li class="active">@lang('Video')</li>
+            </ol>
+            <!-- end breadcrumb -->
+            <!-- begin page-header -->
+            <h1 class="page-header">@lang('Reports')
+                <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Video')</small>
+            </h1>
+        </div>
 
-    <div class="" style="position: relative">
-        <div style="position: absolute; width: 100%;width: 100%;top: -60px;z-index: -1;">
+        <div style="position: absolute;width: 99%;top: -10px;">
             <div style="background: white;position: absolute;height: 60px;z-index: 100;width: 100%;"></div>
             <iframe id="ts-iframe" height="500px" class="col-md-12 no-padding opacity-0" frameborder="0" src="http://dev.pcwserviciosgps.com/reportes/rutas/reporte-de-ruta/ts"></iframe>
         </div>
@@ -37,6 +32,8 @@
 
 @section('scripts')
     <script>
+        $('.menu-passengers, .menu-passengers-video').addClass('active-animated');
+
         var logged = false;
         var iframe = document.getElementById('ts-iframe');
         iframe.onload = function(data) {

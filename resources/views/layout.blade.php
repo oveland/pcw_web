@@ -615,7 +615,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         @lang('Photos')
                                     </a>
                                 </li>
-                                <li class="nav-item menu-passengers-photos">
+                                <li class="nav-item menu-passengers-video">
                                     <a href="{{ route('report.passengers.video') }}" class="faa-parent animated-hover nav-link nav-toggle">
                                         <i class="fa fa-video-camera faa-vertical"></i>
                                         @lang('Video')

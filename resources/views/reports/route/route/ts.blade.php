@@ -14,7 +14,7 @@
             <input name="method" value="login"/>
             <input name="account" value="pcwoveland"/>
             <input name="password" value=""/>
-            <input name="language" value="en"/>
+            <input name="language" value=""/>
             <input name="validCode" value=""/>
         </form>
     </div>
