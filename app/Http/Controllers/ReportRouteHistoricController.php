@@ -121,7 +121,7 @@ class ReportRouteHistoricController extends Controller
         $newTurn = true;
 
         foreach ($locations as $index => $location) {
-            $dispatchRegister = $location->dispatchRegister;
+//            $dispatchRegister = $location->dispatchRegister;
 
             $period = '';
             $averagePeriod = '';
@@ -132,13 +132,16 @@ class ReportRouteHistoricController extends Controller
             }
 
             $passenger = $location->passenger;
-
-            if ($dispatchRegister) {
-                $newTurn = $prevDr ? $dispatchRegister->id != $prevDr->id : true;
-                $prevDr = $dispatchRegister;
-            }
-
+            $dispatchRegister = null;
+            
             if ($passenger) {
+                $dispatchRegister = $passenger->dispatchRegister;
+
+                if ($dispatchRegister) {
+                    $newTurn = $prevDr ? $dispatchRegister->id != $prevDr->id : true;
+                    $prevDr = $dispatchRegister;
+                }
+
                 $frameCounter = $passenger->frame ? $passenger->date->toTimeString() . " • " . $passenger->frame : $frameCounter;
 
                 if ($totalPassengers <= $passenger->total) {
@@ -153,10 +156,10 @@ class ReportRouteHistoricController extends Controller
                     $totalDescents = $passenger->total_descents;
                 }
 
-                $totalCharge = $passenger->total_charge;
+//                $totalCharge = $passenger->total_charge;
                 $tariff = $passenger->tariff;
 
-                if ($dispatchRegister) {
+                if ($dispatchRegister && $dispatchRegister->active()) {
                     if ($passengersInRoundTrip <= $passenger->in_round_trip || $newTurn) {
                         $passengersInRoundTrip = $passenger->in_round_trip;
                     }
@@ -173,6 +176,23 @@ class ReportRouteHistoricController extends Controller
                         $totalDescentsInRoundTrip = $passenger->descents_in_round_trip;
                     }
 
+
+                    if ($tariff) {
+                        $counted = ($totalPassengers - $prevTotalPassengers);
+                        $charge = $counted * $tariff;
+                        $totalChargeRoundTrip = (isset($tariffCharges[$tariff]) ? $tariffCharges[$tariff]->totalCharge : 0) + $charge;
+                        $totalCountedRoundTrip = (isset($tariffCharges[$tariff]) ? $tariffCharges[$tariff]->totalCounted : 0) + $counted;
+
+                        $tariffCharges[$tariff] = (object)[
+                            'tariff' => $tariff,
+                            'charge' => $charge,
+                            'counted' => $counted,
+                            'totalCounted' => $totalCountedRoundTrip,
+                            'totalCharge' => $totalChargeRoundTrip,
+                        ];
+
+                        $totalCharge = $totalCharge + $charge;
+                    }
 
                     $trips[$dispatchRegister->id] = (object)[
                         "index" => $index,
@@ -193,17 +213,6 @@ class ReportRouteHistoricController extends Controller
                     $totalInRoundTrips = collect($trips)->sum(function ($t) {
                         return $t->passengers->inRoundTrip;
                     });
-
-                    if ($tariff) {
-                        $counted = ($totalPassengers - $prevTotalPassengers);
-                        $tariffCharges[$tariff] = (object)[
-                            'tariff' => $tariff,
-                            'charge' => $passenger->charge,
-                            'counted' => $counted,
-                            'totalCounted' => (isset($tariffCharges[$tariff]) ? $tariffCharges[$tariff]->totalCounted : 0) + $counted,
-                            'totalCharge' => (isset($tariffCharges[$tariff]) ? $tariffCharges[$tariff]->totalCharge : 0) + ($counted * $tariff),
-                        ];
-                    }
                 } else {
                     $passengersInRoundTrip = 0;
                     $passengersOutRoundTrip = 0;

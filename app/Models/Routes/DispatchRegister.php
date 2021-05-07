@@ -339,6 +339,11 @@ class DispatchRegister extends Model
         return $this->status == $this::COMPLETE;
     }
 
+    public function active()
+    {
+        return $this->status == $this::COMPLETE || $this->status == $this::IN_PROGRESS;
+    }
+
     public function inProgress()
     {
         return $this->status == $this::IN_PROGRESS;
