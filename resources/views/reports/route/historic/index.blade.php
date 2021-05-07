@@ -513,7 +513,7 @@
                         </div>
 
                         @if(Auth::user()->company->hasSensorCounter())
-                            <div class="m-t-5 p-10 p-t-0 info-trips-container" style="display: none">
+                            <div class="m-t-5 p-10 p-t-0 info-trips-container" style="display: nonse">
                                 <h5 class="text-bold m-b-0">
                                     <i class="fa fa-users"></i>   @lang('Histórico de pasajeros'):
                                     <span class="info-trips-total">0</span> (<span class="passengers-total"></span>
@@ -781,7 +781,7 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217) {
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
 
