@@ -159,7 +159,7 @@ class ReportRouteHistoricController extends Controller
 //                $totalCharge = $passenger->total_charge;
                 $tariff = $passenger->tariff;
 
-                if ($dispatchRegister && $dispatchRegister->active()) {
+                if ($dispatchRegister && $dispatchRegister->isActive()) {
                     if ($passengersInRoundTrip <= $passenger->in_round_trip || $newTurn) {
                         $passengersInRoundTrip = $passenger->in_round_trip;
                     }

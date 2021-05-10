@@ -76,7 +76,7 @@ use Illuminate\Support\Str;
  * @property string|null $driver_code
  * @property mixed $departure_fringe
  * @property mixed $arrival_fringe
-
+ * @method static Builder|DispatchRegister active($completedTurns = null)
  * @method static Builder|DispatchRegister whereDriverCode($value)
  * @property-read mixed $passengers
  * @property-read Driver|null $driver
