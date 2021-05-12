@@ -165,7 +165,7 @@ trait CounterBySensor
                 'lastEndRecorder' => $lastEndRecorder,
 
                 'passengers' => $totalPassengers,
-                'passengersByRecorder' => $totalBySensorRecorder,
+                'passengersByRecorder' => $totalPassengers,
 
                 'timeRecorder' => $lastDispatchRegister ? $lastDispatchRegister->arrival_time : '--:--:--',
                 'history' => $history,
