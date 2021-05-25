@@ -214,7 +214,9 @@ trait CounterByRecorder
                 $issueField = __('A high count');
             } else if ($passengersByRoundTrip < 0) {
                 $issueField = __('A negative count');
-            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder) {
+            } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder
+                && $startRecorder != 66600
+            ) {
                 $start = $startRecorder;
                 $endLast = $lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 ? $lastDispatchRegister->end_recorder : 0;
                 $issueField = __('A Start Recorder less than the last End Recorder') . " ($start < $endLast)." . $dispatchRegister->route->name . ', ' . __('Turn') . " $dispatchRegister->turn";
