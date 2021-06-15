@@ -850,6 +850,10 @@ class DispatchRegister extends Model
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
 
+            if(!$takings->isTaken() && $this->date >= '2021-05-01' && $this->date <= '2021-05-13'){
+                $takings->passenger_tariff = 2200;
+            }
+
             $totalProduction = $takings->passenger_tariff * $passengers;
 
             if ($this->route && $this->route->company_id == Company::YUMBENOS) {
