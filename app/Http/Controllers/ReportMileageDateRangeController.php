@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\LastLocation;
 use App\Models\Company\Company;
 use App\Models\Vehicles\ReportVehicleStatus;
+use App\Models\Vehicles\VehicleIssue;
+use App\Models\Vehicles\VehicleIssueType;
 use App\Models\Vehicles\VehicleStatusReport;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
@@ -100,7 +102,7 @@ class ReportMileageDateRangeController extends Controller
         foreach ($vehicles as $vehicle) {
             foreach ($dateRange as $date) {
                 $date = $date->toDateString();
-                $key = ($vehicle->active ? 'A' : 'B') . str_pad($vehicle->number, 5, '0', STR_PAD_LEFT) ."-$date";
+                $key = ($vehicle->active ? 'A' : 'B') . str_pad($vehicle->number, 5, '0', STR_PAD_LEFT) . "-$date";
 
                 $lastLocation = isset($lastLocationsByVehicles[$vehicle->id]) ? $lastLocationsByVehicles[$vehicle->id]->filter(function ($ll) use ($date, $vehicle) {
                     return $ll->date->toDateString() == $date;
@@ -120,7 +122,7 @@ class ReportMileageDateRangeController extends Controller
                         break;
                 }
 
-                if($mileage < 0 || $mileage > $maxMileage){
+                if ($mileage < 0 || $mileage > $maxMileage) {
                     $mileage = 0;
                 }
 
@@ -128,19 +130,30 @@ class ReportMileageDateRangeController extends Controller
                 $vehicleStatus = '';
                 $vehicleIsActive = $lastLocation ? $lastLocation->vehicle_active : false;
 
-                if($lastLocation) {
+                if ($lastLocation) {
                     $vehicleStatus = $lastLocation->vehicle_active ? __('Active') : __('Inactive');
-                }else {
-                    $vehicleStatusReport = ReportVehicleStatus::where('date','<=',$date)
-                        ->where('vehicle_id', $vehicle->id)
+                } else {
+//                    $vehicleStatusReport = ReportVehicleStatus::where('date','<=',$date)
+//                        ->where('vehicle_id', $vehicle->id)
+//                        ->orderByDesc('id')
+//                        ->first();
+
+                    $vehicleIssue = VehicleIssue::where('vehicle_id', $vehicle->id)
+                        ->whereDate('date', '<=', $date)
                         ->orderByDesc('id')
                         ->first();
 
-                    if($vehicleStatusReport){
-                        $vehicleStatus = $vehicleStatusReport->getParsedStatus();
-                        $vehicleIsActive = $vehicleStatus != __('Inactive');
-                        $observations = $vehicleStatusReport->observations;
-                    }else{
+                    if ($vehicleIssue) {
+                        $vehicleIsActive = $vehicleIssue->issue_type_id == VehicleIssueType::OUT;
+                        $vehicleStatus = ($vehicleIsActive ? __('Active') : __('Vehicle issue')) . " desde " . $vehicleIssue->date;
+
+                        $u = $vehicleIssue->user;
+                        if ($u) {
+                            $vehicleStatus .= " • $u->username";
+                        }
+
+                        $observations = $vehicleIssue->observations;
+                    } else {
                         $vehicleIsActive = false;
                         $vehicleStatus = __('Inactive');
 
@@ -199,7 +212,7 @@ class ReportMileageDateRangeController extends Controller
         }
 
         $vehicleNumber = __("all");
-        if ($mileageReport->vehicleReport != 'all' && intval($mileageReport->vehicleReport)  && $dataExcel->count()) {
+        if ($mileageReport->vehicleReport != 'all' && intval($mileageReport->vehicleReport) && $dataExcel->count()) {
             $vehicleNumber = __('Vehicle') . " " . $dataExcel->first()[__('Number')];
         }
 

@@ -68,7 +68,7 @@ class PassengersRecordersReportController extends Controller
         $groupByDriver = $request->get('group-by-driver');
 
         if ($dateEndReport < $dateReport) return view('partials.dates.invalidRange');
-        if (Carbon::parse($dateReport)->diffInDays(Carbon::parse($dateEndReport)) > self::LIMIT_DATE_RANGE) return view('partials.dates.rangeTooHigh', ['limit' => self::LIMIT_DATE_RANGE]);
+        if (Carbon::parse($dateReport)->diffInDays(Carbon::parse($dateEndReport)) > self::LIMIT_DATE_RANGE && !$vehicle) return view('partials.dates.rangeTooHigh', ['limit' => self::LIMIT_DATE_RANGE]);
 
         $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle, $groupByRoute, $groupByDate, $groupByDriver);
 
