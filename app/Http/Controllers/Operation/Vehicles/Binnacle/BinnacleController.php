@@ -110,7 +110,7 @@ class BinnacleController extends Controller
                 $binnacle->type()->associate($fromBinnacle->type);
                 $binnacle->mileage = $fromBinnacle->mileage;
                 $binnacle->observations = $fromBinnacle->observations;
-                $binnacle->prev_date = $fromBinnacle->updated_at->toDateString();
+                $binnacle->prev_date = $fromBinnacle->updated_at;
                 $binnacle->notification = $fromBinnacle->notification;
             }
         }

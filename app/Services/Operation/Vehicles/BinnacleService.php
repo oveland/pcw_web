@@ -58,7 +58,7 @@ class BinnacleService
         $prevDate = $request->get('prev-date');
         $lastLocation = null;
         if ($prevDate) {
-            $lastLocation = LastLocation::whereDate('date', '<=', $prevDate)
+            $lastLocation = LastLocation::whereDate('date', '<', $prevDate)
                 ->where('vehicle_id', $vehicle->id)
                 ->orderByDesc('date')
                 ->first();

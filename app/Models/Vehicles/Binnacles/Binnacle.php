@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * App\Models\Vehicles\Binnacles\Binnacle
  *
  * @property int $id
- * @property string $date
- * @property string $prev_date
+ * @property Carbon | string $date
+ * @property Carbon | string $prev_date
  * @property int $type_id
  * @property int $vehicle_id
  * @property int $user_id
@@ -63,6 +63,11 @@ class Binnacle extends Model
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
+    public function getUpdatedAtAttribute($date)
+    {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+    }
+
     public function getDateAttribute($date)
     {
         if (!$date) return null;
@@ -72,6 +77,9 @@ class Binnacle extends Model
     public function getPrevDateAttribute($date)
     {
         if (!$date) return null;
+
+        if ($date instanceof Carbon) return $date;
+
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
