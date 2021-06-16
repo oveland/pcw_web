@@ -47,8 +47,8 @@ class BinnacleService
         if (!$binnacle) {
             $binnacle = new Binnacle();
 
-            $binnacle->mileageOdometer = $currentLocation->odometer;
-            $binnacle->mileageRoute = $currentLocation->mileage_route;
+            $binnacle->mileage_odometer = $currentLocation->odometer;
+            $binnacle->mileage_route = $currentLocation->mileage_route;
 
             $action = 'created';
             $update = false;
@@ -64,10 +64,10 @@ class BinnacleService
                 ->first();
         }
         if ($lastLocation) {
-            $binnacle->mileageOdometer = $lastLocation->odometer;
+            $binnacle->mileage_odometer = $lastLocation->odometer;
 
             if ($prevDate > '2021-06-15') {
-                $binnacle->mileageRoute = $lastLocation->mileage_route;
+                $binnacle->mileage_route = $lastLocation->mileage_route;
             } else {
                 $drs = DispatchRegister::active()
                     ->where('vehicle_id', $vehicle->id)
@@ -77,7 +77,7 @@ class BinnacleService
                     return $dr->route->distance_in_meters;
                 });
 
-                $binnacle->mileageRoute = $currentLocation->mileage_route - $routeKm;
+                $binnacle->mileage_route = $currentLocation->mileage_route - $routeKm;
             }
         }
 

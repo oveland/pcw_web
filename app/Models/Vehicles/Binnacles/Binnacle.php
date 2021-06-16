@@ -40,10 +40,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Notification $notification
  * @property int|null $mileage
  * @method static Builder|Binnacle whereMileage($value)
- * @property int|null $mileageOdometer
- * @property int|null $mileageRoute
+ * @property int|null $mileage_odometer
+ * @property int|null $mileage_odometer_completed
+ * @property int|null $mileage_route
+ * @property int|null $mileage_route_completed
  * @method static Builder|Binnacle whereMileageOdometer($value)
+ * @method static Builder|Binnacle whereMileageOdometerCompleted($value)
  * @method static Builder|Binnacle whereMileageRoute($value)
+ * @method static Builder|Binnacle whereMileageRouteCompleted($value)
  * @property-read mixed $mileage_traveled_odometer
  * @property-read mixed $mileage_traveled_route
  */
@@ -58,23 +62,23 @@ class Binnacle extends Model
         return config('app.simple_date_time_format');
     }
 
-    public function getCreatedAtAttribute($date)
+    function getCreatedAtAttribute($date)
     {
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
-    public function getUpdatedAtAttribute($date)
+    function getUpdatedAtAttribute($date)
     {
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
-    public function getDateAttribute($date)
+    function getDateAttribute($date)
     {
         if (!$date) return null;
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
-    public function getPrevDateAttribute($date)
+    function getPrevDateAttribute($date)
     {
         if (!$date) return null;
 
@@ -86,7 +90,7 @@ class Binnacle extends Model
     /**
      * @return BelongsTo | Type
      */
-    public function type()
+    function type()
     {
         return $this->belongsTo(Type::class, 'type_id');
     }
@@ -94,12 +98,12 @@ class Binnacle extends Model
     /**
      * @return BelongsTo | Vehicle
      */
-    public function vehicle()
+    function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function getMileageTraveled($type = 'greater')
+    function getMileageTraveled($type = 'greater')
     {
         $mileageByOdometer = $this->mileage_traveled_odometer;
         $mileageByRoute = $this->mileage_traveled_route;
@@ -117,40 +121,47 @@ class Binnacle extends Model
         }
     }
 
-    public function getMileageTraveledOdometerAttribute()
+    function getMileageTraveledOdometerAttribute()
     {
-        $currentLocation = $this->vehicle->currentLocation;
-
-        return ($currentLocation->odometer - $this->mileageOdometer) / 1000;
+        $currentLocationOdometer = $this->vehicle->currentLocation->odometer;
+        return (($this->completed ? $this->mileage_odometer_completed : $currentLocationOdometer) - $this->mileage_odometer) / 1000;
     }
 
-    public function getMileageTraveledRouteAttribute()
+    function getMileageTraveledRouteAttribute()
     {
-        $currentLocation = $this->vehicle->currentLocation;
+        $currentLocationMileageRoute = $this->vehicle->currentLocation->mileage_route;
 
-        return ($currentLocation->mileage_route - $this->mileageRoute) / 1000;
+        return (($this->completed ? $this->mileage_route_completed : $currentLocationMileageRoute) - $this->mileage_route) / 1000;
     }
 
     /**
      * @return BelongsTo | User
      */
-    public function user()
+    function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function notification()
+    function notification()
     {
         return $this->hasOne(Notification::class, 'binnacle_id', 'id');
     }
 
-    public function complete()
+    function complete()
     {
-        $this->completed = true;
+        if (!$this->completed) {
+            $currentLocation = $this->vehicle->currentLocation;
+
+            $this->mileage_odometer_completed = $currentLocation->odometer;
+            $this->mileage_route_completed = $currentLocation->mileage_route;
+
+            $this->completed = true;
+        }
+
         return $this;
     }
 
-    public function isNotifiableByMileage()
+    function isNotifiableByMileage()
     {
         return $this->mileage && $this->getMileageTraveled() >= $this->notification->mileage;
     }
