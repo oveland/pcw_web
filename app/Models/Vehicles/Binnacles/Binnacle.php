@@ -69,6 +69,12 @@ class Binnacle extends Model
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
+    public function getPrevDateAttribute($date)
+    {
+        if (!$date) return null;
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+    }
+
     /**
      * @return BelongsTo | Type
      */

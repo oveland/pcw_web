@@ -21,14 +21,12 @@
                     <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
                         <thead>
                         <tr class="inverse">
-                            <th class="text-right" colspan="10">
-
-                            </th>
-                        </tr>
-                        <tr class="inverse">
                             <th class="text-center"><i class="fa fa-car" aria-hidden="true"></i><br>@lang('Vehicle')</th>
                             <th class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i><br>@lang('Type')</th>
                             <th class="text-center"><i class="icon-bag" aria-hidden="true"></i><br>@lang('Observations')</th>
+                            <th class="text-center">
+                                <i class="fa fa-calendar" aria-hidden="true"></i> @lang('Previous maintenance')
+                            </th>
                             <th class="text-center">
                                 <i class="fa fa-calendar" aria-hidden="true"></i> @lang('Expiration date')
                             </th>
@@ -39,12 +37,16 @@
                                 <i class="fa fa-road" aria-hidden="true"></i> @lang('Mileage')<br>
                                 <small class="text-muted">
                                     @lang('Traveled') / @lang('Expiration')
+                                    <hr class="no-padding no-margin">
+                                    @lang('Difference')
                                 </small>
                             </th>
                             <th class="text-center">
                                 <i class="fa fa-road" aria-hidden="true"></i> @lang('Notification mileage')<br>
                                 <small class="text-muted">
                                     @lang('Traveled') / @lang('Expiration')
+                                    <hr class="no-padding no-margin">
+                                    @lang('Difference')
                                 </small>
                             </th>
                             <th class="text-center"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-bell faa-ring animated" aria-hidden="true"></i><br>@lang('Notification users')</th>
@@ -76,6 +78,11 @@
                                         </label>
                                     </td>
                                     <td class="binnacle-observations text-left">{{ $binnacle->observations }}</td>
+                                    <td>
+                                        @if($binnacle->prev_date)
+                                            {{ $binnacle->prev_date->toDateString() }}
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($binnacle->date)
                                             {{ $binnacle->date->toDateString() }}
