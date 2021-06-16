@@ -769,5 +769,15 @@
   "Download login report": "Descargar reporte de accesos",
   "activity": "actividad",
   "ARD turns": "Turnos DAR",
-  "ARD pending": "Pendiente DAR"
+  "ARD pending": "Pendiente DAR",
+  "Expirations": "Vencimientos",
+  "Previous maintenance date": "Fecha del último mantenimiento",
+  "Traveled mileage": "Kilometraje recorrido",
+  "Register as completed": "Registrar como completo",
+  "Confirm completed the maintenance": "Establecer el mantenimiento como completado",
+  "Create next maintenance": "Crear programación para próximo mantenimiento",
+  "Maintenance completed": "Mantenimiento completo",
+  "Maintenance completed successfully": "Mantenimiento completo correctamente",
+  "Vehicle maintenance": "Mantenimiento de vehículo",
+  "Create other": "Crear otro similar"
 }

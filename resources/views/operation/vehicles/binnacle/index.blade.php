@@ -127,15 +127,31 @@
         <div class="modal fade modal-binnacle" id="modal-binnacle-create" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-create') }}">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header p-20">
+                    <div class="modal-header p-20 bg-primary">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="fa fa-times"></i>
                         </button>
-                        <h4 class="modal-title text-center text-purple">
-                            <span><i class="icon-bag"></i> @lang('Vehicles binnacle')</span>
-                        </h4>
+                        <h3 class="modal-title text-center text-white">
+                            <span><i class="icon-bag"></i>@lang('Create') @lang('Vehicle maintenance')</span>
+                        </h3>
                     </div>
-                    <div class="modal-body p-t-0 p-b-0 row"></div>
+                    <div class="modal-body p-t-20 p-b-0 row"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade modal-binnacle" id="modal-binnacle-complete" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-complete', ['binnacle' => 'ID']) }}">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header p-20 bg-green-dark">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="fa fa-times"></i>
+                        </button>
+                        <h3 class="modal-title text-center text-white">
+                            <span><i class="icon-bag"></i> @lang('Complete') @lang('Vehicle maintenance')</span>
+                        </h3>
+                    </div>
+                    <div class="modal-body p-t-20 p-b-0 row"></div>
                 </div>
             </div>
         </div>
@@ -143,15 +159,15 @@
         <div class="modal fade modal-binnacle" id="modal-binnacle-edit" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-edit', ['binnacle' => 'ID']) }}">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header p-20">
+                    <div class="modal-header p-20 bg-yellow">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="fa fa-times"></i>
                         </button>
-                        <h4 class="modal-title text-center text-purple">
-                            <span><i class="icon-bag"></i> @lang('Edit') @lang('Vehicles binnacle')</span>
-                        </h4>
+                        <h3 class="modal-title text-center text-white">
+                            <span><i class="icon-bag"></i> @lang('Edit') @lang('Vehicle maintenance')</span>
+                        </h3>
                     </div>
-                    <div class="modal-body p-t-0 p-b-0 row"></div>
+                    <div class="modal-body p-t-20 p-b-0 row"></div>
                 </div>
             </div>
         </div>
@@ -159,15 +175,15 @@
         <div class="modal fade modal-binnacle" id="modal-binnacle-delete" style="background: #535353;opacity: 0.96;" data-url="{{ route('operation-vehicles-binnacle-form-delete', ['binnacle' => 'ID']) }}">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header p-20">
+                    <div class="modal-header p-20 bg-danger">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="fa fa-times"></i>
                         </button>
-                        <h4 class="modal-title text-center text-danger">
-                            <span><i class="icon-bag"></i> @lang('Delete') @lang('Vehicles binnacle')</span>
-                        </h4>
+                        <h3 class="modal-title text-center text-danger">
+                            <span><i class="icon-bag"></i> @lang('Delete') @lang('Vehicle maintenance')</span>
+                        </h3>
                     </div>
-                    <div class="modal-body p-t-0 p-b-0 row"></div>
+                    <div class="modal-body p-t-20 p-b-0 row"></div>
                 </div>
             </div>
         </div>
@@ -182,6 +198,7 @@
         let mainContainer = $('.main-container');
         let form = $('.form-search-operation');
         let modalBinnacleCreate = $('#modal-binnacle-create');
+        let modalBinnacleComplete = $('#modal-binnacle-complete');
         let modalBinnacleEdit = $('#modal-binnacle-edit');
         let modalBinnacleDelete = $('#modal-binnacle-delete');
 
@@ -235,13 +252,26 @@
             });
         });
 
-        function loadBinnacleFormCreate(){
+        function loadBinnacleFormCreate(fromBinnacle){
             $('.modal-binnacle').find('.modal-body').empty();
 
             modalBinnacleCreate.find('.modal-body').load(modalBinnacleCreate.data('url'), {
-                company: $('#company-report').val()
+                company: $('#company-report').val(),
+                fromBinnacle
             });
             modalBinnacleCreate.modal('show');
+        }
+
+        function completeBinnacle(id){
+            $('.modal-binnacle').find('.modal-body').empty();
+
+            const url = modalBinnacleComplete.data('url').toString();
+            modalBinnacleComplete.find('.modal-body').load(url.replace('ID', id), {
+                company: $('#company-report').val()
+            }, function (){
+                $('.tooltips').tooltip();
+            });
+            modalBinnacleComplete.modal('show');
         }
 
         function loadBinnacleFormEdit(id){
@@ -258,7 +288,9 @@
             $('.modal-binnacle').find('.modal-body').empty();
 
             const url = modalBinnacleDelete.data('url').toString();
-            modalBinnacleDelete.find('.modal-body').load(url.replace('ID', id), {});
+            modalBinnacleDelete.find('.modal-body').load(url.replace('ID', id), {}, function (){
+                $('.tooltips').tooltip();
+            });
             modalBinnacleDelete.modal('show');
         }
     </script>

@@ -62,6 +62,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read RouteTariff $tariff
  * @property-read Collection|Fringe[] $allFringes
  * @property-read mixed $distance_in_km
+ * @property-read mixed $distance_in_meters
  */
 class Route extends Model
 {
@@ -170,5 +171,10 @@ class Route extends Model
     public function getDistanceInKmAttribute()
     {
         return $this->distance;
+    }
+
+    public function getDistanceInMetersAttribute()
+    {
+        return $this->distance_in_km * 1000;
     }
 }

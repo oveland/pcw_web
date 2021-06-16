@@ -4,9 +4,9 @@
 
         <hr>
 
-        <div class="form-actions">
-            <div class="col-md-6 col-md-offset-4">
-                <button class="btn btn-rounded btn-circle btn-outline blue-chambray">
+        <div class="form-actions p-t-10">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-rounded btn-circle btn-outline btn-warning btn-lg">
                     <i class="fa fa-save"></i> @lang('Update')
                 </button>
             </div>

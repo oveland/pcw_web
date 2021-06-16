@@ -87,26 +87,35 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="text-left" style="display: inline-block">
+                                        <div class="text-center" style="display: inline-block">
                                             @if($binnacle->mileage)
+                                                {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$binnacle->mileage Km" }}
+                                                <hr class="no-margin no-padding">
+                                                <p class="no-margin no-padding">
+                                                    <small>{{ number_format($binnacle->mileage - $binnacle->getMileageTraveled(), 1) }} Km</small>
+                                                </p>
                                                 @if(Auth::user()->isSuperAdmin())
-                                                    <span class="tooltips" title="Km Odometer" data-placement="left">
-                                                        {{ number_format($binnacle->getMileageTraveled('odometer'), 1)." Km" }}  / {{ "$binnacle->mileage Km" }}
-                                                    </span>
-                                                    <br>
-                                                    <span class="tooltips" title="Km Route" data-placement="left">
-                                                        {{ number_format($binnacle->getMileageTraveled('route'), 1)." Km" }}
-                                                    </span>
-                                                @else
-                                                    {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$binnacle->mileage Km" }}
+                                                    <small class="text-muted">
+                                                        <small class="tooltips" title="Km Odometer" data-placement="left">
+                                                            {{ number_format($binnacle->getMileageTraveled('odometer'), 1)." Km" }}
+                                                        </small>
+                                                        vs
+                                                        <small class="tooltips" title="Km Route" data-placement="left">
+                                                            {{ number_format($binnacle->getMileageTraveled('route'), 1)." Km" }}
+                                                        </small>
+                                                    </small>
                                                 @endif
                                             @endif
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="text-left" style="display: inline-block">
+                                        <div class="text-center" style="display: inline-block">
                                             @if($binnacle->mileage && $notification->mileage)
                                                 {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$notification->mileage Km" }}
+                                                <hr class="no-margin no-padding">
+                                                <p class="no-margin no-padding">
+                                                    <small>{{ number_format($notification->mileage - $binnacle->getMileageTraveled(), 1) }} Km</small>
+                                                </p>
                                             @endif
                                         </div>
                                     </td>
@@ -141,10 +150,24 @@
                                         <small>{{ $binnacle->created_at }}</small>
                                     </td>
                                     <td class="text-center">
-                                        <button class="btn btn-circle green btn-outline" onclick="loadBinnacleFormEdit({{ $binnacle->id }})">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-circle red btn-outline" onclick="loadBinnacleFormDelete({{ $binnacle->id }})">
+                                        @if(!$binnacle->completed)
+                                            <button class="btn btn-circle green btn-outline tooltips" title="@lang('Register as completed')" onclick="completeBinnacle({{ $binnacle->id }})">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-circle yellow-mint btn-outline tooltips" title="@lang('Edit')" onclick="loadBinnacleFormEdit({{ $binnacle->id }})">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        @else
+                                            <label class="label-success btn-circle p-10 tooltips text-white" data-title="{{ $binnacle->updated_at }}">
+                                                <i class="fa fa-check text-white"></i> @lang('Maintenance completed')
+                                            </label>
+
+                                            <button class="btn btn-circle warning btn-outline tooltips" title="@lang('Create other')" onclick="loadBinnacleFormCreate({{ $binnacle->id }})">
+                                                <i class="fa fa-copy"></i>
+                                            </button>
+                                        @endif
+
+                                        <button class="btn btn-circle red btn-outline tooltips" title="@lang('Delete')" onclick="loadBinnacleFormDelete({{ $binnacle->id }})">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>

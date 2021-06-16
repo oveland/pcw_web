@@ -116,11 +116,13 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('url-binnacle'))->group(function () {
                 Route::get('/', 'Operation\Vehicles\Binnacle\BinnacleController@index')->name('operation-vehicles-binnacle');
                 Route::post('/form/create', 'Operation\Vehicles\Binnacle\BinnacleController@formCreate')->name('operation-vehicles-binnacle-form-create');
+                Route::post('/form/complete/{binnacle}', 'Operation\Vehicles\Binnacle\BinnacleController@formComplete')->name('operation-vehicles-binnacle-form-complete');
                 Route::post('/form/edit/{binnacle}', 'Operation\Vehicles\Binnacle\BinnacleController@formEdit')->name('operation-vehicles-binnacle-form-edit');
                 Route::post('/form/delete/{binnacle}', 'Operation\Vehicles\Binnacle\BinnacleController@formDelete')->name('operation-vehicles-binnacle-form-delete');
                 Route::post('/create', 'Operation\Vehicles\Binnacle\BinnacleController@create')->name('operation-vehicles-binnacle-create');
                 Route::post('/update/{binnacle}', 'Operation\Vehicles\Binnacle\BinnacleController@update')->name('operation-vehicles-binnacle-update');
                 Route::delete('/delete/{binnacle}', 'Operation\Vehicles\Binnacle\BinnacleController@delete')->name('operation-vehicles-binnacle-delete');
+                Route::post('/complete/{binnacle}', 'Operation\Vehicles\Binnacle\BinnacleController@complete')->name('operation-vehicles-binnacle-complete');
                 Route::get('/show', 'Operation\Vehicles\Binnacle\BinnacleController@show')->name('operation-vehicles-binnacle-show');
             });
         });

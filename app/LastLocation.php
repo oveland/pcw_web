@@ -32,9 +32,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $vehicle_status_id
  * @property float|null $yesterday_odometer
  * @property float|null $current_mileage
+ * @property float|null $mileage_route
  * @property bool|null $speeding
  * @method static Builder|LastLocation whereCurrentMileage($value)
- * @method static Builder|LastLocation whereDate($value)
+// * @method static Builder|LastLocation whereDate($value)
  * @method static Builder|LastLocation whereDateCreated($value)
  * @method static Builder|LastLocation whereDispatchRegisterId($value)
  * @method static Builder|LastLocation whereDistance($value)

@@ -1,9 +1,9 @@
-<form class="col-md-12 form-horizontal form-binnacle-delete p-b-20" action="{{ route('operation-vehicles-binnacle-delete', ['binnacle' => $binnacle->id]) }}">
+<form class="col-md-12 form-horizontal form-binnacle-complete p-b-20" action="{{ route('operation-vehicles-binnacle-complete', ['binnacle' => $binnacle->id]) }}">
     <div class="form-body p-l-40 p-r-40">
-        <div class="details col-md-12 bg-danger-light">
-            <strong class="text-danger">
+        <div class="details col-md-12 bg-success-light">
+            <strong class="text-success">
                 <i class="fa fa-warning"></i>
-                @lang('Confirm delete the register'):
+                @lang('Confirm completed the maintenance'):
             </strong>
 
             <p>@lang('Vehicle') {{ $binnacle->vehicle->number }}</p>
@@ -22,12 +22,12 @@
                 <p>@lang('Expiration mileage'):
                     @if(Auth::user()->isSuperAdmin())
                         <span class="tooltips" title="Km Odometer" data-placement="left">
-                            {{ number_format($binnacle->getMileageTraveled('odometer'), 1)." Km" }}
-                        </span>
+                        {{ number_format($binnacle->getMileageTraveled('odometer'), 1)." Km" }}
+                    </span>
                         |
                         <span class="tooltips" title="Km Route" data-placement="left">
-                            {{ number_format($binnacle->getMileageTraveled('route'), 1)." Km" }}
-                        </span>
+                        {{ number_format($binnacle->getMileageTraveled('route'), 1)." Km" }}
+                    </span>
                         <br>
                     @else
                         {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }}
@@ -38,10 +38,25 @@
 
         <hr class="hr col-md-12">
 
+        <div class="col-md-12">
+            <div class="md-checkbox">
+                <input type="checkbox" id="checkbox-next" class="md-check" name="create-next" value="true">
+                <label for="checkbox-next">
+                    <span class="inc"></span>
+                    <span class="check"></span>
+                    <span class="box"></span>
+
+                    @lang('Create next maintenance')
+                </label>
+            </div>
+        </div>
+
+        <hr class="hr col-md-12">
+        
         <div class="form-actions">
             <div class="col-md-12">
-                <button class="btn btn-rounded btn-circle btn-outline btn-danger btn-lg">
-                    <i class="fa fa-trash"></i> @lang('Delete')
+                <button class="btn btn-rounded btn-circle btn-outline green-dark btn-lg">
+                    <i class="fa fa-check"></i> @lang('Save')
                 </button>
             </div>
         </div>
@@ -51,7 +66,7 @@
 
 <script>
 
-    let formBinnacleDelete = $('.form-binnacle-delete');
+    let formBinnacleComplete = $('.form-binnacle-complete');
 
     $('.default-select2').select2();
 
@@ -70,26 +85,33 @@
         $('#notification-date').val($(this).val());
     });
 
-    formBinnacleDelete.submit(function (e) {
+    formBinnacleComplete.submit(function (e) {
         e.preventDefault();
-        if (formBinnacleDelete.isValid()) {
-            formBinnacleDelete.find('button').addClass(loadingClass);
+        if (formBinnacleComplete.isValid()) {
+            formBinnacleComplete.find('button').addClass(loadingClass);
             $.ajax({
-                url: formBinnacleDelete.attr('action'),
-                data: formBinnacleDelete.serialize(),
-                type: 'DELETE',
+                url: formBinnacleComplete.attr('action'),
+                data: formBinnacleComplete.serialize(),
+                type: 'POST',
                 success: function (data) {
-                    if(data.success){
+                    if (data.success) {
                         $('.modal').modal('hide');
-                        gwarning(data.message);
+                        gsuccess(data.message);
 
                         $('.form-search-operation').submit();
-                    }else{
+
+                        if(data.createNext){
+                            setTimeout(function() {
+                                loadBinnacleFormCreate(data.fromBinnacle);
+                            }, 1000);
+                        }
+
+                    } else {
                         gerror(data.message);
                     }
                 },
-                complete:function(){
-                    formBinnacleDelete.find('button').removeClass(loadingClass);
+                complete: function () {
+                    formBinnacleComplete.find('button').removeClass(loadingClass);
                 }
             });
         }

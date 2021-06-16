@@ -42,17 +42,17 @@ class NotificationUser extends Model
 
     protected function getDateFormat()
     {
-        return config('app.date_time_format');
+        return config('app.simple_date_time_format');
     }
 
     public function getEmailNotifiedAtAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+        return $date ? Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]) : '';
     }
 
     public function getPlatformNotifiedAtAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+        return $date ? Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]) : '';
     }
 
     /**

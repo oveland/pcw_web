@@ -1,6 +1,6 @@
 
 @php
-    $selected = collect( isset($selected) && is_array($selected) ? $selected : [] )->values();
+    $selected = collect( isset($selected) ? $selected : [] )->values();
 @endphp
 
 @if( $withAll ?? false )

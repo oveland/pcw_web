@@ -17,12 +17,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property int $id
  * @property string $date
+ * @property string $prev_date
  * @property int $type_id
  * @property int $vehicle_id
  * @property int $user_id
  * @property string|null $observations
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property boolean $completed
  * @method static Builder|Binnacle whereCreatedAt($value)
  * @method static Builder|Binnacle whereDate($value)
  * @method static Builder|Binnacle whereId($value)
@@ -35,7 +37,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Type $type
  * @property-read User $user
  * @property-read Vehicle $vehicle
- * @property-read Notification $notification
+ * @property Notification $notification
  * @property int|null $mileage
  * @method static Builder|Binnacle whereMileage($value)
  * @property int|null $mileageOdometer
@@ -49,11 +51,11 @@ class Binnacle extends Model
 {
     protected $table = 'vehicle_binnacles';
 
-    protected $fillable = ['date', 'type_id', 'vehicle_id', 'user_id', 'observations', 'mileage'];
+    protected $fillable = ['date', 'prev_date', 'type_id', 'vehicle_id', 'user_id', 'observations', 'mileage'];
 
     protected function getDateFormat()
     {
-        return config('app.date_time_format');
+        return config('app.simple_date_time_format');
     }
 
     public function getCreatedAtAttribute($date)
@@ -95,9 +97,10 @@ class Binnacle extends Model
             case 'odometer':
                 return $mileageByOdometer;
                 break;
+            default:
+                return $mileageByOdometer > $mileageByRoute ? $mileageByOdometer : $mileageByRoute;
+                break;
         }
-        
-        return $mileageByOdometer > $mileageByRoute ? $mileageByOdometer : $mileageByRoute;
     }
 
     public function getMileageTraveledOdometerAttribute()
@@ -125,6 +128,12 @@ class Binnacle extends Model
     public function notification()
     {
         return $this->hasOne(Notification::class, 'binnacle_id', 'id');
+    }
+
+    public function complete()
+    {
+        $this->completed = true;
+        return $this;
     }
 
     public function isNotifiableByMileage()

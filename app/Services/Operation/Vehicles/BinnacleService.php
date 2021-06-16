@@ -2,8 +2,10 @@
 
 namespace App\Services\Operation\Vehicles;
 
+use App\LastLocation;
 use App\Mail\Vehicles\Binnacles\NotificationMail;
 use App\Models\Company\Company;
+use App\Models\Routes\DispatchRegister;
 use App\Models\Users\User;
 use App\Models\Vehicles\Binnacles\Binnacle;
 use App\Models\Vehicles\Binnacles\Notification;
@@ -40,10 +42,10 @@ class BinnacleService
 
         DB::beginTransaction();
 
+        $currentLocation = $vehicle->currentLocation;
+
         if (!$binnacle) {
             $binnacle = new Binnacle();
-
-            $currentLocation = $vehicle->currentLocation;
 
             $binnacle->mileageOdometer = $currentLocation->odometer;
             $binnacle->mileageRoute = $currentLocation->mileage_route;
@@ -52,6 +54,34 @@ class BinnacleService
             $update = false;
         }
 
+
+        $prevDate = $request->get('prev-date');
+        $lastLocation = null;
+        if ($prevDate) {
+            $lastLocation = LastLocation::whereDate('date', '<=', $prevDate)
+                ->where('vehicle_id', $vehicle->id)
+                ->orderByDesc('date')
+                ->first();
+        }
+        if ($lastLocation) {
+            $binnacle->mileageOdometer = $lastLocation->odometer;
+
+            if ($prevDate > '2021-06-15') {
+                $binnacle->mileageRoute = $lastLocation->mileage_route;
+            } else {
+                $drs = DispatchRegister::active()
+                    ->where('vehicle_id', $vehicle->id)
+                    ->whereBetween('date', [$prevDate, Carbon::now()])->get();
+
+                $routeKm = $drs->sum(function (DispatchRegister $dr) {
+                    return $dr->route->distance_in_meters;
+                });
+
+                $binnacle->mileageRoute = $currentLocation->mileage_route - $routeKm;
+            }
+        }
+
+
         $response = collect([
             'success' => true,
             'message' => __("Binnacle register $action successfully")
@@ -59,6 +89,7 @@ class BinnacleService
 
         $binnacle = $binnacle->fill([
             'date' => $request->get('date'),
+            'prev_date' => $request->get('prev-date'),
             'mileage' => $request->get('mileage'),
             'observations' => $request->get('observations')
         ]);

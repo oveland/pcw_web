@@ -4,10 +4,10 @@
 
         <hr>
 
-        <div class="form-actions">
-            <div class="col-md-6 col-md-offset-4">
-                <button class="btn btn-rounded btn-circle btn-outline blue-chambray">
-                    <i class="fa fa-save"></i> @lang('Save')
+        <div class="form-actions p-t-10">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-rounded btn-circle btn-outline btn-primary btn-lg">
+                    <i class="fa fa-save"></i> @lang('Create')
                 </button>
             </div>
         </div>

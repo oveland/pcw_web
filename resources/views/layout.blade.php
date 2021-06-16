@@ -1526,14 +1526,16 @@ License: You must have a valid license purchased only from themeforest(the above
 @include('template.metronic.plugins')
 
 <script>
-    $(document).ready(function (){
+    $(document).ready(function () {
         const selectorIcons = '.page-sidebar-menu.page-sidebar-menu-closed li';
 
-        $('body').on('mouseenter', selectorIcons, function(){
-            $(this).find('a span').style('display', 'block !important');
-        }).on('mouseleave', selectorIcons, function(){
+        $('body').on('mouseenter', selectorIcons, function () {
+            if ($(this).find('a span') && typeof($(this).find('a span').style) == 'function' ) {
+                $(this).find('a span').style('display', 'block !important');
+            }
+        }).on('mouseleave', selectorIcons, function () {
             $(this).find('a span').hide();
-        }).on('click', '.sidebar-toggler', function() {
+        }).on('click', '.sidebar-toggler', function () {
             // setTimeout(()=>{
             //     $(selectorIcons).mouseenter();
             // },500);

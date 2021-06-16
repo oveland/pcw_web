@@ -32,7 +32,7 @@ class BinnacleController extends Controller
     /**
      * @var BinnacleService
      */
-    private $service;
+    private $binnacle;
 
     /**
      * VehicleIssuesController constructor.
@@ -44,7 +44,7 @@ class BinnacleController extends Controller
     {
         $this->auth = $auth;
         $this->novelty = $novelty;
-        $this->service = $service;
+        $this->binnacle = $service;
     }
 
     /**
@@ -74,7 +74,7 @@ class BinnacleController extends Controller
         $sortDescending = $request->get('sort-desc');
         $company = $this->auth->getCompanyFromRequest($request);
 
-        $report = $this->service->report($company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending);
+        $report = $this->binnacle->report($company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending);
 
         if ($request->get('export')) $this->novelty->export($report);
 
@@ -102,7 +102,29 @@ class BinnacleController extends Controller
 
         $binnacle = new Binnacle();
 
+        if ($request->get('fromBinnacle')) {
+            $fromBinnacle = Binnacle::find($request->get('fromBinnacle'));
+
+            if ($fromBinnacle) {
+                $binnacle->vehicle()->associate($fromBinnacle->vehicle);
+                $binnacle->type()->associate($fromBinnacle->type);
+                $binnacle->mileage = $fromBinnacle->mileage;
+                $binnacle->observations = $fromBinnacle->observations;
+                $binnacle->prev_date = $fromBinnacle->updated_at->toDateString();
+                $binnacle->notification = $fromBinnacle->notification;
+            }
+        }
+
         return view('operation.vehicles.binnacle.formCreate', compact(['vehicles', 'binnacleTypes', 'binnacle', 'users']));
+    }
+
+    /**
+     * @param Binnacle $binnacle
+     * @return Factory|Application|View
+     */
+    public function formComplete(Binnacle $binnacle)
+    {
+        return view('operation.vehicles.binnacle.formComplete', compact(['binnacle']));
     }
 
     /**
@@ -136,7 +158,32 @@ class BinnacleController extends Controller
      */
     public function create(Request $request)
     {
-        return $this->service->process(null, $request);
+        return $this->binnacle->process(null, $request);
+    }
+
+    /**
+     * @param Binnacle $binnacle
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function complete(Binnacle $binnacle, Request $request)
+    {
+        $response = collect([
+            'success' => true,
+            'message' => __("Maintenance completed successfully")
+        ]);
+
+        if (!$binnacle->complete()->save()) {
+            $response->put('success', false);
+            $response->put('message', __("Maintenance not completed"));
+        }
+
+        if ($request->get('create-next')) {
+            $response->put('createNext', true);
+            $response->put('fromBinnacle', $binnacle->id);
+        }
+
+        return response()->json($response);
     }
 
     /**
@@ -147,7 +194,7 @@ class BinnacleController extends Controller
      */
     public function update(Binnacle $binnacle, Request $request)
     {
-        return $this->service->process($binnacle, $request);
+        return $this->binnacle->process($binnacle, $request);
     }
 
     /**
