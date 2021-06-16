@@ -31,7 +31,7 @@
     <label for="prev-date" class="control-label col-md-5 field-required">@lang('Previous maintenance date')</label>
     <div class="col-md-5">
         <div class="input-group date binnacle-date">
-            <input name="prev-date" id="prev-date" type="text" class="form-control" value="{{ $binnacle->prevDate ? $binnacle->prevDate->toDateString() ?? date('Y-m-d') : date('Y-m-d') }}"/>
+            <input name="prev-date" id="prev-date" type="text" class="form-control" value="{{ $binnacle->prev_date ? $binnacle->prev_date->toDateString() ?? date('Y-m-d') : date('Y-m-d') }}"/>
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar font-dark"></span>
             </span>
