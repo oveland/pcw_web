@@ -132,7 +132,7 @@
                             <i class="fa fa-times"></i>
                         </button>
                         <h3 class="modal-title text-center text-white">
-                            <span><i class="icon-bag"></i>@lang('Create') @lang('Vehicle maintenance')</span>
+                            <span><i class="icon-bag"></i>@lang('Create') <span class="text-lowercase">@lang('Vehicle maintenance')</span></span>
                         </h3>
                     </div>
                     <div class="modal-body p-t-20 p-b-0 row"></div>
@@ -148,7 +148,7 @@
                             <i class="fa fa-times"></i>
                         </button>
                         <h3 class="modal-title text-center text-white">
-                            <span><i class="icon-bag"></i> @lang('Complete') @lang('Vehicle maintenance')</span>
+                            <span><i class="icon-bag"></i> @lang('Complete') <span class="text-lowercase">@lang('Vehicle maintenance')</span></span>
                         </h3>
                     </div>
                     <div class="modal-body p-t-20 p-b-0 row"></div>
@@ -164,7 +164,7 @@
                             <i class="fa fa-times"></i>
                         </button>
                         <h3 class="modal-title text-center text-white">
-                            <span><i class="icon-bag"></i> @lang('Edit') @lang('Vehicle maintenance')</span>
+                            <span><i class="icon-bag"></i> @lang('Edit') <span class="text-lowercase">@lang('Vehicle maintenance')</span></span>
                         </h3>
                     </div>
                     <div class="modal-body p-t-20 p-b-0 row"></div>
@@ -180,7 +180,7 @@
                             <i class="fa fa-times"></i>
                         </button>
                         <h3 class="modal-title text-center text-danger">
-                            <span><i class="icon-bag"></i> @lang('Delete') @lang('Vehicle maintenance')</span>
+                            <span><i class="icon-bag"></i> @lang('Delete') <span class="text-lowercase">@lang('Vehicle maintenance')</span></span>
                         </h3>
                     </div>
                     <div class="modal-body p-t-20 p-b-0 row"></div>
