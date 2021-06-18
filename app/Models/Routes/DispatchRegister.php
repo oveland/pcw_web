@@ -876,7 +876,9 @@ class DispatchRegister extends Model
     public function getMileageAttribute()
     {
 //        return ($this->end_odometer - $this->start_odometer) / 1000;
-        return $this->route ? $this->route->distance_in_km : 0;
+
+        $lastControlPoint = $this->route->controlPoints()->get()->sortBy('order')->last();
+        return $lastControlPoint ? $lastControlPoint->distance_from_dispatch / 1000 : 0;
     }
 
     public function processedByARD()

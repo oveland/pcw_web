@@ -431,7 +431,10 @@ class PassengersRecordersReportController extends Controller
         $programmedMileage = 0;
         if ($dispatchRegisters->count()) {
             $firstRoute = $firstRoute ? $firstRoute : $dispatchRegisters->sortBy('departure_time')->first()->route;
-            $programmedMileage = $programmedRoundTrips * $firstRoute->distance_in_km;
+
+            $lastControlPoint = $firstRoute->controlPoints()->get()->sortBy('order')->last();
+
+            $programmedMileage = $programmedRoundTrips * ($lastControlPoint ? ($lastControlPoint->distance_from_dispatch / 1000) : $firstRoute->distance_in_km);
         }
 
         return $programmedMileage;

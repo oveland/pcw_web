@@ -66,19 +66,30 @@ class BinnacleService
         if ($lastLocation) {
             $binnacle->mileage_odometer = $lastLocation->odometer;
 
-            if ($prevDate > '2021-06-15') {
-                $binnacle->mileage_route = $lastLocation->mileage_route;
-            } else {
-                $drs = DispatchRegister::active()
-                    ->where('vehicle_id', $vehicle->id)
-                    ->whereBetween('date', [$prevDate, Carbon::now()])->get();
+//            if ($prevDate > '2021-06-15') {
+//                $binnacle->mileage_route = $lastLocation->mileage_route;
+//            } else {
+//                $drs = DispatchRegister::active()
+//                    ->where('vehicle_id', $vehicle->id)
+//                    ->whereBetween('date', [$prevDate, Carbon::now()])->get();
+//
+//                $routeKm = $drs->sum(function (DispatchRegister $dr) {
+//                    return $dr->route->distance_in_meters;
+//                });
+//
+//                $binnacle->mileage_route = $currentLocation->mileage_route - $routeKm;
+//            }
 
-                $routeKm = $drs->sum(function (DispatchRegister $dr) {
-                    return $dr->route->distance_in_meters;
-                });
+            $drs = DispatchRegister::active()
+                ->where('vehicle_id', $vehicle->id)
+                ->whereBetween('date', [$prevDate, Carbon::now()])->get();
 
-                $binnacle->mileage_route = $currentLocation->mileage_route - $routeKm;
-            }
+            $routeKm = $drs->sum(function (DispatchRegister $dr) {
+                $lastControlPoint = $dr->route->controlPoints()->get()->sortBy('order')->last();
+                return $lastControlPoint ? $lastControlPoint->distance_from_dispatch : 0;
+            });
+
+            $binnacle->mileage_route = $currentLocation->mileage_route - $routeKm;
         }
 
 
