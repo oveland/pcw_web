@@ -187,22 +187,19 @@ class BinnacleService
         return $notifications->sortBy('date');
     }
 
-    /**
-     * @param Company $company
-     * @param $vehicleReport
-     * @param $dateReport
-     * @param $withEndDate
-     * @param $dateEndReport
-     * @param bool $sortDescending
-     * @return object
-     */
-    public function report(Company $company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending = false)
+    public function report(Company $company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending = false, $includeCompleted = true)
     {
         $vehicles = ($vehicleReport == 'all') ? $company->vehicles : $company->vehicles()->where('id', $vehicleReport)->get();
 
         $binnacles = Binnacle::whereIn('vehicle_id', $vehicles->pluck('id'))->where(function ($query) use ($dateReport, $dateEndReport) {
             $query->whereBetween('date', ["$dateReport 00:00:00", "$dateEndReport 23:59:59"])->orWhere('mileage', '>', 0);
-        })->get();
+        });
+
+        if (!$includeCompleted) {
+            $binnacles->where('completed', false);
+        }
+
+        $binnacles = $binnacles->get();
 
         return (object)[
             'company' => $company,
@@ -213,6 +210,7 @@ class BinnacleService
             'binnacles' => $binnacles->sortBy('date', 0, $sortDescending)->sortBy('id'),
             'isNotEmpty' => $binnacles->isNotEmpty(),
             'sortDescending' => $sortDescending,
+            'includeCompleted' => $includeCompleted,
         ];
     }
 

@@ -72,9 +72,10 @@ class BinnacleController extends Controller
 
         $vehicleReport = $request->get('vehicle-report');
         $sortDescending = $request->get('sort-desc');
+        $includeCompleted = $request->get('include-completed');
         $company = $this->auth->getCompanyFromRequest($request);
 
-        $report = $this->binnacle->report($company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending);
+        $report = $this->binnacle->report($company, $vehicleReport, $dateReport, $withEndDate, $dateEndReport, $sortDescending, $includeCompleted);
 
         if ($request->get('export')) $this->novelty->export($report);
 
