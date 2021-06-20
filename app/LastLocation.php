@@ -86,17 +86,20 @@ class LastLocation extends Model
 
     public function getDateAttribute($date)
     {
+        if(!$date){
+//            dd($this);
+        }
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
     public function getMileageAttribute()
     {
-        return $this->vehicle->company->countMileageByMax() ? $this->attributes['max_mileage'] : $this->attributes['odometer'];
+        return $this->vehicle->company->countMileageByMax() && $this->attributes['max_mileage'] > 0 ? $this->attributes['max_mileage'] : $this->attributes['odometer'];
     }
 
     public function getCurrentMileageAttribute()
     {
-        return $this->vehicle->company->countMileageByMax() ? $this->attributes['max_current_mileage'] : $this->attributes['current_mileage'];
+        return $this->vehicle->company->countMileageByMax() && $this->attributes['max_current_mileage'] > 0 ? $this->attributes['max_current_mileage'] : $this->attributes['current_mileage'];
     }
 
     public function getCurrentMileageOdometerAttribute()

@@ -83,7 +83,6 @@ class ReportMileageDateRangeController extends Controller
         $vehicles = $vehicles->get();
 
         $lastLocationsByVehicles = LastLocation::whereBetween('date', ["$initialDateReport 00:00:00", "$finalDateReport 23:59:59"])
-            ->with('reportVehicleStatus')
             ->whereIn('vehicle_id', $vehicles->pluck('id'))
             ->get()
             ->groupBy('vehicle_id');
@@ -99,8 +98,8 @@ class ReportMileageDateRangeController extends Controller
                     return $ll->date->toDateString() == $date;
                 })->first() : null;
 
-                $mileage = $lastLocation ? $lastLocation->current_mileage_odometer : 0;
-                $mileageOdometer = $lastLocation ? $lastLocation->current_mileage : 0;
+                $mileage = $lastLocation ? $lastLocation->current_mileage : 0;
+                $mileageOdometer = $lastLocation ? $lastLocation->current_mileage_odometer : 0;
                 $mileageRoute = $lastLocation ? $lastLocation->current_mileage_route : 0;
 
                 $maxMileage = $company->getMaxDailyMileage();
