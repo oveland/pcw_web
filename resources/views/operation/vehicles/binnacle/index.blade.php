@@ -110,7 +110,7 @@
                                                     <input id="sort-desc" class="vehicle-options" name="sort-desc" type="checkbox" value="true" checked> @lang('Sort by date')
                                                 </label>
                                                 <label class="text-bold text-success">
-                                                    <input id="include-completed" class="vehicle-options" name="include-completed" type="checkbox" value="false" checked> @lang('Include completed maintenances')
+                                                    <input id="include-completed" class="vehicle-options" name="include-completed" type="checkbox" value="true"> @lang('Include completed maintenances')
                                                 </label>
                                             </div>
                                         </div>
