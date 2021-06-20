@@ -57,7 +57,7 @@ class Binnacle extends Model
 {
     protected $table = 'vehicle_binnacles';
 
-    protected $fillable = ['date', 'prev_date', 'type_id', 'vehicle_id', 'user_id', 'observations', 'mileage'];
+    protected $fillable = ['date', 'prev_date', 'type_id', 'vehicle_id', 'user_id', 'observations', 'mileage', 'mileage_expiration'];
 
     protected function getDateFormat()
     {
