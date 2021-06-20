@@ -65,7 +65,7 @@
     <label for="expiration-mileage" class="control-label col-md-5">@lang('Expiration mileage') <small class="text-muted">Km</small></label>
     <div class="col-md-5">
         <div class="input-group">
-            <input name="expiration-mileage" id="expiration-mileage" type="number" min="1" class="form-control" data-toggle="click" value="{{ $binnacle ? $binnacle->mileage : '' }}"/>
+            <input name="expiration-mileage" id="expiration-mileage" type="number" min="1" class="form-control" data-toggle="click" value="{{ $binnacle ? $binnacle->mileage_expiration : '' }}"/>
             <span class="input-group-addon">
                 <i class="fa fa-road font-dark"></i>
             </span>
@@ -114,7 +114,7 @@
     <label for="notification-mileage" class="control-label col-md-5">@lang('Notification mileage') <small class="text-muted">Km</small></label>
     <div class="col-md-5">
         <div class="input-group">
-            <input name="notification-mileage" id="notification-mileage" type="number" min="1" class="form-control" value="{{ $binnacle->notification ? $binnacle->notification->mileage : '' }}"/>
+            <input name="notification-mileage" id="notification-mileage" type="number" min="1" class="form-control" value="{{ $binnacle->notification ? $binnacle->notification->mileage_expiration : '' }}"/>
             <span class="input-group-addon">
                 <i class="fa fa-road font-dark"></i>
             </span>

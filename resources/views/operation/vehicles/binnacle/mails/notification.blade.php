@@ -54,13 +54,13 @@
                                 <td>{{ $binnacle->date ? $binnacle->date->toDateString() : '' }}</td>
                                 <td>{{ $notification && $notification->date ? $notification->date->toDateString() : '' }}</td>
                                 <td>
-                                    {{ $binnacle->mileage ? "$binnacle->mileage Km" : '' }}
+                                    {{ $binnacle->mileage_expiration ? "$binnacle->mileage_expiration Km" : '' }}
                                 </td>
                                 <td>
                                     {{ $notification->mileage ? "$notification->mileage Km" : '' }}
                                 </td>
                                 <td>
-                                    {{ $binnacle->mileage ? number_format($binnacle->getMileageTraveled(), 1)." Km" : '' }}
+                                    {{ $binnacle->mileage_expiration ? number_format($binnacle->getMileageTraveled(), 1)." Km" : '' }}
                                 </td>
                             </tr>
                         @endforeach

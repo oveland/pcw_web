@@ -95,11 +95,11 @@
                                     </td>
                                     <td>
                                         <div class="text-center" style="display: inline-block">
-                                            @if($binnacle->mileage)
-                                                {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$binnacle->mileage Km" }}
+                                            @if($binnacle->mileage_expiration)
+                                                {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$binnacle->mileage_expiration Km" }}
                                                 <hr class="no-margin no-padding">
                                                 <p class="no-margin no-padding">
-                                                    <small>{{ number_format($binnacle->mileage - $binnacle->getMileageTraveled(), 1) }} Km</small>
+                                                    <small>{{ number_format($binnacle->mileage_expiration - $binnacle->getMileageTraveled(), 1) }} Km</small>
                                                 </p>
                                                 @if(Auth::user()->isSuperAdmin())
                                                     <small class="text-muted">
@@ -117,7 +117,7 @@
                                     </td>
                                     <td>
                                         <div class="text-center" style="display: inline-block">
-                                            @if($binnacle->mileage && $notification->mileage)
+                                            @if($binnacle->mileage_expiration && $notification->mileage)
                                                 {{ number_format($binnacle->getMileageTraveled(), 1)." Km" }} / {{ "$notification->mileage Km" }}
                                                 <hr class="no-margin no-padding">
                                                 <p class="no-margin no-padding">

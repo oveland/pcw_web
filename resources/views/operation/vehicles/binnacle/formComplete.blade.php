@@ -18,7 +18,7 @@
                 <p>@lang('Expiration date'): {{ $binnacle->date }}</p>
             @endif
 
-            @if($binnacle->mileage)
+            @if($binnacle->mileage_expiration)
                 <p>@lang('Expiration mileage'):
                     @if(Auth::user()->isSuperAdmin())
                         <span class="tooltips" title="Km Odometer" data-placement="left">
