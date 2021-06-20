@@ -14,8 +14,9 @@ class AddColumnMileageCompletedToVehicleBinnaclesTable extends Migration
     public function up()
     {
         Schema::table('vehicle_binnacles', function (Blueprint $table) {
-            $table->integer('mileage_odometer_completed')->nullable()->default(0);
-            $table->integer('mileage_route_completed')->nullable()->default(0);
+            $table->unsignedBigInteger('mileage_completed')->nullable()->default(0);
+            $table->unsignedBigInteger('mileage_odometer_completed')->nullable()->default(0);
+            $table->unsignedBigInteger('mileage_route_completed')->nullable()->default(0);
 
             $table->renameColumn('"mileageOdometer"', 'mileage_odometer');
             $table->renameColumn('"mileageRoute"', 'mileage_route');
@@ -35,6 +36,7 @@ class AddColumnMileageCompletedToVehicleBinnaclesTable extends Migration
 
             $table->dropColumn('mileage_route_completed');
             $table->dropColumn('mileage_odometer_completed');
+            $table->dropColumn('mileage_completed');
         });
     }
 }

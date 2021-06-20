@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|VehicleIssue whereCreatedAt($value)
- * @method static Builder|VehicleIssue whereDate($value)
  * @method static Builder|VehicleIssue whereDispatchRegisterId($value)
  * @method static Builder|VehicleIssue whereDriverId($value)
  * @method static Builder|VehicleIssue whereId($value)

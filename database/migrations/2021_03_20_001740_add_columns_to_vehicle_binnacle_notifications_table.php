@@ -14,7 +14,8 @@ class AddColumnsToVehicleBinnacleNotificationsTable extends Migration
     public function up()
     {
         Schema::table('vehicle_binnacle_notifications', function (Blueprint $table) {
-            $table->integer('mileage')->nullable()->default(0);
+            $table->unsignedBigInteger('mileage')->nullable()->default(0);
+            $table->unsignedBigInteger('mileage_expiration')->nullable()->default(0);
         });
     }
 
@@ -27,6 +28,7 @@ class AddColumnsToVehicleBinnacleNotificationsTable extends Migration
     {
         Schema::table('vehicle_binnacle_notifications', function (Blueprint $table) {
             $table->dropColumn('mileage');
+            $table->dropColumn('mileage_expiration');
         });
     }
 }

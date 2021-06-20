@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\ReportVehicleStatus;
 use Carbon\Carbon;
@@ -31,11 +32,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $vehicle_id
  * @property int|null $vehicle_status_id
  * @property float|null $yesterday_odometer
+ * @property float|null $mileage
  * @property float|null $current_mileage
  * @property float|null $mileage_route
+ * @property float|null $current_mileage_route
+ * @property float|null $max_mileage
+ * @property float|null $max_current_mileage
  * @property bool|null $speeding
+ *
+ * @property-read float|null $current_mileage_odometer
  * @method static Builder|LastLocation whereCurrentMileage($value)
-// * @method static Builder|LastLocation whereDate($value)
  * @method static Builder|LastLocation whereDateCreated($value)
  * @method static Builder|LastLocation whereDispatchRegisterId($value)
  * @method static Builder|LastLocation whereDistance($value)
@@ -83,6 +89,21 @@ class LastLocation extends Model
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 
+    public function getMileageAttribute()
+    {
+        return $this->vehicle->company->countMileageByMax() ? $this->attributes['max_mileage'] : $this->attributes['odometer'];
+    }
+
+    public function getCurrentMileageAttribute()
+    {
+        return $this->vehicle->company->countMileageByMax() ? $this->attributes['max_current_mileage'] : $this->attributes['current_mileage'];
+    }
+
+    public function getCurrentMileageOdometerAttribute()
+    {
+        return $this->attributes['current_mileage'];
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
@@ -98,7 +119,7 @@ class LastLocation extends Model
         $report = collect([]);
         $reportVehicleStatusAll = $this->reportVehicleStatus;
 
-        foreach ($reportVehicleStatusAll as $reportVehicleStatus ){
+        foreach ($reportVehicleStatusAll as $reportVehicleStatus) {
             $report->push((object)[
                 'status' => $reportVehicleStatus->status,
                 'updated_by' => $reportVehicleStatus->updated_by,

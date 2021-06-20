@@ -53,7 +53,7 @@
     <label for="expiration-date" class="control-label col-md-5 field-required">@lang('Expiration date')</label>
     <div class="col-md-5">
         <div class="input-group date binnacle-date">
-            <input name="date" id="expiration-date" type="text" class="form-control" value="{{ $binnacle->date ? $binnacle->date->toDateString() : '' }}"/>
+            <input name="expiration-date" id="expiration-date" type="text" class="form-control" value="{{ $binnacle->date ? $binnacle->date->toDateString() : '' }}"/>
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar font-dark"></span>
             </span>
@@ -65,7 +65,7 @@
     <label for="expiration-mileage" class="control-label col-md-5">@lang('Expiration mileage') <small class="text-muted">Km</small></label>
     <div class="col-md-5">
         <div class="input-group">
-            <input name="mileage" id="expiration-mileage" type="number" min="1" class="form-control" data-toggle="click" value="{{ $binnacle ? $binnacle->mileage : '' }}"/>
+            <input name="expiration-mileage" id="expiration-mileage" type="number" min="1" class="form-control" data-toggle="click" value="{{ $binnacle ? $binnacle->mileage : '' }}"/>
             <span class="input-group-addon">
                 <i class="fa fa-road font-dark"></i>
             </span>

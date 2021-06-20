@@ -290,11 +290,31 @@ class Company extends Model
         return collect([self::MONTEBELLO])->contains($this->id);
     }
 
+    public function countMileageByMax()
+    {
+        return collect([self::ALAMEDA])->contains($this->id);
+    }
+
     /**
      * @return HasMany | User []
      */
     public function users()
     {
         return $this->hasMany(User::class)->where('active', true);
+    }
+
+    function getMaxDailyMileage()
+    {
+        switch ($this->id) {
+            case self::MONTEBELLO:
+                return 900000;
+                break;
+            case self::YUMBENOS:
+                return 500000;
+                break;
+            default:
+                return 400000;
+                break;
+        }
     }
 }

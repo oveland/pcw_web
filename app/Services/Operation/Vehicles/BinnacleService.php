@@ -36,60 +36,40 @@ class BinnacleService
     {
         $action = 'updated';
         $update = true;
-
-        $vehicle = Vehicle::find($request->get('vehicle'));
-        $type = Type::find($request->get('type'));
-
-        DB::beginTransaction();
-
-        $currentLocation = $vehicle->currentLocation;
-
         if (!$binnacle) {
             $binnacle = new Binnacle();
-
-            $binnacle->mileage_odometer = $currentLocation->odometer;
-            $binnacle->mileage_route = $currentLocation->mileage_route;
-
             $action = 'created';
             $update = false;
         }
 
-
         $prevDate = $request->get('prev-date');
-        $lastLocation = null;
-        if ($prevDate) {
-            $lastLocation = LastLocation::whereDate('date', '<', $prevDate)
-                ->where('vehicle_id', $vehicle->id)
-                ->orderByDesc('date')
-                ->first();
-        }
-        if ($lastLocation) {
-            $binnacle->mileage_odometer = $lastLocation->odometer;
+        $vehicle = Vehicle::find($request->get('vehicle'));
+        $type = Type::find($request->get('type'));
 
-//            if ($prevDate > '2021-06-15') {
-//                $binnacle->mileage_route = $lastLocation->mileage_route;
-//            } else {
-//                $drs = DispatchRegister::active()
-//                    ->where('vehicle_id', $vehicle->id)
-//                    ->whereBetween('date', [$prevDate, Carbon::now()])->get();
-//
-//                $routeKm = $drs->sum(function (DispatchRegister $dr) {
-//                    return $dr->route->distance_in_meters;
-//                });
-//
-//                $binnacle->mileage_route = $currentLocation->mileage_route - $routeKm;
-//            }
+        $binnacle->vehicle()->associate($vehicle);
+        $binnacle->user()->associate(Auth::user());
+        $binnacle->type()->associate($type);
 
-            $drs = DispatchRegister::active()
-                ->where('vehicle_id', $vehicle->id)
-                ->whereBetween('date', [$prevDate, Carbon::now()])->get();
+        DB::beginTransaction();
 
-            $routeKm = $drs->sum(function (DispatchRegister $dr) {
-                $lastControlPoint = $dr->route->controlPoints()->get()->sortBy('order')->last();
-                return $lastControlPoint ? $lastControlPoint->distance_from_dispatch : 0;
-            });
+        $yesterdayLocation = LastLocation::whereDate('date', '<', Carbon::now()->toDateString())
+            ->where('vehicle_id', $vehicle->id)
+            ->orderByDesc('date')
+            ->first();
 
-            $binnacle->mileage_route = $currentLocation->mileage_route - $routeKm;
+        $prevDateLocation = LastLocation::whereDate('date', '<', $prevDate)
+            ->where('vehicle_id', $vehicle->id)
+            ->orderByDesc('date')
+            ->first();
+
+        if ($prevDateLocation) {
+            $binnacle->mileage = $prevDateLocation->mileage;
+            $binnacle->mileage_odometer = $prevDateLocation->odometer;
+            $binnacle->mileage_route = $prevDateLocation->mileage_route;
+        } else {
+            $binnacle->mileage = $yesterdayLocation->mileage;
+            $binnacle->mileage_odometer = $yesterdayLocation->odometer;
+            $binnacle->mileage_route = $yesterdayLocation->mileage_route;
         }
 
 
@@ -99,15 +79,11 @@ class BinnacleService
         ]);
 
         $binnacle = $binnacle->fill([
-            'date' => $request->get('date'),
+            'date' => $request->get('expiration-date'),
             'prev_date' => $request->get('prev-date'),
-            'mileage' => $request->get('mileage'),
+            'mileage_expiration' => $request->get('expiration-mileage'),
             'observations' => $request->get('observations')
         ]);
-
-        $binnacle->vehicle()->associate($vehicle);
-        $binnacle->user()->associate(Auth::user());
-        $binnacle->type()->associate($type);
 
 
         if (!$binnacle->save()) {
@@ -202,8 +178,8 @@ class BinnacleService
         $notifications = $notifications->filter(function (Notification $n) use ($company) {
             $binnacle = $n->binnacle;
 
-            $companyNotifications = $company ? $company->vehicles->contains($binnacle->vehicle->id) : true;
-            $notificationsByMileage = $binnacle->mileage && !$binnacle->notification->date ? $binnacle->isNotifiableByMileage() : true;
+            $companyNotifications = !$company || $company->vehicles->contains($binnacle->vehicle->id);
+            $notificationsByMileage = $binnacle->isNotifiableByMileage();
 
             return $companyNotifications && $notificationsByMileage;
         });
