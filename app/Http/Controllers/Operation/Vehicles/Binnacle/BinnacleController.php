@@ -108,7 +108,7 @@ class BinnacleController extends Controller
             if ($fromBinnacle) {
                 $binnacle->vehicle()->associate($fromBinnacle->vehicle);
                 $binnacle->type()->associate($fromBinnacle->type);
-                $binnacle->mileage = $fromBinnacle->mileage;
+                $binnacle->mileage_expiration = $fromBinnacle->mileage_expiration;
                 $binnacle->observations = $fromBinnacle->observations;
                 $binnacle->prev_date = $fromBinnacle->updated_at;
                 $binnacle->notification = $fromBinnacle->notification;
