@@ -67,9 +67,9 @@ class BinnacleService
             $binnacle->mileage_odometer = $prevDateLocation->odometer;
             $binnacle->mileage_route = $prevDateLocation->mileage_route;
         } else {
-            $binnacle->mileage = $yesterdayLocation->mileage;
-            $binnacle->mileage_odometer = $yesterdayLocation->odometer;
-            $binnacle->mileage_route = $yesterdayLocation->mileage_route;
+            $binnacle->mileage = $yesterdayLocation->mileage ?? 0;
+            $binnacle->mileage_odometer = $yesterdayLocation->odometer ?? 0;
+            $binnacle->mileage_route = $yesterdayLocation->mileage_route ?? 0;
         }
 
 
