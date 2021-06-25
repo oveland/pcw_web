@@ -203,7 +203,7 @@ trait CounterBySensor
             } else if ($passengersByRoundTrip < 0) {
                 $issueField = __('A negative count');
             } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder
-                && $startRecorder != 66600 && $dispatchRegister->id != 1624106
+                && $startRecorder != 66600 && $dispatchRegister->id != 1624106 && $dispatchRegister->id != 1633048
             ) {
                 $start = $startRecorder;
                 $endLast = $lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 ? $lastDispatchRegister->end_recorder : 0;
