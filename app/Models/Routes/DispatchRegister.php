@@ -847,7 +847,7 @@ class DispatchRegister extends Model
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
 
-            if(!$takings->isTaken() && $this->date >= '2021-05-01' && $this->date <= '2021-05-13'){
+            if (!$takings->isTaken() && $this->date >= '2021-05-01' && $this->date <= '2021-05-13') {
                 $takings->passenger_tariff = 2200;
             }
 
@@ -873,6 +873,7 @@ class DispatchRegister extends Model
     public function getMileageAttribute()
     {
 //        return ($this->end_odometer - $this->start_odometer) / 1000;
+        if (!$this->route) return 0;
 
         $lastControlPoint = $this->route->controlPoints()->get()->sortBy('order')->last();
         return $lastControlPoint ? $lastControlPoint->distance_from_dispatch / 1000 : 0;
@@ -890,6 +891,7 @@ class DispatchRegister extends Model
     {
         return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')->where('dispatch_id', $this->dispatch_id);
     }
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }
