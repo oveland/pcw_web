@@ -100,7 +100,7 @@
 							<multiselect track-by="username" label="tag" :options="search.users" :clear-on-select="true"
 										 @input="searchReport()" v-model="search.user"
 										 :option-height="104" :searchable="true" :allow-empty="true"
-										 :placeholder="$t('Select a user')"></multiselect>
+										 :placeholder="$t('Select an user')"></multiselect>
 						</div>
 					</div>
 				</div>
