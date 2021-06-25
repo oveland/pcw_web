@@ -27,5 +27,9 @@ return [
     */
     'gps_time_for_NO_report_power_OFF' => env('GPS_TIME_FOR_NO_REPORT_POWER_OFF','00:15:00'),
 
-
+    'devices' => [
+        'syrus' => [
+            'ftp_base_path' => env('GPS_DEVICES_SYRUS_FTP_BASE_PATH')
+        ]
+    ]
 ];

@@ -100,6 +100,7 @@ class PhotoService
             'img' => 'required',
             'type' => 'required',
             'side' => 'required',
+            'uid' => 'required|unique:app_photos'
         ]);
 
         if ($validator->passes()) {
@@ -144,7 +145,7 @@ class PhotoService
                 'success' => $success,
                 'message' => $message,
             ],
-            'photo' => $success ? $photo->getAPIFields() : null
+//            'photo' => $success ? $photo->getAPIFields() : null
         ];
     }
 

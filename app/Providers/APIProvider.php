@@ -9,6 +9,7 @@ use App\Services\API\Apps\PCWTrackService;
 use App\Services\API\Apps\APIRocketService;
 use App\Services\API\Files\APIConcoxFilesService;
 use App\Services\API\Files\APIRocketFilesService;
+use App\Services\API\GPS\Syrus\APISyrus;
 use App\Services\API\Web\APIPassengersService;
 use App\Services\API\Web\DB\APIMigrationsService;
 use App\Services\API\Web\Reports\APIReportService;
@@ -108,6 +109,21 @@ class APIProvider extends ServiceProvider
                     break;
                 default:
                     return Image::make(File::get('img/image-404.jpg'))->resize(200, 200)->response('png');
+                    break;
+            }
+        });
+
+        // For API Syrus
+        $this->app->bind('api.gps', function ($app, $params) {
+            $resource = $params['resource'];
+            $service = $params['service'] ?? null;
+
+            switch ($resource) {
+                case 'syrus':
+                    return new APISyrus($service);
+                    break;
+                default:
+                    return abort(403);
                     break;
             }
         });

@@ -49,10 +49,11 @@ class APIController extends Controller
      * @example For API Apps:   /v2/app/rocket/set-photo?side=rear
      * @example For API Web:    /v2/web/reports/control-points?foo=bar
      * @example For API Files:    /v2/files/rocket/get-photo?foo=bar
+     * @example For API Files:    /v2/gps/syrus/sync-photos?foo=bar
      */
     public function serve($platform, $resource, $service)
     {
-        if (collect(['app', 'web', 'files'])->contains($platform) && $resource && $service) {
+        if (collect(['app', 'web', 'files', 'gps'])->contains($platform) && $resource && $service) {
             return App::makeWith("api", compact(['platform', 'resource', 'service']))->serve();
         }
 

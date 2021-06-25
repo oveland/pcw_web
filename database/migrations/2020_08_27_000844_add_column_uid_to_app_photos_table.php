@@ -14,11 +14,11 @@ class AddColumnUidToAppPhotosTable extends Migration
     public function up()
     {
         Schema::table('app_photos', function (Blueprint $table) {
-            $table->unsignedBigInteger('uid')->nullable()->unique();
+            $table->text('uid')->nullable()->unique();
         });
 
         Schema::table('app_current_photos', function (Blueprint $table) {
-            $table->unsignedBigInteger('uid')->nullable()->unique();
+            $table->text('uid')->nullable()->unique();
         });
     }
 
