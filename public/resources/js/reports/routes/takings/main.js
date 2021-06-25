@@ -1560,6 +1560,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
@@ -7023,10 +7029,26 @@ var render = function() {
                           staticClass: "p-l-20",
                           class: r.vehicle.processTakings
                             ? "text-info"
-                            : "text-warning text-bold",
+                            : "text-danger text-bold",
                           attrs: { colspan: r.vehicle.processTakings ? 1 : 11 }
                         },
-                        [_c("small", [_vm._v(_vm._s(r.takings.observations))])]
+                        [
+                          r.takings.isTaken && r.forNormalTakings
+                            ? _c("small", [
+                                _vm._v(
+                                  "\n\t\t\t\t\t" +
+                                    _vm._s(r.takings.observations) +
+                                    "\n\t\t\t\t"
+                                )
+                              ])
+                            : _c("small", { staticClass: "text-warning" }, [
+                                _vm._v(
+                                  "\n\t\t\t\t\t" +
+                                    _vm._s(_vm.$t("No taken")) +
+                                    "\n\t\t\t\t"
+                                )
+                              ])
+                        ]
                       ),
                       _vm._v(" "),
                       _c("td", { staticClass: "text-info p-l-20" }, [

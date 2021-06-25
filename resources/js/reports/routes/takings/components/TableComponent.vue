@@ -215,8 +215,14 @@
 						<small class="text-muted tooltips" :data-title="$t('Passengers balance')">{{ r.takings.passengersBalance | numberFormat('0.0') }}</small>
 					</td>
 				</template>
-				<td class="p-l-20" :class="r.vehicle.processTakings ? 'text-info' : 'text-warning text-bold'" :colspan="r.vehicle.processTakings ? 1: 11">
-					<small>{{ r.takings.observations }}</small>
+
+				<td class="p-l-20" :class="r.vehicle.processTakings ? 'text-info' : 'text-danger text-bold'" :colspan="r.vehicle.processTakings ? 1: 11">
+					<small v-if="r.takings.isTaken && r.forNormalTakings">
+						{{ r.takings.observations }}
+					</small>
+					<small v-else class="text-warning">
+						{{ $t('No taken') }}
+					</small>
 				</td>
 				<td class="text-info p-l-20">
 					<div v-if="r.takings.user">
