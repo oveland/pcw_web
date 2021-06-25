@@ -341,6 +341,8 @@
 					<br>
 					<small class="tooltips" :data-title="$t('Passengers balance')"><i class="fa fa-users"></i> {{ totals.passengersBalance | numberFormat('0.0') }}</small>
 				</th>
+				<th class="bg-inverse text-white text-bold text-right" colspan="2">
+				</th>
 			</tr>
 			</tfoot>
 		</table>

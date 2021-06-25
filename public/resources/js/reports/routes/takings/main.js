@@ -1566,6 +1566,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
@@ -7572,7 +7574,12 @@ var render = function() {
                           ]
                         )
                       ]
-                    )
+                    ),
+                    _vm._v(" "),
+                    _c("th", {
+                      staticClass: "bg-inverse text-white text-bold text-right",
+                      attrs: { colspan: "2" }
+                    })
                   ]
                 )
               ]
