@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<table v-if="report && report.length"
-			   class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report">
-			<thead>
+			   class="table table-bordered table-striped table-condensed table-hover table-valign-middle table-report relative">
+			<thead  style="position: sticky; top: 20px">
 			<tr class="inverse">
 				<th>
 					<small>
@@ -289,7 +289,7 @@
 				</td>
 			</tr>
 			</tbody>
-			<tfoot>
+			<tfoot style="position: sticky; bottom: 0px">
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
 				<th :colspan=" options.showRecorders ? 7 : 5" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
 					<small><i class="icon-layers"></i> {{ $t('Totals') }}</small>

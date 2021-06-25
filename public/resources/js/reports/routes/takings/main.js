@@ -6471,10 +6471,10 @@ var render = function() {
           "table",
           {
             staticClass:
-              "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report"
+              "table table-bordered table-striped table-condensed table-hover table-valign-middle table-report relative"
           },
           [
-            _c("thead", [
+            _c("thead", { staticStyle: { position: "sticky", top: "20px" } }, [
               _c("tr", { staticClass: "inverse" }, [
                 _c("th", [
                   _c("small", [
@@ -7291,281 +7291,292 @@ var render = function() {
               2
             ),
             _vm._v(" "),
-            _c("tfoot", [
-              _c(
-                "tr",
-                { class: _vm.totals.hasInvalidCounts ? "bg-danger" : "" },
-                [
-                  _c(
-                    "th",
-                    {
-                      staticClass:
-                        "bg-inverse text-white text-right text-bold uppercase",
-                      staticStyle: { "font-size": "1.1em !important" },
-                      attrs: { colspan: _vm.options.showRecorders ? 7 : 5 }
-                    },
-                    [
-                      _c("small", [
-                        _c("i", { staticClass: "icon-layers" }),
-                        _vm._v(" " + _vm._s(_vm.$t("Totals")))
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _vm.options.showSensor
-                    ? _c(
-                        "th",
-                        { staticClass: "bg-inverse text-white text-center" },
-                        [
-                          _c("small", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.totals.passengers.sensor.tariff.a
-                                  .totalCounted
-                              )
-                            )
-                          ]),
-                          _vm._v(" •\n\t\t\t\t"),
-                          _c("small", [
-                            _vm._v(
-                              _vm._s(
-                                _vm._f("numberFormat")(
+            _c(
+              "tfoot",
+              { staticStyle: { position: "sticky", bottom: "0px" } },
+              [
+                _c(
+                  "tr",
+                  { class: _vm.totals.hasInvalidCounts ? "bg-danger" : "" },
+                  [
+                    _c(
+                      "th",
+                      {
+                        staticClass:
+                          "bg-inverse text-white text-right text-bold uppercase",
+                        staticStyle: { "font-size": "1.1em !important" },
+                        attrs: { colspan: _vm.options.showRecorders ? 7 : 5 }
+                      },
+                      [
+                        _c("small", [
+                          _c("i", { staticClass: "icon-layers" }),
+                          _vm._v(" " + _vm._s(_vm.$t("Totals")))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm.options.showSensor
+                      ? _c(
+                          "th",
+                          { staticClass: "bg-inverse text-white text-center" },
+                          [
+                            _c("small", [
+                              _vm._v(
+                                _vm._s(
                                   _vm.totals.passengers.sensor.tariff.a
-                                    .totalCharge,
-                                  "$0,0"
+                                    .totalCounted
                                 )
                               )
-                            )
-                          ])
-                        ]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.options.showSensor
-                    ? _c(
-                        "th",
-                        { staticClass: "bg-inverse text-white text-center" },
-                        [
-                          _c("small", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.totals.passengers.sensor.tariff.b
-                                  .totalCounted
+                            ]),
+                            _vm._v(" •\n\t\t\t\t"),
+                            _c("small", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("numberFormat")(
+                                    _vm.totals.passengers.sensor.tariff.a
+                                      .totalCharge,
+                                    "$0,0"
+                                  )
+                                )
                               )
-                            )
-                          ]),
-                          _vm._v(" •\n\t\t\t\t"),
-                          _c("small", [
-                            _vm._v(
-                              _vm._s(
-                                _vm._f("numberFormat")(
+                            ])
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.options.showSensor
+                      ? _c(
+                          "th",
+                          { staticClass: "bg-inverse text-white text-center" },
+                          [
+                            _c("small", [
+                              _vm._v(
+                                _vm._s(
                                   _vm.totals.passengers.sensor.tariff.b
-                                    .totalCharge,
-                                  "$0,0"
+                                    .totalCounted
                                 )
                               )
-                            )
-                          ])
-                        ]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    {
-                      staticClass:
-                        "bg-inverse text-white text-center text-bold",
-                      staticStyle: { "font-size": "1.1em !important" }
-                    },
-                    [
-                      _c("small", [
-                        _vm._v(_vm._s(_vm.totals.passengers.recorders.count))
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "bg-inverse text-white text-right" },
-                    [
-                      _c("small", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(
-                              _vm.totals.totalProduction,
-                              "$0,0"
-                            )
-                          )
+                            ]),
+                            _vm._v(" •\n\t\t\t\t"),
+                            _c("small", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("numberFormat")(
+                                    _vm.totals.passengers.sensor.tariff.b
+                                      .totalCharge,
+                                    "$0,0"
+                                  )
+                                )
+                              )
+                            ])
+                          ]
                         )
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "bg-inverse text-white text-right" },
-                    [
-                      _c("small", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(_vm.totals.control, "$0,0")
-                          )
-                        )
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "bg-inverse text-white text-right" },
-                    [
-                      _c("small", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(_vm.totals.fuel, "$0,0")
-                          )
-                        )
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "bg-inverse text-white text-right" },
-                    [
-                      _c("small", [
-                        _vm._v(_vm._s(_vm.totals.fuelGallons.toFixed(2)))
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "bg-inverse text-right" }),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "bg-inverse text-white text-right" },
-                    [
-                      _c("small", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(_vm.totals.bonus, "$0,0")
-                          )
-                        )
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "bg-inverse text-white text-right" },
-                    [
-                      _c("small", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(_vm.totals.others, "$0,0")
-                          )
-                        )
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    {
-                      staticClass: "bg-inverse text-white text-bold text-right"
-                    },
-                    [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(
-                              _vm.totals.netProduction,
-                              "$0,0"
-                            )
-                          )
-                        )
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    {
-                      staticClass: "bg-inverse text-white text-bold text-right"
-                    },
-                    [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(_vm.totals.advance, "$0,0")
-                          )
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c(
-                        "small",
-                        {
-                          staticClass: "tooltips",
-                          attrs: { "data-title": _vm.$t("Passengers advance") }
-                        },
-                        [
-                          _c("i", { staticClass: "fa fa-users" }),
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass:
+                          "bg-inverse text-white text-center text-bold",
+                        staticStyle: { "font-size": "1.1em !important" }
+                      },
+                      [
+                        _c("small", [
+                          _vm._v(_vm._s(_vm.totals.passengers.recorders.count))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      { staticClass: "bg-inverse text-white text-right" },
+                      [
+                        _c("small", [
                           _vm._v(
-                            " " +
-                              _vm._s(
-                                _vm._f("numberFormat")(
-                                  _vm.totals.passengersAdvance,
-                                  "0.0"
-                                )
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                _vm.totals.totalProduction,
+                                "$0,0"
                               )
+                            )
                           )
-                        ]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    {
-                      staticClass: "bg-inverse text-white text-bold text-right"
-                    },
-                    [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("numberFormat")(_vm.totals.balance, "$0,0")
-                          )
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c(
-                        "small",
-                        {
-                          staticClass: "tooltips",
-                          attrs: { "data-title": _vm.$t("Passengers balance") }
-                        },
-                        [
-                          _c("i", { staticClass: "fa fa-users" }),
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      { staticClass: "bg-inverse text-white text-right" },
+                      [
+                        _c("small", [
                           _vm._v(
-                            " " +
-                              _vm._s(
-                                _vm._f("numberFormat")(
-                                  _vm.totals.passengersBalance,
-                                  "0.0"
-                                )
-                              )
+                            _vm._s(
+                              _vm._f("numberFormat")(_vm.totals.control, "$0,0")
+                            )
                           )
-                        ]
-                      )
-                    ]
-                  )
-                ]
-              )
-            ])
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      { staticClass: "bg-inverse text-white text-right" },
+                      [
+                        _c("small", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(_vm.totals.fuel, "$0,0")
+                            )
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      { staticClass: "bg-inverse text-white text-right" },
+                      [
+                        _c("small", [
+                          _vm._v(_vm._s(_vm.totals.fuelGallons.toFixed(2)))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "bg-inverse text-right" }),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      { staticClass: "bg-inverse text-white text-right" },
+                      [
+                        _c("small", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(_vm.totals.bonus, "$0,0")
+                            )
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      { staticClass: "bg-inverse text-white text-right" },
+                      [
+                        _c("small", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(_vm.totals.others, "$0,0")
+                            )
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass:
+                          "bg-inverse text-white text-bold text-right"
+                      },
+                      [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(
+                                _vm.totals.netProduction,
+                                "$0,0"
+                              )
+                            )
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass:
+                          "bg-inverse text-white text-bold text-right"
+                      },
+                      [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(_vm.totals.advance, "$0,0")
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c(
+                          "small",
+                          {
+                            staticClass: "tooltips",
+                            attrs: {
+                              "data-title": _vm.$t("Passengers advance")
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-users" }),
+                            _vm._v(
+                              " " +
+                                _vm._s(
+                                  _vm._f("numberFormat")(
+                                    _vm.totals.passengersAdvance,
+                                    "0.0"
+                                  )
+                                )
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass:
+                          "bg-inverse text-white text-bold text-right"
+                      },
+                      [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("numberFormat")(_vm.totals.balance, "$0,0")
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c(
+                          "small",
+                          {
+                            staticClass: "tooltips",
+                            attrs: {
+                              "data-title": _vm.$t("Passengers balance")
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-users" }),
+                            _vm._v(
+                              " " +
+                                _vm._s(
+                                  _vm._f("numberFormat")(
+                                    _vm.totals.passengersBalance,
+                                    "0.0"
+                                  )
+                                )
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ]
+            )
           ]
         )
       : _vm._e(),
