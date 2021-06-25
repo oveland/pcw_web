@@ -25,7 +25,7 @@
 
         <div style="position: absolute;width: 99%;top: -10px;">
             <div style="background: white;position: absolute;height: 60px;z-index: 100;width: 100%;"></div>
-            <iframe id="ts-iframe" height="500px" class="col-md-12 no-padding opacity-0" frameborder="0" src="http://dev.pcwserviciosgps.com/reportes/rutas/reporte-de-ruta/ts"></iframe>
+            <iframe id="ts-iframe" style="height: 90vh" class="col-md-12 no-padding opacity-0" frameborder="0" src="http://dev.pcwserviciosgps.com/reportes/rutas/reporte-de-ruta/ts"></iframe>
         </div>
     </div>
 @endsection

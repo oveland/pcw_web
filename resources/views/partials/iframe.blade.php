@@ -4,12 +4,14 @@
     <style>
         .page-content {
             padding: 0 !important;
+            min-height: 95vh !important;
+            height: 95vh !important;
         }
     </style>
 @endsection
 
 @section('content')
-    <iframe class="" src="{{ $link }}" width="100%" height="1100px"></iframe>
+    <iframe class="" src="{{ $link }}" width="100%"  style="height: 95vh"></iframe>
 @endsection
 
 @section('scripts')

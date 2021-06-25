@@ -327,7 +327,12 @@ License: You must have a valid license purchased only from themeforest(the above
     }
 
     .page-sidebar-menu.page-sidebar-menu-closed li span {
-        display: none;
+        /*display: none !important;*/
+        color: transparent;
+    }
+
+    .page-sidebar-menu.page-sidebar-menu-closed li span:hover {
+        display: block !important;
         color: white;
     }
 
@@ -335,6 +340,10 @@ License: You must have a valid license purchased only from themeforest(the above
         position: absolute !important;
         right: 50px !important;
         background: transparent !important;
+    }
+
+    .page-bar {
+        width: 100% !important;
     }
 </style>
 
