@@ -7042,13 +7042,17 @@ var render = function() {
                                     "\n\t\t\t\t"
                                 )
                               ])
-                            : _c("small", { staticClass: "text-warning" }, [
-                                _vm._v(
-                                  "\n\t\t\t\t\t" +
-                                    _vm._s(_vm.$t("No taken")) +
-                                    "\n\t\t\t\t"
-                                )
-                              ])
+                            : _c(
+                                "small",
+                                { staticClass: "text-warning uppercase" },
+                                [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t" +
+                                      _vm._s(_vm.$t("No taken")) +
+                                      "\n\t\t\t\t"
+                                  )
+                                ]
+                              )
                         ]
                       ),
                       _vm._v(" "),

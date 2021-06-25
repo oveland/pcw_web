@@ -220,7 +220,7 @@
 					<small v-if="r.takings.isTaken && r.forNormalTakings || !r.vehicle.processTakings">
 						{{ r.takings.observations }}
 					</small>
-					<small v-else class="text-warning">
+					<small v-else class="text-warning uppercase">
 						{{ $t('No taken') }}
 					</small>
 				</td>
