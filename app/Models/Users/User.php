@@ -316,4 +316,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserVehicle::class);
     }
+
+    public function toArray($short = false)
+    {
+        if ($short) {
+            return (object)[
+                'id' => $this->id,
+                'name' => $this->name,
+                'username' => $this->username,
+            ];
+        }
+
+        return collect(parent::toArray())->put('tag', "$this->username • $this->name")->toArray();
+    }
 }

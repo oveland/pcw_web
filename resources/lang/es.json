@@ -822,5 +822,11 @@
   "Error setting advance": "Error al registrar anticipo",
   "Enter a valid number": "Ingrese un número válido",
   "Passengers advance": "Pasajeros anticipo",
-  "Passengers balance": "Pasajeros CxC"
+  "Passengers balance": "Pasajeros CxC",
+  "Ups!": "Ups!",
+  "Excel": "Excel",
+  "PDF": "PDF",
+  "Control": "Control",
+  "Responsable": "Responsable",
+  "Takings user": "Usuario recaudador"
 }

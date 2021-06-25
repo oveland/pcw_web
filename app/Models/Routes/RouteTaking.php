@@ -130,6 +130,8 @@ class RouteTaking extends Model
 
     public function getPassengersBalanceAttribute()
     {
+        if ($this->dispatchRegister->vehicle->process_takings) return 0;
+
         $totalPassengers = $this->dispatchRegister->passengers->recorders->count;
         return intval($totalPassengers) - $this->passengers_advance;
     }
@@ -164,7 +166,7 @@ class RouteTaking extends Model
             'balance' => $this->balance,
             'netProduction' => $this->net_production,
             'observations' => $this->observations,
-            'user' => $this->user,
+            'user' => $this->user->toArray(true),
             'isTaken' => $this->isTaken(),
             'stationFuel' => $this->stationFuel(),
             'updatedAt' => $this->updated_at->toDateTimeString()

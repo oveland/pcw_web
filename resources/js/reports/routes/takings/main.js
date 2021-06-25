@@ -43,6 +43,8 @@ let camerasReportView = new Vue({
             route: {},
             vehicles: [],
             vehicle: {},
+            users: [],
+            user: {},
             date: moment().format("YYYY-MM-DD"),
             dateRange: false,
             type: 'detailed'
@@ -55,6 +57,7 @@ let camerasReportView = new Vue({
                 date: this.search.date,
                 route: this.search.route ? this.search.route.id : null,
                 vehicle: this.search.vehicle ? this.search.vehicle.id : null,
+                user: this.search.user ? this.search.user.id : null,
                 type: this.search.type
             }
         },

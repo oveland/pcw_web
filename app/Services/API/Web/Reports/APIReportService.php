@@ -65,6 +65,7 @@ class APIReportService implements APIWebInterface
     private function buildTakingsReport()
     {
         $vehicleRequest = $this->request->get('vehicle');
+        $userTakingsRequest = $this->request->get('user-takings');
         $routeRequest = $this->request->get('route');
         $finalDate = $this->request->get('final-date') ? $this->request->get('final-date') : $this->request->get('date-end');
         $onlyTotals = $this->request->get('only-totals');
@@ -77,7 +78,7 @@ class APIReportService implements APIWebInterface
         $date = $this->request->get('date');
 
         if ($date) {
-            $report = $this->dispatchService->getTakingsReport($date, $finalDate, $routeRequest, $vehicleRequest, 'detailed', $onlyTotals);
+            $report = $this->dispatchService->getTakingsReport($date, $finalDate, $routeRequest, $vehicleRequest, 'detailed', $onlyTotals, $userTakingsRequest);
 
             return response()->json([
                 'error' => false,

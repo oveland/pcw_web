@@ -9,6 +9,7 @@ use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\Dispatch;
 use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
+use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Eloquent;
@@ -95,6 +96,14 @@ class Company extends Model
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class)->orderBy('number');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class)->orderBy('name');
     }
 
     /**
@@ -254,6 +263,6 @@ class Company extends Model
 
     public function getAPIFields()
     {
-        return (object) $this->only(['id', 'name', 'short_name', 'active']);
+        return (object)$this->only(['id', 'name', 'short_name', 'active']);
     }
 }

@@ -27,7 +27,7 @@
 						</li>
 						<li v-if="search.date" class="divider"> </li>
 						<li v-if="search.date">
-							<a :href="`http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=downloadTakingsReceipt&ui=${ui}&vehicle=${search.vehicle ? search.vehicle.id : ''}&fecha_sel=${search.date}`" target="_blank">
+							<a :href="`http://www.pcwserviciosgps.com/pcw_gps/php/despachoDinamico/pdf/crearrecibopdf.php?action=downloadTakingsReceipt&ui=${ui}&vehicle=${search.vehicle ? search.vehicle.id : ''}&user-takings=${search.user ? search.user.id : ''}&fecha_sel=${search.date}`" target="_blank">
 								<i class="icon-layers"></i> {{ $t('Receipt consolidated') }} <i class="fa fa-file-pdf-o pull-right red tooltips" :title="$t('PDF')"></i>
 							</a>
 						</li>
@@ -92,6 +92,18 @@
                         </div>
                     </div>
                 </div>
+
+				<div class="col-md-2">
+					<div class="form-group">
+						<label class="control-label">{{ $t('Takings user') }}</label>
+						<div class="form-group">
+							<multiselect track-by="username" label="tag" :options="search.users" :clear-on-select="true"
+										 @input="searchReport()" v-model="search.user"
+										 :option-height="104" :searchable="true" :allow-empty="true"
+										 :placeholder="$t('Select a user')"></multiselect>
+						</div>
+					</div>
+				</div>
             </div>
         </div>
     </div>
@@ -113,6 +125,7 @@
             getSearchParams: function () {
 				this.search.route = {};
 				this.search.vehicle = {};
+				this.search.user = {};
 
                 const mainContainer = $('.report-container');
                 mainContainer.fadeIn();
@@ -126,6 +139,7 @@
                     this.search.vehicles = data.vehicles;
                     this.search.companies = data.companies;
                     this.search.routes = data.routes;
+                    this.search.users = data.users;
 
                     this.search.company = _.find(this.search.companies, function (c) {
                         return c.id === data.company.id;

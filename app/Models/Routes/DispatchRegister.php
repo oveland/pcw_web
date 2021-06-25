@@ -867,6 +867,20 @@ class DispatchRegister extends Model
 
         $takings->save();
 
+        if (!$this->vehicle->process_takings) {
+            $takings->total_production = 0;
+            $takings->control = 0;
+            $takings->fuel = 0;
+            $takings->fuel_gallons = 0;
+            $takings->station_fuel_id = null;
+            $takings->bonus = 0;
+            $takings->others = 0;
+            $takings->net_production = 0;
+            $takings->advance = 0;
+            $takings->balance = 0;
+            $takings->observations = "<< VEHICULO EXCLUIDO DE RECAUDO >> " . $takings->observations;
+        }
+
         return $takings;
     }
 

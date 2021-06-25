@@ -127,7 +127,7 @@
 				<th>
 					<small>
 						<i class="fa fa-user"></i> <i class="fa fa-edit"></i><br>
-						<span class="">{{ $t('Updated at') }}</span>
+						<span class="">{{ $t('Takings user') }}</span>
 					</small>
 				</th>
 			</tr>
@@ -179,43 +179,51 @@
 						{{ $t('Takings without dispatch turns') }}
 					</small>
 				</td>
-
-				<td class="text-right">
-					<small>{{ r.takings.totalProduction | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ r.takings.control | numberFormat('$0,0')}}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ r.takings.fuel | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ r.takings.fuelGallons.toFixed(2) }}</small>
-				</td>
-				<td class="text-left">
-					<small>{{ r.takings.stationFuel }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ r.takings.bonus | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ r.takings.others | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-bold text-right">
-					<small>{{ r.takings.netProduction | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-bold text-right">
-					<small>{{ r.takings.advance | numberFormat('$0,0') }}</small>
-					<br>
-					<small class="text-muted tooltips" :data-title="$t('Passengers advance')">{{ r.takings.passengersAdvance | numberFormat('0.0') }}</small>
-				</td>
-				<td class="text-bold text-right">
-					<small>{{ r.takings.balance | numberFormat('$0,0') }}</small>
-					<br>
-					<small class="text-muted tooltips" :data-title="$t('Passengers balance')">{{ r.takings.passengersBalance | numberFormat('0.0') }}</small>
+				<template v-if="r.vehicle.processTakings">
+					<td class="text-right">
+						<small>{{ r.takings.totalProduction | numberFormat('$0,0') }}</small>
+					</td>
+					<td class="text-right">
+						<small>{{ r.takings.control | numberFormat('$0,0')}}</small>
+					</td>
+					<td class="text-right">
+						<small>{{ r.takings.fuel | numberFormat('$0,0') }}</small>
+					</td>
+					<td class="text-right">
+						<small>{{ r.takings.fuelGallons.toFixed(2) }}</small>
+					</td>
+					<td class="text-left">
+						<small>{{ r.takings.stationFuel }}</small>
+					</td>
+					<td class="text-right">
+						<small>{{ r.takings.bonus | numberFormat('$0,0') }}</small>
+					</td>
+					<td class="text-right">
+						<small>{{ r.takings.others | numberFormat('$0,0') }}</small>
+					</td>
+					<td class="text-bold text-right">
+						<small>{{ r.takings.netProduction | numberFormat('$0,0') }}</small>
+					</td>
+					<td class="text-bold text-right">
+						<small>{{ r.takings.advance | numberFormat('$0,0') }}</small>
+						<br>
+						<small class="text-muted tooltips" :data-title="$t('Passengers advance')">{{ r.takings.passengersAdvance | numberFormat('0.0') }}</small>
+					</td>
+					<td class="text-bold text-right">
+						<small>{{ r.takings.balance | numberFormat('$0,0') }}</small>
+						<br>
+						<small class="text-muted tooltips" :data-title="$t('Passengers balance')">{{ r.takings.passengersBalance | numberFormat('0.0') }}</small>
+					</td>
+				</template>
+				<td class="p-l-20" :class="r.vehicle.processTakings ? 'text-info' : 'text-warning text-bold'" :colspan="r.vehicle.processTakings ? 1: 11">
+					<small>{{ r.takings.observations }}</small>
 				</td>
 				<td class="text-info p-l-20">
-					<small>{{ r.takings.observations }}</small>
+					<div v-if="r.takings.user">
+						<span>{{ r.takings.user.name }}</span>
+						<br>
+						<small>{{ r.takings.updatedAt }}</small>
+					</div>
 				</td>
 			</tr>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reports\Routes\Takings;
 
 use App\Http\Controllers\GeneralController;
+use App\Models\Users\User;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\DispatchService;
 use Illuminate\Contracts\View\Factory;
@@ -50,6 +51,7 @@ class TakingsController extends Controller
         $vehicle = $request->get('vehicle');
         $date = $request->get('date');
         $type = $request->get('type');
+        $user = $request->get('user');
         $initialDate = $date;
         $finalDate = null;
         if (is_array($date)) {
@@ -57,7 +59,7 @@ class TakingsController extends Controller
             $finalDate = $date[1];
         }
 
-        return (object)compact(['initialDate', 'finalDate', 'route', 'vehicle', 'type']);
+        return (object)compact(['initialDate', 'finalDate', 'route', 'vehicle', 'type', 'user']);
     }
 
     /**
@@ -67,7 +69,7 @@ class TakingsController extends Controller
     private function findReport(Request $request)
     {
         $params = $this->searchParams($request);
-        return $this->dispatchService->getTakingsReport($params->initialDate, $params->finalDate, $params->route, $params->vehicle, $params->type);
+        return $this->dispatchService->getTakingsReport($params->initialDate, $params->finalDate, $params->route, $params->vehicle, $params->type, false, $params->user);
     }
 
     /**
@@ -109,6 +111,7 @@ class TakingsController extends Controller
                     'company' => $company,
                     'vehicles' => $company->vehicles,
                     'routes' => $company->routes,
+                    'users' => $company->users()->get(),
                     'companies' => $access->companies
                 ]);
                 break;

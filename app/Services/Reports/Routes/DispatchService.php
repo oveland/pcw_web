@@ -8,7 +8,9 @@ use App\Exports\Routes\TakingsTotalsExport;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Routes\RouteTaking;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class DispatchService
@@ -23,23 +25,29 @@ class DispatchService
         $this->company = $company;
     }
 
-    /**
+    /**\
      * @param $initialDate
      * @param null $finalDate
      * @param null $route
      * @param null $vehicle
+     * @param null $user
      * @param string $typeTurns
-     * @return DispatchRegister[] | Collection
+     * @return DispatchRegister[]|Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
      */
-    function getTurns($initialDate, $finalDate = null, $route = null, $vehicle = null, $typeTurns = 'completed')
+    function getTurns($initialDate, $finalDate = null, $route = null, $vehicle = null, $user = null, $typeTurns = 'completed')
     {
         $dr = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->company, $initialDate, $finalDate, $route, $vehicle)->type($typeTurns)
             ->with('route')
             ->with('vehicle')
-            ->with('routeTakings')
-            ->get();
+            ->with('routeTakings');
 
-        return $dr->map(function (DispatchRegister $dr) {
+        if ($user) {
+            $dr = $dr->whereHas('routeTakings', function (Builder $r) use ($user) {
+                return $r->where('user_id', $user);
+            });
+        }
+
+        return $dr->get()->map(function (DispatchRegister $dr) {
             return $dr->getAPIFields();
         })->sortBy(function ($dr) {
             return "$dr->date.$dr->id";
@@ -55,12 +63,12 @@ class DispatchService
      * @param bool $onlyTotals
      * @return object | array
      */
-    public function getTakingsReport($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'detailed', $onlyTotals = false)
+    public function getTakingsReport($initialDate, $finalDate = null, $route = null, $vehicle = null, $type = 'detailed', $onlyTotals = false, $user = null)
     {
         switch ($type) {
             case 'totals':
             case 'grouped':
-                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
+                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, $user, 'takings');
 
                 $turns = $turns->sortBy(function ($dr) {
                     return $dr->vehicle->number . "$dr->id";
@@ -83,7 +91,7 @@ class DispatchService
                 }
                 break;
             default:
-                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, 'takings');
+                $turns = $this->getTurns($initialDate, $finalDate, $route, $vehicle, $user, 'takings');
 
                 if ($turns->isNotEmpty()) {
                     return $this->getData($turns, $onlyTotals);
