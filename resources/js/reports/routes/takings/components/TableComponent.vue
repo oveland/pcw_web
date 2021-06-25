@@ -124,6 +124,12 @@
 						<span class="">{{ $t('Observations') }}</span>
 					</small>
 				</th>
+				<th>
+					<small>
+						<i class="fa fa-user"></i> <i class="fa fa-edit"></i><br>
+						<span class="">{{ $t('Updated at') }}</span>
+					</small>
+				</th>
 			</tr>
 			</thead>
 

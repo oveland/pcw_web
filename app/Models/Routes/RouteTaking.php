@@ -166,7 +166,8 @@ class RouteTaking extends Model
             'observations' => $this->observations,
             'user' => $this->user,
             'isTaken' => $this->isTaken(),
-            'stationFuel' => $this->stationFuel()
+            'stationFuel' => $this->stationFuel(),
+            'updatedAt' => $this->updated_at->toDateTimeString()
         ];
     }
 
