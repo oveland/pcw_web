@@ -7,7 +7,6 @@ use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\DispatcherVehicle;
-use App\Models\Users\User;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Services\Reports\Passengers\Seats\SeatTopology;
 use Carbon\Carbon;
@@ -16,7 +15,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Sofa\Eloquence\Eloquence;
+use Sofa\Eloquence\Mappable;
 
 /**
  * App\Models\Vehicles\Vehicle
@@ -139,7 +141,8 @@ class Vehicle extends Model
             'number' => $this->number,
             'plate' => $this->plate,
             'companyId' => $this->company_id,
-            'currentLocation' => $currentLocation ? $currentLocation->getAPIFields() : []
+            'currentLocation' => $currentLocation ? $currentLocation->getAPIFields() : [],
+            'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ''
         ];
     }
 
@@ -192,7 +195,6 @@ class Vehicle extends Model
         $seatDistribution = new SeatDistributionService($this->seatDistribution);
         return $seatDistribution->getTopology();
     }
-
 
     /**
      * @param string $date

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Routes\Route
@@ -63,6 +62,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Collection|Fringe[] $allFringes
  * @property-read mixed $distance_in_km
  * @property-read mixed $distance_in_meters
+ * @property-read RouteTariff|null $routeTariff
  */
 class Route extends Model
 {
@@ -153,17 +153,23 @@ class Route extends Model
         }
     }
 
+    public function routeTariff()
+    {
+        return $this->hasOne(RouteTariff::class);
+    }
+
     /**
      * @return RouteTariff
      */
     function getTariffAttribute()
     {
-        $tariff = RouteTariff::where('route_id', $this->id)->first();
+        $tariff = $this->routeTariff;
         if (!$tariff) {
             $tariff = new RouteTariff();
             $tariff->route()->associate($this);
             $tariff->passenger = 0;
             $tariff->fuel = 0;
+            $tariff->value = 0;
         }
         return $tariff;
     }

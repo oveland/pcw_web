@@ -159,7 +159,7 @@ use Illuminate\Support\Str;
  * @method static Builder|DispatchRegister whereEditUserId($value)
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
- * @property-read \RouteTariff $tariff
+ * @property-read RouteTariff $tariff
  * @property-read RouteTariff $fuel_tariff
  * @property-read mixed $mileage
  * @property-read mixed $passengers_by_sensor_total
@@ -498,10 +498,7 @@ class DispatchRegister extends Model
     public function getAPIFields($short = false)
     {
         $passengers = $this->passengers;
-//        $passengers = null;
-
         $takings = $this->takings;
-//        $takings = null;
 
         if ($short) {
             return (object)[
