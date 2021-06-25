@@ -7033,7 +7033,8 @@ var render = function() {
                           attrs: { colspan: r.vehicle.processTakings ? 1 : 11 }
                         },
                         [
-                          r.takings.isTaken && r.forNormalTakings
+                          (r.takings.isTaken && r.forNormalTakings) ||
+                          !r.vehicle.processTakings
                             ? _c("small", [
                                 _vm._v(
                                   "\n\t\t\t\t\t" +

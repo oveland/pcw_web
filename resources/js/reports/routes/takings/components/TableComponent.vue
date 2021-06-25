@@ -217,7 +217,7 @@
 				</template>
 
 				<td class="p-l-20" :class="r.vehicle.processTakings ? 'text-info' : 'text-danger text-bold'" :colspan="r.vehicle.processTakings ? 1: 11">
-					<small v-if="r.takings.isTaken && r.forNormalTakings">
+					<small v-if="r.takings.isTaken && r.forNormalTakings || !r.vehicle.processTakings">
 						{{ r.takings.observations }}
 					</small>
 					<small v-else class="text-warning">
