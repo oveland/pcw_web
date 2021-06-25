@@ -12,6 +12,7 @@ use App\Models\Vehicles\Location;
 use App\Models\Vehicles\ParkingReport;
 use App\Models\Vehicles\Speeding;
 use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleStatus;
 use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 /**
@@ -29,6 +31,7 @@ use Illuminate\Support\Str;
  * @property string|null $date
  * @property string|null $time
  * @property int|null $route_id
+ * @property int|null $ard_route_id
  * @property int|null $type_of_day
  * @property int|null $turn
  * @property int|null $round_trip
@@ -156,7 +159,7 @@ use Illuminate\Support\Str;
  * @method static Builder|DispatchRegister whereEditUserId($value)
  * @method static Builder|DispatchRegister whereEditedInfo($value)
  * @property-read RouteTaking $takings
- * @property-read \RouteTariff $tariff
+ * @property-read RouteTariff $tariff
  * @property-read RouteTariff $fuel_tariff
  * @property-read mixed $mileage
  * @property-read mixed $passengers_by_sensor_total
@@ -219,7 +222,7 @@ class DispatchRegister extends Model
      */
     public function locations($order = 'asc')
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->orderBy('date', $order);
+        return $this->hasMany(new Location(), 'dispatch_register_id', 'id')->orderBy('date', $order);
     }
 
     /**
@@ -336,6 +339,11 @@ class DispatchRegister extends Model
         return $this->status == $this::COMPLETE;
     }
 
+    public function isActive()
+    {
+        return $this->status == $this::COMPLETE || $this->status == $this::IN_PROGRESS;
+    }
+
     public function inProgress()
     {
         return $this->status == $this::IN_PROGRESS;
@@ -388,8 +396,8 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensorAttribute()
     {
-        if ($this->inProgress()) {
-            $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+        $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
+        if ($this->inProgress() && $currentSensor && isset($currentSensor->sensorCounter)) {
             $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
             return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
         }
@@ -473,6 +481,20 @@ class DispatchRegister extends Model
         return !$this->onlyControlTakings();
     }
 
+    public function getRouteFields()
+    {
+        $driver = $this->driver;
+        $driveName = $driver ? $driver->fullName() : __('Unassigned');
+        return (object)[
+            'id' => $this->id,
+            'turn' => $this->turn,
+            'roundTrip' => $this->round_trip,
+            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'driverName' => $driveName,
+            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+        ];
+    }
+
     public function getAPIFields($short = false)
     {
         $passengers = $this->passengers;
@@ -536,8 +558,8 @@ class DispatchRegister extends Model
             'route_time' => $this->getRouteTime(),
             'routeTime' => $this->getRouteTime(),
 
-            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(),
-            'vehicle' => $this->vehicle->getAPIFields(),
+            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+            'vehicle' => $this->vehicle->getAPIFields(null, true),
             'vehicle_id' => $this->vehicle_id,
             'status' => $this->status,
 
@@ -592,7 +614,7 @@ class DispatchRegister extends Model
     }
 
     /**
-     * @param Buider | DispatchRegister $query
+     * @param Builder | DispatchRegister $query
      * @param string $initialDate
      * @param string | null $finalDate
      * @return DispatchRegister | Builder
@@ -628,12 +650,6 @@ class DispatchRegister extends Model
      */
     public function scopeWhereCompanyAndRouteAndVehicle($query, Company $company, $routeId = null, $vehicleId = null)
     {
-        $user = Auth::user();
-
-        if ($user && $routeId == 'all') {
-            $query = $query->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
-        }
-
         return $query
             ->where(function ($query) use ($company, $routeId, $vehicleId) {
                 if ($vehicleId == 'all' || $vehicleId == null) {
@@ -642,11 +658,28 @@ class DispatchRegister extends Model
                     $query = $query->where('vehicle_id', $vehicleId);
                 }
 
-                if ($company->hasADD() && $vehicleId == 'all') {
-                    $query = $query->orWhere('route_id', intval($routeId));
-                } else if ($routeId != 'all' && $routeId != null) {
-                    $query = $query->where('route_id', intval($routeId));
-                }
+                $query->where(function (Builder $subQuery) use ($company, $routeId, $vehicleId) {
+                    $user = Auth::user();
+
+                    if ($user && $routeId == 'all') {
+                        $subQuery = $subQuery->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
+                    }
+
+                    if ($routeId != null && $routeId != 'all') {
+                        if ($company->hasADD() && $vehicleId == 'all') {
+                            $subQuery = $subQuery->orWhere('route_id', intval($routeId));
+                        } else {
+                            $subQuery = $subQuery->where('route_id', intval($routeId));
+                        }
+
+                        $route = Route::find($routeId);
+                        if ($route->as_group) {
+                            $subQuery = $subQuery->orWhereIn('route_id', $route->subRoutes->pluck('id'));
+                        }
+                    }
+
+                    return $subQuery;
+                });
 
                 return $query;
             });
@@ -683,12 +716,28 @@ class DispatchRegister extends Model
             ->with('user');
     }
 
+    public function hasValidOffRoad()
+    {
+        $offRoadPercent = $this->getOffRoadPercent();
+        $invalidGPSPercent = $this->invalidGPSPercent();
+
+        return $offRoadPercent < 2 && $invalidGPSPercent < 2 || $offRoadPercent >= 2;
+    }
+
     public function getOffRoadPercent()
     {
         $totalLocations = $this->locations()->count();
         $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
 
         return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0;
+    }
+
+    public function invalidGPSPercent()
+    {
+        $totalLocations = $this->locations()->count();
+        $totalInvalidGPS = $totalLocations ? $this->locations()->where('vehicle_status_id', VehicleStatus::WITHOUT_GPS_SIGNAL)->count() : 0;
+
+        return $totalInvalidGPS ? number_format(100 * $totalInvalidGPS / $totalLocations, 1, '.', '') : 0;
     }
 
     public function getRouteDistance($withFormat = false)
@@ -748,36 +797,30 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensor()
     {
-        $tariffs = collect(\DB::select("
-            SELECT tariff, sum(counted) \"totalCounted\", sum(charge) \"totalCharge\"
+        /*$tariffs = collect(\DB::select("
+            SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
             FROM passengers
             WHERE dispatch_register_id = $this->id
             GROUP BY tariff
             ORDER BY tariff
-        "));
+        "));*/
 
-        $totalCharge = $tariffs->sum('totalCharge');
 
         $default = (object)[
             'tariff' => 0,
             'totalCounted' => 0,
             'totalCharge' => 0,
         ];
-
-        $tariffA = $tariffs->where('tariff', 1600)->first();
-        $tariffB = $tariffs->where('tariff', 2100)->first();
-        $tariff0 = $tariffs->where('tariff', 0)->first();
+        $tariffs = collect([$default, $default]);
 
         return (object)[
             'start' => $this->initial_sensor_counter,
             'end' => $this->final_sensor_counter,
             'count' => $this->passengersBySensor,
             'mileage' => $this->mileage,
-            'totalCharge' => $totalCharge,
             'tariff' => (object)[
-                'a' => (object)($tariffA ? $tariffA : $default),
-                'b' => (object)($tariffB ? $tariffB : $default),
-                '0' => (object)($tariff0 ? $tariff0 : $default),
+                'a' => (object)($tariffs->get(0) ? $tariffs->get(0) : $default),
+                'b' => (object)($tariffs->get(1) ? $tariffs->get(1) : $default),
             ]
         ];
     }
@@ -800,15 +843,18 @@ class DispatchRegister extends Model
         }
 
         if (!$this->onlyControlTakings()) {
-            $passengers = $this->getPassengersByRecorder();
-            $totalPassengers = $passengers->count;
+            $passengers = $this->getPassengersByRecorder()->count;
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
 
-            $totalProduction = $takings->passenger_tariff * $totalPassengers;
+            if(!$takings->isTaken() && $this->date >= '2021-05-01' && $this->date <= '2021-05-13'){
+                $takings->passenger_tariff = 2200;
+            }
+
+            $totalProduction = $takings->passenger_tariff * $passengers;
 
             if ($this->route && $this->route->company_id == Company::YUMBENOS) {
-                $totalProduction = $passengers->totalCharge;
+                $totalProduction = $this->final_charge - $this->initial_charge;
             }
 
             $takings->total_production = $totalProduction;
@@ -826,10 +872,24 @@ class DispatchRegister extends Model
 
     public function getMileageAttribute()
     {
-        return ($this->end_odometer - $this->start_odometer) / 1000;
-        return $this->route->distance_in_km;
+//        return ($this->end_odometer - $this->start_odometer) / 1000;
+
+        $lastControlPoint = $this->route->controlPoints()->get()->sortBy('order')->last();
+        return $lastControlPoint ? $lastControlPoint->distance_from_dispatch / 1000 : 0;
     }
 
+    public function processedByARD()
+    {
+        return $this->ard_route_id && $this->ard_route_id != $this->route_id && auth()->user()->isAdmin();
+    }
+
+    /**
+     * @return HasOne | DispatcherVehicle
+     */
+    public function dispatcherVehicle()
+    {
+        return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')->where('dispatch_id', $this->dispatch_id);
+    }
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 }

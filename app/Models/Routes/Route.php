@@ -58,10 +58,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $sampling_radius
  * @method static Builder|Route whereDistanceThreshold($value)
  * @method static Builder|Route whereSamplingRadius($value)
- * @property-read int|null $control_points_count
- * @property-read int|null $current_dispatch_registers_count
- * @property-read int|null $sub_routes_count
  * @property-read RouteTariff $tariff
+ * @property-read Collection|Fringe[] $allFringes
+ * @property-read mixed $distance_in_km
+ * @property-read mixed $distance_in_meters
  * @property-read RouteTariff|null $routeTariff
  */
 class Route extends Model
@@ -98,6 +98,11 @@ class Route extends Model
         return $this->hasMany(Fringe::class)->where('day_type_id', $dayType)->get();
     }
 
+    public function allFringes()
+    {
+        return $this->hasMany(Fringe::class);
+    }
+
     public function currentLocations()
     {
         $currentRouteDispatchRegisters = $this->currentDispatchRegisters;
@@ -116,13 +121,18 @@ class Route extends Model
 
     public function getAPIFields($short = false)
     {
-        $dataAPI = array();
-        if (!$short) $dataAPI['company'] = $this->company->getAPIFields();
-        $dataAPI['name'] = $this->name;
-        $dataAPI['distance'] = $this->distance;
-        $dataAPI['road_time'] = $this->road_time;
-        $dataAPI['url'] = $this->url;
-        $dataAPI['active'] = $this->active;
+        if ($short) {
+            return (object)[
+                'id' => $this->id,
+                'name' => $this->name,
+                'company' => (object)[
+                    'short_name' => $this->company->short_name
+                ],
+            ];
+        }
+
+        $dataAPI = $this->toArray();
+        $dataAPI['company'] = $this->company->toArray();
         return (object)$dataAPI;
     }
 
@@ -139,7 +149,7 @@ class Route extends Model
         if ($this->as_group) {
             return $this->hasMany(Route::class)->active();
         } else {
-            return $this->hasMany(Route::class)->where('id', $this->id);
+            return $this->hasMany(Route::class)->orWhere('id', $this->id);
         }
     }
 
@@ -157,8 +167,20 @@ class Route extends Model
         if (!$tariff) {
             $tariff = new RouteTariff();
             $tariff->route()->associate($this);
+            $tariff->passenger = 0;
+            $tariff->fuel = 0;
             $tariff->value = 0;
         }
         return $tariff;
+    }
+
+    public function getDistanceInKmAttribute()
+    {
+        return $this->distance;
+    }
+
+    public function getDistanceInMetersAttribute()
+    {
+        return $this->distance_in_km * 1000;
     }
 }

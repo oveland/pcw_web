@@ -2,10 +2,13 @@
 
 namespace App\Models\Vehicles;
 
+use App\LastLocation;
 use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\BEA\ManagementCost;
 use App\Models\Company\Company;
+use App\Models\Drivers\Driver;
+use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\DispatcherVehicle;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Services\Reports\Passengers\Seats\SeatTopology;
@@ -24,12 +27,12 @@ use Sofa\Eloquence\Mappable;
  * App\Models\Vehicles\Vehicle
  *
  * @property int $id
- * @property strin
+ * @property string $plate
  * @property string $number
  * @property int $company_id
  * @property bool $active
  * @property bool $in_repair
- * @property int $bea_id
+ * @property string $observations
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Company $company
@@ -51,24 +54,20 @@ use Sofa\Eloquence\Mappable;
  * @property-read DispatcherVehicle $dispatcherVehicle
  * @property-read GpsVehicle $gpsVehicle
  * @property-read DispatcherVehicle $dispatcherVehicles
- * @method static Builder|Vehicle newModelQuery()
- * @method static Builder|Vehicle newQuery()
- * @method static Builder|Vehicle query()
+ * @property int|null $bea_id
+ * @property int|null $driver_id
+ * @property int|null $proprietary_id
  * @method static Builder|Vehicle whereBeaId($value)
  * @property-read VehicleSeatDistribution $seatDistribution
- * @property string|null $observations
- * @property int|null $proprietary_id
- * @property int|null $driver_id
- * @property string|null $tags
+ * @property-read Driver|null $driver
+ * @property-read Proprietary|null $proprietary
  * @method static Builder|Vehicle whereDriverId($value)
  * @method static Builder|Vehicle whereObservations($value)
  * @method static Builder|Vehicle whereProprietaryId($value)
- * @method static Builder|Vehicle whereTags($value)
+ * @property-read CurrentVehicleIssue $currentIssue
+ * @property string|null $tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereTags($value)
  * @property-read Collection|ManagementCost[] $costsBEA
- * @property-read int|null $costs_b_e_a_count
- * @property-read int|null $maintenance_count
- * @property-read int|null $peak_and_plate_count
- * @property string $plate
  * @property-read ConfigProfile|null $configProfile
  * @property-read ProfileSeat $profile_seating
  * @property-read \App\Models\Apps\Rocket\ProfileSeat|null $profileSeat
@@ -139,12 +138,25 @@ class Vehicle extends Model
         return "$this->number <i class='fa fa-hand-o-right'></i> $this->plate";
     }
 
-    public function getAPIFields(CurrentLocation $currentLocation = null)
+    public function getAPIFields(CurrentLocation $currentLocation = null, $short = false)
     {
+        if ($short) {
+            return (object)[
+                'id' => $this->id,
+                'number' => $this->number,
+                'plate' => $this->plate
+            ];
+        }
+
+        $currentLocation = $currentLocation ? $currentLocation : ($this->currentLocation ? $this->currentLocation : null);
+        $vehicleStatus = $currentLocation ? $currentLocation->vehicleStatus : null;
+
         return (object)[
             'id' => $this->id,
             'number' => $this->number,
             'plate' => $this->plate,
+            'companyId' => $this->company_id,
+            'currentLocation' => $currentLocation ? $currentLocation->getAPIFields() : [],
             'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ''
         ];
     }
@@ -197,6 +209,73 @@ class Vehicle extends Model
     {
         $seatDistribution = new SeatDistributionService($this->seatDistribution);
         return $seatDistribution->getTopology();
+    }
+
+    /**
+     * @param string $date
+     * @return LastLocation|CurrentLocation|Model|null
+     */
+    public function lasLocation($date = null)
+    {
+        if ($date == Carbon::now()->toDateString()) {
+            return CurrentLocation::where('vehicle_id', $this->id)->first();
+        }
+        return LastLocation::whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])->where('vehicle_id', $this->id)->first();
+    }
+
+    /**
+     * @return Driver | BelongsTo
+     */
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
+    }
+
+    /**
+     * @return Proprietary | BelongsTo
+     */
+    public function proprietary()
+    {
+        return $this->belongsTo(Proprietary::class);
+    }
+
+    /**
+     * @return CurrentVehicleIssue | HasOne
+     */
+    public function currentIssue()
+    {
+        return $this->hasOne(CurrentVehicleIssue::class);
+    }
+
+    /**
+     * @param $issueTypeId
+     * @return CurrentVehicleIssue
+     */
+    public function getCurrentIssue($issueTypeId = null)
+    {
+        $currentIssue = $this->currentIssue;
+
+        if (!$currentIssue) {
+            $currentIssue = new CurrentVehicleIssue([
+                'vehicle_id' => $this->id,
+            ]);
+
+            $currentIssue->issue_type_id = VehicleIssueType::IN;
+            $currentIssue->generateUid();
+        };
+
+        $currentLocation = $this->currentLocation;
+        $dispatchRegister = $currentLocation ? $currentLocation->dispatchRegister : null;
+
+        if ($issueTypeId) $currentIssue->issue_type_id = $issueTypeId;
+        $currentIssue->date = Carbon::now();
+        $currentIssue->user_id = auth()->user() ? auth()->user()->id : null;
+        $currentIssue->dispatch_register_id = $dispatchRegister ? $dispatchRegister->id : null;
+        $currentIssue->driver_id = $dispatchRegister && $dispatchRegister->driver ? $dispatchRegister->driver->id : null;
+
+        $currentIssue->save();
+
+        return $currentIssue;
     }
 
     /**
