@@ -41,6 +41,13 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
 
             $route = $report->onlyControlTakings ? __('Takings without dispatch turns') : $report->route->name;
 
+            $user = "";
+            $updatedAt = "";
+            if ($report->takings->user) {
+                $user = trim($report->takings->user->username . ": " . $report->takings->user->name);
+                $updatedAt = $report->takings->updatedAt;
+            }
+
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                                                  # A CELL
                 __('Date') => $report->date,                                                                        # B CELL
@@ -64,6 +71,8 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
                 __('Balance') => intval($report->takings->balance),                                                 # T CELL
                 __('Passengers balance') => intval($report->takings->passengersBalance),                            # U CELL
                 __('Observations') => $observations,                                                                # V CELL
+                __('User') => $user,                                                                                # W CELL
+                __('Updated at') => $updatedAt,                                                                     # X CELL
             ];
         }
 
@@ -101,7 +110,7 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
             $workSheet->setCellValue("I$row", "=H$row-G$row");
             $workSheet->setCellValue("Q$row", "=J$row-K$row-L$row-O$row-P$row");
             $workSheet->setCellValue("T$row", "=Q$row-R$row");
-            $workSheet->setCellValue("S$row", "=R$row/(J$row/I$row)");
+//            $workSheet->setCellValue("S$row", "=R$row/(J$row/I$row)");
             $workSheet->setCellValue("U$row", "=I$row-S$row");
         }
 
