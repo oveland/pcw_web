@@ -166,7 +166,7 @@ class RouteTaking extends Model
             'balance' => $this->balance,
             'netProduction' => $this->net_production,
             'observations' => $this->observations,
-            'user' => $this->user->toArray(true),
+            'user' => $this->user ? $this->user->toArray(true) : null,
             'isTaken' => $this->isTaken(),
             'stationFuel' => $this->stationFuel(),
             'updatedAt' => $this->updated_at->toDateTimeString()
