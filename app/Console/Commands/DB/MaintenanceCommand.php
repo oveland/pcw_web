@@ -54,8 +54,8 @@ class MaintenanceCommand extends Command
 //                ]
 //            ],
             [
-                'from' => '2020-10-01',
-                'to' => '2020-10-31',
+                'from' => '2021-03-01',
+                'to' => '2021-03-31',
                 'tables' => [
                     'locations' => [
                         'release' => true,
@@ -68,57 +68,43 @@ class MaintenanceCommand extends Command
                 ]
             ],
             [
-                'from' => '2020-11-01',
-                'to' => '2020-11-30',
+                'from' => '2021-04-01',
+                'to' => '2021-04-30',
                 'tables' => [
                     'locations' => [
-                        'release' => true,
+                        'release' => false,
                         'hasBackup' => false,
                     ],
                     'reports' => [
-                        'release' => true,
+                        'release' => false,
                         'hasBackup' => false,
                     ],
                 ]
             ],
             [
-                'from' => '2020-12-01',
-                'to' => '2020-12-31',
+                'from' => '2021-05-01',
+                'to' => '2021-05-31',
                 'tables' => [
                     'locations' => [
-                        'release' => true,
+                        'release' => false,
                         'hasBackup' => false,
                     ],
                     'reports' => [
-                        'release' => true,
+                        'release' => false,
                         'hasBackup' => false,
                     ],
                 ]
             ],
             [
-                'from' => '2021-01-01',
-                'to' => '2021-01-31',
+                'from' => '2021-06-01',
+                'to' => '2021-06-30',
                 'tables' => [
                     'locations' => [
-                        'release' => true,
+                        'release' => false,
                         'hasBackup' => false,
                     ],
                     'reports' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2021-02-01',
-                'to' => '2021-02-28',
-                'tables' => [
-                    'locations' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                    ],
-                    'reports' => [
-                        'release' => true,
+                        'release' => false,
                         'hasBackup' => false,
                     ],
                 ]
@@ -161,7 +147,7 @@ class MaintenanceCommand extends Command
                 $hasBackup = isset($options->hasBackup) ? $options->hasBackup : false;
                 $this->processTable($table, $maintenance->from, $maintenance->to, $options->release, $hasBackup);
             }
-        }else {
+        } else {
             $this->log("Invalid date range From: $maintenance->from and To: $maintenance->to");
         }
     }
