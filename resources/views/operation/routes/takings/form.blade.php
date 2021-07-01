@@ -1,5 +1,6 @@
 @php
-    $company = $dispatchRegister->route->company
+    $company = $dispatchRegister->route->company;
+    $processTakings = $dispatchRegister->vehicle->process_takings;
 @endphp
 
 <div class="row">
@@ -55,6 +56,14 @@
         </div>
     </div>
 
+    @if(!$processTakings)
+    <div class="bg-red text-white p-10 text-center" style="display: flow-root">
+        <strong>@lang('Excluido para recaudo')</strong>
+        <br><br>
+        <i class="fa fa-lock faa-ring fa-2x animated"></i>
+    </div>
+    @endif
+
     @if(!$dispatchRegister->complete() && !$dispatchRegister->onlyControlTakings())
         <div class="bg-warning text-white p-10 text-center" style="display: flow-root">
             <i class="fa fa-bus faa-passing animated"></i> <strong>@lang('Turno no completado')</strong>
@@ -80,7 +89,7 @@
                 <div class="col-md-7">
                     <div class="input-icon">
                         <i class="icon-bag"></i>
-                        <input type="number" class="form-control input-circle-right currency" id="control_takings" name="control" value="{{ $dispatchRegister->takings->control }}">
+                        <input type="number" class="form-control input-circle-right currency" id="control_takings" name="control" value="{{ $dispatchRegister->takings->control }}" {{ $processTakings ? '' : 'disabled' }} >
                     </div>
                 </div>
             </div>
@@ -101,7 +110,7 @@
                 <div class="col-md-7">
                     <div class="input-icon">
                         <i class="icon-fire"></i>
-                        <input type="number" class="form-control input-circle-right" id="fuel_takings" name="fuel" value="{{ $dispatchRegister->takings->fuel }}">
+                        <input type="number" class="form-control input-circle-right" id="fuel_takings" name="fuel" value="{{ $dispatchRegister->takings->fuel }}" {{ $processTakings ? '' : 'disabled' }} >
                     </div>
                 </div>
             </div>
@@ -116,7 +125,7 @@
                             @endphp
 
                             <div class="md-radio">
-                                <input type="radio" id="station_fuel_{{ $stationId }}" name="station_fuel_id" {{ $checked ? 'checked' : '' }} class="md-radiobtn" value="{{ $stationId }}">
+                                <input type="radio" id="station_fuel_{{ $stationId }}" name="station_fuel_id" {{ $checked ? 'checked' : '' }} class="md-radiobtn" value="{{ $stationId }}" {{ $processTakings ? '' : 'disabled' }} >
                                 <label for="station_fuel_{{ $stationId }}">
                                     <span class="inc"></span>
                                     <span class="check"></span>
@@ -135,7 +144,7 @@
                 <div class="col-md-7">
                     <div class="input-icon">
                         <i class="icon-badge"></i>
-                        <input type="number" class="form-control input-circle-right" id="bonus_takings" name="bonus" value="{{ $dispatchRegister->takings->bonus }}">
+                        <input type="number" class="form-control input-circle-right" id="bonus_takings" name="bonus" value="{{ $dispatchRegister->takings->bonus }}" {{ $processTakings ? '' : 'disabled' }}>
                     </div>
                 </div>
             </div>
@@ -145,7 +154,7 @@
                 <div class="col-md-7">
                     <div class="input-icon">
                         <i class="icon-cup"></i>
-                        <input type="number" class="form-control input-circle-right" id="others_takings" name="others" value="{{ $dispatchRegister->takings->others }}">
+                        <input type="number" class="form-control input-circle-right" id="others_takings" name="others" value="{{ $dispatchRegister->takings->others }}" {{ $processTakings ? '' : 'disabled' }}>
                     </div>
                 </div>
             </div>
@@ -169,7 +178,7 @@
                 <div class="col-md-7">
                     <div class="input-icon input-group tooltips" title="@lang('Passengers') @lang('Advance')" data-placement="right">
                         <i class="fa fa-dollar"></i>
-                        <input type="number" class="form-control disabled" id="advance_takings" name="advance" value="{{ $dispatchRegister->takings->advance }}">
+                        <input type="number" class="form-control disabled" id="advance_takings" name="advance" value="{{ $dispatchRegister->takings->advance }}" {{ $processTakings ? '' : 'disabled' }}>
                         <span class="input-group-addon">
                             <i class="fa fa-users"></i> <span id="passengers_advance">{{ $dispatchRegister->takings->passengersAdvance }}</span>
                         </span>
@@ -182,7 +191,7 @@
                 <div class="col-md-7">
                     <div class="input-icon input-group">
                         <i class="fa fa-dollar"></i>
-                        <input type="number" disabled class="form-control disabled" id="balance_takings" name="balance" value="{{ $dispatchRegister->takings->balance }}">
+                        <input type="number" disabled class="form-control disabled" id="balance_takings" name="balance" value="{{ $dispatchRegister->takings->balance }}" {{ $processTakings ? '' : 'disabled' }}>
                         <span class="input-group-addon">
                             <i class="fa fa-users" style="color: #0b4d3f"></i> <span id="passengers_balance">{{ $dispatchRegister->takings->passengersBalance }}</span>
                         </span>
@@ -204,14 +213,16 @@
                 </div>
             </div>
 
-            <hr>
-            <div class="form-group">
-                <div class="col-md-offset-5 col-md-7">
-                    <button type="submit" class="btn green btn-outline btn-circle">
-                        <i class=""></i>@lang('Save')
-                    </button>
+            @if($processTakings || true)
+                <hr>
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-7">
+                        <button type="submit" class="btn green btn-outline btn-circle">
+                            <i class=""></i>@lang('Save')
+                        </button>
+                    </div>
                 </div>
-            </div>
+            @endif
         </form>
     </div>
 

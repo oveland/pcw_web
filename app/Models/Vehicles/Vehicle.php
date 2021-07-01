@@ -63,7 +63,8 @@ use Sofa\Eloquence\Mappable;
  * @method static Builder|Vehicle whereProprietaryId($value)
  * @property-read CurrentVehicleIssue $currentIssue
  * @property string|null $tags
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Vehicle whereTags($value)
+ * @property boolean|null $process_takings
+ * @method static Builder|Vehicle whereTags($value)
  */
 class Vehicle extends Model
 {
@@ -129,7 +130,8 @@ class Vehicle extends Model
             return (object)[
                 'id' => $this->id,
                 'number' => $this->number,
-                'plate' => $this->plate
+                'plate' => $this->plate,
+                'processTakings' => $this->process_takings,
             ];
         }
 
@@ -142,7 +144,8 @@ class Vehicle extends Model
             'plate' => $this->plate,
             'companyId' => $this->company_id,
             'currentLocation' => $currentLocation ? $currentLocation->getAPIFields() : [],
-            'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : ''
+            'currentStatus' => $currentLocation ? $currentLocation->vehicleStatus->des_status : '',
+            'processTakings' => $this->process_takings,
         ];
     }
 
