@@ -526,6 +526,7 @@ class DispatchRegister extends Model
                 'takings' => $takings ? $takings->getAPIFields() : [],
                 'onlyControlTakings' => $this->onlyControlTakings(),
                 'forNormalTakings' => $this->forNormalTakings(),
+                'processTakings' => $this->processTakings(),
 
                 'forTakings' => $this->onlyControlTakings(),
                 'mileage' => $this->mileage
@@ -573,6 +574,7 @@ class DispatchRegister extends Model
             'takings' => $takings ? $takings->getAPIFields() : [],
             'onlyControlTakings' => $this->onlyControlTakings(),
             'forNormalTakings' => $this->forNormalTakings(),
+            'processTakings' => $this->processTakings(),
 
             'forTakings' => $this->onlyControlTakings(),
             'mileage' => $this->mileage

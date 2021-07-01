@@ -179,7 +179,7 @@
 						{{ $t('Takings without dispatch turns') }}
 					</small>
 				</td>
-				<template v-if="r.vehicle.processTakings">
+				<template v-if="r.processTakings">
 					<td class="text-right">
 						<small>{{ r.takings.totalProduction | numberFormat('$0,0') }}</small>
 					</td>
@@ -216,8 +216,8 @@
 					</td>
 				</template>
 
-				<td class="p-l-20" :class="r.vehicle.processTakings ? 'text-info' : 'text-danger text-bold'" :colspan="r.vehicle.processTakings ? 1: 11">
-					<small v-if="r.takings.isTaken && r.forNormalTakings || !r.vehicle.processTakings">
+				<td class="p-l-20" :class="r.processTakings ? 'text-info' : 'text-danger text-bold'" :colspan="r.processTakings ? 1: 11">
+					<small v-if="r.takings.isTaken && r.forNormalTakings || !r.processTakings">
 						{{ r.takings.observations }}
 					</small>
 					<small v-else class="text-warning uppercase">

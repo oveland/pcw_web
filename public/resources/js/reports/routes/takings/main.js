@@ -6861,7 +6861,7 @@ var render = function() {
                           )
                         : _vm._e(),
                       _vm._v(" "),
-                      r.vehicle.processTakings
+                      r.processTakings
                         ? [
                             _c("td", { staticClass: "text-right" }, [
                               _c("small", [
@@ -7029,14 +7029,14 @@ var render = function() {
                         "td",
                         {
                           staticClass: "p-l-20",
-                          class: r.vehicle.processTakings
+                          class: r.processTakings
                             ? "text-info"
                             : "text-danger text-bold",
-                          attrs: { colspan: r.vehicle.processTakings ? 1 : 11 }
+                          attrs: { colspan: r.processTakings ? 1 : 11 }
                         },
                         [
                           (r.takings.isTaken && r.forNormalTakings) ||
-                          !r.vehicle.processTakings
+                          !r.processTakings
                             ? _c("small", [
                                 _vm._v(
                                   "\n\t\t\t\t\t" +
