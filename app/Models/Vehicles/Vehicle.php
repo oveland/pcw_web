@@ -82,6 +82,12 @@ class Vehicle extends Model
         return config('app.simple_date_time_format');
     }
 
+    function getToDateTakingsAttribute($date)
+    {
+        if (!$date) return null;
+        return Carbon::createFromFormat(config('app.date_format'), $date)->toDateString();
+    }
+
     /**
      * @return BelongsTo | Company
      */
