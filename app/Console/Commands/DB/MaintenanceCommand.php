@@ -54,30 +54,18 @@ class MaintenanceCommand extends Command
 //                ]
 //            ],
             [
-                'from' => '2021-03-01',
-                'to' => '2021-03-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                    ],
-                    'reports' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                    ],
-                ]
-            ],
-            [
                 'from' => '2021-04-01',
                 'to' => '2021-04-30',
                 'tables' => [
                     'locations' => [
                         'release' => false,
                         'hasBackup' => false,
+                        'restore' => true,
                     ],
                     'reports' => [
                         'release' => false,
                         'hasBackup' => false,
+                        'restore' => true,
                     ],
                 ]
             ],
@@ -88,10 +76,12 @@ class MaintenanceCommand extends Command
                     'locations' => [
                         'release' => false,
                         'hasBackup' => false,
+                        'restore' => true,
                     ],
                     'reports' => [
                         'release' => false,
                         'hasBackup' => false,
+                        'restore' => true,
                     ],
                 ]
             ],
@@ -102,14 +92,32 @@ class MaintenanceCommand extends Command
                     'locations' => [
                         'release' => false,
                         'hasBackup' => false,
+                        'restore' => true,
                     ],
                     'reports' => [
                         'release' => false,
                         'hasBackup' => false,
+                        'restore' => true,
                     ],
                 ]
             ],
         ]);
+    }
+
+    function getTableColumns($table)
+    {
+        $columns = "";
+
+        switch ($table) {
+            case 'locations':
+                $columns = "(id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road)";
+                break;
+            case 'reports':
+                $columns = "(id, version, date, date_created, dispatch_register_id, distanced, distancem, distancep, last_updated, status, timed, timem, timep, location_id, status_in_minutes, control_point_id, fringe_id)";
+                break;
+        }
+
+        return $columns;
     }
 
     /**
@@ -129,11 +137,6 @@ class MaintenanceCommand extends Command
             $this->process($maintenance);
         });
 
-//        $query = "INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road)
-//                    SELECT * FROM locations_2020_10_16";
-//        $this->log("       - $query");
-//        DB::statement($query);
-
         $this->log("Maintenance finished at " . Carbon::now()->toDateTimeString());
 
     }
@@ -145,35 +148,50 @@ class MaintenanceCommand extends Command
         if ($maintenance->from && $maintenance->to && $maintenance->from < $maintenance->to) {
             foreach ($tables as $table => $options) {
                 $hasBackup = isset($options->hasBackup) ? $options->hasBackup : false;
-                $this->processTable($table, $maintenance->from, $maintenance->to, $options->release, $hasBackup);
+                $this->processTable($table, $maintenance->from, $maintenance->to, $options->release, $hasBackup, $options->restore);
             }
         } else {
             $this->log("Invalid date range From: $maintenance->from and To: $maintenance->to");
         }
     }
 
-    public function processTable($table, $from, $to, $release = false, $hasBackup = false)
+    public function processTable($table, $from, $to, $release = false, $hasBackup = false, $restore = false)
     {
         $this->log("   Processing table: $table...");
         $tableBackup = $this->getTableBackup($table, $to);
 
-        if (!$hasBackup) {
-            $query = "CREATE TABLE $tableBackup AS SELECT * FROM $table WHERE date BETWEEN '$from' AND '$to'";
-            $this->log("       - $query");
+        if ($restore) {
+            $this->restore($table, $from, $to);
+        } else {
+            if (!$hasBackup) {
+//                DB::statement("DROP TABLE IF EXISTS $tableBackup");
+                $query = "CREATE TABLE $tableBackup AS SELECT * FROM $table WHERE date BETWEEN '$from' AND '$to'";
+                $this->log("       - $query");
+                DB::statement($query);
+            }
 
-            DB::statement($query);
+            $backupSuccess = $this->buildBackup($table, $from, $to);
+            if ($release && $backupSuccess) {
+                $this->releaseTable($table, $from, $to);
+            }
         }
+    }
 
-        $backup = $this->buildBackup($table, $from, $to);
+    private function restore($table, $from, $to)
+    {
+        $tableBackup = $this->getTableBackup($table, $to);
+        $tableColumns = $this->getTableColumns($table);
+        $initialDate = Carbon::now();
 
-        if ($backup) {
-            $query = "DROP TABLE $tableBackup";
-            $this->log("       - $query");
-        }
+        $this->log("       ******** RESTORING TABLE $table FROM TABLE FROM $tableBackup at " . $initialDate->toDateTimeString());
 
-        if ($release && $backup) {
-            $this->releaseTable($table, $from, $to);
-        }
+        $query = "INSERT INTO $table $tableColumns SELECT * FROM $tableBackup";
+        $this->log("       - $query");
+
+        DB::statement($query);
+
+        $now = Carbon::now();
+        $this->log("       - END: at " . $now->toDateTimeString() . " | Started = " . $now->diffForHumans($initialDate));
     }
 
     public function buildBackup($table, $from, $to)
@@ -189,12 +207,6 @@ class MaintenanceCommand extends Command
 
     public function releaseTable($table, $from, $to)
     {
-        $this->log("   Releasing dats from table: $table...");
-
-        $query = "DELETE FROM $table WHERE date BETWEEN '$from' AND '$to'";
-        $this->log("       * $query");
-//        DB::statement($query);
-
         $tableBackup = $this->getTableBackup($table, $to);
         $query = "DROP TABLE IF EXISTS $tableBackup";
         $this->log("       - $query");
