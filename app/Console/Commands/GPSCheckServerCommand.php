@@ -55,7 +55,7 @@ class GPSCheckServerCommand extends Command
         $this->issues = collect([]);
 
         $this->checkGPSServer();
-        $this->checkDatabaseServer();
+//        $this->checkDatabaseServer();
         $this->checkTCPConnections();
 
         $this->sendAlerts();

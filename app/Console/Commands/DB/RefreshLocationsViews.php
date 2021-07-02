@@ -51,9 +51,9 @@ class RefreshLocationsViews extends Command
             $this->info($sql);
         }
 
-        $sql = "TRUNCATE TABLE locations_0";
-        DB::statement($sql);
-        $this->info($sql);
+//        $sql = "TRUNCATE TABLE locations_0";
+//        DB::statement($sql);
+//        $this->info($sql);
         $this->info("Refresh locations views finished at " . Carbon::now()->toDateTimeString());
     }
 }

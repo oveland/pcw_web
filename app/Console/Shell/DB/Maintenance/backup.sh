@@ -37,21 +37,23 @@ cd ${PATH_BACKUP_DIR}
 echo "\n\n**************** $(date +"%Y-%m-%d")  **************** \n" >> ${FILE_LOG}
 
 log " ••• Starting backup process for table: ${TABLE} •••\n"
-log "    Exporting table ${TABLE}..."
+log " ••• Exporting table ${TABLE}..."
 PGPASSWORD="${DB_PASS}" pg_dump -h ${DB_HOST} -d ${DB_NAME} -U ${DB_USER} -p ${DB_PORT} -a --data-only --column-inserts -t ${TABLE} > ${TABLE}.sql
 
-log "    Compressing sql file..."
+log " ••• Compressing sql file..."
 rm ${PATH_BACKUP}/${ZIP_FILE_NAME}
 sleep 1
 tar -cvzf ${PATH_BACKUP}/${ZIP_FILE_NAME} ${PATH_BACKUP_DIR}/
 
-log "    Moving backup to AWS S3. Bucket ${AWS_S3_BUCKET_BACKUP_DATABASE}${ZIP_FILE_NAME}\n"
+log " ••• Moving backup to AWS S3. Bucket ${AWS_S3_BUCKET_BACKUP_DATABASE}${ZIP_FILE_NAME}\n"
 aws s3 mv ${PATH_BACKUP}/${ZIP_FILE_NAME} s3://${AWS_S3_BUCKET_BACKUP_DATABASE}
 
 log " ••• Backup for table ${TABLE} finished successfully! •••" >> ${FILE_LOG}
 
-log "\n********************************************* \n" >> ${FILE_LOG}
+log " ••• Removing sql file... "
+rm ${TABLE}.sql
 
+log "\n********************************************* \n" >> ${FILE_LOG}
 log "Finished successfully at $(date +"%r")!"
 
 echo "true";
