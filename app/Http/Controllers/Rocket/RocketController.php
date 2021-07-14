@@ -56,7 +56,7 @@ class RocketController extends Controller
         switch ($name) {
             case 'historic':
                 $vehicle = Vehicle::find($request->get('vehicle'));
-                $camera = $request->get('camera')   Ω¸¸¸¸¸¸F
+                $camera = $request->get('camera');
 
                 if ($vehicle) {
                     $date = $request->get('date');
