@@ -56,10 +56,11 @@ class RocketController extends Controller
         switch ($name) {
             case 'historic':
                 $vehicle = Vehicle::find($request->get('vehicle'));
+                $camera = $request->get('camera')   Ω¸¸¸¸¸¸F
 
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle)->getHistoric($date);
+                    $photos = $this->photoService->for($vehicle)->getHistoric($date, $camera);
 
                     $response->photos = $photos->sortByDesc('time')->values();
 
@@ -143,13 +144,12 @@ class RocketController extends Controller
 
                     if ($photos->count()) {
                         $photo = Photo::find($photos->last()->id);
-                    }
 
-//                    $photo = Photo::find(53717);
+//                    $photo = Photo::find(77176);
 //                    $photo->processRekognition(true, 'persons_and_faces');
 //                    $photo->save();
 
-                    if ($photo) {
+
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
 

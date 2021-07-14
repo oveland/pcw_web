@@ -31,6 +31,24 @@ let adminRocketView = new Vue({
             date: moment().format("YYYY-MM-DD"),
             activate: null,
             release: null,
+            camera: {
+                id: 'all',
+                name: 'Ambas'
+            },
+            cameras: [
+                {
+                    id: 'all',
+                    name: 'Ambas'
+                },
+                {
+                    id: '0',
+                    name: 'Derecha'
+                },
+                {
+                    id: '1',
+                    name: 'Izquierda'
+                }
+            ]
         },
         searchParams: {}
     },
@@ -44,6 +62,7 @@ let adminRocketView = new Vue({
                 vehicle: this.search.vehicle.id,
                 activate: this.search.activate,
                 release: this.search.release,
+                camera: this.search.camera.id
             };
         }
     },

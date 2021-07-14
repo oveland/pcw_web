@@ -20,7 +20,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="control-label">Vehicle</label>
+                        <label class="control-label">{{ $t('Vehicle') }}</label>
                         <div class="form-group">
                             <multiselect track-by="number" label="number" :options="search.vehicles"
 										 v-model="search.vehicle"
@@ -32,14 +32,14 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="control-label">Date report</label>
+                        <label class="control-label">{{ $t('Date') }}</label>
                         <div class="input-group col-md-12">
                             <date-picker v-model="search.date" valueType="format" :first-day-of-week="1" lang="es" width="100%"></date-picker>
                         </div>
                     </div>
                 </div>
 
-				<div class="col-md-1">
+				<div class="col-md-1 hide">
 					<div class="form-group">
 						<label class="control-label">Activate</label>
 						<div class="form-group">
@@ -47,11 +47,23 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-1">
+				<div class="col-md-1 hide">
 					<div class="form-group">
 						<label class="control-label">Release</label>
 						<div class="form-group">
 							<input type="number" name="" v-model="search.release" class="input form-control">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-2">
+					<div class="form-group">
+						<label class="control-label">{{ $t('Camera') }}</label>
+						<div class="form-group">
+							<multiselect track-by="id" label="name" :options="search.cameras"
+										 v-model="search.camera"
+										 :option-height="104" :searchable="false" :allow-empty="false"
+										 :placeholder="$t('Select a camera')"></multiselect>
 						</div>
 					</div>
 				</div>

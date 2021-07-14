@@ -43,7 +43,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereUpdatedAt($value)
  * @method static Builder|Photo whereVehicleId($value)
  * @property-read Vehicle $vehicle
- * @method static Builder|Photo whereDate($value)
+ * @method static Builder|Photo whereDate($column, $value)
  * @property int|null $persons
  * @property-read DispatchRegister|null $dispatchRegister
  * @method static Builder|Photo wherePersons($value)
@@ -51,7 +51,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereEffects($value)
  * @property string $disk
  * @method static Builder|Photo whereDisk($value)
- * @method static Collection|Photo[] findAllByVehicleAndDate(Vehicle $vehicle, $date)
+ * @method static Builder|Photo whereVehicleAndDate(Vehicle $vehicle, $date)
+ * @method static Builder|Photo whereVehicleAndDateAndSide(Vehicle $vehicle, $date, $side)
  * @property string $rekognition
  * @method static Builder|Photo whereRekognition($value)
  * @property string|null $data_persons
@@ -82,14 +83,31 @@ class Photo extends Model implements PhotoInterface
     }
 
     /**
+     * @param Builder|Photo $query
+     * @param Vehicle $vehicle
+     * @param $date
+     * @param $side
+     * @return Builder
+     */
+    function scopeWhereVehicleAndDateAndSide(Builder $query, Vehicle $vehicle, $date, $side)
+    {
+        $query = $query->whereVehicleAndDate($vehicle, $date);
+
+        if ($side !== null && $side != 'all') {
+            return $query->where('side', $side);
+        }
+        return $query;
+    }
+
+    /**
      * @param Builder $query
      * @param Vehicle $vehicle
      * @param $date
-     * @return Photo[]|Collection
+     * @return Builder
      */
-    function scopeFindAllByVehicleAndDate(Builder $query, Vehicle $vehicle, $date)
+    function scopeWhereVehicleAndDate(Builder $query, Vehicle $vehicle, $date)
     {
-        $query =  $query
+        return $query
 //            ->whereBetween('date', ["$date 00:00:00", "$date 23:59:59"])
             ->whereDate('date', $date)
             ->where('vehicle_id', $vehicle->id)
@@ -144,9 +162,6 @@ class Photo extends Model implements PhotoInterface
 
 //            ->limit(30)->offset(220)
             ->limit(600)
-            ->with(['dispatchRegister', 'vehicle'])
-            ->get();
-
-        return $query;
+            ->with(['dispatchRegister', 'vehicle']);
     }
 }

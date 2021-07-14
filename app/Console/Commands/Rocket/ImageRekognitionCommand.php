@@ -16,7 +16,7 @@ class ImageRekognitionCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:image:rekognition {--vehicle-plate=} {--date=} {--type=persons}';
+    protected $signature = 'rocket:image:rekognition {--vehicle-plate=} {--date=} {--type=persons} {--camera=0}';
 
     /**
      * The console command description.
@@ -56,19 +56,18 @@ class ImageRekognitionCommand extends Command
         $date = $this->option('date');
         $vehiclePlate = $this->option('vehicle-plate');
         $type = $this->option('type');
+        $camera = $this->option('camera');
 
         if ($date && $vehiclePlate) {
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
-//                $photos = Photo::findAllByVehicleAndDate($vehicle, $date);
-                $photos = Photo::where('vehicle_id', $vehicle->id)
+                $photos = Photo::whereVehicleAndDateAndSide($vehicle, $date, $camera)
 //                    ->where('dispatch_register_id', 1276931) // Round trip 1 322 October 2nd
-//                    ->where('id', '>=',49027)
-                    ->whereDate('date', $date)
+//                    ->where('id', '=',77176)
                     ->orderBy('date')
                     ->get();
-                
+
                 $total = $photos->count();
                 $index = 1;
 

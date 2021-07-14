@@ -55,7 +55,7 @@ class MigratePhotosToS3Command extends Command
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
-                $photos = Photo::findAllByVehicleAndDate($vehicle, $date)->take(1000);
+                $photos = Photo::whereVehicleAndDate($vehicle, $date)->get()->take(1000);
 
                 $s3 = Storage::disk('s3');
                 $local = Storage::disk('local');

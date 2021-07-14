@@ -71,9 +71,10 @@ trait PhotoEncode
     /**
      * @param null $encode
      * @param bool $withEffects
+     * @param bool $withMask
      * @return \Intervention\Image\Image|null
      */
-    public function getImage($encode = null, $withEffects = false)
+    public function getImage($encode = null, $withEffects = false, $withMask = false)
     {
         $image = null;
 
@@ -130,6 +131,15 @@ trait PhotoEncode
 
 //            $this->save();
             $image = $encode ? $image->encode($encode) : $image;
+
+            if ($withMask) {
+                $pathMask = 'Apps/Rocket/Profiles/Mask/' . $this->side . '-' . $this->vehicle_id . '.png';
+
+                if (Storage::exists($pathMask)) {
+                    $mask = Image::make(Storage::path($pathMask));
+                    $image->insert($mask, 'center');
+                }
+            }
         } catch (FileNotFoundException $e) {
 
         }

@@ -5,6 +5,8 @@ namespace App\Models\Apps\Rocket\Traits;
 
 
 use App\Services\AWS\RekognitionService;
+use Image;
+use Storage;
 
 trait PhotoRekognition
 {
@@ -55,7 +57,8 @@ trait PhotoRekognition
         $config = $this->photoRekognitionService($type)->config;
 
         $this->effects = $config->photo->effects;
-        $image = $this->getImage('png', true);
+        $image = $this->getImage('png', true, true);
+        $image = Image::make($image)->encode('png'); // It's necessary because image has a Mask
 
         $column = "data_$type";
         $this->$column = $rekognition->sefFile($image)->process($type);

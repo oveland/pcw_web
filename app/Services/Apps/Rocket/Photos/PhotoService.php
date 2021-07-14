@@ -350,13 +350,14 @@ class PhotoService
 
     /**
      * @param null $date
+     * @param int $camera
      * @return Collection
      */
-    function getHistoric($date = null)
+    function getHistoric($date = null, $camera = null)
     {
         $historic = collect([]);
 
-        $photos = Photo::findAllByVehicleAndDate($this->vehicle, $date ? $date : Carbon::now());
+        $photos = Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $camera)->get();
 //            ->where('id', 53717);
 
         if ($photos->isNotEmpty()) {
@@ -626,7 +627,7 @@ class PhotoService
      */
     function getFile(Photo $photo, $encode = "webp", $withEffect = false)
     {
-        $image = $photo->getImage($encode, $withEffect);
+        $image = $photo->getImage($encode, $withEffect, false);
 
         if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
             return $image->response($encode);
