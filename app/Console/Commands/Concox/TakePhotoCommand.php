@@ -48,6 +48,8 @@ class TakePhotoCommand extends Command
     {
         $camera = $this->option('camera');
 
+        if($camera == 2)sleep(10);
+
         $this->logData("Concox request photo camera: $camera");
         $this->logData($this->concoxService->takePhoto($camera));
         sleep(15);
@@ -60,7 +62,7 @@ class TakePhotoCommand extends Command
      * @param $message
      * @param string $level
      */
-    public function logData($message, $level = 'info')
+    public function logData($message, string $level = 'info')
     {
         $this->info($message);
         switch ($level) {

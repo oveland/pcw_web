@@ -869,7 +869,7 @@ class DispatchRegister extends Model
 
         $takings->save();
 
-        if ($this->processTakings()) {
+        if (!$this->processTakings()) {
             $takings->total_production = 0;
             $takings->control = 0;
             $takings->fuel = 0;
@@ -888,7 +888,7 @@ class DispatchRegister extends Model
 
     function processTakings()
     {
-        return !$this->vehicle->process_takings && ($this->date > $this->vehicle->to_date_takings || !$this->vehicle->to_date_takings);
+        return !(!$this->vehicle->process_takings && ($this->date > $this->vehicle->to_date_takings || !$this->vehicle->to_date_takings));
     }
 
     public function getMileageAttribute()
