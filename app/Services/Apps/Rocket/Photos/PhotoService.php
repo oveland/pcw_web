@@ -473,7 +473,7 @@ class PhotoService
                 $details->occupation->seatingActivatedStr = $seatingActivated->keys()->sort()->implode(', ');
 
 
-                $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts, $photo->id);
+                $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts, $photo);
 
                 $historic->push((object)[
                     'id' => $photo->id,
@@ -508,7 +508,7 @@ class PhotoService
         return $historic;
     }
 
-    public function processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts = null, $photoId)
+    public function processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts = null, Photo $photo)
     {
         $rekognitionCounts = collect([]);
 
@@ -574,7 +574,11 @@ class PhotoService
             $maxDetection = $prevMaxDetection;
             if ($count > $prevMaxDetection) {
                 $maxDetection = $count;
-                $maxPhotoId = $photoId;
+                $maxPhotoId = $photo->id;
+
+                if($photo->dispatchRegister) {
+                    \DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $count, final_sensor_counter = $count WHERE id_registro = $photo->dispatch_register_id");
+                }
             }
 
             if ($endRoundTrip) {
@@ -627,7 +631,7 @@ class PhotoService
      */
     function getFile(Photo $photo, $encode = "webp", $withEffect = false)
     {
-        $image = $photo->getImage($encode, $withEffect, false);
+        $image = $photo->getImage($encode, $withEffect, request()->get('with-mask'));
 
         if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
             return $image->response($encode);
