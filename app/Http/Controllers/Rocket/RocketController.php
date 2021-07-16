@@ -62,7 +62,9 @@ class RocketController extends Controller
                     $date = $request->get('date');
                     $photos = $this->photoService->for($vehicle)->getHistoric($date, $camera);
 
-                    $response->photos = $photos->sortByDesc('time')->values();
+                    $response->photos = $photos
+                        ->where('drId', '<>', null)
+                        ->sortByDesc('time')->values();
 
                     $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
                     $response->seating = $profileSeat ? $profileSeat->occupation : [];
@@ -88,22 +90,24 @@ class RocketController extends Controller
     public function processMaxRecognitions($photos)
     {
         $max = collect([]);
-        foreach (['persons', 'faces'] as $type) {
-            $maxRecognitions = $photos->pluck('rekognitionCounts')->pluck($type)->filter(function ($rc) {
-                return $rc->max->endRoundTrip === true;
-            })->pluck('max');
+        $maxDrRecognitions = $photos->where('drId', '<>', null)->groupBy('drId');
 
-            $data = collect([]);
-            foreach ($maxRecognitions as $maxRecognition) {
+        foreach ($maxDrRecognitions as $maxRecognitions) {
+            foreach (['persons', 'faces'] as $type) {
+                $data = collect([]);
+
+                $maxRecognition = $maxRecognitions->sortBy('time')->last()->rekognitionCounts->get($type)->max;
+
                 $photo = Photo::find($maxRecognition->photoId);
                 $data->push((object)[
+                    'dr' => $maxRecognition->dr,
                     'photoId' => $photo->id,
                     'time' => $photo->date->toTimeString(),
                     'value' => $maxRecognition->value,
                 ]);
-            }
 
-            $max->put($type, $data->toArray());
+                $max->put($type, $data->toArray());
+            }
         }
 
         return $max;

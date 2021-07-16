@@ -50,15 +50,6 @@
                             </p>
                         </div>
                     </div>
-					<div class="col-md-12 p-0 p-t-10">
-						<p>{{ $t('Recognition') }}:</p>
-						<div class="detail p-l-15">
-							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
-								<i :class="rekognition.description.icon"></i>
-								{{ rekognition.description.name }}: {{ rekognition.count }}
-							</div>
-						</div>
-					</div>
 
 					<div class="col-md-12 p-0 p-t-10">
 						<p>{{ $t('Recognition with persistence') }}:</p>
@@ -66,6 +57,16 @@
 							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
 								<i :class="rekognition.description.icon"></i>
 								{{ rekognition.description.name }}: {{ rekognition.persistence.count }}
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 p-0 p-t-10">
+						<p>{{ $t('Recognition') }}:</p>
+						<div class="detail p-l-15">
+							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
+								<i :class="rekognition.description.icon"></i>
+								{{ rekognition.description.name }}: {{ rekognition.count }}
 							</div>
 						</div>
 					</div>
@@ -115,9 +116,9 @@
 						<div class="detail p-l-15">
 							<div v-for="rekognition in photo.rekognitionCounts" class="text-capitalize text-white" style="font-size: 1rem">
 								<i :class="rekognition.description.icon"></i>
-								<span v-if="rekognition.endRoundTrip" class="text-uppercase">
-									{{ $t('Max in round trip') }} = {{ rekognition.max.value }}, ID = {{ rekognition.max.photoId }}
-								</span>
+<!--								<span v-if="rekognition.endRoundTrip" class="text-uppercase">-->
+<!--									{{ $t('Max in round trip') }} = {{ rekognition.max.value }}, ID = {{ rekognition.max.photoId }}-->
+<!--								</span>-->
 								<span>
 									{{ $t('Max count') }}: {{ rekognition.max.detection }}
 								</span>

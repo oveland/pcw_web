@@ -245,6 +245,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PhotoDetailsComponent",
   props: {
@@ -7488,35 +7489,6 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-12 p-0 p-t-10" }, [
-                _c("p", [_vm._v(_vm._s(_vm.$t("Recognition")) + ":")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "detail p-l-15" },
-                  _vm._l(_vm.photo.rekognitionCounts, function(rekognition) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "text-capitalize text-white",
-                        staticStyle: { "font-size": "1rem" }
-                      },
-                      [
-                        _c("i", { class: rekognition.description.icon }),
-                        _vm._v(
-                          "\n\t\t\t\t\t\t\t\t" +
-                            _vm._s(rekognition.description.name) +
-                            ": " +
-                            _vm._s(rekognition.count) +
-                            "\n\t\t\t\t\t\t\t"
-                        )
-                      ]
-                    )
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-12 p-0 p-t-10" }, [
                 _c("p", [
                   _vm._v(_vm._s(_vm.$t("Recognition with persistence")) + ":")
                 ]),
@@ -7538,6 +7510,35 @@ var render = function() {
                             _vm._s(rekognition.description.name) +
                             ": " +
                             _vm._s(rekognition.persistence.count) +
+                            "\n\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  }),
+                  0
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12 p-0 p-t-10" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Recognition")) + ":")]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "detail p-l-15" },
+                  _vm._l(_vm.photo.rekognitionCounts, function(rekognition) {
+                    return _c(
+                      "div",
+                      {
+                        staticClass: "text-capitalize text-white",
+                        staticStyle: { "font-size": "1rem" }
+                      },
+                      [
+                        _c("i", { class: rekognition.description.icon }),
+                        _vm._v(
+                          "\n\t\t\t\t\t\t\t\t" +
+                            _vm._s(rekognition.description.name) +
+                            ": " +
+                            _vm._s(rekognition.count) +
                             "\n\t\t\t\t\t\t\t"
                         )
                       ]
@@ -7679,20 +7680,6 @@ var render = function() {
                       },
                       [
                         _c("i", { class: rekognition.description.icon }),
-                        _vm._v(" "),
-                        rekognition.endRoundTrip
-                          ? _c("span", { staticClass: "text-uppercase" }, [
-                              _vm._v(
-                                "\n\t\t\t\t\t\t\t\t\t" +
-                                  _vm._s(_vm.$t("Max in round trip")) +
-                                  " = " +
-                                  _vm._s(rekognition.max.value) +
-                                  ", ID = " +
-                                  _vm._s(rekognition.max.photoId) +
-                                  "\n\t\t\t\t\t\t\t\t"
-                              )
-                            ])
-                          : _vm._e(),
                         _vm._v(" "),
                         _c("span", [
                           _vm._v(
@@ -8379,7 +8366,7 @@ var render = function() {
       _vm.photos.length > 0
         ? _c("div", { staticClass: "col-md-12 bg-inverse p-20 text-white" }, [
             _c("p", { staticClass: "text-uppercase" }, [
-              _vm._v(_vm._s(_vm.$t("Max recognitions")) + " TOTAL:")
+              _vm._v(_vm._s(_vm.$t("Max recognitions")) + ":")
             ]),
             _vm._v(" "),
             _c(
@@ -8411,9 +8398,11 @@ var render = function() {
                             "\n\t\t\t\t\t\t\t" +
                               _vm._s(max.time) +
                               " • " +
+                              _vm._s(max.dr.routeName) +
+                              " " +
                               _vm._s(_vm.$t("Round trip")) +
                               " " +
-                              _vm._s(index + 1) +
+                              _vm._s(max.dr.roundTrip) +
                               " = " +
                               _vm._s(max.value) +
                               "\n\t\t\t\t\t\t"
@@ -8458,7 +8447,8 @@ var render = function() {
                   attrs: {
                     draggable: "false",
                     src: "/img/rocket/report.svg",
-                    width: "30%"
+                    width: "30%",
+                    alt: "Empty report"
                   }
                 })
               : undefined

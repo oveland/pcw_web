@@ -390,7 +390,7 @@ return [
                         ],
                         [
                             'range' => [50, 100],
-                            'color' => '#9bef00',
+                            'color' => '#05da55',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
                         ]

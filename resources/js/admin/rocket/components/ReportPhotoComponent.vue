@@ -1,14 +1,14 @@
 <template>
     <div class="report-photo-component" :style="`width: ${image.size.width + 6}px; margin: auto;overflow-y:auto;height:${image.size.height + 10}px`">
 		<div v-if="photos.length > 0" class="col-md-12 bg-inverse p-20 text-white">
-			<p class="text-uppercase">{{ $t('Max recognitions') }} TOTAL:</p>
+			<p class="text-uppercase">{{ $t('Max recognitions') }}:</p>
 			<div class="detail p-l-15">
 				<div v-for="(recognitions, type) in maxRecognitions" class="text-capitalize text-white" style="font-size: 1rem">
 					<p class="text-capitalize m-b-0 m-t-5">{{ $t(type)}}: {{ totalMax(recognitions) }}</p>
 					<div v-for="(max, index) in recognitions" class="p-l-15">
 						<span>
 							<small class="text-muted">{{ max.photoId }}</small>
-							{{ max.time }} • {{ $t('Round trip') }} {{ index + 1 }} = {{ max.value }}
+							{{ max.time }} • {{ max.dr.routeName }} {{ $t('Round trip') }} {{ max.dr.roundTrip }} = {{ max.value }}
 						</span>
 					</div>
 				</div>
@@ -21,7 +21,7 @@
         </div>
 
         <div v-if="photos.length <= 0" class="col-md-12 text-center p-40">
-            <img v-if="true" draggable="false" src="/img/rocket/report.svg" width="30%">
+            <img v-if="true" draggable="false" src="/img/rocket/report.svg" width="30%" alt="Empty report">
         </div>
     </div>
 </template>
