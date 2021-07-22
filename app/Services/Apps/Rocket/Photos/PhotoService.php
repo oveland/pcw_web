@@ -373,7 +373,7 @@ class PhotoService
                 $h1 = $historicDrCamera1->get($drId);
 
                 $maxCamera1 = 0;
-                if ($h1->sortBy('date')->last()) {
+                if ($h1 && $h1->sortBy('date')->last()) {
                     $maxCamera1 = $h1->sortBy('time')->last()->passengers->totalInRoundTrip;
                 }
 

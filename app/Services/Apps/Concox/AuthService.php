@@ -15,7 +15,7 @@ class AuthService
     private const APP_KEY = '8FB345B8693CCD00E573E7459324059A';
     private const APP_SECRET = 'be8fe6b5babc49e3ba8c2c3682ac0a05';
     private const USER_ID = 'pcwoveland';
-    private const USER_PWD_MD5 = 'ba1e3adbf24ad7221bfc4f5c0446df4e';
+    private const USER_PWD_MD5 = '5d0ea53f421c80b519878c78b188fcef';
 
     /**
      * @var string
