@@ -430,6 +430,10 @@ class PhotoService
 
             foreach ($photos->sortBy('date') as $photo) {
 
+                if ($prevPhoto->dispatchRegister && !$prevPhoto->dispatchRegister->isActive()) {
+                    $prevPhoto->dispatch_register_id = null;
+                }
+
                 if ($photo->dispatchRegister && !$photo->dispatchRegister->isActive()) {
                     $photo->dispatch_register_id = null;
                 }
@@ -448,7 +452,14 @@ class PhotoService
 //                    }
                 }
 
-                $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);
+                $statusDispatch = 'none';
+                if ($photo->dispatch_register_id) {
+                    $statusDispatch = 'in';
+                } else if ($photo->dispatch_register_id <> $prevPhoto->dispatch_register_id) {
+                    $statusDispatch = 'end';
+                }
+
+                $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDispatch);
 
                 $seatingActivated = $this->seatOccupationService->getSeatingActivated($currentOccupation->seatingOccupied, $currentOccupation->withOverlap);
                 $seatingReleased = $this->seatOccupationService->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);

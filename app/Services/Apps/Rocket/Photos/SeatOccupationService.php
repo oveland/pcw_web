@@ -28,22 +28,25 @@ class SeatOccupationService
      * @param $currentOccupied
      * @param $prevOccupied
      * @param false $withOverlap
+     * @param $statusDispatch
      */
-    public function processPersistenceSeating(&$currentOccupied, $prevOccupied, $withOverlap = false)
+    public function processPersistenceSeating(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch)
     {
-        $this->persistenceRelease($currentOccupied, $prevOccupied, $withOverlap);
-        $this->persistenceActivate($currentOccupied, $prevOccupied);
+        $this->persistenceRelease($currentOccupied, $prevOccupied, $withOverlap, $statusDispatch);
+        $this->persistenceActivate($currentOccupied, $prevOccupied, false,  $statusDispatch);
     }
 
     /**
      * @param Collection | array $currentOccupied
      * @param Collection | array $prevOccupied
      * @param bool $withOverlap
+     * @param $statusDispatch
      */
-    private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false)
+    private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch)
     {
         if (!$withOverlap) {
             foreach ($prevOccupied as $seat => $data) {
+
                 $seatReleaseThreshold = $this->configSeating[$seat]['persistence']['release'];
                 $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
 
@@ -52,10 +55,14 @@ class SeatOccupationService
                 $persistentInCurrent = $currentOccupied->get($seat);
 
                 $counterRelease = intval($newData->get('counterRelease') ?? 0);
-                if (!$persistentInCurrent) {
+                if (!$persistentInCurrent && $statusDispatch == 'in') {
                     $counterRelease++;
 
                     $newData->put('counterRelease', $counterRelease);
+
+//                    if ($statusDispatch == 'out' || $statusDispatch == 'none') {
+//                        $counterRelease = $seatReleaseThreshold;
+//                    }
 
                     if ($counterRelease < $seatReleaseThreshold && $newData->get('counterActivate') >= $seatActivateThreshold) {
                         $currentOccupied->put($seat, (object)$newData->toArray());
@@ -75,8 +82,9 @@ class SeatOccupationService
      * @param Collection | array $currentOccupied
      * @param Collection | array $prevOccupied
      * @param bool $withOverlap
+     * @param $statusDispatch
      */
-    private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false)
+    private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch)
     {
         if (!$withOverlap) {
             $currentOccupiedClone = clone $currentOccupied;
@@ -91,10 +99,14 @@ class SeatOccupationService
 
                 $counterRelease = $newData->get('counterRelease');
 
-                if ($persistentPrev && (!$counterRelease || $counterRelease <= 0)) {
-                    $counterActivate++;
-                } else if (!$persistentPrev) {
-                    $counterActivate = 1;
+                if ($statusDispatch == 'in') {
+                    if ($persistentPrev && (!$counterRelease || $counterRelease <= 0)) {
+                        $counterActivate++;
+                    } else if (!$persistentPrev) {
+                        $counterActivate = 1;
+                    }
+                } else {
+                    $counterActivate = 0;
                 }
 
                 $prevCounterActivate = $persistentPrev ? collect($persistentPrev)->get('counterActivate') : 0;
@@ -105,6 +117,7 @@ class SeatOccupationService
                 $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
                 $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent);
                 $newData->put('counted', $counterActivate >= $seatActivateThreshold);
+                $newData->put('seatActivateThreshold', $seatActivateThreshold);
                 $newData->put('risingEvent', $risingEvent);
 
                 $currentOccupied->put($seat, (object)$newData->toArray());

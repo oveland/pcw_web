@@ -799,17 +799,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -8482,11 +8471,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "panel panel-inverse" }, [
-    _c("div", { staticClass: "panel-heading hide" }, [
+    _c("div", { staticClass: "panel-heading" }, [
       _c(
         "button",
         {
-          staticClass: "btn btn-success btn-sm btn-search-report",
+          staticClass:
+            "btn green btn-outline btn-light btn-sm btn-search-report",
           attrs: { type: "button" },
           on: {
             click: function($event) {
@@ -8496,7 +8486,7 @@ var render = function() {
         },
         [
           _c("i", { staticClass: "fa fa-search" }),
-          _vm._v(" Search\n            ")
+          _vm._v(" " + _vm._s(_vm.$t("Search")) + "\n            ")
         ]
       )
     ]),
@@ -8609,7 +8599,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-1 hide" }, [
+        _c("div", { staticClass: "col-md-1" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [_vm._v("Activate")]),
             _vm._v(" "),
@@ -8639,7 +8629,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-1 hide" }, [
+        _c("div", { staticClass: "col-md-1" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [_vm._v("Release")]),
             _vm._v(" "),
@@ -8700,36 +8690,6 @@ var render = function() {
               ],
               1
             )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-2" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { staticClass: "control-label" }, [_vm._v(" ")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-group col-md-12" }, [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn green-haze btn-outline btn-light btn-search-report",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      return _vm.setSearch()
-                    }
-                  }
-                },
-                [
-                  _c("i", { staticClass: "fa fa-search" }),
-                  _vm._v(
-                    " " +
-                      _vm._s(_vm.$t("Search")) +
-                      "\n                            "
-                  )
-                ]
-              )
-            ])
           ])
         ])
       ])

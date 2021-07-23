@@ -1,8 +1,8 @@
 <template>
     <div class="panel panel-inverse">
-        <div class="panel-heading hide">
-            <button type="button" class="btn btn-success btn-sm btn-search-report" @click="setSearch()">
-                <i class="fa fa-search"></i> Search
+        <div class="panel-heading">
+            <button type="button" class="btn green btn-outline btn-light btn-sm btn-search-report" @click="setSearch()">
+                <i class="fa fa-search"></i> {{ $t('Search') }}
             </button>
         </div>
         <div class="panel-body p-b-15">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-				<div class="col-md-1 hide">
+				<div class="col-md-1">
 					<div class="form-group">
 						<label class="control-label">Activate</label>
 						<div class="form-group">
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-1 hide">
+				<div class="col-md-1">
 					<div class="form-group">
 						<label class="control-label">Release</label>
 						<div class="form-group">
@@ -67,17 +67,6 @@
 						</div>
 					</div>
 				</div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">&nbsp;</label>
-                        <div class="input-group col-md-12">
-                            <button type="button" class="btn green-haze btn-outline btn-light btn-search-report" @click="setSearch()">
-                                <i class="fa fa-search"></i> {{ $t('Search') }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
