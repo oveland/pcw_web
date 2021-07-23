@@ -143,6 +143,7 @@
                 });
                 axios.post(`${this.apiUrl}/params/occupation/save`, {
                     vehicle: this.searchParams.vehicle,
+					camera: this.searchParams.camera,
                     seating: this.seating,
                 }).then(response => {
                     const data = response.data;

@@ -56,14 +56,14 @@ class ReportPhotosController extends Controller
         switch ($name) {
             case 'historic':
                 $vehicle = Vehicle::find($request->get('vehicle'));
+                $camera = $request->get('camera');
 
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle)->getHistoric($date);
+                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
                     $response->photos = $photos->sortByDesc('time')->values();
 
-                    $profileSeat = $vehicle->profile_seating;
-                    $response->seating = $profileSeat ? $profileSeat->occupation : [];
+                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
                 } else {
                     $response->success = false;
                     $response->message = __('Vehicle not found');
@@ -106,6 +106,8 @@ class ReportPhotosController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
+                $camera = $request->get('camera');
+
                 $photo = null;
                 if ($vehicle) {
                     $date = $request->get('date');
@@ -127,8 +129,7 @@ class ReportPhotosController extends Controller
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
 
-                    $profileSeat = $vehicle->profile_seating;
-                    $response->seating = $profileSeat ? $profileSeat->occupation : [];
+                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
                 } else {
                     $response->success = false;
                     $response->message = __('Vehicle not found');
@@ -158,9 +159,10 @@ class ReportPhotosController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
+                $camera = $request->get('camera');
                 if ($vehicle) {
                     $seating = collect($request->get('seating'));
-                    $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
+                    $profileSeat = ProfileSeat::findByVehicleAndCamera($vehicle, $camera);
                     $profileSeat = $profileSeat ? $profileSeat : new ProfileSeat();
                     $profileSeat->vehicle()->associate($vehicle);
 

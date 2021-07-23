@@ -23,7 +23,7 @@ trait PhotoGlobals
      */
     public function photoRekognitionService($type)
     {
-        $profileSeating = $this->vehicle->profile_seating;
+        $profileSeating = $this->vehicle->getProfileSeating($this->side);
 
         return App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating]);
     }

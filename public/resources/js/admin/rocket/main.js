@@ -568,6 +568,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       axios.post("".concat(this.apiUrl, "/params/occupation/save"), {
         vehicle: this.searchParams.vehicle,
+        camera: this.searchParams.camera,
         seating: this.seating
       }).then(function (response) {
         var data = response.data;

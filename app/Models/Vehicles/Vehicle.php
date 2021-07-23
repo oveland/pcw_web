@@ -314,12 +314,14 @@ class Vehicle extends Model
     /**
      * @return ProfileSeat
      */
-    public function getProfileSeatingAttribute()
+    public function getProfileSeating($camera = 'all')
     {
-        $profileSeat = $this->profileSeat;
+        $profileSeat = $this->profileSeat()->where('camera', $camera)->first();
         if (!$profileSeat) {
             $profileSeat = new ProfileSeat();
             $profileSeat->vehicle()->associate($this);
+            $profileSeat->camera = $camera;
+            $profileSeat->occupation = [];
             $profileSeat->save();
         }
         return $profileSeat;

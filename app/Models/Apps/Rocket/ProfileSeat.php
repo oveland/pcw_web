@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
  * @property Carbon|null $updated_at
  * @property-read Vehicle $vehicle
  * @property string $photo
+ * @property string $camera
  * @method static Builder|ProfileSeat newModelQuery()
  * @method static Builder|ProfileSeat newQuery()
  * @method static Builder|ProfileSeat query()
@@ -29,7 +30,7 @@ use Illuminate\Support\Str;
  * @method static Builder|ProfileSeat whereVehicleId($value)
  * @method static Builder|ProfileSeat wherePhoto($value)
  * @mixin Eloquent
- * @method static Builder|ProfileSeat findByVehicle(Vehicle $vehicle)
+ * @method static Builder|ProfileSeat findByVehicleAndCamera(Vehicle $vehicle, $camera = 'all')
  * @property-read mixed $date
  */
 class ProfileSeat extends Model
@@ -74,14 +75,16 @@ class ProfileSeat extends Model
     /**
      * @param Builder $query
      * @param Vehicle $vehicle
+     * @param string $camera
      * @return Builder
      */
-    function scopeFindByVehicle(Builder $query, Vehicle $vehicle)
+    function scopeFindByVehicleAndCamera(Builder $query, Vehicle $vehicle, $camera = 'all')
     {
-        $profileSeat = $query->with('vehicle')->where('vehicle_id', $vehicle->id)->first();
+        $profileSeat = $query->with('vehicle')->where('vehicle_id', $vehicle->id)->where('camera', $camera)->first();
         if (!$profileSeat) {
             $profileSeat = new ProfileSeat();
             $profileSeat->vehicle()->associate($vehicle);
+            $profileSeat->camera = $camera;
             $profileSeat->save();
         }
         return $profileSeat;

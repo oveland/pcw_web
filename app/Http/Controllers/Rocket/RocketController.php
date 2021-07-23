@@ -60,14 +60,13 @@ class RocketController extends Controller
 
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle)->getHistoric($date, $camera);
+                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
 
                     $response->photos = $photos
 //                        ->where('drId', '<>', null)
                         ->sortByDesc('time')->values();
 
-                    $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
-                    $response->seating = $profileSeat ? $profileSeat->occupation : [];
+                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
                     $response->maxRecognitions = $this->processMaxRecognitions($photos);
                 } else {
                     $response->success = false;
@@ -141,10 +140,11 @@ class RocketController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
+                $camera = $request->get('camera');
                 $photo = null;
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle)->getHistoric($date);
+                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
 
                     if ($photos->count()) {
                         $photo = Photo::find($photos->last()->id);
@@ -153,12 +153,10 @@ class RocketController extends Controller
 //                    $photo->processRekognition(true, 'persons_and_faces');
 //                    $photo->save();
 
-
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
 
-                    $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
-                    $response->seating = $profileSeat ? $profileSeat->occupation : [];
+                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
                 } else {
                     $response->success = false;
                     $response->message = __('Vehicle not found');
@@ -188,12 +186,11 @@ class RocketController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
+                $camera = $request->get('camera');
                 if ($vehicle) {
                     $seating = collect($request->get('seating'));
-                    $profileSeat = ProfileSeat::where('vehicle_id', $vehicle->id)->first();
-                    $profileSeat = $profileSeat ? $profileSeat : new ProfileSeat();
-                    $profileSeat->vehicle()->associate($vehicle);
 
+                    $profileSeat = $vehicle->getProfileSeating($camera);
                     $profileSeat->occupation = $seating->transform(function ($seat) {
                         $seat['selected'] = false;
                         return $seat;

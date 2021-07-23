@@ -38,7 +38,7 @@
                             <i class="fa fa-photo"></i> @lang('Report')
                         </a>
                     </li>
-                    <li>
+                    <li v-if="search.camera.id !== 'all'">
                         <a href="#tab-profile-seating" data-toggle="tab">
                             <i class="fa fa-users"></i> @lang('Profile')
                         </a>
@@ -49,7 +49,7 @@
                         <report-photo-component :search-params="searchParams" api-url="{{ route('admin.rocket') }}"></report-photo-component>
                     </div>
 
-                    <div class="tab-pane" id="tab-profile-seating">
+                    <div class="tab-pane" id="tab-profile-seating" v-if="search.camera.id !== 'all'">
                         <profile-seating-component :search-params="searchParams" api-url="{{ route('admin.rocket') }}"></profile-seating-component>
                     </div>
                 </div>

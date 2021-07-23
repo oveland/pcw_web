@@ -3,12 +3,10 @@
 
 namespace App\Services\Apps\Rocket\Photos;
 
-
-use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
-use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\ConfigProfileService;
+use Exception;
 use Illuminate\Support\Collection;
 
 abstract class
@@ -17,14 +15,9 @@ PhotoRekognitionService
     protected $type = 'persons';
 
     /**
-     * @var Vehicle
-     */
-    protected $vehicle;
-
-    /**
      * @var PhotoZone
      */
-    public $zoneDetected;
+    public $photoZone;
 
     /**
      * @var object
@@ -34,22 +27,26 @@ PhotoRekognitionService
     /**
      * @var ProfileSeat
      */
-    private $profileSeating;
+    private $profileSeat;
 
 
     /**
      * PhotoRekognitionService constructor.
-     * @param PhotoZone $zoneDetected
-     * @param ProfileSeat $profileSeating
+     * @param PhotoZone $photoZone
+     * @param ProfileSeat $profileSeat
+     * @throws Exception
      */
-    function __construct(PhotoZone $zoneDetected, ProfileSeat $profileSeating)
+    function __construct(PhotoZone $photoZone, ProfileSeat $profileSeat)
     {
-        $this->vehicle = $profileSeating->vehicle;
-        $this->zoneDetected = $zoneDetected;
+        if (!$profileSeat) {
+            throw new Exception("Photo Rekognition Service haven't a valid profile!");
+        }
 
-        $configService = new ConfigProfileService($this->vehicle);
+        $this->photoZone = $photoZone;
+
+        $configService = new ConfigProfileService($profileSeat);
         $this->config = $configService->type($this->type);
-        $this->profileSeating = $profileSeating;
+        $this->profileSeat = $profileSeat;
     }
 
     /**
@@ -240,13 +237,6 @@ PhotoRekognitionService
      */
     function occupationParams($occupation)
     {
-        $profileSeating = $this->profileSeating;
-
-        if (!$profileSeating) {
-            $profileSeating = $this->vehicle->profile_seating;
-            \Log::info("Load ProfileSeat!!");
-        }
-
         $occupation = (object)$occupation;
 
         $personDraws = collect([]);
@@ -260,9 +250,9 @@ PhotoRekognitionService
                 $recognition = (object)$recognition;
                 if (isset($recognition->count)) {
                     if ($recognition->count) {
-                        $this->zoneDetected->buildZone($recognition->box);
-                        $this->zoneDetected->setType($recognition->type);
-                        $profileOccupation = $this->zoneDetected->getProfileOccupation($profileSeating);
+                        $this->photoZone->buildZone($recognition->box);
+                        $this->photoZone->setType($recognition->type);
+                        $profileOccupation = $this->photoZone->getProfileOccupation($this->profileSeat);
                         $recognition->profile = $profileOccupation;
 
                         if ($profileOccupation->seatOccupied) {
@@ -281,7 +271,7 @@ PhotoRekognitionService
             }
         }
 
-        $occupationPercent = $profileSeating->occupation->count() ? 100 * $seatingOccupied->count() / $profileSeating->occupation->count() : 0;
+        $occupationPercent = $this->profileSeat->occupation->count() ? 100 * $seatingOccupied->count() / $this->profileSeat->occupation->count() : 0;
 
         $occupation->type = $this->type;
         $occupation->draws = $personDraws;

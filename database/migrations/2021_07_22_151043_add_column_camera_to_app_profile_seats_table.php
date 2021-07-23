@@ -16,7 +16,7 @@ class AddColumnCameraToAppProfileSeatsTable extends Migration
         Schema::table('app_profile_seats', function (Blueprint $table) {
             $table->dropUnique(['vehicle_id']);
 
-            $table->integer('camera')->nullable();
+            $table->string('camera')->default('all');
 
             $table->unique(['vehicle_id', 'camera']);
         });
@@ -32,6 +32,8 @@ class AddColumnCameraToAppProfileSeatsTable extends Migration
         Schema::table('app_profile_seats', function (Blueprint $table) {
             $table->dropUnique(['vehicle_id', 'camera']);
             $table->unique(['vehicle_id']);
+
+            $table->dropColumn('camera');
         });
     }
 }

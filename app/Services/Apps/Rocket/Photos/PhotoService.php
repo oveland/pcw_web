@@ -44,6 +44,11 @@ class PhotoService
     public $vehicle;
 
     /**
+     * @var string
+     */
+    public $camera = 'all';
+
+    /**
      * @var SeatOccupationService
      */
     private $seatOccupationService;
@@ -65,15 +70,30 @@ class PhotoService
         $this->storage = Storage::disk(self::DISK);
     }
 
-    /**
-     * @param Vehicle $vehicle
-     * @return PhotoService
-     */
-    function for(Vehicle $vehicle)
+    function setVehicle(Vehicle $vehicle)
     {
         $this->vehicle = $vehicle;
-        $this->seatOccupationService = new SeatOccupationService($vehicle);
-        $this->profileSeating = $vehicle->profile_seating;
+    }
+
+    function setCamera($camera)
+    {
+        if ($camera !== '' && $camera !== null) {
+            $this->camera = $camera;
+        }
+    }
+
+    /**
+     * @param Vehicle $vehicle
+     * @param $camera
+     * @return PhotoService
+     */
+    function for(Vehicle $vehicle, $camera)
+    {
+        $this->setVehicle($vehicle);
+        $this->setCamera($camera);
+
+        $this->profileSeating = $this->vehicle->getProfileSeating($this->camera);
+        $this->seatOccupationService = new SeatOccupationService($this->profileSeating);
 
         $this->recognitionServices = collect([]);
 
@@ -184,7 +204,7 @@ class PhotoService
 
 
     /**
-     * @param $photo
+     * @param PhotoInterface $photo
      * @param Collection $historic
      * @return object|null
      */
@@ -350,21 +370,20 @@ class PhotoService
 
     /**
      * @param null $date
-     * @param int $camera
      * @return Collection
      */
-    function getHistoric($date = null, $camera = null)
+    function getHistoric($date = null)
     {
-        $photos = Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $camera)
-//            ->whereBetween('id', [77495, 77503])
+        $photos = Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $this->camera)
+            //->whereBetween('id', [77495, 77503])
             //->where('id', 53717);
             ->get();
 
-        if($camera == null || $camera == 'all') {
+        if ($this->camera == null || $this->camera == 'all') {
             $historicDrCamera0 = $this->processPhotos($photos->where('side', '0'))->where('drId', '<>', null)->groupBy('drId');
             $historicDrCamera1 = $this->processPhotos($photos->where('side', '1'))->where('drId', '<>', null)->groupBy('drId');
 
-            foreach ($historicDrCamera0 as $drId => $h0){
+            foreach ($historicDrCamera0 as $drId => $h0) {
                 $maxCamera0 = 0;
                 if ($h0->sortBy('date')->last()) {
                     $maxCamera0 = $h0->sortBy('time')->last()->passengers->totalInRoundTrip;
@@ -390,7 +409,8 @@ class PhotoService
      * @param Collection|Photo[] $photos
      * @return Collection
      */
-    function processPhotos(Collection $photos) {
+    function processPhotos(Collection $photos)
+    {
         $historic = collect([]);
 
         if ($photos->isNotEmpty()) {
@@ -410,7 +430,7 @@ class PhotoService
 
             foreach ($photos->sortBy('date') as $photo) {
 
-                if($photo->dispatchRegister && !$photo->dispatchRegister->isActive()) {
+                if ($photo->dispatchRegister && !$photo->dispatchRegister->isActive()) {
                     $photo->dispatch_register_id = null;
                 }
 
@@ -645,8 +665,8 @@ class PhotoService
                     'detection' => $maxDetection,
                     'dr' => (object)[
                         'id' => $photo->dispatch_register_id,
-                        'routeName' => $photo->dispatchRegister? $photo->dispatchRegister->route->name : '',
-                        'roundTrip' => $photo->dispatchRegister? $photo->dispatchRegister->round_trip : ''
+                        'routeName' => $photo->dispatchRegister ? $photo->dispatchRegister->route->name : '',
+                        'roundTrip' => $photo->dispatchRegister ? $photo->dispatchRegister->round_trip : ''
                     ]
                 ]
             ]);

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\Apps\Rocket\ConfigProfileService;
 use App\Services\Apps\Rocket\Photos\FacesRekognitionService;
 use App\Services\Apps\Rocket\Photos\FacesZone;
 use App\Services\Apps\Rocket\Photos\PersonsRekognitionService;
@@ -29,17 +28,11 @@ class RocketServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->bind('rocket.photo.rekognition.persons', function ($app, $params) {
-            $profileSeating = $params['profileSeating'];
-            $zoneDetected = new PersonsZone();
-
-            return new PersonsRekognitionService($zoneDetected, $profileSeating);
+            return new PersonsRekognitionService(new PersonsZone(), $params['profileSeating']);
         });
 
         $this->app->bind('rocket.photo.rekognition.faces', function ($app, $params) {
-            $profileSeating = $params['profileSeating'];
-            $zoneDetected = new FacesZone();
-
-            return new FacesRekognitionService($zoneDetected, $profileSeating);
+            return new FacesRekognitionService(new FacesZone(), $params['profileSeating']);
         });
     }
 }

@@ -3,17 +3,12 @@
 
 namespace App\Services\Apps\Rocket\Photos;
 
-use App\Models\Vehicles\Vehicle;
+use App\Models\Apps\Rocket\ProfileSeat;
 use App\Services\Apps\Rocket\ConfigProfileService;
 use Illuminate\Support\Collection;
 
 class SeatOccupationService
 {
-    /**
-     * @var Vehicle
-     */
-    private $vehicle;
-
     /**
      * @var array
      */
@@ -21,13 +16,12 @@ class SeatOccupationService
 
     /**
      * ConfigProfileService constructor.
-     * @param Vehicle $vehicle
+     * @param ProfileSeat $profileSeat
      */
-    function __construct(Vehicle $vehicle)
+    function __construct(ProfileSeat $profileSeat)
     {
-        $this->vehicle = $vehicle;
-        $configService = new ConfigProfileService($vehicle);
-        $this->configSeating = collect($configService->get()->config)->get('seating');
+        $configService = new ConfigProfileService($profileSeat);
+        $this->configSeating = collect($configService->getConfigProfile()->config)->get('seating');
     }
 
     /**

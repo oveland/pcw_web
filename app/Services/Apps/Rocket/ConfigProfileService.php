@@ -28,13 +28,13 @@ class ConfigProfileService
 
     /**
      * ConfigProfileService constructor.
-     * @param Vehicle $vehicle
+     * @param ProfileSeat $profileSeat
      */
-    function __construct(Vehicle $vehicle)
+    function __construct(ProfileSeat $profileSeat)
     {
-        $this->vehicle = $vehicle;
-        $this->profileSeat = $vehicle->profile_seating;
-        $this->configProfile = $vehicle->configProfile;
+        $this->profileSeat = $profileSeat;
+        $this->vehicle = $this->profileSeat->vehicle;
+        $this->configProfile = $this->vehicle->configProfile;
     }
 
     /**
@@ -43,14 +43,14 @@ class ConfigProfileService
      */
     public function type($type)
     {
-        $c = json_decode(json_encode($this->get()->type($type), JSON_FORCE_OBJECT), false);
+        $c = json_decode(json_encode($this->getConfigProfile()->type($type), JSON_FORCE_OBJECT), false);
         return $c;
     }
 
     /**
      * @return ConfigProfile
      */
-    public function get()
+    public function getConfigProfile()
     {
         $config = $this->configProfile;
 
