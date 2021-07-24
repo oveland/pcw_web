@@ -87,7 +87,7 @@ trait PhotoEncode
 
                 $avBrightness = $this->getAvgLuminance($image->encode('jpeg')->encode('data-url'));
 
-                if ($withEffects && $this->effects && intval($avBrightness) < 18) {
+                if ($withEffects && $this->effects && $avBrightness < 18) {
 
                     $brightness = collect($this->effects->brightness)->filter(function ($brightness) use ($avBrightness) {
                         $brightness = (object)$brightness;
@@ -100,7 +100,7 @@ trait PhotoEncode
                     $gamma = $this->effects->gamma;
                     $sharpen = $this->effects->sharpen;
 
-                    if (intval($avBrightness) < 18) {
+                    if ($avBrightness < 18) {
                         $brightness = 20;
                         $contrast = 0;
                         $gamma = 1;
