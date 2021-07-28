@@ -4,6 +4,7 @@ namespace App\Console\Commands\Syrus;
 
 use App\Services\GPS\Syrus\SyrusService;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class SyncPhotoCommand extends Command
 {
@@ -41,7 +42,8 @@ class SyncPhotoCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
+     * @throws FileNotFoundException
      */
     public function handle()
     {

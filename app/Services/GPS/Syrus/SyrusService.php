@@ -4,6 +4,7 @@
 namespace App\Services\GPS\Syrus;
 
 
+use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use Carbon\Carbon;
@@ -18,6 +19,7 @@ class SyrusService
 {
     /**
      * @throws FileNotFoundException
+     * @throws \Exception
      */
     function syncPhoto($imei): Collection
     {
@@ -37,32 +39,40 @@ class SyrusService
 
         $saveFiles = collect([]);
         foreach ($files as $file) {
-            if (Str::endsWith($file, '.jpeg')) {
-                try {
-                    $image = Image::make($storage->get($file))->encode('data-url');
-                    $service->for(Vehicle::find(1199));
+            if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
+                $side = $this->getSide($file);
 
-                    $data = [
-                        'date' => Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString(),
-                        'img' => $image,
-                        'type' => 'syrus',
-                        'side' => Str::startsWith($file, '1') ? 'camera-1' : 'camera-2',
-                        'uid' => $file
-                    ];
+                $service->for(Vehicle::find(1199), $side);
 
-                    $process = $service->saveImageData($data);
-                    if ($process->response->success === true) {
-                        $storage->delete($file);
-                    }
-                    $saveFiles->push($process->response->message);
-                } catch (Exception $e) {
+                $process = $service->saveImageData([
+                    'date' => Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString(),
+                    'img' => Image::make($storage->get($file))->encode('data-url'),
+                    'type' => 'syrus',
+                    'side' => $side,
+                    'uid' => $file
+                ]);
 
+                if ($process->response->success === true) {
+                    $storage->delete($file);
                 }
+
+                $saveFiles->push($process->response->message);
             }
         }
 
         $response->put('sync', $saveFiles);
 
         return $response;
+    }
+
+    function getSide($fileName)
+    {
+        if (Str::startsWith($fileName, '1')) {
+            return '1';
+        } else if (Str::startsWith($fileName, '2')) {
+            return '2';
+        }
+
+        return '0';
     }
 }
