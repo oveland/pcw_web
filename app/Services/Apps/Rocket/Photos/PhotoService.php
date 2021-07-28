@@ -79,6 +79,20 @@ class PhotoService
     {
         if ($camera !== '' && $camera !== null) {
             $this->camera = $camera;
+
+            $this->setProfileSeating();
+        }
+    }
+
+    function setProfileSeating()
+    {
+        $this->profileSeating = $this->vehicle->getProfileSeating($this->camera);
+
+        $this->seatOccupationService = new SeatOccupationService($this->profileSeating);
+
+        $this->recognitionServices = collect([]);
+        foreach (['persons', 'faces'] as $type) {
+            $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $this->profileSeating]));
         }
     }
 
@@ -91,15 +105,6 @@ class PhotoService
     {
         $this->setVehicle($vehicle);
         $this->setCamera($camera);
-
-        $this->profileSeating = $this->vehicle->getProfileSeating($this->camera);
-        $this->seatOccupationService = new SeatOccupationService($this->profileSeating);
-
-        $this->recognitionServices = collect([]);
-
-        foreach (['persons', 'faces'] as $type) {
-            $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $this->profileSeating]));
-        }
 
         return $this;
     }
@@ -368,20 +373,25 @@ class PhotoService
         return $dr;
     }
 
+    function getPhotos($date = null, $camera = null)
+    {
+        $this->setCamera($camera);
+
+        return Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $this->camera)
+            //->whereBetween('id', [77495, 77503])
+            //->where('id', 53717);
+            ->get();
+    }
+
     /**
      * @param null $date
      * @return Collection
      */
     function getHistoric($date = null)
     {
-        $photos = Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $this->camera)
-            //->whereBetween('id', [77495, 77503])
-            //->where('id', 53717);
-            ->get();
-
         if ($this->camera == null || $this->camera == 'all') {
-            $historicDrCamera0 = $this->processPhotos($photos->where('side', '0'))->where('drId', '<>', null)->groupBy('drId');
-            $historicDrCamera1 = $this->processPhotos($photos->where('side', '1'))->where('drId', '<>', null)->groupBy('drId');
+            $historicDrCamera0 = $this->processPhotos($this->getPhotos($date, 0))->where('drId', '<>', null)->groupBy('drId');
+            $historicDrCamera1 = $this->processPhotos($this->getPhotos($date, 1))->where('drId', '<>', null)->groupBy('drId');
 
             foreach ($historicDrCamera0 as $drId => $h0) {
                 $maxCamera0 = 0;
@@ -389,20 +399,23 @@ class PhotoService
                     $maxCamera0 = $h0->sortBy('time')->last()->passengers->totalInRoundTrip;
                 }
 
-                $h1 = $historicDrCamera1->get($drId);
-
                 $maxCamera1 = 0;
+                $h1 = $historicDrCamera1->get($drId);
                 if ($h1 && $h1->sortBy('date')->last()) {
                     $maxCamera1 = $h1->sortBy('time')->last()->passengers->totalInRoundTrip;
                 }
 
                 $totalDr = $maxCamera0 + $maxCamera1;
+                dump("$drId --> $maxCamera0 + $maxCamera1 = $totalDr");
+                dump($h0->sortBy('time')->last());
 
                 \DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $totalDr, final_sensor_counter = $totalDr WHERE id_registro = $drId");
             }
+
+            return $this->processPhotos(collect([]));
         }
 
-        return $this->processPhotos($photos);
+        return $this->processPhotos($this->getPhotos($date));
     }
 
     /**
@@ -411,6 +424,8 @@ class PhotoService
      */
     function processPhotos(Collection $photos)
     {
+        $photos = $photos->sortBy('date');
+
         $historic = collect([]);
 
         if ($photos->isNotEmpty()) {
@@ -428,7 +443,7 @@ class PhotoService
 
             $pevRekognitionCounts = null;
 
-            foreach ($photos->sortBy('date') as $photo) {
+            foreach ($photos as $photo) {
 
                 if ($prevPhoto->dispatchRegister && !$prevPhoto->dispatchRegister->isActive()) {
                     $prevPhoto->dispatch_register_id = null;
@@ -453,10 +468,23 @@ class PhotoService
                 }
 
                 $statusDispatch = 'none';
-                if ($photo->dispatch_register_id) {
-                    $statusDispatch = 'in';
-                } else if ($photo->dispatch_register_id <> $prevPhoto->dispatch_register_id) {
-                    $statusDispatch = 'end';
+
+                if ($photo->id == $prevPhoto->id) {
+                    if ($photo->dispatch_register_id) {
+                        $statusDispatch = 'start';
+                    }
+                } else {
+                    if ($photo->dispatch_register_id == $prevPhoto->dispatch_register_id) {
+                        if ($photo->dispatch_register_id) {
+                            $statusDispatch = 'in';
+                        }
+                    } else {
+                        if ($photo->dispatch_register_id) {
+                            $statusDispatch = 'start';
+                        } else if ($prevPhoto->dispatch_register_id) {
+                            $statusDispatch = 'end';
+                        }
+                    }
                 }
 
                 $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDispatch);
@@ -474,7 +502,7 @@ class PhotoService
                 $newPersons = $seatingActivated->count();
 
                 $currentCount = $currentOccupation ? $currentOccupation->persons : 0;
-                $prevCount = $prevOccupation ? $prevOccupation->persons : 0;
+                $prevCount = $prevOccupation && $photo->id != $prevPhoto->id ? $prevOccupation->persons : 0;
 
                 if ($photo->persons === null) {
                     $photo->persons = $currentCount;
@@ -504,12 +532,12 @@ class PhotoService
                     $personsByRoundTrip = $newPersons;
 //                    $personsByRoundTrip = $currentOccupation->seatingOccupied->count();
                 } else {
-                    if ($dr) {
+                    if ($photo->dispatch_register_id) {
                         $personsByRoundTrip += $newPersons;
                     }
                 }
 
-                if ($dr) {
+                if ($photo->dispatch_register_id) {
                     $roundTrip = $dr->round_trip;
                     $routeName = $dr->route->name;
                     $from = $dr->departure_time;
@@ -530,10 +558,10 @@ class PhotoService
 
                 $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts, $photo, $firstPhotoInRoundTrip);
 
-                $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value');
+//                $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value');
 
                 $personsByRoundTrips = collect([])->push((object)[
-                    'id' => $dr ? $dr->id : null,
+                    'id' => $photo->dispatch_register_id,
                     'number' => $roundTrip,
                     'route' => $routeName,
                     'from' => $from,

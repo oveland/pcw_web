@@ -233,7 +233,8 @@ class ConcoxService
                             'uid' => $photoUId
                         ];
 
-                        $photoService->for($vehicle);
+                        $photoService->for($vehicle, $photo->camera);
+                        
                         $saved = $photoService->saveImageData($data);
                         $successSaved = $saved->response->success;
                         $response->put('success', $successSaved);

@@ -55,7 +55,7 @@ class SeatOccupationService
                 $persistentInCurrent = $currentOccupied->get($seat);
 
                 $counterRelease = intval($newData->get('counterRelease') ?? 0);
-                if (!$persistentInCurrent && $statusDispatch == 'in') {
+                if (!$persistentInCurrent && ($statusDispatch == 'in' || $statusDispatch == 'start')) {
                     $counterRelease++;
 
                     $newData->put('counterRelease', $counterRelease);
@@ -99,7 +99,7 @@ class SeatOccupationService
 
                 $counterRelease = $newData->get('counterRelease');
 
-                if ($statusDispatch == 'in') {
+                if ($statusDispatch == 'start' || $statusDispatch == 'in') {
                     if ($persistentPrev && (!$counterRelease || $counterRelease <= 0)) {
                         $counterActivate++;
                     } else if (!$persistentPrev) {
@@ -115,9 +115,10 @@ class SeatOccupationService
                 $newData->put('counterActivate', $counterActivate);
                 $newData->put('initialCount', $counterActivate == $seatActivateThreshold - 2);
                 $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
-                $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent);
+                $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent || ($counterActivate > $prevCounterActivate && $statusDispatch == 'start'));
                 $newData->put('counted', $counterActivate >= $seatActivateThreshold);
                 $newData->put('seatActivateThreshold', $seatActivateThreshold);
+                $newData->put('statusDispatch', $statusDispatch);
                 $newData->put('risingEvent', $risingEvent);
 
                 $currentOccupied->put($seat, (object)$newData->toArray());

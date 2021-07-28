@@ -329,7 +329,7 @@ return [
                         ]
                     ],
                     'box' => [
-                        'ld' => 2.5,                                # Min relation height/width for Large Detection
+                        'ld' => 3.5,                                # Min relation height/width for Large Detection
                         'mld' => 10,                                # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection

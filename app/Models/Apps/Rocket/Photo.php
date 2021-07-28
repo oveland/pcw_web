@@ -91,9 +91,10 @@ class Photo extends Model implements PhotoInterface
      */
     function scopeWhereVehicleAndDateAndSide(Builder $query, Vehicle $vehicle, $date, $side)
     {
+        $side = "$side";
         $query = $query->whereVehicleAndDate($vehicle, $date);
 
-        if ($side !== null && $side != 'all') {
+        if ($side !== null && $side != 'all' && $side !== "") {
             return $query->where('side', $side);
         }
         return $query;

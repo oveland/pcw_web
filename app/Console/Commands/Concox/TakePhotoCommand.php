@@ -48,10 +48,10 @@ class TakePhotoCommand extends Command
     {
         $camera = $this->option('camera');
 
-        if($camera == 2)sleep(10);
+        if ($camera == 2) sleep(10);
 
         $this->logData("Concox request and sync photo camera: $camera");
-       $this->logData($this->concoxService->takePhoto($camera));
+        $this->logData($this->concoxService->takePhoto($camera));
         sleep(15);
         $this->logData($this->concoxService->syncPhotos($camera, 90, 50));
 

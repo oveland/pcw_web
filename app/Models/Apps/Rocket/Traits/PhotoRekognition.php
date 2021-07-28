@@ -61,6 +61,6 @@ trait PhotoRekognition
         $image = Image::make($image)->encode('png'); // It's necessary because image has a Mask
 
         $column = "data_$type";
-        $this->$column = $rekognition->sefFile($image)->process($type);
+     //   $this->$column = $rekognition->sefFile($image)->process($type);
     }
 }

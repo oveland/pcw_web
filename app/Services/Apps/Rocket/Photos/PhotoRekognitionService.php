@@ -9,8 +9,7 @@ use App\Services\Apps\Rocket\ConfigProfileService;
 use Exception;
 use Illuminate\Support\Collection;
 
-abstract class
-PhotoRekognitionService
+abstract class PhotoRekognitionService
 {
     protected $type = 'persons';
 
@@ -149,7 +148,7 @@ PhotoRekognitionService
             return collect(range($rangeArray->first(), $rangeArray->last()))->contains($confidence);
         })->first());
 
-        $count = $rule->get('count') && !$boxZone->overlap;// && $boundingBox->width > 1.5 && $boundingBox->height > 2;
+        $count = $rule->get('count') && !$boxZone->overlap && !$boxZone->largeDetection;
 
         if (!$count) {
             $rule->put('color', 'rgba(255, 50, 55, 0.78)');
@@ -196,7 +195,7 @@ PhotoRekognitionService
         }
 
         $relationSize = $heightOrig / $width;
-        $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 15);
+        $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 18) || ($width > 25); // CAUTION: $width > 25 works as overlap
 
         $overlap = false;
 
