@@ -33,6 +33,7 @@ class TakingsController extends Controller
      */
     public function index(Request $request)
     {
+        if(Auth::user()->role_id == 3 || Auth::user()->role_id == 4 )abort(403);
         $user = Auth::user();
         $link = config('app.beta_server_url')."/link/reportes/rutas/recaudo/$user->id"; // TODO: Change when BETA migrated fully to NE domain
 

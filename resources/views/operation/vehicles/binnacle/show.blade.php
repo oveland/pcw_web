@@ -140,7 +140,7 @@
                                                     @endif
                                                 </p>
                                                 <small>
-                                                    <i class="fa fa-user text-success"></i> {{ $userNotification->username }}
+                                                    <i class="fa fa-user text-success"></i> {{ $userNotification->name }}
                                                 </small>
                                                 <br>
                                                 <small class="text-{{ $notificationUser->email_notified ? 'success tooltips' : '' }}" data-title="@lang('Notified via email')">

@@ -124,14 +124,14 @@
                         <th class="text-center">
                             <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage round trips')
                         </th>
-                        <th class="text-center">
-                            <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage programmed')
-                        </th>
-                        <th class="text-center">
-                            <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Difference mileage')
-                        </th>
-
                         @if($company->hasRecorderCounter())
+                            <th class="text-center">
+                                <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage programmed')
+                            </th>
+                            <th class="text-center">
+                                <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Difference mileage')
+                            </th>
+
                             <th class="text-center hide">
                                 <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i><br> @lang('Sensor recorder')
                             </th>
@@ -144,7 +144,8 @@
                             <th class="text-center sensor">
                                 <i class="fa fa-crosshairs" aria-hidden="true"></i><br> @lang('Sensor')
                             </th>
-
+                        @endif
+                        @if($company->hasSensorCounter() && $company->id <> 21)
                             <th class="text-center sensor">
                                 <i class="fa fa-crosshairs" aria-hidden="true"></i><br> @lang('Sensor TOTAL')
                             </th>
@@ -192,10 +193,9 @@
                             <td>{{ $report->totalDates }} </td>
                             <td>{{ $report->roundTrips }} </td>
                             <td>{{ number_format($report->mileage, 1) }} </td>
-                            <td>{{ number_format($report->programmedMileage, 1) }} </td>
-                            <td>{{ number_format($report->differenceMileage, 1) }} </td>
-
                             @if($company->hasRecorderCounter())
+                                <td>{{ number_format($report->programmedMileage, 1) }} </td>
+                                <td>{{ number_format($report->differenceMileage, 1) }} </td>
                                 <td class="hide">
                                 {{ $sensorRecorder }}</td>
                                 <td class="recorder text-center">
@@ -208,6 +208,8 @@
 
                             @if($company->hasSensorCounter())
                                 <td class="sensor">{{ $sensor }}</td>
+                            @endif
+                            @if($company->hasSensorCounter() && $company->id <> 21)
                                 <td class="sensor">{{ $allSensor }}</td>
                             @endif
 
@@ -272,16 +274,17 @@
                         </td>
                         <td class="text-center recorder">{{ $passengerReport->totalRoundTrips }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalMileage,1) }}</td>
-                        <td class="text-center recorder">{{ number_format($passengerReport->totalProgrammedMileage,1) }}</td>
-                        <td class="text-center recorder">{{ number_format($passengerReport->totalDifferenceMileage,1) }}</td>
-
                         @if($company->hasRecorderCounter())
+                            <td class="text-center recorder">{{ number_format($passengerReport->totalProgrammedMileage,1) }}</td>
+                            <td class="text-center recorder">{{ number_format($passengerReport->totalDifferenceMileage,1) }}</td>
                             <td class="text-center sensor recorder hide">{{ $totalSensorRecorder->sum() }}</td>
                             <td class="text-center recorder">{{ number_format($passengerReport->totalRecorder, 0) }}</td>
                         @endif
 
                         @if($company->hasSensorCounter())
                             <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
+                        @endif
+                        @if($company->hasSensorCounter() && $company->id <> 21)
                             <td class="text-center sensor">{{ $totalAllSensor->sum() }}</td>
                         @endif
 

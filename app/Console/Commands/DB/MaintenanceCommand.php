@@ -60,12 +60,12 @@ class MaintenanceCommand extends Command
                     'locations' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => true,
+                        'restore' => false,
                     ],
                     'reports' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => true,
+                        'restore' => false,
                     ],
                 ]
             ],
@@ -76,12 +76,12 @@ class MaintenanceCommand extends Command
                     'locations' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => true,
+                        'restore' => false,
                     ],
                     'reports' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => true,
+                        'restore' => false,
                     ],
                 ]
             ],
@@ -92,12 +92,12 @@ class MaintenanceCommand extends Command
                     'locations' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => true,
+                        'restore' => false,
                     ],
                     'reports' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => true,
+                        'restore' => false,
                     ],
                 ]
             ],
@@ -127,8 +127,8 @@ class MaintenanceCommand extends Command
      */
     public function handle()
     {
-        $now = Carbon::now();
-        $this->log('Executing db maintenance at ' . $now->toDateTimeString());
+        $initialDate = Carbon::now();
+        $this->log('Executing db maintenance at ' . $initialDate->toDateTimeString());
 
         $maintenanceData = $this->getMaintenanceData();
 
@@ -137,7 +137,11 @@ class MaintenanceCommand extends Command
             $this->process($maintenance);
         });
 
-        $this->log("Maintenance finished at " . Carbon::now()->toDateTimeString());
+//        $query = "INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer,orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations_0 WHERE date < current_date";
+//        $this->log($query);
+//        DB::statement($query);
+
+        $this->log("Maintenance finished at " . Carbon::now()->toDateTimeString() . " | From " . Carbon::now()->diffForHumans($initialDate));
 
     }
 
@@ -183,7 +187,7 @@ class MaintenanceCommand extends Command
         $tableColumns = $this->getTableColumns($table);
         $initialDate = Carbon::now();
 
-        $this->log("       ******** RESTORING TABLE $table FROM TABLE FROM $tableBackup at " . $initialDate->toDateTimeString());
+        $this->log("       ******** RESTORING TABLE $table FROM TABLE $tableBackup at " . $initialDate->toDateTimeString());
 
         $query = "INSERT INTO $table $tableColumns SELECT * FROM $tableBackup";
         $this->log("       - $query");

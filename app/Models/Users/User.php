@@ -58,6 +58,7 @@ class User extends Authenticatable
     const SYSTEM_ROLE = 2;
     const PROPRIETARY_ROLE = 3;
     const DISPATCHER_ROLE = 4;
+    const TAKINGS_ROLE = 5;
 
     use Notifiable;
 
@@ -189,7 +190,7 @@ class User extends Authenticatable
 
     public function canMakeTakings()
     {
-        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE;
+        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE || $this->role_id == self::TAKINGS_ROLE;
     }
 
     /**

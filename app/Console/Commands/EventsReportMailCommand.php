@@ -106,7 +106,7 @@ class EventsReportMailCommand extends Command
                         'accidentes@alameda.com.co',
 
                         'olatorre22@hotmail.com',
-                        'oiva.pcw@gmail.com'
+                       // 'oiva.pcw@gmail.com'
                     ];
 
                 } else {
