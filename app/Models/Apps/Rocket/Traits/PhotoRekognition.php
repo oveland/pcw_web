@@ -52,8 +52,6 @@ trait PhotoRekognition
      */
     private function process($type)
     {
-        $rekognition = new RekognitionService();
-
         $config = $this->photoRekognitionService($type)->config;
 
         $this->effects = $config->photo->effects;
@@ -62,6 +60,10 @@ trait PhotoRekognition
         $image = Image::make($image)->encode('png'); // It's necessary because image has a Mask
 
         $column = "data_$type";
-        //   $this->$column = $rekognition->sefFile($image)->process($type);
+
+        if ($this->dispatchRegister && $this->dispatchRegister->isActive()) {
+            $rekognition = new RekognitionService();
+            $this->$column = $rekognition->sefFile($image)->process($type);
+        }
     }
 }
