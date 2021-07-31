@@ -419,6 +419,142 @@ return [
             ]
         ]
     ],
+    Company::COODETRANS => [
+        'persons' => [
+            'photo' => [
+                'effects' => [
+                    'brightness' => [
+                        [
+                            'range' => [0, 15],
+                            'value' => 10
+                        ],
+                        [
+                            'range' => [15, 100],
+                            'value' => 10
+                        ]
+                    ],
+                    'contrast' => -30,
+                    'gamma' => 1,
+                    'sharpen' => 50,
+                ],
+                'rekognition' => [
+                    'rules' => [
+                        [
+                            'range' => [0, 25],
+                            'color' => 'red',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => [25, 40],
+                            'color' => 'orange',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => [40, 60],
+                            'color' => 'yellow',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => [60, 100],
+                            'color' => '#9bef00',
+                            'background' => 'rgba(122, 162, 12, 0.1)',
+                            'count' => true,
+                        ]
+                    ],
+                    'box' => [
+                        'ld' => 3.5,                                # Min relation height/width for Large Detection
+                        'mld' => 10,                                # Min width percent (about of image size) for Large Detection
+                        'od' => [
+                            'width' => 10,                          # Min percent width for Overlap Detection
+                            'height' => 60,                         # Min percent height for Overlap Detection
+                            'rs' => 3.5,                            # Min relation height/width for Overlap Detection
+                            'rsw' => 15,                            # Min percent height for Overlap Detection when rs
+                        ]
+                    ],
+                    'draw' => [
+                        'heightFromWidth' => [
+                            'nd' => 120,                            # Percent of height when Normal Detection
+                            'ld' => 150                              # Percent of height when Large Detection
+                        ],
+                        'centerTopFromHeight' => [
+                            'nd' => 50,                             # Percent top of point center when Normal Detection
+                            'ld' => 40                              # Percent top of point center when Large Detection
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        'faces' => [
+            'photo' => [
+                'effects' => [
+                    'brightness' => [
+                        [
+                            'range' => [0, 15],
+                            'value' => 10
+                        ],
+                        [
+                            'range' => [15, 100],
+                            'value' => 10
+                        ]
+                    ],
+                    'contrast' => -30,
+                    'gamma' => 1,
+                    'sharpen' => 50,
+                ],
+                'rekognition' => [
+                    'rules' => [
+                        [
+                            'range' => [0, 25],
+                            'color' => 'red',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => [25, 40],
+                            'color' => 'orange',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => [40, 50],
+                            'color' => 'yellow',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => [50, 100],
+                            'color' => '#05da55',
+                            'background' => 'rgba(122, 162, 12, 0.1)',
+                            'count' => true,
+                        ]
+                    ],
+                    'box' => [
+                        'ld' => 2.5,                                # Min relation height/width for Large Detection
+                        'mld' => 2,                                 # Min width percent (about of image size) for Large Detection
+                        'od' => [
+                            'width' => 10,                          # Min percent width for Overlap Detection
+                            'height' => 60,                         # Min percent height for Overlap Detection
+                            'rs' => 3.5,                            # Min relation height/width for Overlap Detection
+                            'rsw' => 15,                            # Min percent height for Overlap Detection when rs
+                        ]
+                    ],
+                    'draw' => [
+                        'heightFromWidth' => [
+                            'nd' => 200,                            # Percent of height when Normal Detection
+                            'ld' => 200                             # Percent of height when Large Detection
+                        ],
+                        'centerTopFromHeight' => [
+                            'nd' => 40,                             # Percent top of point center when Normal Detection
+                            'ld' => 30                              # Percent top of point center when Large Detection
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
     Company::YUMBENOS => [
         'persons' => [
             'photo' => [

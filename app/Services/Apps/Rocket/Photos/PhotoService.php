@@ -389,7 +389,7 @@ class PhotoService
      */
     function getHistoric($date = null)
     {
-        if ($this->camera == null || $this->camera == 'all') {
+        if (($this->camera == null || $this->camera == 'all') && request()->routeIs('admin.rocket.report')) {
             $historicDrCamera0 = $this->processPhotos($this->getPhotos($date, 0))->where('drId', '<>', null)->groupBy('drId');
             $historicDrCamera1 = $this->processPhotos($this->getPhotos($date, 1))->where('drId', '<>', null)->groupBy('drId');
 
@@ -406,8 +406,6 @@ class PhotoService
                 }
 
                 $totalDr = $maxCamera0 + $maxCamera1;
-                dump("$drId --> $maxCamera0 + $maxCamera1 = $totalDr");
-                dump($h0->sortBy('time')->last());
 
                 \DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $totalDr, final_sensor_counter = $totalDr WHERE id_registro = $drId");
             }

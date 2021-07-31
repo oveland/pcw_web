@@ -56,7 +56,7 @@ class ReportPhotosController extends Controller
         switch ($name) {
             case 'historic':
                 $vehicle = Vehicle::find($request->get('vehicle'));
-                $camera = $request->get('camera');
+                $camera = $request->get('camera') ?? 'all';
 
                 if ($vehicle) {
                     $date = $request->get('date');
@@ -106,12 +106,12 @@ class ReportPhotosController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
-                $camera = $request->get('camera');
+                $camera = $request->get('camera') ?? 'all';
 
                 $photo = null;
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle)->getHistoric($date);
+                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
 
                     if ($photos->count()) {
                         $photo = Photo::find($photos->last()->id);
@@ -159,7 +159,7 @@ class ReportPhotosController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
-                $camera = $request->get('camera');
+                $camera = $request->get('camera')  ?? 'all';
                 if ($vehicle) {
                     $seating = collect($request->get('seating'));
                     $profileSeat = ProfileSeat::findByVehicleAndCamera($vehicle, $camera);

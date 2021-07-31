@@ -5,15 +5,14 @@ namespace App\Services\GPS\Syrus;
 
 
 use App\Models\Apps\Rocket\Photo;
-use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\GpsVehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use Carbon\Carbon;
-use Dompdf\Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Storage;
 use Image;
+use Storage;
 
 class SyrusService
 {
@@ -24,15 +23,16 @@ class SyrusService
     function syncPhoto($imei): Collection
     {
         $service = new PhotoService();
+        $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
+        $vehicle = $gpsVehicle->vehicle;
 
         $response = collect([
             'success' => true,
-            'message' => 'Sync photo from API GPS Syrus',
+            'message' => "Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id",
         ]);
 
         $path = "$imei/images";
         $response->put('imei', $imei);
-        $response->put('path', $path);
 
         $storage = Storage::disk('syrus');
         $files = collect($storage->files($path));
@@ -42,7 +42,7 @@ class SyrusService
             if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($file);
 
-                $service->for(Vehicle::find(1199), $side);
+                $service->for($vehicle, $side);
 
                 $process = $service->saveImageData([
                     'date' => Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString(),
