@@ -53,7 +53,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <!-- BEGIN FOOTER -->
     <div class="page-footer">
-        <div class="page-footer-inner col-md-12 text-center"><b>{{ date('Y-m-d') }}</b> &copy;
+        <div class="page-footer-inner col-md-12 text-center"><b>{{ date('Y') }}</b> &copy;
             <a href="http://brochure.pcwserviciosgps.com/" title="PCW Tecnología" class="text-bold text-muted"
                target="_blank">Powered by PCW</a>
         </div>
