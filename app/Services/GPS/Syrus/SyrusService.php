@@ -72,6 +72,8 @@ class SyrusService
             return '1';
         } else if (Str::startsWith($fileName, '2')) {
             return '2';
+        } else if (Str::startsWith($fileName, '3')) {
+            return '3';
         }
 
         return '0';

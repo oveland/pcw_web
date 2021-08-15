@@ -14,10 +14,12 @@ use App\Models\Apps\Rocket\CurrentPhoto;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
+use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\PerfilSeat;
 use Carbon\Carbon;
+use DB;
 use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -32,6 +34,10 @@ class PhotoService
     public const REKOGNITION_TYPE = 'persons_and_faces';
 //    public const REKOGNITION_TYPE = 'persons';
 //    public const REKOGNITION_TYPE = 'faces';
+
+    public const VEHICLE_CAMERAS = [
+        1744 => [1, 2, 3]
+    ];
 
     /**
      * @var Filesystem
@@ -373,6 +379,17 @@ class PhotoService
         return $dr;
     }
 
+    function getProcessCameras(): array
+    {
+        $vehicleCameras = VehicleCamera::where('vehicle_id', $this->vehicle->id)->get();
+
+        if ($vehicleCameras->count()) {
+            return $vehicleCameras->pluck('camera')->toArray();
+        }
+
+        return [0];
+    }
+
     function getPhotos($date = null, $camera = null)
     {
         $this->setCamera($camera);
@@ -390,24 +407,36 @@ class PhotoService
     function getHistoric($date = null)
     {
         if (($this->camera == null || $this->camera == 'all') && request()->routeIs('admin.rocket.report')) {
-            $historicDrCamera0 = $this->processPhotos($this->getPhotos($date, 0))->where('drId', '<>', null)->groupBy('drId');
-            $historicDrCamera1 = $this->processPhotos($this->getPhotos($date, 1))->where('drId', '<>', null)->groupBy('drId');
+            $allPhotos = $this->getPhotos($date);
+            $historicCameras = collect([]);
 
-            foreach ($historicDrCamera0 as $drId => $h0) {
-                $maxCamera0 = 0;
-                if ($h0->sortBy('date')->last()) {
-                    $maxCamera0 = $h0->sortBy('time')->last()->passengers->totalInRoundTrip;
+            foreach ($this->getProcessCameras() as $side => $camera) {
+                $data = $this->processPhotos($allPhotos->where('side', $side))->where('drId', '<>', null)
+                    ->groupBy('drId');
+
+                $historicCameras->push($data);
+            }
+
+            $defaultCamera = $historicCameras->first();
+            $otherCameras = $historicCameras->forget(0);
+
+            foreach ($defaultCamera as $drId => $historic) {
+                $maxCameraDefault = 0;
+                if ($historic->sortBy('date')->last()) {
+                    $maxCameraDefault = $historic->sortBy('time')->last()->passengers->totalInRoundTrip;
                 }
 
-                $maxCamera1 = 0;
-                $h1 = $historicDrCamera1->get($drId);
-                if ($h1 && $h1->sortBy('date')->last()) {
-                    $maxCamera1 = $h1->sortBy('time')->last()->passengers->totalInRoundTrip;
+                $maxOtherCameras = 0;
+                foreach ($otherCameras as $other) {
+                    $h = $other->get($drId);
+                    if ($h && $h->sortBy('date')->last()) {
+                        $maxOtherCameras = $maxOtherCameras + $h->sortBy('time')->last()->passengers->totalInRoundTrip;
+                    }
                 }
 
-                $totalDr = $maxCamera0 + $maxCamera1;
+                $totalDr = $maxCameraDefault + $maxOtherCameras;
 
-                \DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $totalDr, final_sensor_counter = $totalDr WHERE id_registro = $drId");
+                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $totalDr, final_sensor_counter = $totalDr WHERE id_registro = $drId");
             }
 
             return $this->processPhotos(collect([]));

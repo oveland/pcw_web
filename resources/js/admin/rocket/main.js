@@ -33,20 +33,28 @@ let adminRocketView = new Vue({
             release: null,
             camera: {
                 id: '0',
-                name: 'Derecha'
+                name: 'Única'
             },
             cameras: [
                 {
                     id: 'all',
-                    name: 'Ambas'
+                    name: 'Todas'
                 },
                 {
                     id: '0',
-                    name: 'Derecha'
+                    name: 'Única'
                 },
                 {
                     id: '1',
-                    name: 'Izquierda'
+                    name: 'Cámara 1'
+                },
+                {
+                    id: '2',
+                    name: 'Cámara 2'
+                },
+                {
+                    id: '3',
+                    name: 'Cámara 3'
                 }
             ]
         },
