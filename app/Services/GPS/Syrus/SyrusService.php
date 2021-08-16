@@ -40,9 +40,10 @@ class SyrusService
 
         $saveFiles = collect([]);
         foreach ($files as $file) {
-            if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
-                $side = $this->getSide($file);
+            $fileName = collect(explode('/', $file))->last();
 
+            if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
+                $side = $this->getSide($fileName);
                 $service->for($vehicle, $side);
 
                 $process = $service->saveImageData([
@@ -50,7 +51,7 @@ class SyrusService
                     'img' => Image::make($storage->get($file))->encode('data-url'),
                     'type' => 'syrus',
                     'side' => $side,
-                    'uid' => $file
+                    'uid' => $fileName
                 ]);
 
                 if ($process->response->success === true) {
