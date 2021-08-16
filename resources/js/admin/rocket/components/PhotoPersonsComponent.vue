@@ -191,7 +191,7 @@
     .container-actions {
         position: absolute;
         bottom: 0;
-        z-index: 100;
+        z-index: 200 !important;
         background: #1e2d3352;
         border-radius: 0;
 		border-bottom: 1px solid white;

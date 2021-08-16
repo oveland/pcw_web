@@ -12,3 +12,7 @@
 .table-valign-middle td, .table-valign-middle th{
   vertical-align: middle !important;
 }
+
+.multiselect__content-wrapper {
+  z-index: 1000;
+}

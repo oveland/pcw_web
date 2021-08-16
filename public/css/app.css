@@ -8256,3 +8256,7 @@ button.close {
   vertical-align: middle !important;
 }
 
+.multiselect__content-wrapper {
+  z-index: 1000;
+}
+
