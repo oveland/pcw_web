@@ -13,6 +13,10 @@
   vertical-align: middle !important;
 }
 
+.multiselect {
+  z-index: 1000 !important;
+}
+
 .multiselect__content-wrapper {
-  z-index: 1000;
+  z-index: 1000 !important;
 }
