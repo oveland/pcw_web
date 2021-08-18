@@ -7297,9 +7297,8 @@ var render = function() {
                 _c("span", { staticClass: "detail" }, [
                   _vm._v(
                     _vm._s(_vm.photo.details.date) +
-                      " | (" +
-                      _vm._s(_vm.photo.id) +
-                      ")"
+                      " | " +
+                      _vm._s(_vm.photo.id)
                   )
                 ])
               ])
@@ -7315,7 +7314,7 @@ var render = function() {
                         _vm._s(_vm.photo.details.dispatchRegister.route.name)
                       )
                     ]),
-                    _vm._v(",\n                        "),
+                    _vm._v(",\n\t\t\t\t\t\t"),
                     _c("span", { staticClass: "detail" }, [
                       _vm._v(
                         _vm._s(_vm.$t("Round trip")) +
@@ -7323,7 +7322,7 @@ var render = function() {
                           _vm._s(_vm.photo.details.dispatchRegister.round_trip)
                       )
                     ]),
-                    _vm._v(",\n                        "),
+                    _vm._v(",\n\t\t\t\t\t\t"),
                     _c("span", { staticClass: "detail" }, [
                       _vm._v(
                         _vm._s(_vm.$t("Turn")) +

@@ -4,20 +4,20 @@
             <div class="col-md-6 col-sm-6 col-xs-12 p-0">
                 <div class="photo col-md-12 p-0">
                     <p class="pull-left">
-                    <span class="title">
-                        <i class="fa fa-calendar"></i>
-                    </span>
-                        <span class="detail">{{ photo.details.date }} | ({{ photo.id }})</span>
+						<span class="title">
+							<i class="fa fa-calendar"></i>
+						</span>
+						<span class="detail">{{ photo.details.date }} | {{ photo.id }}</span>
                     </p>
                 </div>
                 <div v-if="photo.details.dispatchRegister" class="route col-md-12 p-0">
                     <p>
-                    <span class="title">
-                        <i class="fa fa-flag"></i>
-                    </span>
-                        <span class="detail">{{ photo.details.dispatchRegister.route.name }}</span>,
-                        <span class="detail">{{ $t('Round trip')}} {{ photo.details.dispatchRegister.round_trip }}</span>,
-                        <span class="detail">{{ $t('Turn') }} {{ photo.details.dispatchRegister.turn }}</span>
+						<span class="title">
+							<i class="fa fa-flag"></i>
+						</span>
+						<span class="detail">{{ photo.details.dispatchRegister.route.name }}</span>,
+						<span class="detail">{{ $t('Round trip')}} {{ photo.details.dispatchRegister.round_trip }}</span>,
+						<span class="detail">{{ $t('Turn') }} {{ photo.details.dispatchRegister.turn }}</span>
                     </p>
                 </div>
                 <div class="passengers col-md-12 p-0">

@@ -500,38 +500,36 @@ class DispatchRegister extends Model
         $passengers = $this->passengers;
         $takings = $this->takings;
 
-        if ($short) {
-            return (object)[
-                'id' => $this->id,
-                'date' => $this->getParsedDate()->toDateString(),
-                'turn' => $this->turn,
+        if ($short) return (object)[
+            'id' => $this->id,
+            'date' => $this->getParsedDate()->toDateString(),
+            'turn' => $this->turn,
 
-                'round_trip' => $this->round_trip,
-                'roundTrip' => $this->round_trip,
+            'round_trip' => $this->round_trip,
+            'roundTrip' => $this->round_trip,
 
-                'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
-                'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
 
-                'routeTime' => $this->getRouteTime(),
+            'routeTime' => $this->getRouteTime(),
 
-                'arrival_time_scheduled' => $this->arrival_time_scheduled,
-                'arrivalTimeScheduled' => $this->arrival_time_scheduled,
+            'arrival_time_scheduled' => $this->arrival_time_scheduled,
+            'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-                'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
-                'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+            'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
+            'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
-                'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
 
-                'passengers' => $passengers,
-                'takings' => $takings ? $takings->getAPIFields() : [],
-                'onlyControlTakings' => $this->onlyControlTakings(),
-                'forNormalTakings' => $this->forNormalTakings(),
-                'processTakings' => $this->processTakings(),
+            'passengers' => $passengers,
+            'takings' => $takings && $this->vehicle->company->hasRouteTakings() ? $takings->getAPIFields() : [],
+            'onlyControlTakings' => $this->onlyControlTakings(),
+            'forNormalTakings' => $this->forNormalTakings(),
+            'processTakings' => $this->processTakings(),
 
-                'forTakings' => $this->onlyControlTakings(),
-                'mileage' => $this->mileage
-            ];
-        }
+            'forTakings' => $this->onlyControlTakings(),
+            'mileage' => $this->mileage
+        ];
 
         $driver = $this->driver;
         $driveName = $driver ? $driver->fullName() : __('Unassigned');
