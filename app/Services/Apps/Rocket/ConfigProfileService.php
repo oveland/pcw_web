@@ -110,9 +110,18 @@ class ConfigProfileService
 
         $config['seating'] = $seatingConfig;
         $config['cameras'] = (object)[
-            '1' => ['largeDetection' => false],
-            '2' => ['largeDetection' => false],
-            '3' => ['largeDetection' => false],
+            '1' => [
+                'largeDetection' => false,
+                'processMaxWidth' => 100,
+            ],
+            '2' => [
+                'largeDetection' => false,
+                'processMaxWidth' => 30,
+            ],
+            '3' => [
+                'largeDetection' => false,
+                'processMaxWidth' => 30
+            ],
         ];
 
         return $config;

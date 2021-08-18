@@ -179,7 +179,9 @@ abstract class PhotoRekognitionService
 
         $largeDetection = false;
         $configBox = $this->config->photo->rekognition->box;
-        $processLargeDetection = collect($this->config->cameras)->get($this->profileSeat->camera)->largeDetection ?? false;
+        $cameraConfig = collect($this->config->cameras)->get($this->profileSeat->camera);
+        $processLargeDetection = $cameraConfig->largeDetection ?? false;
+        $processMaxWidth = $cameraConfig->processMaxWidth ?? false;
 
         $width = $boundingBox->width;
         $height = $boundingBox->height;
@@ -198,7 +200,7 @@ abstract class PhotoRekognitionService
 
         $relationSize = $heightOrig / $width;
 
-        if($processLargeDetection || $width > 30){
+        if($processLargeDetection || $width > $processMaxWidth){
             $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 18) || ($width > 25); // CAUTION: $width > 25 works as overlap
         }
 
