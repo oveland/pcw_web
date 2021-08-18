@@ -56,6 +56,15 @@ class ConfigProfile extends Model
      */
     function type($type)
     {
-        return (object)collect($this->config)->get($type);
+        $allConfig = collect($this->config);
+        $typeConfig = $allConfig->get($type);
+
+        $allConfig->filter(function($data) {
+           return isset($data['photo']);
+        })->keys()->each(function($k) use (&$allConfig) {
+            $allConfig->forget($k);
+        });
+
+        return (object)$allConfig->merge($typeConfig);
     }
 }

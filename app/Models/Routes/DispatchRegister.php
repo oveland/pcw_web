@@ -867,7 +867,9 @@ class DispatchRegister extends Model
 
         $takings->net_production = $takings->total_production - $takings->control - $takings->fuel - $takings->others - $takings->bonus;
 
-        $takings->save();
+        if ($this->vehicle->company->hasRouteTakings()) {
+            $takings->save();
+        }
 
         if (!$this->processTakings()) {
             $takings->total_production = 0;

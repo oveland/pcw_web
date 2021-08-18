@@ -35,10 +35,6 @@ class PhotoService
 //    public const REKOGNITION_TYPE = 'persons';
 //    public const REKOGNITION_TYPE = 'faces';
 
-    public const VEHICLE_CAMERAS = [
-        1744 => [1, 2, 3]
-    ];
-
     /**
      * @var Filesystem
      */

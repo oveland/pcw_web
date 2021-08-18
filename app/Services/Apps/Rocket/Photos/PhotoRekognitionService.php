@@ -177,16 +177,18 @@ abstract class PhotoRekognitionService
     {
         $boundingBox = (object)$boundingBox;
 
+        $largeDetection = false;
         $configBox = $this->config->photo->rekognition->box;
+        $processLargeDetection = collect($this->config->cameras)->get($this->profileSeat->camera)->largeDetection ?? false;
 
         $width = $boundingBox->width;
         $height = $boundingBox->height;
 
-        $heightOrig = isset($boundingBox->heightOrig) ? $boundingBox->heightOrig : $height;
+        $heightOrig = $boundingBox->heightOrig ?? $height;
 
         if (isset($boundingBox->center)) {
             $boundingBox->center = (object)$boundingBox->center;
-            $centerOrig = (object)(isset($boundingBox->center) ? $boundingBox->center : $boundingBox->centerOrig);
+            $centerOrig = (object)($boundingBox->center ?? $boundingBox->centerOrig);
         } else {
             $centerOrig = (object)[
                 'left' => $boundingBox->left + $width / 2,
@@ -195,25 +197,28 @@ abstract class PhotoRekognitionService
         }
 
         $relationSize = $heightOrig / $width;
-        $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 18) || ($width > 25); // CAUTION: $width > 25 works as overlap
 
-        $overlap = false;
-
-        if (isset($boundingBox->center)) {
-            if ($boundingBox->center->top < 60 || true) {   // For overlaps located on medium screen
-                if ($boundingBox->center->left > 30 && $boundingBox->center->left < 60) { // Only overlaps located on center/front bottom screen
-                    $overlap = ($heightOrig > 30 && $width > 30);
-                }
-            }
-
-            if ($boundingBox->center->top < 45) {   // For overlaps located on medium screen
-                $overlap = $overlap || ($heightOrig > 30 && $width > 13);
-            }
-
-            if ($boundingBox->center->top < 30) { // For overlaps located on top/back screen
-                $overlap = $overlap || ($heightOrig > 30 && $width > 10);
-            }
+        if($processLargeDetection || $width > 30){
+            $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 18) || ($width > 25); // CAUTION: $width > 25 works as overlap
         }
+
+//        $overlap = false;
+//
+//        if (isset($boundingBox->center)) {
+//            if ($boundingBox->center->top < 60 || true) {   // For overlaps located on medium screen
+//                if ($boundingBox->center->left > 30 && $boundingBox->center->left < 60) { // Only overlaps located on center/front bottom screen
+//                    $overlap = ($heightOrig > 30 && $width > 30);
+//                }
+//            }
+//
+//            if ($boundingBox->center->top < 45) {   // For overlaps located on medium screen
+//                $overlap = $overlap || ($heightOrig > 30 && $width > 13);
+//            }
+//
+//            if ($boundingBox->center->top < 30) { // For overlaps located on top/back screen
+//                $overlap = $overlap || ($heightOrig > 30 && $width > 10);
+//            }
+//        }
 
         $overlap = false;
 

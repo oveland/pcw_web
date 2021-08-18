@@ -265,4 +265,9 @@ class Company extends Model
     {
         return (object)$this->only(['id', 'name', 'short_name', 'active']);
     }
+
+    public function hasRouteTakings()
+    {
+        return collect([self::ALAMEDA])->contains($this->id);
+    }
 }
