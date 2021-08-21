@@ -36,6 +36,7 @@
 
                 <!-- BEGIN USER LOGIN DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                @if(Auth::user())
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">
@@ -58,6 +59,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 <!-- END QUICK SIDEBAR TOGGLER -->
             </ul>
         </div>

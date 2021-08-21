@@ -7,12 +7,13 @@ use App\Services\API\Apps\MyRouteService;
 use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
 use App\Services\API\Apps\APIRocketService;
-use App\Services\API\Files\APIConcoxFilesService;
-use App\Services\API\Files\APIRocketFilesService;
 use App\Services\API\GPS\Syrus\APISyrus;
 use App\Services\API\Web\APIPassengersService;
 use App\Services\API\Web\DB\APIMigrationsService;
 use App\Services\API\Web\Reports\APIReportService;
+use App\Services\API\Files\APIConcoxFilesService;
+use App\Services\API\Files\APIRocketFilesService;
+use App\Services\API\Files\Operation\APIBearingService;
 use File;
 use Illuminate\Support\ServiceProvider;
 use Image;
@@ -107,13 +108,16 @@ class APIProvider extends ServiceProvider
                 case 'rocket':
                     return new APIRocketFilesService($service);
                     break;
+                case 'operation-bearing':
+                    return new APIBearingService($service);
+                    break;
                 default:
                     return Image::make(File::get('img/image-404.jpg'))->resize(200, 200)->response('png');
                     break;
             }
         });
 
-        // For API Syrus
+        // For API GPS
         $this->app->bind('api.gps', function ($app, $params) {
             $resource = $params['resource'];
             $service = $params['service'] ?? null;
