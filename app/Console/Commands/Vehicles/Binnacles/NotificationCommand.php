@@ -6,6 +6,7 @@ use App\Mail\Vehicles\Binnacles\NotificationMail;
 use App\Models\Company\Company;
 use App\Services\Operation\Vehicles\BinnacleService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Mail;
 
 class NotificationCommand extends Command
@@ -63,7 +64,11 @@ class NotificationCommand extends Command
 
 //                $mailTo = 'oiva.pcw@gmail.com';
 
-                $rta = Mail::to($mailTo)->send($mail);
+                if ($mailTo) {
+                    Log::useDailyFiles(storage_path() . '/logs/binnacles.log', 30);
+                    Log::info(" Vehicle Binnacles -> Mail to $mailTo -> notifications = " . collect($notifications)->pluck('id')->implode(', '));
+                    $rta = Mail::to($mailTo)->send($mail);
+                }
             }
         } else {
             $this->info('Company not found');

@@ -203,6 +203,7 @@
             cursor: pointer;
             position: absolute;
             bottom: 0px;
+            z-index: 10000 !important;
             box-shadow: rgba(117, 117, 117, 0.43) 3px -4px 7px 2px;
             border-radius: 10px;
         }

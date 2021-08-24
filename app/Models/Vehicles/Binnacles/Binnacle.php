@@ -137,10 +137,35 @@ class Binnacle extends Model
 
     private function yesterdayLocation(): LastLocation
     {
-        return LastLocation::whereDate('date', '<', Carbon::now()->toDateString())
+        $yl = LastLocation::whereDate('date', '<', Carbon::now()->toDateString())
             ->where('vehicle_id', $this->vehicle->id)
             ->orderByDesc('date')
             ->first();
+
+        if (!$yl) {
+            $yl = new LastLocation();
+            $cl = $this->vehicle->currentLocation;
+
+            $yl->vehicle()->associate($this->vehicle);
+            $yl->odometer = $cl->odometer ?? 0;
+            $yl->date = $cl->date ?? Carbon::now();
+            $yl->yesterday_odometer = $cl->yesterday_odometer ?? 0;
+            $yl->current_mileage = $cl->current_mileage ?? 0;
+            $yl->mileage_route = $cl->mileage_route ?? 0;
+            $yl->distance = $cl->distance ?? 0;
+            $yl->latitude = $cl->latitude ?? null;
+            $yl->longitude = $cl->longitude ?? null;
+            $yl->orientation = $cl->orientation ?? 0;
+            $yl->speed = $cl->speed ?? 0;
+            $yl->speeding = $cl->speeding ?? false;
+            $yl->date_created = $cl->date_created ?? Carbon::now();
+            $yl->last_updated = $cl->last_updated ?? Carbon::now();
+
+            $yl->save();
+            $yl->refresh();
+        }
+
+        return $yl;
     }
 
     /**

@@ -78,6 +78,7 @@ class LastLocation extends Model
     const MINIMUM_LOCATIONS_FOR_ANALYZE_JUMPS = 100;
 
     protected $dates = ['date'];
+    public $timestamps = false;
 
     protected function getDateFormat()
     {
@@ -86,9 +87,6 @@ class LastLocation extends Model
 
     public function getDateAttribute($date)
     {
-        if(!$date){
-//            dd($this);
-        }
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
     }
 

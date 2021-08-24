@@ -161,7 +161,7 @@ class BinnacleService
                 'notifications' => $notificationsUser
             ]);
         }
-
+        
         return $data;
     }
 
@@ -179,9 +179,10 @@ class BinnacleService
             $binnacle = $n->binnacle;
 
             $companyNotifications = !$company || $company->vehicles->contains($binnacle->vehicle->id);
-            $notificationsByMileage = $binnacle->isNotifiableByMileage();
+            $isNotifiableByMileage = $binnacle->isNotifiableByMileage();
+            $isNotifiableByDate = $binnacle->date && $binnacle->date->isToday();
 
-            return $companyNotifications && $notificationsByMileage;
+            return $companyNotifications && ($isNotifiableByMileage || $isNotifiableByDate);
         });
 
         return $notifications->sortBy('date');
