@@ -1,29 +1,17 @@
 <template>
     <div class="">
         <div class="table-responsive">
-            <table-component :search.sync="search" :marks="marks" :totals="totals"></table-component>
+            <table-component :search.sync="search" :marks="marks" :totals="totals" v-on:start-liquidation="startLiquidation()"></table-component>
 
 			<div v-if="!marks.length">
-				<div class="alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3">
-					<div class="col-md-12">
-						<div class="col-md-12">
-							<h4><strong>{{ $t('No registers for liquidation yet') }}</strong></h4>
-							<hr class="hr">
-						</div>
-
-						<div class="col-md-6 col-md-offset-3">
-							<div class="form-group">
-								<label for="advances">{{ $t('Advance') }}</label>
-								<div class="input-group">
-
-									<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ liquidation.advance | numberFormat('$0,0') }}</span>
-
-									<input type="number" class="form-control" id="advances" v-model.number="liquidation.advance" style="color: white;caret-color: red;padding-left: 25px">
-									<span class="input-group-addon btn bg-warning tooltips" @click="setAdvance" :data-title="$t('Save')" style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;">
-										<i class="fa fa-save" style="color: white !important;"></i>
-									</span>
-								</div>
-							</div>
+				<div class="alert alert-success alert-bordered m-b-10 mb-10 mt-10 col-md-4 col-md-offset-4 offset-md-4">
+					<div class="col-md-2" style="padding-top: 10px">
+						<i class="fa fa-3x fa-check"></i>
+					</div>
+					<div class="col-md-10">
+						<span class="close pull-right" data-dismiss="alert">×</span>
+						<div style="margin-top: 10px">
+							<strong>{{ $t('No turns pending for liquidation') }}</strong>
 						</div>
 					</div>
 				</div>
@@ -138,11 +126,11 @@
 
 															<hr class="m-t-10 m-b-10">
 
-															<div class="col-md-10 col-md-offset-1" v-if="liquidation.advance">
+															<div class="col-md-10 col-md-offset-1" v-if="liquidation.advances.takings">
 																<div class="col-md-4">
 																	<label for="advance-summary">{{ $t('Advance') }}</label>
 																	<div class="input-group">
-																		<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ liquidation.advance | numberFormat('$0,0') }}</span>
+																		<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ liquidation.advances.takings | numberFormat('$0,0') }}</span>
 																		<input type="number" disabled="disabled" class="form-control" id="advance-summary" style="color: white;caret-color: red;padding-left: 25px">
 																	</div>
 																</div>
@@ -226,6 +214,13 @@
             }
         },
         methods: {
+			startLiquidation() {
+				$('#modal-generate-liquidation').modal('show');
+
+				this.marks[0].payFall = this.liquidation.advances.payFall;
+				this.marks[0].getFall = this.liquidation.advances.getFall;
+
+			},
             liquidate: function () {
                 let payFalls = {};
                 let getFalls = {};
@@ -281,48 +276,6 @@
                     }, 500);
                 });
             },
-			setAdvance: function () {
-
-            	if(!this.liquidation.advance){
-					gwarning(this.$t('Enter a valid number'));
-            		return;
-				}
-
-				App.blockUI({target: '#table-liquidations', animate: true});
-
-				Swal.fire({
-					title: this.$t('Processing'),
-					text: this.$t('Saving advance'),
-					onBeforeOpen: () => {
-						Swal.showLoading();
-					},
-					heightAuto: true,
-					allowOutsideClick: false,
-					allowEscapeKey: false,
-					showConfirmButton: false
-				});
-				this.control.processing = true;
-
-				axios.post(this.urlSetAdvance.replace('ID', this.search.vehicle.id), {
-					value: this.liquidation.advance
-				}).then(response => {
-					const data = response.data;
-					if( data.success ){
-						this.control.enableSaving = false;
-						gsuccess(data.message);
-						this.liquidation.advance = data.value;
-					}else{
-						gerror(data.message);
-					}
-				}).catch( (error) => {
-					gerror(this.$t('Error setting advance'));
-					console.log(error);
-				}).then( () => {
-					App.unblockUI('#table-liquidations');
-					this.control.processing = false;
-					Swal.close();
-				});
-			},
         }
     }
 </script>

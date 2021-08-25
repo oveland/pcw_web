@@ -68,14 +68,16 @@ class BEASyncService
     public function last()
     {
         try {
-            //$this->turns();
-            //$this->trajectories();
-            $this->marks();
+            if (config('app.env') == 'beta') {
+                //$this->turns();
+                //$this->trajectories();
+                $this->marks();
+            }
 
         } catch (Exception $e) {
             if ($this->vehicle && $this->date) DB::select("SELECT refresh_bea_marks_turns_numbers_function(" . $this->vehicle->id . ", '$this->date')");
 
-            throw new Exception('Error BEA sync last data! • '. $e->getMessage());
+            throw new Exception('Error BEA sync last data! • ' . $e->getMessage());
         }
     }
 
@@ -202,13 +204,7 @@ class BEASyncService
 
         $queryVehicle = $this->vehicle ? "AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . ($this->vehicle->bea_id ?? 0) . ")" : "";
 
-        if (request()->get('dump')) {
-            $q = "SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle";
-            $marks = BEADB::for($this->company)->select($q);
-            dd($q, $marks);
-        } else {
-            $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
-        }
+        $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
 
         foreach ($marks as $markBEA) {
             DB::transaction(function () use ($markBEA) {
@@ -263,7 +259,7 @@ class BEASyncService
         $passengersBEA = $passengersUp > $passengersDown ? $passengersUp : $passengersDown;
         $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 2500;
 
-        if($this->company->id == Company::ALAMEDA) {
+        if ($this->company->id == Company::ALAMEDA) {
             $totalBEA = $passengersBEA * 2200;
         }
 

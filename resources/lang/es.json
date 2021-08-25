@@ -818,7 +818,7 @@
   "Advances": "Anticipos",
   "advances": "anticipos",
   "Saving advance": "Guardando anticipo",
-  "Advance saved successfully": "Anticipo registrado correctamente",
+  "Advances saved successfully": "Anticipos registrados correctamente",
   "Error setting advance": "Error al registrar anticipo",
   "Enter a valid number": "Ingrese un número válido",
   "Passengers advance": "Pasajeros anticipo",
@@ -832,5 +832,10 @@
   "Select an user": "Seleccione un usuario",
   "Select a camera": "Seleccione una cámara",
   "Count by recognitions": "Conteo por reconocimientos",
-  "Bearing": "Rodamiento"
+  "Bearing": "Rodamiento",
+  "No turns pending for liquidation": "No existen turnos pendientes a liquidar",
+  "No turns pending for takings": "No existen turnos pendientes a recaudar",
+  "Total BEA": "Total BEA",
+  "BEA": "BEA",
+  "Commission type": "Tipo"
 }

@@ -3,6 +3,7 @@ import numeral from 'numeral';
 
 import SearchComponent from './components/SearchComponent';
 import AdminComponent from './components/admin/AdminComponent';
+import AdvanceComponent from './components/liquidation/Advance';
 import LiquidationComponent from './components/LiquidationComponent';
 import TakingsComponent from './components/TakingsComponent';
 import TakingsListComponent from './components/TakingsListComponent';
@@ -50,6 +51,7 @@ let liquidationView = new Vue({
     components: {
         SearchComponent,
         AdminComponent,
+        AdvanceComponent,
         LiquidationComponent,
         TakingsComponent,
         TakingsListComponent,
@@ -60,7 +62,7 @@ let liquidationView = new Vue({
     data: {
         flag: false,
         urlList: String,
-        urlGetAdvance: String,
+        urlGetAdvances: String,
         vehicles: [],
         search: {
             companies: [],
@@ -78,7 +80,11 @@ let liquidationView = new Vue({
             realTaken: 0,
             pendingBalance: 0,
             forgivableBalance: false,
-            advance: 0
+            advances: {
+                takings: 0,
+                payFall: 0,
+                getFall: 0,
+            }
         }
     },
     computed: {
@@ -221,12 +227,12 @@ let liquidationView = new Vue({
                     this.liquidation.observations = "";
 
 
-                    axios.get(this.urlGetAdvance, {
+                    axios.get(this.urlGetAdvances, {
                         params: {
                             vehicle: this.searchParams.vehicle,
                         }
                     }).then(response => {
-                        this.liquidation.advance = response.data;
+                        this.liquidation.advances = response.data;
                     });
                 }).catch((error) => {
                     Swal.fire({
@@ -331,7 +337,7 @@ let liquidationView = new Vue({
     },
     mounted: function () {
         this.urlList = this.$el.attributes.url.value;
-        this.urlGetAdvance = this.$el.attributes.urlgetadvance.value;
+        this.urlGetAdvances = this.$el.attributes.urlgetadvances.value;
     },
 });
 

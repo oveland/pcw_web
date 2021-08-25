@@ -84,7 +84,7 @@
                                     <a href="#liquidation-detail" data-toggle="tab"> {{ $t('Liquidation') }} </a>
                                 </li>
                                 <li class="active">
-                                    <a href="#detail-marks-liquidated" data-toggle="tab"> {{ $t('Turnos') }} BEA </a>
+                                    <a href="#detail-marks-liquidated" data-toggle="tab"> {{ $t('Turns') }} BEA </a>
                                 </li>
                             </ul>
                         </div>
@@ -186,10 +186,10 @@
 																		</div>
 																	</div>
 
-																	<div class="col-md-3" v-if="liquidation.liquidation.advance">
+																	<div class="col-md-3" v-if="advances.takings">
 																		<label for="advance-summary">{{ $t('Advance') }}</label>
 																		<div class="input-group">
-																			<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ liquidation.liquidation.advance | numberFormat('$0,0') }}</span>
+																			<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ advances.takings | numberFormat('$0,0') }}</span>
 																			<input type="number" disabled="disabled" class="form-control" id="advance-summary" style="color: white;caret-color: red;padding-left: 25px">
 																		</div>
 																	</div>
@@ -252,17 +252,17 @@
         </div>
 
         <div v-show="!liquidations.length" class="row">
-            <div class="alert alert-warning alert-bordered m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3">
-                <div class="col-md-2" style="padding-top: 10px">
-                    <i class="fa fa-3x fa-exclamation-circle"></i>
-                </div>
-                <div class="col-md-10">
-                    <span class="close pull-right" data-dismiss="alert">×</span>
-                    <h4><strong>{{ $t('Ups!') }}</strong></h4>
-                    <hr class="hr">
-                    {{ $t('No registers found') }}
-                </div>
-            </div>
+			<div class="alert alert-info alert-bordered m-b-10 mb-10 mt-10 col-md-4 col-md-offset-4 offset-md-4">
+				<div class="col-md-2" style="padding-top: 10px">
+					<i class="fa fa-3x fa-check"></i>
+				</div>
+				<div class="col-md-10">
+					<span class="close pull-right" data-dismiss="alert">×</span>
+					<div style="margin-top: 10px">
+						<strong>{{ $t('No turns pending for takings') }}</strong>
+					</div>
+				</div>
+			</div>
         </div>
     </div>
 </template>
@@ -362,8 +362,12 @@
 			},
 			pendingBalance() {
 				this.liquidation.liquidation.pendingBalance = this.thousandRound(this.liquidation.totals.totalDispatch) - this.liquidation.liquidation.realTaken
-						+ (this.liquidation.liquidation.forgivableBalance ? 0 : this.previousBalance) - this.liquidation.liquidation.advance;
+						+ (this.liquidation.liquidation.forgivableBalance ? 0 : this.previousBalance) - this.advances.takings;
 				return this.liquidation.liquidation.pendingBalance;
+			},
+			advances() {
+				const advances = this.liquidation.liquidation.advances;
+				return advances ? advances : {};
 			}
         },
         methods: {

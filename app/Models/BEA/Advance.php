@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $liquidated
  * @property int|null $liquidation_id
  * @property int|null $user_id
+ * @property string $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|Advance newModelQuery()
@@ -42,10 +43,12 @@ class Advance extends Model
 {
     protected $table = 'bea_advances';
 
+    const TYPES = ['takings', 'getFall', 'payFall'];
+
     /**
      * @return BelongsTo | Vehicle
      */
-    public function vehicle()
+    function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
     }
@@ -53,12 +56,12 @@ class Advance extends Model
     /**
      * @return BelongsTo | User
      */
-    public function user()
+    function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function setValueAttribute($value)
+    function setValueAttribute($value)
     {
         $this->user()->associate(auth()->user());
 
@@ -70,7 +73,7 @@ class Advance extends Model
     /**
      * @return BelongsTo | Liquidation
      */
-    public function liquidation()
+    function liquidation()
     {
         return $this->belongsTo(Liquidation::class);
     }
@@ -79,24 +82,49 @@ class Advance extends Model
      * @param Builder | Advance $query
      * @return Builder | Advance
      */
-    public function scopeActive($query)
+    function scopeActive($query)
     {
         return $query->where('liquidated', false);
     }
 
+    /**
+     * @param Vehicle $vehicle
+     * @return array
+     */
+    static function findAllByVehicle(Vehicle $vehicle)
+    {
+        return collect(self::TYPES)->mapWithKeys(function ($type) use ($vehicle) {
+            return [$type => Advance::findByVehicle($vehicle, $type)->value];
+        })->toArray();
+    }
+
+    /**
+     * @param Liquidation $liquidation
+     * @return $this
+     */
+    function liquidate(Liquidation $liquidation)
+    {
+        if ($this->value) {
+            $this->liquidation()->associate($liquidation);
+            $this->liquidated = true;
+        }
+        return $this;
+    }
 
     /**
      * @param Vehicle $vehicle
+     * @param string $type
      * @return Advance | Builder
      */
-    public static function findByVehicle(Vehicle $vehicle)
+    static function findByVehicle(Vehicle $vehicle, $type = 'takings')
     {
-        $activeAdvance = Advance::where('vehicle_id', $vehicle->id)->active()->first();
+        $activeAdvance = Advance::where('vehicle_id', $vehicle->id)->where('type', $type)->active()->first();
 
         if (!$activeAdvance) {
             $activeAdvance = new Advance();
             $activeAdvance->vehicle()->associate($vehicle);
             $activeAdvance->value = 0;
+            $activeAdvance->type = $type;
         }
 
 

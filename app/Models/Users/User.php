@@ -277,16 +277,13 @@ class User extends Authenticatable
     {
         switch ($roleName) {
             case 'liquidate':
+            case 'admin-params':
+            case 'advances':
                 return $this->role_id === self::ANALYST_ML_ROLE || ($this->role_id < 3) || $this->isAdmin();
-                break;
-            case 'takings':
-                return $this->role_id === self::ANALYST_ML_ROLE || $this->role_id === self::DISPATCHER_ROLE || ($this->role_id < 3) || $this->isAdmin();
                 break;
             case 'takings-list':
+            case 'takings':
                 return $this->role_id === self::ANALYST_ML_ROLE || $this->role_id === self::DISPATCHER_ROLE || ($this->role_id < 3) || $this->isAdmin();
-                break;
-            case 'admin-params':
-                return $this->role_id === self::ANALYST_ML_ROLE || ($this->role_id < 3) || $this->isAdmin();
                 break;
             default:
                 return false;

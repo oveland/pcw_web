@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        if (config('app.env') == 'local') {
+        if (config('app.env') == 'beta') {
             $schedule->command('track:map --company=17')->everyMinute()->between('04:30', '21:00');
             
             $schedule->command('telescope:prune')->daily();

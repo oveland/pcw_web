@@ -57,15 +57,15 @@
                 <td class="text-center">{{ mark.totalGrossBEA + mark.penalty.value | numberFormat('$0,0') }}</td>
                 <td class="text-center">
                     <div class="input-icon tooltips m-b-5" data-placement="left" :data-title="'<i class=\'fa fa-angle-double-right font-green\'></i> ' + $t('Pay fall')" data-html="true">
-                        <i class="fa fa-angle-double-right font-green"></i> <input type="number" min="0" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Pay fall')" v-model.number="mark.payFall">
+                        <i class="fa fa-angle-double-right font-green"></i> <input type="number" onFocus="this.select()" min="0" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Pay fall')" v-model.number="mark.payFall">
                     </div>
-                    <div class="input-icon tooltips" data-placement="left" :data-title="'<i class=\'fa fa-angle-double-left font-blue\'></i>' + $t('Get fall')" data-html="true">
-                        <i class="fa fa-angle-double-left font-blue"></i> <input type="number" min="0" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Get fall')" v-model.number="mark.getFall">
+                    <div class="input-icon tooltips" data-placement="left" :data-title="'<i class=\'fa fa-angle-double-left font-yellow\'></i> ' + $t('Get fall')" data-html="true">
+                        <i class="fa fa-angle-double-left font-yellow"></i> <input type="number" onFocus="this.select()" min="0" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Get fall')" v-model.number="mark.getFall">
                     </div>
                 </td>
 				<td class="text-center">
                     <div class="input-icon m-b-5">
-                        <i class="fa fa-dollar font-green"></i> <input type="number" min="0" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Bonuses')" v-model.number="mark.payFall">
+                        <i class="fa fa-dollar font-green"></i> <input type="number" min="0" onFocus="this.select()" :disabled="readonly" class="form-control input-sm" :placeholder="$t('Bonuses')" v-model.number="mark.payFall">
                     </div>
                 </td>
                 <td class="text-center col-md-3">
@@ -132,7 +132,7 @@
             getCommissionIconClass: (commission) => {
                 return commission.type === 'fixed' ? 'icon-user': 'icon-pie-chart';
             }
-        }
+        },
     }
 </script>
 

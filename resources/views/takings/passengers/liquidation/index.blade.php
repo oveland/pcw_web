@@ -28,7 +28,7 @@
 
 @section('content')
     <!-- begin row -->
-    <div id="liquidation" class="row p-t-10" url="{{ route('takings-passengers-search-liquidation') }}" urlgetadvance="{{  route('takings-passengers-liquidation-params',['name' => __('advance')]) }}">
+    <div id="liquidation" class="row p-t-10" url="{{ route('takings-passengers-search-liquidation') }}" urlgetadvances="{{  route('takings-passengers-liquidation-params',['name' => __('advances')]) }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
             <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('takings-passengers-liquidation-params',['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>
@@ -43,6 +43,12 @@
                             <div class="portlet-title">
                                 <div class="">
                                     <div class="btn-group btn-group-devided width-full btn-group-modules" data-toggle="buttons">
+                                        @if( Auth::user()->canML('advances') )
+                                            <label class="btn btn-tab btn-transparent purple btn-outline pull-left btn-circle uppercase" data-toggle="tab" data-target="#table-advances"
+                                                   onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')" style="z-index: 1 !important;">
+                                                <i class="icon-calculator"></i> <span class="hidden-xs">@lang('Advances')</span>
+                                            </label>
+                                        @endif
                                         @if( Auth::user()->canML('liquidate') )
                                             <label class="btn btn-tab btn-transparent yellow-crusta btn-outline pull-left btn-circle uppercase active" data-toggle="tab" data-target="#table-liquidations"
                                                    onclick="$('.btn-tab').removeClass('active');$(this).addClass('active')">
@@ -72,9 +78,14 @@
                             </div>
                             <div class="portlet-body">
                                 <div class="tab-content p-0">
+                                    @if( Auth::user()->canML('advances') )
+                                        <div id="table-advances" class="tab-pane fade">
+                                            <advance-component :liquidation.sync="liquidation" url-set-advance="{{ route('takings-passengers-advance-set', ['vehicle' => 'ID']) }}" :search="search" v-on:refresh-report="searchReport($event)"></advance-component>
+                                        </div>
+                                    @endif
                                     @if( Auth::user()->canML('liquidate') )
                                         <div id="table-liquidations" class="tab-pane fade active in">
-                                            <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" url-set-advance="{{ route('takings-passengers-advance-set', ['vehicle' => 'ID']) }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
+                                            <liquidation-component url-liquidate="{{ route('takings-passengers-liquidation-liquidate') }}" :marks.sync="marks" :liquidation.sync="liquidation" :search="search" :totals="totals" v-on:refresh-report="searchReport($event)"></liquidation-component>
                                         </div>
                                     @endif
                                     @if( Auth::user()->canML('takings') )
@@ -153,7 +164,7 @@
         $('.menu-takings-passengers, .menu-takings-passengers-liquidation').addClass('active-animated');
         $(document).ready(function () {
             setTimeout(()=>{
-                $('.btn-group-modules .btn-tab:first').click();
+                $('.btn-group-modules .btn-tab:nth-child(2)').click();
             },1000);
 
             $("#modal-params-manager").on('hidden.bs.modal', function () {

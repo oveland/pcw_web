@@ -306,13 +306,10 @@ class TakingsPassengersLiquidationController extends Controller
 
                 return response()->json($costs->where('uid', '<>', ManagementCost::PAYROLL_ID)->values()->toArray());
                 break;
-            case __('advance'):
+            case __('advances'):
                 $vehicle = Vehicle::find($request->get('vehicle'));
-                if (!$vehicle) {
-                    return 0;
-                }
-                return Advance::findByVehicle($vehicle)->value;
 
+                return response()->json(Advance::findAllByVehicle($vehicle));
                 break;
             default:
                 return response()->json($this->beaService->getLiquidationParams(true));
@@ -652,10 +649,10 @@ class TakingsPassengersLiquidationController extends Controller
                         }
                     }
 
-                    $advance = Advance::findByVehicle($vehicle);
-                    $advance->liquidation()->associate($liquidation);
-                    $advance->liquidated = true;
-                    $advance->save();
+                    foreach (Advance::TYPES as $type) {
+                        Advance::findByVehicle($vehicle, $type)->liquidate($liquidation)->save();
+                    }
+
                 } else {
                     $response->success = false;
                     $response->message = __('Error at generate liquidation register');
@@ -749,19 +746,22 @@ class TakingsPassengersLiquidationController extends Controller
     {
         $response = (object)[
             'success' => true,
-            'message' => __('Advance saved successfully'),
+            'message' => __('Advances saved successfully'),
             'value' => 0
         ];
 
-        $advance = Advance::findByVehicle($vehicle);
-        $advance->value = round(preg_replace("/[^0-9.]/", "", $request->get('value')));
+        foreach ($request->get('advances') as $type => $value) {
+            $advance = Advance::findByVehicle($vehicle, $type);
 
-        if (!$advance->save()) {
-            $response->success = false;
-            $response->message = __('Error setting advance');
-        } else {
-            $response->value = $advance->value;
+            $advance->value = round(preg_replace("/[^0-9.]/", "", $value));
+
+            if (!$advance->save()) {
+                $response->success = false;
+                $response->message = __("Error setting advance $type");
+            }
         }
+
+        $response->advances = Advance::findAllByVehicle($vehicle);
 
         return response()->json($response);
 
