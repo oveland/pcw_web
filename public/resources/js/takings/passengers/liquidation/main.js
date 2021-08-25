@@ -2243,6 +2243,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2291,6 +2298,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     pendingBalance: function pendingBalance() {
       return this.liquidationDetail.liquidation.pendingBalance;
+    },
+    advances: function advances() {
+      var advances = this.liquidationDetail.liquidation.advances;
+      return advances ? advances : {};
     }
   },
   methods: {
@@ -15875,7 +15886,7 @@ var render = function() {
                                                     _c(
                                                       "div",
                                                       {
-                                                        staticClass: "col-md-4"
+                                                        staticClass: "col-md-3"
                                                       },
                                                       [
                                                         _c(
@@ -15966,10 +15977,100 @@ var render = function() {
                                                       ]
                                                     ),
                                                     _vm._v(" "),
+                                                    _vm.advances.takings
+                                                      ? _c(
+                                                          "div",
+                                                          {
+                                                            staticClass:
+                                                              "col-md-3"
+                                                          },
+                                                          [
+                                                            _c(
+                                                              "label",
+                                                              {
+                                                                attrs: {
+                                                                  for:
+                                                                    "advance-summary"
+                                                                }
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    _vm.$t(
+                                                                      "Advance"
+                                                                    )
+                                                                  )
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "div",
+                                                              {
+                                                                staticClass:
+                                                                  "input-group"
+                                                              },
+                                                              [
+                                                                _c(
+                                                                  "span",
+                                                                  {
+                                                                    staticStyle: {
+                                                                      position:
+                                                                        "absolute",
+                                                                      "z-index":
+                                                                        "100",
+                                                                      top:
+                                                                        "8px",
+                                                                      left:
+                                                                        "10px"
+                                                                    }
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      _vm._s(
+                                                                        _vm._f(
+                                                                          "numberFormat"
+                                                                        )(
+                                                                          _vm
+                                                                            .advances
+                                                                            .takings,
+                                                                          "$0,0"
+                                                                        )
+                                                                      )
+                                                                    )
+                                                                  ]
+                                                                ),
+                                                                _vm._v(" "),
+                                                                _c("input", {
+                                                                  staticClass:
+                                                                    "form-control",
+                                                                  staticStyle: {
+                                                                    color:
+                                                                      "white",
+                                                                    "caret-color":
+                                                                      "red",
+                                                                    "padding-left":
+                                                                      "25px"
+                                                                  },
+                                                                  attrs: {
+                                                                    type:
+                                                                      "number",
+                                                                    disabled:
+                                                                      "disabled",
+                                                                    id:
+                                                                      "advance-summary"
+                                                                  }
+                                                                })
+                                                              ]
+                                                            )
+                                                          ]
+                                                        )
+                                                      : _vm._e(),
+                                                    _vm._v(" "),
                                                     _c(
                                                       "div",
                                                       {
-                                                        staticClass: "col-md-4"
+                                                        staticClass: "col-md-3"
                                                       },
                                                       [
                                                         _c(
@@ -16065,7 +16166,7 @@ var render = function() {
                                                     _c(
                                                       "div",
                                                       {
-                                                        staticClass: "col-md-4"
+                                                        staticClass: "col-md-3"
                                                       },
                                                       [
                                                         _c(

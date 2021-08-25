@@ -180,14 +180,21 @@
 
 																<div class="col-md-8 col-md-offset-2">
 																	<div class="col-md-12 p-0" v-if="liquidationDetail.liquidation.realTaken > 0">
-																		<div class="col-md-4">
+																		<div class="col-md-3">
 																			<label for="real-taken">{{ $t('Real taken') }}</label>
 																			<div class="input-icon">
 																				<i class="fa fa-dollar font-green"></i>
 																				<input id="real-taken" type="number" class="form-control input-other-discount disabled" disabled v-model="liquidationDetail.liquidation.realTaken">
 																			</div>
 																		</div>
-																		<div class="col-md-4">
+																		<div class="col-md-3" v-if="advances.takings">
+																			<label for="advance-summary">{{ $t('Advance') }}</label>
+																			<div class="input-group">
+																				<span style="position: absolute; z-index: 100; top: 8px; left: 10px;">{{ advances.takings | numberFormat('$0,0') }}</span>
+																				<input type="number" disabled="disabled" class="form-control" id="advance-summary" style="color: white;caret-color: red;padding-left: 25px">
+																			</div>
+																		</div>
+																		<div class="col-md-3">
 																			<label for="previous-balance">{{ $t('Previous balance') }}</label>
 																			<div class="input-icon input-group">
 																				<i class="fa fa-dollar font-green" style="z-index: 3 !important;"></i>
@@ -198,7 +205,7 @@
 																			</span>
 																			</div>
 																		</div>
-																		<div class="col-md-4">
+																		<div class="col-md-3">
 																			<label for="pending-balance">{{ $t('New pending balance') }}</label>
 																			<div class="input-icon">
 																				<i class="fa fa-dollar font-green"></i>
@@ -301,6 +308,10 @@
 			},
 			pendingBalance() {
 				return this.liquidationDetail.liquidation.pendingBalance;
+			},
+			advances() {
+				const advances = this.liquidationDetail.liquidation.advances;
+				return advances ? advances : {};
 			}
 		},
         methods: {
