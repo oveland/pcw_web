@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <table class="table table-bordered table-condensed table-hover table-valign-middle table-report">
+        <table class="table table-bordered table-condensed table-hover table-valign-middle table-report m-b-0">
             <thead>
             <tr class="inverse">
                 <th width="3%">
@@ -28,10 +28,10 @@
                     <i class="fa fa-dollar text-muted"></i><br> {{ $t('Gross BEA') }}
                 </th>
                 <th class="col-md-3">
-                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Penalties by turn') }}
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Penalties') }}
                 </th>
                 <th class="col-md-2">
-                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total by turn') }}
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total') }}
                 </th>
             </tr>
             </thead>
@@ -39,11 +39,10 @@
             <tr class="" v-for="mark in marks">
                 <td class="text-center">{{ mark.number }}</td>
                 <td class="col-md-2 text-center">
-                    <span>{{ mark.turn.route.name }}</span><br>
-                    <span class="span-full badge badge-info" v-if="mark.trajectory">
+                    <small class="span-full badge badge-info" v-if="mark.trajectory">
                         {{ mark.trajectory.name }}
-                    </span>
-                    <span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
+                    </small>
+                    <small class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</small> - <small class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</small>
                 </td>
                 <td class="text-center">{{ mark.locks }}</td>
                 <td class="text-center">{{ mark.auxiliaries }}</td>

@@ -75,7 +75,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="portlet light">
-                        <div class="portlet-title tabbable-line">
+                        <div class="portlet-title tabbable-line hide">
                             <div class="caption">
                                 <i class="icon-layers"></i>
                                 <span class="caption-subject font-dark bold uppercase">{{ $t('Taking details') }}</span>
@@ -89,7 +89,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="portlet-body">
+                        <div class="portlet-body p-b-0 m-0">
                             <div class="tab-content row">
                                 <div id="takings-detail" class="tab-pane fade">
                                     <div class="">
@@ -101,81 +101,30 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="portlet-body">
-                                            <div class="tabbable-custom hidden-lg hidden-md">
-                                                <ul class="nav nav-tabs ">
-                                                    <li class="active">
-                                                        <a href="#step-discounts-detail-list" data-toggle="tab" aria-expanded="true"> <i class="icon-tag"></i> <span class="hidden-xs">{{ $t('Discounts') }}</span> </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#step-penalties-detail-list" data-toggle="tab" aria-expanded="false"> <i class="icon-shield"></i> <span class="hidden-xs">{{ $t('Penalties') }}</span> </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#step-commissions-detail-list" data-toggle="tab" aria-expanded="false"> <i class=" icon-user-follow"></i> <span class="hidden-xs">{{ $t('Commissions') }}</span> </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#step-liquidate-detail-list" data-toggle="tab" aria-expanded="false"> <i class="icon-layers"></i> <span class="hidden-xs">{{ $t('Liquidation') }}</span> </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        <div class="portlet-body p-0">
 
-                                            <div class="mt-element-step hidden-sm hidden-xs">
-                                                <div class="row step-line">
-                                                    <div class="phases col-md-3 mt-step-col first phase-inventory warning"
-                                                         data-toggle="tab" href="#step-discounts-detail-list" data-active="warning">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class="icon-tag"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Discounts') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade hide"></div>
-                                                    </div>
-                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                         href="#step-penalties-detail-list" data-active="error">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class="icon-shield"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Penalties') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade hide"></div>
-                                                    </div>
-                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                         href="#step-commissions-detail-list" data-active="active">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class=" icon-user-follow"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Commissions') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade hide"></div>
-                                                    </div>
-                                                    <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
-                                                         href="#step-liquidate-detail-list" data-active="done">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class="icon-layers"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Liquidation') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade"></div>
-                                                    </div>
-                                                </div>
-                                                <hr/>
-                                            </div>
+											<header-steps module="history"></header-steps>
+
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="tab-content">
-                                                        <div id="step-discounts-detail-list" class="tab-pane fade in active">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-discounts-history" class="tab-pane fade in active">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <discount-component :control="control" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></discount-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-penalties-detail-list" class="tab-pane fade">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-penalties-history" class="tab-pane fade">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <penalty-component :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></penalty-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-commissions-detail-list" class="tab-pane fade">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-commissions-history" class="tab-pane fade">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <commission-component :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation"></commission-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-liquidate-detail-list" class="tab-pane fade">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-liquidate-history" class="tab-pane fade">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidationDetail.id)" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation" :search="search"></summary-component>
 
 																<div class="col-md-8 col-md-offset-2">
@@ -265,6 +214,7 @@
     import SummaryComponent from "./SummaryComponent";
     import VueFriendlyIframe from 'vue-friendly-iframe';
     import TableComponent from "./TableComponent";
+	import HeaderSteps from "./liquidation/HeaderSteps";
 
 	export default {
         name: 'TakingsListComponent',
@@ -376,7 +326,8 @@
             CommissionComponent,
             PenaltyComponent,
             SummaryComponent,
-            VueFriendlyIframe
+            VueFriendlyIframe,
+			HeaderSteps
         }
     }
 </script>

@@ -27,7 +27,7 @@
                             <i class="fa fa-dollar"></i> {{ $t('Generate liquidation') }}
                         </h5>
                     </div>
-                    <div class="modal-body" style="">
+                    <div class="modal-body p-b-0 m-0">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="">
@@ -39,89 +39,29 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
-                                        <div class="tabbable-custom hidden-lg hidden-md">
-                                            <ul class="nav nav-tabs ">
-                                                <li class="active">
-                                                    <a href="#step-discounts" data-toggle="tab" aria-expanded="true"> <i class="icon-tag"></i> <span class="hidden-xs">{{ $t('Discounts') }}</span> </a>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#step-penalties" data-toggle="tab" aria-expanded="false"> <i class="icon-shield"></i> <span class="hidden-xs">{{ $t('Penalties') }}</span> </a>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#step-commissions" data-toggle="tab" aria-expanded="false"> <i class=" icon-user-follow"></i> <span class="hidden-xs">{{ $t('Commissions') }}</span> </a>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#step-liquidate" data-toggle="tab" aria-expanded="false"> <i class="icon-layers"></i> <span class="hidden-xs">{{ $t('Liquidation') }}</span> </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    <div class="portlet-body p-0">
+                                        <header-steps module="liquidation"></header-steps>
 
-                                        <div class="mt-element-step hidden-sm hidden-xs">
-                                            <div class="row step-line">
-                                                <div class="mt-step-desc text-center hide">
-                                                    <div class="font-dark bold uppercase">
-                                                        {{ $t('Generate liquidation') }}
-                                                    </div>
-                                                    <div class="caption-desc font-grey-cascade">
-                                                    </div>
-                                                    <br/>
-                                                </div>
-                                                <div class="phases col-md-3 mt-step-col first phase-inventory warning"
-                                                     data-toggle="tab" href="#step-discounts" data-active="warning">
-                                                    <div class="mt-step-number bg-white">
-                                                        <i class="icon-tag"></i>
-                                                    </div>
-                                                    <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Discounts') }}</div>
-                                                    <div class="mt-step-content font-grey-cascade hide"></div>
-                                                </div>
-                                                <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                     href="#step-penalties" data-active="error">
-                                                    <div class="mt-step-number bg-white">
-                                                        <i class="icon-shield"></i>
-                                                    </div>
-                                                    <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Penalties') }}</div>
-                                                    <div class="mt-step-content font-grey-cascade hide"></div>
-                                                </div>
-                                                <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                     href="#step-commissions" data-active="active">
-                                                    <div class="mt-step-number bg-white">
-                                                        <i class=" icon-user-follow"></i>
-                                                    </div>
-                                                    <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Commissions') }}</div>
-                                                    <div class="mt-step-content font-grey-cascade hide"></div>
-                                                </div>
-                                                <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
-                                                     href="#step-liquidate" data-active="done">
-                                                    <div class="mt-step-number bg-white">
-                                                        <i class="icon-layers"></i>
-                                                    </div>
-                                                    <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Liquidate') }}</div>
-                                                    <div class="mt-step-content font-grey-cascade"></div>
-                                                </div>
-                                            </div>
-                                            <hr/>
-                                        </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="tab-content">
-                                                    <div id="step-discounts" class="tab-pane fade in active">
-                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                    <div id="step-discounts-liquidation" class="tab-pane fade in active">
+                                                        <div class="table-responsive phase-container col-md-12">
                                                             <discount-component :control.sync="control" :marks.sync="marks" :totals="totals" :liquidation.sync="liquidation"></discount-component>
                                                         </div>
                                                     </div>
-                                                    <div id="step-penalties" class="tab-pane fade">
-                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                    <div id="step-penalties-liquidation" class="tab-pane fade">
+                                                        <div class="table-responsive phase-container col-md-12">
                                                             <penalty-component :marks="marks" :totals="totals" :liquidation.sync="liquidation"></penalty-component>
                                                         </div>
                                                     </div>
-                                                    <div id="step-commissions" class="tab-pane fade">
-                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                    <div id="step-commissions-liquidation" class="tab-pane fade">
+                                                        <div class="table-responsive phase-container col-md-12">
                                                             <commission-component :marks.sync="marks" :totals="totals" :liquidation.sync="liquidation"></commission-component>
                                                         </div>
                                                     </div>
-                                                    <div id="step-liquidate" class="tab-pane fade">
-                                                        <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                    <div id="step-liquidate-liquidation" class="tab-pane fade">
+                                                        <div class="table-responsive phase-container col-md-12">
                                                             <summary-component :url-export="urlExport" :marks="marks" :liquidation.sync="liquidation" :totals="totals" :search="search"></summary-component>
 
 															<hr class="m-t-10 m-b-10">
@@ -170,6 +110,7 @@
     import SummaryComponent from "./SummaryComponent";
 
     import Swal from 'sweetalert2/dist/sweetalert2.min'
+	import HeaderSteps from "./liquidation/HeaderSteps";
 
     export default {
         name: 'LiquidationComponent',
@@ -193,6 +134,7 @@
           }
         },
         components: {
+			HeaderSteps,
             TableComponent,
             DiscountComponent,
             CommissionComponent,

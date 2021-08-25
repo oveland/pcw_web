@@ -37,7 +37,7 @@
 					<i class="fa fa-dollar text-muted"></i><br> {{ $t('Bonuses') }}
 				</th>
                 <th class="col-md-3">
-                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Commissions by turn') }}
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Commissions') }}
                 </th>
             </tr>
             </thead>
@@ -45,11 +45,10 @@
             <tr class="" v-for="mark in marks">
                 <td class="text-center">{{ mark.number }}</td>
                 <td class="col-md-2 text-center">
-                    <span>{{ mark.turn.route.name }}</span><br>
-                    <span class="span-full badge badge-info" v-if="mark.trajectory">
-                        {{ mark.trajectory.name }}
-                    </span>
-                    <span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
+					<small class="span-full badge badge-info" v-if="mark.trajectory">
+						{{ mark.trajectory.name }}
+					</small>
+					<small class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</small> - <small class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</small>
                 </td>
                 <td class="text-center">{{ mark.passengersBEA }}</td>
                 <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>

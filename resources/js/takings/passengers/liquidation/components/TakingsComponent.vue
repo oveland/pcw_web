@@ -74,7 +74,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="portlet light">
-                        <div class="portlet-title tabbable-line">
+                        <div class="portlet-title tabbable-line hide">
                             <div class="caption">
                                 <i class="icon-layers"></i>
                                 <span class="caption-subject font-dark bold uppercase">{{ $t('Liquidation details') }}</span>
@@ -88,7 +88,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="portlet-body">
+                        <div class="portlet-body p-b-0 m-0">
                             <div class="tab-content row">
                                 <div id="liquidation-detail" class="tab-pane fade">
                                     <div class="">
@@ -100,81 +100,29 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="portlet-body">
-                                            <div class="tabbable-custom hidden-lg hidden-md">
-                                                <ul class="nav nav-tabs ">
-                                                    <li class="active">
-                                                        <a href="#step-discounts-detail" data-toggle="tab" aria-expanded="true"> <i class="icon-tag"></i> <span class="hidden-xs">{{ $t('Discounts') }}</span> </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#step-penalties-detail" data-toggle="tab" aria-expanded="false"> <i class="icon-shield"></i> <span class="hidden-xs">{{ $t('Penalties') }}</span> </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#step-commissions-detail" data-toggle="tab" aria-expanded="false"> <i class=" icon-user-follow"></i> <span class="hidden-xs">{{ $t('Commissions') }}</span> </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="#step-liquidate-detail" data-toggle="tab" aria-expanded="false"> <i class="icon-layers"></i> <span class="hidden-xs">{{ $t('Liquidation') }}</span> </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        <div class="portlet-body p-0">
+											<header-steps module="takings"></header-steps>
 
-                                            <div class="mt-element-step hidden-sm hidden-xs">
-                                                <div class="row step-line">
-                                                    <div class="phases col-md-3 mt-step-col first phase-inventory warning"
-                                                         data-toggle="tab" href="#step-discounts-detail" data-active="warning">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class="icon-tag"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Discounts') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade hide"></div>
-                                                    </div>
-                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                         href="#step-penalties-detail" data-active="error">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class="icon-shield"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Penalties') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade hide"></div>
-                                                    </div>
-                                                    <div class="phases col-md-3 mt-step-col phase-inventory" data-toggle="tab"
-                                                         href="#step-commissions-detail" data-active="active">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class=" icon-user-follow"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Commissions') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade hide"></div>
-                                                    </div>
-                                                    <div class="phases col-md-3 mt-step-col last phase-inventory" data-toggle="tab"
-                                                         href="#step-liquidate-detail" data-active="done">
-                                                        <div class="mt-step-number bg-white">
-                                                            <i class="icon-layers"></i>
-                                                        </div>
-                                                        <div class="mt-step-title uppercase font-grey-cascade">{{ $t('Liquidation') }}</div>
-                                                        <div class="mt-step-content font-grey-cascade"></div>
-                                                    </div>
-                                                </div>
-                                                <hr/>
-                                            </div>
-                                            <div class="row">
+											<div class="row">
                                                 <div class="col-md-12">
                                                     <div class="tab-content">
-                                                        <div id="step-discounts-detail" class="tab-pane fade in active">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-discounts-takings" class="tab-pane fade in active">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <discount-component :url-update-liquidate="urlUpdateLiquidate" :control.sync="control" :marks="liquidation.marks" :totals.sync="liquidation.totals" :liquidation.sync="liquidation.liquidation" v-on:update-liquidation="updateLiquidation"></discount-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-penalties-detail" class="tab-pane fade">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-penalties-takings" class="tab-pane fade">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <penalty-component :marks="liquidation.marks" :totals="totals" :liquidation="liquidation.liquidation"></penalty-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-commissions-detail" class="tab-pane fade">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-commissions-takings" class="tab-pane fade">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <commission-component :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation="liquidation.liquidation"></commission-component>
                                                             </div>
                                                         </div>
-                                                        <div id="step-liquidate-detail" class="tab-pane fade">
-                                                            <div class="table-responsive phase-container col-md-12 m-t-10">
+                                                        <div id="step-liquidate-takings" class="tab-pane fade">
+                                                            <div class="table-responsive phase-container col-md-12">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidation.id)" :readonly="true" :marks="liquidation.marks" :totals="totals" :liquidation.sync="liquidation.liquidation" :search="search"></summary-component>
 
 																<div class="col-md-10 col-md-offset-1">
@@ -209,7 +157,7 @@
 																		</div>
 																	</div>
 																	<div class="col-md-3">
-																		<label for="pending-balance">{{ $t('New pending balance') }}</label>
+																		<label for="pending-balance">{{ $t('New balance') }}</label>
 																		<div class="input-icon">
 																			<i class="fa fa-dollar font-green"></i>
 																			<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" :value="pendingBalance">
@@ -274,6 +222,7 @@
     import SummaryComponent from "./SummaryComponent";
     import VueFriendlyIframe from 'vue-friendly-iframe';
     import TableComponent from "./TableComponent";
+    import HeaderSteps from "./liquidation/HeaderSteps";
 
     import Swal from 'sweetalert2/dist/sweetalert2.min'
 
@@ -542,7 +491,8 @@
             CommissionComponent,
             PenaltyComponent,
             VueFriendlyIframe,
-            SummaryComponent
+            SummaryComponent,
+			HeaderSteps
         }
     }
 </script>

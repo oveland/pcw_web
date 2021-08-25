@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <table class="table table-bordered table-condensed table-hover table-valign-middle table-report">
+        <table class="table table-bordered table-condensed table-hover table-valign-middle table-report m-b-0">
             <thead>
             <tr class="inverse">
                 <th width="3%">
@@ -28,7 +28,7 @@
                     <i class="fa fa-dollar text-muted"></i><br> {{ $t('Gross BEA') }}
                 </th>
                 <th class="col-md-3">
-                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Discounts by turn') }}
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Discounts') }}
                 </th>
             </tr>
             </thead>
@@ -37,11 +37,10 @@
 				<tr class="">
 					<td class="text-center">{{ mark.number }}</td>
 					<td class="col-md-2 text-center">
-						<span>{{ mark.turn.route.name }}</span><br>
-						<span class="span-full badge badge-info" v-if="mark.trajectory">
-                        {{ mark.trajectory.name }}
-                    </span>
-						<span class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</span> - <span class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</span>
+						<small class="span-full badge badge-info" v-if="mark.trajectory">
+							{{ mark.trajectory.name }}
+						</small>
+						<small class="tooltips" :data-title="$t('Initial time')">{{ mark.initialTime }}</small> - <small class="tooltips" :data-title="$t('Final time')">{{ mark.finalTime }}</small>
 					</td>
 					<td class="text-center">{{ mark.locks }}</td>
 					<td class="text-center">{{ mark.auxiliaries }}</td>
@@ -49,20 +48,20 @@
 					<td class="text-center">{{ mark.passengersBEA }}</td>
 					<td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
 					<td class="text-center">{{ mark.totalGrossBEA | numberFormat('$0,0') }}</td>
-					<td class="text-right col-md-3">
-						<div v-for="discount in orderBy(mark.discounts, 'discount_type.uid')" v-if="discount" :data-original-title="discount.discount_type.description + (discount.optional ? (' ' + $t('Optional') + ': $' + discount.value) : '')" class="tooltips">
-							<span>
-								<label :for="'checkbox-' + mark.id + '-' + discount.id">
+					<td class="text-right col-md-3 p-t-0">
+						<div v-for="discount in orderBy(mark.discounts, 'discount_type.uid')" v-if="discount" :data-original-title="discount.discount_type.description + (discount.optional ? (' ' + $t('Optional') + ': $' + discount.value) : '')" class="tooltips container-discount">
+							<small>
+								<label :for="'checkbox-' + mark.id + '-' + discount.id" style="margin: 0">
 									<i :class="discount.discount_type.icon"></i> {{ discount.required ? discount.value : 0 | numberFormat('$0,0') }}
 								</label>
 								<input v-if="discount.optional" type="checkbox" :id="'checkbox-' + mark.id + '-' + discount.id" class="md-check" v-model="discount.required" :disabled="mark.liquidated">
-							</span><br>
+							</small><br>
 						</div>
 						<div v-if="!readonly" class="divider-other-discount">
-							<button class="btn btn-sm btn-outline btn-white" @click="addOtherDiscount(mark.id)">
-								<i class="fa fa-plus"></i> {{ $t('Add') }}
+							<button class="btn btn-xs btn-outline btn-white" @click="addOtherDiscount(mark.id)">
+								<i class="fa fa-plus"></i> {{ $t('Other') }}
 							</button>
-							<button v-if="control.canUpdate && control.enableSaving && !control.processing" class="btn btn-sm green m-t-5 hide" @click="$emit('update-liquidation')">
+							<button v-show="control.canUpdate && control.enableSaving && !control.processing && mark.id === markAddingOtherDiscount" class="btn btn-xs green m-t-5" @click="$emit('update-liquidation')">
 								<i class="fa fa-save"></i> {{ $t('Save') }}
 							</button>
 						</div>
@@ -72,16 +71,16 @@
 					<td colspan="8" class="text-right">
 						<div class="text-bold col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-r-0">
 							<div class="input-group" :class="!readonly ? '' : 'input-group-other-full'">
-								<span v-if="!readonly" class="input-group-addon faa-parent animated-hover tooltips" data-placement="bottom" :data-title="$t('Delete')" @click="removeOtherDiscount(otherDiscount.id)">
+								<span v-show="!readonly" class="input-group-addon faa-parent animated-hover tooltips" data-placement="bottom" :data-title="$t('Delete')" @click="removeOtherDiscount(otherDiscount.id, mark.id)">
 									<i class="fa fa-trash faa-shake font-red"></i>
 								</span>
 								<div class="input-icon">
 									<i class="icon-tag font-green"></i> <input type="text" :disabled="readonly" class="form-control input-desc-other-discount" :placeholder="$t('Description')" v-model="otherDiscount.name" @keyup="control.enableSaving = true">
 								</div>
-								<span v-if="otherDiscount.hasFile" class="input-group-addon faa-parent animated-hover tooltips" data-placement="left" :data-title="$t('Show file')" data-toggle="modal" data-target="#modal-show-file-discount" @click="showImagePreview(otherDiscount)">
+								<span v-show="otherDiscount.hasFile" class="input-group-addon faa-parent animated-hover tooltips" data-placement="left" :data-title="$t('Show file')" data-toggle="modal" data-target="#modal-show-file-discount" @click="showImagePreview(otherDiscount)">
 									<i class="fa fa-image faa-shake font-red"></i>
 								</span>
-								<span v-if="!readonly" class="input-group-addon">
+								<span v-show="!readonly" class="input-group-addon">
                             		<input type="file" accept="image/*" @change="addDiscountFile(otherDiscount)">
                         		</span>
 							</div>
@@ -108,11 +107,14 @@
                 <td class="text-center">{{ totals.totalPassengersBea }}</td>
                 <td class="text-center">{{ totals.totalBea | numberFormat('$0,0') }}</td>
                 <td class="text-center">{{ totals.totalGrossBea | numberFormat('$0,0') }}</td>
-                <td class="text-right">
-                    <div v-for="totalDiscount in orderBy(discountsByTurns, 'discount.discount_type.uid')">
-                        <span :data-original-title="totalDiscount.discount.discount_type.description" class="tooltips">
-                            <i :class="totalDiscount.discount.discount_type.icon"></i> {{ totalDiscount.value | numberFormat('$0,0') }}
-                        </span><br>
+                <td class="text-right p-t-0">
+                    <div v-for="totalDiscount in orderBy(discountsByTurns, 'discount.discount_type.uid')" class="container-discount">
+                        <strong>
+							<small :data-original-title="totalDiscount.discount.discount_type.description" class="tooltips">
+								<i :class="totalDiscount.discount.discount_type.icon"></i> {{ totalDiscount.value | numberFormat('$0,0') }}
+							</small>
+						</strong>
+						<br>
                     </div>
                 </td>
             </tr>
@@ -144,7 +146,6 @@
         </table>
 
         <div class="form form-horizontal total-discount">
-            <hr class="hr">
             <div class="form-group">
                 <div class="col-md-9 col-lg-9 col-sm-9 col-xs-12 text-right">
                     <span class="text-bold">
@@ -183,7 +184,8 @@
         mixins: [Vue2Filters.mixin],
         data: function () {
             return {
-                imagePreview: null
+                imagePreview: null,
+				markAddingOtherDiscount: null
             }
         },
         props: {
@@ -264,6 +266,8 @@
             addOtherDiscount: function (markId) {
                 const otherDiscountId = (new Date).getTime();
 
+                this.markAddingOtherDiscount = markId;
+
                 this.liquidation.otherDiscounts.push({
                     id: otherDiscountId,
                     name: '',
@@ -280,8 +284,11 @@
             },
             saveOtherDiscounts: function(){
                 this.$emit('update-liquidation');
+                this.markAddingOtherDiscount = null;
             },
-            removeOtherDiscount: function (idToRemove) {
+            removeOtherDiscount: function (idToRemove, markId) {
+				this.markAddingOtherDiscount = markId;
+
                 this.liquidation.otherDiscounts = _.filter(this.liquidation.otherDiscounts, function (other) {
                     return other.id !== idToRemove;
                 });
@@ -320,7 +327,7 @@
 
 	.divider-other-discount {
 		margin-top: 5px;
-		padding-top: 5px;
+		padding-top: 0;
 		border-top: 1px solid #d3d3d38a;
 	}
 	.divider-other-discount button{
@@ -338,6 +345,10 @@
 	}
 
 	.input-group-other-full {
-		display: block;
+		display: inline-table !important;
+	}
+
+	.container-discount {
+		height: 15px;
 	}
 </style>

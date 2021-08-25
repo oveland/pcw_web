@@ -9,9 +9,11 @@
             color: #0b465a;
             border: none !important;
         }
+
         .nav.nav-pills>li.active>a {
             color:white !important;
         }
+
         .fa{
             z-index:1 !important;
         }
@@ -22,6 +24,28 @@
 
         .v--modal-overlay{
             display: inline-table !important;
+        }
+
+        .portlet-title.tabbable-line {
+            margin: 0 !important;
+        }
+
+        .mt-element-step .step-line .mt-step-col {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+
+        .mt-element-step .step-line .mt-step-title {
+            font-size: unset !important;
+            font-weight: bold !important;
+        }
+
+        .modal-content, .portlet.light {
+            border-radius: 30px !important;
+        }
+
+        .modal-open .modal {
+            background: rgba(0, 0, 0, 0.71) !important;
         }
     </style>
 @endsection
