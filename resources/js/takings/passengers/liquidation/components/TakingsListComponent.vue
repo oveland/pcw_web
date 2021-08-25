@@ -127,7 +127,7 @@
                                                             <div class="table-responsive phase-container col-md-12">
                                                                 <summary-component :url-export="urlExport.replace('ID', liquidationDetail.id)" :readonly="true" :marks="liquidationDetail.marks" :totals="liquidationDetail.totals" :liquidation="liquidationDetail.liquidation" :search="search"></summary-component>
 
-																<div class="col-md-8 col-md-offset-2">
+																<div class="col-md-10 col-md-offset-1">
 																	<div class="col-md-12 p-0" v-if="liquidationDetail.liquidation.realTaken > 0">
 																		<div class="col-md-3">
 																			<label for="real-taken">{{ $t('Real taken') }}</label>
@@ -183,9 +183,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn dark btn-outline" data-dismiss="modal">{{ $t('Close') }}</button>
                     </div>
                 </div>
             </div>

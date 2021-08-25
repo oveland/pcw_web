@@ -2094,9 +2094,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 
 
@@ -15120,7 +15117,7 @@ var render = function() {
                                             "div",
                                             {
                                               staticClass:
-                                                "col-md-8 col-md-offset-2"
+                                                "col-md-10 col-md-offset-1"
                                             },
                                             [
                                               _vm.liquidationDetail.liquidation
@@ -15594,17 +15591,6 @@ var render = function() {
                   )
                 ])
               ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "modal-footer" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn dark btn-outline",
-                  attrs: { type: "button", "data-dismiss": "modal" }
-                },
-                [_vm._v(_vm._s(_vm.$t("Close")))]
-              )
             ])
           ])
         ])
