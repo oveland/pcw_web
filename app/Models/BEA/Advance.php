@@ -45,6 +45,11 @@ class Advance extends Model
 
     const TYPES = ['takings', 'getFall', 'payFall'];
 
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     /**
      * @return BelongsTo | Vehicle
      */
