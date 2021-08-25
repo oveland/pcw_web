@@ -14838,7 +14838,9 @@ var render = function() {
                                                   [
                                                     _vm._v(
                                                       _vm._s(
-                                                        _vm.$t("New balance")
+                                                        _vm.$t(
+                                                          "New pending balance"
+                                                        )
                                                       )
                                                     )
                                                   ]
@@ -16179,7 +16181,7 @@ var render = function() {
                                                             _vm._v(
                                                               _vm._s(
                                                                 _vm.$t(
-                                                                  "New pending balance"
+                                                                  "New balance"
                                                                 )
                                                               )
                                                             )

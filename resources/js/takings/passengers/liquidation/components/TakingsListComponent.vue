@@ -206,7 +206,7 @@
 																			</div>
 																		</div>
 																		<div class="col-md-3">
-																			<label for="pending-balance">{{ $t('New pending balance') }}</label>
+																			<label for="pending-balance">{{ $t('New balance') }}</label>
 																			<div class="input-icon">
 																				<i class="fa fa-dollar font-green"></i>
 																				<input id="pending-balance" disabled type="number" class="form-control input-other-discount disabled" :value="pendingBalance">
