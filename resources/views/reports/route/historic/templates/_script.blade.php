@@ -350,7 +350,7 @@
             if (reportLocation.dispatchRegister) {
                 const dr = reportLocation.dispatchRegister;
 
-                if(reportLocation.vehicle.id != 1199) routeLabel.text(dr.route.name).parent().fadeIn();
+                if(reportLocation.vehicle.id != 1199) routeLabel.text(dr.route).parent().fadeIn();
 
                 this.showInfo.find('.mileage-route').text(reportLocation.routeDistance);
                 if (reportLocation.offRoad) {
@@ -360,7 +360,7 @@
                 }
 
                 $('.passengers-within-round-trip').removeClass('hide');
-                this.showInfo.find('.passengers-route-name').text(dr.route.name);
+                this.showInfo.find('.passengers-route-name').text(dr.route);
 
 
             } else {
@@ -489,11 +489,11 @@
             let dr = r.dispatchRegister;
             if (dr) {
                 infoDispatchRegister = "" +
-                    "<small class='text-bold'><i class='fa fa-flag text-muted'></i> @lang('Route'): " + dr.route.name + "</small><br>" +
-                    "<small class='text-bold'><i class='fa fa-retweet text-muted'></i> @lang('Round Trip'): " + dr.roundTrip + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-flag text-muted'></i> @lang('Route'): " + dr.route + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-retweet text-muted'></i> @lang('Round Trip'): " + dr.trip + "</small><br>" +
                     "<small class='text-bold'><i class='fa fa-list-ol text-muted'></i> @lang('Turn'): " + dr.turn + "</small><br>" +
-                    "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> @lang('Dispatched'): " + dr.departureTime + "</small><br>" +
-                    "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): " + dr.driverName + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-clock-o text-muted'></i> @lang('Dispatched'): " + dr.departure + "</small><br>" +
+                    "<small class='text-bold'><i class='fa fa-user text-muted'></i> @lang('Driver'): " + dr.driver + "</small><br>" +
                     "<hr class='hr'>";
 
                 let height = '250px';

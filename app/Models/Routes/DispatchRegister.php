@@ -488,10 +488,10 @@ class DispatchRegister extends Model
         return (object)[
             'id' => $this->id,
             'turn' => $this->turn,
-            'roundTrip' => $this->round_trip,
-            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
-            'driverName' => $driveName,
-            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+            'trip' => $this->round_trip,
+            'departure' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'driver' => $driveName,
+            'route' => $this->onlyControlTakings() ? [] : $this->route->name,
         ];
     }
 

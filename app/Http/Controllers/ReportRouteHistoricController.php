@@ -121,7 +121,7 @@ class ReportRouteHistoricController extends Controller
         $newTurn = true;
 
         foreach ($locations as $index => $location) {
-//            $dispatchRegister = $location->dispatchRegister;
+            $dispatchRegister = $location->dispatchRegister;
 
             $period = '';
             $averagePeriod = '';
@@ -132,7 +132,7 @@ class ReportRouteHistoricController extends Controller
             }
 
             $passenger = $location->passenger;
-            $dispatchRegister = null;
+//            $dispatchRegister = null;
             
             if ($passenger) {
                 $dispatchRegister = $passenger->dispatchRegister;
