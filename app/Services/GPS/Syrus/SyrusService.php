@@ -24,7 +24,7 @@ class SyrusService
     {
         $service = new PhotoService();
 
-        $gpsVehicle = GpsVehicle::where('imei', $imei == '352557100781619' ? 'TJV-993' : $imei)->first();
+        $gpsVehicle = GpsVehicle::where('imei', $imei == '352557100781619' ? '864180032117116' : $imei)->first();
         $vehicle = $gpsVehicle->vehicle;
 
         $response = collect([

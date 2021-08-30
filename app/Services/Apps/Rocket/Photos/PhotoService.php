@@ -164,6 +164,7 @@ class PhotoService
                 }
             }
         } else {
+            $success = true;
             $message = collect($validator->errors())->flatten()->implode(' ');
         }
 

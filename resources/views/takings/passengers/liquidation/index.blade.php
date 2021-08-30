@@ -47,6 +47,11 @@
         .modal-open .modal {
             background: rgba(0, 0, 0, 0.71) !important;
         }
+
+        .v--modal-overlay{
+            background: #111d1ef0 !important;
+            border-radius: 30px !important;
+        }
     </style>
 @endsection
 

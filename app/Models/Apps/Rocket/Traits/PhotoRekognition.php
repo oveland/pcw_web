@@ -61,7 +61,7 @@ trait PhotoRekognition
 
         $column = "data_$type";
 
-        if ($this->dispatchRegister && $this->dispatchRegister->isActive()) {
+        if ($this->dispatchRegister && $this->dispatchRegister->isActive() || true) {
             $rekognition = new RekognitionService();
             $this->$column = $rekognition->sefFile($image)->process($type);
         }
