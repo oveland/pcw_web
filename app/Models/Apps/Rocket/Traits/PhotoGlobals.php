@@ -76,6 +76,21 @@ trait PhotoGlobals
     {
         $dispatchRegister = $this->dispatchRegister;
 
+        if ($dispatchRegister) {
+            $dispatchRegister = (object)[
+                'id' => $dispatchRegister->id,
+                'turn' => $dispatchRegister->turn,
+                'round_trip' => $dispatchRegister->round_trip,
+                'roundTrip' => $dispatchRegister->round_trip,
+                'departure_time' => $dispatchRegister->departure_time,
+                'arrival_time' => $dispatchRegister->arrival_time,
+                'route' => (object)[
+                    'id' => $dispatchRegister->route_id,
+                    'name' => $dispatchRegister->route->name
+                ]
+            ];
+        }
+
         return (object)[
             'id' => $this->id,
             'url' => $this->encode($encodeImage, true),
@@ -84,7 +99,7 @@ trait PhotoGlobals
             'side' => Str::ucfirst(__($this->side)),
             'type' => Str::ucfirst(__($this->type)),
             'vehicle_id' => $this->vehicle_id,
-            'dispatchRegister' => $dispatchRegister ? $dispatchRegister->getAPIFields(true) : null,
+            'dispatchRegister' => $dispatchRegister,
             'persons' => $this->data,
             'occupation' => null
         ];

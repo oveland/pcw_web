@@ -55,12 +55,6 @@ class PhotoService
      */
     private $seatOccupationService;
 
-
-    /**
-     * @var ProfileSeat
-     */
-    private $profileSeating;
-
     /**
      * @var Collection
      */
@@ -88,13 +82,13 @@ class PhotoService
 
     function setProfileSeating()
     {
-        $this->profileSeating = $this->vehicle->getProfileSeating($this->camera);
+        $profileSeating = $this->vehicle->getProfileSeating($this->camera);
 
-        $this->seatOccupationService = new SeatOccupationService($this->profileSeating);
+        $this->seatOccupationService = new SeatOccupationService($profileSeating);
 
         $this->recognitionServices = collect([]);
         foreach (['persons', 'faces'] as $type) {
-            $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $this->profileSeating]));
+            $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating]));
         }
     }
 
@@ -221,54 +215,49 @@ class PhotoService
         $historic = $historic->where('id', '<=', $photo->id);
         $lastPhoto = $historic->last();
 
-        $photoData = null;
+        $details = $photo->getAPIFields('data-url');
+        $details->occupation = $this->getOccupation($photo);
 
-        if ($photo) {
-            $details = $photo->getAPIFields('data-url');
-            $details->occupation = $this->getOccupation($photo);
+        $personsByRoundTrips = collect([]);
+        $historicByTurns = $historic->groupBy('drId');
 
-            $personsByRoundTrips = collect([]);
-            $historicByTurns = $historic->groupBy('drId');
-            $lastHistoricByTurn = null;
-            foreach ($historicByTurns as $dr => $historicByTurn) {
-                $firstHistoricByTurn = $historicByTurn->sortBy('time')->first();
-                $lastHistoricByTurn = $historicByTurn->sortBy('time')->last();
-                $dispatchRegister = $lastHistoricByTurn->details->dispatchRegister;
-                if ($dispatchRegister) {
-                    $personsByRoundTrips->push((object)[
-                        'id' => $dr,
-                        'number' => $dispatchRegister->round_trip,
-                        'route' => $dispatchRegister->route->name,
-                        'from' => $dispatchRegister->departure_time,
-                        'to' => $dispatchRegister->arrival_time,
-                        'count' => $lastHistoricByTurn->passengers->totalInRoundTrip,
-                        'firstHistoricByTurn' => $firstHistoricByTurn,
-                        'historic' => collect($historicByTurn)->only(['time', 'passengers']),
-                        'lastHistoricByTurn' => $lastHistoricByTurn,
+        foreach ($historicByTurns as $dr => $historicByTurn) {
+            $firstHistoricByTurn = $historicByTurn->sortBy('time')->first();
+            $lastHistoricByTurn = $historicByTurn->sortBy('time')->last();
+            $dispatchRegister = $lastHistoricByTurn->details->dispatchRegister;
 
-                        'prevCount' => $firstHistoricByTurn->passengers->totalInRoundTrip,
-                        'currentCount' => $lastHistoricByTurn->passengers->totalInRoundTrip,
-                        'newPersons' => intval($lastHistoricByTurn->passengers->totalInRoundTrip) - intval($firstHistoricByTurn->passengers->totalInRoundTrip),
-                    ]);
-                }
+            if ($dispatchRegister) {
+                $personsByRoundTrips->push((object)[
+                    'id' => $dr,
+                    'number' => $dispatchRegister->round_trip,
+                    'route' => $dispatchRegister->route->name,
+                    'from' => $dispatchRegister->departure_time,
+                    'to' => $dispatchRegister->arrival_time,
+                    'count' => $lastHistoricByTurn->passengers->totalInRoundTrip,
+                    'firstHistoricByTurn' => $firstHistoricByTurn,
+                    'historic' => collect($historicByTurn)->only(['time', 'passengers']),
+                    'lastHistoricByTurn' => $lastHistoricByTurn,
+
+                    'prevCount' => $firstHistoricByTurn->passengers->totalInRoundTrip,
+                    'currentCount' => $lastHistoricByTurn->passengers->totalInRoundTrip,
+                    'newPersons' => intval($lastHistoricByTurn->passengers->totalInRoundTrip) - intval($firstHistoricByTurn->passengers->totalInRoundTrip),
+                ]);
             }
-
-            $photoData = (object)[
-                'id' => $photo->id,
-                'details' => $details,
-                'prevDetails' => $lastPhoto->prevDetails ?? null,
-                'alarms' => $lastPhoto->alarms ?? null,
-                'rekognitionCounts' => $lastPhoto->rekognitionCounts ?? null,
-                'passengers' => (object)[
-                    'byRoundTrips' => $personsByRoundTrips,
-                    'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
-                    'totalSumOccupied' => $historic->count() ? $historic->last()->passengers->totalSumOccupied : 0,
-                    'totalSumReleased' => $historic->count() ? $historic->last()->passengers->totalSumReleased : 0
-                ]
-            ];
         }
 
-        return $photoData;
+        return (object)[
+            'id' => $photo->id,
+            'details' => $details,
+            'prevDetails' => $lastPhoto->prevDetails ?? null,
+            'alarms' => $lastPhoto->alarms ?? null,
+            'rekognitionCounts' => $lastPhoto->rekognitionCounts ?? null,
+            'passengers' => (object)[
+                'byRoundTrips' => $personsByRoundTrips,
+                'total' => $personsByRoundTrips ? $personsByRoundTrips->sum('count') : 0,
+                'totalSumOccupied' => $historic->count() ? $historic->last()->passengers->totalSumOccupied : 0,
+                'totalSumReleased' => $historic->count() ? $historic->last()->passengers->totalSumReleased : 0
+            ]
+        ];
     }
 
 
@@ -339,11 +328,6 @@ class PhotoService
         return $occupation;
     }
 
-    /**
-     * @param PhotoInterface $currentPhoto
-     * @param $counterLock
-     * @param $alert
-     */
     public function processLockCam(PhotoInterface $currentPhoto, &$counterLock, &$alert)
     {
         $currentAvBrightness = $currentPhoto->data_properties->avBrightness ?? null;
@@ -356,10 +340,6 @@ class PhotoService
         $alert = $counterLock >= 3;
     }
 
-    /**
-     * @param Photo $photo
-     * @return DispatchRegister
-     */
     public function findDispatchRegisterByPhoto(Photo $photo)
     {
         $dr = DispatchRegister::where('date', $photo->date->toDateString())
@@ -392,8 +372,10 @@ class PhotoService
         $this->setCamera($camera);
 
         return Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $this->camera)
-            //->whereBetween('id', [77495, 77503])
+//            ->whereBetween('id', [104073, 104173])
             //->where('id', 53717);
+            ->where('dispatch_register_id', 1776516)
+            ->limit(2000)
             ->get();
     }
 
@@ -405,10 +387,12 @@ class PhotoService
     {
         if (($this->camera == null || $this->camera == 'all') && request()->routeIs('admin.rocket.report')) {
             $allPhotos = $this->getPhotos($date);
+
             $historicCameras = collect([]);
 
-            foreach ($this->getProcessCameras() as $side => $camera) {
-                $data = $this->processPhotos($allPhotos->where('side', $side))->where('drId', '<>', null)
+            foreach ($this->getProcessCameras() as $sideCamera) {
+                $this->setCamera($sideCamera); // Important for setProfileSeating() routine
+                $data = $this->processPhotos($allPhotos->where('side', $sideCamera)->values())->where('drId', '<>', null)
                     ->groupBy('drId');
 
                 $historicCameras->push($data);
@@ -416,7 +400,6 @@ class PhotoService
 
             $defaultCamera = $historicCameras->first();
             $otherCameras = $historicCameras->forget(0);
-
             foreach ($defaultCamera as $drId => $historic) {
                 $maxCameraDefault = 0;
                 if ($historic->sortBy('date')->last()) {
@@ -440,6 +423,30 @@ class PhotoService
         }
 
         return $this->processPhotos($this->getPhotos($date));
+    }
+
+    function processStatusDispatch(Photo $photo, Photo $prevPhoto)
+    {
+        $statusDispatch = 'none';
+        if ($photo->id == $prevPhoto->id) {
+            if ($photo->dispatch_register_id) {
+                $statusDispatch = 'start';
+            }
+        } else {
+            if ($photo->dispatch_register_id == $prevPhoto->dispatch_register_id) {
+                if ($photo->dispatch_register_id) {
+                    $statusDispatch = 'in';
+                }
+            } else {
+                if ($photo->dispatch_register_id) {
+                    $statusDispatch = 'start';
+                } else if ($prevPhoto->dispatch_register_id) {
+                    $statusDispatch = 'end';
+                }
+            }
+        }
+
+        return $statusDispatch;
     }
 
     /**
@@ -477,46 +484,20 @@ class PhotoService
                     $photo->dispatch_register_id = null;
                 }
 
-
                 $currentOccupation = $this->getOccupation($photo);
-
-                $details = $photo->getAPIFields('url');
-
-                $seatingActivated = collect([]);
-                $seatingReleased = collect([]);
-
                 if ($currentOccupation->withOverlap) {
 //                    foreach ($prevOccupation->seatingOccupied as $seatNumber => $seatOccupied) {
 //                        $currentOccupation->seatingOccupied->put($seatNumber, $seatOccupied);
 //                    }
                 }
 
-                $statusDispatch = 'none';
-
-                if ($photo->id == $prevPhoto->id) {
-                    if ($photo->dispatch_register_id) {
-                        $statusDispatch = 'start';
-                    }
-                } else {
-                    if ($photo->dispatch_register_id == $prevPhoto->dispatch_register_id) {
-                        if ($photo->dispatch_register_id) {
-                            $statusDispatch = 'in';
-                        }
-                    } else {
-                        if ($photo->dispatch_register_id) {
-                            $statusDispatch = 'start';
-                        } else if ($prevPhoto->dispatch_register_id) {
-                            $statusDispatch = 'end';
-                        }
-                    }
-                }
-
+                $statusDispatch = $this->processStatusDispatch($photo, $prevPhoto);
                 $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDispatch);
 
                 $seatingActivated = $this->seatOccupationService->getSeatingActivated($currentOccupation->seatingOccupied, $currentOccupation->withOverlap);
                 $seatingReleased = $this->seatOccupationService->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);
 
-
+                $details = $photo->getAPIFields('url');
                 $details->occupationOrig = clone $currentOccupation;
                 $details->occupation = $currentOccupation;
 

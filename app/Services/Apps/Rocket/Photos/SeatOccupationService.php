@@ -88,6 +88,7 @@ class SeatOccupationService
     {
         if (!$withOverlap) {
             $currentOccupiedClone = clone $currentOccupied;
+            $currentOccupied = collect([]);
             foreach ($currentOccupiedClone as $seat => $data) {
                 $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
 
@@ -105,23 +106,25 @@ class SeatOccupationService
                     } else if (!$persistentPrev) {
                         $counterActivate = 1;
                     }
+
+                    $prevCounterActivate = $persistentPrev ? collect($persistentPrev)->get('counterActivate') : 0;
+                    $risingEvent = $counterActivate > $prevCounterActivate;
+
+                    $newData->put('counterActivate', $counterActivate);
+                    $newData->put('initialCount', $counterActivate == $seatActivateThreshold - 2);
+                    $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
+                    $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent);
+                    $newData->put('counted', $counterActivate >= $seatActivateThreshold);
+                    $newData->put('seatActivateThreshold', $seatActivateThreshold);
+                    $newData->put('statusDispatch', $statusDispatch);
+                    $newData->put('risingEvent', $risingEvent);
+
+                    $currentOccupied->put($seat, (object)$newData->toArray());
                 } else {
                     $counterActivate = 0;
                 }
 
-                $prevCounterActivate = $persistentPrev ? collect($persistentPrev)->get('counterActivate') : 0;
-                $risingEvent = $counterActivate > $prevCounterActivate;
 
-                $newData->put('counterActivate', $counterActivate);
-                $newData->put('initialCount', $counterActivate == $seatActivateThreshold - 2);
-                $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
-                $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent || ($counterActivate > $prevCounterActivate && $statusDispatch == 'start'));
-                $newData->put('counted', $counterActivate >= $seatActivateThreshold);
-                $newData->put('seatActivateThreshold', $seatActivateThreshold);
-                $newData->put('statusDispatch', $statusDispatch);
-                $newData->put('risingEvent', $risingEvent);
-
-                $currentOccupied->put($seat, (object)$newData->toArray());
             }
         }
     }
