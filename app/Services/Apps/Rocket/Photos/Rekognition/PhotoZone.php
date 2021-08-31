@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Apps\Rocket\Photos;
+namespace App\Services\Apps\Rocket\Photos\Rekognition;
 
 use App\Models\Apps\Rocket\ProfileSeat;
 

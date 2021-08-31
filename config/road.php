@@ -61,8 +61,8 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'google_api_token' => 'AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA',
-    //'google_api_token' => 'AIzaSyC_BkN0qt9j8gUEe7GdW2Bxu3vgQPTrSP8',
+    'google_api_token' => 'AIzaSyDmDwfAM8ID9sjcMayS-ihJ_tmpKvd4C9U', // Apps SMS
+//    'google_api_token' => 'AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA', // PCW Apps
 
     /*
     |--------------------------------------------------------------------------
@@ -92,5 +92,5 @@ return [
     | Defines the time for report a vehicle as parked
     |
     */
-    'time_parked_vehicle_threshold' => '00:10:00',
+    'time_parked_vehicle_threshold' => '00:08:00',
 ];

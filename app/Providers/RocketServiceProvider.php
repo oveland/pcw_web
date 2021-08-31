@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\Apps\Rocket\Photos\FacesRekognitionService;
-use App\Services\Apps\Rocket\Photos\FacesZone;
-use App\Services\Apps\Rocket\Photos\PersonsRekognitionService;
-use App\Services\Apps\Rocket\Photos\PersonsZone;
+use App\Services\Apps\Rocket\Photos\Rekognition\FacesRekognitionService;
+use App\Services\Apps\Rocket\Photos\Rekognition\FacesZone;
+use App\Services\Apps\Rocket\Photos\Rekognition\PersonsRekognitionService;
+use App\Services\Apps\Rocket\Photos\Rekognition\PersonsZone;
 use Illuminate\Support\ServiceProvider;
 
 class RocketServiceProvider extends ServiceProvider

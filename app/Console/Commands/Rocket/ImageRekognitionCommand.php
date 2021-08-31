@@ -4,10 +4,7 @@ namespace App\Console\Commands\Rocket;
 
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\Vehicle;
-use App\Services\Apps\Rocket\Photos\PhotoService;
-use App\Services\AWS\RekognitionService;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ImageRekognitionCommand extends Command
 {
@@ -24,32 +21,20 @@ class ImageRekognitionCommand extends Command
      * @var string
      */
     protected $description = 'Command description';
-    /**
-     * @var RekognitionService
-     */
-    private $rekognition;
-    /**
-     * @var PhotoService
-     */
-    private $photoService;
 
     /**
      * Create a new command instance.
      *
-     * @param RekognitionService $rekognition
-     * @param PhotoService $photoService
      */
-    public function __construct(RekognitionService $rekognition, PhotoService $photoService)
+    public function __construct()
     {
         parent::__construct();
-        $this->rekognition = $rekognition;
-        $this->photoService = $photoService;
     }
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return bool
      */
     public function handle()
     {
@@ -63,7 +48,6 @@ class ImageRekognitionCommand extends Command
 
             if ($vehicle) {
                 $photos = Photo::whereVehicleAndDateAndSide($vehicle, $date, $camera)
-//                    ->where('dispatch_register_id', 1276931) // Round trip 1 322 October 2nd
                     ->where('dispatch_register_id', '>', 0)
                     ->where('id', '>=', 77333)
                     ->orderBy('date')
@@ -95,7 +79,6 @@ class ImageRekognitionCommand extends Command
                     $index++;
                 }
                 $this->info("Finished! **** ");
-//                $this->photoService->for($vehicle)->notifyToMap($date);
             } else {
                 $this->info("Plate $vehiclePlate doesnt associated with a vehicle!");
             }

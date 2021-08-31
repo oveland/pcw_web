@@ -13,7 +13,7 @@ use Storage;
 class MigrationService
 {
     /**
-     * @param $vehicle
+     * @param Vehicle $vehicle
      * @param $date
      * @throws FileNotFoundException
      */

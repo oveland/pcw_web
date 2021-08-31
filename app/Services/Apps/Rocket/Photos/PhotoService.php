@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 21/05/2020
- * Time: 05:08 PM
- */
 
 namespace App\Services\Apps\Rocket\Photos;
 
@@ -12,12 +6,13 @@ use App;
 use App\Events\App\Rocket\PhotoMapEvent;
 use App\Models\Apps\Rocket\CurrentPhoto;
 use App\Models\Apps\Rocket\Photo;
-use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\PerfilSeat;
+use App\Services\Apps\Rocket\Photos\Rekognition\Zone;
+use App\Services\Apps\Rocket\SeatOccupationService;
 use Carbon\Carbon;
 use DB;
 use File;
@@ -400,6 +395,7 @@ class PhotoService
 
             $defaultCamera = $historicCameras->first();
             $otherCameras = $historicCameras->forget(0);
+
             foreach ($defaultCamera as $drId => $historic) {
                 $maxCameraDefault = 0;
                 if ($historic->sortBy('date')->last()) {
@@ -414,9 +410,11 @@ class PhotoService
                     }
                 }
 
-                $totalDr = $maxCameraDefault + $maxOtherCameras;
 
-                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $totalDr, final_sensor_counter = $totalDr WHERE id_registro = $drId");
+                $totalDr = $maxCameraDefault + $maxOtherCameras;
+                dump($drId, $totalDr);
+
+//                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $totalDr, final_sensor_counter = $totalDr WHERE id_registro = $drId");
             }
 
             return $this->processPhotos(collect([]));

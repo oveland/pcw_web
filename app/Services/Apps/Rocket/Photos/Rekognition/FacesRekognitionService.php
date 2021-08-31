@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Apps\Rocket\Photos;
+namespace App\Services\Apps\Rocket\Photos\Rekognition;
 
 /**
  * Class FacesRekognitionService

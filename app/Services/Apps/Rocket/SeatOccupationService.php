@@ -1,10 +1,9 @@
 <?php
 
 
-namespace App\Services\Apps\Rocket\Photos;
+namespace App\Services\Apps\Rocket;
 
 use App\Models\Apps\Rocket\ProfileSeat;
-use App\Services\Apps\Rocket\ConfigProfileService;
 use Illuminate\Support\Collection;
 
 class SeatOccupationService
