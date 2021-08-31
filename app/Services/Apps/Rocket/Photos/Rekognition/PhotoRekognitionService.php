@@ -225,7 +225,7 @@ abstract class PhotoRekognitionService
 //            }
 //        }
         } else if ($this->type == 'faces') {
-            if ($boundingBox->center->top < 20) {
+            if (isset($boundingBox->center) && $boundingBox->center->top < 20) {
                 $overlap = ($height > 11 && $width > 6);
             } else {
                 $overlap = ($height > 20 && $width > 11);
