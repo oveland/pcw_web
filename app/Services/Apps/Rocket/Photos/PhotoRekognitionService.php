@@ -200,11 +200,14 @@ abstract class PhotoRekognitionService
 
         $relationSize = $heightOrig / $width;
 
-        if($processLargeDetection || $width > $processMaxWidth){
+        if ($processLargeDetection || $width > $processMaxWidth) {
             $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 18) || ($width > 25); // CAUTION: $width > 25 works as overlap
         }
 
-//        $overlap = false;
+        $overlap = false;
+
+        if ($this->type == 'persons') {
+            //        $overlap = false;
 //
 //        if (isset($boundingBox->center)) {
 //            if ($boundingBox->center->top < 60 || true) {   // For overlaps located on medium screen
@@ -221,8 +224,16 @@ abstract class PhotoRekognitionService
 //                $overlap = $overlap || ($heightOrig > 30 && $width > 10);
 //            }
 //        }
+        } else if ($this->type == 'faces') {
+            if ($boundingBox->center->top < 20) {
+                $overlap = ($height > 11 && $width > 6);
+            } else {
+                $overlap = ($height > 20 && $width > 11);
+            }
 
-        $overlap = false;
+        }
+
+//        $overlap = false;
 
         return (object)compact(['overlap', 'relationSize', 'largeDetection']);
     }
