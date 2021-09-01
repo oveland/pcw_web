@@ -290,7 +290,7 @@
                 let photoWidth = 100 / photos.length;
                 if (photoWidth > 20) photoWidth = 20;
                 for (let photo of photos) {
-                    const url = `http://local.beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${photo.id}&with-effect=true&encode=png&title=true`;
+                    const url = `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${photo.id}&with-effect=true&encode=png&title=true`;
                     photosContainer.append(`<img src="${url}" class="photo photo-image" draggable="false" onclick="toggleImgSize(this)"  alt="" width="${photoWidth}%">`);
                 }
             }
