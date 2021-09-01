@@ -70,11 +70,12 @@ trait PhotoEncode
 
     /**
      * @param null $encode
-     * @param bool $withEffects
-     * @param bool $withMask
+     * @param false $withEffects
+     * @param false $withMask
+     * @param false $withTitle
      * @return \Intervention\Image\Image|null
      */
-    public function getImage($encode = null, $withEffects = false, $withMask = false)
+    public function getImage($encode = null, $withEffects = false, $withMask = false, $withTitle = false)
     {
         $image = null;
 
@@ -121,15 +122,24 @@ trait PhotoEncode
                         $font->color('#00ff00');
                     });
                 }
+            }
 
-                $image->text("Avg Br: $avBrightness", 5, $h - 10, function ($font) {
-                    $font->color('#00ff00');
-                })->text("PCW@" . Carbon::now()->format('Y'), 5, $h + 45, function ($font) {
-                    $font->color('#00ff00');
+            if($withTitle){
+                $image->rectangle($image->width()/3, 10, 2*$image->width()/3, 35, function ($draw) {
+                    $draw->background('rgba(0, 0, 0, 0.5)');
+                });
+                $image->text(__('CAMERA')." $this->side", $image->width()/2, 20, function ($font) {
+                    $font->color('#ffff00');
+                    $font->size(1000);
+                    $font->align('center');
+                });
+                $image->text($this->date->toDateTimeString(), $image->width()/2, 30, function ($font) {
+                    $font->color('#ffff00');
+                    $font->size(1000);
+                    $font->align('center');
                 });
             }
 
-//            $this->save();
             $image = $encode ? $image->encode($encode) : $image;
 
             if ($withMask) {
@@ -140,6 +150,21 @@ trait PhotoEncode
                     $image->insert($mask, 'center');
                 }
             }
+
+            $image->text("PCW@" . Carbon::now()->format('Y'), $image->width()/2, $image->height() - 10, function ($font) {
+                $font->color('#00ff00');
+                $font->align('center');
+                $font->size(24);
+            });
+
+            $image->text('foo', 0, 0, function($font) {
+//                $font->file('foo/bar.ttf');
+                $font->size(24);
+                $font->color('#fdf6e3');
+                $font->align('center');
+                $font->valign('top');
+                $font->angle(45);
+            });
         } catch (FileNotFoundException $e) {
 
         }

@@ -74,19 +74,31 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $tariff
  * @property int $charge
  * @property int $total_charge
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereAscentsInRoundTrip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereCharge($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereCounted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereDescentsInRoundTrip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereInRoundTrip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereOutRoundTrip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTariff($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalAscents($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalCharge($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Passengers\Passenger whereTotalDescents($value)
+ * @method static Builder|Passenger whereAscentsInRoundTrip($value)
+ * @method static Builder|Passenger whereCharge($value)
+ * @method static Builder|Passenger whereCounted($value)
+ * @method static Builder|Passenger whereDescentsInRoundTrip($value)
+ * @method static Builder|Passenger whereInRoundTrip($value)
+ * @method static Builder|Passenger whereOutRoundTrip($value)
+ * @method static Builder|Passenger whereTariff($value)
+ * @method static Builder|Passenger whereTotalAscents($value)
+ * @method static Builder|Passenger whereTotalCharge($value)
+ * @method static Builder|Passenger whereTotalDescents($value)
  */
 class Passenger extends Model
 {
+    protected $fillable = [
+        'date',
+        'dispatch_register_id',
+        'location_id',
+        'vehicle_id',
+        'total',
+        'total_prev',
+        'in_round_trip',
+        'frame',
+        'tags'
+    ];
+
     public function getDateAttribute($date)
     {
         return Carbon::createFromFormat(config(str_contains($date, ":") ? 'app.simple_date_time_format' : 'app.date_format'), explode('.', $date)[0]);
@@ -137,13 +149,13 @@ class Passenger extends Model
 
     public function getHexSeatsAttribute()
     {
-        $arrayFrame = explode(' ',$this->frame);
+        $arrayFrame = explode(' ', $this->frame);
 
         $hexFromFrame = '000000';
-        foreach ($arrayFrame as $a){
-            if( strlen($a) == 6 ){
+        foreach ($arrayFrame as $a) {
+            if (strlen($a) == 6) {
                 $hexFromFrame = $a;
-                if($this->vehicle_id != 1086){
+                if ($this->vehicle_id != 1086) {
                     break;
                 }
             }

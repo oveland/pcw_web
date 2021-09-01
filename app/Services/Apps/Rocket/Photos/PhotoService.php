@@ -8,6 +8,7 @@ use App\Models\Apps\Rocket\CurrentPhoto;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Apps\Rocket\VehicleCamera;
+use App\Models\Passengers\Passenger;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\PerfilSeat;
@@ -351,7 +352,7 @@ class PhotoService
         return $dr;
     }
 
-    function getProcessCameras(): array
+    function getVehicleCameras(): array
     {
         $vehicleCameras = VehicleCamera::where('vehicle_id', $this->vehicle->id)->get();
 
@@ -375,47 +376,82 @@ class PhotoService
     }
 
     /**
-     * @param null $date
+     * @param $date
      * @return Collection
      */
-    function getHistoric($date = null)
+    function getHistoric($date)
     {
         if (($this->camera == null || $this->camera == 'all') && request()->routeIs('admin.rocket.report')) {
             $allPhotos = $this->getPhotos($date);
+            $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
 
-            $historicCameras = collect([]);
+            $historicByCameras = collect([]);
 
-            foreach ($this->getProcessCameras() as $sideCamera) {
+            foreach ($this->getVehicleCameras() as $sideCamera) {
                 $this->setCamera($sideCamera); // Important for setProfileSeating() routine
-                $data = $this->processPhotos($allPhotos->where('side', $sideCamera)->values())->where('drId', '<>', null)
-                    ->groupBy('drId');
+                $data = $this->processPhotos($allPhotos->where('side', $sideCamera)->values())->where('drId', '<>', null);
 
-                $historicCameras->push($data);
+                $historicByCameras->push($data->groupBy('drId'));
             }
 
-            $defaultCamera = $historicCameras->first();
-            $otherCameras = $historicCameras->forget(0);
-
-            foreach ($defaultCamera as $drId => $historic) {
-                $maxCameraDefault = 0;
-                if ($historic->sortBy('date')->last()) {
-                    $maxCameraDefault = $historic->sortBy('time')->last()->passengers->totalInRoundTrip;
-                }
-
-                $maxOtherCameras = 0;
-                foreach ($otherCameras as $other) {
-                    $h = $other->get($drId);
-                    if ($h && $h->sortBy('date')->last()) {
-                        $maxOtherCameras = $maxOtherCameras + $h->sortBy('time')->last()->passengers->totalInRoundTrip;
+            foreach ($drIds as $drId) {
+                $countByRoundTrip = 0;
+                foreach ($historicByCameras as $historicCamera) {
+                    $data = $historicCamera->get($drId);
+                    if ($data && $data->sortBy('date')->last()) {
+                        $countByRoundTrip = $countByRoundTrip + $data->sortBy('time')->last()->passengers->totalInRoundTrip;
                     }
                 }
-
-
-                $totalDr = $maxCameraDefault + $maxOtherCameras;
-                dump($drId, $totalDr);
-
-//                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $totalDr, final_sensor_counter = $totalDr WHERE id_registro = $drId");
+                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             }
+
+            $historic = $historicByCameras->collapse()->collapse();
+            $totalByCamerasPrev = 0;
+            DB::delete("DELETE FROM passengers WHERE date::DATE = '$date' AND vehicle_id = " . $this->vehicle->id);
+
+            foreach ($drIds as $drId) {
+                $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
+                $historicDrByLocation = $historicDr->groupBy('details.location_id');
+
+                foreach ($historicDrByLocation as $locationId => $locationPhotos) {
+                    $locationPhotos = collect($locationPhotos);
+                    $totalByCameras = 0;
+                    $totalInRoundTrip = 0;
+                    $lastDatePhoto = null;
+                    $occupation = 0;
+
+                    foreach ($locationPhotos->groupBy('camera') as $photoData) {
+                        $lastPhoto = $photoData->last();
+                        $details = $lastPhoto->details;
+
+                        $countPassengers = $lastPhoto->passengers;
+                        $totalByCameras += $countPassengers->total;
+                        $totalInRoundTrip += $countPassengers->totalInRoundTrip;
+
+                        $lastDatePhoto = $details->date;
+
+                        $occupation += $details->occupation->percent;
+                    }
+
+                    $passenger = new Passenger([
+                        'date' => $lastDatePhoto,
+                        'dispatch_register_id' => $drId,
+                        'location_id' => $locationId,
+                        'vehicle_id' => $this->vehicle->id,
+                        'total' => $totalByCameras,
+                        'total_prev' => $totalByCamerasPrev,
+                        'in_round_trip' => $totalInRoundTrip,
+                        'tags' => collect([
+                            'occupation' => $occupation > 0 ? ($occupation / $locationPhotos->groupBy('camera')->count()) : 0
+                        ])->toJson(),
+                        'frame' => ''
+                    ]);
+                    $passenger->save();
+
+                    $totalByCamerasPrev = $totalByCameras;
+                }
+            }
+
 
             return $this->processPhotos(collect([]));
         }
@@ -736,11 +772,13 @@ class PhotoService
      * @param Photo $photo
      * @param string $encode
      * @param bool $withEffect
+     * @param bool $withMask
+     * @param bool $withTitle
      * @return Image|mixed
      */
-    function getFile(Photo $photo, $encode = "webp", $withEffect = false)
+    function getFile(Photo $photo, $encode = "webp", $withEffect = false, $withMask = false, $withTitle = false)
     {
-        $image = $photo->getImage($encode, $withEffect, request()->get('with-mask'));
+        $image = $photo->getImage($encode, $withEffect, $withMask, $withTitle);
 
         if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
             return $image->response($encode);

@@ -101,6 +101,7 @@ trait PhotoGlobals
             'vehicle_id' => $this->vehicle_id,
             'dispatchRegister' => $dispatchRegister,
             'persons' => $this->data,
+            'location_id' => $this->location_id,
             'occupation' => null
         ];
     }
