@@ -201,11 +201,32 @@
 
         img.photo {
             cursor: pointer;
-            position: absolute;
-            bottom: 0px;
             z-index: 10000 !important;
+            margin: 2px;
             box-shadow: rgba(117, 117, 117, 0.43) 3px -4px 7px 2px;
-            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            -webkit-transition: all 0.3s ease-in-out;
+            -moz-transition: all 0.3s ease-in-out;
+            -o-transition: all 0.3s ease-in-out;
+        }
+
+        img.photo.enlarge {
+            width: 50%;
+            height: auto;
+            position: inherit;
+            top: -200%;
+            left: 25%;
+        }
+
+        .photo-container {
+            position: absolute;
+            bottom: 0;
+        }
+
+        .photos-image-container {
+            position: absolute;
+            top: 0;
+            width: 100%;
         }
 
         .photo-info {
@@ -213,10 +234,12 @@
             z-index: 100000;
             width: auto;
             display: inline-block;
-            background: #00000080;
+            background: #000000b5;
             color: white;
-            padding: 5px;
-            bottom: 15px;
+            padding: 10px;
+            bottom: 5px;
+            border-radius: 5px;
+            left: 10px;
         }
 
         @media only screen and (max-width: 1200px) {
@@ -406,7 +429,7 @@
                             <div class="form-group">
                                 <label class="control-label hidden-xs"><br></label>
                                 <div class="form-group">
-                                    <button id="search" type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report">
+                                    <button type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report">
                                         <i class="fa fa-map-o"></i> @lang('Search')
                                     </button>
                                     <a href="#" class="btn btn-lime btn-export form-export" style="display: nonse">
@@ -425,7 +448,7 @@
                             <div class="form-group m-0">
                                 <label class="control-label hidden-xs"><br></label>
                                 <div class="form-group m-0">
-                                    <button id="search" type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report btn-rounded btn-outline" style="margin-top: 5px">
+                                    <button type="submit" onclick="$('#export').val('')" class="btn btn-success btn-search-report btn-rounded btn-outline" style="margin-top: 5px">
                                         <i class="fa fa-map-o"></i> @lang('Search')
                                     </button>
                                 </div>
@@ -588,17 +611,25 @@
                     <i class="fa fa-camera"></i>
                 </button>
 
-                <img id="photo-loading" class="photo" draggable="false" style="display: none" src="https://satsangiconsultancy.files.wordpress.com/2019/01/gif-final.gif" onclick="toggleImgSize()"  alt="" width="30%">
+                <img id="photo-loading" class="photo" draggable="false" style="display: none" src="https://satsangiconsultancy.files.wordpress.com/2019/01/gif-final.gif" alt="" width="20%">
 
-                <div class="photo-passengers-container show-info" style="width: 100%">
-                    <img id="photo" src="" class="photo" draggable="false" onclick="toggleImgSize()"  alt="" width="30%">
+                <div id="photos-container" class="show-info" style="width: 100%">
+                    <div class="photos-image-container">
 
-                    <div class="photo-info" style="display: none" onclick="toggleImgSize()">
+                    </div>
+
+                    <div class="photo-info">
+                        <div class="photo-passengers-label photo-alerts text-uppercase text-bold">
+                        </div>
+
                         <div class="photo-passengers-label">
                             <i class="fa fa-users"></i> <span class="hidden-xss">@lang('Total'):</span> <span class="photo-passengers-total"></span>
                         </div>
                         <div class="photo-passengers-label">
                             <i class="fa fa-users"></i> <span class="hidden-xss">@lang('Round trip'):</span> <span class="photo-passengers-trip"></span>
+                        </div>
+                        <div class="photo-passengers-label">
+                            <i class="fa fa-clock-o"></i> <span class="photo-time"></span>
                         </div>
                     </div>
                 </div>
@@ -647,49 +678,30 @@
         const companyReport = '{{ $companyReport }}';
         let form = $('.form-search-report');
 
-        let img = document.getElementById("photo");
-        let imgLarge = false;
         let trackIndex = 0;
         let largePhoto = false;
+        let imgLarge = false;
 
         // Function to set image dimensions
-        function toggleImgSize() {
+        function toggleImgSize(img) {
             if(imgLarge) {
-                resetImg();
+                resetImg(img);
             }else {
-                enlargeImg();
+                enlargeImg(img);
             }
         }
 
-        function enlargeImg() {
-            img.style.width = "100%";
-            img.style.height = "auto";
-            img.style.transition = "width 0.5s ease";
+        function enlargeImg(img) {
+            $('.photo-image').removeClass('enlarge');
+            $(img).addClass('enlarge');
             imgLarge = true;
         }
-        // Function to reset image dimensions
-        function resetImg() {
-            img.style.width = "30%";
-            img.style.height = "auto";
-            img.style.transition = "width 0.5s ease";
+
+        function resetImg(img) {
+            $('.photo-image').removeClass('enlarge');
+            $(img).removeClass('enlarge');
             imgLarge = false;
-            play();
         }
-
-        @if(Auth::user()->company->hasSensorCounter())
-        img.onload = function () {
-            $('#photo-show').hide();
-            $('#photo-loading').hide();
-            $('#photo').fadeIn();
-            $('.photo-info').fadeIn();
-
-            if(largePhoto){
-                imgLarge = false;
-                toggleImgSize();
-            }
-            largePhoto = false;
-        }
-        @endif
 
         function loadScript(url, callback)
         {
@@ -912,6 +924,8 @@
                 $('#vehicle-report').change();
             },2000);
             @endif
+
+            $('#photos-container').hide();
         });
 
         var min = 0;
@@ -960,7 +974,7 @@
             controls.find('.btn-pause').show();
             controls.find('.btn-play').hide();
 
-            reportRouteHistoric.showPhoto(trackIndex);
+            reportRouteHistoric.showPhotos(trackIndex);
         }
 
 
@@ -970,7 +984,7 @@
             setTrack(back, force);
 
             if(!tracking) {
-                reportRouteHistoric.showPhoto(trackIndex);
+                reportRouteHistoric.showPhotos(trackIndex);
             }
         }
 
@@ -983,7 +997,7 @@
             }
 
             if(!tracking) {
-                reportRouteHistoric.showPhoto(trackIndex);
+                reportRouteHistoric.showPhotos(trackIndex);
             }
         }
 

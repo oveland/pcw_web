@@ -273,17 +273,33 @@
             });
         }
 
-        showPhoto(index) {
+        showPhotos(index) {
             const historicLocation = this.historicLocations[index];
             if (!historicLocation) return false;
             const reportLocation = historicLocation.reportLocation;
+            const photos = reportLocation.photos;
 
-            if(reportLocation.photo.id) {
-                const url = `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${ reportLocation.photo.id }&with-effect=true&encode=png`;
+            if (photos.length) {
+                let photosContainer = $('.photos-image-container');
+                photosContainer.empty();
 
                 $('#photo-show').hide();
+                $('#photos-container').show();
                 $('#photo-loading').show();
-                $('#photo').hide().attr('src', url);
+
+                let photoWidth = 100 / photos.length;
+                if (photoWidth > 20) photoWidth = 20;
+                for (let photo of photos) {
+                    const url = `http://local.beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${photo.id}&with-effect=true&encode=png&title=true`;
+                    photosContainer.append(`<img src="${url}" class="photo photo-image" draggable="false" onclick="toggleImgSize(this)"  alt="" width="${photoWidth}%">`);
+                }
+            }
+
+            if(reportLocation.photo.alerts.length) {
+                this.showInfo.find('.photo-alerts').empty();
+                for(let alert of reportLocation.photo.alerts){
+                    this.showInfo.find('.photo-alerts').append(`<p class="m-0 text-${alert.color}">${alert.message}</p>`);
+                }
             }
         }
 
@@ -389,10 +405,10 @@
 
             this.showInfo.find('.photo-passengers-total').text(reportLocation.photo.passengers);
             this.showInfo.find('.photo-passengers-trip').text(reportLocation.photo.passengersTrip);
+            this.showInfo.find('.photo-time').text(reportLocation.photo.time);
 
             this.showInfo.find('.passengers-route-ascents').text(reportLocation.passengers.ascentsInRoundTrip);
             this.showInfo.find('.passengers-route-descents').text(reportLocation.passengers.descentsInRoundTrip);
-
 
             if (reportLocation.speeding) {
                 this.showInfo.find('.speed').parent().addClass('btn-warning');
@@ -414,8 +430,9 @@
             }
 
             $('#photo-loading').hide();
-            $('#photo').hide();
-            $('.photo-info').hide();
+            $('#photos-container').hide();
+            $('.photo-image').hide();
+            // $('.photo-info').hide();
         }
 
         processTariffCharges(reportLocation){

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 trait BindsDynamically
@@ -116,6 +117,7 @@ trait BindsDynamically
  * @property string|null $ard_off_road
  * @method static Builder|Location whereArdOffRoad($value)
  * @property-read PhotoLocation $photo
+ * @property-read PhotoLocation[]|Collection $photos
  */
 class Location extends Model
 {
@@ -276,5 +278,10 @@ class Location extends Model
     public function photo()
     {
         return $this->hasOne(PhotoLocation::class);
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(PhotoLocation::class)->orderBy('side');
     }
 }

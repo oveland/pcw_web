@@ -71,6 +71,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $tariff
  * @property int $charge
  * @property int $total_charge
+ * @property string $tags
  * @method static Builder|Passenger whereAscentsInRoundTrip($value)
  * @method static Builder|Passenger whereCharge($value)
  * @method static Builder|Passenger whereCounted($value)
@@ -152,5 +153,9 @@ class Passenger extends Model
     public function vehicleStatus()
     {
         return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id', 'id_status');
+    }
+
+    function getTagsAttribute() {
+        return collect(json_decode($this->attributes['tags'], true))->toArray();
     }
 }

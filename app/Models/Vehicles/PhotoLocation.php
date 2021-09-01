@@ -2,13 +2,14 @@
 
 namespace App\Models\Vehicles;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\Vehicles\PhotoLocation
  *
  * @property int $id
- * @property string $date
+ * @property Carbon | string $date
  * @property int $vehicle_id
  * @property int|null $dispatch_register_id
  * @property int|null $location_id
@@ -16,8 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $side
  * @property string $type
  * @property string|null $data
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int|null $persons
  * @property string $disk
  * @property string|null $effects
@@ -51,10 +52,17 @@ class PhotoLocation extends Model
 {
     protected $table = "app_photos";
 
+    protected $dates = ['date'];
+
+    protected function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     public function toArray()
     {
         return [
-          'id' => $this->id,
+            'id' => $this->id,
         ];
     }
 }

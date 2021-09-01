@@ -101,6 +101,7 @@ class ReportRouteHistoricController extends Controller
 
         $totalPassengersOnPhoto = 0;
         $passengersTripOnPhoto = 0;
+        $photoTags = [];
         $totalInRoundTrips = 0;
         $passengersInRoundTrip = 0;
         $passengersOutRoundTrip = 0;
@@ -117,8 +118,11 @@ class ReportRouteHistoricController extends Controller
         $trips = [];
 
         $photoId = null;
+        $photoTime = null;
         $prevDr = null;
         $newTurn = true;
+
+        $photos = [];
 
         foreach ($locations as $index => $location) {
             $dispatchRegister = $location->dispatchRegister;
@@ -133,7 +137,7 @@ class ReportRouteHistoricController extends Controller
 
             $passenger = $location->passenger;
 //            $dispatchRegister = null;
-            
+
             if ($passenger) {
                 $dispatchRegister = $passenger->dispatchRegister;
 
@@ -256,8 +260,14 @@ class ReportRouteHistoricController extends Controller
 
             if ($location->photo) {
                 $photoId = $location->photo->id;
+                $photoTime = $location->photo->date->toTimeString();
                 $totalPassengersOnPhoto = $totalPassengers;
                 $passengersTripOnPhoto = $passengersInRoundTrip;
+                $photoTags = $passenger->tags ?? [];
+            }
+
+            if ($location->photos->count()) {
+                $photos = $location->photos->toArray();
             }
 
             $dataLocations->push((object)[
@@ -305,10 +315,13 @@ class ReportRouteHistoricController extends Controller
                 ],
                 'photo' => (object)[
                     'id' => $photoId,
+                    'time' => $photoTime,
                     'index' => $index,
                     'passengers' => $totalPassengersOnPhoto,
                     'passengersTrip' => $passengersTripOnPhoto,
-                ]
+                    "alerts" => $this->getPhotoAlerts($photoTags),
+                ],
+                'photos' => $photos
             ]);
 
             $prevTotalAscentsInRoundTrip = $totalAscentsInRoundTrip;
@@ -331,6 +344,31 @@ class ReportRouteHistoricController extends Controller
         ];
 
         return $report;
+    }
+
+    function getPhotoAlerts($photoTags)
+    {
+        $photoTags = collect($photoTags);
+        $alerts = collect([]);
+
+        if ($photoTags->get('occupation')) {
+            $occupation = intval($photoTags->get('occupation'));
+
+            $color = 'white';
+            if ($occupation >= 70) {
+                $color = 'warning';
+            }
+            if ($occupation >= 100) {
+                $color = 'danger';
+            }
+
+            $alerts->push([
+                'color' => $color,
+                'message' => __('Occupation') . ": $occupation%"
+            ]);
+        }
+
+        return $alerts->toArray();
     }
 
     /**
@@ -378,7 +416,7 @@ class ReportRouteHistoricController extends Controller
     {
         $infoDispatchRegister = "";
         $dispatchRegister = $reportLocation->dispatchRegister;
-        
+
         if ($dispatchRegister) {
             $route = $dispatchRegister->route;
             $infoDispatchRegister = "$route->name \n " . __('Round trip') . " $dispatchRegister->roundTrip \n " . __('Turn') . " $dispatchRegister->turn \n " . __('Dispatched') . " $dispatchRegister->departureTime \n " . __('Driver') . " $dispatchRegister->driverName";
