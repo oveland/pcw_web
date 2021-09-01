@@ -382,77 +382,79 @@ class PhotoService
      */
     function getHistoric($date, $fromCommand = false)
     {
-        if ($this->camera == null || $this->camera == 'all' || $fromCommand) {
-            $allPhotos = $this->getPhotos($date);
-            $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
+        if (($this->camera == null || $this->camera == 'all')) {
+            if ($fromCommand) {
+                $allPhotos = $this->getPhotos($date);
+                $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
 
-            $historicByCameras = collect([]);
+                $historicByCameras = collect([]);
+                $historicByCameras = collect([]);
 
-            foreach ($this->getVehicleCameras() as $sideCamera) {
-                $this->setCamera($sideCamera); // Important for setProfileSeating() routine
-                $data = $this->processPhotos($allPhotos->where('side', $sideCamera)->values())->where('drId', '<>', null);
+                foreach ($this->getVehicleCameras() as $sideCamera) {
+                    $this->setCamera($sideCamera); // Important for setProfileSeating() routine
+                    $data = $this->processPhotos($allPhotos->where('side', $sideCamera)->values())->where('drId', '<>', null);
 
-                $historicByCameras->push($data->groupBy('drId'));
-            }
+                    $historicByCameras->push($data->groupBy('drId'));
+                }
 
-            foreach ($drIds as $drId) {
-                $countByRoundTrip = 0;
-                foreach ($historicByCameras as $historicCamera) {
-                    $data = $historicCamera->get($drId);
-                    if ($data && $data->sortBy('date')->last()) {
-                        $countByRoundTrip = $countByRoundTrip + $data->sortBy('time')->last()->passengers->totalInRoundTrip;
+                foreach ($drIds as $drId) {
+                    $countByRoundTrip = 0;
+                    foreach ($historicByCameras as $historicCamera) {
+                        $data = $historicCamera->get($drId);
+                        if ($data && $data->sortBy('date')->last()) {
+                            $countByRoundTrip = $countByRoundTrip + $data->sortBy('time')->last()->passengers->totalInRoundTrip;
+                        }
+                    }
+                    DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
+                }
+
+                $historic = $historicByCameras->collapse()->collapse();
+                $totalByCamerasPrev = 0;
+                DB::delete("DELETE FROM passengers WHERE date::DATE = '$date' AND vehicle_id = " . $this->vehicle->id);
+
+                foreach ($drIds as $drId) {
+                    $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
+                    $historicDrByLocation = $historicDr->groupBy('details.location_id');
+
+                    foreach ($historicDrByLocation as $locationId => $locationPhotos) {
+                        $locationPhotos = collect($locationPhotos);
+                        $totalByCameras = 0;
+                        $totalInRoundTrip = 0;
+                        $lastDatePhoto = null;
+                        $occupation = 0;
+
+                        foreach ($locationPhotos->groupBy('camera') as $photoData) {
+                            $lastPhoto = $photoData->last();
+                            $details = $lastPhoto->details;
+
+                            $countPassengers = $lastPhoto->passengers;
+                            $totalByCameras += $countPassengers->total;
+                            $totalInRoundTrip += $countPassengers->totalInRoundTrip;
+
+                            $lastDatePhoto = $details->date;
+
+                            $occupation += $details->occupation->percent;
+                        }
+
+                        $passenger = new Passenger([
+                            'date' => $lastDatePhoto,
+                            'dispatch_register_id' => $drId,
+                            'location_id' => $locationId,
+                            'vehicle_id' => $this->vehicle->id,
+                            'total' => $totalByCameras,
+                            'total_prev' => $totalByCamerasPrev,
+                            'in_round_trip' => $totalInRoundTrip,
+                            'tags' => collect([
+                                'occupation' => $occupation > 0 ? ($occupation / $locationPhotos->groupBy('camera')->count()) : 0
+                            ])->toJson(),
+                            'frame' => ''
+                        ]);
+                        $passenger->save();
+
+                        $totalByCamerasPrev = $totalByCameras;
                     }
                 }
-                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             }
-
-            $historic = $historicByCameras->collapse()->collapse();
-            $totalByCamerasPrev = 0;
-            DB::delete("DELETE FROM passengers WHERE date::DATE = '$date' AND vehicle_id = " . $this->vehicle->id);
-
-            foreach ($drIds as $drId) {
-                $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
-                $historicDrByLocation = $historicDr->groupBy('details.location_id');
-
-                foreach ($historicDrByLocation as $locationId => $locationPhotos) {
-                    $locationPhotos = collect($locationPhotos);
-                    $totalByCameras = 0;
-                    $totalInRoundTrip = 0;
-                    $lastDatePhoto = null;
-                    $occupation = 0;
-
-                    foreach ($locationPhotos->groupBy('camera') as $photoData) {
-                        $lastPhoto = $photoData->last();
-                        $details = $lastPhoto->details;
-
-                        $countPassengers = $lastPhoto->passengers;
-                        $totalByCameras += $countPassengers->total;
-                        $totalInRoundTrip += $countPassengers->totalInRoundTrip;
-
-                        $lastDatePhoto = $details->date;
-
-                        $occupation += $details->occupation->percent;
-                    }
-
-                    $passenger = new Passenger([
-                        'date' => $lastDatePhoto,
-                        'dispatch_register_id' => $drId,
-                        'location_id' => $locationId,
-                        'vehicle_id' => $this->vehicle->id,
-                        'total' => $totalByCameras,
-                        'total_prev' => $totalByCamerasPrev,
-                        'in_round_trip' => $totalInRoundTrip,
-                        'tags' => collect([
-                            'occupation' => $occupation > 0 ? ($occupation / $locationPhotos->groupBy('camera')->count()) : 0
-                        ])->toJson(),
-                        'frame' => ''
-                    ]);
-                    $passenger->save();
-
-                    $totalByCamerasPrev = $totalByCameras;
-                }
-            }
-
 
             return $this->processPhotos(collect([]));
         }
