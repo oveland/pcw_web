@@ -126,6 +126,7 @@ class ReportRouteHistoricController extends Controller
 
         foreach ($locations as $index => $location) {
             $dispatchRegister = $location->dispatchRegister;
+            $inRoute = $dispatchRegister && $dispatchRegister->isActive();
 
             $period = '';
             $averagePeriod = '';
@@ -266,11 +267,18 @@ class ReportRouteHistoricController extends Controller
                 $photoTags = $passenger->tags ?? [];
             }
 
+            if (!$inRoute) {
+                $passengersTripOnPhoto = 0;
+                $passengersInRoundTrip = 0;
+                $photoTags = [];
+            }
+
             if ($location->photos->count()) {
                 $photos = $location->photos->toArray();
             }
 
             $dataLocations->push((object)[
+                'inRoute' => $inRoute,
                 'time' => $location->date->format('H:i:s'),
                 'period' => $period,
                 'averagePeriod' => $averagePeriod,
