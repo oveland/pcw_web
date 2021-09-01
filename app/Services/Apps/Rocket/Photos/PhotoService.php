@@ -377,11 +377,12 @@ class PhotoService
 
     /**
      * @param $date
+     * @param false $fromCommand
      * @return Collection
      */
-    function getHistoric($date)
+    function getHistoric($date, $fromCommand = false)
     {
-        if (($this->camera == null || $this->camera == 'all') && request()->routeIs('admin.rocket.report')) {
+        if ($this->camera == null || $this->camera == 'all' || $fromCommand) {
             $allPhotos = $this->getPhotos($date);
             $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
 
