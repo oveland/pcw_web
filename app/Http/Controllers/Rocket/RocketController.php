@@ -60,7 +60,9 @@ class RocketController extends Controller
 
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
+                    $persistenceActivate = $request->get('activate');
+                    $persistenceRelease = $request->get('release');
+                    $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->getHistoric($date);
 
                     $response->photos = $photos
 //                        ->where('drId', '<>', null)
@@ -144,7 +146,9 @@ class RocketController extends Controller
                 $photo = null;
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
+                    $persistenceActivate = $request->get('activate');
+                    $persistenceRelease = $request->get('release');
+                    $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->getHistoric($date);
 
                     if ($photos->count()) {
                         $photo = Photo::find($photos->last()->id);
