@@ -81,9 +81,8 @@ class ConfigProfileService
         foreach ($this->profileSeat->occupation as $seat) {
             $number = $seat['number'];
 
-            $rActivate = request()->get('activate');
-            $rRelease = request()->get('release');
-
+            $rActivate = $this->profileSeat->persistence['activate'];
+            $rRelease = $this->profileSeat->persistence['release'];
 
             $activate = $rActivate ? $rActivate : self::THRESHOLD_ACTIVATE;
             $release = $rRelease ? $rRelease : self::THRESHOLD_RELEASE;

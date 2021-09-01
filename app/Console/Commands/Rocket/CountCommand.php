@@ -15,7 +15,7 @@ class CountCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:count {--vehicle-plate=WDL-057} {--type=persons_and_faces} {--camera=all} {--date=}';
+    protected $signature = 'rocket:count {--vehicle-plate=WDL-057} {--type=persons_and_faces} {--camera=all} {--pa=2} {--pr=2} {--date=}';
 
     /**
      * The console command description.
@@ -48,7 +48,8 @@ class CountCommand extends Command
     {
         $date = $this->option('date') ?? Carbon::now()->toDateString();
         $vehiclePlate = $this->option('vehicle-plate');
-        $type = $this->option('type');
+        $persistenceActivate = $this->option('pa');
+        $persistenceRelease = $this->option('pr');
         $camera = $this->option('camera');
 
         if ($date && $vehiclePlate) {
@@ -56,7 +57,8 @@ class CountCommand extends Command
 
             if ($vehicle) {
                 $this->log("Start process count: Vehicle = $vehicle->number • Camera = $camera • Date = $date");
-                $this->photoService->for($vehicle, $camera)->getHistoric($date, true);
+                $response = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->getHistoric($date, true);
+                $this->log($response->toJson());
                 $this->log("Count finished! **** ");
             } else {
                 $this->log("Plate $vehiclePlate doesnt associated with a vehicle!");

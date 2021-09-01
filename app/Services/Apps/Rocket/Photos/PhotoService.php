@@ -56,6 +56,11 @@ class PhotoService
      */
     private $recognitionServices;
 
+    /**
+     * @var array
+     */
+    private $persistence = [];
+
 
     function __construct()
     {
@@ -69,32 +74,44 @@ class PhotoService
 
     function setCamera($camera)
     {
-        if ($camera !== '' && $camera !== null) {
-            $this->camera = $camera;
-
-            $this->setProfileSeating();
-        }
+        $this->camera = $camera;
+        $this->setProfileSeating();
     }
 
     function setProfileSeating()
     {
-        $profileSeating = $this->vehicle->getProfileSeating($this->camera);
+        if ($this->camera !== '' && $this->camera !== null) {
 
-        $this->seatOccupationService = new SeatOccupationService($profileSeating);
+            $profileSeating = $this->vehicle->getProfileSeating($this->camera);
+            $profileSeating->setPersistence($this->persistence);
 
-        $this->recognitionServices = collect([]);
-        foreach (['persons', 'faces'] as $type) {
-            $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating]));
+            $this->seatOccupationService = new SeatOccupationService($profileSeating);
+
+            $this->recognitionServices = collect([]);
+            foreach (['persons', 'faces'] as $type) {
+                $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating]));
+            }
+        }
+    }
+
+    function setPersistence($activate, $release)
+    {
+        if ($activate && $release) {
+            $this->persistence = compact(['activate', 'release']);
         }
     }
 
     /**
      * @param Vehicle $vehicle
      * @param $camera
-     * @return PhotoService
+     * @param null $persistenceActivate
+     * @param null $persistenceRelease
+     * @return $this
      */
-    function for(Vehicle $vehicle, $camera)
+    function for(Vehicle $vehicle, $camera, $persistenceActivate = null, $persistenceRelease = null)
     {
+        $this->setPersistence($persistenceActivate, $persistenceRelease);
+
         $this->setVehicle($vehicle);
         $this->setCamera($camera);
 
@@ -454,6 +471,11 @@ class PhotoService
                         $totalByCamerasPrev = $totalByCameras;
                     }
                 }
+
+                return collect([
+                    'total' => $totalByCameras,
+                    'totalPhotos' => $allPhotos->count()
+                ]);
             }
 
             return $this->processPhotos(collect([]));

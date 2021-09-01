@@ -32,7 +32,7 @@ class SeatOccupationService
     public function processPersistenceSeating(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch)
     {
         $this->persistenceRelease($currentOccupied, $prevOccupied, $withOverlap, $statusDispatch);
-        $this->persistenceActivate($currentOccupied, $prevOccupied, false,  $statusDispatch);
+        $this->persistenceActivate($currentOccupied, $prevOccupied, false, $statusDispatch);
     }
 
     /**

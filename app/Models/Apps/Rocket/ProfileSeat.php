@@ -39,6 +39,19 @@ class ProfileSeat extends Model
 
     protected $fillable = ['occupation'];
 
+    public $persistence = [
+        'activate' => 2,
+        'release' => 2,
+    ];
+
+    function setPersistence($persistence)
+    {
+        if (is_array($persistence) && sizeof($persistence) && isset($persistence['activate']) && isset($persistence['release'])) {
+            $this->persistence['activate'] = intval($persistence['activate']);
+            $this->persistence['release'] = intval($persistence['release']);
+        }
+    }
+
     public function getDateFormat()
     {
         return config('app.simple_date_time_format');
