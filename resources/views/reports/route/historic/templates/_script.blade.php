@@ -295,8 +295,8 @@
                 }
             }
 
+            this.showInfo.find('.photo-alerts').empty();
             if(reportLocation.photo.alerts.length) {
-                this.showInfo.find('.photo-alerts').empty();
                 for(let alert of reportLocation.photo.alerts){
                     this.showInfo.find('.photo-alerts').append(`<p class="m-0 text-${alert.color}">${alert.message}</p>`);
                 }

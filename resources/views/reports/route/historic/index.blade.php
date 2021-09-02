@@ -203,7 +203,7 @@
             cursor: pointer;
             z-index: 10000 !important;
             margin: 2px;
-            box-shadow: rgba(117, 117, 117, 0.43) 3px -4px 7px 2px;
+            box-shadow: rgb(0 0 0 / 43%) 0px 10px 7px 2px;
             transition: all 0.3s ease-in-out;
             -webkit-transition: all 0.3s ease-in-out;
             -moz-transition: all 0.3s ease-in-out;
@@ -540,13 +540,16 @@
                             <div class="m-t-5 p-10 p-t-0 info-trips-container" style="display: nonse">
                                 <h5 class="text-bold m-b-0">
                                     <i class="fa fa-users"></i>   @lang('Histórico de pasajeros'):
-                                    <span class="info-trips-total">0</span> (<span class="passengers-total"></span>
-                                    <small class="text-lime hide">
-                                        <i class="fa fa-angle-double-up"></i> <span class="passengers-total-ascents"></span>
-                                    </small>
-                                    <small class="text-warning hide">
-                                        <i class="fa fa-angle-double-down"></i> <span class="passengers-total-descents"></span>
-                                    </small>)
+                                    <span class="info-trips-total">0</span>
+                                    <span class="hide">
+                                        (<span class="passengers-total"></span>
+                                        <small class="text-lime hide">
+                                            <i class="fa fa-angle-double-up"></i> <span class="passengers-total-ascents"></span>
+                                        </small>
+                                        <small class="text-warning hide">
+                                            <i class="fa fa-angle-double-down"></i> <span class="passengers-total-descents"></span>
+                                        </small>)
+                                    </span>
                                 </h5>
                                 <div class="text-center">
                                     <div class="label label-warning tooltips" title="@lang('Total charge')" style="display: inline-block;margin-top: 5px">
@@ -794,7 +797,7 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233) {
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
 
