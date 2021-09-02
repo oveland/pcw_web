@@ -103,6 +103,8 @@
                     }
                 }
 
+                path = this.iconPassenger; // Not show incon in/out passenger
+
 
                 scale = .060;
                 zIndex = 1000;
