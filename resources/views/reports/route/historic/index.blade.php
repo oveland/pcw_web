@@ -188,11 +188,10 @@
             width: auto;
             padding-right: 30px !important;
             display: table;
-            border-radius: 10px;
             transition: all ease 500ms;
             position: absolute;
-            bottom: -90px;
-            left: 8px;
+            bottom: -151px;
+            left: 0;
         }
 
         .info-trips li.active {
