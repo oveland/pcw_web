@@ -362,8 +362,11 @@ class ReportRouteHistoricController extends Controller
         if ($photoTags->get('occupation')) {
             $occupation = intval($photoTags->get('occupation'));
 
-            $color = 'white';
-            if ($occupation >= 70) {
+            $color = 'gray';
+            if ($occupation >= 5) {
+                $color = 'success';
+            }
+            if ($occupation >= 90) {
                 $color = 'warning';
             }
             if ($occupation >= 100) {
@@ -372,7 +375,7 @@ class ReportRouteHistoricController extends Controller
 
             $alerts->push([
                 'color' => $color,
-                'message' => __('Occupation') . ": $occupation%"
+                'message' => strtoupper(__('Occupation') . ": $occupation%")
             ]);
         }
 

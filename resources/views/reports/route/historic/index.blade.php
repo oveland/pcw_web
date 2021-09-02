@@ -578,6 +578,9 @@
                                     </div>
                                 </div>
 
+                                <div class="text-center photo-alerts">
+                                </div>
+
                                 @if(Auth::user()->isAdmin())
                                     <small class="passengers-label p-0 hidden-sm hidden-md hidden-lg" style="display: block">
                                         <span class="passengers-frame-container">

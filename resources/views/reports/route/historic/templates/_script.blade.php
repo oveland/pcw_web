@@ -292,13 +292,6 @@
                     photosContainer.append(`<img src="${url}" class="photo photo-image" draggable="false" onclick="toggleImgSize(this)"  alt="" width="${photoWidth}%">`);
                 }
             }
-
-            this.showInfo.find('.photo-alerts').empty();
-            if(reportLocation.photo.alerts.length) {
-                for(let alert of reportLocation.photo.alerts){
-                    this.showInfo.find('.photo-alerts').append(`<p class="m-0 text-${alert.color}">${alert.message}</p>`);
-                }
-            }
         }
 
         updateBusMarker(index) {
@@ -382,6 +375,12 @@
                 routeLabel.parent().hide();
             }
 
+            this.showInfo.find('.photo-alerts').empty();
+            if(reportLocation.photo.alerts.length) {
+                for(let alert of reportLocation.photo.alerts){
+                    this.showInfo.find('.photo-alerts').append(`<p class="m-0 bg-white text-${alert.color}">${alert.message}</p>`);
+                }
+            }
 
             this.processTrips(reportLocation, index);
             this.processTariffCharges(reportLocation);
