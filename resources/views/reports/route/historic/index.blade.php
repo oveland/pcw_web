@@ -190,7 +190,7 @@
             display: table;
             transition: all ease 500ms;
             position: absolute;
-            bottom: -151px;
+            top: 143px;
             left: 0;
         }
 
