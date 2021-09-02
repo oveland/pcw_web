@@ -417,9 +417,10 @@ class ReportRouteHistoricController extends Controller
         $infoDispatchRegister = "";
         $dispatchRegister = $reportLocation->dispatchRegister;
 
+
         if ($dispatchRegister) {
             $route = $dispatchRegister->route;
-            $infoDispatchRegister = "$route->name \n " . __('Round trip') . " $dispatchRegister->roundTrip \n " . __('Turn') . " $dispatchRegister->turn \n " . __('Dispatched') . " $dispatchRegister->departureTime \n " . __('Driver') . " $dispatchRegister->driverName";
+            $infoDispatchRegister = "$route \n " . __('Round trip') . " $dispatchRegister->trip \n " . __('Turn') . " $dispatchRegister->turn \n " . __('Dispatched') . " $dispatchRegister->departure \n " . __('Driver') . " $dispatchRegister->driver";
         }
 
         return $infoDispatchRegister;
