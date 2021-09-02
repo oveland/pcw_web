@@ -82,7 +82,7 @@
             }
 
             if (reportLocation.passengers.counted) {
-                rotation = 0;
+                // rotation = 0;
                 // path = this.iconPassenger;
 
                 fillColor = '#b3ff00';
@@ -102,7 +102,7 @@
                     }
                 }
 
-                scale = .060;
+                // scale = .060;
                 zIndex = 1000;
                 // animation = google.maps.Animation.BOUNCE;
             }
