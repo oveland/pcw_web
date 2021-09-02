@@ -83,14 +83,13 @@
 
             if (reportLocation.passengers.counted) {
                 rotation = 0;
-                path = this.iconPassenger;
-
+                // path = this.iconPassenger;
 
                 fillColor = '#b3ff00';
                 strokeColor = '#7e002e';
 
                 if (reportLocation.passengers.countedAscents && reportLocation.passengers.countedDescents) {
-                    path = this.iconPassengerInOut;
+                    // path = this.iconPassengerInOut;
                     fillColor = '#00f5ff';
                     strokeColor = '#000b47';
                 } else {
@@ -102,9 +101,6 @@
                         strokeColor = '#530000';
                     }
                 }
-
-                path = this.iconPassenger; // Not show incon in/out passenger
-
 
                 scale = .060;
                 zIndex = 1000;
