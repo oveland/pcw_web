@@ -95,6 +95,8 @@ class Passenger extends Model
         'total',
         'total_prev',
         'in_round_trip',
+        'ascents_in_round_trip',
+        'descents_in_round_trip',
         'frame',
         'tags'
     ];

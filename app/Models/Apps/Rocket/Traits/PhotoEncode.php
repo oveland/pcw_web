@@ -157,14 +157,6 @@ trait PhotoEncode
                 $font->size(24);
             });
 
-            $image->text('foo', 0, 0, function($font) {
-//                $font->file('foo/bar.ttf');
-                $font->size(24);
-                $font->color('#fdf6e3');
-                $font->align('center');
-                $font->valign('top');
-                $font->angle(45);
-            });
         } catch (FileNotFoundException $e) {
 
         }

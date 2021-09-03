@@ -36,8 +36,11 @@
                             <p class="detail">
                                 {{ $t('Previous seating') }}: <span v-if="photo.prevDetails && photo.prevDetails.occupation">{{ photo.prevDetails.occupation.seatingOccupiedStr }}</span>
                             </p>
+							<p class="detail text-info">
+								{{ $t('Current seating') }}: <span>{{ photo.details.occupation.seatingOccupiedStr }}</span>
+							</p>
                             <p class="detail text-info">
-                                {{ $t('Current seating') }}: <span>{{ photo.details.occupation.seatingBoardingStr }}</span>
+                                {{ $t('Seating boarding') }}: <span>{{ photo.details.occupation.seatingBoardingStr }}</span>
                             </p>
                             <p class="detail hide">
                                 {{ $t('Mix seating') }}: <span>{{ photo.details.occupation.seatingMixStr }}</span>

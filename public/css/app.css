@@ -8257,10 +8257,10 @@ button.close {
 }
 
 .multiselect {
-  z-index: 999 !important;
+  z-index: 1000 !important;
 }
 
 .multiselect__content-wrapper {
-  z-index: 999 !important;
+  z-index: 1000 !important;
 }
 
