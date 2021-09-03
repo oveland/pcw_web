@@ -210,10 +210,11 @@
         }
 
         img.photo.enlarge {
-            width: 50%;
+            width: 48%;
             height: auto;
-            position: inherit;
-            top: -200%;
+            position: fixed;
+            z-index: 10000 !important;
+            top: 10%;
             left: 25%;
         }
 
@@ -578,8 +579,7 @@
                                     </div>
                                 </div>
 
-                                <div class="text-center photo-alerts">
-                                </div>
+                                <div class="photo-alerts" style="display: grid"></div>
 
                                 @if(Auth::user()->isAdmin())
                                     <small class="passengers-label p-0 hidden-sm hidden-md hidden-lg" style="display: block">
@@ -608,7 +608,7 @@
             <div id="google-map-light-dream" class="col-md-12 col-sm-12 col-xs-12 p-0 map-report-historic"></div>
 
             @if(Auth::user()->company->hasSensorCounter())
-            <div class="col-md-12 col-sm-12 col-xs-12 p-0 photo-container">
+            <div class="col-md-6 col-sm-12 col-xs-12 p-0 photo-container">
 
                 <button id="photo-show" class="btn btn-warning btn-outline btn-circle pulse"
                         onclick="largePhoto = true; pause()" ontouchstart="largePhoto = true; pause()"
@@ -624,13 +624,10 @@
                     </div>
 
                     <div class="photo-info">
-                        <div class="photo-passengers-label photo-alerts text-uppercase text-bold">
-                        </div>
-
-                        <div class="photo-passengers-label">
+                        <div class="photo-passengers-label hide">
                             <i class="fa fa-users"></i> <span class="hidden-xss">@lang('Total'):</span> <span class="photo-passengers-total"></span>
                         </div>
-                        <div class="photo-passengers-label">
+                        <div class="photo-passengers-label hide">
                             <i class="fa fa-users"></i> <span class="hidden-xss">@lang('Round trip'):</span> <span class="photo-passengers-trip"></span>
                         </div>
                         <div class="photo-passengers-label">

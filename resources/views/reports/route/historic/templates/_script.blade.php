@@ -20,11 +20,10 @@
             this.iconPassengerInOut = 'M96,128A64,64,0,1,0,32,64,64,64,0,0,0,96,128Zm0,176.08a44.11,44.11,0,0,1,13.64-32L181.77,204c1.65-1.55,3.77-2.31,5.61-3.57A63.91,63.91,0,0,0,128,160H64A64,64,0,0,0,0,224v96a32,32,0,0,0,32,32V480a32,32,0,0,0,32,32h64a32,32,0,0,0,32-32V383.61l-50.36-47.53A44.08,44.08,0,0,1,96,304.08ZM480,128a64,64,0,1,0-64-64A64,64,0,0,0,480,128Zm32,32H448a63.91,63.91,0,0,0-59.38,40.42c1.84,1.27,4,2,5.62,3.59l72.12,68.06a44.37,44.37,0,0,1,0,64L416,383.62V480a32,32,0,0,0,32,32h64a32,32,0,0,0,32-32V352a32,32,0,0,0,32-32V224A64,64,0,0,0,512,160ZM444.4,295.34l-72.12-68.06A12,12,0,0,0,352,236v36H224V236a12,12,0,0,0-20.28-8.73L131.6,295.34a12.4,12.4,0,0,0,0,17.47l72.12,68.07A12,12,0,0,0,224,372.14V336H352v36.14a12,12,0,0,0,20.28,8.74l72.12-68.07A12.4,12.4,0,0,0,444.4,295.34Z';
 
 
-
             this.showInfo = $('.show-info');
         }
 
-        processSVGIcon(reportLocation){
+        processSVGIcon(reportLocation) {
             let rotation = parseInt(reportLocation.orientation);
             rotation = rotation > 0 ? rotation - 90 : (this.markerBus ? this.markerBus.getIcon().rotation : rotation);
 
@@ -46,7 +45,7 @@
 
             const dr = reportLocation.dispatchRegister;
 
-            if(reportLocation.vehicleStatus.id === 6 && !dr){
+            if (reportLocation.vehicleStatus.id === 6 && !dr) {
                 rotation = 0;
                 path = this.iconPowerOffSVG;
                 fillColor = '#bf1308';
@@ -55,8 +54,7 @@
                 zIndex = 100;
                 anchor.x = 250;
                 anchor.y = 280;
-            }
-            else if(reportLocation.vehicleStatus.id === 3){
+            } else if (reportLocation.vehicleStatus.id === 3) {
                 rotation = 0;
                 path = this.iconParkedOffSVG;
                 fillColor = '#1300ce';
@@ -65,7 +63,7 @@
                 zIndex = 100;
                 anchor.x = 250;
                 anchor.y = 280;
-            }else if(reportLocation.vehicleStatus.id === 5){
+            } else if (reportLocation.vehicleStatus.id === 5) {
                 rotation = 0;
                 path = this.iconWithOutGPSSVG;
                 fillColor = '#fffd06';
@@ -74,27 +72,27 @@
                 zIndex = 100;
                 anchor.x = 250;
                 anchor.y = 280;
-            }
-            else if (reportLocation.speeding) {
+            } else if (reportLocation.speeding) {
                 fillColor = '#ffe415';
                 strokeColor = '#d44200';
                 zIndex = 100;
             }
 
             if (reportLocation.passengers.counted) {
-                // rotation = 0;
-                // path = this.iconPassenger;
+                rotation = 0;
+                path = this.iconPassenger;
+                scale = .04;
 
-                fillColor = '#b3ff00';
-                strokeColor = '#7e002e';
+                fillColor = '#40ffc7';
+                strokeColor = '#000b47';
 
                 if (reportLocation.passengers.countedAscents && reportLocation.passengers.countedDescents) {
                     // path = this.iconPassengerInOut;
-                    fillColor = '#00f5ff';
-                    strokeColor = '#000b47';
+                    fillColor = '#ffdd00';
+                    strokeColor = '#470020';
                 } else {
                     if (reportLocation.passengers.countedAscents) {
-                        fillColor = '#b3ff00';
+                        fillColor = '#84ff00';
                         strokeColor = '#7e002e';
                     } else if (reportLocation.passengers.countedDescents) {
                         fillColor = '#ff6900';
@@ -102,7 +100,6 @@
                     }
                 }
 
-                // scale = .060;
                 zIndex = 1000;
                 // animation = google.maps.Animation.BOUNCE;
             }
@@ -243,7 +240,7 @@
 
             this.historicLocations.forEach(async (historicLocation, i) => {
                 path.removeAt(i);
-                if (i <= index){
+                if (i <= index) {
                     await path.insertAt(i, historicLocation.marker.position);
                 }
 
@@ -286,7 +283,7 @@
                 $('#photo-loading').show();
 
                 let photoWidth = 100 / photos.length;
-                if (photoWidth > 20) photoWidth = 20;
+                if (photoWidth > 30) photoWidth = 30;
                 for (let photo of photos) {
                     const url = `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${photo.id}&with-effect=true&encode=png&title=true`;
                     photosContainer.append(`<img src="${url}" class="photo photo-image" draggable="false" onclick="toggleImgSize(this)"  alt="" width="${photoWidth}%">`);
@@ -357,7 +354,7 @@
             if (reportLocation.dispatchRegister) {
                 const dr = reportLocation.dispatchRegister;
 
-                if(reportLocation.vehicle.id != 1199) routeLabel.text(dr.route).parent().fadeIn();
+                if (reportLocation.vehicle.id != 1199) routeLabel.text(dr.route).parent().fadeIn();
 
                 this.showInfo.find('.mileage-route').text(reportLocation.routeDistance);
                 if (reportLocation.offRoad) {
@@ -376,9 +373,9 @@
             }
 
             this.showInfo.find('.photo-alerts').empty();
-            if(reportLocation.photo.alerts.length) {
-                for(let alert of reportLocation.photo.alerts){
-                    this.showInfo.find('.photo-alerts').append(`<p class="m-0 bg-white text-${alert.color}">${alert.message}</p>`);
+            if (reportLocation.photo.alerts.length) {
+                for (let alert of reportLocation.photo.alerts) {
+                    this.showInfo.find('.photo-alerts').append(`<small class="m-0 p-l-5 p-r-5 bg-white text-${alert.color}">${alert.message}</small>`);
                 }
             }
 
@@ -420,7 +417,7 @@
 
             $('.gm-style-iw-c, .gm-style-iw-d').css('max-height', '300px').css('height', '270px');
 
-            if(parseInt(reportLocation.photo.id) > 0) {
+            if (parseInt(reportLocation.photo.id) > 0) {
                 $('#photo-show').show();
             } else {
                 $('#photo-show').hide();
@@ -432,18 +429,18 @@
             // $('.photo-info').hide();
         }
 
-        processTariffCharges(reportLocation){
+        processTariffCharges(reportLocation) {
             const passengers = reportLocation.passengers;
             const tariffCharges = passengers.tariffCharges;
 
             const sorted = _.sortBy(tariffCharges, 'tariff');
 
-            let html = "<div>";
-            for(const tariff in sorted) {
+            let html = "<ul>";
+            for (const tariff in sorted) {
                 const charge = sorted[tariff];
                 html += `<div>
                         <small>
-                            <span><i class="fa fa-dollar"></i> ${charge.tariff} • ${ charge.totalCounted } • ${charge.totalCharge}</span>
+                            <span><i class="fa fa-dollar"></i> ${charge.tariff} • ${charge.totalCounted} • ${charge.totalCharge}</span>
                         </small>
                     </div>`;
             }
@@ -464,11 +461,11 @@
             const sorted = _.sortBy(trips, 'departureTime');
             let iterations = sorted.length;
 
-            if(iterations && dr) {
+            if (iterations && dr) {
                 $('.passengers-route-ascents').parent().show();
                 $('.passengers-route-descents').parent().show();
                 $('.passengers-route-tariff').parent().show();
-            }else {
+            } else {
                 $('.passengers-route-ascents').parent().hide();
                 $('.passengers-route-descents').parent().hide();
                 $('.passengers-route-tariff').parent().hide();
@@ -476,12 +473,12 @@
 
             let html = "<ol class='m-0'>";
 
-            for(const drId in sorted) {
+            for (const drId in sorted) {
                 const trip = sorted[drId];
 
                 const classLast = (!--iterations && dr) ? 'active' : '';
 
-                if( trip.index <= index ){
+                if (trip.index <= index) {
                     html += `<li class="${classLast}">
                         <small>
                             <span><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</span>

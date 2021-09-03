@@ -783,5 +783,9 @@
   "Create other": "Crear otro similar",
   "Complete": "Completar",
   "Include completed maintenances": "Incluir mantenimientos completos",
-  "Occupation": "Ocupación"
+  "st-occupation": "ocupación",
+  "st-boarding": "ascensos",
+  "st-released": "descensos",
+  "st-activated": "contados",
+  "st-current": "ocupados"
 }

@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ReportRouteHistoricController extends Controller
@@ -84,7 +85,7 @@ class ReportRouteHistoricController extends Controller
 
         $locations = Location::forDate($dateReport)->whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
             ->where('vehicle_id', $vehicleReport)
-            ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.driver', 'vehicleStatus', 'passenger', 'photo'])
+            ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.driver', 'vehicleStatus', 'passenger', 'photo', 'photos'])
             ->orderBy('date');
         $locations = $locations->get();
 
@@ -113,6 +114,8 @@ class ReportRouteHistoricController extends Controller
         $totalDescents = 0;
         $totalDescentsInRoundTrip = 0;
         $prevTotalDescentsInRoundTrip = 0;
+        $countedAscents = false;
+        $countedDescents = false;
 
         $frameCounter = '';
         $trips = [];
@@ -124,6 +127,12 @@ class ReportRouteHistoricController extends Controller
 
         $photos = [];
 
+        if ($dateReport < '2021-09-03') { // TODO: Delete on 2022
+            $locations = $locations->filter(function (Location $l) {
+                return !Str::contains($l->status, 'X');
+            })->values();
+        }
+
         foreach ($locations as $index => $location) {
             $dispatchRegister = $location->dispatchRegister;
             $inRoute = $dispatchRegister && $dispatchRegister->isActive();
@@ -132,12 +141,10 @@ class ReportRouteHistoricController extends Controller
             $averagePeriod = '';
             if (Auth::user()->isAdmin()) {
                 $period = $location->date->diffInSeconds($lastLocation->date);
-                //$averagePeriod = intval($dataLocations->average('period')); // CAUTION this line take some long time!
                 $averagePeriod = "--";
             }
 
             $passenger = $location->passenger;
-//            $dispatchRegister = null;
 
             if ($passenger) {
                 $dispatchRegister = $passenger->dispatchRegister;
@@ -164,7 +171,7 @@ class ReportRouteHistoricController extends Controller
 //                $totalCharge = $passenger->total_charge;
                 $tariff = $passenger->tariff;
 
-                if ($dispatchRegister && $dispatchRegister->isActive()) {
+                if ($inRoute) {
                     if ($passengersInRoundTrip <= $passenger->in_round_trip || $newTurn) {
                         $passengersInRoundTrip = $passenger->in_round_trip;
                     }
@@ -181,6 +188,10 @@ class ReportRouteHistoricController extends Controller
                         $totalDescentsInRoundTrip = $passenger->descents_in_round_trip;
                     }
 
+                    $countedAscents = $passenger->ascents_in_round_trip ?? false;
+                    if ($passenger->counted) $countedAscents = false;
+//                    $countedDescents = $passenger->descents_in_round_trip ?? false;
+                    $countedDescents = false;
 
                     if ($tariff) {
                         $counted = ($totalPassengers - $prevTotalPassengers);
@@ -226,6 +237,9 @@ class ReportRouteHistoricController extends Controller
                     $totalDescentsInRoundTrip = 0;
                 }
             } else {
+                $countedAscents = false;
+                $countedDescents = false;
+
                 if ($newTurn) {
                     $passengersInRoundTrip = 0;
                     $passengersOutRoundTrip = 0;
@@ -253,11 +267,8 @@ class ReportRouteHistoricController extends Controller
                 }
             }
 
-//            $countedAscents = $prevTotalAscentsInRoundTrip !== $totalAscentsInRoundTrip;
-//            $countedDescents = $prevTotalDescentsInRoundTrip !== $totalDescentsInRoundTrip;
-
-            $countedAscents = $prevTotalPassengers !== $totalPassengers;
-            $countedDescents = false;
+//            $countedAscents = $prevTotalPassengers !== $totalPassengers;
+//            $countedDescents = false;
 
             if ($location->photo) {
                 $photoId = $location->photo->id;
@@ -278,6 +289,7 @@ class ReportRouteHistoricController extends Controller
             }
 
             $dataLocations->push((object)[
+                'id' => $location->id,
                 'inRoute' => $inRoute,
                 'time' => $location->date->format('H:i:s'),
                 'period' => $period,
@@ -311,7 +323,7 @@ class ReportRouteHistoricController extends Controller
                     'totalDescents' => $totalDescents > $totalAscents ? $totalAscents : $totalDescents,
                     'ascentsInRoundTrip' => $totalAscentsInRoundTrip,
                     'descentsInRoundTrip' => $totalDescentsInRoundTrip > $totalAscentsInRoundTrip ? $totalAscentsInRoundTrip : $totalDescentsInRoundTrip,
-                    'counted' => ($countedAscents || $countedDescents),
+                    'counted' => ($countedAscents || $countedDescents || ($passenger->counted ?? false)),
                     'countedAscents' => $countedAscents,
                     'countedDescents' => $countedDescents,
                     'frame' => $frameCounter,
@@ -360,23 +372,35 @@ class ReportRouteHistoricController extends Controller
         $alerts = collect([]);
 
         if ($photoTags->get('occupation')) {
-            $occupation = intval($photoTags->get('occupation'));
+            $occupation = collect($photoTags->get('occupation'));
+            $percent = $occupation->get('percent');
 
-            $color = 'gray';
-            if ($occupation >= 5) {
+            $color = 'info';
+            if ($percent >= 5) {
                 $color = 'success';
             }
-            if ($occupation >= 90) {
+            if ($percent >= 90) {
                 $color = 'warning';
             }
-            if ($occupation >= 100) {
+            if ($percent >= 100) {
                 $color = 'danger';
             }
 
             $alerts->push([
                 'color' => $color,
-                'message' => strtoupper(__('Occupation') . ": $occupation%")
+                'message' => "<strong>" . ucfirst(__('st-occupation')) . "</strong>: $percent%"
             ]);
+
+            $color = 'info';
+            foreach (['current', 'boarding', 'activated'] as $type) {
+                $data = $occupation->get($type);
+                $total = $data ? collect(explode(' ', $data))->count() : 0;
+                $total = $total ? " ($total)" : "";
+                $alerts->push([
+                    'color' => $color,
+                    'message' => "<strong>" . ucfirst(__("st-$type")) . "$total</strong>: $data"
+                ]);
+            }
         }
 
         return $alerts->toArray();
