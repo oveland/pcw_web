@@ -87,15 +87,9 @@ class ConfigProfileService
             $activate = $rActivate ? $rActivate : self::THRESHOLD_ACTIVATE;
             $release = $rRelease ? $rRelease : self::THRESHOLD_RELEASE;
 
-
-            if (collect([22])->contains(intval($number))) {
-                $activate = 1;
-                $release = 3;
-            }
-
             if (collect([2])->contains(intval($number))) {
-                $activate = 5;
-                $release = 5;
+//                $activate = 5;
+//                $release = 5;
             }
 
 //            if (collect([9, 10, 11, 12, 13, 14, 19, 20, 21,22, 23])->contains(intval($number))) {
