@@ -6,6 +6,7 @@ namespace App\Services\Apps\Rocket\Photos\Rekognition;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Services\Apps\Rocket\ConfigProfileService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
 
