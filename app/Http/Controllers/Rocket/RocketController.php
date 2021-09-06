@@ -62,8 +62,13 @@ class RocketController extends Controller
                     $date = $request->get('date');
                     $persistenceActivate = $request->get('activate');
                     $persistenceRelease = $request->get('release');
-                    $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->getHistoric($date);
-
+                    $photos = collect([]);
+                    if ($camera == 'all') {
+                        $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->processCount($date, false);
+                    } else {
+                        $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->getHistoric($date);
+                    }
+                    
                     $response->photos = $photos
 //                        ->where('drId', '<>', null)
                         ->sortByDesc('time')->values();

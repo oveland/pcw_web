@@ -74,7 +74,9 @@ class PhotoService
 
     function setCamera($camera)
     {
-        $this->camera = $camera;
+        if ($camera !== '' && $camera !== null) {
+            $this->camera = $camera;
+        }
         $this->setProfileSeating();
     }
 
@@ -387,12 +389,12 @@ class PhotoService
         return Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $this->camera)
 //            ->whereBetween('id', [104073, 104173])
             //->where('id', 53717);
-//            ->where('dispatch_register_id', 1776516)
+//            ->where('dispatch_register_id', 1790216)
             ->limit(2000)
             ->get();
     }
 
-    function processCount($date)
+    function processCount($date, $withHistoricPassengers = true)
     {
         $totalByCameras = 0;
         $allPhotos = $this->getPhotos($date);
@@ -418,94 +420,96 @@ class PhotoService
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
         }
 
-        $historic = $historicByCameras->collapse()->collapse();
-        $totalByCamerasPrev = 0;
-        DB::delete("DELETE FROM passengers WHERE date::DATE = '$date' AND vehicle_id = " . $this->vehicle->id);
+        if ($withHistoricPassengers) {
+            $historic = $historicByCameras->collapse()->collapse();
+            $totalByCamerasPrev = 0;
+            DB::delete("DELETE FROM passengers WHERE date::DATE = '$date' AND vehicle_id = " . $this->vehicle->id);
 
-        foreach ($drIds as $drId) {
-            $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
-            $historicDrByLocation = $historicDr->groupBy('details.location_id');
+            foreach ($drIds as $drId) {
+                $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
+                $historicDrByLocation = $historicDr->groupBy('details.location_id');
 
-            foreach ($historicDrByLocation as $locationId => $locationPhotos) {
-                $totalCameras = $locationPhotos->groupBy('camera')->count();
-                $locationPhotos = collect($locationPhotos);
-                $totalByCameras = 0;
-                $totalInRoundTrip = 0;
+                foreach ($historicDrByLocation as $locationId => $locationPhotos) {
+                    $totalCameras = $locationPhotos->groupBy('camera')->count();
+                    $locationPhotos = collect($locationPhotos);
+                    $totalByCameras = 0;
+                    $totalInRoundTrip = 0;
 
-                $lastDatePhoto = null;
+                    $lastDatePhoto = null;
 
-                $occupation = (object)[
-                    'percent' => 0,
-                    'current' => collect([]),
-                    'prev' => collect([]),
-                    'activated' => collect([]),
-                    'boarding' => collect([]),
-                    'released' => collect([]),
-                ];
+                    $occupation = (object)[
+                        'percent' => 0,
+                        'current' => collect([]),
+                        'prev' => collect([]),
+                        'activated' => collect([]),
+                        'boarding' => collect([]),
+                        'released' => collect([]),
+                    ];
 
-                $totalSeating = 0;
+                    $totalSeating = 0;
 
-                foreach ($locationPhotos->groupBy('camera')->sort() as $camera => $photoData) {
-                    $lastPhoto = $photoData->last();
-                    $details = $lastPhoto->details;
-                    $prevDetails = $lastPhoto->prevDetails;
+                    foreach ($locationPhotos->groupBy('camera')->sort() as $camera => $photoData) {
+                        $lastPhoto = $photoData->last();
+                        $details = $lastPhoto->details;
+                        $prevDetails = $lastPhoto->prevDetails;
 
-                    $countPassengers = $lastPhoto->passengers;
-                    $totalByCameras += $countPassengers->total;
-                    $totalInRoundTrip += $countPassengers->totalInRoundTrip;
+                        $countPassengers = $lastPhoto->passengers;
+                        $totalByCameras += $countPassengers->total;
+                        $totalInRoundTrip += $countPassengers->totalInRoundTrip;
 
-                    $lastDatePhoto = $details->date;
+                        $lastDatePhoto = $details->date;
 
-                    $occupation->percent += $details->occupation->percent / $totalCameras;
-                    $occupation->current->push(explode(', ', $details->occupation->seatingOccupiedStr));
-                    $occupation->activated->push(explode(', ', $details->occupation->seatingActivatedStr));
-                    $occupation->boarding->push(explode(', ', $details->occupation->seatingBoardingStr));
-                    $occupation->released->push(explode(', ', $details->occupation->seatingReleaseStr));
+                        $occupation->percent += $details->occupation->percent / $totalCameras;
+                        $occupation->current->push(explode(', ', $details->occupation->seatingOccupiedStr));
+                        $occupation->activated->push(explode(', ', $details->occupation->seatingActivatedStr));
+                        $occupation->boarding->push(explode(', ', $details->occupation->seatingBoardingStr));
+                        $occupation->released->push(explode(', ', $details->occupation->seatingReleaseStr));
 
-                    if ($prevDetails->occupation ?? false) {
-                        $occupation->prev->push(explode(', ', $prevDetails->occupation->seatingOccupiedStr));
+                        if ($prevDetails->occupation ?? false) {
+                            $occupation->prev->push(explode(', ', $prevDetails->occupation->seatingOccupiedStr));
+                        }
+
+                        $profileSeating = $this->vehicle->getProfileSeating($camera);
+                        $totalSeating += $profileSeating->occupation->count();
                     }
 
-                    $profileSeating = $this->vehicle->getProfileSeating($camera);
-                    $totalSeating += $profileSeating->occupation->count();
+                    $occupation->percent = $totalSeating ? intval(100 * $totalInRoundTrip / $totalSeating) : 0;
+                    $occupation->percent = $occupation->percent <= 100 ? $occupation->percent : 100;
+
+                    $occupation->current = $occupation->current->flatten()->sort();
+                    $occupation->activated = $occupation->activated->flatten()->sort();
+                    $occupation->boarding = $occupation->boarding->flatten()->sort();
+                    $occupation->released = $occupation->released->flatten()->sort();
+                    $occupation->prev = $occupation->prev->flatten()->sort();
+
+                    $ascents = $occupation->boarding->filter()->count();
+                    $descents = $occupation->released->filter()->count();
+
+                    $occupation->current = trim($occupation->current->implode(' '));
+                    $occupation->activated = trim($occupation->activated->implode(' '));
+                    $occupation->boarding = trim($occupation->boarding->implode(' '));
+                    $occupation->released = trim($occupation->released->implode(' '));
+                    $occupation->prev = trim($occupation->prev->implode(' '));
+
+                    $passenger = new Passenger([
+                        'date' => $lastDatePhoto,
+                        'dispatch_register_id' => $drId,
+                        'location_id' => $locationId,
+                        'vehicle_id' => $this->vehicle->id,
+                        'total' => $totalByCameras,
+                        'total_prev' => $totalByCamerasPrev,
+                        'in_round_trip' => $totalInRoundTrip,
+                        'ascents_in_round_trip' => $ascents,
+                        'descents_in_round_trip' => $descents,
+                        'tags' => collect([
+                            'occupation' => $occupation
+                        ])->toJson(),
+                        'frame' => ''
+                    ]);
+                    $passenger->save();
+
+                    $totalByCamerasPrev = $totalByCameras;
                 }
-
-                $occupation->percent = $totalSeating ? intval(100 * $totalInRoundTrip / $totalSeating) : 0;
-                $occupation->percent = $occupation->percent <= 100 ? $occupation->percent : 100;
-
-                $occupation->current = $occupation->current->flatten()->sort();
-                $occupation->activated = $occupation->activated->flatten()->sort();
-                $occupation->boarding = $occupation->boarding->flatten()->sort();
-                $occupation->released = $occupation->released->flatten()->sort();
-                $occupation->prev = $occupation->prev->flatten()->sort();
-
-                $ascents = $occupation->boarding->filter()->count();
-                $descents = $occupation->released->filter()->count();
-
-                $occupation->current = trim($occupation->current->implode(' '));
-                $occupation->activated = trim($occupation->activated->implode(' '));
-                $occupation->boarding = trim($occupation->boarding->implode(' '));
-                $occupation->released = trim($occupation->released->implode(' '));
-                $occupation->prev = trim($occupation->prev->implode(' '));
-
-                $passenger = new Passenger([
-                    'date' => $lastDatePhoto,
-                    'dispatch_register_id' => $drId,
-                    'location_id' => $locationId,
-                    'vehicle_id' => $this->vehicle->id,
-                    'total' => $totalByCameras,
-                    'total_prev' => $totalByCamerasPrev,
-                    'in_round_trip' => $totalInRoundTrip,
-                    'ascents_in_round_trip' => $ascents,
-                    'descents_in_round_trip' => $descents,
-                    'tags' => collect([
-                        'occupation' => $occupation
-                    ])->toJson(),
-                    'frame' => ''
-                ]);
-                $passenger->save();
-
-                $totalByCamerasPrev = $totalByCameras;
             }
         }
 
@@ -517,10 +521,9 @@ class PhotoService
 
     /**
      * @param $date
-     * @param false $fromCommand
      * @return Collection
      */
-    function getHistoric($date, $fromCommand = false)
+    function getHistoric($date)
     {
         $photos = ($this->camera != null && $this->camera != 'all') ? $this->getPhotos($date) : collect([]);
         return $this->processPhotos($photos);
@@ -576,9 +579,12 @@ class PhotoService
      */
     function processPhotos(Collection $photos)
     {
-        $photos = $photos->sortBy('date');
+        $initotal = Carbon::now();
+        $photos = $photos->sortBy('date')->values();
 
         $historic = collect([]);
+
+        $durations = collect([]);
 
         if ($photos->isNotEmpty()) {
             $prevPhoto = $photos->first();
@@ -595,7 +601,8 @@ class PhotoService
 
             $pevRekognitionCounts = null;
 
-            foreach ($photos as $photo) {
+            foreach ($photos as $index => $photo) {
+                $ini = Carbon::now();
 
                 if ($prevPhoto->dispatchRegister && !$prevPhoto->dispatchRegister->isActive()) {
                     $prevPhoto->dispatch_register_id = null;
@@ -612,13 +619,24 @@ class PhotoService
 //                    }
                 }
 
+                $durations->put('getOccupation', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $ini = Carbon::now();
+
                 $statusDispatch = $this->processStatusDispatch($photo, $prevPhoto);
                 $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDispatch);
 
                 $seatingActivated = $this->seatOccupationService->getSeatingActivated($currentOccupation->seatingOccupied, $currentOccupation->withOverlap);
                 $seatingReleased = $this->seatOccupationService->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);
 
+                $durations->put('getSeatingReleased', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $ini = Carbon::now();
+
+
                 $details = $photo->getAPIFields('url');
+
+                $durations->put('getAPIFields', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $ini = Carbon::now();
+
                 $details->occupationOrig = clone $currentOccupation;
                 $details->occupation = $currentOccupation;
 
@@ -675,6 +693,9 @@ class PhotoService
 
                 $this->processLockCam($photo, $counterLock, $alertLockCam);
 
+                $durations->put('processLockCam', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $ini = Carbon::now();
+
                 $details->occupation->seatingOccupiedStr = $details->occupation->seatingOccupied->keys()->sort()->implode(', ');
                 $details->occupation->seatingBoardingStr = $this->getBoardingSeating($details->occupation->seatingOccupied, $prevDetails->occupation->seatingOccupied ?? [])->implode(', ');
                 $details->occupation->seatingMixStr = $currentOccupation->withOverlap ? $currentOccupation->seatingOccupied->keys()->sort()->implode(', ') : "";
@@ -683,6 +704,9 @@ class PhotoService
 
 
                 $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts, $photo, $firstPhotoInRoundTrip);
+
+                $durations->put('processRekognitionCounts', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $ini = Carbon::now();
 
 //                $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value');
 
