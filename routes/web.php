@@ -482,6 +482,7 @@ Route::prefix(__('link'))->group(function () {
         return redirect(route('report-route-historic'));
     })->name('link-report-route-historic-path');
 
+
     // TODO: Temporal link to render beta ML on NE
     Route::prefix(__('takings'))->group(function () {
         Route::prefix(__('passengers'))->group(function () {
@@ -505,6 +506,14 @@ Route::prefix(__('link'))->group(function () {
                     return redirect(route('reports.routes.takings.index'))->with('hide-menu', true);
                 })->name('link.reports.routes.takings');
             });
+        });
+
+        Route::prefix(__('url-liquidation'))->group(function () {
+            Route::get('/{user}', function (User $user) {
+                Auth::login($user, true);
+
+                return redirect(route('reports.liquidation.index'))->with('hide-menu', true);
+            })->name('link.reports.liquidation.index');
         });
     });
 
