@@ -160,23 +160,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5449,45 +5432,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("ul", { staticClass: "nav nav-tabs tabs-reversed" }, [
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { onclick: "$('#modal-params-manager').modal('show')" } },
-            [
-              _c("i", { staticClass: "fa fa-cogs" }),
-              _vm._v(" "),
-              _c("span", { staticClass: "hidden-xs" }, [
-                _vm._v(_vm._s(_vm.$t("Settings")))
-              ])
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "#tab-road-safety", "data-toggle": "tab" } },
-            [
-              _c("i", { staticClass: "fa fa-user-secret" }),
-              _vm._v(" "),
-              _c("span", { staticClass: "hidden-xs" }, [
-                _vm._v(_vm._s(_vm.$t("Read safety")))
-              ])
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "active" }, [
-          _c("a", { attrs: { href: "#tab-takings", "data-toggle": "tab" } }, [
-            _c("i", { staticClass: "fa fa-briefcase" }),
-            _vm._v(" "),
-            _c("span", { staticClass: "hidden-xs" }, [
-              _vm._v(_vm._s(_vm.$t("Takings")))
-            ])
-          ])
-        ])
-      ])
+      _c("hr", { staticClass: "col-md-12" })
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "panel-body p-b-15" }, [
