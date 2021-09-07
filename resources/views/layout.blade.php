@@ -760,6 +760,13 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </ul>
                             </li>
                         @endif
+
+                        <li class="nav-item {{ $baseMenu == __('url-liquidation') ? 'active-animated' : '' }}">
+                            <a href="{{ route('reports.liquidation.index')  }}" class="faa-parent animated-hover">
+                                <i class="fa fa-dollar faa-vertical"></i>
+                                <span>@lang('Liquidation')</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
