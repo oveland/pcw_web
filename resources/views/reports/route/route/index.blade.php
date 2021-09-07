@@ -20,6 +20,12 @@
             top: -10px;
             right: -5px;
         }
+
+        .car-nr {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+        }
     </style>
 @endsection
 

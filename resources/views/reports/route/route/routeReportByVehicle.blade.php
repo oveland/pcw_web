@@ -35,6 +35,9 @@
                                         <span class="car-ss car-ss-percent-{{ $vehicleId }} hide">
                                             <i class="fa fa-signal faa-flash animated"></i>
                                         </span>
+                                        <span class="car-nr car-nr-{{ $vehicleId }} hide">
+                                            <i class="fa fa-clock-o red faa-flash animated"></i>
+                                        </span>
                                     @endif
                                 </a>
                             </li>

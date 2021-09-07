@@ -1,3 +1,8 @@
+@php
+    $thresholdAlertSS = 1;
+    $thresholdAlertNR = 2;
+    $thresholdMinLocations = 300;
+@endphp
 <!-- begin table -->
 <table id="table-report" class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
@@ -104,6 +109,7 @@
         $totalPassengersBySensorRecorder = 0;
 
         $maxInvalidGPSPercent = 0;
+        $lowerGPSReport = 0;
     @endphp
 
     @foreach( $dispatchRegisters as $dispatchRegister )
@@ -142,36 +148,31 @@
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
             <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
 
-                @if($dispatchRegister->processedByARD())
-                    @php
-                        $dv = $dispatchRegister->dispatcherVehicle;
-                    @endphp
-                    <span class="label label-lime label-lg">{{ $route->name }}</span>
-                    <small class="text-muted" style="margin-top: 12px;display: block">{{ $dv ? $dv->route->name : '---' }}</small>
-                @else
-                    <span>{{ $route->name }}</span>
-                @endif
+                <span class="m-b-5">
+                    @if($dispatchRegister->processedByARD())
+                        @php
+                            $dv = $dispatchRegister->dispatcherVehicle;
+                        @endphp
+                        <span class="label label-lime label-lg">{{ $route->name }}</span>
+                        <small class="text-muted" style="margin-top: 12px;display: block">{{ $dv ? $dv->route->name : '---' }}</small>
+                    @else
+                        <span>{{ $route->name }}</span>
+                    @endif
+                </span>
 
 
                 @if($dispatchRegister->hasValidOffRoad() && $offRoadPercent)
-                    <div class="m-t-5">
+                    <div class="m-t-1">
                         <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
                             {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
-                            @if(Auth::user()->isSuperAdmin())
-                                @php
-
-                                @endphp
-                                @if($invalidGPSPercent)
-                                    • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
-                                @endif
-                            @endif
                         </label>
                     </div>
-                @elseif(Auth::user()->isSuperAdmin() && $invalidGPSPercent)
-                <div class="m-t-5">
-                    <label class="label label-{{ $invalidGPSPercent < 0.8 ? 'warning': 'danger' }} tooltips" data-placement="bottom" title="@lang('GPS with issues')">
+                @endif
+                @if(Auth::user()->isSuperAdmin() && $invalidGPSPercent)
+                <div class="m-t-1">
+                    <label class="label label-{{ $invalidGPSPercent < $thresholdAlertSS ? 'default': 'danger' }} tooltips" data-placement="bottom" title="@lang('GPS with issues')">
                         @if($invalidGPSPercent)
-                            • {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
+                            {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
                         @endif
                     </label>
                 </div>
@@ -385,7 +386,16 @@
                     @endif
 
                     @if( Auth::user()->isSuperAdmin() )
-                        <small class="badge tooltips" data-original-title="@lang('Locations') / @lang('Reports')" data-placement="bottom">{!! $dispatchRegister->locations()->count() !!} / {!! $dispatchRegister->reports()->count() !!}</small>
+                        @php
+                            $totalLocations = $dispatchRegister->locations()->count();
+                            $totalReports = $dispatchRegister->reports()->count();
+                            $alert = false;
+                            if($totalLocations < $thresholdMinLocations) {
+                                $lowerGPSReport++;
+                                $alert = true;
+                            }
+                        @endphp
+                        <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}" data-original-title="@lang('Locations') / @lang('Reports')" data-placement="bottom">{!! $totalLocations !!} / {!! $totalReports !!}</small>
                     @endif
                 </div>
             </td>
@@ -396,13 +406,18 @@
 
         <script>
             @if($offRoadPercent)
-                $('.icon-car-{{$vehicle->id}}').removeClass('f-s-8').addClass('text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-passing animated');
+                $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').addClass('text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-passing animated');
             @endif
 
             @if($maxInvalidGPSPercent)
-                console.log(parseFloat('{{ $maxInvalidGPSPercent }}'));
                 if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
-                    $('.car-ss-percent-{{$vehicle->id}}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < 0.8 ? 'white': 'danger' }} faa-pulse animated');
+                    $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
+                }
+            @endif
+
+            @if($lowerGPSReport)
+                if (parseFloat('{{ $lowerGPSReport }}') > 1) {
+                    $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
                 }
             @endif
         </script>
