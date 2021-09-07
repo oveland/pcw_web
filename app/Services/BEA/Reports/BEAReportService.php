@@ -9,10 +9,8 @@ use App\Models\BEA\Mark;
 use App\Models\BEA\Turn;
 use App\Models\Company\Company;
 use Exception;
-use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
-use Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -105,6 +103,63 @@ class BEAReportService
     }
 
     /**
+     * @param Collection $liquidations
+     * @return Collection
+     */
+    public function buildMainReport($liquidations)
+    {
+        if ($liquidations->isEmpty()) {
+            return collect([
+                'empty' => true
+            ]);
+        }
+
+        $marksGroup = $liquidations->pluck('marks', 'id');
+        $totalsGroup = $liquidations->pluck('totals', 'id');
+        $detailGroup = $liquidations->pluck('liquidation', 'id');
+
+        $marksGroup = $marksGroup->map(function ($marks, $liquidationId) use ($liquidations) {
+            $marks = collect($marks);
+            $totalMarks = $marks->count();
+            $liquidation = collect($liquidations)->where('id', $liquidationId)->first();
+            return $marks->map(function ($mark, $index) use ($totalMarks, $liquidation) {
+                $pendingBalance = 0;
+                $realTaken = 0;
+                if ($totalMarks == $index + 1) {
+                    $pendingBalance = $liquidation->liquidation->pendingBalance;
+                    $realTaken = $liquidation->liquidation->realTaken;
+                }
+                $mark->pendingBalance = $pendingBalance;
+                $mark->realTaken = $realTaken;
+                return $mark;
+            });
+        });
+
+        $totalsGroup = $totalsGroup->map(function ($totals, $liquidationId) use ($liquidations) {
+            $totals = collect($totals);
+
+            $liquidation = collect($liquidations)->where('id', $liquidationId)->first();
+            $pendingBalance = $liquidation->liquidation->pendingBalance;
+            $realTaken = $liquidation->liquidation->realTaken;
+
+            $totals->put('pendingBalance', $pendingBalance);
+            $totals->put('realTaken', $realTaken);
+
+            return $totals;
+        });
+
+        $totals = $this->mergeTotals($totalsGroup);
+        $totals->pendingBalance = $totals->balance - $totals->realTaken;
+
+        return collect([
+            'marks' => $this->mergeMarks($marksGroup),
+            'totals' => $totals,
+            'details' => $this->mergeDetails($detailGroup),
+            'liquidations' => $liquidations->values()
+        ]);
+    }
+
+    /**
      * @param Collection $marksGroup
      * @return object
      */
@@ -118,7 +173,7 @@ class BEAReportService
             }
         }
 
-        return $marks->sortBy('number')->values();
+        return $marks->sortBy('dateTime')->values();
     }
 
     /**

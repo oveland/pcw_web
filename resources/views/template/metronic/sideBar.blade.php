@@ -443,6 +443,13 @@
                                 </ul>
                             </li>
                         @endif
+
+                        <li class="nav-item menu-logs">
+                            <a href="{{ route('reports.liquidation.index') }}" class="faa-parent animated-hover">
+                                <i class="fa fa-dollar faa-vertical"></i>
+                                @lang('Liquidation')
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

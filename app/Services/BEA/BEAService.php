@@ -85,22 +85,40 @@ class BEAService
     /**
      * @param $vehicleId
      * @param $date
+     * @param null $finalDate
+     * @param null $driverId
      * @return Collection
      */
-    function getBEALiquidations($vehicleId, $date)
+    function getBEALiquidations($vehicleId, $date, $finalDate = null, $driverId = null)
     {
+        $finalDate = $finalDate ?? $date;
+
         $beaLiquidations = collect([]);
         $liquidations = Liquidation::where('vehicle_id', $vehicleId)
-            ->whereDate('date', $date)
+            ->whereBetween('date', ["$date", "$finalDate 23:59:59"])
             ->with(['user', 'marks', 'vehicle', 'marks.turn.vehicle', 'marks.turn.route', 'marks.turn.driver', 'marks.trajectory'])
             ->orderBy('date')
             ->get();
+
+        if ($driverId) {
+            $liquidations = $liquidations->filter(function (Liquidation $liquidation) use ($driverId) {
+                return $liquidation->marks->filter(function (Mark $mark) use ($driverId) {
+                    return $mark->turn->driver_id && $mark->turn->driver_id == $driverId;
+                })->count();
+            });
+        }
 
         $prevLiquidation = Liquidation::where('vehicle_id', $vehicleId)
             ->where('date', '<', $date)
             ->orderByDesc('date')
             ->limit(1)
             ->first();
+
+        if ($driverId && $prevLiquidation) {
+            $prevLiquidation = $prevLiquidation->marks->filter(function (Mark $mark) use ($driverId) {
+                return $mark->turn->driver_id == $driverId;
+            });
+        }
 
         foreach ($liquidations as $liquidation) {
             if ($liquidation->marks->isNotEmpty()) {
@@ -153,6 +171,19 @@ class BEAService
     {
         $beaLiquidations = $this->getBEALiquidations($vehicleId, $date)->where('taken', true);
         return $this->report->buildDailyReport($beaLiquidations);
+    }
+
+    /**
+     * @param $vehicleId
+     * @param $driverId
+     * @param $initialDate
+     * @param $finalDate
+     * @return Collection
+     */
+    function getMainReport($vehicleId, $driverId, $initialDate, $finalDate)
+    {
+        $beaLiquidations = $this->getBEALiquidations($vehicleId, $initialDate, $finalDate, $driverId)->where('taken', true);
+        return $this->report->buildMainReport($beaLiquidations);
     }
 
     /**

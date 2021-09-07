@@ -4,6 +4,7 @@
     "/resources/js/admin/rocket/main.js": "/resources/js/admin/rocket/main.js",
     "/resources/js/example/main.js": "/resources/js/example/main.js",
     "/resources/js/reports/apps/main.js": "/resources/js/reports/apps/main.js",
+    "/resources/js/reports/liquidation/main.js": "/resources/js/reports/liquidation/main.js",
     "/resources/js/reports/passengers/photos/main.js": "/resources/js/reports/passengers/photos/main.js",
     "/resources/js/reports/passengers/sensors/cameras/main.js": "/resources/js/reports/passengers/sensors/cameras/main.js",
     "/resources/js/reports/routes/takings/main.js": "/resources/js/reports/routes/takings/main.js",

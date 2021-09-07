@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Reports\Liquidation\ReportLiquidationController;
 use App\Models\Users\User;
 
 Auth::routes();
@@ -36,7 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::prefix(__('url-params'))->group(function () {
             Route::get('/{name}', 'Example\ExampleController@getParams')->name('example.params.get');
-            Route::any('/{name}/'.__('save'), 'Example\ExampleController@setParams')->name('example.params.set');
+            Route::any('/{name}/' . __('save'), 'Example\ExampleController@setParams')->name('example.params.set');
         });
     });
 
@@ -140,14 +141,14 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::prefix(__('url-params'))->group(function () {
                 Route::get('/{name}', 'Apps\AppsReportController@getParams')->name('report.app.params.get');
-                Route::any('/{name}/'.__('save'), 'Apps\AppsReportController@setParams')->name('report.app.params.set');
+                Route::any('/{name}/' . __('save'), 'Apps\AppsReportController@setParams')->name('report.app.params.set');
             });
         });
 
         Route::prefix(__('routes'))->group(function () {
             /* Route report */
             Route::prefix(__('route-report'))->group(function () {
-                Route::get('/', function(){
+                Route::get('/', function () {
                     return redirect(route('report-dispatch'));
                 })->name('report-route');
                 Route::get('/show', 'ReportRouteController@show')->name('report-route-search');
@@ -372,6 +373,16 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/{date}', 'AccessLogController@report')->name('report-user-access-log-export');
             });
         });
+
+        Route::prefix(__('url-liquidation'))->group(function () {
+            Route::get('/', [ReportLiquidationController::class, 'index'])->name('reports.liquidation.index');
+            Route::get('/search', [ReportLiquidationController::class, 'search'])->name('reports.liquidation.search');
+            Route::get('/export', [ReportLiquidationController::class, 'export'])->name('reports.liquidation.export');
+
+            Route::prefix(__('url-params'))->group(function () {
+                Route::get('/{name}', [ReportLiquidationController::class, 'getParams'])->name('reports.liquidation.params');
+            });
+        });
     });
 
     /* Routes for operation pages */
@@ -381,7 +392,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('search'))->group(function () {
                 Route::get(__('url-liquidation'), 'TakingsPassengersLiquidationController@searchLiquidation')->name('takings-passengers-search-liquidation');
                 Route::get(__('takings'), 'TakingsPassengersLiquidationController@searchTakings')->name('takings-passengers-search-takings');
-                Route::get(__('takings').'/list', 'TakingsPassengersLiquidationController@searchTakingsList')->name('takings-passengers-search-takings-list');
+                Route::get(__('takings') . '/list', 'TakingsPassengersLiquidationController@searchTakingsList')->name('takings-passengers-search-takings-list');
                 Route::get('/file/discount/{id}', 'TakingsPassengersLiquidationController@getFileDiscount')->name('takings-passengers-search-file-discount');
             });
 
@@ -389,7 +400,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/', 'TakingsPassengersLiquidationController@index')->name('takings-passengers-liquidation');
                 Route::post('/liquidate', 'TakingsPassengersLiquidationController@liquidate')->name('takings-passengers-liquidation-liquidate');
                 Route::post('/update/{liquidation}', 'TakingsPassengersLiquidationController@updateLiquidation')->name('takings-passengers-liquidation-update');
-                Route::get('/export/'.__('Receipt').'-{liquidation}', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
+                Route::get('/export/' . __('Receipt') . '-{liquidation}', 'TakingsPassengersLiquidationController@exportLiquidation')->name('takings-passengers-liquidation-export');
                 Route::get('/test', 'TakingsPassengersLiquidationController@test')->name('takings-passengers-liquidation-test');
             });
 
@@ -399,15 +410,15 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::prefix(__('url-params'))->group(function () {
                 Route::get('/{name}', 'TakingsPassengersLiquidationController@getParams')->name('takings-passengers-liquidation-params');
-                Route::post('/{name}/'.__('save'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-set');
-                Route::post('/{name}/'.__('delete'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-delete');
+                Route::post('/{name}/' . __('save'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-set');
+                Route::post('/{name}/' . __('delete'), 'TakingsPassengersLiquidationController@setParams')->name('takings-passengers-liquidation-params-delete');
             });
 
             Route::post('takings/{liquidation}', 'TakingsPassengersLiquidationController@takings')->name('taking-passengers-takings');
 
             Route::prefix(__('report'))->group(function () {
                 Route::get(__('daily'), 'TakingsPassengersLiquidationController@searchDailyReport')->name('takings-passengers-report-daily');
-                Route::get(__('daily')."/export", 'TakingsPassengersLiquidationController@exportDailyReport')->name('takings-passengers-report-daily-export');
+                Route::get(__('daily') . "/export", 'TakingsPassengersLiquidationController@exportDailyReport')->name('takings-passengers-report-daily-export');
             });
         });
     });
@@ -475,7 +486,7 @@ Route::prefix(__('link'))->group(function () {
     Route::prefix(__('takings'))->group(function () {
         Route::prefix(__('passengers'))->group(function () {
             Route::prefix(__('url-liquidation'))->group(function () {
-                Route::get('/{user}', function (User $user){
+                Route::get('/{user}', function (User $user) {
                     Auth::login($user, true);
 
                     return redirect(route('takings-passengers-liquidation'))->with('hide-menu', true);
@@ -488,7 +499,7 @@ Route::prefix(__('link'))->group(function () {
     Route::prefix(__('reports'))->group(function () {
         Route::prefix(__('routes'))->group(function () {
             Route::prefix(__('takings'))->group(function () {
-                Route::get('/{user}', function (User $user){
+                Route::get('/{user}', function (User $user) {
                     Auth::login($user, true);
 
                     return redirect(route('reports.routes.takings.index'))->with('hide-menu', true);
@@ -501,7 +512,7 @@ Route::prefix(__('link'))->group(function () {
     Route::prefix(__('reports'))->group(function () {
         Route::prefix(__('passengers'))->group(function () {
             Route::prefix(__('photos'))->group(function () {
-                Route::get('/{user}', function (User $user){
+                Route::get('/{user}', function (User $user) {
                     Auth::login($user, true);
 
                     return redirect(route('report.passengers.photos'))->with('hide-menu', true);

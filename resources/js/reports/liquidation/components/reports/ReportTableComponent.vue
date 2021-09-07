@@ -12,8 +12,8 @@
                             <th width="10%">
                                 <i class="fa fa-retweet text-muted"></i><br> {{ $t('Trajectory') }}
                             </th>
-                            <th width="15%">
-                                <i class="fa fa-clock-0 text-muted"></i><br> {{ $t('Time') }}
+                            <th width="10%">
+                                <i class="fa fa-retweet text-muted"></i><br> {{ $t('Date') }}
                             </th>
                             <th>
                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('BEA') }}
@@ -54,13 +54,19 @@
                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('Penalty') }}
                             </th>
                             <th class="col-md-1">
-                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Liquidate') }}
-                            </th>
-                            <th class="col-md-1">
                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('Payroll cost') }}
                             </th>
                             <th class="col-md-1">
                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('Net to car') }}
+                            </th>
+							<th class="col-md-1">
+								<i class="fa fa-dollar text-muted"></i><br> {{ $t('Liquidate') }}
+							</th>
+                            <th class="col-md-1">
+                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Real taken') }}
+                            </th>
+                            <th class="col-md-1">
+                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Pending balance') }}
                             </th>
                         </tr>
                         </thead>
@@ -71,12 +77,17 @@
                                 <i :class="mark.status.icon+' font-'+ mark.status.class" class="tooltips" data-placement="right" :data-original-title="mark.status.name"></i>
                             </td>
                             <td>
-                                <small class="span-full badge badge-info" v-if="mark.trajectory">
-                                    {{ mark.trajectory.name }}
-                                </small>
+								<small class="span-full badge badge-info" v-if="mark.trajectory">
+									{{ mark.trajectory.name }}
+								</small>
                             </td>
-                            <td width="15%" class="text-center">
-                                <small>{{ mark.initialTime }} - {{ mark.finalTime }}</small>
+                            <td>
+								<div class="text-center">
+									<small>{{ mark.date }}</small>
+								</div>
+								<div class="text-center">
+									<small>{{ mark.initialTime }} - {{ mark.finalTime }}</small>
+								</div>
                             </td>
 
                             <td class="text-center">{{ mark.totalBEA | numberFormat('$0,0') }}</td>
@@ -91,11 +102,13 @@
                             <td class="text-center">{{ mark.locks }}</td>
                             <td class="text-center">{{ mark.boarded }}</td>
                             <td class="text-center">{{ mark.penalty.value | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ turn.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ mark.payRollCost | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ turnNetToCar(mark, turn) | thousandRound | numberFormat('$0,0') }}</td>
+							<td class="text-center">{{ turn.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
+							<td class="text-center">{{ mark.realTaken | thousandRound | numberFormat('$0,0') }}</td>
+							<td class="text-center">{{ mark.pendingBalance | thousandRound | numberFormat('$0,0') }}</td>
                         </tr>
-						<tr class="bg-inverse text-white height-50">
+                        <tr class="bg-inverse text-white height-50">
                             <td colspan="3" class="text-right">
                                 <i class="icon-layers"></i> {{ $t('Total') }}
                             </td>
@@ -111,9 +124,11 @@
                             <td class="text-center">{{ totals.totalLocks }}</td>
                             <td class="text-center">{{ totals.totalBoarded }}</td>
                             <td class="text-center">{{ totals.totalPenalties | numberFormat('$0,0') }}</td>
-                            <td class="text-center">{{ totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ totalPayRollCost | numberFormat('$0,0') }}</td>
                             <td class="text-center">{{ totalNetToCar | thousandRound | numberFormat('$0,0') }}</td>
+							<td class="text-center">{{ totals.totalDispatch | thousandRound | numberFormat('$0,0') }}</td>
+							<td class="text-center">{{ totals.realTaken | thousandRound | numberFormat('$0,0') }}</td>
+							<td class="text-center">{{ totals.pendingBalance | thousandRound | numberFormat('$0,0') }}</td>
                         </tr>
                         </tbody>
                     </table>

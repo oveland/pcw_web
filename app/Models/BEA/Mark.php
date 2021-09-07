@@ -386,6 +386,7 @@ class Mark extends Model
             'date' => $this->date->toDateString(),
             'initialTime' => $this->initial_time->toTimeString(),
             'finalTime' => $this->final_time->toTimeString(),
+            'dateTime' => $this->date->toDateString()." ".$this->initial_time->toTimeString(),
             'duration' => $this->duration,
             'trajectory' => $this->trajectory,
             'passengersUp' => $this->passengers_up,

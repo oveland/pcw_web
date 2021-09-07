@@ -16,8 +16,10 @@ mix.js('resources/js/app.js', 'public/js').sass('resources/sass/app.scss', 'publ
 mix.js('resources/js/example/main.js', 'resources/js/example/');
 
 mix.js('resources/js/takings/passengers/liquidation/main.js', 'resources/js/takings/passengers/liquidation/');
+
 mix.js('resources/js/reports/passengers/sensors/cameras/main.js', 'resources/js/reports/passengers/sensors/cameras/');
 mix.js('resources/js/reports/apps/main.js', 'resources/js/reports/apps/');
+mix.js('resources/js/reports/liquidation/main.js', 'resources/js/reports/liquidation/');
 
 mix.js('resources/js/admin/rocket/main.js', 'resources/js/admin/rocket/');
 mix.js('resources/js/reports/passengers/photos/main.js', 'resources/js/reports/passengers/photos/');
