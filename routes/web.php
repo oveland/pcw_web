@@ -356,6 +356,10 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/search', 'Booths\BoothsHistoricReportController@search')->name('report-booths-search');
             });
         });
+
+        Route::prefix(__('url-liquidation'))->group(function () {
+            Route::get('/', 'Reports\Liquidation\ReportLiquidationController@index')->name('reports.liquidation.index');
+        });
     });
 
     /* Routes for operation pages */
