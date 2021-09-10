@@ -18,15 +18,32 @@ class BearingExport implements WithMultipleSheets
     {
         $data = (object)$data;
 
-        $this->report = collect($data->report);
+        $this->report = collect([
+            'date' => $data->date,
+            'bearing' => collect([])
+        ]);
 
-        $this->fileName = Str::limit(__('R.') . " $data->routeName $data->date", 31, '') . '.' . Extension::XLSX;
+        collect($data->bearing)->groupBy('vehicle')->each(function ($bearingByVehicle) {
+            collect($bearingByVehicle)->sortBy('departure')->each(function ($bearing) {
+                $this->report->get('bearing')->push($bearing);
+            });
+
+            $this->report->get('bearing')->push([
+                'vehicle' => '',
+                'departure' => '',
+                'turn' => '',
+                'route' => [
+                    'name' => ''
+                ],
+                'arrival' => '',
+            ]);
+        });
+
+        $this->fileName = Str::limit(__('R.') . " $data->date", 31, '') . '.' . Extension::XLSX;
     }
 
     public function sheets(): array
     {
-        return $this->report->map(function ($report) {
-            return new BearingRouteSheet((object)$report);
-        })->toArray();
+        return [new BearingRouteSheet((object)$this->report)];
     }
 }

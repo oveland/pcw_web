@@ -5,6 +5,7 @@ namespace App\Exports\Bearing\Sheets;
 use App\Exports\ExportWithPCWStyle;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -20,29 +21,31 @@ class BearingRouteSheet implements FromCollection, ShouldAutoSize, Responsable, 
 {
     use ExportWithPCWStyle;
 
+    /**
+     * @param Collection $report
+     */
     public function __construct($report)
     {
         $dataExcel = array();
-        $route = (object)$report->route;
-        $bearing = (object)$report->bearing;
-        $date = $report->date ?? Carbon::now()->toDateString();
+        $bearing = $report->get('bearing');
+        $date = $report->get('date');
 
         foreach ($bearing as $b) {
             $b = (object)$b;
 
             $dataExcel[] = [
-                __('Turn') => $b->turn,
                 __('Vehicle') => $b->vehicle,
                 __('Departure') => $b->departure,
+                __('Route') => $b->route['name'],
                 __('Arrival') => $b->arrival,
             ];
         }
 
         $this->report = (object)[
             'fileName' => __('Bearing report'),
-            'title' => __('Bearing') . "\n" . $route->name,
+            'title' => __('Bearing'),
             'subTitle' => $date,
-            'sheetTitle' => $route->name,
+            'sheetTitle' => __('Bearing') . ' ' . $date,
             'data' => $dataExcel
         ];
 
