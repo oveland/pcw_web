@@ -49,7 +49,7 @@ class ImageRekognitionCommand extends Command
             if ($vehicle) {
                 $photos = Photo::whereVehicleAndDateAndSide($vehicle, $date, $camera)
                     ->where('dispatch_register_id', '>', 0)
-                    ->where('id', '>=', 77333)
+//                    ->where('id', '<=', 117340)
                     ->orderBy('date')
                     ->get();
 
