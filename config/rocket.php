@@ -689,34 +689,34 @@ return [
             ]
         ]
     ],
-    37 => [
+    39 => [
         'persons' => [
             'photo' => [
                 'effects' => [
                     'brightness' => [
                         [
                             'range' => [0, 15],
-                            'value' => 0
+                            'value' => 10
                         ],
                         [
                             'range' => [15, 100],
-                            'value' => 20
+                            'value' => 10
                         ]
                     ],
-                    'contrast' => 8,
+                    'contrast' => -30,
                     'gamma' => 1,
-                    'sharpen' => 0
+                    'sharpen' => 50,
                 ],
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 20],
+                            'range' => [0, 25],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [20, 40],
+                            'range' => [25, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
@@ -735,23 +735,23 @@ return [
                         ]
                     ],
                     'box' => [
-                        'ld' => 2.4,                                # Min relation height/width for Large Detection
+                        'ld' => 3.5,                                # Min relation height/width for Large Detection
                         'mld' => 10,                                # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
-                            'height' => 40,                         # Min percent height for Overlap Detection
-                            'rs' => 2.7,                            # Min relation height/width for Overlap Detection
-                            'rsw' => 15,                            # Min percent width for Overlap Detection when rs
+                            'height' => 60,                         # Min percent height for Overlap Detection
+                            'rs' => 3.5,                            # Min relation height/width for Overlap Detection
+                            'rsw' => 15,                            # Min percent height for Overlap Detection when rs
                         ]
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 130,                            # Percent of height when Normal Detection
-                            'ld' => 150                             # Percent of height when Large Detection
+                            'nd' => 120,                            # Percent of height when Normal Detection
+                            'ld' => 150                              # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 40,                             # Percent top of point center when Normal Detection
-                            'ld' => 50                              # Percent top of point center when Large Detection
+                            'nd' => 50,                             # Percent top of point center when Normal Detection
+                            'ld' => 40                              # Percent top of point center when Large Detection
                         ]
                     ]
                 ]
@@ -762,21 +762,17 @@ return [
                 'effects' => [
                     'brightness' => [
                         [
-                            'range' => [0, 10],
-                            'value' => 0
-                        ],
-                        [
-                            'range' => [10, 15],
+                            'range' => [0, 15],
                             'value' => 10
                         ],
                         [
                             'range' => [15, 100],
-                            'value' => 20
-                        ],
+                            'value' => 10
+                        ]
                     ],
-                    'contrast' => 8,
+                    'contrast' => -30,
                     'gamma' => 1,
-                    'sharpen' => 0
+                    'sharpen' => 50,
                 ],
                 'rekognition' => [
                     'rules' => [
@@ -787,14 +783,20 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => [25, 60],
+                            'range' => [25, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [60, 100],
-                            'color' => '#9bef00',
+                            'range' => [40, 50],
+                            'color' => 'yellow',
+                            'background' => 'rgba(137, 138, 135, 0.1)',
+                            'count' => false
+                        ],
+                        [
+                            'range' => [50, 100],
+                            'color' => '#05da55',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
                         ]
@@ -811,18 +813,19 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 240,                            # Percent of height when Normal Detection
-                            'ld' => 240                             # Percent of height when Large Detection
+                            'nd' => 200,                            # Percent of height when Normal Detection
+                            'ld' => 200                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 50,                             # Percent top of point center when Normal Detection
-                            'ld' => 50                              # Percent top of point center when Large Detection
+                            'nd' => 40,                             # Percent top of point center when Normal Detection
+                            'ld' => 30                              # Percent top of point center when Large Detection
                         ]
                     ]
                 ]
             ]
         ]
     ],
+
     35 => [
         'persons' => [
             'photo' => [

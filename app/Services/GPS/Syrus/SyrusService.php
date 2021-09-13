@@ -24,7 +24,7 @@ class SyrusService
     {
         $service = new PhotoService();
 
-        $gpsVehicle = GpsVehicle::where('imei', $imei == '352557100781619' ? '864180032117116' : $imei)->first();
+        $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
         $vehicle = $gpsVehicle->vehicle;
 
         $response = collect([
@@ -43,7 +43,7 @@ class SyrusService
             $fileName = collect(explode('/', $file))->last();
 
             if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
-                $side = $this->getSide($fileName);
+                $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
 
                 $process = $service->saveImageData([
@@ -67,14 +67,14 @@ class SyrusService
         return $response;
     }
 
-    function getSide($fileName)
+    function getSide($fileName, $imei)
     {
         if (Str::startsWith($fileName, '1')) {
-            return '1';
+            return $imei == '352557100781619' ? '3' : '1'; // TODO: must be changed when fix correctly position
         } else if (Str::startsWith($fileName, '2')) {
             return '2';
         } else if (Str::startsWith($fileName, '3')) {
-            return '3';
+            return $imei == '352557100781619' ? '1' : '3';  // TODO: must be changed when fix correctly position
         }
 
         return '0';
