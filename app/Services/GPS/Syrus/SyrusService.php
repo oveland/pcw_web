@@ -8,6 +8,7 @@ use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\GpsVehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -18,7 +19,7 @@ class SyrusService
 {
     /**
      * @throws FileNotFoundException
-     * @throws \Exception
+     * @throws Exception
      */
     function syncPhoto($imei): Collection
     {
@@ -41,24 +42,27 @@ class SyrusService
         $saveFiles = collect([]);
         foreach ($files as $file) {
             $fileName = collect(explode('/', $file))->last();
-
+            dump($file);
             if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
+                try {
+                    $process = $service->saveImageData([
+                        'date' => Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString(),
+                        'img' => Image::make($storage->get($file))->encode('data-url'),
+                        'type' => 'syrus',
+                        'side' => $side,
+                        'uid' => $fileName
+                    ]);
 
-                $process = $service->saveImageData([
-                    'date' => Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString(),
-                    'img' => Image::make($storage->get($file))->encode('data-url'),
-                    'type' => 'syrus',
-                    'side' => $side,
-                    'uid' => $fileName
-                ]);
+                    if ($process->response->success === true) {
+                        $storage->delete($file);
+                    }
 
-                if ($process->response->success === true) {
-                    $storage->delete($file);
+                    $saveFiles->push($process->response->message);
+                } catch (Exception $e) {
+                    dump($e);
                 }
-
-                $saveFiles->push($process->response->message);
             }
         }
 

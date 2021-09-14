@@ -13,7 +13,7 @@ class ImageRekognitionCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:image:rekognition {--vehicle-plate=} {--date=} {--type=persons} {--camera=0}';
+    protected $signature = 'rocket:image:rekognition {--vehicle-plate=} {--date=} {--type=persons_and_faces} {--camera=0}';
 
     /**
      * The console command description.

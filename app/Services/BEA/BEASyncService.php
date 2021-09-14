@@ -203,8 +203,8 @@ class BEASyncService
         DB::statement("ALTER SEQUENCE bea_marks_id_seq RESTART WITH $maxSequence");
 
         $queryVehicle = $this->vehicle ? "AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . ($this->vehicle->bea_id ?? 0) . ")" : "";
-
-        $marks = BEADB::for($this->company)->select("SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle");
+        $queryMarks = "SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle";
+        $marks = BEADB::for($this->company)->select($queryMarks);
 
         foreach ($marks as $markBEA) {
             DB::transaction(function () use ($markBEA) {
@@ -228,7 +228,6 @@ class BEASyncService
                 DB::statement("UPDATE bea_marks SET duplicated = TRUE WHERE company_id = $companyId AND bea_id IN ($duplicatedIdsPCW)");
             }
         }
-
 
         if ($this->vehicle && $this->date) DB::select("SELECT refresh_bea_marks_turns_numbers_function(" . $this->vehicle->id . ", '$this->date')");
     }
@@ -264,8 +263,11 @@ class BEASyncService
         }
 
         // Synchronized models
-        $turn = $this->validateTurn($markBEA->AMR_IDTURNO);
-        $trajectory = $this->validateTrajectory($markBEA->AMR_IDDERROTERO);
+        $turn = Turn::where('bea_id', $markBEA->AMR_IDTURNO)->where('company_id', $this->company->id)->first();
+        if (!$turn) $turn = $this->validateTurn($markBEA->AMR_IDTURNO);
+
+        $trajectory = Trajectory::where('bea_id', $markBEA->AMR_IDDERROTERO)->where('company_id', $this->company->id)->first();
+        if (!$trajectory) $trajectory = $this->validateTrajectory($markBEA->AMR_IDDERROTERO);
 
         $initialTime = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO);
         $finalTime = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHFINAL);
