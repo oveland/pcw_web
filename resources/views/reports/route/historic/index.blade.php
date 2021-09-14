@@ -796,7 +796,7 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893) {
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
 

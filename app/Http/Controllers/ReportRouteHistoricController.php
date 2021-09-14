@@ -147,7 +147,7 @@ class ReportRouteHistoricController extends Controller
             $passenger = $location->passenger;
 
             if ($passenger) {
-                $dispatchRegister = $passenger->dispatchRegister;
+//                $dispatchRegister = $passenger->dispatchRegister;
 
                 if ($dispatchRegister) {
                     $newTurn = $prevDr ? $dispatchRegister->id != $prevDr->id : true;

@@ -147,7 +147,7 @@ class DispatchRouteService
                     $completedPercent = $routeDistance > 0 ? (($report ? $report->distancem : 0) / $routeDistance) * 100 : 0;
                     if ($completedPercent > 100) $completedPercent = 100;
 
-                    $dispatchRegister = $location->dispatchRegister;
+                    $dr = $location->dispatchRegister(true)->first();
 
                     $reportData->push((object)[
                         'locationId' => $location->id,
@@ -171,7 +171,7 @@ class DispatchRouteService
                             'iconClass' => $location->vehicleStatus->icon_class,
                             'mainClass' => $location->vehicleStatus->main_class,
                         ],
-                        'dispatchRegister' => $dispatchRegister ? true : null,
+                        'dispatchRegister' => $dr ? true : null,
                     ]);
 
                     $lastReport = $report;
