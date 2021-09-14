@@ -13,7 +13,9 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Image;
+use Intervention\Image\Exception\NotReadableException;
 use Storage;
+use Symfony\Component\ErrorHandler\Error\FatalError;
 
 class SyrusService
 {
@@ -42,11 +44,19 @@ class SyrusService
         $saveFiles = collect([]);
         foreach ($files as $file) {
             $fileName = collect(explode('/', $file))->last();
-            dump($file);
             if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
+
+                $fileHasError = false;
                 try {
+                    $jpegInfo = exec("jpeginfo -c " . $storage->path($file));
+                    $fileHasError = Str::contains($jpegInfo, "ERROR");
+                } catch (Exception $e) {
+
+                }
+
+                if (!$fileHasError) {
                     $process = $service->saveImageData([
                         'date' => Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString(),
                         'img' => Image::make($storage->get($file))->encode('data-url'),
@@ -60,8 +70,6 @@ class SyrusService
                     }
 
                     $saveFiles->push($process->response->message);
-                } catch (Exception $e) {
-                    dump($e);
                 }
             }
         }
