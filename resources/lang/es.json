@@ -786,6 +786,8 @@
   "st-occupation": "ocupación",
   "st-boarding": "ascensos",
   "st-released": "descensos",
-  "st-activated": "contados",
-  "st-current": "ocupados"
+  "st-activated": "censados",
+  "st-counted": "contados",
+  "st-current": "ocupados",
+  "Profile seating": "Perfil de asientos"
 }
