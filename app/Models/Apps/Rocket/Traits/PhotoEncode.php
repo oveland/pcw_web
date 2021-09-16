@@ -3,6 +3,7 @@
 
 namespace App\Models\Apps\Rocket\Traits;
 
+use App\Models\Apps\Rocket\ProfileSeat;
 use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -124,18 +125,20 @@ trait PhotoEncode
                 }
             }
 
-            if($withTitle){
-                $image->rectangle($image->width()/3, 10, 2*$image->width()/3, 35, function ($draw) {
+            if ($withTitle) {
+                $image->rectangle($image->width() / 2 - 90, 4, $image->width() / 2 + 90, 40, function ($draw) {
                     $draw->background('rgba(0, 0, 0, 0.5)');
                 });
-                $image->text(__('CAMERA')." $this->side", $image->width()/2, 20, function ($font) {
+                $image->text(__('CAMERA') . " $this->side", $image->width() / 2, 20, function ($font) {
                     $font->color('#ffff00');
-                    $font->size(1000);
+                    $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                    $font->size(14);
                     $font->align('center');
                 });
-                $image->text($this->date->toDateTimeString(), $image->width()/2, 30, function ($font) {
+                $image->text($this->date->toDateTimeString(), $image->width() / 2, 35, function ($font) {
                     $font->color('#ffff00');
-                    $font->size(1000);
+                    $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                    $font->size(10);
                     $font->align('center');
                 });
             }
@@ -151,11 +154,33 @@ trait PhotoEncode
                 }
             }
 
-            $image->text("PCW@" . Carbon::now()->format('Y'), $image->width()/2, $image->height() - 10, function ($font) {
-                $font->color('#00ff00');
+            $image->text("PCW @ " . Carbon::now()->format('Y') . "", $image->width() / 2, $image->height() - 10, function ($font) {
+                $font->color('#7980ff');
                 $font->align('center');
-                $font->size(24);
+                $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                $font->size(12);
             });
+
+            $profileSeat = $this->vehicle->getProfileSeating($this->side);
+            if ($profileSeat && request()->get('d')) {
+//                dd($this->data_persons, $this->data_faces);
+                foreach ($profileSeat->occupation as $zone) {
+                    $zone = (object)$zone;
+                    $center = (object)$zone->center;
+                    $percentWidth = $image->width() / 100;
+                    $percentHeight = $image->height() / 100;
+
+                    $image->rectangle($center->left * $percentWidth - 22, $center->top * $percentHeight - 25, $center->left * $percentWidth + 22, $center->top * $percentHeight + 5, function ($draw) {
+                        $draw->background('rgba(0, 0, 0, 0.2)');
+                    });
+                    $image->text($zone->number, $center->left * $percentWidth, $center->top * $percentHeight, function ($font) {
+                        $font->color('#ffff00');
+                        $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                        $font->size(24);
+                        $font->align('center');
+                    });
+                }
+            }
 
         } catch (FileNotFoundException $e) {
 
