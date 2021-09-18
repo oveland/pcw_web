@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('db:manage-markers-reports')->dailyAt('02:00');
         $schedule->command('db:manage-old-routines')->dailyAt('03:00');
 
-        $schedule->command('vehicles:binnacle:notify')->dailyAt('03:00');
+     //   $schedule->command('vehicles:binnacle:notify')->dailyAt('03:00');
 
 
 //        $schedule->command('gps:restart')->dailyAt('12:00');
@@ -76,7 +76,7 @@ class Kernel extends ConsoleKernel
         //$schedule->command('mail-routes:dispatches --company=28 --prod=true')->dailyAt('04:00');
 
         /* Reports for ALAMEDA */
-        $schedule->command('mail-routes:events --company=14 --prod=true')->dailyAt('07:00');
+        //$schedule->command('mail-routes:events --company=14 --prod=true')->dailyAt('07:00');
         //$schedule->command('mail-routes:dispatches --company=14 --prod=true')->dailyAt('04:00');
 //        $schedule->command('mail-passengers:consolidated --company=14')->dailyAt('08:10');
 

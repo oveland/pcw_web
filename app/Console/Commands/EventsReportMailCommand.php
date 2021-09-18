@@ -106,11 +106,13 @@ class EventsReportMailCommand extends Command
                         'accidentes@alameda.com.co',
 
                         'olatorre22@hotmail.com',
+                        'oscarivelan@gmail.com'
                        // 'oiva.pcw@gmail.com'
                     ];
 
                 } else {
-                    $mailTo = ['olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com', 'oiva.pcw@gmail.com'];
+//                    $mailTo = ['olatorre22@hotmail.com', 'soportenivel2pcwtecnologia@outlook.com', 'oiva.pcw@gmail.com'];
+                    $mailTo = ['oscarivelan@gmail.com'];
                 }
                 break;
             /*case Company::TUPAL:
