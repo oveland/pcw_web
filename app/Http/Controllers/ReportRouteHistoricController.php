@@ -106,6 +106,7 @@ class ReportRouteHistoricController extends Controller
         $totalInRoundTrips = 0;
         $passengersInRoundTrip = 0;
         $passengersOutRoundTrip = 0;
+        $seatingCounted = [];
 
         $totalAscents = 0;
         $totalAscentsInRoundTrip = 0;
@@ -282,6 +283,7 @@ class ReportRouteHistoricController extends Controller
                 $passengersTripOnPhoto = 0;
                 $passengersInRoundTrip = 0;
                 $photoTags = [];
+                $seatingCounted = [];
             }
 
             if ($location->photos->count()) {
@@ -339,7 +341,7 @@ class ReportRouteHistoricController extends Controller
                     'index' => $index,
                     'passengers' => $totalPassengersOnPhoto,
                     'passengersTrip' => $passengersTripOnPhoto,
-                    "alerts" => $this->getPhotoAlerts($photoTags),
+                    "alerts" => $this->getPhotoAlerts($location->photo, $photoTags, $seatingCounted),
                 ],
                 'photos' => $photos
             ]);
@@ -366,12 +368,17 @@ class ReportRouteHistoricController extends Controller
         return $report;
     }
 
-    function getPhotoAlerts($photoTags)
+    function getPhotoAlerts($photo, $photoTags, &$seatingCounted)
     {
         $photoTags = collect($photoTags);
         $alerts = collect([]);
 
         if ($photoTags->get('occupation')) {
+            $alerts->push([
+                'color' => 'primary',
+                'message' => "<h5>" . strtoupper(__('Profile seating')) . "</h5>"
+            ]);
+
             $occupation = collect($photoTags->get('occupation'));
             $percent = $occupation->get('percent');
 
@@ -394,11 +401,49 @@ class ReportRouteHistoricController extends Controller
             $color = 'info';
             foreach (['current', 'boarding', 'activated'] as $type) {
                 $data = $occupation->get($type);
-                $total = $data ? collect(explode(' ', $data))->count() : 0;
+                $seatingList = collect(explode(' ', $data));
+
+                if (!$photo && collect(['activated', 'boarding'])->contains($type)) {
+                    $data = "";
+                    $seatingList = collect([]);
+                }
+
+                $total = $data ? $seatingList->count() : 0;
                 $total = $total ? " ($total)" : "";
+
                 $alerts->push([
                     'color' => $color,
                     'message' => "<strong>" . ucfirst(__("st-$type")) . "$total</strong>: $data"
+                ]);
+
+                if ($type == 'activated' && $total) {
+                    foreach ($seatingList as $activated) {
+                        $seatingCounted[$activated] = ($seatingCounted[$activated] ?? 0) + 1;
+                    }
+                }
+            }
+
+            $color = 'primary';
+            $dataCounted = collect($seatingCounted);
+            if ($dataCounted->count()) {
+                $countedStr = "";
+
+                $dataCounted = $dataCounted->sortBy(function ($value, $key) {
+                    return $key;
+                });
+
+                foreach ($dataCounted as $seat => $countedTimes) {
+                    $colorCounted = $countedTimes > 1 ? "warning" : $color;
+                    $countedTimes = "<small class='text-$colorCounted'>($countedTimes)</small>";
+                    $countedStr .= "$seat$countedTimes ";
+                }
+
+                $totalCounted = $dataCounted->count();
+                $totalCounted = $totalCounted > 0 ? " ($totalCounted)" : "";
+
+                $alerts->push([
+                    'color' => $color,
+                    'message' => "<h6>" . strtoupper(__('st-counted')) . "$totalCounted: $countedStr</h6>"
                 ]);
             }
         }
