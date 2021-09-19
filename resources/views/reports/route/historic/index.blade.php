@@ -39,6 +39,13 @@
             border: none !important;
         }
 
+        .speed-player {
+            position: absolute;
+            bottom: -34px;
+            background: #00000073;
+            border-radius: 100px !important;
+        }
+
         .speed-player .irs {
             height: 18px !important;
             margin-top: 5px;
@@ -186,11 +193,10 @@
         .info-trips-container {
             background: rgba(0, 0, 0, 0.5);
             width: auto;
-            padding-right: 30px !important;
             display: table;
             transition: all ease 500ms;
             position: absolute;
-            top: 143px;
+            top: 85px;
             left: 0;
         }
 
@@ -242,10 +248,22 @@
             left: 10px;
         }
 
+        .color-white {
+            color: white !important;
+        }
+
+        .form-search-report .form-group {
+            margin-bottom: 5px;
+        }
+
         @media only screen and (max-width: 1200px) {
             .btn-passengers-info {
 
             }
+        }
+
+        .help-block {
+            margin-top: 5px !important;
         }
 
         @media only screen and (max-width: 600px) {
@@ -296,26 +314,25 @@
             }
 
             .range-reports {
+                padding-top: 15px !important;
                 padding-left: 20px !important;
                 padding-right: 20px !important;
             }
 
             .info-trips-container {
                 width: 100%;
-                background: #00000030;
-                padding-right: 20px !important;
-                border-radius: 0;
+                background: transparent;
                 position: initial;
-                bottom: 0;
-                left: 0;
-            }
-
-            .irs-with-grid {
-                height: auto !important ;
+                margin-top: 30px !important;
             }
 
             .irs-grid {
                 display: none !important;
+            }
+
+            .speed-player {
+                position: initial;
+                background: transparent;
             }
 
             .slider-player .irs {
@@ -358,7 +375,7 @@
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" action="{{ route('report-route-historic-search') }}">
             <div class="panel panel-inverse m-0">
-                <div class="panel-body p-b-5">
+                <div class="panel-body p-5">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
                             <div class="col-md-2" ontouchstart="pause()">
@@ -441,7 +458,6 @@
 
                         <div class="col-md-12 col-xs-12 col-sm-12">
                             <input id="time-range-report" name="time-range-report" type="text" value="" />
-                            <span class="help-block hide"> @lang('Quickly select a time range from 00:00 to 23:59') </span>
                         </div>
 
                         <div class="col-md-3 col-sm-6 col-xs-12 form-actions hidden-sm hidden-md hidden-lg" ontouchstart="pause()">
@@ -465,16 +481,16 @@
 
         <div class="historic-container col-md-12">
             <div class="col-md-12 col-sm-12 col-xs-12 p-0" style="display: grid">
-                <div class="range-reports col-md-12" style="display: grid">
+                <div class="range-reports col-md-12 p-t-2" style="display: grid">
                     <div class="slider-player">
-                        <div class="text-center hidden-xs" style="position: absolute;width: 100%; top: 10px">
+                        <div class="text-center hidden-xs" style="position: absolute;width: 100%; top: 3px">
                             <label for="slider-player">
                                 <small class="text-muted">Deslice para reproducir recorrido</small>
                             </label>
                         </div>
                         <input id="slider-player" type="text" />
                     </div>
-                    <div class="help-block text-white show-info m-b-0">
+                    <div class="help-block text-white show-info m-0">
                         <div class="col-md-4 col-sm-12 col-xs-12 p-0 hidden-sxs">
                             <span class="hidden-xs">
                                 <i class="fa fa-map-o"></i> <span class="total">0</span> @lang('reports')
@@ -488,7 +504,7 @@
                             <div class="play-controls text-center">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <span class="btn btn-default btn-xs btn-circle btn-backward tooltipss m-0 faa-parent animated-hover" data-placement="left" title="@lang('Backward')"  onclick="backward(maxTrack/10, true)" ontouchstart="backward(maxTrack/10, true)">
-                                        <i class="fa fa-step-backward faa-passing-reverse"></i>
+                                        <i class="fa fa-fast-backward faa-passing-reverse"></i>
                                     </span>
 
                                     <span class="btn btn-default btn- btn-circle btn-play tooltipss" title="@lang('Play')"  onclick="pause()" ontouchstart="pause()">
@@ -500,7 +516,7 @@
                                     </span>
 
                                     <span class="btn btn-default btn-xs btn-circle btn-forward tooltipss m-0 faa-parent animated-hover" data-placement="right" title="@lang('Forward')"  onclick="forward(maxTrack/10, true)" ontouchstart="forward(maxTrack/10, true)">
-                                        <i class="fa fa-step-forward faa-passing"></i>
+                                        <i class="fa fa-fast-forward faa-passing"></i>
                                     </span>
                                 </div>
 
@@ -510,8 +526,8 @@
                             </div>
 
                             @if(Auth::user()->company->hasSensorCounter())
-                                <div class="col-md-12 col-xs-12 btn-passengers-info tooltipss active" data-placement="bottom" title="@lang('Count passengers')">
-                                    @if(Auth::user()->isAdmin())
+                                <div class="col-md-12 col-xs-12 btn-passengers-info tooltips active" data-placement="bottom" title="@lang('Count passengers')">
+                                    @if(Auth::user()->isAdmin() && false)
                                         <small class="passengers-label p-0 hidden-xs" style="display: block">
                                             <span class="passengers-frame-container">
                                                 <i class="fa fa-clock-o"></i>
@@ -536,62 +552,6 @@
                             @endif
                         </div>
 
-                        @if(Auth::user()->company->hasSensorCounter())
-                            <div class="m-t-5 p-10 p-t-0 info-trips-container" style="display: nonse">
-                                <h5 class="text-bold m-b-0">
-                                    <i class="fa fa-users"></i>   @lang('Histórico de pasajeros'):
-                                    <span class="info-trips-total">0</span>
-                                    <span class="hide">
-                                        (<span class="passengers-total"></span>
-                                        <small class="text-lime hide">
-                                            <i class="fa fa-angle-double-up"></i> <span class="passengers-total-ascents"></span>
-                                        </small>
-                                        <small class="text-warning hide">
-                                            <i class="fa fa-angle-double-down"></i> <span class="passengers-total-descents"></span>
-                                        </small>)
-                                    </span>
-                                </h5>
-                                <div class="text-center">
-                                    <div class="label label-warning tooltips" title="@lang('Total charge')" style="display: inline-block;margin-top: 5px">
-                                        <small style="font-weight: bold !important;color: white;font-size: 1.1rem;">
-                                            <i class="fa fa-dollar"></i> <span class="hidden-xs hide">@lang('Total charge'):</span> <span class="passengers-total-charge"></span>
-                                        </small>
-                                        <hr class="m-0">
-                                        <small style="font-weight: bold !important;color: white;font-size: 1.1rem;" class="passengers-tariff-charges">
-
-                                        </small>
-                                    </div>
-                                </div>
-                                <div style="display: flex">
-                                    <div class="info-trips"></div>
-                                    <div style="align-items: flex-end; display: flex;padding-left: 5px">
-                                        <small class="passengers-label text-lime hide" style="display: none">
-                                            <i class="fa fa-angle-double-up"></i> <span class="hidden-xs hide">@lang('Ascents'):</span> <span class="passengers-route-ascents"></span>
-                                        </small>
-
-                                        <small class="passengers-label text-warning hide" style="display: none">
-                                            <i class="fa fa-angle-double-down"></i> <span class="hidden-xs hide">@lang('Descents'):</span> <span class="passengers-route-descents"></span>
-                                        </small>
-
-                                        <small class="passengers-label text-info tooltips" style="display: none;margin-left: 5px" title="@lang('Tariff')">
-                                            <i class="fa fa-tag"></i> <span class="passengers-route-tariff"></span>
-                                        </small>
-                                    </div>
-                                </div>
-
-                                <div class="photo-alerts" style="display: grid"></div>
-
-                                @if(Auth::user()->isAdmin())
-                                    <small class="passengers-label p-0 hidden-sm hidden-md hidden-lg" style="display: block">
-                                        <span class="passengers-frame-container">
-                                            <i class="fa fa-clock-o"></i>
-                                            <span class="passengers-frame p-0">Frame counter</span>
-                                        </span>
-                                    </small>
-                                @endif
-                            </div>
-                        @endif
-
                         <div class="col-md-4 col-sm-12 col-xs-12 p-0 text-right show-info-last">
                             <span class="btn btn-default btn-xs btn-circle btn-historic-info show-info-route tooltips" data-title="@lang('Route') | @lang('Mileage') @lang('route')"><i class="fa fa-flag"></i> <span class="route"></span> | <span class="mileage-route">0</span> Km</span>
                             <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Speed')"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
@@ -602,8 +562,80 @@
                             @endif
                         </div>
                     </div>
+
+                    @if(Auth::user()->company->hasSensorCounter())
+                        <div class="m-t-5 p-20 p-t-0 p-b-0 info-trips-container">
+                            <h5 class="text-bold m-b-0">
+                                <i class="fa fa-users"></i> @lang('Histórico de pasajeros'):
+                                <span class="info-trips-total">0</span>
+                                <span class="hide">
+                                        (<span class="passengers-total"></span>
+                                        <small class="text-lime hide">
+                                            <i class="fa fa-angle-double-up"></i> <span class="passengers-total-ascents"></span>
+                                        </small>
+                                        <small class="text-warning hide">
+                                            <i class="fa fa-angle-double-down"></i> <span class="passengers-total-descents"></span>
+                                        </small>)
+                                    </span>
+                            </h5>
+                            <div class="text-center">
+                                <div class="label label-warning tooltips" title="@lang('Total charge')" style="display: inline-block;margin-top: 5px">
+                                    <small style="font-weight: bold !important;color: white;font-size: 1.1rem;">
+                                        <i class="fa fa-dollar"></i> <span class="hidden-xs hide">@lang('Total charge'):</span> <span class="passengers-total-charge"></span>
+                                    </small>
+                                    <hr class="m-0">
+                                    <small style="font-weight: bold !important;color: white;font-size: 1.1rem;" class="passengers-tariff-charges">
+
+                                    </small>
+                                </div>
+                            </div>
+                            <div style="display: flex">
+                                <div class="info-trips"></div>
+                                <div style="align-items: flex-end; display: flex;padding-left: 5px">
+                                    <small class="passengers-label text-lime hide" style="display: none">
+                                        <i class="fa fa-angle-double-up"></i> <span class="hidden-xs hide">@lang('Ascents'):</span> <span class="passengers-route-ascents"></span>
+                                    </small>
+
+                                    <small class="passengers-label text-warning hide" style="display: none">
+                                        <i class="fa fa-angle-double-down"></i> <span class="hidden-xs hide">@lang('Descents'):</span> <span class="passengers-route-descents"></span>
+                                    </small>
+
+                                    <small class="passengers-label text-info tooltips" style="display: none;margin-left: 5px" title="@lang('Tariff')">
+                                        <i class="fa fa-tag"></i> <span class="passengers-route-tariff"></span>
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="photo-alerts" style="display: grid"></div>
+
+                            @if(Auth::user()->isAdmin() && false)
+                                <small class="passengers-label p-0 hidden-sm hidden-md hidden-lg" style="display: block">
+                                        <span class="passengers-frame-container">
+                                            <i class="fa fa-clock-o"></i>
+                                            <span class="passengers-frame p-0">Frame counter</span>
+                                        </span>
+                                </small>
+                            @endif
+
+                            <hr class="bg-white">
+                            <div class="play-controls text-center m-t-5">
+                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-1" data-placement="bottom" title="@lang('Hasta evento de activación')"  onclick="setEvent(1)" ontouchstart="setEvent(1)">
+                                    <i class="fa fa-user text-lime"></i>
+                                </span>
+
+                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-2" data-placement="bottom" title="@lang('Hasta evento de conteo')"  onclick="setEvent(2)" ontouchstart="setEvent(2)">
+                                    <i class="fa fa-user text-info"></i>
+                                </span>
+
+                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-3" data-placement="bottom" title="@lang('Hasta evento de activación o conteo')"  onclick="setEvent(3)" ontouchstart="setEvent(3)">
+                                    <i class="fa fa-user text-warning"></i>
+                                </span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
+
 
             <div id="google-map-light-dream" class="col-md-12 col-sm-12 col-xs-12 p-0 map-report-historic"></div>
 
@@ -663,6 +695,7 @@
         let track = 0;
         let period = 150;
         let tracking = false;
+        let pauseOnEvent = null;
         let maxTrack = 0;
         let trackInterval = null;
         let controls = $('.play-controls');
@@ -796,7 +829,7 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312) {
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312|| $(this).val() == 1357) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
 
@@ -862,6 +895,8 @@
                 skin: "round",
                 grid: true,
                 prettify: true,
+                prefix: "<i class='fa fa-location-arrow faa-burst animated-hover'></i> ",
+                skin: "modern",
                 keyboard: false,
                 min: 0,
                 max: 1,
@@ -884,6 +919,7 @@
                 onFinish: function(slide){
                     track = slide.from;
                     if (tracking) play();
+                    else reportRouteHistoric.showPhotos(slide.from);
                 }
             });
 
@@ -912,13 +948,13 @@
             loadingReport.html($('#animated-loading').html()).hide();
 
             $('body').on('mousedown', '.range-reports .irs-line', function() {
-                pause(true);
+                pause(tracking);
             }).on('mousedown', '.range-reports .irs-bar', function() {
-                pause(true);
+                pause(tracking);
             }).on('mousedown', '.range-reports .irs-single', function() {
-                pause(true);
+                pause(tracking);
             }).on('touchstart', '.range-reports .irs-single', function() {
-                pause(true);
+                pause(tracking);
             });
 
             @if(Auth::user()->isProprietary())
@@ -998,6 +1034,11 @@
                 pause(true);
             }
 
+            const event = reportRouteHistoric.getEvent(next);
+            if (event === pauseOnEvent) {
+                pause();
+            }
+
             if(!tracking) {
                 reportRouteHistoric.showPhotos(trackIndex);
             }
@@ -1012,6 +1053,22 @@
             trackInterval = setInterval(() => {
                 forward(fw);
             }, period);
+        }
+
+        function setEvent(number) {
+            $('.event').removeClass('bg-purple').find('i').removeClass('faa-bounce').removeClass('animated').removeClass('color-white');
+
+            let button = $('.event-' + number);
+            if (pauseOnEvent != number) {
+                button.find('i').addClass('faa-bounce').addClass('animated').addClass('color-white');
+                button.addClass('bg-purple');
+                pauseOnEvent = number;
+            } else {
+                $('.event').removeClass('bg-purple').find('i').removeClass('faa-bounce').removeClass('animated').removeClass('color-white');
+                pauseOnEvent = null;
+            }
+
+            reportRouteHistoric.setPauseOnEvent(pauseOnEvent);
         }
 
         function clearTrack() {
@@ -1058,6 +1115,10 @@
                 -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
                 box-shadow: 0 0 0 0 rgba(204,169,44, 0);
             }
+        }
+
+        .irs-with-grid {
+            height: 36px !important ;
         }
     </style>
 @endsection

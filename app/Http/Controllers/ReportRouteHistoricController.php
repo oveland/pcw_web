@@ -290,6 +290,8 @@ class ReportRouteHistoricController extends Controller
                 $photos = $location->photos->toArray();
             }
 
+            $photoAlerts = $this->getPhotoAlerts($location->photo, $photoTags, $seatingCounted);
+
             $dataLocations->push((object)[
                 'id' => $location->id,
                 'inRoute' => $inRoute,
@@ -341,7 +343,8 @@ class ReportRouteHistoricController extends Controller
                     'index' => $index,
                     'passengers' => $totalPassengersOnPhoto,
                     'passengersTrip' => $passengersTripOnPhoto,
-                    "alerts" => $this->getPhotoAlerts($location->photo, $photoTags, $seatingCounted),
+                    "alerts" => $photoAlerts,
+                    "event" => $this->processEventPhoto($photoAlerts)
                 ],
                 'photos' => $photos
             ]);
@@ -366,6 +369,10 @@ class ReportRouteHistoricController extends Controller
         ];
 
         return $report;
+    }
+
+    function processEventPhoto($photoAlerts) {
+        return 1;
     }
 
     function getPhotoAlerts($photo, $photoTags, &$seatingCounted)
