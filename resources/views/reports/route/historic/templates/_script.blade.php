@@ -21,6 +21,12 @@
 
 
             this.showInfo = $('.show-info');
+
+            this.pauseOnEvent = null;
+        }
+
+        setPauseOnEvent(number) {
+            this.pauseOnEvent = number;
         }
 
         processSVGIcon(reportLocation) {
@@ -427,6 +433,18 @@
             $('#photos-container').hide();
             $('.photo-image').hide();
             // $('.photo-info').hide();
+        }
+
+        getEvent(index) {
+            let event = 0;
+
+            const historicLocation = this.historicLocations[index];
+            if (historicLocation) {
+                const reportLocation = historicLocation.reportLocation;
+                return reportLocation.photo.event;
+            }
+
+            return event;
         }
 
         processTariffCharges(reportLocation) {
