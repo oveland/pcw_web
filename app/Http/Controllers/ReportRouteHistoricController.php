@@ -110,11 +110,10 @@ class ReportRouteHistoricController extends Controller
 
         $totalAscents = 0;
         $totalAscentsInRoundTrip = 0;
-        $prevTotalAscentsInRoundTrip = 0;
 
         $totalDescents = 0;
         $totalDescentsInRoundTrip = 0;
-        $prevTotalDescentsInRoundTrip = 0;
+
         $countedAscents = false;
         $countedDescents = false;
 
@@ -190,7 +189,7 @@ class ReportRouteHistoricController extends Controller
                     }
 
                     $countedAscents = $passenger->ascents_in_round_trip ?? false;
-                    if ($passenger->counted) $countedAscents = false;
+//                    if ($passenger->counted) $countedAscents = false;
 //                    $countedDescents = $passenger->descents_in_round_trip ?? false;
                     $countedDescents = false;
 
@@ -290,8 +289,6 @@ class ReportRouteHistoricController extends Controller
                 $photos = $location->photos->toArray();
             }
 
-            $photoAlerts = $this->getPhotoAlerts($location->photo, $photoTags, $seatingCounted);
-
             $dataLocations->push((object)[
                 'id' => $location->id,
                 'inRoute' => $inRoute,
@@ -343,21 +340,18 @@ class ReportRouteHistoricController extends Controller
                     'index' => $index,
                     'passengers' => $totalPassengersOnPhoto,
                     'passengersTrip' => $passengersTripOnPhoto,
-                    "alerts" => $photoAlerts,
-                    "event" => $this->processEventPhoto($photoAlerts)
+                    "events" => $this->processPhotoEvents($location->photo, $photoTags, $seatingCounted)
                 ],
                 'photos' => $photos
             ]);
 
-            $prevTotalAscentsInRoundTrip = $totalAscentsInRoundTrip;
-            $prevTotalDescentsInRoundTrip = $totalDescentsInRoundTrip;
             $prevTotalPassengers = $totalPassengers;
             $lastLocation = $location;
         }
 
         $totalLocations = $dataLocations->count();
 
-        $report = (object)[
+        return (object)[
             'dateReport' => $dateReport,
             'initialTime' => $initialTime,
             'finalTime' => $finalTime,
@@ -367,18 +361,24 @@ class ReportRouteHistoricController extends Controller
             'from' => $totalLocations ? $dataLocations->first()->time : '--:--',
             'to' => $totalLocations ? $dataLocations->last()->time : '--:--',
         ];
-
-        return $report;
     }
 
-    function processEventPhoto($photoAlerts) {
-        return 1;
+    function processPhotoEventTypes($photoAlerts)
+    {
+        $photoAlerts = collect($photoAlerts);
+        $withEvents = $photoAlerts->where('total', '>', 0);
+
+        $events = $withEvents->pluck('event');
+        if ($withEvents->count() > 1) $events->push(3);
+
+        return $events;
     }
 
-    function getPhotoAlerts($photo, $photoTags, &$seatingCounted)
+    function processPhotoEvents($photo, $photoTags, &$seatingCounted)
     {
         $photoTags = collect($photoTags);
         $alerts = collect([]);
+        $countedSeating = collect([]);
 
         if ($photoTags->get('occupation')) {
             $alerts->push([
@@ -406,7 +406,7 @@ class ReportRouteHistoricController extends Controller
             ]);
 
             $color = 'info';
-            foreach (['current', 'boarding', 'activated'] as $type) {
+            foreach (['current' => 0, 'boarding' => 1, 'activated' => 2] as $type => $event) {
                 $data = $occupation->get($type);
                 $seatingList = collect(explode(' ', $data));
 
@@ -416,21 +416,28 @@ class ReportRouteHistoricController extends Controller
                 }
 
                 $total = $data ? $seatingList->count() : 0;
-                $total = $total ? " ($total)" : "";
+                $totalStr = $total ? " ($total)" : "";
 
                 $alerts->push([
                     'color' => $color,
-                    'message' => "<strong>" . ucfirst(__("st-$type")) . "$total</strong>: $data"
+                    'event' => $event,
+                    'total' => $total,
+                    'message' => "<strong>" . ucfirst(__("st-$type")) . "$totalStr</strong>: $data"
                 ]);
 
                 if ($type == 'activated' && $total) {
                     foreach ($seatingList as $activated) {
-                        $seatingCounted[$activated] = ($seatingCounted[$activated] ?? 0) + 1;
+                        $seatingCounted[$activated] = [
+                            'total' => ($seatingCounted[$activated] ?? 0) + 1,
+                            'new' => true
+                        ];
                     }
+
+                    $countedSeating = $seatingList;
                 }
             }
 
-            $color = 'primary';
+            $color = 'gray';
             $dataCounted = collect($seatingCounted);
             if ($dataCounted->count()) {
                 $countedStr = "";
@@ -439,10 +446,16 @@ class ReportRouteHistoricController extends Controller
                     return $key;
                 });
 
-                foreach ($dataCounted as $seat => $countedTimes) {
+                foreach ($dataCounted as $seat => $counted) {
+                    $countedTimes = $counted['total'];
                     $colorCounted = $countedTimes > 1 ? "warning" : $color;
-                    $countedTimes = "<small class='text-$colorCounted'>($countedTimes)</small>";
-                    $countedStr .= "$seat$countedTimes ";
+
+                    $newCounted = $counted['new'];
+                    $newCountedColor = $newCounted ? "counted" : "";
+
+                    $countedStr .= "<span class='text-$newCountedColor'>$seat</span><small class='text-$colorCounted'>($countedTimes)</small> ";
+
+                    $seatingCounted[$seat]['new'] = false;
                 }
 
                 $totalCounted = $dataCounted->count();
@@ -455,7 +468,11 @@ class ReportRouteHistoricController extends Controller
             }
         }
 
-        return $alerts->toArray();
+        return (object)[
+            'alerts' => $alerts->toArray(),
+            'countedStr' => $countedSeating->implode(','),
+            'types' => $this->processPhotoEventTypes($alerts->toArray())
+        ];
     }
 
     /**
