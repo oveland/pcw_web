@@ -789,5 +789,9 @@
   "st-activated": "censados",
   "st-counted": "contados",
   "st-current": "ocupados",
-  "Profile seating": "Perfil de asientos"
+  "Profile seating": "Perfil de asientos",
+  "Last laps": "Últimas vueltas",
+  "Without dispatches": "Sin despachos",
+  "Mileage day": "Kilometraje día",
+  "Mileage in time range": "Km en rango de hora"
 }

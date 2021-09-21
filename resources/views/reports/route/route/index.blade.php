@@ -1,6 +1,9 @@
 @extends('layout')
 
 @section('stylesheets')
+    <link href="{{ asset('assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.skinFlat.css') }}" rel="stylesheet" type="text/css" />
+
     <style>
         .nav.nav-pills>li>a {
             color: #9ca4aa !important;
@@ -25,6 +28,10 @@
             position: absolute;
             top: -10px;
             right: 20px;
+        }
+
+        .form-search-report .form-group {
+            margin-bottom: 5px;
         }
     </style>
 @endsection
@@ -126,7 +133,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 options with-route">
+                        <div class="col-md-{{ Auth::user()->isAdmin() ? 4 : 6 }} options with-route">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
@@ -141,18 +148,17 @@
                                             <label class="text-bold">
                                                 <input id="no-taken-turns" name="no-taken-turns" type="checkbox" value="no-taken-turns"> @lang('No taken turns')
                                             </label>
-                                            @if(Auth::user()->isAdmin())
-                                                <label class="text-bold">
-                                                    <input id="ard-turns" name="ard-turns" type="checkbox" value="true"> @lang('ARD turns')
-                                                </label>
-                                                <label class="text-bold">
-                                                    <input id="ard-pending" name="ard-pending" type="checkbox" value="true"> @lang('ARD pending')
-                                                </label>
-                                            @endif
+                                            <label class="text-bold">
+                                                <input id="last-laps" name="last-laps" type="checkbox" value="true"> @lang('Last laps')
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="col-md-12 col-xs-12 col-sm-12">
+                            <input id="time-range-report" name="time-range-report" type="text" value="" />
                         </div>
 
                         <div class="col-md-2 options without-route" style="display: none">
@@ -241,6 +247,7 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('assets/global/plugins/ion.rangeslider/js/ion.rangeSlider.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.js') }}" type="text/javascript"></script>
 
     <script type="application/javascript">
@@ -275,23 +282,53 @@
                 }
             });
 
-            $('#date-report, #route-report, #vehicle-report, #company-report, #type-report, #completed-turns, #no-taken-turns').change(function () {
+            $('#date-report, #route-report, #vehicle-report, #company-report, #type-report, #completed-turns, #no-taken-turns, #last-laps').change(function () {
                 $('.report-container').slideUp();
             });
 
+
+            let time = moment('00:00', 'HH:mm');
+            let timeRange = [];
+            for(let min = 0; min <= (24*60-2); min+=5){
+                timeRange.push(time.format('HH:mm'));
+                time.add(5, 'minutes');
+            }
+            timeRange.push(time.subtract(1, 'minutes').format('HH:mm'));
+
+            $("#time-range-report").ionRangeSlider({
+                type: "double",
+                values: timeRange,
+                drag_interval: true,
+                from: 0,
+                to: 288,
+                prefix: "<i class='fa fa-clock-o'></i> ",
+                skin: "modern",
+                decorate_both: true,
+                prettify: true,
+                keyboard: false,
+                grid_num: 10,
+                values_separator: " → ",
+                onChange: function (slider) {
+                }
+            });
+            setTimeRange();
+
             $('#route-report').change(function () {
-                loadSelectVehicleReportFromRoute($(this).val());
+                const route = $(this).val();
+                loadSelectVehicleReportFromRoute(route);
                 reportContainer.slideUp(100);
+                setTimeRange();
             });
 
             @if(Auth::user()->isAdmin())
-                $('#company-report').change(function () {
-                    loadSelectVehicleReport($(this).val(), true);
-                    loadSelectRouteReport($(this).val());
-                    reportContainer.slideUp(100);
-                }).change();
+            $('#company-report').change(function () {
+                loadSelectVehicleReport($(this).val(), true);
+                loadSelectRouteReport($(this).val());
+                reportContainer.slideUp(100);
+                setTimeRange();
+            }).change();
             @else
-                loadSelectRouteReport(null);
+            loadSelectRouteReport(null);
             @endif
 
             setTimeout(function(){
@@ -305,5 +342,24 @@
                 dec.slideDown();
             }
         });
+
+        function setTimeRange() {
+            let initialTime = parseInt('{{ $initialTime ?? 0 }}');
+            let finalTime = parseInt('{{ $finalTime ?? 288 }}');
+
+            let companyId = $('#company-report').val();
+            companyId = parseInt(companyId ? companyId : '{{ Auth::user()->company_id }}');
+
+            let route = $('#route-report').val();
+
+            if(companyId === 30 && route === 'none') {
+                initialTime = 264;
+            }
+
+            $('#time-range-report').data("ionRangeSlider").update({
+                from: initialTime,
+                to: finalTime
+            });
+        }
     </script>
 @endsection

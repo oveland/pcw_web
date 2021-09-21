@@ -923,22 +923,24 @@
                 }
             });
 
+            const speed = parseInt('{{ $speed ? $speed : 280 }}');
+
             $('#speed-player').ionRangeSlider({
                 skin: "round",
                 keyboard: false,
                 min: 50,
                 max: 500,
-                from: 280,
+                from: speed,
                 step: 1,
                 onStart: function(data) {
-                    period = 280;
+                    period = 500 - speed;
                 },
                 onUpdate: function (slide) {
 
                 },
                 onChange: function(slide){
                     period = 500 - slide.from;
-                    play();
+                    if (tracking) play();
                 },
                 onFinish: function(slide){
 

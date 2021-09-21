@@ -65,30 +65,26 @@ class DispatchRouteService
             ->orderBy('date')
             ->orderBy('departure_time');
 
-        if (request()->get('ard-turns')) {
-            $q = $q->whereRaw('ard_route_id <> route_id');
-        }
-
-        if (request()->get('ard-pending')) {
-            $q = $q->where('process_ard', true);
-        }
-
         return $q->get();
     }
 
     /**
      * @param $company
      * @param $dateReport
-     * @param $dateEndReport
+     * @param null $dateEndReport
      * @param string $routeReport
      * @param string $vehicleReport
      * @param bool $completedTurns
      * @param bool $noTakenTurns
+     * @param string $initialTime
+     * @param string $finaTime
      * @return DispatchRegister[]|Builder[]|Collection
      */
-    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false)
+    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false, $initialTime = '00:00', $finaTime = '23:59')
     {
         $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns);
+
+        $dispatchRegisters = $dispatchRegisters->where('departure_time', '>=', "$initialTime:00")->where('departure_time', '<=', "$finaTime:00");
 
         if ($noTakenTurns) {
             $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
