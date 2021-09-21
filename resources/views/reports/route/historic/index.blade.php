@@ -252,6 +252,14 @@
             color: white !important;
         }
 
+        .text-counted {
+            color: #00d6ff !important;
+        }
+
+        .text-gray {
+            color: #3b3b3b !important;
+        }
+
         .form-search-report .form-group {
             margin-bottom: 5px;
         }
@@ -264,6 +272,22 @@
 
         .help-block {
             margin-top: 5px !important;
+        }
+
+        #photo-show {
+            position: absolute;
+            bottom: 0;
+            margin: 15px 15px 1px;
+        }
+
+        #photo-show .photo-id-container {
+            background: #F1C40F;
+            color: white;
+            padding-left: 2px;
+            padding-right: 2px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            margin-top: 2px;
         }
 
         @media only screen and (max-width: 600px) {
@@ -287,6 +311,7 @@
 
             .show-info-last{
                 padding-top: 5px !important;
+                height: 20px;
             }
 
             .passengers-label {
@@ -477,7 +502,7 @@
         <!-- end search form -->
 
         <!-- begin content report -->
-        <div class="loading-report col-md-12"></div>
+        <div class="loading-report col-md-12 m-t-40"></div>
 
         <div class="historic-container col-md-12">
             <div class="col-md-12 col-sm-12 col-xs-12 p-0" style="display: grid">
@@ -557,14 +582,11 @@
                             <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Speed')"><i class='fa fa-tachometer'></i> <span class="speed">0</span> Km/h</span>
                             <span class="btn btn-default btn-xs btn-circle btn-historic-info tooltips" title="@lang('Mileage') @lang('in the day')"><i class='fa fa-road'></i> <span class="current-mileage">0</span> Km</span>
                             <span class="btn btn-default btn-xs btn-circle btn-historic-info status-vehicle tooltips" title="@lang('Vehicle status')"><i class='fa fa-send'></i></span>
-                            @if(Auth::user()->company->hasSensorCounter())
-                                <span class="btn btn-primary btn-xs btn-circle btn-historic-info photo tooltips" title="@lang('Photo Id')"><i class='fa fa-camera'></i></span>
-                            @endif
                         </div>
                     </div>
 
                     @if(Auth::user()->company->hasSensorCounter())
-                        <div class="m-t-5 p-20 p-t-0 p-b-0 info-trips-container">
+                        <div class="m-t-5 p-20 p-t-0 p-b-0 info-trips-container show-info">
                             <h5 class="text-bold m-b-0">
                                 <i class="fa fa-users"></i> @lang('Histórico de pasajeros'):
                                 <span class="info-trips-total">0</span>
@@ -617,17 +639,16 @@
                                 </small>
                             @endif
 
-                            <hr class="bg-white">
                             <div class="play-controls text-center m-t-5">
-                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-1" data-placement="bottom" title="@lang('Hasta evento de activación')"  onclick="setEvent(1)" ontouchstart="setEvent(1)">
+                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-1" data-placement="bottom" title="@lang('Hasta evento de activación')" onclick="setEvent(1)" data-color="green-jungle" ontouchstart="setEvent(1)">
                                     <i class="fa fa-user text-lime"></i>
                                 </span>
 
-                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-2" data-placement="bottom" title="@lang('Hasta evento de conteo')"  onclick="setEvent(2)" ontouchstart="setEvent(2)">
+                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-2" data-placement="bottom" title="@lang('Hasta evento de conteo')" onclick="setEvent(2)" data-color="green" ontouchstart="setEvent(2)">
                                     <i class="fa fa-user text-info"></i>
                                 </span>
 
-                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-3" data-placement="bottom" title="@lang('Hasta evento de activación o conteo')"  onclick="setEvent(3)" ontouchstart="setEvent(3)">
+                                <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-3" data-placement="bottom" title="@lang('Hasta evento de activación o conteo')" onclick="setEvent(3)" data-color="warning"  ontouchstart="setEvent(3)">
                                     <i class="fa fa-user text-warning"></i>
                                 </span>
                             </div>
@@ -642,11 +663,16 @@
             @if(Auth::user()->company->hasSensorCounter())
             <div class="col-md-6 col-sm-12 col-xs-12 p-0 photo-container">
 
-                <button id="photo-show" class="btn btn-warning btn-outline btn-circle pulse"
-                        onclick="largePhoto = true; pause()" ontouchstart="largePhoto = true; pause()"
-                        style="position: absolute;bottom: 0;margin: 15px;display: none">
-                    <i class="fa fa-camera"></i>
-                </button>
+                <div id="photo-show" style="display: none">
+                    <button class="btn btn-warning btn-outline btn-circle pulse text-center" onclick="largePhoto = true; pause()" ontouchstart="largePhoto = true; pause()">
+                        <i class="fa fa-camera"></i>
+                    </button>
+                    @if(Auth::user()->company->hasSensorCounter())
+                        <div class="photo-id-container text-center">
+                            <small class="photo-id"></small>
+                        </div>
+                    @endif
+                </div>
 
                 <img id="photo-loading" class="photo" draggable="false" style="display: none" src="https://satsangiconsultancy.files.wordpress.com/2019/01/gif-final.gif" alt="" width="20%">
 
@@ -663,7 +689,7 @@
                             <i class="fa fa-users"></i> <span class="hidden-xss">@lang('Round trip'):</span> <span class="photo-passengers-trip"></span>
                         </div>
                         <div class="photo-passengers-label">
-                            <i class="fa fa-clock-o"></i> <span class="photo-time"></span>
+                            <span class="photo-time hide"></span>
                         </div>
                     </div>
                 </div>
@@ -1036,9 +1062,10 @@
                 pause(true);
             }
 
-            const event = reportRouteHistoric.getEvent(next);
-            if (event === pauseOnEvent) {
-                pause();
+            const events = reportRouteHistoric.getEvents(next);
+            
+            if (pauseOnEvent && events.includes(pauseOnEvent)) {
+                pause(true);
             }
 
             if(!tracking) {
@@ -1058,15 +1085,18 @@
         }
 
         function setEvent(number) {
-            $('.event').removeClass('bg-purple').find('i').removeClass('faa-bounce').removeClass('animated').removeClass('color-white');
+            $('.event').each(function(i, e) {
+                const c = $(this).data('color');
+                $(this).removeClass('bg-' + c).find('i').removeClass('faa-bounce').removeClass('animated').removeClass('color-white')
+            });
 
             let button = $('.event-' + number);
+            const color = button.data('color');
             if (pauseOnEvent != number) {
                 button.find('i').addClass('faa-bounce').addClass('animated').addClass('color-white');
-                button.addClass('bg-purple');
+                button.addClass('bg-' + color);
                 pauseOnEvent = number;
             } else {
-                $('.event').removeClass('bg-purple').find('i').removeClass('faa-bounce').removeClass('animated').removeClass('color-white');
                 pauseOnEvent = null;
             }
 

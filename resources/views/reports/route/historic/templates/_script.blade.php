@@ -279,6 +279,7 @@
             if (!historicLocation) return false;
             const reportLocation = historicLocation.reportLocation;
             const photos = reportLocation.photos;
+            const photoCountedSeatingStr = reportLocation.photo.events.countedStr;
 
             if (photos.length) {
                 let photosContainer = $('.photos-image-container');
@@ -291,7 +292,7 @@
                 let photoWidth = 100 / photos.length;
                 if (photoWidth > 30) photoWidth = 30;
                 for (let photo of photos) {
-                    const url = `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${photo.id}&with-effect=true&encode=png&title=true`;
+                    const url = `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${photo.id}&with-effect=true&encode=png&title=true&counted=${photoCountedSeatingStr}`;
                     photosContainer.append(`<img src="${url}" class="photo photo-image" draggable="false" onclick="toggleImgSize(this)"  alt="" width="${photoWidth}%">`);
                 }
             }
@@ -379,8 +380,8 @@
             }
 
             this.showInfo.find('.photo-alerts').empty();
-            if (reportLocation.photo.alerts.length) {
-                for (let alert of reportLocation.photo.alerts) {
+            if (reportLocation.photo.events.alerts.length) {
+                for (let alert of reportLocation.photo.events.alerts) {
                     this.showInfo.find('.photo-alerts').append(`<small class="m-0 p-l-5 p-r-5 bg-white text-${alert.color}">${alert.message}</small>`);
                 }
             }
@@ -393,7 +394,7 @@
             this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
             this.showInfo.find('.speed').text(reportLocation.speed);
 
-            this.showInfo.find('.photo').text(reportLocation.photo.id);
+            $('.photo-id').text(reportLocation.photo.id);
 
             this.showInfo.find('.current-mileage').text(reportLocation.currentMileage);
             this.showInfo.find('.passengers-total').text(reportLocation.passengers.total);
@@ -435,13 +436,13 @@
             // $('.photo-info').hide();
         }
 
-        getEvent(index) {
+        getEvents(index) {
             let event = 0;
 
             const historicLocation = this.historicLocations[index];
             if (historicLocation) {
                 const reportLocation = historicLocation.reportLocation;
-                return reportLocation.photo.event;
+                return reportLocation.photo.events.types;
             }
 
             return event;
