@@ -80,7 +80,8 @@ class ReportRouteController extends Controller
         $completedTurns = $request->get('completed-turns');
         $noTakenTurns = $request->get('no-taken-turns');
 
-        $timeRange = collect(explode(';', $request->get('time-range-report')));
+        $timeReport = $request->get('time-range-report');
+        $timeRange = collect(explode(';', $timeReport));
         $initialTime = $timeRange->get(0);
         $finalTime = $timeRange->get(1);
 
@@ -114,7 +115,7 @@ class ReportRouteController extends Controller
 
         }
 
-        return view($view, compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'dateEndReport', 'withEndDate', 'routeReport', 'vehicleReport', 'typeReport', 'completedTurns']));
+        return view($view, compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'dateEndReport', 'withEndDate', 'routeReport', 'vehicleReport', 'typeReport', 'completedTurns', 'timeReport']));
     }
 
     public function showReportWithOutRoute(Request $request)
