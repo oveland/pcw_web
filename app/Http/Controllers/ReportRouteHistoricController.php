@@ -428,7 +428,7 @@ class ReportRouteHistoricController extends Controller
                 if ($type == 'activated' && $total) {
                     foreach ($seatingList as $activated) {
                         $seatingCounted[$activated] = [
-                            'total' => ($seatingCounted[$activated] ?? 0) + 1,
+                            'total' => (intval($seatingCounted[$activated] ?? 0)) + 1,
                             'new' => true
                         ];
                     }

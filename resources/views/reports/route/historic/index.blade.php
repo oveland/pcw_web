@@ -1063,7 +1063,7 @@
             const events = reportRouteHistoric.getEvents(next);
             
             if (pauseOnEvent && events.includes(pauseOnEvent)) {
-                pause(true);
+                pause();
             }
 
             if(!tracking) {
