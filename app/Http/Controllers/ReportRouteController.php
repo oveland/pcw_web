@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\StrTime;
 use App\LastLocation;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
@@ -16,6 +17,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use function foo\func;
 
 class ReportRouteController extends Controller
 {
@@ -78,9 +80,22 @@ class ReportRouteController extends Controller
         $completedTurns = $request->get('completed-turns');
         $noTakenTurns = $request->get('no-taken-turns');
 
+        $timeRange = collect(explode(';', $request->get('time-range-report')));
+        $initialTime = $timeRange->get(0);
+        $finalTime = $timeRange->get(1);
+
+        $onlyLastLap = $request->get('last-laps');
+
         if ($routeReport == 'none') return $this->showReportWithOutRoute($request);
 
-        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns);
+        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime);
+
+        if ($onlyLastLap) {
+            $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->mapWithKeys(function ($drs, $vehicleId) {
+                return [$vehicleId => collect([$drs->last()])];
+            });
+            $typeReport = 'ungroup';
+        }
 
         $reportsByVehicle = collect([]);
         foreach ($dispatchRegistersByVehicles as $vehicleId => $dispatchRegistersByVehicle) {
@@ -106,34 +121,60 @@ class ReportRouteController extends Controller
     {
         $company = $this->authService->getCompanyFromRequest($request);
         $dateReport = $request->get('date-report');
-        $thresholdKm = $request->get('threshold-km');
-        $typeReport = $request->get('type-report');
+//        $thresholdKm = $request->get('threshold-km');
         $vehicleReport = $request->get('vehicle-report');
-        $completedTurns = $request->get('completed-turns');
-
-        if ($dateReport >= Carbon::now()->toDateString()) return view('partials.alerts.onlyPreviousDate');
+//        $completedTurns = $request->get('completed-turns');
+        $timeRange = collect(explode(';', $request->get('time-range-report')));
+        $initialTime = $timeRange->get(0);
+        $finalTime = $timeRange->get(1);
 
         if ($vehicleReport && $vehicleReport != 'all') $vehiclesId = [$vehicleReport];
         else $vehiclesId = $company->activeVehicles->pluck('id');
 
-        $lastLocations = LastLocation::with('vehicle')
-            ->whereBetween('date', ["$dateReport 00:00:00", "$dateReport 23:59:59"])
+        $from = Carbon::now();
+
+        $locations = Location::forDate($dateReport)->with(['vehicle', 'dispatchRegister'])
+            ->whereBetween('date', ["$dateReport $initialTime:00", "$dateReport $finalTime:59"])
             ->whereIn('vehicle_id', $vehiclesId)
-            ->where('current_mileage', '>', $thresholdKm * 1000)
-            ->where('current_mileage', '<', 700 * 1000)
-            ->get()->filter(function (LastLocation $ll) {
-                return $ll->gpsIsOK();
+            ->get()
+            ->filter(function (Location $l) {
+                return !$l->dispatchRegister || !$l->dispatchRegister->isActive();
             });
 
+//        dd(Carbon::now()->diffAsCarbonInterval($from)->forHumans());
+
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
-            ->whereIn('vehicle_id', $lastLocations->pluck('vehicle_id'))
-            ->active($completedTurns)
+            ->whereBetween('departure_time', ["$initialTime:00", "$finalTime:00"])
+            ->whereIn('vehicle_id', $locations->pluck('vehicle_id'))
+            ->active()
             ->orderBy('departure_time')
             ->get();
 
-        $lasLocationsOut = $lastLocations->whereNotIn('vehicle_id', $dispatchRegisters->pluck('vehicle_id'));
+        $locations = $locations->whereNotIn('vehicle_id', $dispatchRegisters->pluck('vehicle_id'));
 
-        return view('reports.route.route.withOutRoute', compact(['lasLocationsOut', 'company', 'dateReport']));
+        $from1 = Carbon::now();
+
+        $vehiclesData = $locations->groupBy('vehicle_id')->mapWithKeys(function ($l, $vehicleId) {
+            $l = collect($l)->sortBy('date');
+            $first = $l->first();
+            $last = $l->last();
+            $kmInTimeRange = $last->current_mileage - $first->current_mileage;
+
+            return [$vehicleId => (object)compact(['first', 'last', 'kmInTimeRange'])];
+        });
+
+//        dd('locas > ' ,Carbon::now()->diffAsCarbonInterval($from1)->forHumans())
+
+        $vehiclesData = $vehiclesData->filter(function ($d) {
+            return $d->kmInTimeRange >= 1000;
+        });
+
+        $timeRange = (object)[
+            'initial' => intval(round(StrTime::toSeg($initialTime) / 5)),
+            'final' => intval(round(StrTime::toSeg($finalTime) / 5)),
+        ];
+
+        return view('reports.route.route.withOutRoute', compact(['vehiclesData', 'company', 'dateReport', 'timeRange']));
     }
 
     /**

@@ -1,5 +1,5 @@
 @if(empty($routes))
-    <option value="">@lang('No routes found')</option>
+    <option value="">{{ strtoupper(__('No routes found')) }}</option>
 @else
     @if( isset($withAll) && ($withAll === true || $withAll === "true") )
 
@@ -7,13 +7,13 @@
             $defaultKmzUrl = isset($defaultKmzUrl) ? $defaultKmzUrl : ($routes->count() ? $routes->first()->company->default_kmz_url : "");
         @endphp
 
-        <option data-kmz-url="{{ $defaultKmzUrl }}" value="all">@lang('All routes')</option>
+        <option data-kmz-url="{{ $defaultKmzUrl }}" value="all">{{ strtoupper(__('All routes')) }}</option>
     @else
-        <option value="">@lang('Select a route')</option>
+        <option value="">{{ strtoupper(__('Select a route')) }}</option>
     @endif
 
     @if( Auth::user()->canViewAllRoutes() && isset($withNone) && ($withNone === true || $withNone === "true") )
-        <option value="none">@lang('Without route')</option>
+        <option value="none">{{ strtoupper(__('Without route')) }}</option>
     @endif
 
     @php

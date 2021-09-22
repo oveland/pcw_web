@@ -1,4 +1,4 @@
-@if(count($lasLocationsOut))
+@if(count($vehiclesData))
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
@@ -45,7 +45,10 @@
                             <i class="fa fa-flag" aria-hidden="true"></i> @lang('Route') (Predefinida)
                         </th>
                         <th class="text-center sensor">
-                            <i class="fa fa-road" aria-hidden="true"></i> @lang('Mileage') (km)
+                            <i class="fa fa-road" aria-hidden="true"></i> @lang('Mileage day')
+                        </th>
+                        <th class="text-center sensor">
+                            <i class="fa fa-road" aria-hidden="true"></i> @lang('Mileage in time range')
                         </th>
                         <th class="text-center sensor">
                             <i class="fa fa-rocket" aria-hidden="true"></i> @lang('Options')
@@ -53,19 +56,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($lasLocationsOut as $lasLocation)
+                    @foreach($vehiclesData as $data)
                         @php
-                            $vehicle = $lasLocation->vehicle;
+                            $vehicle = $data->last->vehicle;
+                            $last = $data->last;
                         @endphp
                         <tr class="text-center">
                             <td >{{ $loop->iteration }}</td>
                             <td >{{ $vehicle->number }}</td>
                             <td >{{ $vehicle->dispatcherVehicle && $vehicle->dispatcherVehicle->route ? $vehicle->dispatcherVehicle->route->name : '' }}</td>
-                            <td >{{ intval($lasLocation->current_mileage/1000) }}</td>
+                            <td >{{ intval($last->current_mileage/1000) }}</td>
+                            <td>{{ number_format($data->kmInTimeRange/1000, 1) }}</td>
 
                             <td class="p-3">
                                 <div class="tooltips" data-html="true" data-title="@lang('See historic report')">
-                                    <a href="{{ route('report-route-historic') }}?c={{ $company->id }}&d={{ $dateReport }}&v={{ $vehicle->id }}&i={{ 60 }}&f={{ 264 }}" target="_blank" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase">
+                                    <a href="{{ route('report-route-historic') }}?c={{ $company->id }}&d={{ $dateReport }}&v={{ $vehicle->id }}&i={{ $timeRange->initial }}&f={{ $timeRange->final }}&s=400" target="_blank" class="btn btn-sm btn-circle blue-hoki btn-outline sbold uppercase">
                                         <i class="fa fa-map-o" aria-hidden="true"></i>
                                     </a>
                                 </div>
