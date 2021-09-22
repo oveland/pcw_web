@@ -162,8 +162,9 @@ trait PhotoEncode
             });
 
             $profileSeat = $this->vehicle->getProfileSeating($this->side);
-            if ($profileSeat && request()->get('d')) {
-//                dd($this->data_persons, $this->data_faces);
+            if ($profileSeat && $withTitle) {
+                $countedSeating = request()->get('counted');
+                $countedSeating = collect($countedSeating ? explode(',', $countedSeating) : []);
                 foreach ($profileSeat->occupation as $zone) {
                     $zone = (object)$zone;
                     $center = (object)$zone->center;
@@ -173,8 +174,10 @@ trait PhotoEncode
                     $image->rectangle($center->left * $percentWidth - 22, $center->top * $percentHeight - 25, $center->left * $percentWidth + 22, $center->top * $percentHeight + 5, function ($draw) {
                         $draw->background('rgba(0, 0, 0, 0.2)');
                     });
-                    $image->text($zone->number, $center->left * $percentWidth, $center->top * $percentHeight, function ($font) {
-                        $font->color('#ffff00');
+
+                    $counted = $countedSeating->contains($zone->number);
+                    $image->text($zone->number, $center->left * $percentWidth, $center->top * $percentHeight, function ($font) use ($counted) {
+                        $font->color($counted ? '#00f9ff' : '#ffff00');
                         $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
                         $font->size(24);
                         $font->align('center');
