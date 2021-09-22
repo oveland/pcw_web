@@ -88,7 +88,7 @@
                                 <label for="date-report" class="control-label field-required">
                                     @lang('Date')
                                 </label>
-                                <label class="text-bold">
+                                <label class="with-end-date-container text-bold">
                                     &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
                                 </label>
                                 <div class="input-group date" id="datetimepicker-report">
@@ -360,6 +360,16 @@
                 from: initialTime,
                 to: finalTime
             });
+
+            let withEndDate = $('#with-end-date');
+            let withDateEndC = withEndDate.parents('.with-end-date-container');
+            if(route === 'none') {
+                withEndDate.prop('checked', false).change();
+                withDateEndC.hide();
+            }else {
+                withEndDate.prop('checked', false).change();
+                withDateEndC.show();
+            }
         }
     </script>
 @endsection

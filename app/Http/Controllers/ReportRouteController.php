@@ -123,33 +123,36 @@ class ReportRouteController extends Controller
         $dateReport = $request->get('date-report');
 //        $thresholdKm = $request->get('threshold-km');
         $vehicleReport = $request->get('vehicle-report');
-        $completedTurns = $request->get('completed-turns');
+//        $completedTurns = $request->get('completed-turns');
         $timeRange = collect(explode(';', $request->get('time-range-report')));
         $initialTime = $timeRange->get(0);
         $finalTime = $timeRange->get(1);
 
-        if ($dateReport >= Carbon::now()->toDateString()) return view('partials.alerts.onlyPreviousDate');
-
         if ($vehicleReport && $vehicleReport != 'all') $vehiclesId = [$vehicleReport];
         else $vehiclesId = $company->activeVehicles->pluck('id');
 
-        $locations = Location::forDate($dateReport)->with('vehicle')
+        $from = Carbon::now();
+
+        $locations = Location::forDate($dateReport)->with(['vehicle', 'dispatchRegister'])
             ->whereBetween('date', ["$dateReport $initialTime:00", "$dateReport $finalTime:59"])
             ->whereIn('vehicle_id', $vehiclesId)
-            ->where('dispatch_register_id', '=', null)
-            ->get();
-//            ->filter(function (LastLocation $ll) {
-//                return $ll->gpsIsOK();
-//            });
+            ->get()
+            ->filter(function (Location $l) {
+                return !$l->dispatchRegister || !$l->dispatchRegister->isActive();
+            });
+
+//        dd(Carbon::now()->diffAsCarbonInterval($from)->forHumans());
 
         $dispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
             ->whereBetween('departure_time', ["$initialTime:00", "$finalTime:00"])
             ->whereIn('vehicle_id', $locations->pluck('vehicle_id'))
-            ->active($completedTurns)
+            ->active()
             ->orderBy('departure_time')
             ->get();
 
         $locations = $locations->whereNotIn('vehicle_id', $dispatchRegisters->pluck('vehicle_id'));
+
+        $from1 = Carbon::now();
 
         $vehiclesData = $locations->groupBy('vehicle_id')->mapWithKeys(function ($l, $vehicleId) {
             $l = collect($l)->sortBy('date');
@@ -159,6 +162,8 @@ class ReportRouteController extends Controller
 
             return [$vehicleId => (object)compact(['first', 'last', 'kmInTimeRange'])];
         });
+
+//        dd('locas > ' ,Carbon::now()->diffAsCarbonInterval($from1)->forHumans())
 
         $vehiclesData = $vehiclesData->filter(function ($d) {
             return $d->kmInTimeRange >= 1000;
