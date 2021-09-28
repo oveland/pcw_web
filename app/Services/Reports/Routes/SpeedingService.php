@@ -119,7 +119,7 @@ class SpeedingService
      * @param \Illuminate\Database\Eloquent\Collection|Location[] $allSpeeding
      * @return Collection
      */
-    function speedingByVehicles($allSpeeding)
+    function speedingByVehicles($allSpeeding, $onlyMax = false)
     {
         $allSpeedingReportByVehicles = $allSpeeding->groupBy('vehicle_id');
 
@@ -127,6 +127,12 @@ class SpeedingService
         foreach ($allSpeedingReportByVehicles as $vehicleId => $speedingByVehicle) {
             $speedingEvents = $this->groupByFirstSpeedingEvent($speedingByVehicle);
             if (count($speedingEvents)) $speedingByVehicles->put($vehicleId, $speedingEvents);
+        }
+
+        if ($onlyMax) {
+            $speedingByVehicles = $speedingByVehicles->mapWithKeys(function ($d, $vehicleId) {
+                return [$vehicleId => collect($d)->sortByDesc('speed')->take(1)];
+            });
         }
 
         return $speedingByVehicles;

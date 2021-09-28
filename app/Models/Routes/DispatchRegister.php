@@ -484,7 +484,9 @@ class DispatchRegister extends Model
     public function getRouteFields()
     {
         $driver = $this->driver;
-        $driveName = $driver ? $driver->fullName() : __('Unassigned');
+        $driveName = $driver ? $driver->fullName() : $this->driver_code;
+        $driveName = $driveName ?? __('Unassigned');
+
         return (object)[
             'id' => $this->id,
             'turn' => $this->turn,
