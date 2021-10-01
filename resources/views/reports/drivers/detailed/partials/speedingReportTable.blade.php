@@ -1,6 +1,6 @@
 <div class="col-md-8 col-md-offset-2 col-sm-12 col-xs-12 m-t-10">
     @php
-        $speedingReport = (new \App\Services\Reports\Routes\SpeedingService())->groupByFirstSpeedingEvent($dispatchRegister->speedingReport)
+        $speedingReport = (new \App\Services\Reports\Routes\SpeedingService())->groupByEvent($dispatchRegister->speedingReport)
     @endphp
 
     @if( $speedingReport->isNotEmpty() )

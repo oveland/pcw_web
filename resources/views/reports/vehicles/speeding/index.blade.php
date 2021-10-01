@@ -176,7 +176,7 @@
         <!-- end search form -->
         <!-- begin content report -->
 
-        <div class="col-md-12">
+        <div class="col-md-12 chart-container">
             <div id="chart_div"></div>
         </div>
 
@@ -205,11 +205,13 @@
         $('.menu-report-vehicles, .menu-report-vehicles-speeding').addClass('active-animated');
         let form = $('.form-search-report');
         let mainContainer = $('.report-container');
+        let chart = $('.chart-container');
 
         $(document).ready(function () {
             form.submit(function (e) {
                 e.preventDefault();
                 mainContainer.show().empty().hide().html($('#animated-loading').html()).show();
+                chart.hide();
                 if (form.isValid()) {
 
                     form.find('.btn-search-report').addClass(loadingClass);
@@ -228,14 +230,8 @@
                         url: form.attr('action') + '?chart=true',
                         data: form.serialize(),
                         success: function (data) {
+                            if(data.length > 1)chart.show();
                             drawChart(data);
-
-                            // [
-                            //     ['speed', '60 - 79', '80 - 90', '91 - 110', '111 - 120', '> 120'],
-                            //     ['9084', 10, 24, 20, 32, 51],
-                            //     ['9011', 16, 22, 23, 30, 66],
-                            //     ['9089', 28, 19, 29, 30, 55]
-                            // ]
                         }
                     });
                 }

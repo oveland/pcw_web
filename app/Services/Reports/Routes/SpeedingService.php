@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 10/10/2018
- * Time: 10:16 PM
- */
 
 namespace App\Services\Reports\Routes;
 
@@ -13,46 +7,13 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Speeding;
-use App\Models\Vehicles\Vehicle;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Psy\Util\Str;
 
 class SpeedingService
 {
     /**
-     * Generate detailed speeding report for all vehicles of a company in a date
-     *
-     * @param Company $company
-     * @param $dateReport
-     * @return Collection
-     */
-    function speedingByVehiclesReport(Company $company, $dateReport)
-    {
-        $speedingByVehiclesReport = collect([]);
-        $speedingByVehicles = $this->speedingByVehicles($this->allSpeeding($company, $dateReport));
-
-        foreach ($speedingByVehicles as $vehicleId => $speedingByVehicle) {
-            $speedingByVehicleByRoute = $this->groupByFirstSpeedingEventByRoute($speedingByVehicle);
-            $speedingByVehiclesReport->put($vehicleId, [
-                'vehicle' => Vehicle::find($vehicleId),
-                'speedingByVehicle' => $speedingByVehicle,
-                'totalSpeeding' => $speedingByVehicle->count(),
-                'speedingByRoutes' => (object)[
-                    'speedingByRoute' => $speedingByVehicleByRoute,
-                    'totalSpeedingByRoutes' => $speedingByVehicleByRoute->sum(function ($route) {
-                        return count($route);
-                    })
-                ]
-            ]);
-        }
-
-        return $speedingByVehiclesReport;
-    }
-
-    /**
-     * Get all Speeding of a company, date, route (optional) and vehicle (optional)
+     * Get all events of a company, date, route (optional) and vehicle (optional)
      *
      * @param Company $company
      * @param $initialDate
@@ -61,11 +22,11 @@ class SpeedingService
      * @param null $vehicleReport
      * @return Location[]|Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
      */
-    function allSpeeding(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
+    function all(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
         $initialDate = trim($initialDate);
         $finalDate = trim($finalDate);
-        $allSpeeding = Speeding::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
+        $all = Speeding::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
 
         if ($routeReport == 'all' || !$routeReport) {
             $vehicles = $company->vehicles();
@@ -73,19 +34,18 @@ class SpeedingService
                 $vehicles = $vehicles->where('id', $vehicleReport);
             }
 
-            $allSpeeding = $allSpeeding->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
+            $all = $all->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
         } else {
             $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)
                 ->select('id')
                 ->get();
-            $allSpeeding = $allSpeeding->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
+            $all = $all->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
         }
 
-        $allSpeeding = $allSpeeding
+        return $all
             ->with(['vehicle', 'dispatchRegister', 'addressLocation'])
-            ->orderBy('date')->get();
-
-        $allSpeeding = $allSpeeding
+            ->orderBy('date')
+            ->get()
             ->filter(function (Location $s) use ($initialDate, $finalDate) {
                 $time = $s->date->toTimeString();
                 $initialTime = collect(explode(' ', $initialDate))->get(1);
@@ -93,98 +53,56 @@ class SpeedingService
 
                 return $time >= $initialTime && $time <= $finalTime;
             })->sortBy('id');
-
-        return $allSpeeding;
     }
 
     /**
-     * Get all speeding of a dispatch register
+     * Groups all events by vehicle
      *
-     * @param DispatchRegister $dispatchRegister
+     * @param \Illuminate\Database\Eloquent\Collection|Location[] $all
      * @return Collection
      */
-    function byDispatchRegister(DispatchRegister $dispatchRegister)
+    function groupByVehicles($all, $onlyMax = false)
     {
-        $allSpeedingByDispatchRegister = Speeding::withSpeeding()
-            ->where('dispatch_register_id', $dispatchRegister->id)
-            ->orderBy('date')
-            ->get();
-
-        return $this->groupByFirstSpeedingEvent($allSpeedingByDispatchRegister);
-    }
-
-    /**
-     * Groups all speeding by vehicle and first event
-     *
-     * @param \Illuminate\Database\Eloquent\Collection|Location[] $allSpeeding
-     * @return Collection
-     */
-    function speedingByVehicles($allSpeeding, $onlyMax = false)
-    {
-        $allSpeedingReportByVehicles = $allSpeeding->groupBy('vehicle_id');
-
-        $speedingByVehicles = collect([]);
-        foreach ($allSpeedingReportByVehicles as $vehicleId => $speedingByVehicle) {
-            $speedingEvents = $this->groupByFirstSpeedingEvent($speedingByVehicle);
-            if (count($speedingEvents)) $speedingByVehicles->put($vehicleId, $speedingEvents);
+        $eventsByVehicles = collect([]);
+        foreach ($all->groupBy('vehicle_id') as $vehicleId => $allByVehicle) {
+            $events = $this->groupByEvent($allByVehicle);
+            if (count($events)) $eventsByVehicles->put($vehicleId, $events);
         }
 
         if ($onlyMax) {
-            $speedingByVehicles = $speedingByVehicles->mapWithKeys(function ($d, $vehicleId) {
+            $eventsByVehicles = $eventsByVehicles->mapWithKeys(function ($d, $vehicleId) {
                 return [$vehicleId => collect($d)->sortByDesc('speed')->take(1)];
             });
         }
 
-        return $speedingByVehicles;
-    }
-
-
-    /**
-     * Extract first event of the all speeding and group it by route
-     *
-     * @param $speedingByVehicle
-     * @return Collection
-     */
-    function groupByFirstSpeedingEventByRoute($speedingByVehicle)
-    {
-        $speedingEvents = $this->groupByFirstSpeedingEvent($speedingByVehicle);
-
-        $speedingEventsByRoutes = $speedingEvents->where('dispatch_register_id', '<>', null)
-            ->sortBy(function ($speeding, $key) {
-                return $speeding->dispatchRegister->route->name;
-            })
-            ->groupBy(function ($speeding, $key) {
-                return $speeding->dispatchRegister->route->id;
-            });
-
-        return $speedingEventsByRoutes;
+        return $eventsByVehicles;
     }
 
     /**
-     * Extract first event of the all speeding
+     * Extract first event of the all registers
      *
-     * @param $speedingByVehicle
+     * @param $allByVehicle
      * @return Collection
      */
-    public function groupByFirstSpeedingEvent($speedingByVehicle)
+    public function groupByEvent($allByVehicle)
     {
-        $speedingByVehicle = $speedingByVehicle->where('speeding', true);
+        $allByVehicle = $allByVehicle->where('speeding', true);
 
-        $speedingEvents = collect([]);
-        if (!count($speedingByVehicle)) return $speedingEvents;
+        $events = collect([]);
+        if (!count($allByVehicle)) return $events;
 
-        $lastSpeeding = null;
-        foreach ($speedingByVehicle as $speeding) {
-            if ($lastSpeeding) {
-                if ($speeding->time->diff($lastSpeeding->time)->format('%H:%I:%S') > '00:05:00') {
-                    $speedingEvents->push($speeding);
+        $last = null;
+        foreach ($allByVehicle as $event) {
+            if ($last) {
+                if ($event->time->diff($last->time)->format('%H:%I:%S') > '00:05:00') {
+                    $events->push($event);
                 }
             } else {
-                $speedingEvents->push($speeding);
+                $events->push($event);
             }
-            $lastSpeeding = $speeding;
+            $last = $event;
         }
 
-        return $speedingEvents->sortBy('date');
+        return $events->sortBy('date');
     }
 }

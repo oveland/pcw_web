@@ -83,9 +83,9 @@ class ConsolidatedService
 
                     //Log::info("         - Vehicle $vehicle->number >> ".$allRouteLocations->count()." locations");
 
-                    $offRoadEventLocation = $this->offRoadService->groupByFirstOffRoad($allRouteLocations);
+                    $offRoadEventLocation = $this->offRoadService->groupByEvent($allRouteLocations);
 
-                    $speedingEventLocation = $this->speedingService->groupByFirstSpeedingEvent($allRouteLocations);
+                    $speedingEventLocation = $this->speedingService->groupByEvent($allRouteLocations);
 
                     $consolidated = ConsolidatedRouteVehicle::where('date', $date)
                         ->where('route_id', $route->id)

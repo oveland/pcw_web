@@ -36,30 +36,39 @@ trait BindsDynamically
         return $model;
     }
 
-    public function scopeForDate(Builder $query, $withDate)
+    public function scopeForDate(Builder $query, $initialDate, $finalDate = null)
     {
-        $tableName = 'locations';
+        $indexViewId = $this->getIndexView($initialDate);
+        $indexViewFd = $this->getIndexView($finalDate);
 
-        $withDate = explode(' ', $withDate)[0];
-
-        $format = Str::contains($withDate, "-") ? 'Y-m-d' : 'd/m/Y';
-        $date = Carbon::createFromFormat($format, $withDate);
-
-        $diffDays = Carbon::now()->diffInDays($date);
-
-        if ($diffDays == 0) {
-//            $tableName .= "_$diffDays";
-        } else {
-            $indexView = floor(($diffDays - 1) / 5) + 1;
-
-            if ($indexView <= 6) {
-                $tableName .= "_$indexView";
-            }
+        $tableName = "locations";
+        if ($indexViewId === $indexViewFd) {
+            $tableName = "locations$indexViewId";
         }
 
         $this->setTable($tableName);
-
         return $query->from($tableName);
+    }
+
+    function getIndexView($forDate)
+    {
+        if (!$forDate) return null;
+
+        $indexView = "";
+
+        $forDate = explode(' ', $forDate)[0];
+
+        $format = Str::contains($forDate, "-") ? 'Y-m-d' : 'd/m/Y';
+        $date = Carbon::createFromFormat($format, $forDate);
+
+        $diffDays = Carbon::now()->diffInDays($date);
+
+        $indexNumber = $diffDays > 0 ? (floor(($diffDays - 1) / config('database.maintenance.locations.fragments.days')) + 1) : 0;
+        if ($indexNumber <= config('database.maintenance.locations.fragments.tables')) {
+            $indexView .= "_$indexNumber";
+        }
+
+        return $indexView;
     }
 }
 
@@ -101,7 +110,7 @@ trait BindsDynamically
  * @property int|null $vehicle_status_id
  * @method static Builder|Location whereVehicleStatusId($value)
  * @method static Builder|Location witOffRoads()
- * @method static Builder|Location forDate($date)
+ * @method static Builder|Location forDate($initialDate, $finalDate = null)
  * @property bool|null $speeding
  * @property-read DispatchRegister|null $dispatchRegister
  * @method static Builder|Location validCoordinates()

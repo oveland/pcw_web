@@ -72,8 +72,8 @@ class ReportRouteOffRoadController extends Controller
             'typeReport' => $request->get('type-report'),
         ];
 
-        $allOffRoads = $this->offRoadService->allOffRoads($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
-        $offRoadsByVehicles = $this->offRoadService->offRoadsByVehicles($allOffRoads);
+        $allOffRoads = $this->offRoadService->all($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
+        $offRoadsByVehicles = $this->offRoadService->groupByVehicles($allOffRoads);
         
         if ($request->get('export')) $this->offRoadService->exportByVehicles($offRoadsByVehicles, $query);
 

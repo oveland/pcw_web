@@ -83,8 +83,8 @@ class SpeedingReportController extends Controller
             'chart' => $request->get('chart'),
         ];
 
-        $allSpeeding = $this->speedingService->allSpeeding($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
-        $speedingReportByVehicles = $this->speedingService->speedingByVehicles($allSpeeding, $query->onlyMax);
+        $allSpeeding = $this->speedingService->all($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
+        $speedingReportByVehicles = $this->speedingService->groupByVehicles($allSpeeding, $query->onlyMax);
 
         if ($request->get('export')) $this->export($speedingReportByVehicles, $query);
 

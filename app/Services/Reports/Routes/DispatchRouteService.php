@@ -187,7 +187,7 @@ class DispatchRouteService
             }
 
             $offRoadLocations = $locations->where('off_road', true);
-            $offRoadReport = $this->offRoad->groupByFirstOffRoad($offRoadLocations);
+            $offRoadReport = $this->offRoad->groupByEvent($offRoadLocations);
 
             $locationsReports = (object)[
                 'empty' => $locations->isEmpty(),
@@ -241,8 +241,8 @@ class DispatchRouteService
                     $speedingReport = collect([]);
                     $controlPointReport = collect([]);
 
-                    $offRoadReport = $this->offRoad->groupByFirstOffRoad($locations);
-                    if ($company->hasSpeedingEventsActive()) $speedingReport = $this->speeding->groupByFirstSpeedingEvent($speedingLocations);
+                    $offRoadReport = $this->offRoad->groupByEvent($locations);
+                    if ($company->hasSpeedingEventsActive()) $speedingReport = $this->speeding->groupByEvent($speedingLocations);
                     if ($company->hasControlPointEventsActive()) $controlPointReport = $this->controlPoints->reportWithDelay($dispatchRegister);
 
                     $totalOffRoads = $offRoadReport->count();
