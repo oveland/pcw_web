@@ -179,6 +179,12 @@
                                     @lang('Speeding')
                                 </a>
                             </li>
+                            <li class="has-sub menu-report-vehicles-panic">
+                                <a href="{{ route('report-vehicle-panic')  }}" class="faa-parent animated">
+                                    <i class="fa fa-exclamation-triangle text-danger faa-pulse animated" aria-hidden="true"></i>
+                                    @lang('Panic')
+                                </a>
+                            </li>
                             <li class="has-sub menu-report-vehicles-mileage">
                                 <a href="{{ route('report-vehicle-mileage')  }}" class="faa-parent animated-hover">
                                     <i class="fa fa-road faa-tada" aria-hidden="true"></i>

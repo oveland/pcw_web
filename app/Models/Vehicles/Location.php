@@ -109,7 +109,8 @@ trait BindsDynamically
  * @mixin Eloquent
  * @property int|null $vehicle_status_id
  * @method static Builder|Location whereVehicleStatusId($value)
- * @method static Builder|Location witOffRoads()
+ * @method static Builder|Location withOffRoads()
+ * @method static Builder|Location withPanic()
  * @method static Builder|Location forDate($initialDate, $finalDate = null)
  * @property bool|null $speeding
  * @property-read DispatchRegister|null $dispatchRegister
@@ -191,9 +192,18 @@ class Location extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWitOffRoads($query)
+    public function scopeWithOffRoads($query)
     {
         return $query->where('off_road', true);
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWithPanic($query)
+    {
+        return $query->where('vehicle_status_id', VehicleStatus::PANIC);
     }
 
     /**

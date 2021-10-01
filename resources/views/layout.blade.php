@@ -559,12 +559,19 @@ License: You must have a valid license purchased only from themeforest(the above
                             </ul>
                         </li>
                         <li class="nav-item menu-report-vehicles">
+
                             <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
                                 <i class="fa fa-bus faa-vertical"></i>
                                 @lang('Vehicles')
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
+                                <li class="nav-item menu-report-vehicles-panic">
+                                    <a href="{{ route('report-vehicle-panic')  }}" class="faa-parent animated">
+                                        <i class="fa fa-exclamation-triangle text-danger faa-ring animated" aria-hidden="true"></i>
+                                        @lang('Panic')
+                                    </a>
+                                </li>
                                 <li class="nav-item menu-report-vehicles-issues">
                                     <a href="{{ route('report-vehicles-issues')  }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-wrench faa-wrench" aria-hidden="true"></i>

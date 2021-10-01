@@ -218,6 +218,14 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/image/{location}', 'SpeedingReportController@getImageLocationFromCoordinates')->name('report-vehicle-speeding-geolocation-image');
             });
 
+            /* Panic report */
+            Route::prefix(__('url-panic'))->group(function () {
+                Route::get('/', 'PanicReportController@index')->name('report-vehicle-panic');
+                Route::get('/show', 'PanicReportController@show')->name('report-vehicle-panic-search-report');
+                Route::get('/address/{location}', 'PanicReportController@getAddressFromCoordinates')->name('report-vehicle-panic-geolocation-address');
+                Route::get('/image/{location}', 'PanicReportController@getImageLocationFromCoordinates')->name('report-vehicle-panic-geolocation-image');
+            });
+
             /* Mileage report */
             Route::prefix(__('mileage'))->group(function () {
                 Route::prefix(__('daily'))->group(function () {

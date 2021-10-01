@@ -794,5 +794,10 @@
   "Without dispatches": "Sin despachos",
   "Mileage day": "Kilometraje día",
   "Mileage in time range": "Km en rango de hora",
-  "Only max": "Valor máximo"
+  "Only max": "Valor máximo",
+  "Panic": "Pánico",
+  "panic": "pánico",
+  "url-panic": "panico",
+  "Panic_report": "Reporte_Panico",
+  "The date haven´t panic list": "No se encontró eventos de pánico"
 }

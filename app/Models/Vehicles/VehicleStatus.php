@@ -33,6 +33,7 @@ class VehicleStatus extends Model
     const POWER_OFF = 6;
     const PARKED = 3;
     const IN_REPAIR = 31;
+    const PANIC = 4;
 
     protected $table = 'status_vehi';
 

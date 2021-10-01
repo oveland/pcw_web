@@ -2,8 +2,6 @@
 
 namespace App\Services\Reports\Routes;
 
-
-use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
@@ -14,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
-class OffRoadService
+class PanicService
 {
     /**
      * Get all events of a company and date
@@ -30,7 +28,7 @@ class OffRoadService
     {
         $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)->get();
 
-        return Location::withOffRoads()
+        return Location::withPanic()
             ->forDate($initialDate, $finalDate)
             ->whereBetween('date', [$initialDate, $finalDate])
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
@@ -82,67 +80,31 @@ class OffRoadService
     }
 
     /**
-     * Extract first event of the all locations
+     * Extract first event of the all registers
      *
-     * @param Collection $allByVehicle
-     * @param null $truncateTimeFromDispatchRegister
+     * @param $allByVehicle
      * @return \Illuminate\Support\Collection
      */
-    function groupByEvent(Collection $allByVehicle, $truncateTimeFromDispatchRegister = null)
+    public function groupByEvent($allByVehicle)
     {
-        $allByVehicle = $allByVehicle->where('off_road', true);
+        $allByVehicle = $allByVehicle->where('speeding', true);
+
         $events = collect([]);
         if (!count($allByVehicle)) return $events;
 
-        $includeAll = $allByVehicle->first()->vehicle->company_id == Company::ALAMEDA;
-
         $last = null;
-        $displacement = collect([]);
         foreach ($allByVehicle as $event) {
-            if ($last && Geolocation::getDistance($event->latitude, $event->longitude, $last->latitude, $last->longitude) > 10 || (!$last && $includeAll)) {
-                $displacement->push($event);
+            if ($last) {
+                if ($event->time->diff($last->time)->format('%H:%I:%S') > '00:05:00') {
+                    $events->push($event);
+                }
+            } else {
+                $events->push($event);
             }
             $last = $event;
         }
 
-        $last = null;
-        $totalByGroup = 0;
-        $firstEventOnGroup = null;
-
-        $allByDispatchRegisters = $displacement->groupBy('dispatch_register_id');
-
-
-        foreach ($allByDispatchRegisters as $allByDispatchRegister) {
-            $dispatchRegister = $allByDispatchRegister->first()->dispatchRegister;
-
-            if ($dispatchRegister && $dispatchRegister->hasValidOffRoad()) {
-                if ($truncateTimeFromDispatchRegister || !$includeAll) {
-                    $date = $dispatchRegister->getParsedDate()->toDateString();
-                    $allByDispatchRegister = $allByDispatchRegister->where('date', '<=', "$date $dispatchRegister->arrival_time_scheduled");
-                }
-
-                // Detect first event
-                foreach ($allByDispatchRegister as $event) {
-                    if (!$last || $event->date->diff($last->date)->format('%H:%I:%S') > '00:03:00') {
-                        $firstEventOnGroup = $event;
-                        $totalByGroup = 1;
-                    } else if ($totalByGroup > 0) {
-                        $totalByGroup++;
-                    }
-
-                    if ($totalByGroup > 3 || ($includeAll && $totalByGroup >= 1)) {
-                        if ($firstEventOnGroup->isTrueOffRoad()) {
-                            $events->push($firstEventOnGroup);
-                        }
-                        $totalByGroup = 0;
-                    }
-
-                    $last = $event;
-                }
-            }
-        }
-
-        return $events;
+        return $events->sortBy('date');
     }
 
     /**
@@ -152,7 +114,7 @@ class OffRoadService
      */
     public function exportByVehicles($dataReport, $query)
     {
-        return Excel::create(__('Off Roads') . " $query->dateReport", function ($excel) use ($dataReport, $query) {
+        return Excel::create(__('Panics') . " $query->dateReport", function ($excel) use ($dataReport, $query) {
             foreach ($dataReport as $vehicleId => $reports) {
                 $vehicle = Vehicle::find($vehicleId);
                 $dataExcel = array();
@@ -177,12 +139,12 @@ class OffRoadService
                 }
 
                 $dataExport = (object)[
-                    'fileName' => __('Off road report by Vehicle') . " $query->dateReport",
-                    'title' => __('Off road report by Vehicle') . " $query->dateReport",
+                    'fileName' => __('Panic report by Vehicle') . " $query->dateReport",
+                    'title' => __('Panic report by Vehicle') . " $query->dateReport",
                     'subTitle' => "$vehicle->number",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
-                    'type' => 'offRoadReport'
+                    'type' => 'panicReport'
                 ];
                 $excel = PCWExporterService::createHeaders($excel, $dataExport);
                 $excel = PCWExporterService::createSheet($excel, $dataExport);
