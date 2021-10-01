@@ -73,8 +73,7 @@ class PanicReportController extends Controller
             'vehicleReport' => $request->get('vehicle-report'),
             'initialTime' => $initialTime,
             'finalTime' => $finalTime,
-            'typeReport' => $request->get('type-report'),
-            'onlyMax' => $request->get('only-max')
+            'typeReport' => $request->get('type-report')
         ];
 
         $allPanic = $this->panicService->all($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
@@ -90,7 +89,18 @@ class PanicReportController extends Controller
     function processResponse(Collection $report)
     {
         return $report->mapWithKeys(function ($data, $vehicleId) {
-            return [$vehicleId => collect($data->toArray())->values()];
+            $report = collect([]);
+            foreach ($data as $r) {
+                $report->push((object)[
+                    'id' => $r->id,
+                    'date' => $r->date->toDateTimeString(),
+                    'speed' => $r->speed,
+                    'dispatchRegister' => $r->dispatchRegister ? $r->dispatchRegister->getRouteFields(true) : null,
+                    'vehicle' => $r->vehicle->getAPIFields(null, true)
+                ]);
+            }
+
+            return [$vehicleId => $report];
         });
     }
 

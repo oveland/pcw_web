@@ -13,9 +13,9 @@
                     <ul class="nav nav-pills nav-pills-success m-0">
                         @foreach($report as $vehicleId => $events)
                             @php
-                                $vehicle = $events->first()['vehicle'];
+                                $vehicle = $events->first()->vehicle;
                             @endphp
-                            <li class="{{$loop->first?'active':''}}">
+                            <li class="{{ $loop->first ? 'active' : '' }}">
                                 <a href="#report-tab-{{ $vehicle->id }}" data-toggle="tab" aria-expanded="true" class="tooltips" data-placement="bottom"
                                    data-original-title="{{ $vehicle->plate }}">
                                     <i class="fa fa-car f-s-8 icon-report icon-car-{{ $vehicleId }}"></i><span class="icon-report f-s-8">{{ $loop->iteration }}</span>
@@ -31,7 +31,7 @@
         <div class="tab-content panel p-0">
             @foreach($report as $vehicleId => $events)
                 @php
-                    $vehicle = $events->first()['vehicle'];
+                    $vehicle = $events->first()->vehicle;
                 @endphp
                 <div id="report-tab-{{ $vehicleId }}" class="tab-pane fade {{ $loop->first ? 'active in' : '' }}">
                     <div class="table-responsive">

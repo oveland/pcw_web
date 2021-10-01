@@ -38,13 +38,6 @@
             z-index: 1 !important;
         }
     </style>
-
-    <!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', {packages: ['corechart', 'bar']});
-        // google.charts.setOnLoadCallback(drawStacked);
-    </script>
 @endsection
 
 @section('content')
@@ -142,25 +135,10 @@
                             <div class="form-group">
                                 <label for="date-end-report" class="control-label">@lang('Date end')</label>
                                 <div class="input-group date" id="datetimepicker-report">
-                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
+                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ \Carbon\Carbon::yesterday()->toDateString() }}"/>
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 options">
-                            <div class="form-group">
-                                <label for="type-report" class="control-label">@lang('Options')</label>
-                                <div class="form-group">
-                                    <div class="has-warning">
-                                        <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
-                                            <label class="text-bold">
-                                                <input id="only-max" name="only-max" type="checkbox" value="only-max"> @lang('Only max')
-                                            </label>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -175,10 +153,6 @@
         </form>
         <!-- end search form -->
         <!-- begin content report -->
-
-        <div class="col-md-12 chart-container">
-            <div id="chart_div"></div>
-        </div>
 
         <div class="report-container col-md-12"></div>
         <!-- end content report -->
@@ -205,13 +179,12 @@
         $('.menu-report-vehicles, .menu-report-vehicles-panic').addClass('active-animated');
         let form = $('.form-search-report');
         let mainContainer = $('.report-container');
-        let chart = $('.chart-container');
 
         $(document).ready(function () {
             form.submit(function (e) {
                 e.preventDefault();
                 mainContainer.show().empty().hide().html($('#animated-loading').html()).show();
-                chart.hide();
+
                 if (form.isValid()) {
 
                     form.find('.btn-search-report').addClass(loadingClass);
@@ -223,15 +196,6 @@
                         },
                         complete: function () {
                             form.find('.btn-search-report').removeClass(loadingClass);
-                        }
-                    });
-
-                    $.ajax({
-                        url: form.attr('action') + '?chart=true',
-                        data: form.serialize(),
-                        success: function (data) {
-                            if(data.length > 1)chart.show();
-                            drawChart(data);
                         }
                     });
                 }
@@ -334,48 +298,5 @@
             }
         });
 
-        function drawChart(report) {
-            if(!report.length) return false;
-
-            var data = new google.visualization.DataTable();
-
-            var data = google.visualization.arrayToDataTable(report);
-
-            var options = {
-                animation: {duration: 200, easing: 'in', startup: true},
-                width: 'auto',
-                height: 400,
-                legend: { position: 'top', maxLines: 3 },
-                bar: { groupWidth: '40%' },
-                colors: ['#d8ff00', 'orange', '#ff5200', '#d00000'],
-                isStacked: true,
-                dataOpacity: 0.8,
-                title: 'Rango de velocidades en Km/h',
-                tooltip: {showColorCode: true},
-                alwaysOutside: true,
-                axisTitlesPosition: 'in',
-                trendlines: {
-                    0: {
-                        type: 'linear',
-                        color: 'green',
-                        lineWidth: 3,
-                        opacity: 0.3,
-                        showR2: true,
-                        visibleInLegend: true
-                    },
-                    1: {
-                        type: 'linear',
-                        color: 'green',
-                        lineWidth: 10,
-                        opacity: 0.3,
-                        showR2: true,
-                        visibleInLegend: false
-                    },
-                }
-            };
-
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
-        }
     </script>
 @endsection
