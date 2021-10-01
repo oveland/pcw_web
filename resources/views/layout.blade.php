@@ -566,12 +566,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
+                                @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->company->id === App\Models\Company\Company::COODETRANS) )
                                 <li class="nav-item menu-report-vehicles-panic">
                                     <a href="{{ route('report-vehicle-panic')  }}" class="faa-parent animated">
                                         <i class="fa fa-exclamation-triangle text-danger faa-ring animated" aria-hidden="true"></i>
                                         @lang('Panic')
                                     </a>
                                 </li>
+                                @endif
                                 <li class="nav-item menu-report-vehicles-issues">
                                     <a href="{{ route('report-vehicles-issues')  }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-wrench faa-wrench" aria-hidden="true"></i>
