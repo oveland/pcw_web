@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company\Company;
 use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\PanicService;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class PanicReportController extends Controller
@@ -38,10 +40,6 @@ class PanicReportController extends Controller
         $this->pcwAuthService = $pcwAuthService;
     }
 
-
-    /**
-     * @return Factory|View
-     */
     public function index()
     {
         $access = $this->pcwAuthService->getAccessProperties();
@@ -49,7 +47,10 @@ class PanicReportController extends Controller
         $routes = $access->routes;
         $vehicles = $access->vehicles;
 
-        return view('reports.vehicles.panic.index', compact(['companies', 'routes', 'vehicles']));
+        if ($access->company->id === Company::COODETRANS || Auth::user()->isAdmin()) {
+            return view('reports.vehicles.panic.index', compact(['companies', 'routes', 'vehicles']));
+        }
+        abort(403);
     }
 
     /**

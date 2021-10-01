@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company\Company;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\LocationToday;
 use App\Models\Vehicles\Vehicle;
@@ -361,6 +362,11 @@ class ReportRouteHistoricController extends Controller
             'total' => $totalLocations,
             'from' => $totalLocations ? $dataLocations->first()->time : '--:--',
             'to' => $totalLocations ? $dataLocations->last()->time : '--:--',
+            'config' => [
+                'events' => [
+                    'panic' => $vehicle->company->id === Company::COODETRANS
+                ]
+            ]
         ];
     }
 

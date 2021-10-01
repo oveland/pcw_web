@@ -3,6 +3,7 @@
 
     class ReportRouteHistoric {
         constructor(map) {
+            this.report = null;
             this.map = map;
 
             this.currentLocation = null;
@@ -70,7 +71,7 @@
                 zIndex = 100;
                 anchor.x = 250;
                 anchor.y = 280;
-            } else if (reportLocation.vehicleStatus.id === 4) {
+            } else if (reportLocation.vehicleStatus.id === 4 && this.report && this.report.config.events.panic) {
                 rotation = 0;
                 path = this.iconPanicSVG;
                 fillColor = '#ff0000';
@@ -133,6 +134,7 @@
         }
 
         processHistoricReportData(report) {
+            this.report = report;
             // fitHeight('#google-map-light-dream');
 
             $.each(report.historic, (i, reportLocation) => {
