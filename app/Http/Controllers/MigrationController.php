@@ -233,6 +233,10 @@ class MigrationController extends Controller
             $route->as_group = $routeOLD->as_group;
             $route->route_id = $routeOLD->route_id;
 
+            if($route->id == 204) {
+                dump($routeOLD);
+            }
+
             $routeGoogle = RouteGoogle::find($route->id);
             $route->url = $routeGoogle ? $routeGoogle->url : "";
 
