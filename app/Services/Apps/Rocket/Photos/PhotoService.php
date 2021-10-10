@@ -389,7 +389,7 @@ class PhotoService
         return Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $this->camera)
 //            ->whereBetween('id', [104073, 104173])
             //->where('id', 53717);
-//            ->where('dispatch_register_id', 1790216)
+//            ->where('dispatch_register_id', '>', 1833559)
             ->limit(2000)
             ->get();
     }

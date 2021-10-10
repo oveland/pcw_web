@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('syrus:sync-photos')->everyMinute()->between('04:00', '23:00');
 
-            $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('04:00', '22:00');
+           $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('04:00', '22:00');
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
 
