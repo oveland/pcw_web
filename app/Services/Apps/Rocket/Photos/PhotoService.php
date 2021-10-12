@@ -708,7 +708,11 @@ class PhotoService
                 $durations->put('processRekognitionCounts', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
                 $ini = Carbon::now();
 
-//                $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value');
+                // Overwrite count by maximum criteria
+                // $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value'); // get the max count between different rekognition types
+                $maximumCriteria = $rekognitionCounts->get('faces');
+                $personsByRoundTrip = $maximumCriteria->max->value;
+                $totalPersons = $maximumCriteria->total;
 
                 $personsByRoundTrips = collect([])->push((object)[
                     'id' => $photo->dispatch_register_id,
@@ -783,11 +787,11 @@ class PhotoService
         ];
 
         foreach ($types as $type => $description) {
-            $prevDraws = $prevDetails->occupation ? collect($prevDetails->occupation->draws) : collect([]);
-            $currentDraws = collect($details->occupation->draws);
+//            $prevDraws = $prevDetails->occupation ? collect($prevDetails->occupation->draws) : collect([]);
+//            $currentDraws = collect($details->occupation->draws);
 
-            //$prevDraws = $prevDetails->occupation ? collect($prevDetails->occupation->draws)->where('count', true) : collect([]);
-            //$currentDraws = collect($details->occupation->draws)->where('count', true);
+            $prevDraws = $prevDetails->occupation ? collect($prevDetails->occupation->draws)->where('count', true) : collect([]);
+            $currentDraws = collect($details->occupation->draws)->where('count', true);
 
             $prevCount = $prevDraws->where('type', $type)->count();
             $prevTotal = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->total : 0;
@@ -795,8 +799,9 @@ class PhotoService
             $count = $currentDraws->where('type', $type)->count();
             $diff = $count - $prevCount;
             $diff = $diff > 0 ? $diff : 0;
-            $total = $prevTotal + $diff;
 
+            $total = $prevTotal;
+            
             /* With Persistence */
 
             // Prev persistence
@@ -831,6 +836,7 @@ class PhotoService
 
             if ($photo->dispatch_register_id) {
                 if ($count > $prevMaxDetection) {
+                    $total = $total + ($count - $maxDetection);
                     $maxDetection = $count;
                     $maxPhotoId = $photo->id;
                 }
