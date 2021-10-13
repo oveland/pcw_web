@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company\Company;
 use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\PanicService;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Services\PCWExporterService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class PanicReportController extends Controller
@@ -38,10 +40,6 @@ class PanicReportController extends Controller
         $this->pcwAuthService = $pcwAuthService;
     }
 
-
-    /**
-     * @return Factory|View
-     */
     public function index()
     {
         $access = $this->pcwAuthService->getAccessProperties();
@@ -49,7 +47,10 @@ class PanicReportController extends Controller
         $routes = $access->routes;
         $vehicles = $access->vehicles;
 
-        return view('reports.vehicles.panic.index', compact(['companies', 'routes', 'vehicles']));
+        if ($access->company->id === Company::COODETRANS || Auth::user()->isAdmin()) {
+            return view('reports.vehicles.panic.index', compact(['companies', 'routes', 'vehicles']));
+        }
+        abort(403);
     }
 
     /**
@@ -73,8 +74,7 @@ class PanicReportController extends Controller
             'vehicleReport' => $request->get('vehicle-report'),
             'initialTime' => $initialTime,
             'finalTime' => $finalTime,
-            'typeReport' => $request->get('type-report'),
-            'onlyMax' => $request->get('only-max')
+            'typeReport' => $request->get('type-report')
         ];
 
         $allPanic = $this->panicService->all($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
@@ -90,7 +90,18 @@ class PanicReportController extends Controller
     function processResponse(Collection $report)
     {
         return $report->mapWithKeys(function ($data, $vehicleId) {
-            return [$vehicleId => collect($data->toArray())->values()];
+            $report = collect([]);
+            foreach ($data as $r) {
+                $report->push((object)[
+                    'id' => $r->id,
+                    'date' => $r->date->toDateTimeString(),
+                    'speed' => $r->speed,
+                    'dispatchRegister' => $r->dispatchRegister ? $r->dispatchRegister->getRouteFields(true) : null,
+                    'vehicle' => $r->vehicle->getAPIFields(null, true)
+                ]);
+            }
+
+            return [$vehicleId => $report];
         });
     }
 

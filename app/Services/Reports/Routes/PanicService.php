@@ -6,6 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleStatus;
 use App\Services\PCWExporterService;
 use Excel;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,12 +27,20 @@ class PanicService
      */
     function all(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
-        $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)->get();
+        $vehicles = $company->activeVehicles();
+
+        if ($vehicleReport) {
+            if (is_numeric($vehicleReport)) {
+                $vehicles = $vehicles->where('id', $vehicleReport);
+            } else {
+                $vehicles = $vehicles->where('tags', 'like', "%$vehicleReport%");
+            }
+        }
 
         return Location::withPanic()
             ->forDate($initialDate, $finalDate)
             ->whereBetween('date', [$initialDate, $finalDate])
-            ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
+            ->whereIn('vehicle_id', $vehicles->get()->pluck('id'))
             ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.route', 'dispatchRegister.driver'])
             ->orderBy('date')
             ->get()->filter(function (Location $o) use ($initialDate, $finalDate) {
@@ -87,7 +96,7 @@ class PanicService
      */
     public function groupByEvent($allByVehicle)
     {
-        $allByVehicle = $allByVehicle->where('speeding', true);
+        $allByVehicle = $allByVehicle->where('vehicle_status_id', VehicleStatus::PANIC);
 
         $events = collect([]);
         if (!count($allByVehicle)) return $events;
