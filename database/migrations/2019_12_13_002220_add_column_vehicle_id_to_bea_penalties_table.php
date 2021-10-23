@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\BEA\Penalty;
+use App\Models\LM\Penalty;
 use App\Models\Company\Company;
-use App\Services\BEA\BEARepository;
+use App\Services\LM\LMRepository;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -10,15 +10,15 @@ use Illuminate\Database\Migrations\Migration;
 class AddColumnVehicleIdToBeaPenaltiesTable extends Migration
 {
     /**
-     * @var BEARepository
+     * @var LMRepository
      */
     private $repository;
 
     public function __construct()
     {
-        $this->repository = new BEARepository();
+        $this->repository = new LMRepository();
 
-        $this->repository->forCompany(Company::find(Company::COODETRANS)); // TODO: replace for all companies with BEA
+        $this->repository->forCompany(Company::find(Company::COODETRANS)); // TODO: replace for all companies with LM
     }
 
     /**

@@ -5,7 +5,7 @@ namespace App\Models\Vehicles;
 use App\LastLocation;
 use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
-use App\Models\BEA\ManagementCost;
+use App\Models\LM\ManagementCost;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Proprietaries\Proprietary;

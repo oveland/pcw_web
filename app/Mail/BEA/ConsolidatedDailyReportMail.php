@@ -2,7 +2,7 @@
 
 namespace App\Mail\BEA;
 
-use App\Services\BEA\Reports\BEAReportService;
+use App\Services\LM\Reports\LMReportService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use App\Models\Company\Company;
@@ -38,7 +38,7 @@ class ConsolidatedDailyReportMail extends Mailable
     {
         $this->company = $company;
         $this->dateReport = $dateReport;
-        $this->reportService = app(BEAReportService::class);
+        $this->reportService = app(LMReportService::class);
         $this->production = false;
     }
 
@@ -73,7 +73,7 @@ class ConsolidatedDailyReportMail extends Mailable
     {
         $pathToConsolidatesReportFiles = $this->makeFiles();
 
-        $email = $this->view('email.reports.consolidated.daily')->subject(__('BEA') . " | " . __('Consolidated report daily') . " | $this->dateReport ".($this->production ? '✓':''));
+        $email = $this->view('email.reports.consolidated.daily')->subject(__('LM') . " | " . __('Consolidated report daily') . " | $this->dateReport ".($this->production ? '✓':''));
         if ($pathToConsolidatesReportFiles->isNotEmpty()) {
             foreach ($pathToConsolidatesReportFiles as $pathToConsolidatesReportFile) {
                 $email->attach(Storage::path($pathToConsolidatesReportFile));

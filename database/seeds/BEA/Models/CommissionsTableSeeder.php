@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\BEA\Commission;
+use App\Models\LM\Commission;
 use App\Models\Company\Company;
 use App\Services\BEA\BEASyncService;
 use Illuminate\Database\Seeder;

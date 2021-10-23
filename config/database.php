@@ -94,44 +94,60 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'BEA_COODETRANS' => [
-            'company_id' => App\Models\Company\Company::COODETRANS,
-            'driver' => 'firebird',
-            'path' => env('BEADB_PATH'),
-            'username' => env('BEADB_USERNAME', 'BEADMIN'),
-            'password' => env('BEADB_PASSWORD', 'bea00001'),
+        'BEA' => [
+            'COODETRANS' => [
+                'company_id' => App\Models\Company\Company::COODETRANS,
+                'driver' => 'firebird',
+                'path' => env('BEADB_PATH'),
+                'username' => env('BEADB_USERNAME', 'BEADMIN'),
+                'password' => env('BEADB_PASSWORD', 'bea00001'),
+            ],
+
+            'PAPAGAYO' => [
+                'company_id' => App\Models\Company\Company::PAPAGAYO,
+                'driver' => 'firebird',
+                'path' => env('BEADB_PATH_PAPAGAYO'),
+                'username' => env('BEADB_USERNAME_PAPAGAYO', 'BEADMIN'),
+                'password' => env('BEADB_PASSWORD_PAPAGAYO', 'bea00001'),
+            ],
+
+            'MONTEBELLO' => [
+                'company_id' => App\Models\Company\Company::MONTEBELLO,
+                'driver' => 'firebird',
+                'path' => env('BEADB_PATH_MONTEBELLO'),
+                'username' => env('BEADB_USERNAME_MONTEBELLO', 'BEADMIN'),
+                'password' => env('BEADB_PASSWORD_MONTEBELLO', 'bea00001'),
+            ],
+
+            'ALAMEDA' => [
+                'company_id' => App\Models\Company\Company::ALAMEDA,
+                'driver' => 'firebird',
+                'path' => env('BEADB_PATH_ALAMEDA'),
+                'username' => env('BEADB_USERNAME_ALAMEDA', 'BEADMIN'),
+                'password' => env('BEADB_PASSWORD_ALAMEDA', 'bea00001'),
+            ],
+
+            'PCW' => [
+                'company_id' => App\Models\Company\Company::PCW,
+                'driver' => 'firebird',
+                'path' => env('BEADB_PATH_MONTEBELLO'),
+                'username' => env('BEADB_USERNAME_MONTEBELLO', 'BEADMIN'),
+                'password' => env('BEADB_PASSWORD_MONTEBELLO', 'bea00001'),
+            ],
         ],
 
-        'BEA_PAPAGAYO' => [
-            'company_id' => App\Models\Company\Company::PAPAGAYO,
-            'driver' => 'firebird',
-            'path' => env('BEADB_PATH_PAPAGAYO'),
-            'username' => env('BEADB_USERNAME_PAPAGAYO', 'BEADMIN'),
-            'password' => env('BEADB_PASSWORD_PAPAGAYO', 'bea00001'),
-        ],
-
-        'BEA_MONTEBELLO' => [
-            'company_id' => App\Models\Company\Company::MONTEBELLO,
-            'driver' => 'firebird',
-            'path' => env('BEADB_PATH_MONTEBELLO'),
-            'username' => env('BEADB_USERNAME_MONTEBELLO', 'BEADMIN'),
-            'password' => env('BEADB_PASSWORD_MONTEBELLO', 'bea00001'),
-        ],
-
-        'BEA_ALAMEDA' => [
-            'company_id' => App\Models\Company\Company::ALAMEDA,
-            'driver' => 'firebird',
-            'path' => env('BEADB_PATH_ALAMEDA'),
-            'username' => env('BEADB_USERNAME_ALAMEDA', 'BEADMIN'),
-            'password' => env('BEADB_PASSWORD_ALAMEDA', 'bea00001'),
-        ],
-
-        'PCW' => [
-            'company_id' => App\Models\Company\Company::PCW,
-            'driver' => 'firebird',
-            'path' => env('BEADB_PATH_MONTEBELLO'),
-            'username' => env('BEADB_USERNAME_MONTEBELLO', 'BEADMIN'),
-            'password' => env('BEADB_PASSWORD_MONTEBELLO', 'bea00001'),
+        'DFS' => [
+            'EXPRESO_PALMIRA' => [
+                'driver'   => 'sqlsrv',
+                'host'     => env( 'DFSDB_HOST_EP' ),
+                'port'     => env( 'DFSDB_PORT_EP' ),
+                'database' => env( 'DFSDB_DB_EP' ),
+                'username' => env( 'DFSDB_USERNAME_EP' ),
+                'password' => env( 'DFSDB_PASSWORD_EP' ),
+                'prefix'   => '',
+                'charset'  => 'SQL_Latin1_General_CP1_CI_AS',
+                'pooling'  => false,
+            ],
         ],
     ],
 

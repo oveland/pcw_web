@@ -13,9 +13,9 @@
 
 /** @var Factory $factory */
 
-use App\Models\BEA\Mark;
-use App\Models\BEA\Trajectory;
-use App\Models\BEA\Turn;
+use App\Models\LM\Mark;
+use App\Models\LM\Trajectory;
+use App\Models\LM\Turn;
 use App\Models\Company\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factory;

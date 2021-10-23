@@ -19,13 +19,13 @@
                     <i class="fa fa-users text-muted"></i><br> {{ $t('Boarded') }}
                 </th>
                 <th class="col-md-1">
-                    <i class="fa fa-users text-muted"></i><br> {{ $t('BEA') }}
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Passengers') }}
                 </th>
                 <th class="col-md-2">
-                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total BEA') }}
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total') }}
                 </th>
                 <th class="col-md-2">
-                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Gross BEA') }}
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total gross') }}
                 </th>
                 <th class="col-md-2">
                     <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total by turn') }}
@@ -126,7 +126,7 @@
         },
         methods: {
             getCommissionTitle: (commission) => {
-                return commission.type === 'fixed' ? ('Fixed value per passenger') + ': $' + commission.baseValue : ('Percent of Gross BEA') + ': ' + commission.baseValue + '%';
+                return commission.type === 'fixed' ? ('Fixed value per passenger') + ': $' + commission.baseValue : ('Percent of Total gross') + ': ' + commission.baseValue + '%';
             },
             getCommissionIconClass: (commission) => {
                 return commission.type === 'fixed' ? 'icon-user': 'icon-pie-chart';

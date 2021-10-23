@@ -1,8 +1,8 @@
 <?php
 
 use App\Facades\BEADB;
-use App\Models\BEA\Discount;
-use App\Models\BEA\Penalty;
+use App\Models\LM\Discount;
+use App\Models\LM\Penalty;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use App\Services\BEA\BEASyncService;

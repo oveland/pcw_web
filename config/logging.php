@@ -44,9 +44,9 @@ return [
             'level' => 'debug',
         ],
 
-        'bea' => [
+        'lm' => [
             'driver' => 'single',
-            'path' => storage_path('logs/bea.log'),
+            'path' => storage_path('logs/lm.log'),
             'level' => 'debug',
         ],
 

@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\BEA\DiscountType;
+use App\Models\LM\DiscountType;
 use App\Models\Company\Company;
-use App\Services\BEA\BEARepository;
+use App\Services\LM\LMRepository;
 use App\Services\BEA\BEASyncService;
 use Illuminate\Database\Seeder;
 

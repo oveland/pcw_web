@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\BEA\Commission;
+use App\Models\LM\Commission;
 use App\Models\Company\Company;
-use App\Services\BEA\BEARepository;
+use App\Services\LM\LMRepository;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,15 +10,15 @@ use Illuminate\Support\Facades\Schema;
 class AddColumnVehicleIdToBeaCommissionsTable extends Migration
 {
     /**
-     * @var BEARepository
+     * @var LMRepository
      */
     private $repository;
 
     public function __construct()
     {
-        $this->repository = new BEARepository();
+        $this->repository = new LMRepository();
 
-        $this->repository->forCompany(Company::find(Company::COODETRANS)); // TODO: replace for all companies with BEA
+        $this->repository->forCompany(Company::find(Company::COODETRANS)); // TODO: replace for all companies with LM
     }
 
     /**

@@ -143,7 +143,7 @@
                             <div class="col-md-6">
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
-                                        <input id="edit-discount-name" readonly type="text" class="form-control" :placeholder="$t('Namme')" v-model="editingDiscount.discount_type.name">
+                                        <input id="edit-discount-name" readonly type="text" class="form-control" :placeholder="$t('Name')" v-model="editingDiscount.discount_type.name">
                                         <label for="edit-discount-name">{{ $t('Name') }}</label>
                                         <i :class="editingDiscount.discount_type.icon"></i>
                                     </div>

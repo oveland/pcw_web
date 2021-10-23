@@ -85,7 +85,7 @@
                                     <a href="#takings-detail" data-toggle="tab"> {{ $t('Takings') }} </a>
                                 </li>
                                 <li class="active">
-                                    <a href="#detail-marks-taken" data-toggle="tab"> {{ $t('Turns') }} BEA </a>
+                                    <a href="#detail-marks-taken" data-toggle="tab"> {{ $t('Turns') }} LM </a>
                                 </li>
                             </ul>
                         </div>

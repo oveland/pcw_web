@@ -16,7 +16,7 @@
                                 <i class="fa fa-retweet text-muted"></i><br> {{ $t('Date') }}
                             </th>
                             <th>
-                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('BEA') }}
+                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('LM') }}
                             </th>
                             <th>
                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('Fuel') }}

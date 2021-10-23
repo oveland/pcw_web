@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Reports\Liquidation;
 
 use App;
 use App\Http\Controllers\Controller;
-use App\Models\BEA\Advance;
-use App\Models\BEA\ManagementCost;
+use App\Models\LM\Advance;
+use App\Models\LM\ManagementCost;
 use App\Models\Drivers\Driver;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
-use App\Services\BEA\BEAService;
+use App\Services\LM\LMService;
 use App\Services\PCWExporterService;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -26,9 +26,9 @@ class ReportLiquidationController extends Controller
      */
     private $auth;
     /**
-     * @var BEAService
+     * @var LMService
      */
-    private $beaService;
+    private $lmService;
     /**
      * @var PCWExporterService
      */
@@ -40,7 +40,7 @@ class ReportLiquidationController extends Controller
         $this->exporter = $exporter;
 
         $this->middleware(function ($request, $next) {
-            $this->beaService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)->id]);
+            $this->lmService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)->id]);
             return $next($request);
         });
     }
@@ -69,7 +69,7 @@ class ReportLiquidationController extends Controller
         $initialDate = $date[0];
         $finalDate = $date[1] ?? $initialDate;
 
-        $report = (object)$this->beaService->getMainReport($vehicle->id, $driver->id ?? null, $initialDate, $finalDate)->toArray();
+        $report = (object)$this->lmService->getMainReport($vehicle->id, $driver->id ?? null, $initialDate, $finalDate)->toArray();
 
         $options = (object)[
             'w' => 1500,
@@ -103,7 +103,7 @@ class ReportLiquidationController extends Controller
             $finalDate = $date[1];
         }
 
-        $dailyReport = $this->beaService->getMainReport($vehicle->id, $driver->id ?? null, $initialDate, $finalDate)->toArray();
+        $dailyReport = $this->lmService->getMainReport($vehicle->id, $driver->id ?? null, $initialDate, $finalDate)->toArray();
 
         return response()->json($dailyReport);
     }
@@ -122,9 +122,9 @@ class ReportLiquidationController extends Controller
                 $access = $this->auth->access($company);
 
                 return response()->json([
-                    'company' => $this->beaService->repository->company,
-                    'vehicles' => $this->beaService->repository->getAllVehicles(),
-                    'drivers' => $this->beaService->repository->getAllDrivers(),
+                    'company' => $this->lmService->repository->company,
+                    'vehicles' => $this->lmService->repository->getAllVehicles(),
+                    'drivers' => $this->lmService->repository->getAllDrivers(),
                     'companies' => $access->companies
                 ]);
                 break;
@@ -132,16 +132,16 @@ class ReportLiquidationController extends Controller
                 $vehicle = Vehicle::find($request->get('vehicle'));
                 $trajectory = $request->get('trajectory');
 
-                $this->beaService->sync->checkDiscountsFor($vehicle);
+                $this->lmService->sync->checkDiscountsFor($vehicle);
 
-                return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory, true));
+                return response()->json($this->lmService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory, true));
                 break;
             case __('costs'):
                 $vehicle = Vehicle::find($request->get('vehicle'));
 
-                $this->beaService->sync->checkManagementCostsFor($vehicle);
+                $this->lmService->sync->checkManagementCostsFor($vehicle);
 
-                $costs = $this->beaService->repository->getManagementCosts($vehicle);
+                $costs = $this->lmService->repository->getManagementCosts($vehicle);
 
                 return response()->json($costs->where('uid', '<>', ManagementCost::PAYROLL_ID)->values()->toArray());
                 break;
@@ -151,7 +151,7 @@ class ReportLiquidationController extends Controller
                 return response()->json(Advance::findAllByVehicle($vehicle));
                 break;
             default:
-                return response()->json($this->beaService->getLiquidationParams(true));
+                return response()->json($this->lmService->getLiquidationParams(true));
                 break;
         }
     }

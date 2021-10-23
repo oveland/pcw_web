@@ -57,7 +57,7 @@
                                     <tr class="" v-for="(commission, indexCommission) in commissionsFor(route.id)">
                                         <td class="text-center">{{ indexCommission + 1 }}</td>
 										<td class="text-center">{{ commission.vehicle.number }}</td>
-                                        <td class="text-center">{{ $t(commission.type + 'BEA') | capitalize }}</td>
+                                        <td class="text-center">{{ $t(commission.type + 'Passengers') | capitalize }}</td>
                                         <td class="text-center">
                                             {{ commission.value | numberFormat('0,0') }}
                                         </td>
@@ -89,7 +89,7 @@
                                 <div class="form-group form-md-line-input has-success">
                                     <div class="input-icon">
                                         <select id="edit-commission-type" readonly type="text" class="form-control" v-model="editingCommission.type">
-                                            <option v-for="(type) in commissionTypes" :value="type">{{ $t(type + 'BEA') | capitalize }}</option>
+                                            <option v-for="(type) in commissionTypes" :value="type">{{ $t(type + 'Passengers') | capitalize }}</option>
                                         </select>
                                         <label for="edit-commission-type">{{ $t('Commission type') }}</label>
                                         <i class="fa fa-tag"></i>

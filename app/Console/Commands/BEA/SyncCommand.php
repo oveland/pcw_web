@@ -22,7 +22,7 @@ class SyncCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Sync global params with BEA database';
+    protected $description = 'Sync global params with LM database';
 
     /**
      * Create a new command instance.
@@ -44,7 +44,7 @@ class SyncCommand extends Command
     {
         $company = Company::find($this->option('company'));
 
-        $this->info("BEA sync for company: $company->name");
+        $this->info("LM sync for company: $company->name");
 
         if ($company) {
             $beaService = App::makeWith('bea.service', ['company' => $company->id, 'console' => true]);
@@ -82,7 +82,7 @@ class SyncCommand extends Command
     {
         if ($string) {
             parent::info($string, $verbosity);
-            Log::channel('bea')->info($string);
+            Log::channel('lm')->info($string);
         }
     }
 }

@@ -2,6 +2,8 @@
 
 use App\Providers\APIProvider;
 use App\Providers\BEAServiceProvider;
+use App\Providers\DFSServiceProvider;
+use App\Providers\LMServiceProvider;
 use App\Providers\ReportsServiceProvider;
 use App\Providers\RocketServiceProvider;
 
@@ -195,9 +197,12 @@ return [
          * PCW Application Service Providers...
          */
         ReportsServiceProvider::class,
-        BEAServiceProvider::class,
         RocketServiceProvider::class,
-        APIProvider::class
+        APIProvider::class,
+
+        LMServiceProvider::class,
+        BEAServiceProvider::class,
+        DFSServiceProvider::class,
     ],
 
     /*

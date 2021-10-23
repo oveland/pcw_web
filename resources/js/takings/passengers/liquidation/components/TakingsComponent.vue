@@ -84,7 +84,7 @@
                                     <a href="#liquidation-detail" data-toggle="tab"> {{ $t('Liquidation') }} </a>
                                 </li>
                                 <li class="active">
-                                    <a href="#detail-marks-liquidated" data-toggle="tab"> {{ $t('Turns') }} BEA </a>
+                                    <a href="#detail-marks-liquidated" data-toggle="tab"> {{ $t('Turns') }} LM </a>
                                 </li>
                             </ul>
                         </div>

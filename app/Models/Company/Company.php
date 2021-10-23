@@ -2,7 +2,7 @@
 
 namespace App\Models\Company;
 
-use App\Models\BEA\Config;
+use App\Models\LM\Config;
 use App\Models\Drivers\Driver;
 use App\Models\Drivers\Drivers;
 use App\Models\Proprietaries\Proprietary;
@@ -81,6 +81,7 @@ class Company extends Model
     const YUMBENOS = 17;
     const COODETRANS = 30;
     const PAPAGAYO = 24;
+    const EXPRESO_PALMIRA = 39;
 
     /**
      * @return mixed|string

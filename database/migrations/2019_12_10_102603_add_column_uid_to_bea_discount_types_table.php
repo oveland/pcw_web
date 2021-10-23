@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\BEA\DiscountType;
-use App\Models\BEA\MarkDiscountType;
+use App\Models\LM\DiscountType;
+use App\Models\LM\MarkDiscountType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;

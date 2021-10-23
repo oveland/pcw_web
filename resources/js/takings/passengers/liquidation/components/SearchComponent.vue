@@ -1,6 +1,6 @@
 <template>
     <div class="panel panel-default">
-        <div class="panel-heading">
+        <div class="panel-heading p-b-0">
             <button type="button" class="btn btn-success btn-search-report pull-left" @click="searchReport()">
                 <i class="fa fa-search"></i> <span class="hidden-xs">{{ $t('Search')}}</span>
             </button>
@@ -23,7 +23,7 @@
                 </li>
             </ul>
         </div>
-        <div class="panel-body p-b-15">
+        <div class="panel-body p-0">
             <div class="form-input-flat">
                 <div class="col-md-2" v-if="admin">
                     <div class="form-group">

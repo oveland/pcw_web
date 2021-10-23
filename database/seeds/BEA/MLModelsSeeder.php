@@ -18,7 +18,7 @@ class MLModelsSeeder extends Seeder
             'bea_trajectories'
         ]);*/
 
-        /* Table from BEA */
+        /* Table from LM */
         DB::transaction(function () {
             $this->call(RoutesTableSeeder::class);
             $this->call(VehiclesTableSeeder::class);

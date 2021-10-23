@@ -3,14 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Company\Company;
-use App\Services\BEA\BEARepository;
-use App\Services\BEA\BEAService;
+use App\Services\LM\LMRepository;
+use App\Services\LM\LMService;
 use App\Services\BEA\BEASyncService;
-use App\Services\BEA\CommissionService;
-use App\Services\BEA\Database;
-use App\Services\BEA\DiscountService;
-use App\Services\BEA\PenaltyService;
-use App\Services\BEA\Reports\BEAReportService;
+use App\Services\LM\CommissionService;
+use App\Services\LM\DiscountService;
+use App\Services\LM\PenaltyService;
+use App\Services\LM\Reports\LMReportService;
 use Auth;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,23 +32,14 @@ class BEAServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-        $this->app->bind('bea.coodetrans', function () {
-            return new Database(Company::COODETRANS);
-        });
-
-        $this->app->bind('bea.papagayo', function () {
-            return new Database(Company::PAPAGAYO);
-        });
-
         $this->app->bind('bea.service', function ($app, $params) {
             $user = Auth::user();
 
-            $company = !$user  || $user->isAdmin() || isset($params['console']) ? Company::find($params['company']) : $user->company;
-            $repository = new BEARepository($company);
-            $report = new BEAReportService();
+            $company = !$user || $user->isAdmin() || isset($params['console']) ? Company::find($params['company']) : $user->company;
+            $repository = new LMRepository($company);
+            $report = new LMReportService();
 
-            return new BEAService(new BEASyncService($company, $repository), $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
+            return new LMService(new BEASyncService($company, $repository), $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
         });
     }
 }

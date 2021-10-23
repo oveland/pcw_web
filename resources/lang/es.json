@@ -573,7 +573,7 @@
   "Taken": "Recaudado",
   "Liquidation processed successfully": "Liquidación procesada correctamente",
   "Error at generate liquidation register": "Error al generar registro de liquidación",
-  "Error at associate liquidation with BEA Mark register": "Error al asociar liquidación con registro de Marca BEA",
+  "Error at associate liquidation with LM Mark register": "Error al asociar liquidación con registro de Marca",
   "Turn list": "Listado de turnos",
   "Params": "Parámetros",
   "params": "parámetros",
@@ -842,5 +842,8 @@
   "New balance": "Nuevo saldo",
   "Other": "Otro",
   "CAMERA": "CAMARA",
-  "TakingsReport": "ReporteRecaudo"
+  "TakingsReport": "ReporteRecaudo",
+  "percentPassengers": "porcentajePasajeros",
+  "fixedPassengers": "valorFijoPasajeros",
+  "Total gross": "Total bruto"
 }

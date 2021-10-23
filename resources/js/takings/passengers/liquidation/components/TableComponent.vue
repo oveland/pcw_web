@@ -37,10 +37,10 @@
                     <i class="fa fa-users text-muted"></i><br> {{ $t('Boarded') }}
                 </th>
                 <th>
-                    <i class="fa fa-users text-muted"></i><br> {{ $t('BEA') }}
+                    <i class="fa fa-users text-muted"></i><br> {{ $t('Passengers') }}
                 </th>
                 <th class="col-md-2">
-                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total BEA') }}
+                    <i class="fa fa-dollar text-muted"></i><br> {{ $t('Total') }}
                 </th>
             </tr>
             </thead>

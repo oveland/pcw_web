@@ -16,7 +16,7 @@
                                 <i class="fa fa-clock-0 text-muted"></i><br> {{ $t('Time') }}
                             </th>
                             <th>
-                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('BEA') }}
+                                <i class="fa fa-dollar text-muted"></i><br> {{ $t('Passengers') }}
                             </th>
                             <th>
                                 <i class="fa fa-dollar text-muted"></i><br> {{ $t('Fuel') }}

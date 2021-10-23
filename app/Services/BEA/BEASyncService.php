@@ -3,83 +3,24 @@
 namespace App\Services\BEA;
 
 use App\Facades\BEADB;
-use App\Models\BEA\Commission;
-use App\Models\BEA\DiscountType;
-use App\Models\BEA\GlobalCosts;
-use App\Models\BEA\Discount;
-use App\Models\BEA\ManagementCost;
-use App\Models\BEA\Mark;
-use App\Models\BEA\Penalty;
-use App\Models\BEA\Trajectory;
-use App\Models\BEA\Turn;
+use App\Models\LM\Mark;
+use App\Models\LM\Trajectory;
+use App\Models\LM\Turn;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
+use App\Services\LM\SyncService;
 use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Log;
+use Throwable;
 
-class BEASyncService
+class BEASyncService extends SyncService
 {
-    /**
-     * @var Vehicle
-     */
-    private $vehicle;
-    /**
-     * @var string
-     */
-    private $date;
-
-    /**
-     * @var Company $company
-     */
-    public $company;
-    /**
-     * @var BEARepository
-     */
-    private $repository;
-
-    /**
-     * BEASyncService constructor.
-     * @param Company $company
-     * @param BEARepository $repository
-     */
-    public function __construct(Company $company, BEARepository $repository)
-    {
-        $this->company = $company;
-        $this->repository = $repository;
-    }
-
-    public function for($vehicleId, $date)
-    {
-        $this->vehicle = Vehicle::find($vehicleId);
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
-     * Sync last marks data
-     */
-    public function last()
-    {
-        try {
-            if (config('app.env') == 'beta') {
-                //$this->turns();
-                //$this->trajectories();
-                $this->marks();
-            }
-
-        } catch (Exception $e) {
-            if ($this->vehicle && $this->date) DB::select("SELECT refresh_bea_marks_turns_numbers_function(" . $this->vehicle->id . ", '$this->date')");
-
-            throw new Exception('Error BEA sync last data! • ' . $e->getMessage());
-        }
-    }
+    protected $type = 'bea';
 
     /**
      * Sync A_TURNO >> bea_turns
@@ -98,7 +39,7 @@ class BEASyncService
         $maxSequence = collect(DB::select("SELECT max(id) max FROM bea_turns"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE bea_turns_id_seq RESTART WITH $maxSequence");
 
-        $this->log("Sync " . $turns->count() . " $turns from BEA");
+        $this->log("Sync " . $turns->count() . " $turns from LM");
 
         foreach ($turns as $turnBEA) {
             $this->validateTurn($turnBEA->ATR_IDTURNO, $turnBEA);
@@ -119,7 +60,7 @@ class BEASyncService
 
         $vehicles = BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS");
 
-        $this->log("Sync " . $vehicles->count() . " vehicles from BEA");
+        $this->log("Sync " . $vehicles->count() . " vehicles from LM");
 
         $detectedVehicles = collect([]);
         foreach ($vehicles as $vehicleBEA) {
@@ -141,7 +82,7 @@ class BEASyncService
 
         $drivers = BEADB::select("SELECT * FROM C_CONDUCTOR");
 
-        $this->log("Sync " . $drivers->count() . " drivers from BEA");
+        $this->log("Sync " . $drivers->count() . " drivers from LM");
 
         foreach ($drivers as $driverBEA) {
             $this->validateDriver($driverBEA->CCO_IDCONDUCTOR, $driverBEA);
@@ -162,7 +103,7 @@ class BEASyncService
 
         $routes = BEADB::for($this->company)->select("SELECT * FROM C_RUTA");
 
-        $this->log("Sync " . $routes->count() . " routes from BEA");
+        $this->log("Sync " . $routes->count() . " routes from LM");
 
         foreach ($routes as $routeBEA) {
             $this->validateRoute($routeBEA->CRU_IDRUTA, $routeBEA);
@@ -184,7 +125,7 @@ class BEASyncService
 
         $trajectories = BEADB::for($this->company)->select("SELECT * FROM C_DERROTERO");
 
-        $this->log("Sync " . $trajectories->count() . " trajectories from BEA");
+        $this->log("Sync " . $trajectories->count() . " trajectories from LM");
 
         foreach ($trajectories as $trajectoryBEA) {
             $this->validateTrajectory($trajectoryBEA->CDR_IDDERROTERO, $trajectoryBEA);
@@ -195,7 +136,7 @@ class BEASyncService
      * Sync A_MARCA >> bea_marks
      *
      * @throws Exception
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function marks()
     {
@@ -459,6 +400,7 @@ class BEASyncService
     /**
      * @param $vehicleBEAId
      * @param null $data
+     * @param null $detectedVehicles
      * @return Vehicle|integer|null
      * @throws Exception
      */
@@ -527,172 +469,5 @@ class BEASyncService
         }
 
         return $vehicle;
-    }
-
-    function checkVehicleParams(Vehicle $vehicle)
-    {
-        $this->log("        Checking all params for vehicle $vehicle->number");
-
-        $this->discountTypes();
-        $this->checkDiscountsFor($vehicle);
-        $this->checkCommissionsFor($vehicle);
-        $this->checkPenaltiesFor($vehicle);
-        $this->checkManagementCostsFor($vehicle);
-    }
-
-    public function checkCommissionsFor(Vehicle $vehicle)
-    {
-        $routes = $this->repository->getAllRoutes();
-
-        foreach ($routes as $route) {
-            $exists = Commission::where('vehicle_id', $vehicle->id)->where('route_id', $route->id)->first();
-
-            if (!$exists) {
-                Commission::create([
-                    'vehicle_id' => $vehicle->id,
-                    'route_id' => $route->id,
-                    'type' => 'percent',
-                    'value' => 0,
-                ]);
-            }
-        }
-    }
-
-    public function checkPenaltiesFor(Vehicle $vehicle)
-    {
-        $routes = $this->repository->getAllRoutes();
-
-        foreach ($routes as $route) {
-            $exists = Penalty::where('vehicle_id', $vehicle->id)->where('route_id', $route->id)->first();
-
-            if (!$exists) {
-                Penalty::create([
-                    'vehicle_id' => $vehicle->id,
-                    'route_id' => $route->id,
-                    'type' => 'boarding',
-                    'value' => 0,
-                ]);
-            }
-        }
-    }
-
-    public function checkManagementCostsFor(Vehicle $vehicle)
-    {
-        $vehicleCosts = $vehicle->costsBEA;
-        $globalCosts = GlobalCosts::whereCompany($vehicle->company)->get();
-
-        foreach ($globalCosts as $cost) {
-            $exists = $vehicleCosts->where('uid', $cost->uid)->first();
-            if (!$exists) {
-                ManagementCost::create([
-                    'uid' => $cost->uid,
-                    'vehicle_id' => $vehicle->id,
-                    'name' => $cost->name,
-                    'concept' => $cost->concept,
-                    'description' => $cost->description,
-                    'value' => $cost->value,
-                    'priority' => $cost->priority,
-                    'global' => true,
-                ]);
-            }
-        }
-    }
-
-    public function checkDiscountsFor(Vehicle $vehicle)
-    {
-        $routes = $this->repository->getAllRoutes();
-        $discountTypes = $this->repository->getAllDiscountTypes();
-
-        foreach ($routes as $route) {
-            $trajectories = $this->repository->getTrajectoriesByRoute($route->id);
-            foreach ($trajectories as $trajectory) {
-                foreach ($discountTypes as $discountType) {
-                    $exists = Discount::where('discount_type_id', $discountType->id)
-                        ->where('vehicle_id', $vehicle->id)
-                        ->where('route_id', $route->id)
-                        ->where('trajectory_id', $trajectory->id)
-                        ->first();
-
-                    if (!$exists) {
-                        Discount::create([
-                            'discount_type_id' => $discountType->id,
-                            'vehicle_id' => $vehicle->id,
-                            'route_id' => $route->id,
-                            'trajectory_id' => $trajectory->id,
-                            'value' => $discountType->default,
-                            'required' => $discountType->required,
-                            'optional' => $discountType->optional,
-                        ]);
-                    }
-                }
-            }
-        }
-    }
-
-    public function discountTypes()
-    {
-        $types = [
-            'Mobility auxilio' => (object)[
-                'uid' => 1,
-                'icon' => 'fa fa-user text-warning',
-                'default' => 0,
-                'required' => true,
-                'optional' => false,
-            ],
-            'Fuel' => (object)[
-                'uid' => 2,
-                'icon' => 'fa fa-tachometer',
-                'default' => 0,
-                'required' => true,
-                'optional' => false,
-            ],
-            'Operative Expenses' => (object)[
-                'uid' => 3,
-                'icon' => 'fa fa-hint text-warning',
-                'default' => 0,
-                'required' => true,
-                'optional' => false,
-            ],
-            'Tolls' => (object)[
-                'uid' => 4,
-                'icon' => 'fa fa-ticket',
-                'default' => 0,
-                'required' => true,
-                'optional' => false,
-            ],
-            'Provisions' => (object)[
-                'uid' => 5,
-                'icon' => 'fa fa-money',
-                'default' => 0,
-                'required' => false,
-                'optional' => true,
-            ],
-        ];
-
-        foreach ($types as $name => $type) {
-            $exists = DiscountType::where('company_id', $this->company->id)->where('uid', $type->uid)->first();
-
-            if (!$exists) {
-                DiscountType::create([
-                    'uid' => $type->uid,
-                    'name' => __(ucfirst($name)),
-                    'icon' => $type->icon,
-                    'description' => __('Discount by') . " " . __(ucfirst($name)),
-                    'default' => $type->default,
-                    'company_id' => $this->company->id,
-                    'required' => $type->required,
-                    'optional' => $type->optional,
-                ]);
-            } else {
-//                $exists->required = $type->required;
-//                $exists->optional = $type->optional;
-//                $exists->save();
-            }
-        }
-    }
-
-    private function log($message)
-    {
-        Log::channel('bea')->info($this->company->short_name . " • " . $message);
     }
 }

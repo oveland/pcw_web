@@ -57,7 +57,7 @@
 
 @section('content')
     <!-- begin row -->
-    <div id="liquidation" class="row p-t-10" url="{{ route('takings-passengers-search-liquidation') }}" urlgetadvances="{{  route('takings-passengers-liquidation-params',['name' => __('advances')]) }}">
+    <div id="liquidation" class="row p-t-0" url="{{ route('takings-passengers-search-liquidation') }}" urlgetadvances="{{  route('takings-passengers-liquidation-params',['name' => __('advances')]) }}">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
             <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('takings-passengers-liquidation-params',['name' => __('search')]) }}" :search.sync="search" v-on:search-report="searchReport($event)"></search-component>

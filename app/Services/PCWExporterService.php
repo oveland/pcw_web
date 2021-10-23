@@ -8,7 +8,7 @@
 
 namespace App\Services;
 
-use App\Exports\BEA\DailyReportExport;
+use App\Exports\LM\DailyReportExport;
 use App\Exports\HistoricRouteExport;
 use App\Exports\MileageDateRangeExport;
 use App\Exports\RouteRoundTripsExport;

@@ -23,7 +23,7 @@ class ConsolidatedDailyReportMailCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Sends daily report BEA mail';
+    protected $description = 'Sends daily report LM mail';
 
     /**
      * Create a new command instance.
@@ -63,7 +63,7 @@ class ConsolidatedDailyReportMailCommand extends Command
                     $this->logData("   >> To: $to");
                 }
             } else {
-                $this->logData("No reports BEA found for date $dateReport", 'error');
+                $this->logData("No reports LM found for date $dateReport", 'error');
             }
         } else {
             $this->logData("No company found for id " . $this->option('company'), 'error');
@@ -72,7 +72,7 @@ class ConsolidatedDailyReportMailCommand extends Command
 
     public function logData($message, $level = 'info')
     {
-        $message = "BEA CONSOLIDATED DAILY > $message";
+        $message = "LM CONSOLIDATED DAILY > $message";
 
         $this->info($message);
 
@@ -96,7 +96,7 @@ class ConsolidatedDailyReportMailCommand extends Command
      */
     public function getMailToFromCompany(Company $company, $production = false)
     {
-        $this->logData("Making mail daily report BEA for '" . ($production ? 'production' : 'development') . "' case...");
+        $this->logData("Making mail daily report LM for '" . ($production ? 'production' : 'development') . "' case...");
 
         switch ($company->id) {
             case Company::COODETRANS:

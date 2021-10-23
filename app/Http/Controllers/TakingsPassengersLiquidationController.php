@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use App;
-use App\Facades\BEADB;
-use App\Models\BEA\Advance;
-use App\Models\BEA\Commission;
-use App\Models\BEA\Discount;
-use App\Models\BEA\Liquidation;
-use App\Models\BEA\ManagementCost;
-use App\Models\BEA\Mark;
-use App\Models\BEA\Penalty;
-use App\Models\BEA\Trajectory;
-use App\Models\Company\Company;
+use App\Models\LM\Advance;
+use App\Models\LM\Commission;
+use App\Models\LM\Discount;
+use App\Models\LM\Liquidation;
+use App\Models\LM\ManagementCost;
+use App\Models\LM\Mark;
+use App\Models\LM\Penalty;
+use App\Models\LM\Trajectory;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
-use App\Services\BEA\BEAService;
+use App\Services\LM\LMService;
 use App\Services\PCWExporterService;
 use Auth;
 use Carbon\Carbon;
@@ -29,6 +27,7 @@ use Illuminate\View\View;
 use PDF;
 use Storage;
 use Validator;
+use App\Facades\DFSDB;
 
 class TakingsPassengersLiquidationController extends Controller
 {
@@ -37,9 +36,9 @@ class TakingsPassengersLiquidationController extends Controller
      */
     private $auth;
     /**
-     * @var BEAService
+     * @var LMService
      */
-    private $beaService;
+    private $lmService;
     /**
      * @var PCWExporterService
      */
@@ -51,7 +50,7 @@ class TakingsPassengersLiquidationController extends Controller
         $this->exporter = $exporter;
 
         $this->middleware(function ($request, $next) {
-            $this->beaService = App::makeWith('bea.service', ['company' => $this->auth->getCompanyFromRequest($request)->id]);
+            $this->lmService = App::makeWith('lm.service', ['company' => $this->auth->getCompanyFromRequest($request)->id]);
             return $next($request);
         });
     }
@@ -59,103 +58,6 @@ class TakingsPassengersLiquidationController extends Controller
     function asDollars($value)
     {
         return '$' . number_format($value, 0);
-    }
-
-    private function paintTable($marks)
-    {
-        $str = "
-            <style>
-                table {
-                  font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;
-                  border-collapse: collapse;
-                  width: 100%;
-                }
-            
-                table th, table td{
-                    border: solid 1px lightgrey;
-                    padding: 10px;
-                    margin: 0;
-                    text-align: center !important;
-                }
-                table tr:nth-child(even){background-color: #f2f2f2 !important;}
-                
-                table th{
-                    padding-top: 12px;
-                    padding-bottom: 12px;
-                    text-align: left;
-                    background-color: #c2c6cd;
-                    color: black;
-                }
-            </style>
-        ";
-
-        $str .= "<table>
-            <thead><tr>
-                <th>ID</th>
-                <th>TURNO</th>
-                <th>H. INICIO</th>
-                <th>H. FIN</th>
-                <th>SUBIDAS</th>
-                <th>BAJADAS</th>
-                <th style='background: #3f570a;color: white'>PASAJEROS EXCEL</th>
-                <th style='background: #234c5b;color: white'>PASAJEROS PCW</th>
-                <th>BLOQ</th>
-                <th>AUX</th>
-                <th>ABOR</th>
-                <th>IMBEAMAX</th>
-                <th>IMBEAMIN</th>
-                <th style='background: #3f570a;color: white'>TOTAL BEA EXCEL</th>
-                <th style='background: #234c5b;color: white'>TOTAL BEA PCW</th>
-            </tr></thead>
-            <tbody>";
-        $turn = 1;
-        foreach ($marks as $m) {
-            $str .= "<tr>";
-            $passengersUp = $m->AMR_SUBIDAS;
-            $passengersDown = $m->AMR_BAJADAS;
-
-            $imBeaMax = $m->AMR_IMEBEAMAX;
-            $imBeaMin = $m->AMR_IMEBEAMIN;
-
-            $passengersBoarding = $passengersUp > $passengersDown ? ($passengersUp - $passengersDown) : 0;
-            $passengersBEA = $passengersUp > $passengersDown ? $passengersUp : $passengersDown;
-
-            $totalBEA = (($imBeaMax + $imBeaMin) / 2) * 1000;
-
-            $str .= "<td>$m->AMR_IDMARCA</td>";
-            $str .= "<td>$turn</td>";
-            $str .= "<td>$m->AMR_FHINICIO</td>";
-            $str .= "<td>$m->AMR_FHFINAL</td>";
-            $str .= "<td>$passengersUp</td>";
-            $str .= "<td>$passengersDown</td>";
-            $str .= "<td>$m->AMR_PASBEA</td>";
-            $str .= "<td>$passengersBEA</td>";
-            $str .= "<td>$m->AMR_BLOQUEOS</td>";
-            $str .= "<td>$m->AMR_AUXILIARES</td>";
-            $str .= "<td>$passengersBoarding</td>";
-            $str .= "<td>" . number_format($imBeaMax, 2) . "</td>";
-            $str .= "<td>" . number_format($imBeaMin, 2) . "</td>";
-            $str .= "<td>" . $this->asDollars($totalBEA) . "</td>";
-            $str .= "<td>???</td>";
-            $str .= "</tr>";
-
-            $turn += 1;
-        }
-        $str .= "</tbody></table>";
-
-        return $str;
-    }
-
-    public function searchMarksBEA(Request $request)
-    {
-//        $data = BEADB::for(Company::find(Company::MONTEBELLO))->select("SELECT * FROM C_CONDUCTOR");
-        $data = BEADB::for(Company::find(Company::MONTEBELLO))->select("SELECT FIRST 10 * FROM A_TURNO WHERE ATR_IDCONDUCTOR IS NOT NULL ORDER BY ATR_IDTURNO DESC");
-        dd($data);
-    }
-
-    public function test(Request $request)
-    {
-        $this->searchMarksBEA($request);
     }
 
     /**
@@ -178,9 +80,9 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
 
-        $beaMarks = $this->beaService->getBEAMarks($vehicleReport, $dateReport);
+        $lmTurns = $this->lmService->getLMTurns($vehicleReport, $dateReport);
 
-        return response()->json($beaMarks);
+        return response()->json($lmTurns);
     }
 
     public function exportLiquidation(Liquidation $liquidation, Request $request)
@@ -207,7 +109,7 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicle = Vehicle::find($request->get('vehicle'));
         $date = $request->get('date');
 
-        $report = (object)$this->beaService->getDailyReport($vehicle->id, $date)->toArray();
+        $report = (object)$this->lmService->getDailyReport($vehicle->id, $date)->toArray();
 
         $options = (object)[
             'w' => 1500,
@@ -233,7 +135,7 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
 
-        $dailyReport = $this->beaService->getDailyReport($vehicleReport, $dateReport)->toArray();
+        $dailyReport = $this->lmService->getDailyReport($vehicleReport, $dateReport)->toArray();
 
         return response()->json($dailyReport);
     }
@@ -248,9 +150,9 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
 
-        $beaLiquidations = $this->beaService->getBEATakings($vehicleReport, $dateReport)->values()->toArray();
+        $lmTakings = $this->lmService->getLMTakings($vehicleReport, $dateReport)->values()->toArray();
 
-        return response()->json($beaLiquidations);
+        return response()->json($lmTakings);
     }
 
     /**
@@ -263,11 +165,9 @@ class TakingsPassengersLiquidationController extends Controller
         $vehicleReport = $request->get('vehicle');
         $dateReport = $request->get('date');
 
-        $beaLiquidations = $this->beaService->getBEATakingsList($vehicleReport, $dateReport)->values()->toArray();
+        $lmTakingsList = $this->lmService->getLMTakingsList($vehicleReport, $dateReport)->values()->toArray();
 
-        Carbon::now();
-
-        return response()->json($beaLiquidations);
+        return response()->json($lmTakingsList);
     }
 
     /**
@@ -284,8 +184,8 @@ class TakingsPassengersLiquidationController extends Controller
                 $access = $this->auth->access($company);
 
                 return response()->json([
-                    'company' => $this->beaService->repository->company,
-                    'vehicles' => $this->beaService->repository->getAllVehicles(),
+                    'company' => $this->lmService->repository->company,
+                    'vehicles' => $this->lmService->repository->getAllVehicles(),
                     'companies' => $access->companies
                 ]);
                 break;
@@ -293,16 +193,16 @@ class TakingsPassengersLiquidationController extends Controller
                 $vehicle = Vehicle::find($request->get('vehicle'));
                 $trajectory = $request->get('trajectory');
 
-                $this->beaService->sync->checkDiscountsFor($vehicle);
+                $this->lmService->sync->checkDiscountsFor($vehicle);
 
-                return response()->json($this->beaService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory, true));
+                return response()->json($this->lmService->discount->byVehicleAndTrajectory($vehicle->id, $trajectory, true));
                 break;
             case __('costs'):
                 $vehicle = Vehicle::find($request->get('vehicle'));
 
-                $this->beaService->sync->checkManagementCostsFor($vehicle);
+                $this->lmService->sync->checkManagementCostsFor($vehicle);
 
-                $costs = $this->beaService->repository->getManagementCosts($vehicle);
+                $costs = $this->lmService->repository->getManagementCosts($vehicle);
 
                 return response()->json($costs->where('uid', '<>', ManagementCost::PAYROLL_ID)->values()->toArray());
                 break;
@@ -312,7 +212,7 @@ class TakingsPassengersLiquidationController extends Controller
                 return response()->json(Advance::findAllByVehicle($vehicle));
                 break;
             default:
-                return response()->json($this->beaService->getLiquidationParams(true));
+                return response()->json($this->lmService->getLiquidationParams(true));
                 break;
         }
     }
@@ -642,7 +542,7 @@ class TakingsPassengersLiquidationController extends Controller
                                 };
                             } else {
                                 $response->success = false;
-                                $response->message = __('Error at associate liquidation with BEA Mark register');
+                                $response->message = __('Error at associate liquidation with ML Mark register');
                                 DB::rollBack();
                                 break;
                             };
