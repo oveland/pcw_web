@@ -28,9 +28,9 @@ class SyrusService
         $service = new PhotoService();
 
 
-        $gpsVehicle = GpsVehicle::where('imei', $imei == '352557100781619' ? '868324021300418' : $imei)->first();
+        $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
         $vehicle = $gpsVehicle->vehicle;
-
+        
         $response = collect([
             'success' => true,
             'message' => "Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id",
@@ -83,11 +83,11 @@ class SyrusService
     function getSide($fileName, $imei)
     {
         if (Str::startsWith($fileName, '1')) {
-            return $imei == '352557100781619' ? '3' : '1'; // TODO: must be changed when fix correctly position
+            return '1';
         } else if (Str::startsWith($fileName, '2')) {
             return '2';
         } else if (Str::startsWith($fileName, '3')) {
-            return $imei == '352557100781619' ? '1' : '3';  // TODO: must be changed when fix correctly position
+            return '3';
         }
 
         return '0';

@@ -47,7 +47,12 @@ class DispatchService
             });
         }
 
-        return $dr->get()->map(function (DispatchRegister $dr) {
+        $dr = $dr->get();
+//        $dr = $dr->filter(function (DispatchRegister $dr) {
+//            return $dr->isActive() || ($dr->onlyControlTakings());
+//        });
+
+        return $dr->map(function (DispatchRegister $dr) {
             return $dr->getAPIFields();
         })->sortBy(function ($dr) {
             return "$dr->date.$dr->id";
