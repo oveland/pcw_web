@@ -47,7 +47,7 @@ class SyncCommand extends Command
         $this->info("LM sync for company: $company->name");
 
         if ($company) {
-            $beaService = App::makeWith('bea.service', ['company' => $company->id, 'console' => true]);
+            $beaService = App::makeWith('lm.service', ['company' => $company->id, 'console' => true]);
 
             $type = $this->option('type');
 
