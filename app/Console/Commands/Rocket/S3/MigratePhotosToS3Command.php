@@ -4,7 +4,7 @@ namespace App\Console\Commands\Rocket\S3;
 
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\Vehicle;
-use App\Services\Apps\Rocket\Tmp\MigrationService;
+use App\Services\Apps\Rocket\Video\VideoService;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Storage;
@@ -25,19 +25,19 @@ class MigratePhotosToS3Command extends Command
      */
     protected $description = 'Migrate photos to S3 Bucket';
     /**
-     * @var MigrationService
+     * @var VideoService
      */
     private $migrationService;
 
     /**
      * Create a new command instance.
      *
-     * @param MigrationService $migrationService
+     * @param VideoService $videoService
      */
-    public function __construct(MigrationService $migrationService)
+    public function __construct(VideoService $videoService)
     {
         parent::__construct();
-        $this->migrationService = $migrationService;
+        $this->migrationService = $videoService;
     }
 
     /**

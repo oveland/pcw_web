@@ -17,3 +17,4 @@ _ide_helper_models.php
 /public/tmp.jpeg
 .phpunit.result.cache
 resources/js/lang/es.json
+storage/app/Apps/Rocket/Photos

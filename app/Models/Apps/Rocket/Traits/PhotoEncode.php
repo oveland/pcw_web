@@ -33,7 +33,7 @@ trait PhotoEncode
     {
         $this->disk = $disk;
 
-        if ($disk == 'local' || $this->disk == 'local') return $this->getOriginalPath();
+        if ($this->disk == 'local') return $this->getOriginalPath();
 
         $date = $this->attributes['date'] ? $this->date : Carbon::now();
 
@@ -138,7 +138,7 @@ trait PhotoEncode
                 $image->text($this->date->toDateTimeString(), $image->width() / 2, 35, function ($font) {
                     $font->color('#ffff00');
                     $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
-                    $font->size(10);
+                    $font->size(14);
                     $font->align('center');
                 });
             }
