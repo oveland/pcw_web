@@ -7,6 +7,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Log;
 
 class CountCommand extends Command
 {
@@ -77,5 +78,7 @@ class CountCommand extends Command
     {
         $date = Carbon::now()->toDateTimeString();
         $this->info("$date • $message");
+//        Log::useDailyFiles(storage_path().'/logs/rocket.log', 10);
+        Log::info(" Rocket • $date • $message" );
     }
 }

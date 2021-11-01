@@ -16,18 +16,19 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         if (config('app.env') == 'beta') {
-            $schedule->command('track:map --company=17')->everyMinute()->between('04:30', '21:00');
-            
+//            $schedule->command('track:map --company=17')->everyMinute()->between('04:30', '21:00');
+
             $schedule->command('telescope:prune')->daily();
 
-            $schedule->command('concox:take-photo --camera=1')->cron('*/2 * * * *')->between('04:00', '23:00');
-
-            $schedule->command('concox:take-photo --camera=2')->cron('*/2 * * * *')->between('04:00', '23:00');
+//            $schedule->command('concox:take-photo --camera=1')->cron('*/2 * * * *')->between('04:00', '23:00');
+//            $schedule->command('concox:take-photo --camera=2')->cron('*/2 * * * *')->between('04:00', '23:00');
 
 
             $schedule->command('syrus:sync-photos')->everyMinute()->between('04:00', '23:00');
 
-           $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('04:00', '22:00');
+            $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('04:00', '22:00');
+            
+            $schedule->command('rocket:count --vehicle-plate=SKR-579 --pa=1 --pr=5')->everyThirtyMinutes()->between('04:00', '22:00');
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
 

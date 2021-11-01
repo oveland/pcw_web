@@ -84,12 +84,23 @@ class ConfigProfileService
             $rActivate = $this->profileSeat->persistence['activate'];
             $rRelease = $this->profileSeat->persistence['release'];
 
-            $activate = $rActivate ? $rActivate : self::THRESHOLD_ACTIVATE;
-            $release = $rRelease ? $rRelease : self::THRESHOLD_RELEASE;
+            $activate = $rActivate ?: self::THRESHOLD_ACTIVATE;
+            $release = $rRelease ?: self::THRESHOLD_RELEASE;
 
-            if (collect([2])->contains(intval($number))) {
-//                $activate = 5;
-//                $release = 5;
+            if ($this->profileSeat->camera == '1') {
+                $activate = 2;
+                $release = 4;
+            } else if ($this->profileSeat->camera == '2') {
+                $activate = 1;
+                $release = 10;
+            } else if ($this->profileSeat->camera == '3') {
+                $activate = 2;
+                $release = 4;
+            }
+
+            if (collect([5])->contains(intval($number))) {
+                $activate = 1;
+                $release = 15;
             }
 
 //            if (collect([9, 10, 11, 12, 13, 14, 19, 20, 21,22, 23])->contains(intval($number))) {

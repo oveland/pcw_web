@@ -310,13 +310,13 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => [40, 90],
+                            'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [90, 100],
+                            'range' => [58, 100],
                             'color' => '#9bef00',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,
@@ -377,13 +377,13 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => [40, 90],
+                            'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [90, 100],
+                            'range' => [58, 100],
                             'color' => '#05da55',
                             'background' => 'rgba(122, 162, 12, 0.1)',
                             'count' => true,

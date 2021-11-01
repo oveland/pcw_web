@@ -619,7 +619,7 @@ class PhotoService
 //                    }
                 }
 
-                $durations->put('getOccupation', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $durations->put('getOccupation', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
                 $statusDispatch = $this->processStatusDispatch($photo, $prevPhoto);
@@ -628,13 +628,13 @@ class PhotoService
                 $seatingActivated = $this->seatOccupationService->getSeatingActivated($currentOccupation->seatingOccupied, $currentOccupation->withOverlap);
                 $seatingReleased = $this->seatOccupationService->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);
 
-                $durations->put('getSeatingReleased', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $durations->put('getSeatingReleased', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
 
                 $details = $photo->getAPIFields('url');
 
-                $durations->put('getAPIFields', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $durations->put('getAPIFields', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
                 $details->occupationOrig = clone $currentOccupation;
@@ -693,7 +693,7 @@ class PhotoService
 
                 $this->processLockCam($photo, $counterLock, $alertLockCam);
 
-                $durations->put('processLockCam', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $durations->put('processLockCam', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
                 $details->occupation->seatingOccupiedStr = $details->occupation->seatingOccupied->keys()->sort()->implode(', ');
@@ -705,14 +705,14 @@ class PhotoService
 
                 $rekognitionCounts = $this->processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts, $photo, $firstPhotoInRoundTrip);
 
-                $durations->put('processRekognitionCounts', intval(Carbon::now()->diffInMicroseconds($ini)/1000));
+                $durations->put('processRekognitionCounts', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
                 // Overwrite count by maximum criteria
                 // $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value'); // get the max count between different rekognition types
-                $maximumCriteria = $rekognitionCounts->get('faces');
-                $personsByRoundTrip = $maximumCriteria->max->value;
-                $totalPersons = $maximumCriteria->total;
+//                $maximumCriteria = $rekognitionCounts->get('faces');
+//                $personsByRoundTrip = $maximumCriteria->max->value;
+//                $totalPersons = $maximumCriteria->total;
 
                 $personsByRoundTrips = collect([])->push((object)[
                     'id' => $photo->dispatch_register_id,
@@ -801,7 +801,7 @@ class PhotoService
             $diff = $diff > 0 ? $diff : 0;
 
             $total = $prevTotal;
-            
+
             /* With Persistence */
 
             // Prev persistence
