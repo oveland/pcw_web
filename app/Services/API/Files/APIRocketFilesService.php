@@ -108,8 +108,10 @@ class APIRocketFilesService implements APIFilesInterface
         $date = $this->request->get('date');
 
         if ($vehicle) {
+            \Artisan::call("rocket:s3:video --vehicle-plate=$vehicle->plate --date=$date");
+
             $videoService = new VideoService();
-            return $videoService->for($vehicle, $date)->getVideo();
+            return $videoService->for($vehicle, $date)->getVideo(false);
         }
 
         return $this->photoService->notFoundImage();

@@ -54,21 +54,21 @@ class VideoCommand extends Command
             if ($vehicle) {
                 $nowInitial = Carbon::now();
 
-                $this->log("Start download");
+                $this->log("Start process");
 
                 $this->videoService->for($vehicle, $date);
 
-                $now = Carbon::now();
-//                $this->videoService->downloadPhotos();
-                $this->log("    DownloadPhotos " . Carbon::now()->from($now));
+//                $now = Carbon::now();
+////                $this->videoService->downloadPhotos();
+//                $this->log("    DownloadPhotos " . Carbon::now()->from($now));
+//
+//                $now = Carbon::now();
+////                $this->videoService->processPhotos();
+//                $this->log("    processPhotos " . Carbon::now()->from($now));
 
                 $now = Carbon::now();
-//                $this->videoService->processPhotos();
-                $this->log("    processPhotos " . Carbon::now()->from($now));
-
-                $now = Carbon::now();
-                $this->videoService->processVideo();
-                $this->log("    processVideo " . Carbon::now()->from($now));
+                $path = $this->videoService->processVideo();
+                $this->log("    processVideo $path " . Carbon::now()->from($now));
 
                 $totalDuration = Carbon::now()->from($nowInitial);
                 $this->log("Finished $totalDuration");

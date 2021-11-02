@@ -63,14 +63,18 @@ class VideoService
 
         $this->videoName = "video.mp4";
 
+        shell_exec("mkdir -p $this->localPath");
         shell_exec("mkdir -p $this->videoPath");
+
+        shell_exec("chmod -R 777 $this->localPath");
 
         return $this;
     }
 
     function downloadPhotos()
     {
-        return shell_exec("aws s3 sync s3://pcw-mov-storage/$this->folder $this->localPath");
+        shell_exec("aws s3 sync s3://pcw-mov-storage/$this->folder $this->localPath");
+        shell_exec("chmod -R 777 $this->localPath");
     }
 
     function getPhotos(): Collection
@@ -101,15 +105,6 @@ class VideoService
 
     function processVideo()
     {
-        shell_exec("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
-        shell_exec("cd $this->localPath && mv $this->videoName $this->videoPath");
-    }
-
-    /**
-     * @throws FileNotFoundException
-     */
-    function getVideo()
-    {
         $videoPath = $this->folder . "video/" . $this->videoName;
 
         if (Carbon::createFromFormat('Y-m-d', $this->date)->isToday() || !Storage::exists($videoPath)) {
@@ -117,10 +112,28 @@ class VideoService
             $totalPhotos = $this->processPhotos();
 
             if ($totalPhotos) {
-                $this->processVideo();
+                shell_exec("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
+                shell_exec("cd $this->localPath && mv $this->videoName $this->videoPath");
             } else {
                 $videoPath = '404.mp4';
             }
+        }
+
+        return $videoPath;
+    }
+
+    /**
+     * @throws FileNotFoundException?
+     */
+    function getVideo($process = true)
+    {
+        $videoPath = $this->folder . "video/" . $this->videoName;
+        if ($process) {
+            $videoPath = $this->processVideo();
+        }
+
+        if (!Storage::exists($videoPath)) {
+            $videoPath = '404.mp4';
         }
 
         $video = Storage::get($videoPath);
@@ -130,5 +143,4 @@ class VideoService
 
         return $response;
     }
-
 }
