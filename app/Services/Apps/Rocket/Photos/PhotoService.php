@@ -417,6 +417,11 @@ class PhotoService
                     $countByRoundTrip = $countByRoundTrip + $data->sortBy('time')->last()->passengers->totalInRoundTrip;
                 }
             }
+
+            if ($drId == 1920798) { // Temporal fot vehicle 02 Montebello
+                $countByRoundTrip = $countByRoundTrip - 1;
+            }
+
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
         }
 
@@ -490,6 +495,10 @@ class PhotoService
                     $occupation->boarding = trim($occupation->boarding->implode(' '));
                     $occupation->released = trim($occupation->released->implode(' '));
                     $occupation->prev = trim($occupation->prev->implode(' '));
+
+                    if ($drId == 1920798) { // Temporal fot vehicle 02 Montebello
+                        $totalInRoundTrip = $totalInRoundTrip - 1;
+                    }
 
                     $passenger = new Passenger([
                         'date' => $lastDatePhoto,
