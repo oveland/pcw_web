@@ -119,7 +119,7 @@ class VideoService
             if ($totalPhotos) {
                 $this->processVideo();
             } else {
-                $videoPath = '404.png';
+                $videoPath = '404.mp4';
             }
         }
 
