@@ -4,11 +4,19 @@ namespace App\Services\Apps\Rocket\Video;
 
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\Vehicle;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
+use Intervention\Image\Image;
 use Storage;
 
 class VideoService
 {
+    /**
+     * @var FilesystemAdapter
+     */
+    private $localDisk;
+
     /**
      * @var Vehicle
      */
@@ -22,29 +30,46 @@ class VideoService
     /**
      * @var string
      */
-    private $formattedDate;
+    private $folder;
 
     /**
      * @var string
      */
-    private $path;
+    private $localPath;
+
+    /**
+     * @var string
+     */
+    private $videoPath;
+
+    /**
+     * @var string
+     */
+    private $videoName;
 
     function for(Vehicle $vehicle, $date)
     {
+        $this->localDisk = Storage::disk('local');
+
         $this->vehicle = $vehicle;
         $this->date = $date;
-        $this->formattedDate = str_replace('-', '', $this->date);
 
-        $this->path = "Apps/Rocket/Photos/" . $this->vehicle->id . "/$this->formattedDate";
+        $formattedDate = str_replace('-', '', $this->date);
+
+        $this->folder = "Apps/Rocket/Photos/" . $this->vehicle->id . "/$formattedDate/";
+        $this->localPath = $this->localDisk->path($this->folder);
+        $this->videoPath = "$this->localPath" . "video/";
+
+        $this->videoName = "video.mp4";
+
+        shell_exec("mkdir -p $this->videoPath");
 
         return $this;
     }
 
     function downloadPhotos()
     {
-        $localPath = Storage::disk('local')->path($this->path);
-
-        return shell_exec("aws s3 sync s3://pcw-mov-storage/$this->path/ $localPath/");
+        return shell_exec("aws s3 sync s3://pcw-mov-storage/$this->folder/ $this->localPath/");
     }
 
     function getPhotos(): Collection
@@ -57,13 +82,41 @@ class VideoService
         $this->getPhotos()->each(function (Photo $photo) {
             $photo->disk = 'local';
             $image = $photo->getImage('jpeg', false, false, true);
-            Storage::disk('local')->put($photo->path, $image);
+
+            $this->processImage($photo, $image);
         });
+    }
+
+    function processImage(Photo $photo, Image $image = null)
+    {
+        if ($image) {
+//            Storage::put($this->videoPath . $photo->uid, $image);
+            Storage::put($photo->path, $image);
+        }
     }
 
     function processVideo()
     {
-        $localPath = Storage::disk('local')->path($this->path);
-        shell_exec("cd $localPath && ffmpeg -y -framerate 10 -pattern_type glob -i '*.jpeg' -c:v libx264 -r 30 video.mp4");
+//        shell_exec("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
+        shell_exec("cd $this->localPath && ffmpeg -y -pattern_type glob -i '*.jpeg' -c:v libx264 $this->videoName");
+        shell_exec("cd $this->localPath && mv $this->videoName $this->videoPath");
     }
+
+    /**
+     * @throws FileNotFoundException
+     */
+    function getVideo()
+    {
+//        $this->processVideo();
+
+        $videoPath = $this->folder . "video/" . $this->videoName;
+
+        $video = Storage::get($videoPath);
+
+        $response = \Response::make($video);
+        $response->header('Content-Type', 'video/mp4');
+
+        return $response;
+    }
+
 }

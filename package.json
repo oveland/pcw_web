@@ -50,6 +50,7 @@
     "vue-resize-directive": "^1.2.0",
     "vue-slider-component": "^3.2.2",
     "vue-snap": "0.1.0-beta.7",
+    "vue-video-player": "^5.0.2",
     "vue2-datepicker": "^2.11.2",
     "vue2-filters": "^0.8.0"
   }

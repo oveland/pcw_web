@@ -37,6 +37,11 @@
                     <profile-seating-component :search-params="searchParams" api-url="{{ route('report.passengers.photos') }}"></profile-seating-component>
                     <report-photo-component v-if="search.loadPhotos" :search-params="searchParams" api-url="{{ route('report.passengers.photos') }}"></report-photo-component>
                 </div>
+                <div class="text-center">
+                    <div>
+                        <video-component></video-component>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- end content report -->
@@ -64,7 +69,6 @@
 
 @section('scripts')
     <script src="{{ mix('resources/js/reports/passengers/photos/main.js') }}" type="application/ecmascript"></script>
-    {{--    <script src="{{ mix('resources/js/admin/rocket/main.js') }}" type="application/ecmascript"></script>--}}
 
     <script type="application/ecmascript">
         $('.menu-passengers, .menu-passengers-photos').addClass('active-animated');

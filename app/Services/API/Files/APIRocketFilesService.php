@@ -1,18 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 17/06/2018
- * Time: 11:08 PM
- */
 
 namespace App\Services\API\Files;
 
 use App\Models\Apps\Rocket\Photo;
-use App\Models\Vehicles\CurrentLocation;
 use App\Models\Vehicles\Vehicle;
 use App\Services\API\Files\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
+use App\Services\Apps\Rocket\Video\VideoService;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Intervention\Image\Image;
 
@@ -28,8 +23,6 @@ class APIRocketFilesService implements APIFilesInterface
      * @var Vehicle
      */
     private $vehicle;
-
-    private $currentLocation;
 
     /**
      * @var PhotoService
@@ -47,7 +40,6 @@ class APIRocketFilesService implements APIFilesInterface
 
         $this->service = $service ?? $this->request->get('action');
         $this->vehicle = Vehicle::find($this->request->get('vehicle'));
-        if ($this->vehicle) $this->currentLocation = CurrentLocation::findByVehicle($this->vehicle);
 
         $this->photoService = new PhotoService();
     }
@@ -63,6 +55,8 @@ class APIRocketFilesService implements APIFilesInterface
                 break;
             case 'get-photo':
                 return $this->getPhoto();
+            case 'get-video':
+                return $this->getVideo();
                 break;
             default:
 
@@ -77,7 +71,7 @@ class APIRocketFilesService implements APIFilesInterface
     public function getLastPhoto()
     {
         if ($this->vehicle) {
-            return $this->photoService->for($this->vehicle)->getLastPhoto();
+            return $this->photoService->for($this->vehicle, 0)->getLastPhoto();
         } else {
             return $this->photoService->notFoundImage();
         }
@@ -96,10 +90,28 @@ class APIRocketFilesService implements APIFilesInterface
                 $this->request->get('encode') ?? 'png',
                 $this->request->get('with-effect') ?? $this->request->get('effect'),
                 $this->request->get('mask') ?? false,
-                $this->request->get('title') ?? false
+                $this->request->get('title') ?? false,
             );
         } else {
             return $this->photoService->notFoundImage();
         }
+    }
+
+    /**
+     * @return mixed|null
+     * @throws FileNotFoundException
+     */
+    public function getVideo()
+    {
+        $vehicle = Vehicle::find($this->request->get('vehicle'));
+
+        $date = $this->request->get('date');
+
+        if ($vehicle) {
+            $videoService = new VideoService();
+            return $videoService->for($vehicle, $date)->getVideo();
+        }
+
+        return $this->photoService->notFoundImage();
     }
 }

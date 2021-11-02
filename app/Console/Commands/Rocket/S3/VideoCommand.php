@@ -59,11 +59,11 @@ class VideoCommand extends Command
                 $this->videoService->for($vehicle, $date);
 
                 $now = Carbon::now();
-                $this->videoService->downloadPhotos();
+//                $this->videoService->downloadPhotos();
                 $this->log("    DownloadPhotos " . Carbon::now()->from($now));
 
                 $now = Carbon::now();
-                $this->videoService->processPhotos();
+//                $this->videoService->processPhotos();
                 $this->log("    processPhotos " . Carbon::now()->from($now));
 
                 $now = Carbon::now();

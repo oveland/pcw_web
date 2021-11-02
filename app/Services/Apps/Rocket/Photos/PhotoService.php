@@ -895,7 +895,7 @@ class PhotoService
      */
     function getFile(Photo $photo, $encode = "webp", $withEffect = false, $withMask = false, $withTitle = false)
     {
-        $image = $photo->getImage($encode, $withEffect, $withMask, $withTitle);
+        $image = $photo->getImage($encode, $withEffect, $withMask, $withTitle, $withTitle);
 
         if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
             return $image->response($encode);
@@ -920,7 +920,7 @@ class PhotoService
     function notFoundImage()
     {
         try {
-            return (new Image)->make(File::get('img/image-404.jpg'))->resize(300, 300)->response();
+            return Image::make(File::get('img/image-404.jpg'))->resize(300, 300)->response();
         } catch (FileNotFoundException $e) {
             return null;
         }

@@ -12,6 +12,7 @@ import SearchComponent from './components/SearchComponent';
 
 import 'sweetalert2/src/sweetalert2.scss';
 
+import VideoComponent from './components/video/VideoComponent';
 
 let adminRocketView = new Vue({
     el: '#vue-container',
@@ -19,7 +20,8 @@ let adminRocketView = new Vue({
     components: {
         SearchComponent,
         ProfileSeatingComponent,
-        ReportPhotoComponent
+        ReportPhotoComponent,
+        VideoComponent
     },
     data: {
         report: [],
