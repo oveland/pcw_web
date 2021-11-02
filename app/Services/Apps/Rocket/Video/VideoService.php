@@ -107,7 +107,6 @@ class VideoService
      */
     function getVideo()
     {
-        sleep(60);
         $videoPath = $this->folder . "video/" . $this->videoName;
 
         if (Carbon::createFromFormat('Y-m-d', $this->date)->isToday() || !Storage::exists($videoPath)) {
