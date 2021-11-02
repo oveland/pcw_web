@@ -80,12 +80,15 @@ class VideoService
 
     function processPhotos()
     {
-        $this->getPhotos()->each(function (Photo $photo) {
+        $photos = $this->getPhotos();
+        $photos->each(function (Photo $photo) {
             $photo->disk = 'local';
             $image = $photo->getImage('jpeg', false, false, true);
 
             $this->processImage($photo, $image);
         });
+
+        return $photos->count();
     }
 
     function processImage(Photo $photo, Image $image = null)
@@ -111,8 +114,13 @@ class VideoService
 
         if (Carbon::createFromFormat('Y-m-d', $this->date)->isToday() || !Storage::exists($videoPath)) {
             $this->downloadPhotos();
-            $this->processPhotos();
-            $this->processVideo();
+            $totalPhotos = $this->processPhotos();
+
+            if ($totalPhotos) {
+                $this->processVideo();
+            } else {
+                $videoPath = '404.png';
+            }
         }
 
         $video = Storage::get($videoPath);
