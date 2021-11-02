@@ -276,7 +276,7 @@
                                 <li class="nav-item menu-passengers-photos">
                                     <a href="{{ route('report.passengers.photos') }}" class="faa-parent animated-hover nav-link nav-toggle">
                                         <i class="fa fa-camera faa-vertical"></i>
-                                        @lang('Photos') / @lang('Video')
+                                        @lang('Video')
                                     </a>
                                 </li>
 

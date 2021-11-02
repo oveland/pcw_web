@@ -4,6 +4,7 @@ namespace App\Services\Apps\Rocket\Video;
 
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
@@ -69,7 +70,7 @@ class VideoService
 
     function downloadPhotos()
     {
-        return shell_exec("aws s3 sync s3://pcw-mov-storage/$this->folder/ $this->localPath/");
+        return shell_exec("aws s3 sync s3://pcw-mov-storage/$this->folder $this->localPath");
     }
 
     function getPhotos(): Collection
@@ -97,8 +98,7 @@ class VideoService
 
     function processVideo()
     {
-//        shell_exec("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
-        shell_exec("cd $this->localPath && ffmpeg -y -pattern_type glob -i '*.jpeg' -c:v libx264 $this->videoName");
+        shell_exec("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
         shell_exec("cd $this->localPath && mv $this->videoName $this->videoPath");
     }
 
@@ -107,9 +107,14 @@ class VideoService
      */
     function getVideo()
     {
-//        $this->processVideo();
-
+        sleep(60);
         $videoPath = $this->folder . "video/" . $this->videoName;
+
+        if (Carbon::createFromFormat('Y-m-d', $this->date)->isToday() || !Storage::exists($videoPath)) {
+            $this->downloadPhotos();
+            $this->processPhotos();
+            $this->processVideo();
+        }
 
         $video = Storage::get($videoPath);
 

@@ -7,13 +7,13 @@
 
 				   @play="onPlayerPlay($event)"
 				   @pause="onPlayerPause($event)"
-				   @ended="onPlayerEnded($event)"
-				   @waiting="onPlayerWaiting($event)"
-				   @playing="onPlayerPlaying($event)"
-				   @loadeddata="onPlayerLoadeddata($event)"
-				   @timeupdate="onPlayerTimeupdate($event)"
-				   @canplay="onPlayerCanplay($event)"
-				   @canplaythrough="onPlayerCanplaythrough($event)"
+				   @ended="test($event)"
+				   @waiting="test($event)"
+				   @playing="test($event)"
+				   @loadeddata="test(test)"
+				   @timeupdate="test($event)"
+				   @canplay="test($event)"
+				   @canplaythrough="test($event)"
 
 				   @statechanged="playerStateChanged($event)"
 				   @ready="playerReadied">
@@ -27,6 +27,7 @@ import 'video.js/dist/video-js.css'
 import { videoPlayer } from 'vue-video-player'
 
 export default {
+	props: ['src'],
 	components: {
 		videoPlayer
 	},
@@ -39,11 +40,16 @@ export default {
 				playbackRates: [0.7, 1.0, 1.5, 2.0],
 				sources: [{
 					type: "video/mp4",
-					src: "http://127.0.0.1:7000/api/v2/files/rocket/get-video?vehicle=1873&date=2021-10-28",
+					src: this.src,
 					// src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm",
 				}],
-				poster: "/static/images/author.jpg",
+				poster: "https://cdn.dribbble.com/users/2170220/screenshots/6196024/btn_1.gif",
 			}
+		}
+	},
+	watch: {
+		src() {
+			this.playerOptions.sources.src = this.src;
 		}
 	},
 	mounted() {
@@ -74,11 +80,27 @@ export default {
 			console.log('the player is readied', player)
 			// you can use it to do something...
 			// player.[methods]
+		},
+		test(event) {
+			console.log(event);
 		}
 	}
 }
 </script>
 
-<style scoped>
+<style>
+	.video-player-box .video-js {
+		margin: auto !important;
+		width: 600px;
+		height: 500px;
+	}
 
+	.video-player-box .vjs-poster {
+		width: 600px;
+		height: 500px;
+	}
+
+	.video-player-box .vjs-big-play-button {
+		display: none !important;
+	}
 </style>

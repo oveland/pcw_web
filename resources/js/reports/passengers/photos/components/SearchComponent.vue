@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-				<div class="col-md-2">
+				<div class="col-md-2 hidden">
 					<div class="form-group">
 						<label class="control-label">{{ $t('Options') }}</label>
 						<div class="input-group col-md-12 p-t-5">
@@ -56,8 +56,12 @@
                     <div class="form-group">
                         <label class="control-label">&nbsp;</label>
                         <div class="input-group col-md-12">
-                            <button type="button" class="btn green-haze btn-outline btn-light btn-search-report" @click="setSearch()">
-                                <i class="fa fa-search"></i> {{ $t('Search') }}
+                            <button type="button" class="btn green-haze btn-outline btn-light btn-search-report hidden" @click="setSearch()">
+                                <i class="fa fa-search"></i> {{ $t('Search photos') }}
+                            </button>
+
+                            <button type="button" class="btn m-l-10 red-mint btn-outline btn-light btn-search-report" @click="searchVideo()">
+                                <i class="fa fa-file-movie-o "></i> {{ $t('Search video') }}
                             </button>
                         </div>
                     </div>
@@ -109,7 +113,14 @@
                 } else {
                     gerror("Select a vehicle");
                 }
-            }
+            },
+			searchVideo: function () {
+				if (this.search.vehicle && this.search.vehicle.id) {
+					this.$emit('search-video');
+				} else {
+					gerror("Select a vehicle");
+				}
+			}
         },
         components: {
             Multiselect,

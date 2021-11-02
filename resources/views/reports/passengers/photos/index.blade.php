@@ -26,7 +26,7 @@
     <div id="vue-container" class="row">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" @submit.prevent="">
-            <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('report.passengers.photos.params.get', ['name' => __('search')]) }}" :search.sync="search" v-on:set-search="setSearch($event)"></search-component>
+            <search-component :admin="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}" url-params="{{ route('report.passengers.photos.params.get', ['name' => __('search')]) }}" :search.sync="search" v-on:set-search="setSearch($event)" @search-video="searchVideo($event)"></search-component>
         </form>
         <!-- end search form -->
 
@@ -39,7 +39,7 @@
                 </div>
                 <div class="text-center">
                     <div>
-                        <video-component></video-component>
+                        <video-component v-if="videoSrc" :src="videoSrc"></video-component>
                     </div>
                 </div>
             </div>

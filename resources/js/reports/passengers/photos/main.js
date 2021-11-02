@@ -33,10 +33,17 @@ let adminRocketView = new Vue({
             date: moment().format("YYYY-MM-DD"),
             loadPhotos: false
         },
-        searchParams: {}
+        searchParams: {},
+        videoSrc: null
     },
     computed: {
 
+    },
+    watch: {
+        search() {
+            this.videoSrc = null;
+            console.log('Changed search panel');
+        }
     },
     methods: {
         setSearch: function () {
@@ -44,6 +51,12 @@ let adminRocketView = new Vue({
                 date: this.search.date,
                 vehicle: this.search.vehicle.id
             };
+        },
+        searchVideo() {
+            this.videoSrc = null;
+            setTimeout(() => {
+                this.videoSrc = `/api/v2/files/rocket/get-video?vehicle=${this.search.vehicle.id}&date=${this.search.date}`;
+            }, 500);
         }
     },
     mounted: function () {
