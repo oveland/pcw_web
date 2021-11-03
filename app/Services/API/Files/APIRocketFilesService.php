@@ -7,9 +7,11 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\API\Files\Contracts\APIFilesInterface;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use App\Services\Apps\Rocket\Video\VideoService;
+use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Intervention\Image\Image;
+use Log;
 
 class APIRocketFilesService implements APIFilesInterface
 {
@@ -109,11 +111,27 @@ class APIRocketFilesService implements APIFilesInterface
 
         if ($vehicle) {
             \Artisan::call("rocket:s3:video --vehicle-plate=$vehicle->plate --date=$date");
+            
+            $this->log(" API run: rocket:s3:video --vehicle-plate=$vehicle->plate --date=$date");
 
             $videoService = new VideoService();
             return $videoService->for($vehicle, $date)->getVideo(false);
         }
 
         return $this->photoService->notFoundImage();
+    }
+
+    public function log($message)
+    {
+        Log::info($message);
+    }
+
+    function command($command, $sudo = false)
+    {
+//        $command = explode('sudo', $command)[0];
+        $response = shell_exec("$command");
+        $this->log("        Run: $command | $response");
+
+        return $response;
     }
 }

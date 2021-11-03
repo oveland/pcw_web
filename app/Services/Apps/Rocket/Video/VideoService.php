@@ -9,7 +9,9 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Intervention\Image\Image;
+use Log;
 use Storage;
+use Iman\Streamer\VideoStreamer;
 
 class VideoService
 {
@@ -63,32 +65,43 @@ class VideoService
 
         $this->videoName = "video.mp4";
 
-        shell_exec("mkdir -p $this->localPath");
-        shell_exec("mkdir -p $this->videoPath");
+        $this->command("mkdir -p $this->localPath");
+        $this->command("mkdir -p $this->videoPath");
 
-        shell_exec("chmod -R 777 $this->localPath");
+        $this->command("chmod -R 777 $this->localPath", true);
+        $this->command("chmod -R 777 $this->videoPath", true);
+//        $this->command("chown -R nobody:nogroup $this->localPath");
 
         return $this;
     }
 
     function downloadPhotos()
     {
-        shell_exec("aws s3 sync s3://pcw-mov-storage/$this->folder $this->localPath");
-        shell_exec("chmod -R 777 $this->localPath");
+        $initial = Carbon::now();
+        $this->log("    Sync photos from aws");
+        $this->command("aws s3 sync s3://pcw-mov-storage/$this->folder $this->localPath");
+        $this->command("chmod -R 777 $this->localPath", true);
+
+        $this->log("    Sync aws in " . Carbon::now()->from($initial));
+
+//        $this->command("chown -R nobody:nogroup $this->localPath");
     }
 
     function getPhotos(): Collection
     {
+        $this->log("    Process photos vehicle = " . $this->vehicle->id . " and date = $this->date");
         return Photo::whereDate('date', $this->date)->whereVehicleId($this->vehicle->id)->get();
     }
 
     function processPhotos()
     {
         $photos = $this->getPhotos();
+
+        $this->log("    Process " . $photos->count() . " photos");
+
         $photos->each(function (Photo $photo) {
             $photo->disk = 'local';
             $image = $photo->getImage('jpeg', false, false, true);
-
             $this->processImage($photo, $image);
         });
 
@@ -112,8 +125,10 @@ class VideoService
             $totalPhotos = $this->processPhotos();
 
             if ($totalPhotos) {
-                shell_exec("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
-                shell_exec("cd $this->localPath && mv $this->videoName $this->videoPath");
+                $this->log("    *** Making video");
+                $this->command("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
+                $this->command("cd $this->localPath && mv $this->videoName $this->videoPath");
+                $this->command("chmod -R 777 $this->videoPath", true);
             } else {
                 $videoPath = '404.mp4';
             }
@@ -136,10 +151,19 @@ class VideoService
             $videoPath = '404.mp4';
         }
 
-        $video = Storage::get($videoPath);
+        VideoStreamer::streamFile(Storage::path($videoPath));
+    }
 
-        $response = \Response::make($video);
-        $response->header('Content-Type', 'video/mp4');
+    function log($message)
+    {
+        Log::info($message);
+    }
+
+    function command($command, $sudo = false)
+    {
+        $command = ($sudo ? "sudo " : "") . explode('sudo', $command)[0];
+        $response = shell_exec("$command");
+        $this->log("        Run: $command | $response");
 
         return $response;
     }

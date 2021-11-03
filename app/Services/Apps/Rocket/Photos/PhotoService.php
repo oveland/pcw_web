@@ -148,7 +148,12 @@ class PhotoService
             $currentLocation = $this->vehicle->currentLocation;
             $dr = $this->findDispatchRegisterByPhoto($photo);
             $photo->dispatch_register_id = $dr ? $dr->id : null;
+            
             $photo->location_id = $currentLocation->location_id ?? null;
+            $vId = $this->vehicle->id;
+            $initialDate = $photo->date->toDateString();
+            $finalDate = $photo->date->toDateTimeString();
+            $photo->location_id = collect(DB::select("SELECT id from locations WHERE vehicle_id = $vId and date between '$initialDate' AND '$finalDate' ORDER BY date DESC LIMIT 1"))->first()->id;
 
             $image = $this->decodeImageData($data->get('img'));
 

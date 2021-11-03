@@ -54,7 +54,7 @@ class VideoCommand extends Command
             if ($vehicle) {
                 $nowInitial = Carbon::now();
 
-                $this->log("Start process");
+                $this->log("Start process as user: " . $this->command('whoami'));
 
                 $this->videoService->for($vehicle, $date);
 
@@ -86,5 +86,9 @@ class VideoCommand extends Command
 
         $this->info("$now • $message");
         Log::info($message);
+    }
+
+    function command($command) {
+        return shell_exec("sudo -u ubuntu $command");
     }
 }
