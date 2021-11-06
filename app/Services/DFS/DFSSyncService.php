@@ -9,6 +9,7 @@ use App\Models\LM\Trajectory;
 use App\Models\LM\Turn;
 use App\Models\Drivers\Driver;
 use App\Models\Routes\Route;
+use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use App\Services\LM\SyncService;
 use Carbon\Carbon;
@@ -25,7 +26,12 @@ class DFSSyncService extends SyncService
 
     function locations(Vehicle $vehicle, $date)
     {
-        $locationsDFS = DFSDB::select("SELECT * FROM REGISTRO WHERE FECHA_HORA BETWEEN '$date' AND '$date 23:59:00' AND ID_VEHICULO = '$vehicle->bea_id' AND EXTENDIDO > 1 ORDER BY FECHA_HORA");
+
+        $maxDateMigrated = Location::whereBetween('date', ["$date", "$date 23:59:00"])->where('vehicle_id', $vehicle->id)->max('date');
+
+        $maxDateMigrated = $maxDateMigrated ? " AND FECHA_HORA > '$maxDateMigrated'" : "";
+
+        $locationsDFS = DFSDB::select("SELECT * FROM REGISTRO WHERE FECHA_HORA BETWEEN '$date' AND '$date 23:59:00' AND ID_VEHICULO = '$vehicle->bea_id' $maxDateMigrated AND EXTENDIDO > 1 ORDER BY FECHA_HORA");
 
         $total = $locationsDFS->count();
 
