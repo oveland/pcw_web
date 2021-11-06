@@ -73,7 +73,7 @@
             };
 
             map = new google.maps.Map(document.getElementById('google-map-light-dream'), mapOptions);
-            map.setOptions({styles: mapLightDreamStyles});
+            // map.setOptions({styles: mapLightDreamStyles});
             routeLayerKML = new google.maps.KmlLayer();
             trafficLayer = new google.maps.TrafficLayer();
 

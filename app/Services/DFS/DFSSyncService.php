@@ -3,6 +3,7 @@
 namespace App\Services\DFS;
 
 use App\Facades\DFSDB;
+use App\Http\Controllers\Utils\Geolocation;
 use App\Models\LM\Mark;
 use App\Models\LM\Trajectory;
 use App\Models\LM\Turn;
@@ -13,6 +14,7 @@ use App\Services\LM\SyncService;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Throwable;
@@ -21,12 +23,67 @@ class DFSSyncService extends SyncService
 {
     protected $type = 'dfs';
 
+    function locations(Vehicle $vehicle, $date)
+    {
+        $locationsDFS = DFSDB::select("SELECT * FROM REGISTRO WHERE FECHA_HORA BETWEEN '$date' AND '$date 23:59:00' AND ID_VEHICULO = '$vehicle->bea_id' AND EXTENDIDO > 1 ORDER BY FECHA_HORA");
+
+        $total = $locationsDFS->count();
+
+        $this->log("Migrating $total locations for vehicle $vehicle->number | $vehicle->plate\n");
+        $migrated = 0;
+
+        $initial = Carbon::now();
+
+        $prevLocation = $locationsDFS->first();
+        $prevOrientation = 0;
+
+        foreach ($locationsDFS as $locationDFS) {
+            usleep(100 * 1000); // Important delay for prevent BD down by error "too many open connections". Recommended value > 100 ms
+            $c = (object)[
+                'latitude' => Geolocation::DMtoDD($locationDFS->LATITUD),
+                'longitude' => Geolocation::DMtoDD($locationDFS->LONGITUD),
+            ];
+            $speed = $locationDFS->VELOCIDAD;
+
+            $date = Carbon::createFromFormat("Y-m-d H:i:s", explode('.', $locationDFS->FECHA_HORA)[0]);
+            $timestamp = $date->timestamp;
+
+            $orientation = Geolocation::orientationDD($prevLocation->LATITUD, $prevLocation->LONGITUD, $locationDFS->LATITUD, $locationDFS->LONGITUD);
+            $distance = Geolocation::getDistanceDD($prevLocation->LATITUD, $prevLocation->LONGITUD, $locationDFS->LATITUD, $locationDFS->LONGITUD);
+
+            if ($distance < 20) $orientation = $prevOrientation;
+
+            $client = new Client();
+            $response = $client->get(config('gps.server.urlAPI') . "/gps/location/save", [
+                'query' => [
+                    'vehicle' => $vehicle->id,
+                    'latitude' => $c->latitude,
+                    'longitude' => $c->longitude,
+                    'speed' => $speed,
+                    'timestamp' => $timestamp,
+                    'orientation' => $orientation,
+                ]
+            ]);
+
+            $status = $response->getStatusCode();
+            $migrated++;
+            $message = json_decode($response->getBody(), false)->message;
+
+            $this->log("  $migrated/$total $timestamp | " . $date->toTimeString() . " • " . ($status == 200 ? "OK" : $status) . " | $message \n");
+
+            $prevLocation = $locationDFS;
+            $prevOrientation = $orientation;
+        }
+
+        $this->log("Finish migration in " . Carbon::now()->from($initial) . "\n");
+    }
+
     /**
      * Sync A_TURNO >> bea_turns
      *
      * @throws Exception
      */
-    public function turns()
+    function turns()
     {
         $lastIdMigrated = Turn::where('company_id', $this->company->id)->max('bea_id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
@@ -79,7 +136,7 @@ class DFSSyncService extends SyncService
      * Sync C_AUTOBUS >> vehicles
      * @throws Exception
      */
-    public function vehicles()
+    function vehicles()
     {
         $maxSequence = collect(DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
@@ -101,7 +158,7 @@ class DFSSyncService extends SyncService
      * Sync C_CONDUCTOR >> drivers
      * @throws Exception
      */
-    public function drivers()
+    function drivers()
     {
         $maxSequence = Driver::max('id') + 1;
         DB::statement("ALTER SEQUENCE conductor_id_idconductor_seq RESTART WITH $maxSequence");
@@ -129,7 +186,7 @@ class DFSSyncService extends SyncService
      * Sync C_RUTA >> routes
      * @throws Exception
      */
-    public function routes()
+    function routes()
     {
         $maxSequenceRuta = collect(DB::select("SELECT max(id_rutas) max FROM ruta"))->first()->max + 1;
         $maxSequenceRoutes = collect(DB::select("SELECT max(id) max FROM routes"))->first()->max + 1;
@@ -158,7 +215,7 @@ class DFSSyncService extends SyncService
      * Sync A_DERROTERO >> bea_trajectories
      * @throws Exception
      */
-    public function trajectories()
+    function trajectories()
     {
         $maxSequence = collect(DB::select("SELECT max(id) max FROM bea_trajectories"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE bea_trajectories_id_seq RESTART WITH $maxSequence");
@@ -204,7 +261,7 @@ class DFSSyncService extends SyncService
      * @throws Exception
      * @throws Throwable
      */
-    public function marks()
+    function marks()
     {
         $maxSequence = collect(DB::select("SELECT max(id) max FROM bea_marks"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE bea_marks_id_seq RESTART WITH $maxSequence");
@@ -341,7 +398,7 @@ class DFSSyncService extends SyncService
      * @return Turn|Model|null
      * @throws Exception
      */
-    public function validateTurn($turnDFSId, $data = null)
+    function validateTurn($turnDFSId, $data = null)
     {
         $turn = Turn::where('bea_id', $turnDFSId)->where('company_id', $this->company->id)->first();
 
@@ -378,7 +435,7 @@ class DFSSyncService extends SyncService
      * @return Trajectory|Model|null
      * @throws Exception
      */
-    public function validateTrajectory($trajectoryDFSId, $data = null)
+    function validateTrajectory($trajectoryDFSId, $data = null)
     {
         $route = $this->validateRoute($data->R_ID);
 

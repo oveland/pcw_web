@@ -68,10 +68,12 @@ class LMService
     {
         $vehicles = $this->repository->getAllVehicles();
 
-        foreach ($vehicles as $vehicle) {
-            $this->sync->checkCommissionsFor($vehicle);
-            $this->sync->checkPenaltiesFor($vehicle);
-            $this->sync->checkManagementCostsFor($vehicle);
+        if ($this->sync) {
+            foreach ($vehicles as $vehicle) {
+                $this->sync->checkCommissionsFor($vehicle);
+                $this->sync->checkPenaltiesFor($vehicle);
+                $this->sync->checkManagementCostsFor($vehicle);
+            }
         }
 
         return (object)[

@@ -11,12 +11,13 @@ use App\Models\LM\Penalty;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
 use App\Services\LM\LMRepository;
+use Carbon\Carbon;
 use Log;
 
 abstract class SyncService
 {
     protected $type;
-    
+
     /**
      * @var Vehicle
      */
@@ -65,6 +66,8 @@ abstract class SyncService
     abstract function trajectories();
 
     abstract function marks();
+
+    abstract function locations(Vehicle $vehicle, $date);
 
     /**
      * Sync last marks data
@@ -251,6 +254,8 @@ abstract class SyncService
 
     protected function log($message)
     {
+        $now = Carbon::now();
+        echo "$now • $message";
         Log::channel('lm')->info($this->company->short_name . " • $this->type • " . $message);
     }
 }

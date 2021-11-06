@@ -10,11 +10,23 @@ namespace App\Http\Controllers\Utils;
 
 use App\Http\Controllers\ReportRouteController;
 use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 use Image;
 use ZipArchive;
 
 class Geolocation
 {
+    static function DMtoDD($coordinate)
+    {
+        list($deg, $min, $sec) = explode('.', $coordinate);
+
+        $sec = str_pad($sec, 5, "0", STR_PAD_RIGHT) * 0.6 / 1000;
+
+        $sign = Str::endsWith($coordinate, 'S') || Str::endsWith($coordinate, 'W') ? -1 : 1;
+
+        return ($deg + $min / 60 + ($sec / (3600))) * $sign;
+    }
+
     /**
      * Get route coordinates from google kmz file
      *
@@ -84,6 +96,14 @@ class Geolocation
         return $routeCoordinates;
     }
 
+    static function getDistanceDD($startLat, $startLong, $endLat, $endLong)
+    {
+        return self::getDistance(
+            self::DMtoDD($startLat), self::DMtoDD($startLong),
+            self::DMtoDD($endLat), self::DMtoDD($endLong)
+        );
+    }
+
     /**
      * Get distance in meters from two coordinates in decimal
      *
@@ -117,14 +137,14 @@ class Geolocation
     public static function getAddressFromCoordinates($latitude, $longitude)
     {
         $address = __('Unavailable');
-        if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90 ) return $address."*";
+        if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90) return $address . "*";
         $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=" . config('road.google_api_token');
 
         try {
             $client = new Client();
             $response = $client->get($url)->getBody()->getContents();
             $data = (object)json_decode($response, true);
-            $result = (object) collect($data->results)->first();
+            $result = (object)collect($data->results)->first();
             $address = explode(',', $result->formatted_address)[0];
         } catch (\Exception $e) {
         }
@@ -198,8 +218,8 @@ class Geolocation
      */
     public static function filterNearestRouteCoordinates($location, $route_coordinates)
     {
-        $location = (object) $location;
-        $route_coordinates = (object) $route_coordinates;
+        $location = (object)$location;
+        $route_coordinates = (object)$route_coordinates;
 
         $location_latitude = $location->latitude;
         $location_longitude = $location->longitude;
@@ -225,19 +245,66 @@ class Geolocation
     public static function findNearestCoordinateFromLocation($location, $routeCoordinates)
     {
         $nearestRouteCoordinate = [];
-        $location = (object) $location;
-        $routeCoordinates = (object) $routeCoordinates;
+        $location = (object)$location;
+        $routeCoordinates = (object)$routeCoordinates;
         $minRadius = 10000;
-        foreach ($routeCoordinates as $routeCoordinate){
+        foreach ($routeCoordinates as $routeCoordinate) {
             $radius = self::getDistance(
                 $routeCoordinate->latitude, $routeCoordinate->longitude,
                 $location->latitude, $location->longitude
             );
-            if($radius < $minRadius){
+            if ($radius < $minRadius) {
                 $nearestRouteCoordinate = $routeCoordinate;
                 $minRadius = $radius;
             }
         }
         return $nearestRouteCoordinate;
     }
+
+    static function orientationDD($startLat, $startLong, $endLat, $endLong)
+    {
+        return self::orientation(
+            self::DMtoDD($startLat), self::DMtoDD($startLong),
+            self::DMtoDD($endLat), self::DMtoDD($endLong)
+        );
+    }
+
+    static function orientation($lat, $lon, $lat2, $lon2)
+    {
+        $teta1 = deg2rad($lat);
+        $teta2 = deg2rad($lat2);
+        $delta1 = deg2rad($lat2 - $lat);
+        $delta2 = deg2rad($lon2 - $lon);
+
+        $y = sin($delta2) * cos($teta2);
+        $x = cos($teta1) * sin($teta2) - sin($teta1) * cos($teta2) * cos($delta2);
+        $orientation = atan2($y, $x);
+        $orientation = rad2deg($orientation);// radians to degrees
+        $orientation = (($orientation + 360) % 360);
+
+        return $orientation;
+
+    }
+
+//    static function orientation($startLat, $startLong, $endLat, $endLong)
+//    {
+//        $startLat = deg2rad($startLat);
+//        $startLong = deg2rad($startLong);
+//        $endLat = deg2rad($endLat);
+//        $endLong = deg2rad($endLong);
+//
+//        $dLong = $endLong - $startLong;
+//
+//        $dPhi = log(tan($endLat / 2.0 + pi() / 4.0) / tan($startLat / 2.0 + pi() / 4.0));
+//        if (abs($dLong) > pi()) {
+//            if ($dLong > 0.0) $dLong = -(2.0 * pi() - $dLong);
+//            else $dLong = (2.0 * pi() + $dLong);
+//        }
+//
+//        $orientation = -(rad2deg(atan2($dLong, $dPhi)) + 360.0) % 360.0 + 90;
+//        if ($orientation < 0) $orientation = 360 + $orientation;
+//        else if ($orientation > 360) $orientation = $orientation - 360;
+//
+//        return $orientation;
+//    }
 }

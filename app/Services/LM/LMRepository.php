@@ -31,10 +31,15 @@ class LMRepository
     /**
      * @return Vehicle[] | Collection
      */
-    function getAllVehicles(): Collection
+    function getAllVehicles($onlyMigrated = false): Collection
     {
-        // return $this->company->activeVehicles()->where('bea_id', '>', 0)->get();
-        return $this->company->activeVehicles()->get();
+        $query = $this->company->activeVehicles();
+
+        if ($onlyMigrated) {
+            $query = $query->where('bea_id', '>', 0);
+        }
+
+        return $query->get();
     }
 
     /**
