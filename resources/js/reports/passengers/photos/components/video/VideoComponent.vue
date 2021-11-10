@@ -1,32 +1,14 @@
 <template>
-	<video-player  class="video-player-box"
-				   ref="videoPlayer"
-				   :options="playerOptions"
-				   :playsinline="true"
-				   customEventName="customstatechangedeventname"
 
-				   @play="onPlayerPlay($event)"
-				   @pause="onPlayerPause($event)"
-				   @ended="test($event)"
-				   @waiting="test($event)"
-				   @playing="test($event)"
-				   @loadeddata="test(test)"
-				   @timeupdate="test($event)"
-				   @canplay="test($event)"
-				   @canplaythrough="test($event)"
 
-				   @statechanged="playerStateChanged($event)"
-				   @ready="playerReadied">
-	</video-player>
+	<video :src="src" class="video-player-box"></video>
 </template>
 
 <script>
 
 import 'video.js/dist/video-js.css'
-import 'videojs-vjsdownload/dist/videojs-vjsdownload.css'
-import 'videojs-vjsdownload/dist/videojs-vjsdownload.min.js'
 
-import { videoPlayer } from 'vue-video-player'
+import {videoPlayer} from 'vue-video-player'
 
 export default {
 	props: ['src'],
@@ -46,28 +28,20 @@ export default {
 					// src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm",
 				}],
 				poster: "https://cdn.dribbble.com/users/2170220/screenshots/6196024/btn_1.gif",
-				plugins: {
-					vjsdownload:{
-						beforeElement: 'playbackRateMenuButton',
-						textControl: 'Download video',
-						name: 'downloadButton',
-						downloadURL: 'https://video_url.mp4' //optional if you need a different download url than the source
-					}
-				}
 			}
 		}
 	},
 	watch: {
 		src() {
-			this.playerOptions.sources.src = this.src;
+			// this.playerOptions.sources.src = this.src;
 		}
 	},
 	mounted() {
-		console.log('this is current player instance object', this.player)
+		// console.log('this is current player instance object', this.player)
 	},
 	computed: {
 		player() {
-			return this.$refs.videoPlayer.player
+			// return this.$refs.videoPlayer.player
 		}
 	},
 	methods: {
@@ -99,18 +73,18 @@ export default {
 </script>
 
 <style>
-	.video-player-box .video-js {
-		margin: auto !important;
-		width: 600px;
-		height: 500px;
-	}
+.video-player-box .video-js {
+	margin: auto !important;
+	width: 600px;
+	height: 500px;
+}
 
-	.video-player-box .vjs-poster {
-		width: 600px;
-		height: 500px;
-	}
+.video-player-box .vjs-poster {
+	width: 600px;
+	height: 500px;
+}
 
-	.video-player-box .vjs-big-play-button {
-		display: none !important;
-	}
+.video-player-box .vjs-big-play-button {
+	display: none !important;
+}
 </style>
