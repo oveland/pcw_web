@@ -88,18 +88,23 @@ class ConfigProfileService
             $release = $rRelease ?: self::THRESHOLD_RELEASE;
 
             if ($this->profileSeat->camera == '1') {
-                $activate = 2;
+                $activate = 3;
                 $release = 4;
             } else if ($this->profileSeat->camera == '2') {
-                $activate = 1;
+                $activate = 2;
                 $release = 10;
             } else if ($this->profileSeat->camera == '3') {
                 $activate = 2;
-                $release = 4;
+                $release = 10;
             }
 
-            if (collect([5])->contains(intval($number))) {
+            if (collect([5])->contains(intval($number))) { // Asientos con poca cobertura
                 $activate = 1;
+                $release = 15;
+            }
+
+            if (collect([13, 16])->contains(intval($number))) { // Asientos con poca cobertura
+                $activate = 2;
                 $release = 15;
             }
 

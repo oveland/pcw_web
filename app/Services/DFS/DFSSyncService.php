@@ -29,9 +29,13 @@ class DFSSyncService extends SyncService
 
         $maxDateMigrated = Location::whereBetween('date', ["$date", "$date 23:59:00"])->where('vehicle_id', $vehicle->id)->max('date');
 
-        $maxDateMigrated = $maxDateMigrated ? " AND FECHA_HORA > '$maxDateMigrated'" : "";
+        $whereMaxDateMigrated = "";
+        if ($maxDateMigrated) {
+            $maxDateMigrated = Carbon::createFromFormat(config('app.simple_date_time_format'), $maxDateMigrated)->toDateTimeString();
+            $whereMaxDateMigrated = " AND FECHA_HORA > '$maxDateMigrated'";
+        }
 
-        $locationsDFS = DFSDB::select("SELECT * FROM REGISTRO WHERE FECHA_HORA BETWEEN '$date' AND '$date 23:59:00' AND ID_VEHICULO = '$vehicle->bea_id' $maxDateMigrated AND EXTENDIDO > 1 ORDER BY FECHA_HORA");
+        $locationsDFS = DFSDB::select("SELECT * FROM REGISTRO WHERE FECHA_HORA BETWEEN '$date' AND '$date 23:59:00' AND ID_VEHICULO = '$vehicle->bea_id' $whereMaxDateMigrated AND EXTENDIDO > 1 ORDER BY FECHA_HORA");
 
         $total = $locationsDFS->count();
 
