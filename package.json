@@ -36,6 +36,7 @@
     "sweetalert2": "^9.7.0",
     "v-drag": "^2.1.3",
     "v-tooltip": "^2.0.3",
+    "videojs-vjsdownload": "^1.0.4",
     "vue-card-carousel": "^1.0.0",
     "vue-draggable-resizable": "^2.2.0",
     "vue-filter-number-format": "^2.0.0",

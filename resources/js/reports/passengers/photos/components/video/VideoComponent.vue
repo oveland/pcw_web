@@ -23,6 +23,8 @@
 <script>
 
 import 'video.js/dist/video-js.css'
+import 'videojs-vjsdownload/dist/videojs-vjsdownload.css'
+import 'videojs-vjsdownload/dist/videojs-vjsdownload.min.js'
 
 import { videoPlayer } from 'vue-video-player'
 
@@ -44,6 +46,14 @@ export default {
 					// src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm",
 				}],
 				poster: "https://cdn.dribbble.com/users/2170220/screenshots/6196024/btn_1.gif",
+				plugins: {
+					vjsdownload:{
+						beforeElement: 'playbackRateMenuButton',
+						textControl: 'Download video',
+						name: 'downloadButton',
+						downloadURL: 'https://video_url.mp4' //optional if you need a different download url than the source
+					}
+				}
 			}
 		}
 	},
