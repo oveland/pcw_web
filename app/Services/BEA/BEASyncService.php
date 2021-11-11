@@ -22,6 +22,11 @@ class BEASyncService extends SyncService
 {
     protected $type = 'bea';
 
+    function locations(Vehicle $vehicle, $date)
+    {
+        
+    }
+
     /**
      * Sync A_TURNO >> bea_turns
      *
