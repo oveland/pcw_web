@@ -29,12 +29,12 @@ class SpeedingService
         $all = Speeding::whereBetween('date', [$initialDate, $finalDate])->withSpeeding();
 
         if ($routeReport == 'all' || !$routeReport) {
-            $vehicles = $company->vehicles();
+            $vehicles = $company->userVehicles($routeReport);
             if ($vehicleReport != 'all') {
                 $vehicles = $vehicles->where('id', $vehicleReport);
             }
 
-            $all = $all->whereIn('vehicle_id', $vehicles->get()->pluck('id'));
+            $all = $all->whereIn('vehicle_id', $vehicles->pluck('id'));
         } else {
             $dispatchRegisters = DispatchRegister::completed()->whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)
                 ->select('id')

@@ -45,6 +45,10 @@ class GPSCheckStatusCommand extends Command
         $gpsTimeForNOReportPowerOff = config('gps.gps_time_for_NO_report_power_OFF');
 
         $configCompanies = collect([
+            29 => (object)[
+                'timeOn' => $gpsTimeForNOReportPowerOn,
+                'timeOff' => $gpsTimeForNOReportPowerOff,
+            ],
             39 => (object)[
                 'timeOn' => $gpsTimeForNOReportPowerOn,
                 'timeOff' => $gpsTimeForNOReportPowerOff,

@@ -73,7 +73,7 @@
                 </small>
             </th>
 
-            <th>
+            <th class="hide">
                 <i class="fa fa-users text-muted"></i><br>
                 <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
                 <small class="text-muted">
@@ -322,7 +322,7 @@
                     </small>
                 </td>
 
-                <td width="10%" class="text-center">
+                <td width="10%" class="text-center hide">
                     <span class="tooltips {{ $dispatchRegister->passengersBySensorTotal > 30 ? 'label label-warning' : '' }} " data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
                         {{ $dispatchRegister->passengersBySensorTotal }}
                     </span>

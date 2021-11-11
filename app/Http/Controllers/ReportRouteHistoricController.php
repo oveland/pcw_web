@@ -475,6 +475,10 @@ class ReportRouteHistoricController extends Controller
             }
         }
 
+        if(!Auth::user()->isSuperAdmin()) {
+            $alerts = collect([]);
+        }
+
         return (object)[
             'alerts' => $alerts->toArray(),
             'countedStr' => $countedSeating->implode(','),
