@@ -148,7 +148,7 @@ class PhotoService
             $currentLocation = $this->vehicle->currentLocation;
             $dr = $this->findDispatchRegisterByPhoto($photo);
             $photo->dispatch_register_id = $dr ? $dr->id : null;
-            
+
             $photo->location_id = $currentLocation->location_id ?? null;
             $vId = $this->vehicle->id;
             $initialDate = $photo->date->toDateString();
@@ -423,10 +423,6 @@ class PhotoService
                 }
             }
 
-            if ($drId == 1920798) { // Temporal fot vehicle 02 Montebello
-                $countByRoundTrip = $countByRoundTrip - 1;
-            }
-
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
         }
 
@@ -605,8 +601,8 @@ class PhotoService
             $prevOccupation = $this->getOccupation($prevPhoto);
             $prevDetails = $prevPhoto->getAPIFields('url');
 
-            $personsByRoundTrip = 0;
-            $totalPersons = 0;
+            $personsByRoundTripT = 0;
+            $totalPersonsT = 0;
             $totalSumOccupied = 0;
             $totalSumReleased = 0;
 
@@ -687,11 +683,11 @@ class PhotoService
 
 
                 if ($firstPhotoInRoundTrip) {
-                    $personsByRoundTrip = $newPersons;
-//                    $personsByRoundTrip = $currentOccupation->seatingOccupied->count();
+                    $personsByRoundTripT = $newPersons;
+//                    $personsByRoundTripT = $currentOccupation->seatingOccupied->count();
                 } else {
                     if ($photo->dispatch_register_id) {
-                        $personsByRoundTrip += $newPersons;
+                        $personsByRoundTripT += $newPersons;
                     }
                 }
 
@@ -700,8 +696,8 @@ class PhotoService
                     $routeName = $dr->route->name;
                     $from = $dr->departure_time;
                     $to = $dr->arrival_time;
-//                    $totalPersons += $firstPhotoInRoundTrip ? $currentOccupation->seatingOccupied->count() : $newPersons;
-                    $totalPersons += $newPersons;
+//                    $totalPersonsT += $firstPhotoInRoundTrip ? $currentOccupation->seatingOccupied->count() : $newPersons;
+                    $totalPersonsT += $newPersons;
                 }
 
 
@@ -722,11 +718,22 @@ class PhotoService
                 $durations->put('processRekognitionCounts', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
-                // Overwrite count by maximum criteria
-                // $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value'); // get the max count between different rekognition types
-//                $maximumCriteria = $rekognitionCounts->get('faces');
+
+                #### Default Count by topologies
+                $personsByRoundTrip = $personsByRoundTripT;
+                $totalPersons = $totalPersonsT;
+
+                // Overwrite count by maximum criteria FACES or PERSONS
+//                $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value'); // get the max count between different rekognition types
+
+                ###### FACES MAX CRITERIA
+                $maximumCriteria = $rekognitionCounts->get('faces');
 //                $personsByRoundTrip = $maximumCriteria->max->value;
 //                $totalPersons = $maximumCriteria->total;
+
+                ###### AVERAGES BETWEEN TOPOLOGIES AND FACES MAX CRITERIA
+                $personsByRoundTrip = floor((($personsByRoundTripT ? : $maximumCriteria->max->value) + $maximumCriteria->max->value) / 2);
+                $totalPersons = floor(($totalPersonsT + $maximumCriteria->total) / 2);
 
                 $personsByRoundTrips = collect([])->push((object)[
                     'id' => $photo->dispatch_register_id,
@@ -940,3 +947,4 @@ class PhotoService
         }
     }
 }
+
