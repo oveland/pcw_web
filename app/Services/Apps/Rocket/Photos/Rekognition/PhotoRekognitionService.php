@@ -38,10 +38,6 @@ abstract class PhotoRekognitionService
      */
     function __construct(PhotoZone $photoZone, ProfileSeat $profileSeat)
     {
-        if (!$profileSeat) {
-            throw new Exception("Photo Rekognition Service haven't a valid profile!");
-        }
-
         $this->photoZone = $photoZone;
 
         $configService = new ConfigProfileService($profileSeat);

@@ -428,16 +428,19 @@ class PhotoService
 
         if ($withHistoricPassengers) {
             $historic = $historicByCameras->collapse()->collapse();
-            $totalByCamerasPrev = 0;
+
             DB::delete("DELETE FROM passengers WHERE date::DATE = '$date' AND vehicle_id = " . $this->vehicle->id);
 
             foreach ($drIds as $drId) {
                 $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
                 $historicDrByLocation = $historicDr->groupBy('details.location_id');
 
+                $totalByCamerasPrev = 0;
+                $totalByRoundTripPrev = 0;
+
                 foreach ($historicDrByLocation as $locationId => $locationPhotos) {
                     $totalCameras = $locationPhotos->groupBy('camera')->count();
-                    $locationPhotos = collect($locationPhotos);
+                    $locationPhotos = collect($locationPhotos)->sortBy('time');
                     $totalByCameras = 0;
                     $totalInRoundTrip = 0;
 
@@ -455,7 +458,7 @@ class PhotoService
                     $totalSeating = 0;
 
                     foreach ($locationPhotos->groupBy('camera')->sort() as $camera => $photoData) {
-                        $lastPhoto = $photoData->last();
+                        $lastPhoto = $photoData->sortBy('time')->last();
                         $details = $lastPhoto->details;
                         $prevDetails = $lastPhoto->prevDetails;
 
@@ -501,6 +504,9 @@ class PhotoService
                         $totalInRoundTrip = $totalInRoundTrip - 1;
                     }
 
+                    $totalByCameras = max([$totalByCameras, $totalByCamerasPrev]);
+                    $totalInRoundTrip = max([$totalInRoundTrip, $totalByRoundTripPrev]);
+
                     $passenger = new Passenger([
                         'date' => $lastDatePhoto,
                         'dispatch_register_id' => $drId,
@@ -519,6 +525,7 @@ class PhotoService
                     $passenger->save();
 
                     $totalByCamerasPrev = $totalByCameras;
+                    $totalByRoundTripPrev = $totalInRoundTrip;
                 }
             }
         }
@@ -718,22 +725,30 @@ class PhotoService
                 $durations->put('processRekognitionCounts', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
+                $criteriaCount = 'topologies';
+                $criteriaCount = 'max';
+                $criteriaCount = 'averages';
 
-                #### Default Count by topologies
-                $personsByRoundTrip = $personsByRoundTripT;
-                $totalPersons = $totalPersonsT;
-
-                // Overwrite count by maximum criteria FACES or PERSONS
-//                $personsByRoundTrip = $rekognitionCounts->values()->pluck('max')->max('value'); // get the max count between different rekognition types
-
-                ###### FACES MAX CRITERIA
-                $maximumCriteria = $rekognitionCounts->get('faces');
-//                $personsByRoundTrip = $maximumCriteria->max->value;
-//                $totalPersons = $maximumCriteria->total;
-
-                ###### AVERAGES BETWEEN TOPOLOGIES AND FACES MAX CRITERIA
-                $personsByRoundTrip = floor((($personsByRoundTripT ? : $maximumCriteria->max->value) + $maximumCriteria->max->value) / 2);
-                $totalPersons = floor(($totalPersonsT + $maximumCriteria->total) / 2);
+                switch ($criteriaCount) {
+                    case 'averages':
+                        ###### AVERAGES BETWEEN TOPOLOGIES AND FACES MAX CRITERIA
+                        $maximumCriteria = $rekognitionCounts->get('faces');
+                        $personsByRoundTrip = ceil((($personsByRoundTripT ?: $maximumCriteria->max->value) + $maximumCriteria->max->value) / 2);
+                        $totalPersons = ceil((($totalPersonsT ?: $maximumCriteria->total) + $maximumCriteria->total) / 2);
+                        break;
+                    case 'max':
+                        ###### FACES MAX CRITERIA
+                        $maximumCriteria = $rekognitionCounts->get('faces');
+                        $personsByRoundTrip = $maximumCriteria->max->value;
+                        $totalPersons = $maximumCriteria->total;
+                        break;
+                    case 'topologies':
+                    default:
+                        #### Default Count by topologies
+                        $personsByRoundTrip = $personsByRoundTripT;
+                        $totalPersons = $totalPersonsT;
+                        break;
+                }
 
                 $personsByRoundTrips = collect([])->push((object)[
                     'id' => $photo->dispatch_register_id,
