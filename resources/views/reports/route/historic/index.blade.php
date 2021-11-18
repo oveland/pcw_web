@@ -639,6 +639,7 @@
                                 </small>
                             @endif
 
+                            @if(Auth::user()->isAdmin())
                             <div class="play-controls text-center m-t-5">
                                 <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-1" data-placement="bottom" title="@lang('Hasta evento de activación')" onclick="setEvent(1)" data-color="green-jungle" ontouchstart="setEvent(1)">
                                     <i class="fa fa-user text-lime"></i>
@@ -652,6 +653,7 @@
                                     <i class="fa fa-user text-warning"></i>
                                 </span>
                             </div>
+                            @endif
                         </div>
                     @endif
                 </div>
@@ -855,7 +857,7 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312|| $(this).val() == 1357) {
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312 || $(this).val() == 1357 || $(this).val() == 1351 || $(this).val() == 1873) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
 

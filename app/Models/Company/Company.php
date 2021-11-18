@@ -75,6 +75,7 @@ class Company extends Model
     const COODETRANS = 30;
     const BOOTHS = 34;
     const SOTRAVALLE = 35;
+    const EXPRESO_PALMIRA = 39;
 
     /**
      * @return mixed|string
@@ -93,15 +94,19 @@ class Company extends Model
 
         $vehicles = $this->hasMany(Vehicle::class)->orderBy('number');
 
-        if ($user && !$user->isAdmin()) {
-            $userVehicleTags = $user->getVehicleTags();
+        if ($user) {
+            if (!$user->isAdmin()) {
+                $userVehicleTags = $user->getVehicleTags();
 
-            if ($userVehicleTags->isNotEmpty()) {
-                $vehicles->where(function ($query) use ($userVehicleTags) {
-                    foreach ($userVehicleTags as $tag) {
-                        $query->where('tags', 'like', "%$tag%");
-                    }
-                });
+                if ($userVehicleTags->isNotEmpty()) {
+                    $vehicles->where(function ($query) use ($userVehicleTags) {
+                        foreach ($userVehicleTags as $tag) {
+                            $query->where('tags', 'like', "%$tag%");
+                        }
+                    });
+                }
+            } else if (!$user->isSuperAdmin()) {
+                $vehicles->where('id', '<>', 1873); // Exclude vh 02 copied from company PARTICULARES. TODO: Delete when tests for GPS Syrus ends
             }
         }
 
@@ -212,7 +217,7 @@ class Company extends Model
      */
     public function hasSensorCounter()
     {
-        return collect([self::YUMBENOS, self::ALAMEDA])->contains($this->id) || auth()->user()->isAdmin();
+        return collect([self::YUMBENOS, self::ALAMEDA, self::EXPRESO_PALMIRA, self::MONTEBELLO])->contains($this->id) || auth()->user()->isAdmin();
     }
 
     /*
