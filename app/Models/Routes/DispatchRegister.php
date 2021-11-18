@@ -519,7 +519,7 @@ class DispatchRegister extends Model
                 'arrival_time_scheduled' => $this->arrival_time_scheduled,
                 'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-                'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+                'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
                 'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
                 'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
@@ -551,7 +551,7 @@ class DispatchRegister extends Model
             'arrival_time_scheduled' => $this->arrival_time_scheduled,
             'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-            'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+            'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
             'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
             'difference_time' => $this->arrival_time_difference,
@@ -671,6 +671,11 @@ class DispatchRegister extends Model
                         $subQuery = $subQuery->orWhere('route_id', intval($routeId));
                     } else {
                         $subQuery = $subQuery->where('route_id', intval($routeId));
+
+                        $route = Route::find(intval($routeId));
+                        if ($route) {
+                            $subQuery = $subQuery->orWhereIn('route_id', $route->subRoutes->pluck('id'));
+                        }
                     }
                 }
 
@@ -681,7 +686,7 @@ class DispatchRegister extends Model
         });
 
         $route = Route::find(intval($routeId));
-        if ($route && $route->as_group) {
+        if ($route && $vehicleId == 'all') {
             $query = $query->orWhereIn('route_id', $route->subRoutes->pluck('id'));
         }
 
