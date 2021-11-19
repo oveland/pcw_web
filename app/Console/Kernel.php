@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('04:00', '23:59');
             
-            $schedule->command('rocket:count --vehicle-plate=SKR-579 --pa=1 --pr=5')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=SKR-579 --pa=1 --pr=5')->everyTenMinutes();
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
 
