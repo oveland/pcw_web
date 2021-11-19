@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
 //            $schedule->command('concox:take-photo --camera=2')->cron('*/2 * * * *')->between('04:00', '23:00');
 
 
-            $schedule->command('syrus:sync-photos')->everyMinute()->between('04:00', '23:49');
+            //$schedule->command('syrus:sync-photos')->everyMinute()->between('04:00', '23:49');
 
             $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('04:00', '23:59');
             
