@@ -28,7 +28,7 @@ class ChangeUniqueIndexOnAppPhotosTable extends Migration
     {
         Schema::table('app_photos', function (Blueprint $table) {
             $table->dropUnique(['uid', 'vehicle_id']);
-            $table->unique('uid');
+            $table->unique(['uid']);
         });
     }
 }
