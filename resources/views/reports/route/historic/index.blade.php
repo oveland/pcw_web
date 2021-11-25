@@ -857,7 +857,7 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312 || $(this).val() == 1357 || $(this).val() == 1351 || $(this).val() == 1873) {
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312 || $(this).val() == 1357 || $(this).val() == 1351 || $(this).val() == 1873 || $(this).val() == 2357) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
 
