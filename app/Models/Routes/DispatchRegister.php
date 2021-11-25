@@ -519,7 +519,7 @@ class DispatchRegister extends Model
                 'arrival_time_scheduled' => $this->arrival_time_scheduled,
                 'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-                'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+                'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
                 'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
                 'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
@@ -551,7 +551,7 @@ class DispatchRegister extends Model
             'arrival_time_scheduled' => $this->arrival_time_scheduled,
             'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-            'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+            'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
             'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
             'difference_time' => $this->arrival_time_difference,
@@ -652,39 +652,45 @@ class DispatchRegister extends Model
      */
     public function scopeWhereCompanyAndRouteAndVehicle($query, Company $company, $routeId = null, $vehicleId = null)
     {
-        return $query
-            ->where(function ($query) use ($company, $routeId, $vehicleId) {
-                if ($vehicleId == 'all' || $vehicleId == null) {
-                    $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
-                } else if ($vehicleId) {
-                    $query = $query->where('vehicle_id', $vehicleId);
+        $query = $query->where(function ($query) use ($company, $routeId, $vehicleId) {
+            if ($vehicleId == 'all' || $vehicleId == null) {
+                $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+            } else if ($vehicleId) {
+                $query = $query->where('vehicle_id', $vehicleId);
+            }
+
+            $query->where(function (Builder $subQuery) use ($company, $routeId, $vehicleId) {
+                $user = Auth::user();
+
+                if ($user && $routeId == 'all') {
+                    $subQuery = $subQuery->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
                 }
 
-                $query->where(function (Builder $subQuery) use ($company, $routeId, $vehicleId) {
-                    $user = Auth::user();
+                if ($routeId != null && $routeId != 'all') {
+                    if ($company->hasADD() && $vehicleId == 'all') {
+                        $subQuery = $subQuery->orWhere('route_id', intval($routeId));
+                    } else {
+                        $subQuery = $subQuery->where('route_id', intval($routeId));
 
-                    if ($user && $routeId == 'all') {
-                        $subQuery = $subQuery->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
-                    }
-
-                    if ($routeId != null && $routeId != 'all') {
-                        if ($company->hasADD() && $vehicleId == 'all') {
-                            $subQuery = $subQuery->orWhere('route_id', intval($routeId));
-                        } else {
-                            $subQuery = $subQuery->where('route_id', intval($routeId));
-                        }
-
-                        $route = Route::find($routeId);
-                        if ($route->as_group) {
+                        $route = Route::find(intval($routeId));
+                        if ($route) {
                             $subQuery = $subQuery->orWhereIn('route_id', $route->subRoutes->pluck('id'));
                         }
                     }
+                }
 
-                    return $subQuery;
-                });
-
-                return $query;
+                return $subQuery;
             });
+
+            return $query;
+        });
+
+        $route = Route::find(intval($routeId));
+        if ($route && $vehicleId == 'all') {
+            $query = $query->orWhereIn('route_id', $route->subRoutes->pluck('id'));
+        }
+
+        return $query;
     }
 
     /**
