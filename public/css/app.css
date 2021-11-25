@@ -1915,3 +1915,7 @@ a.bg-warning:focus {
 .alert, .badge, .btn-group>.btn:not(.md-skip), .btn.btn-link:not(.md-skip):hover, .btn:not(.md-skip), .icon-btn, .label, .list-group1, .md-shadow-z-1, .note, .panel, .social-icons li>a, .social-icons.social-icons-color>li>a, .well {
     box-shadow: 0 1px 3px rgb(0 0 0 / 10%), 0px 4px 0px 0px rgb(0 0 0 / 18%);
 }
+
+.dropdown-menu.menu-export {
+    z-index: 10000;
+}
