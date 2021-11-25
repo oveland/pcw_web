@@ -68,11 +68,11 @@
                         </span>
                     @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="opacity: 20%">
                     <div class="col-md-6 col-md-offset-4 has-success">
                         <div class="checkbox">
                             <label class="text-white">
-                                <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> @lang('Remember Me')
+                                <input type="checkbox" name="remember" checked {{ old('remember') ? 'checked' : '' }}> @lang('Remember Me')
                             </label>
                         </div>
                     </div>
