@@ -843,6 +843,7 @@ class DispatchRegister extends Model
      */
     public function getTakingsAttribute()
     {
+        $this->refresh();
         $takings = $this->routeTakings;
 
         if (!$takings) {
