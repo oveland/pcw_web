@@ -37,7 +37,7 @@ class BearingRouteSheet implements FromCollection, ShouldAutoSize, Responsable, 
                 __('Vehicle') => $b->vehicle,
                 __('Departure') => $b->departure,
                 __('Route') => $b->route['name'],
-                __('Arrival') => $b->arrival,
+                __('Route time') => $b->route['time'] ?? '',
             ];
         }
 
@@ -66,6 +66,7 @@ class BearingRouteSheet implements FromCollection, ShouldAutoSize, Responsable, 
 
         $workSheet->getStyle('A' . $config->row->data->start . ":" . "C" . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $workSheet->getStyle('E' . $config->row->data->start . ":" . $totalLetter . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $workSheet->getStyle('D' . $config->row->data->start . ":" . $totalLetter . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
     }
 
     /**

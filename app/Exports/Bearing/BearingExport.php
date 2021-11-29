@@ -33,7 +33,8 @@ class BearingExport implements WithMultipleSheets
                 'departure' => '',
                 'turn' => '',
                 'route' => [
-                    'name' => ''
+                    'name' => '',
+                    'time' => '',
                 ],
                 'arrival' => '',
             ]);
