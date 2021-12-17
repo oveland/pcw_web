@@ -197,8 +197,8 @@ abstract class PhotoRekognitionService
 
         $relationSize = $heightOrig / $width;
 
-        if ($processLargeDetection || $width > $processMaxWidth) {
-            $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > 18) || ($width > 25); // CAUTION: $width > 25 works as overlap
+        if ($processLargeDetection) {
+            $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > $processMaxWidth); // CAUTION: $width > 25 works as overlap
         }
 
         $overlap = false;

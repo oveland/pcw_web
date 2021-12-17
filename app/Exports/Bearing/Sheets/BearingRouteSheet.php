@@ -37,7 +37,7 @@ class BearingRouteSheet implements FromCollection, ShouldAutoSize, Responsable, 
                 __('Vehicle') => $b->vehicle,
                 __('Departure') => $b->departure,
                 __('Route') => $b->route['name'],
-                __('Route time') => $b->route['time'] ?? '',
+                __('Duration') => '',
             ];
         }
 
@@ -67,6 +67,13 @@ class BearingRouteSheet implements FromCollection, ShouldAutoSize, Responsable, 
         $workSheet->getStyle('A' . $config->row->data->start . ":" . "C" . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $workSheet->getStyle('E' . $config->row->data->start . ":" . $totalLetter . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $workSheet->getStyle('D' . $config->row->data->start . ":" . $totalLetter . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        foreach (range($config->row->data->start + 1, $config->row->data->end) as $row) {
+            $prev = $row - 1;
+            $value = $workSheet->getCell("B$row")->getValue();
+            $prevValue = $workSheet->getCell("B$prev")->getValue();
+            if ($value && $prevValue) $workSheet->setCellValue("D$row", "=B$row-B$prev");
+        }
     }
 
     /**
@@ -76,6 +83,8 @@ class BearingRouteSheet implements FromCollection, ShouldAutoSize, Responsable, 
     {
         return [
             'A' => NumberFormat::FORMAT_NUMBER,
+            'B' => NumberFormat::FORMAT_DATE_TIME3,
+            'D' => NumberFormat::FORMAT_DATE_TIME3,
         ];
     }
 }

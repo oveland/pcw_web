@@ -87,25 +87,27 @@ class ConfigProfileService
             $activate = $rActivate ?: self::THRESHOLD_ACTIVATE;
             $release = $rRelease ?: self::THRESHOLD_RELEASE;
 
-            if ($this->profileSeat->camera == '1') {
-                $activate = 3;
-                $release = 4;
-            } else if ($this->profileSeat->camera == '2') {
-                $activate = 2;
-                $release = 10;
-            } else if ($this->profileSeat->camera == '3') {
-                $activate = 2;
-                $release = 10;
-            }
+            if ($this->vehicle->id == 1873) {
+                if ($this->profileSeat->camera == '1') {
+                    $activate = 3;
+                    $release = 4;
+                } else if ($this->profileSeat->camera == '2') {
+                    $activate = 2;
+                    $release = 10;
+                } else if ($this->profileSeat->camera == '3') {
+                    $activate = 2;
+                    $release = 10;
+                }
 
-            if (collect([5])->contains(intval($number))) { // Asientos con poca cobertura
-                $activate = 1;
-                $release = 15;
-            }
+                if (collect([5])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 15;
+                }
 
-            if (collect([13, 16])->contains(intval($number))) { // Asientos con poca cobertura
-                $activate = 2;
-                $release = 15;
+                if (collect([13, 16])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 2;
+                    $release = 15;
+                }
             }
 
 //            if (collect([9, 10, 11, 12, 13, 14, 19, 20, 21,22, 23])->contains(intval($number))) {
@@ -126,8 +128,8 @@ class ConfigProfileService
         $config['seating'] = $seatingConfig;
         $config['cameras'] = (object)[
             '1' => [
-                'largeDetection' => false,
-                'processMaxWidth' => 100,
+                'largeDetection' => true,
+                'processMaxWidth' => 40,
             ],
             '2' => [
                 'largeDetection' => false,

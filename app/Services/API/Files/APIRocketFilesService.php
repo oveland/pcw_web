@@ -110,9 +110,9 @@ class APIRocketFilesService implements APIFilesInterface
         $date = $this->request->get('date');
 
         if ($vehicle) {
-            \Artisan::call("rocket:s3:video --vehicle-plate=$vehicle->plate --date=$date");
+//            \Artisan::call("rocket:s3:video --vehicle-plate=$vehicle->plate --date=$date");
             
-            $this->log(" API run: rocket:s3:video --vehicle-plate=$vehicle->plate --date=$date");
+//            $this->log(" API run: rocket:s3:video --vehicle-plate=$vehicle->plate --date=$date");
 
             $videoService = new VideoService();
             return $videoService->for($vehicle, $date)->getVideo(false);

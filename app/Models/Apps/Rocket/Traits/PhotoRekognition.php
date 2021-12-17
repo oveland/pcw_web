@@ -4,6 +4,7 @@
 namespace App\Models\Apps\Rocket\Traits;
 
 
+use App\Models\Company\Company;
 use App\Services\AWS\RekognitionService;
 use Image;
 use Storage;
@@ -54,14 +55,17 @@ trait PhotoRekognition
     {
         $config = $this->photoRekognitionService($type)->config;
 
-        $this->effects = $config->photo->effects;
+        if (isset($config->photo)) {
+            $this->effects = $config->photo->effects;
+        }
 
         $image = $this->getImage('png', true, true);
         $image = Image::make($image)->encode('png'); // It's necessary because image has a Mask
 
         $column = "data_$type";
 
-        if ($this->dispatchRegister && $this->dispatchRegister->isActive() || true) {
+//        if ($this->dispatchRegister && $this->dispatchRegister->isActive() || true) {
+        if ($this->vehicle->company_id != 2 || true) {
             $rekognition = new RekognitionService();
             $this->$column = $rekognition->sefFile($image)->process($type);
         }

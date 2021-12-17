@@ -126,7 +126,7 @@ class VideoService
 
             if ($totalPhotos) {
                 $this->log("    *** Making video");
-                $this->command("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -b 200K $this->videoName");
+                $this->command("cd $this->localPath && ffmpeg -y -framerate 2 -pattern_type glob -i '*.jpeg' -c:v libx264 -movflags +faststart $this->videoName");
                 $this->command("cd $this->localPath && mv $this->videoName $this->videoPath");
                 $this->command("chmod -R 777 $this->videoPath", true);
             } else {
