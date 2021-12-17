@@ -132,9 +132,15 @@ trait PhotoEncode
         $image = $encode ? $image->encode($encode) : $image;
 
         if ($withMask) {
-            $pathMask = 'Apps/Rocket/Profiles/Mask/' . $this->side . '-' . $this->vehicle_id . '.png';
+            $pathMask = "Apps/Rocket/Profiles/Mask/$this->side-$this->vehicle_id.png";
+            $photoDate = $this->date->toDateString();
+            $pathMaskDate = "Apps/Rocket/Profiles/Mask/$this->side-$this->vehicle_id-$photoDate.png";
 
-            if (Storage::exists($pathMask)) {
+            if (Storage::exists($pathMaskDate)) {
+                $mask = Image::make(Storage::path($pathMaskDate));
+                $image->insert($mask, 'center');
+            }
+            elseif (Storage::exists($pathMask)) {
                 $mask = Image::make(Storage::path($pathMask));
                 $image->insert($mask, 'center');
             }
