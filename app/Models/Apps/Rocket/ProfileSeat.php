@@ -6,8 +6,8 @@ use App\Models\Vehicles\Vehicle;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 /**
  * App\Models\Apps\Rocket\ProfileSeat
@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
  * @property-read Vehicle $vehicle
  * @property string $photo
  * @property string $camera
+ * @property Carbon|null $date
  * @method static Builder|ProfileSeat newModelQuery()
  * @method static Builder|ProfileSeat newQuery()
  * @method static Builder|ProfileSeat query()
@@ -31,7 +32,6 @@ use Illuminate\Support\Str;
  * @method static Builder|ProfileSeat wherePhoto($value)
  * @mixin Eloquent
  * @method static Builder|ProfileSeat findByVehicleAndCamera(Vehicle $vehicle, $camera = 'all')
- * @property-read mixed $date
  */
 class ProfileSeat extends Model
 {
@@ -39,10 +39,24 @@ class ProfileSeat extends Model
 
     protected $fillable = ['occupation'];
 
+
     public $persistence = [
         'activate' => 2,
         'release' => 2,
     ];
+
+    /**
+     * @param $date
+     * @return string
+     */
+    public function getDateAttribute($date)
+    {
+        if (Str::contains($date, '-')) {
+            return Carbon::createFromFormat('Y-m-d', explode(' ', $date)[0])->toDateString();
+        }
+
+        return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0])->toDateString();
+    }
 
     function setPersistence($persistence)
     {
@@ -55,15 +69,6 @@ class ProfileSeat extends Model
     public function getDateFormat()
     {
         return config('app.simple_date_time_format');
-    }
-
-    public function getDateAttribute($date)
-    {
-        if (Str::contains($date, '-')) {
-            return Carbon::createFromFormat('Y-m-d H:i:s', $date);
-        }
-
-        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
     }
 
     public function vehicle()

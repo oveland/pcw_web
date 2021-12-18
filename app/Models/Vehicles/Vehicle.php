@@ -311,16 +311,19 @@ class Vehicle extends Model
         return $this->hasOne(ProfileSeat::class);
     }
 
-    /**
-     * @return ProfileSeat
-     */
-    public function getProfileSeating($camera = 'all')
+    public function getProfileSeating($camera = 'all', $date = null)
     {
-        $profileSeat = $this->profileSeat()->with('vehicle', 'vehicle.configProfile')->where('camera', $camera)->first();
+        $profileSeat = $this->profileSeat()
+            ->with('vehicle', 'vehicle.configProfile')
+            ->where('camera', $camera)
+            ->where('date', $date)
+            ->first();
+        
         if (!$profileSeat) {
             $profileSeat = new ProfileSeat();
             $profileSeat->vehicle()->associate($this);
             $profileSeat->camera = $camera;
+            $profileSeat->date = $date;
             $profileSeat->occupation = [];
             $profileSeat->save();
         }
