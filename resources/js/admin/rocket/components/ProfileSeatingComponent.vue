@@ -1,4 +1,5 @@
 <template>
+
     <div class="zone-seating-component" :style="`width: ${image.size.width}px; margin: auto`">
         <div v-if="photo">
             <photo-details-component :photo="photo"></photo-details-component>

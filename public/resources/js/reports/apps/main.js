@@ -206,7 +206,7 @@ exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base
 
 
 // module
-exports.push([module.i, "fieldset[disabled] .multiselect{pointer-events:none}.multiselect__spinner{position:absolute;right:1px;top:1px;width:48px;height:35px;background:#fff;display:block}.multiselect__spinner:after,.multiselect__spinner:before{position:absolute;content:\"\";top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border-radius:100%;border:2px solid transparent;border-top-color:#41b883;box-shadow:0 0 0 1px transparent}.multiselect__spinner:before{-webkit-animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__spinner:after{-webkit-animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__loading-enter-active,.multiselect__loading-leave-active{transition:opacity .4s ease-in-out;opacity:1}.multiselect__loading-enter,.multiselect__loading-leave-active{opacity:0}.multiselect,.multiselect__input,.multiselect__single{font-family:inherit;font-size:16px;touch-action:manipulation}.multiselect{box-sizing:content-box;display:block;position:relative;width:100%;min-height:40px;text-align:left;color:#35495e}.multiselect *{box-sizing:border-box}.multiselect:focus{outline:none}.multiselect--disabled{background:#ededed;pointer-events:none;opacity:.6}.multiselect--active{z-index:50}.multiselect--active:not(.multiselect--above) .multiselect__current,.multiselect--active:not(.multiselect--above) .multiselect__input,.multiselect--active:not(.multiselect--above) .multiselect__tags{border-bottom-left-radius:0;border-bottom-right-radius:0}.multiselect--active .multiselect__select{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.multiselect--above.multiselect--active .multiselect__current,.multiselect--above.multiselect--active .multiselect__input,.multiselect--above.multiselect--active .multiselect__tags{border-top-left-radius:0;border-top-right-radius:0}.multiselect__input,.multiselect__single{position:relative;display:inline-block;min-height:20px;line-height:20px;border:none;border-radius:5px;background:#fff;padding:0 0 0 5px;width:100%;transition:border .1s ease;box-sizing:border-box;margin-bottom:8px;vertical-align:top}.multiselect__input:-ms-input-placeholder{color:#35495e}.multiselect__input::-webkit-input-placeholder{color:#35495e}.multiselect__input::-moz-placeholder{color:#35495e}.multiselect__input::-ms-input-placeholder{color:#35495e}.multiselect__input::placeholder{color:#35495e}.multiselect__tag~.multiselect__input,.multiselect__tag~.multiselect__single{width:auto}.multiselect__input:hover,.multiselect__single:hover{border-color:#cfcfcf}.multiselect__input:focus,.multiselect__single:focus{border-color:#a8a8a8;outline:none}.multiselect__single{padding-left:5px;margin-bottom:8px}.multiselect__tags-wrap{display:inline}.multiselect__tags{min-height:40px;display:block;padding:8px 40px 0 8px;border-radius:5px;border:1px solid #e8e8e8;background:#fff;font-size:14px}.multiselect__tag{position:relative;display:inline-block;padding:4px 26px 4px 10px;border-radius:5px;margin-right:10px;color:#fff;line-height:1;background:#41b883;margin-bottom:5px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis}.multiselect__tag-icon{cursor:pointer;margin-left:7px;position:absolute;right:0;top:0;bottom:0;font-weight:700;font-style:normal;width:22px;text-align:center;line-height:22px;transition:all .2s ease;border-radius:5px}.multiselect__tag-icon:after{content:\"\\D7\";color:#266d4d;font-size:14px}.multiselect__tag-icon:focus,.multiselect__tag-icon:hover{background:#369a6e}.multiselect__tag-icon:focus:after,.multiselect__tag-icon:hover:after{color:#fff}.multiselect__current{min-height:40px;overflow:hidden;padding:8px 30px 0 12px;white-space:nowrap;border-radius:5px;border:1px solid #e8e8e8}.multiselect__current,.multiselect__select{line-height:16px;box-sizing:border-box;display:block;margin:0;text-decoration:none;cursor:pointer}.multiselect__select{position:absolute;width:40px;height:38px;right:1px;top:1px;padding:4px 8px;text-align:center;transition:-webkit-transform .2s ease;transition:transform .2s ease;transition:transform .2s ease, -webkit-transform .2s ease}.multiselect__select:before{position:relative;right:0;top:65%;color:#999;margin-top:4px;border-color:#999 transparent transparent;border-style:solid;border-width:5px 5px 0;content:\"\"}.multiselect__placeholder{color:#adadad;display:inline-block;margin-bottom:10px;padding-top:2px}.multiselect--active .multiselect__placeholder{display:none}.multiselect__content-wrapper{position:absolute;display:block;background:#fff;width:100%;max-height:240px;overflow:auto;border:1px solid #e8e8e8;border-top:none;border-bottom-left-radius:5px;border-bottom-right-radius:5px;z-index:50;-webkit-overflow-scrolling:touch}.multiselect__content{list-style:none;display:inline-block;padding:0;margin:0;min-width:100%;vertical-align:top}.multiselect--above .multiselect__content-wrapper{bottom:100%;border-bottom-left-radius:0;border-bottom-right-radius:0;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom:none;border-top:1px solid #e8e8e8}.multiselect__content::webkit-scrollbar{display:none}.multiselect__element{display:block}.multiselect__option{display:block;padding:12px;min-height:40px;line-height:16px;text-decoration:none;text-transform:none;vertical-align:middle;position:relative;cursor:pointer;white-space:nowrap}.multiselect__option:after{top:0;right:0;position:absolute;line-height:40px;padding-right:12px;padding-left:20px;font-size:13px}.multiselect__option--highlight{background:#41b883;outline:none;color:#fff}.multiselect__option--highlight:after{content:attr(data-select);background:#41b883;color:#fff}.multiselect__option--selected{background:#f3f3f3;color:#35495e;font-weight:700}.multiselect__option--selected:after{content:attr(data-selected);color:silver}.multiselect__option--selected.multiselect__option--highlight{background:#ff6a6a;color:#fff}.multiselect__option--selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect--disabled .multiselect__current,.multiselect--disabled .multiselect__select{background:#ededed;color:#a6a6a6}.multiselect__option--disabled{background:#ededed!important;color:#a6a6a6!important;cursor:text;pointer-events:none}.multiselect__option--group{background:#ededed;color:#35495e}.multiselect__option--group.multiselect__option--highlight{background:#35495e;color:#fff}.multiselect__option--group.multiselect__option--highlight:after{background:#35495e}.multiselect__option--disabled.multiselect__option--highlight{background:#dedede}.multiselect__option--group-selected.multiselect__option--highlight{background:#ff6a6a;color:#fff}.multiselect__option--group-selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect-enter-active,.multiselect-leave-active{transition:all .15s ease}.multiselect-enter,.multiselect-leave-active{opacity:0}.multiselect__strong{margin-bottom:8px;line-height:20px;display:inline-block;vertical-align:top}[dir=rtl] .multiselect{text-align:right}[dir=rtl] .multiselect__select{right:auto;left:1px}[dir=rtl] .multiselect__tags{padding:8px 8px 0 40px}[dir=rtl] .multiselect__content{text-align:right}[dir=rtl] .multiselect__option:after{right:auto;left:0}[dir=rtl] .multiselect__clear{right:auto;left:12px}[dir=rtl] .multiselect__spinner{right:auto;left:1px}@-webkit-keyframes spinning{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(2turn);transform:rotate(2turn)}}@keyframes spinning{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(2turn);transform:rotate(2turn)}}", ""]);
+exports.push([module.i, "fieldset[disabled] .multiselect{pointer-events:none}.multiselect__spinner{position:absolute;right:1px;top:1px;width:48px;height:35px;background:#fff;display:block}.multiselect__spinner:after,.multiselect__spinner:before{position:absolute;content:\"\";top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border-radius:100%;border:2px solid transparent;border-top-color:#41b883;box-shadow:0 0 0 1px transparent}.multiselect__spinner:before{-webkit-animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__spinner:after{-webkit-animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.multiselect__loading-enter-active,.multiselect__loading-leave-active{transition:opacity .4s ease-in-out;opacity:1}.multiselect__loading-enter,.multiselect__loading-leave-active{opacity:0}.multiselect,.multiselect__input,.multiselect__single{font-family:inherit;font-size:16px;touch-action:manipulation}.multiselect{box-sizing:content-box;display:block;position:relative;width:100%;min-height:40px;text-align:left;color:#35495e}.multiselect *{box-sizing:border-box}.multiselect:focus{outline:none}.multiselect--disabled{background:#ededed;pointer-events:none;opacity:.6}.multiselect--active{z-index:50}.multiselect--active:not(.multiselect--above) .multiselect__current,.multiselect--active:not(.multiselect--above) .multiselect__input,.multiselect--active:not(.multiselect--above) .multiselect__tags{border-bottom-left-radius:0;border-bottom-right-radius:0}.multiselect--active .multiselect__select{transform:rotate(180deg)}.multiselect--above.multiselect--active .multiselect__current,.multiselect--above.multiselect--active .multiselect__input,.multiselect--above.multiselect--active .multiselect__tags{border-top-left-radius:0;border-top-right-radius:0}.multiselect__input,.multiselect__single{position:relative;display:inline-block;min-height:20px;line-height:20px;border:none;border-radius:5px;background:#fff;padding:0 0 0 5px;width:100%;transition:border .1s ease;box-sizing:border-box;margin-bottom:8px;vertical-align:top}.multiselect__input:-ms-input-placeholder{color:#35495e}.multiselect__input::-moz-placeholder{color:#35495e}.multiselect__input::placeholder{color:#35495e}.multiselect__tag~.multiselect__input,.multiselect__tag~.multiselect__single{width:auto}.multiselect__input:hover,.multiselect__single:hover{border-color:#cfcfcf}.multiselect__input:focus,.multiselect__single:focus{border-color:#a8a8a8;outline:none}.multiselect__single{padding-left:5px;margin-bottom:8px}.multiselect__tags-wrap{display:inline}.multiselect__tags{min-height:40px;display:block;padding:8px 40px 0 8px;border-radius:5px;border:1px solid #e8e8e8;background:#fff;font-size:14px}.multiselect__tag{position:relative;display:inline-block;padding:4px 26px 4px 10px;border-radius:5px;margin-right:10px;color:#fff;line-height:1;background:#41b883;margin-bottom:5px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis}.multiselect__tag-icon{cursor:pointer;margin-left:7px;position:absolute;right:0;top:0;bottom:0;font-weight:700;font-style:normal;width:22px;text-align:center;line-height:22px;transition:all .2s ease;border-radius:5px}.multiselect__tag-icon:after{content:\"\\D7\";color:#266d4d;font-size:14px}.multiselect__tag-icon:focus,.multiselect__tag-icon:hover{background:#369a6e}.multiselect__tag-icon:focus:after,.multiselect__tag-icon:hover:after{color:#fff}.multiselect__current{min-height:40px;overflow:hidden;padding:8px 30px 0 12px;white-space:nowrap;border-radius:5px;border:1px solid #e8e8e8}.multiselect__current,.multiselect__select{line-height:16px;box-sizing:border-box;display:block;margin:0;text-decoration:none;cursor:pointer}.multiselect__select{position:absolute;width:40px;height:38px;right:1px;top:1px;padding:4px 8px;text-align:center;transition:transform .2s ease}.multiselect__select:before{position:relative;right:0;top:65%;color:#999;margin-top:4px;border-color:#999 transparent transparent;border-style:solid;border-width:5px 5px 0;content:\"\"}.multiselect__placeholder{color:#adadad;display:inline-block;margin-bottom:10px;padding-top:2px}.multiselect--active .multiselect__placeholder{display:none}.multiselect__content-wrapper{position:absolute;display:block;background:#fff;width:100%;max-height:240px;overflow:auto;border:1px solid #e8e8e8;border-top:none;border-bottom-left-radius:5px;border-bottom-right-radius:5px;z-index:50;-webkit-overflow-scrolling:touch}.multiselect__content{list-style:none;display:inline-block;padding:0;margin:0;min-width:100%;vertical-align:top}.multiselect--above .multiselect__content-wrapper{bottom:100%;border-bottom-left-radius:0;border-bottom-right-radius:0;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom:none;border-top:1px solid #e8e8e8}.multiselect__content::webkit-scrollbar{display:none}.multiselect__element{display:block}.multiselect__option{display:block;padding:12px;min-height:40px;line-height:16px;text-decoration:none;text-transform:none;vertical-align:middle;position:relative;cursor:pointer;white-space:nowrap}.multiselect__option:after{top:0;right:0;position:absolute;line-height:40px;padding-right:12px;padding-left:20px;font-size:13px}.multiselect__option--highlight{background:#41b883;outline:none;color:#fff}.multiselect__option--highlight:after{content:attr(data-select);background:#41b883;color:#fff}.multiselect__option--selected{background:#f3f3f3;color:#35495e;font-weight:700}.multiselect__option--selected:after{content:attr(data-selected);color:silver}.multiselect__option--selected.multiselect__option--highlight{background:#ff6a6a;color:#fff}.multiselect__option--selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect--disabled .multiselect__current,.multiselect--disabled .multiselect__select{background:#ededed;color:#a6a6a6}.multiselect__option--disabled{background:#ededed!important;color:#a6a6a6!important;cursor:text;pointer-events:none}.multiselect__option--group{background:#ededed;color:#35495e}.multiselect__option--group.multiselect__option--highlight{background:#35495e;color:#fff}.multiselect__option--group.multiselect__option--highlight:after{background:#35495e}.multiselect__option--disabled.multiselect__option--highlight{background:#dedede}.multiselect__option--group-selected.multiselect__option--highlight{background:#ff6a6a;color:#fff}.multiselect__option--group-selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff}.multiselect-enter-active,.multiselect-leave-active{transition:all .15s ease}.multiselect-enter,.multiselect-leave-active{opacity:0}.multiselect__strong{margin-bottom:8px;line-height:20px;display:inline-block;vertical-align:top}[dir=rtl] .multiselect{text-align:right}[dir=rtl] .multiselect__select{right:auto;left:1px}[dir=rtl] .multiselect__tags{padding:8px 8px 0 40px}[dir=rtl] .multiselect__content{text-align:right}[dir=rtl] .multiselect__option:after{right:auto;left:0}[dir=rtl] .multiselect__clear{right:auto;left:12px}[dir=rtl] .multiselect__spinner{right:auto;left:1px}@-webkit-keyframes spinning{0%{transform:rotate(0)}to{transform:rotate(2turn)}}@keyframes spinning{0%{transform:rotate(0)}to{transform:rotate(2turn)}}", ""]);
 
 // exports
 
@@ -1317,8 +1317,8 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /*!
- * vue-i18n v8.15.0 
- * (c) 2019 kazuya kawaguchi
+ * vue-i18n v8.26.7 
+ * (c) 2021 kazuya kawaguchi
  * Released under the MIT License.
  */
 /*  */
@@ -1328,17 +1328,23 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 var numberFormatKeys = [
-  'style',
+  'compactDisplay',
   'currency',
   'currencyDisplay',
+  'currencySign',
+  'localeMatcher',
+  'notation',
+  'numberingSystem',
+  'signDisplay',
+  'style',
+  'unit',
+  'unitDisplay',
   'useGrouping',
   'minimumIntegerDigits',
   'minimumFractionDigits',
   'maximumFractionDigits',
   'minimumSignificantDigits',
-  'maximumSignificantDigits',
-  'localeMatcher',
-  'formatMatcher'
+  'maximumSignificantDigits'
 ];
 
 /**
@@ -1365,8 +1371,18 @@ function error (msg, err) {
   }
 }
 
+var isArray = Array.isArray;
+
 function isObject (obj) {
   return obj !== null && typeof obj === 'object'
+}
+
+function isBoolean (val) {
+  return typeof val === 'boolean'
+}
+
+function isString (val) {
+  return typeof val === 'string'
 }
 
 var toString = Object.prototype.toString;
@@ -1379,6 +1395,10 @@ function isNull (val) {
   return val === null || val === undefined
 }
 
+function isFunction (val) {
+  return typeof val === 'function'
+}
+
 function parseArgs () {
   var args = [], len = arguments.length;
   while ( len-- ) args[ len ] = arguments[ len ];
@@ -1386,7 +1406,7 @@ function parseArgs () {
   var locale = null;
   var params = null;
   if (args.length === 1) {
-    if (isObject(args[0]) || Array.isArray(args[0])) {
+    if (isObject(args[0]) || isArray(args[0])) {
       params = args[0];
     } else if (typeof args[0] === 'string') {
       locale = args[0];
@@ -1396,7 +1416,7 @@ function parseArgs () {
       locale = args[0];
     }
     /* istanbul ignore if */
-    if (isObject(args[1]) || Array.isArray(args[1])) {
+    if (isObject(args[1]) || isArray(args[1])) {
       params = args[1];
     }
   }
@@ -1409,12 +1429,19 @@ function looseClone (obj) {
 }
 
 function remove (arr, item) {
-  if (arr.length) {
-    var index = arr.indexOf(item);
-    if (index > -1) {
-      return arr.splice(index, 1)
-    }
+  if (arr.delete(item)) {
+    return arr
   }
+}
+
+function arrayFrom (arr) {
+  var ret = [];
+  arr.forEach(function (a) { return ret.push(a); });
+  return ret
+}
+
+function includes (arr, item) {
+  return !!~arr.indexOf(item)
 }
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -1450,8 +1477,8 @@ function looseEqual (a, b) {
   var isObjectB = isObject(b);
   if (isObjectA && isObjectB) {
     try {
-      var isArrayA = Array.isArray(a);
-      var isArrayB = Array.isArray(b);
+      var isArrayA = isArray(a);
+      var isArrayB = isArray(b);
       if (isArrayA && isArrayB) {
         return a.length === b.length && a.every(function (e, i) {
           return looseEqual(e, b[i])
@@ -1475,6 +1502,38 @@ function looseEqual (a, b) {
   } else {
     return false
   }
+}
+
+/**
+ * Sanitizes html special characters from input strings. For mitigating risk of XSS attacks.
+ * @param rawText The raw input from the user that should be escaped.
+ */
+function escapeHtml(rawText) {
+  return rawText
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
+/**
+ * Escapes html tags and special symbols from all provided params which were returned from parseArgs().params.
+ * This method performs an in-place operation on the params object.
+ *
+ * @param {any} params Parameters as provided from `parseArgs().params`.
+ *                     May be either an array of strings or a string->any map.
+ *
+ * @returns The manipulated `params` object.
+ */
+function escapeParams(params) {
+  if(params != null) {
+    Object.keys(params).forEach(function (key) {
+      if(typeof(params[key]) == 'string') {
+        params[key] = escapeHtml(params[key]);
+      }
+    });
+  }
+  return params
 }
 
 /*  */
@@ -1527,136 +1586,163 @@ function extend (Vue) {
 
 /*  */
 
-var mixin = {
-  beforeCreate: function beforeCreate () {
-    var options = this.$options;
-    options.i18n = options.i18n || (options.__i18n ? {} : null);
+/**
+ * Mixin
+ * 
+ * If `bridge` mode, empty mixin is returned,
+ * else regulary mixin implementation is returned.
+ */
+function defineMixin (bridge) {
+  if ( bridge === void 0 ) bridge = false;
 
-    if (options.i18n) {
-      if (options.i18n instanceof VueI18n) {
-        // init locale messages via custom blocks
-        if (options.__i18n) {
-          try {
-            var localeMessages = {};
-            options.__i18n.forEach(function (resource) {
-              localeMessages = merge(localeMessages, JSON.parse(resource));
-            });
-            Object.keys(localeMessages).forEach(function (locale) {
-              options.i18n.mergeLocaleMessage(locale, localeMessages[locale]);
-            });
-          } catch (e) {
-            if (true) {
-              warn("Cannot parse locale messages via custom blocks.", e);
-            }
-          }
-        }
-        this._i18n = options.i18n;
-        this._i18nWatcher = this._i18n.watchI18nData();
-      } else if (isPlainObject(options.i18n)) {
-        // component local i18n
-        if (this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n) {
-          options.i18n.root = this.$root;
-          options.i18n.formatter = this.$root.$i18n.formatter;
-          options.i18n.fallbackLocale = this.$root.$i18n.fallbackLocale;
-          options.i18n.formatFallbackMessages = this.$root.$i18n.formatFallbackMessages;
-          options.i18n.silentTranslationWarn = this.$root.$i18n.silentTranslationWarn;
-          options.i18n.silentFallbackWarn = this.$root.$i18n.silentFallbackWarn;
-          options.i18n.pluralizationRules = this.$root.$i18n.pluralizationRules;
-          options.i18n.preserveDirectiveContent = this.$root.$i18n.preserveDirectiveContent;
-        }
-
-        // init locale messages via custom blocks
-        if (options.__i18n) {
-          try {
-            var localeMessages$1 = {};
-            options.__i18n.forEach(function (resource) {
-              localeMessages$1 = merge(localeMessages$1, JSON.parse(resource));
-            });
-            options.i18n.messages = localeMessages$1;
-          } catch (e) {
-            if (true) {
-              warn("Cannot parse locale messages via custom blocks.", e);
-            }
-          }
-        }
-
-        var ref = options.i18n;
-        var sharedMessages = ref.sharedMessages;
-        if (sharedMessages && isPlainObject(sharedMessages)) {
-          options.i18n.messages = merge(options.i18n.messages, sharedMessages);
-        }
-
-        this._i18n = new VueI18n(options.i18n);
-        this._i18nWatcher = this._i18n.watchI18nData();
-
-        if (options.i18n.sync === undefined || !!options.i18n.sync) {
-          this._localeWatcher = this.$i18n.watchLocale();
-        }
-      } else {
-        if (true) {
-          warn("Cannot be interpreted 'i18n' option.");
-        }
-      }
-    } else if (this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n) {
-      // root i18n
-      this._i18n = this.$root.$i18n;
-    } else if (options.parent && options.parent.$i18n && options.parent.$i18n instanceof VueI18n) {
-      // parent i18n
-      this._i18n = options.parent.$i18n;
+  function mounted () {
+    if (this !== this.$root && this.$options.__INTLIFY_META__ && this.$el) {
+      this.$el.setAttribute('data-intlify', this.$options.__INTLIFY_META__);
     }
-  },
-
-  beforeMount: function beforeMount () {
-    var options = this.$options;
-    options.i18n = options.i18n || (options.__i18n ? {} : null);
-
-    if (options.i18n) {
-      if (options.i18n instanceof VueI18n) {
-        // init locale messages via custom blocks
-        this._i18n.subscribeDataChanging(this);
-        this._subscribing = true;
-      } else if (isPlainObject(options.i18n)) {
-        this._i18n.subscribeDataChanging(this);
-        this._subscribing = true;
-      } else {
-        if (true) {
-          warn("Cannot be interpreted 'i18n' option.");
-        }
-      }
-    } else if (this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n) {
-      this._i18n.subscribeDataChanging(this);
-      this._subscribing = true;
-    } else if (options.parent && options.parent.$i18n && options.parent.$i18n instanceof VueI18n) {
-      this._i18n.subscribeDataChanging(this);
-      this._subscribing = true;
-    }
-  },
-
-  beforeDestroy: function beforeDestroy () {
-    if (!this._i18n) { return }
-
-    var self = this;
-    this.$nextTick(function () {
-      if (self._subscribing) {
-        self._i18n.unsubscribeDataChanging(self);
-        delete self._subscribing;
-      }
-
-      if (self._i18nWatcher) {
-        self._i18nWatcher();
-        self._i18n.destroyVM();
-        delete self._i18nWatcher;
-      }
-
-      if (self._localeWatcher) {
-        self._localeWatcher();
-        delete self._localeWatcher;
-      }
-
-      self._i18n = null;
-    });
   }
-};
+
+  return bridge
+    ? { mounted: mounted } // delegate `vue-i18n-bridge` mixin implementation
+    : { // regulary 
+    beforeCreate: function beforeCreate () {
+      var options = this.$options;
+      options.i18n = options.i18n || ((options.__i18nBridge || options.__i18n) ? {} : null);
+
+      if (options.i18n) {
+        if (options.i18n instanceof VueI18n) {
+          // init locale messages via custom blocks
+          if ((options.__i18nBridge || options.__i18n)) {
+            try {
+              var localeMessages = options.i18n && options.i18n.messages ? options.i18n.messages : {};
+              var _i18n = options.__i18nBridge || options.__i18n;
+              _i18n.forEach(function (resource) {
+                localeMessages = merge(localeMessages, JSON.parse(resource));
+              });
+              Object.keys(localeMessages).forEach(function (locale) {
+                options.i18n.mergeLocaleMessage(locale, localeMessages[locale]);
+              });
+            } catch (e) {
+              if (true) {
+                error("Cannot parse locale messages via custom blocks.", e);
+              }
+            }
+          }
+          this._i18n = options.i18n;
+          this._i18nWatcher = this._i18n.watchI18nData();
+        } else if (isPlainObject(options.i18n)) {
+          var rootI18n = this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n
+            ? this.$root.$i18n
+            : null;
+          // component local i18n
+          if (rootI18n) {
+            options.i18n.root = this.$root;
+            options.i18n.formatter = rootI18n.formatter;
+            options.i18n.fallbackLocale = rootI18n.fallbackLocale;
+            options.i18n.formatFallbackMessages = rootI18n.formatFallbackMessages;
+            options.i18n.silentTranslationWarn = rootI18n.silentTranslationWarn;
+            options.i18n.silentFallbackWarn = rootI18n.silentFallbackWarn;
+            options.i18n.pluralizationRules = rootI18n.pluralizationRules;
+            options.i18n.preserveDirectiveContent = rootI18n.preserveDirectiveContent;
+          }
+
+          // init locale messages via custom blocks
+          if ((options.__i18nBridge || options.__i18n)) {
+            try {
+              var localeMessages$1 = options.i18n && options.i18n.messages ? options.i18n.messages : {};
+              var _i18n$1 = options.__i18nBridge || options.__i18n;
+              _i18n$1.forEach(function (resource) {
+                localeMessages$1 = merge(localeMessages$1, JSON.parse(resource));
+              });
+              options.i18n.messages = localeMessages$1;
+            } catch (e) {
+              if (true) {
+                warn("Cannot parse locale messages via custom blocks.", e);
+              }
+            }
+          }
+
+          var ref = options.i18n;
+          var sharedMessages = ref.sharedMessages;
+          if (sharedMessages && isPlainObject(sharedMessages)) {
+            options.i18n.messages = merge(options.i18n.messages, sharedMessages);
+          }
+
+          this._i18n = new VueI18n(options.i18n);
+          this._i18nWatcher = this._i18n.watchI18nData();
+
+          if (options.i18n.sync === undefined || !!options.i18n.sync) {
+            this._localeWatcher = this.$i18n.watchLocale();
+          }
+
+          if (rootI18n) {
+            rootI18n.onComponentInstanceCreated(this._i18n);
+          }
+        } else {
+          if (true) {
+            warn("Cannot be interpreted 'i18n' option.");
+          }
+        }
+      } else if (this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n) {
+        // root i18n
+        this._i18n = this.$root.$i18n;
+      } else if (options.parent && options.parent.$i18n && options.parent.$i18n instanceof VueI18n) {
+        // parent i18n
+        this._i18n = options.parent.$i18n;
+      }
+    },
+
+    beforeMount: function beforeMount () {
+      var options = this.$options;
+      options.i18n = options.i18n || ((options.__i18nBridge || options.__i18n) ? {} : null);
+
+      if (options.i18n) {
+        if (options.i18n instanceof VueI18n) {
+          // init locale messages via custom blocks
+          this._i18n.subscribeDataChanging(this);
+          this._subscribing = true;
+        } else if (isPlainObject(options.i18n)) {
+          this._i18n.subscribeDataChanging(this);
+          this._subscribing = true;
+        } else {
+          if (true) {
+            warn("Cannot be interpreted 'i18n' option.");
+          }
+        }
+      } else if (this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n) {
+        this._i18n.subscribeDataChanging(this);
+        this._subscribing = true;
+      } else if (options.parent && options.parent.$i18n && options.parent.$i18n instanceof VueI18n) {
+        this._i18n.subscribeDataChanging(this);
+        this._subscribing = true;
+      }
+    },
+
+    mounted: mounted,
+
+    beforeDestroy: function beforeDestroy () {
+      if (!this._i18n) { return }
+
+      var self = this;
+      this.$nextTick(function () {
+        if (self._subscribing) {
+          self._i18n.unsubscribeDataChanging(self);
+          delete self._subscribing;
+        }
+
+        if (self._i18nWatcher) {
+          self._i18nWatcher();
+          self._i18n.destroyVM();
+          delete self._i18nWatcher;
+        }
+
+        if (self._localeWatcher) {
+          self._localeWatcher();
+          delete self._localeWatcher;
+        }
+      });
+    }
+  }
+}
 
 /*  */
 
@@ -1665,7 +1751,8 @@ var interpolationComponent = {
   functional: true,
   props: {
     tag: {
-      type: String
+      type: [String, Boolean, Object],
+      default: 'span'
     },
     path: {
       type: String,
@@ -1704,7 +1791,7 @@ var interpolationComponent = {
         : params
     );
 
-    var tag = props.tag || 'span';
+    var tag = (!!props.tag && props.tag !== true) || props.tag === false ? props.tag : 'span';
     return tag ? h(tag, data, children) : children
   }
 };
@@ -1771,7 +1858,7 @@ var numberComponent = {
   functional: true,
   props: {
     tag: {
-      type: String,
+      type: [String, Boolean, Object],
       default: 'span'
     },
     value: {
@@ -1802,7 +1889,7 @@ var numberComponent = {
     var key = null;
     var options = null;
 
-    if (typeof props.format === 'string') {
+    if (isString(props.format)) {
       key = props.format;
     } else if (isObject(props.format)) {
       if (props.format.key) {
@@ -1813,7 +1900,7 @@ var numberComponent = {
       options = Object.keys(props.format).reduce(function (acc, prop) {
         var obj;
 
-        if (numberFormatKeys.includes(prop)) {
+        if (includes(numberFormatKeys, prop)) {
           return Object.assign({}, acc, ( obj = {}, obj[prop] = props.format[prop], obj ))
         }
         return acc
@@ -1830,11 +1917,14 @@ var numberComponent = {
       return slot ? slot(( obj = {}, obj[part.type] = part.value, obj.index = index, obj.parts = parts, obj )) : part.value
     });
 
-    return h(props.tag, {
-      attrs: data.attrs,
-      'class': data['class'],
-      staticClass: data.staticClass
-    }, values)
+    var tag = (!!props.tag && props.tag !== true) || props.tag === false ? props.tag : 'span';
+    return tag
+      ? h(tag, {
+        attrs: data.attrs,
+        'class': data['class'],
+        staticClass: data.staticClass
+      }, values)
+      : values
   }
 };
 
@@ -1917,7 +2007,7 @@ function t (el, binding, vnode) {
   }
 
   var vm = vnode.context;
-  if (choice) {
+  if (choice != null) {
     el._vt = el.textContent = (ref$1 = vm.$i18n).tc.apply(ref$1, [ path, choice ].concat( makeParams(locale, args) ));
   } else {
     el._vt = el.textContent = (ref$2 = vm.$i18n).t.apply(ref$2, [ path ].concat( makeParams(locale, args) ));
@@ -1932,7 +2022,7 @@ function parseValue (value) {
   var args;
   var choice;
 
-  if (typeof value === 'string') {
+  if (isString(value)) {
     path = value;
   } else if (isPlainObject(value)) {
     path = value.path;
@@ -1957,7 +2047,9 @@ function makeParams (locale, args) {
 
 var Vue;
 
-function install (_Vue) {
+function install (_Vue, options) {
+  if ( options === void 0 ) options = { bridge: false };
+
   /* istanbul ignore if */
   if ( true && install.installed && _Vue === Vue) {
     warn('already installed.');
@@ -1975,7 +2067,7 @@ function install (_Vue) {
   }
 
   extend(Vue);
-  Vue.mixin(mixin);
+  Vue.mixin(defineMixin(options.bridge));
   Vue.directive('t', { bind: bind, update: update, unbind: unbind });
   Vue.component(interpolationComponent.name, interpolationComponent);
   Vue.component(numberComponent.name, numberComponent);
@@ -2381,7 +2473,7 @@ I18nPath.prototype.getPathValue = function getPathValue (obj, path) {
     var i = 0;
     while (i < length) {
       var value = last[paths[i]];
-      if (value === undefined) {
+      if (value === undefined || value === null) {
         return null
       }
       last = value;
@@ -2397,12 +2489,13 @@ I18nPath.prototype.getPathValue = function getPathValue (obj, path) {
 
 
 var htmlTagMatcher = /<\/?[\w\s="/.':;#-\/]+>/;
-var linkKeyMatcher = /(?:@(?:\.[a-z]+)?:(?:[\w\-_|.]+|\([\w\-_|.]+\)))/g;
+var linkKeyMatcher = /(?:@(?:\.[a-z]+)?:(?:[\w\-_|./]+|\([\w\-_|./]+\)))/g;
 var linkKeyPrefixMatcher = /^@(?:\.([a-z]+))?:/;
 var bracketsMatcher = /[()]/g;
 var defaultModifiers = {
   'upper': function (str) { return str.toLocaleUpperCase(); },
-  'lower': function (str) { return str.toLocaleLowerCase(); }
+  'lower': function (str) { return str.toLocaleLowerCase(); },
+  'capitalize': function (str) { return ("" + (str.charAt(0).toLocaleUpperCase()) + (str.substr(1))); }
 };
 
 var defaultFormatter = new BaseFormatter();
@@ -2420,9 +2513,11 @@ var VueI18n = function VueI18n (options) {
   }
 
   var locale = options.locale || 'en-US';
-  var fallbackLocale = options.fallbackLocale || 'en-US';
+  var fallbackLocale = options.fallbackLocale === false
+    ? false
+    : options.fallbackLocale || 'en-US';
   var messages = options.messages || {};
-  var dateTimeFormats = options.dateTimeFormats || {};
+  var dateTimeFormats = options.dateTimeFormats || options.datetimeFormats || {};
   var numberFormats = options.numberFormats || {};
 
   this._vm = null;
@@ -2446,12 +2541,54 @@ var VueI18n = function VueI18n (options) {
   this._dateTimeFormatters = {};
   this._numberFormatters = {};
   this._path = new I18nPath();
-  this._dataListeners = [];
+  this._dataListeners = new Set();
+  this._componentInstanceCreatedListener = options.componentInstanceCreatedListener || null;
   this._preserveDirectiveContent = options.preserveDirectiveContent === undefined
     ? false
     : !!options.preserveDirectiveContent;
   this.pluralizationRules = options.pluralizationRules || {};
   this._warnHtmlInMessage = options.warnHtmlInMessage || 'off';
+  this._postTranslation = options.postTranslation || null;
+  this._escapeParameterHtml = options.escapeParameterHtml || false;
+
+  if ('__VUE_I18N_BRIDGE__' in options) {
+    this.__VUE_I18N_BRIDGE__ = options.__VUE_I18N_BRIDGE__;
+  }
+
+  /**
+   * @param choice {number} a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
+   * @param choicesLength {number} an overall amount of available choices
+   * @returns a final choice index
+  */
+  this.getChoiceIndex = function (choice, choicesLength) {
+    var thisPrototype = Object.getPrototypeOf(this$1);
+    if (thisPrototype && thisPrototype.getChoiceIndex) {
+      var prototypeGetChoiceIndex = (thisPrototype.getChoiceIndex);
+      return (prototypeGetChoiceIndex).call(this$1, choice, choicesLength)
+    }
+
+    // Default (old) getChoiceIndex implementation - english-compatible
+    var defaultImpl = function (_choice, _choicesLength) {
+      _choice = Math.abs(_choice);
+
+      if (_choicesLength === 2) {
+        return _choice
+          ? _choice > 1
+            ? 1
+            : 0
+          : 1
+      }
+
+      return _choice ? Math.min(_choice, 2) : 0
+    };
+
+    if (this$1.locale in this$1.pluralizationRules) {
+      return this$1.pluralizationRules[this$1.locale].apply(this$1, [choice, choicesLength])
+    } else {
+      return defaultImpl(choice, choicesLength)
+    }
+  };
+
 
   this._exist = function (message, key) {
     if (!message || !key) { return false }
@@ -2476,7 +2613,7 @@ var VueI18n = function VueI18n (options) {
   });
 };
 
-var prototypeAccessors = { vm: { configurable: true },messages: { configurable: true },dateTimeFormats: { configurable: true },numberFormats: { configurable: true },availableLocales: { configurable: true },locale: { configurable: true },fallbackLocale: { configurable: true },formatFallbackMessages: { configurable: true },missing: { configurable: true },formatter: { configurable: true },silentTranslationWarn: { configurable: true },silentFallbackWarn: { configurable: true },preserveDirectiveContent: { configurable: true },warnHtmlInMessage: { configurable: true } };
+var prototypeAccessors = { vm: { configurable: true },messages: { configurable: true },dateTimeFormats: { configurable: true },numberFormats: { configurable: true },availableLocales: { configurable: true },locale: { configurable: true },fallbackLocale: { configurable: true },formatFallbackMessages: { configurable: true },missing: { configurable: true },formatter: { configurable: true },silentTranslationWarn: { configurable: true },silentFallbackWarn: { configurable: true },preserveDirectiveContent: { configurable: true },warnHtmlInMessage: { configurable: true },postTranslation: { configurable: true },sync: { configurable: true } };
 
 VueI18n.prototype._checkLocaleMessage = function _checkLocaleMessage (locale, level, message) {
   var paths = [];
@@ -2497,7 +2634,7 @@ VueI18n.prototype._checkLocaleMessage = function _checkLocaleMessage (locale, le
           paths.pop();
         }
       });
-    } else if (Array.isArray(message)) {
+    } else if (isArray(message)) {
       message.forEach(function (item, index) {
         if (isPlainObject(item)) {
           paths.push(("[" + index + "]"));
@@ -2511,7 +2648,7 @@ VueI18n.prototype._checkLocaleMessage = function _checkLocaleMessage (locale, le
           paths.pop();
         }
       });
-    } else if (typeof message === 'string') {
+    } else if (isString(message)) {
       var ret = htmlTagMatcher.test(message);
       if (ret) {
         var msg = "Detected HTML in message '" + message + "' of keypath '" + (paths.join('')) + "' at '" + locale + "'. Consider component interpolation with '<i18n>' to avoid XSS. See https://bit.ly/2ZqJzkp";
@@ -2530,7 +2667,7 @@ VueI18n.prototype._checkLocaleMessage = function _checkLocaleMessage (locale, le
 VueI18n.prototype._initVM = function _initVM (data) {
   var silent = Vue.config.silent;
   Vue.config.silent = true;
-  this._vm = new Vue({ data: data });
+  this._vm = new Vue({ data: data, __VUE18N__INSTANCE__: true });
   Vue.config.silent = silent;
 };
 
@@ -2539,7 +2676,7 @@ VueI18n.prototype.destroyVM = function destroyVM () {
 };
 
 VueI18n.prototype.subscribeDataChanging = function subscribeDataChanging (vm) {
-  this._dataListeners.push(vm);
+  this._dataListeners.add(vm);
 };
 
 VueI18n.prototype.unsubscribeDataChanging = function unsubscribeDataChanging (vm) {
@@ -2547,25 +2684,46 @@ VueI18n.prototype.unsubscribeDataChanging = function unsubscribeDataChanging (vm
 };
 
 VueI18n.prototype.watchI18nData = function watchI18nData () {
-  var self = this;
+    var this$1 = this;
   return this._vm.$watch('$data', function () {
-    var i = self._dataListeners.length;
-    while (i--) {
+    var listeners = arrayFrom(this$1._dataListeners);
+    var i = listeners.length;
+    while(i--) {
       Vue.nextTick(function () {
-        self._dataListeners[i] && self._dataListeners[i].$forceUpdate();
+        listeners[i] && listeners[i].$forceUpdate();
       });
     }
   }, { deep: true })
 };
 
-VueI18n.prototype.watchLocale = function watchLocale () {
-  /* istanbul ignore if */
-  if (!this._sync || !this._root) { return null }
-  var target = this._vm;
-  return this._root.$i18n.vm.$watch('locale', function (val) {
-    target.$set(target, 'locale', val);
-    target.$forceUpdate();
-  }, { immediate: true })
+VueI18n.prototype.watchLocale = function watchLocale (composer) {
+  if (!composer) {
+    /* istanbul ignore if */
+    if (!this._sync || !this._root) { return null }
+    var target = this._vm;
+    return this._root.$i18n.vm.$watch('locale', function (val) {
+      target.$set(target, 'locale', val);
+      target.$forceUpdate();
+    }, { immediate: true })
+  } else {
+    // deal with vue-i18n-bridge
+    if (!this.__VUE_I18N_BRIDGE__) { return null }
+    var self = this;
+    var target$1 = this._vm;
+    return this.vm.$watch('locale', function (val) {
+      target$1.$set(target$1, 'locale', val);
+      if (self.__VUE_I18N_BRIDGE__ && composer) {
+        composer.locale.value = val;
+      }
+      target$1.$forceUpdate();
+    }, { immediate: true })
+  }
+};
+
+VueI18n.prototype.onComponentInstanceCreated = function onComponentInstanceCreated (newI18n) {
+  if (this._componentInstanceCreatedListener) {
+    this._componentInstanceCreatedListener(newI18n, this);
+  }
 };
 
 prototypeAccessors.vm.get = function () { return this._vm };
@@ -2582,6 +2740,7 @@ prototypeAccessors.locale.set = function (locale) {
 
 prototypeAccessors.fallbackLocale.get = function () { return this._vm.fallbackLocale };
 prototypeAccessors.fallbackLocale.set = function (locale) {
+  this._localeChainCache = {};
   this._vm.$set(this._vm, 'fallbackLocale', locale);
 };
 
@@ -2617,15 +2776,21 @@ prototypeAccessors.warnHtmlInMessage.set = function (level) {
   }
 };
 
+prototypeAccessors.postTranslation.get = function () { return this._postTranslation };
+prototypeAccessors.postTranslation.set = function (handler) { this._postTranslation = handler; };
+
+prototypeAccessors.sync.get = function () { return this._sync };
+prototypeAccessors.sync.set = function (val) { this._sync = val; };
+
 VueI18n.prototype._getMessages = function _getMessages () { return this._vm.messages };
 VueI18n.prototype._getDateTimeFormats = function _getDateTimeFormats () { return this._vm.dateTimeFormats };
 VueI18n.prototype._getNumberFormats = function _getNumberFormats () { return this._vm.numberFormats };
 
-VueI18n.prototype._warnDefault = function _warnDefault (locale, key, result, vm, values) {
+VueI18n.prototype._warnDefault = function _warnDefault (locale, key, result, vm, values, interpolateMode) {
   if (!isNull(result)) { return result }
   if (this._missing) {
     var missingRet = this._missing.apply(null, [locale, key, vm, values]);
-    if (typeof missingRet === 'string') {
+    if (isString(missingRet)) {
       return missingRet
     }
   } else {
@@ -2639,7 +2804,7 @@ VueI18n.prototype._warnDefault = function _warnDefault (locale, key, result, vm,
 
   if (this._formatFallbackMessages) {
     var parsedArgs = parseArgs.apply(void 0, values);
-    return this._render(key, 'string', parsedArgs.params, key)
+    return this._render(key, interpolateMode, parsedArgs.params, key)
   } else {
     return key
   }
@@ -2677,16 +2842,16 @@ VueI18n.prototype._interpolate = function _interpolate (
   if (!message) { return null }
 
   var pathRet = this._path.getPathValue(message, key);
-  if (Array.isArray(pathRet) || isPlainObject(pathRet)) { return pathRet }
+  if (isArray(pathRet) || isPlainObject(pathRet)) { return pathRet }
 
   var ret;
   if (isNull(pathRet)) {
     /* istanbul ignore else */
     if (isPlainObject(message)) {
       ret = message[key];
-      if (typeof ret !== 'string') {
+      if (!(isString(ret) || isFunction(ret))) {
         if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallback(locale, key)) {
-          warn(("Value of key '" + key + "' is not a string!"));
+          warn(("Value of key '" + key + "' is not a string or function !"));
         }
         return null
       }
@@ -2695,18 +2860,18 @@ VueI18n.prototype._interpolate = function _interpolate (
     }
   } else {
     /* istanbul ignore else */
-    if (typeof pathRet === 'string') {
+    if (isString(pathRet) || isFunction(pathRet)) {
       ret = pathRet;
     } else {
       if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallback(locale, key)) {
-        warn(("Value of key '" + key + "' is not a string!"));
+        warn(("Value of key '" + key + "' is not a string or function!"));
       }
       return null
     }
   }
 
   // Check for the existence of links within the translated string
-  if (ret.indexOf('@:') >= 0 || ret.indexOf('@.') >= 0) {
+  if (isString(ret) && (ret.indexOf('@:') >= 0 || ret.indexOf('@.') >= 0)) {
     ret = this._link(locale, message, ret, host, 'raw', values, visitedLinkStack);
   }
 
@@ -2728,6 +2893,8 @@ VueI18n.prototype._link = function _link (
   // We are going to replace each of
   // them with its translation
   var matches = ret.match(linkKeyMatcher);
+    
+  // eslint-disable-next-line no-autofix/prefer-const
   for (var idx in matches) {
     // ie compatible: filter custom array
     // prototype method
@@ -2742,7 +2909,7 @@ VueI18n.prototype._link = function _link (
     // Remove the leading @:, @.case: and the brackets
     var linkPlaceholder = link.replace(linkPrefix, '').replace(bracketsMatcher, '');
 
-    if (visitedLinkStack.includes(linkPlaceholder)) {
+    if (includes(visitedLinkStack, linkPlaceholder)) {
       if (true) {
         warn(("Circular reference found. \"" + link + "\" is already visited in the chain of " + (visitedLinkStack.reverse().join(' <- '))));
       }
@@ -2772,7 +2939,8 @@ VueI18n.prototype._link = function _link (
     }
     translated = this._warnDefault(
       locale, linkPlaceholder, translated, host,
-      Array.isArray(values) ? values : [values]
+      isArray(values) ? values : [values],
+      interpolateMode
     );
 
     if (this._modifiers.hasOwnProperty(formatterName)) {
@@ -2790,7 +2958,35 @@ VueI18n.prototype._link = function _link (
   return ret
 };
 
+VueI18n.prototype._createMessageContext = function _createMessageContext (values, formatter, path, interpolateMode) {
+    var this$1 = this;
+
+  var _list = isArray(values) ? values : [];
+  var _named = isObject(values) ? values : {};
+  var list = function (index) { return _list[index]; };
+  var named = function (key) { return _named[key]; };
+  var messages = this._getMessages();
+  var locale = this.locale;
+
+  return {
+    list: list,
+    named: named,
+    values: values,
+    formatter: formatter,
+    path: path,
+    messages: messages,
+    locale: locale,
+    linked: function (linkedKey) { return this$1._interpolate(locale, messages[locale] || {}, linkedKey, null, interpolateMode, undefined, [linkedKey]); }
+  }
+};
+
 VueI18n.prototype._render = function _render (message, interpolateMode, values, path) {
+  if (isFunction(message)) {
+    return message(
+      this._createMessageContext(values, this._formatter || defaultFormatter, path, interpolateMode)
+    )
+  }
+
   var ret = this._formatter.interpolate(message, values, path);
 
   // If the custom formatter refuses to work - apply the default one
@@ -2800,7 +2996,104 @@ VueI18n.prototype._render = function _render (message, interpolateMode, values, 
 
   // if interpolateMode is **not** 'string' ('row'),
   // return the compiled data (e.g. ['foo', VNode, 'bar']) with formatter
-  return interpolateMode === 'string' ? ret.join('') : ret
+  return interpolateMode === 'string' && !isString(ret) ? ret.join('') : ret
+};
+
+VueI18n.prototype._appendItemToChain = function _appendItemToChain (chain, item, blocks) {
+  var follow = false;
+  if (!includes(chain, item)) {
+    follow = true;
+    if (item) {
+      follow = item[item.length - 1] !== '!';
+      item = item.replace(/!/g, '');
+      chain.push(item);
+      if (blocks && blocks[item]) {
+        follow = blocks[item];
+      }
+    }
+  }
+  return follow
+};
+
+VueI18n.prototype._appendLocaleToChain = function _appendLocaleToChain (chain, locale, blocks) {
+  var follow;
+  var tokens = locale.split('-');
+  do {
+    var item = tokens.join('-');
+    follow = this._appendItemToChain(chain, item, blocks);
+    tokens.splice(-1, 1);
+  } while (tokens.length && (follow === true))
+  return follow
+};
+
+VueI18n.prototype._appendBlockToChain = function _appendBlockToChain (chain, block, blocks) {
+  var follow = true;
+  for (var i = 0; (i < block.length) && (isBoolean(follow)); i++) {
+    var locale = block[i];
+    if (isString(locale)) {
+      follow = this._appendLocaleToChain(chain, locale, blocks);
+    }
+  }
+  return follow
+};
+
+VueI18n.prototype._getLocaleChain = function _getLocaleChain (start, fallbackLocale) {
+  if (start === '') { return [] }
+
+  if (!this._localeChainCache) {
+    this._localeChainCache = {};
+  }
+
+  var chain = this._localeChainCache[start];
+  if (!chain) {
+    if (!fallbackLocale) {
+      fallbackLocale = this.fallbackLocale;
+    }
+    chain = [];
+
+    // first block defined by start
+    var block = [start];
+
+    // while any intervening block found
+    while (isArray(block)) {
+      block = this._appendBlockToChain(
+        chain,
+        block,
+        fallbackLocale
+      );
+    }
+
+    // last block defined by default
+    var defaults;
+    if (isArray(fallbackLocale)) {
+      defaults = fallbackLocale;
+    } else if (isObject(fallbackLocale)) {
+      /* $FlowFixMe */
+      if (fallbackLocale['default']) {
+        defaults = fallbackLocale['default'];
+      } else {
+        defaults = null;
+      }
+    } else {
+      defaults = fallbackLocale;
+    }
+
+    // convert defaults to array
+    if (isString(defaults)) {
+      block = [defaults];
+    } else {
+      block = defaults;
+    }
+    if (block) {
+      this._appendBlockToChain(
+        chain,
+        block,
+        null
+      );
+    }
+    this._localeChainCache[start] = chain;
+  }
+  return chain
 };
 
 VueI18n.prototype._translate = function _translate (
@@ -2812,19 +3105,20 @@ VueI18n.prototype._translate = function _translate (
   interpolateMode,
   args
 ) {
-  var res =
-    this._interpolate(locale, messages[locale], key, host, interpolateMode, args, [key]);
-  if (!isNull(res)) { return res }
-
-  res = this._interpolate(fallback, messages[fallback], key, host, interpolateMode, args, [key]);
-  if (!isNull(res)) {
-    if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
-      warn(("Fall back to translate the keypath '" + key + "' with '" + fallback + "' locale."));
+  var chain = this._getLocaleChain(locale, fallback);
+  var res;
+  for (var i = 0; i < chain.length; i++) {
+    var step = chain[i];
+    res =
+      this._interpolate(step, messages[step], key, host, interpolateMode, args, [key]);
+    if (!isNull(res)) {
+      if (step !== locale && "development" !== 'production' && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+        warn(("Fall back to translate the keypath '" + key + "' with '" + step + "' locale."));
+      }
+      return res
     }
-    return res
-  } else {
-    return null
   }
+  return null
 };
 
 VueI18n.prototype._t = function _t (key, _locale, messages, host) {
@@ -2835,6 +3129,10 @@ VueI18n.prototype._t = function _t (key, _locale, messages, host) {
   if (!key) { return '' }
 
   var parsedArgs = parseArgs.apply(void 0, values);
+  if(this._escapeParameterHtml) {
+    parsedArgs.params = escapeParams(parsedArgs.params);
+  }
+
   var locale = parsedArgs.locale || _locale;
 
   var ret = this._translate(
@@ -2849,7 +3147,11 @@ VueI18n.prototype._t = function _t (key, _locale, messages, host) {
     if (!this._root) { throw Error('unexpected error') }
     return (ref = this._root).$t.apply(ref, [ key ].concat( values ))
   } else {
-    return this._warnDefault(locale, key, ret, host, values)
+    ret = this._warnDefault(locale, key, ret, host, values, 'string');
+    if (this._postTranslation && ret !== null && ret !== undefined) {
+      ret = this._postTranslation(ret, key);
+    }
+    return ret
   }
 };
 
@@ -2871,7 +3173,7 @@ VueI18n.prototype._i = function _i (key, locale, messages, host, values) {
     if (!this._root) { throw Error('unexpected error') }
     return this._root.$i18n.i(key, locale, values)
   } else {
-    return this._warnDefault(locale, key, ret, host, [values])
+    return this._warnDefault(locale, key, ret, host, [values], 'raw')
   }
 };
 
@@ -2879,7 +3181,7 @@ VueI18n.prototype.i = function i (key, locale, values) {
   /* istanbul ignore if */
   if (!key) { return '' }
 
-  if (typeof locale !== 'string') {
+  if (!isString(locale)) {
     locale = this.locale;
   }
 
@@ -2911,40 +3213,12 @@ VueI18n.prototype._tc = function _tc (
 
 VueI18n.prototype.fetchChoice = function fetchChoice (message, choice) {
   /* istanbul ignore if */
-  if (!message && typeof message !== 'string') { return null }
+  if (!message || !isString(message)) { return null }
   var choices = message.split('|');
 
   choice = this.getChoiceIndex(choice, choices.length);
   if (!choices[choice]) { return message }
   return choices[choice].trim()
-};
-
-/**
- * @param choice {number} a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
- * @param choicesLength {number} an overall amount of available choices
- * @returns a final choice index
-*/
-VueI18n.prototype.getChoiceIndex = function getChoiceIndex (choice, choicesLength) {
-  // Default (old) getChoiceIndex implementation - english-compatible
-  var defaultImpl = function (_choice, _choicesLength) {
-    _choice = Math.abs(_choice);
-
-    if (_choicesLength === 2) {
-      return _choice
-        ? _choice > 1
-          ? 1
-          : 0
-        : 1
-    }
-
-    return _choice ? Math.min(_choice, 2) : 0
-  };
-
-  if (this.locale in this.pluralizationRules) {
-    return this.pluralizationRules[this.locale].apply(this, [choice, choicesLength])
-  } else {
-    return defaultImpl(choice, choicesLength)
-  }
 };
 
 VueI18n.prototype.tc = function tc (key, choice) {
@@ -2974,7 +3248,6 @@ VueI18n.prototype.getLocaleMessage = function getLocaleMessage (locale) {
 VueI18n.prototype.setLocaleMessage = function setLocaleMessage (locale, message) {
   if (this._warnHtmlInMessage === 'warn' || this._warnHtmlInMessage === 'error') {
     this._checkLocaleMessage(locale, this._warnHtmlInMessage, message);
-    if (this._warnHtmlInMessage === 'error') { return }
   }
   this._vm.$set(this._vm.messages, locale, message);
 };
@@ -2982,9 +3255,13 @@ VueI18n.prototype.setLocaleMessage = function setLocaleMessage (locale, message)
 VueI18n.prototype.mergeLocaleMessage = function mergeLocaleMessage (locale, message) {
   if (this._warnHtmlInMessage === 'warn' || this._warnHtmlInMessage === 'error') {
     this._checkLocaleMessage(locale, this._warnHtmlInMessage, message);
-    if (this._warnHtmlInMessage === 'error') { return }
   }
-  this._vm.$set(this._vm.messages, locale, merge(this._vm.messages[locale] || {}, message));
+  this._vm.$set(this._vm.messages, locale, merge(
+    typeof this._vm.messages[locale] !== 'undefined' && Object.keys(this._vm.messages[locale]).length
+      ? Object.assign({}, this._vm.messages[locale])
+      : {},
+    message
+  ));
 };
 
 VueI18n.prototype.getDateTimeFormat = function getDateTimeFormat (locale) {
@@ -2993,10 +3270,25 @@ VueI18n.prototype.getDateTimeFormat = function getDateTimeFormat (locale) {
 
 VueI18n.prototype.setDateTimeFormat = function setDateTimeFormat (locale, format) {
   this._vm.$set(this._vm.dateTimeFormats, locale, format);
+  this._clearDateTimeFormat(locale, format);
 };
 
 VueI18n.prototype.mergeDateTimeFormat = function mergeDateTimeFormat (locale, format) {
   this._vm.$set(this._vm.dateTimeFormats, locale, merge(this._vm.dateTimeFormats[locale] || {}, format));
+  this._clearDateTimeFormat(locale, format);
+};
+
+VueI18n.prototype._clearDateTimeFormat = function _clearDateTimeFormat (locale, format) {
+  // eslint-disable-next-line no-autofix/prefer-const
+  for (var key in format) {
+    var id = locale + "__" + key;
+
+    if (!this._dateTimeFormatters.hasOwnProperty(id)) {
+      continue
+    }
+
+    delete this._dateTimeFormatters[id];
+  }
 };
 
 VueI18n.prototype._localizeDateTime = function _localizeDateTime (
@@ -3009,13 +3301,20 @@ VueI18n.prototype._localizeDateTime = function _localizeDateTime (
   var _locale = locale;
   var formats = dateTimeFormats[_locale];
 
-  // fallback locale
-  if (isNull(formats) || isNull(formats[key])) {
-    if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
-      warn(("Fall back to '" + fallback + "' datetime formats from '" + locale + "' datetime formats."));
+  var chain = this._getLocaleChain(locale, fallback);
+  for (var i = 0; i < chain.length; i++) {
+    var current = _locale;
+    var step = chain[i];
+    formats = dateTimeFormats[step];
+    _locale = step;
+    // fallback locale
+    if (isNull(formats) || isNull(formats[key])) {
+      if (step !== locale && "development" !== 'production' && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+        warn(("Fall back to '" + step + "' datetime formats from '" + current + "' datetime formats."));
+      }
+    } else {
+      break
     }
-    _locale = fallback;
-    formats = dateTimeFormats[_locale];
   }
 
   if (isNull(formats) || isNull(formats[key])) {
@@ -3064,7 +3363,7 @@ VueI18n.prototype.d = function d (value) {
   var key = null;
 
   if (args.length === 1) {
-    if (typeof args[0] === 'string') {
+    if (isString(args[0])) {
       key = args[0];
     } else if (isObject(args[0])) {
       if (args[0].locale) {
@@ -3075,10 +3374,10 @@ VueI18n.prototype.d = function d (value) {
       }
     }
   } else if (args.length === 2) {
-    if (typeof args[0] === 'string') {
+    if (isString(args[0])) {
       key = args[0];
     }
-    if (typeof args[1] === 'string') {
+    if (isString(args[1])) {
       locale = args[1];
     }
   }
@@ -3092,10 +3391,25 @@ VueI18n.prototype.getNumberFormat = function getNumberFormat (locale) {
 
 VueI18n.prototype.setNumberFormat = function setNumberFormat (locale, format) {
   this._vm.$set(this._vm.numberFormats, locale, format);
+  this._clearNumberFormat(locale, format);
 };
 
 VueI18n.prototype.mergeNumberFormat = function mergeNumberFormat (locale, format) {
   this._vm.$set(this._vm.numberFormats, locale, merge(this._vm.numberFormats[locale] || {}, format));
+  this._clearNumberFormat(locale, format);
+};
+
+VueI18n.prototype._clearNumberFormat = function _clearNumberFormat (locale, format) {
+  // eslint-disable-next-line no-autofix/prefer-const
+  for (var key in format) {
+    var id = locale + "__" + key;
+
+    if (!this._numberFormatters.hasOwnProperty(id)) {
+      continue
+    }
+
+    delete this._numberFormatters[id];
+  }
 };
 
 VueI18n.prototype._getNumberFormatter = function _getNumberFormatter (
@@ -3109,13 +3423,20 @@ VueI18n.prototype._getNumberFormatter = function _getNumberFormatter (
   var _locale = locale;
   var formats = numberFormats[_locale];
 
-  // fallback locale
-  if (isNull(formats) || isNull(formats[key])) {
-    if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
-      warn(("Fall back to '" + fallback + "' number formats from '" + locale + "' number formats."));
+  var chain = this._getLocaleChain(locale, fallback);
+  for (var i = 0; i < chain.length; i++) {
+    var current = _locale;
+    var step = chain[i];
+    formats = numberFormats[step];
+    _locale = step;
+    // fallback locale
+    if (isNull(formats) || isNull(formats[key])) {
+      if (step !== locale && "development" !== 'production' && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+        warn(("Fall back to '" + step + "' number formats from '" + current + "' number formats."));
+      }
+    } else {
+      break
     }
-    _locale = fallback;
-    formats = numberFormats[_locale];
   }
 
   if (isNull(formats) || isNull(formats[key])) {
@@ -3175,7 +3496,7 @@ VueI18n.prototype.n = function n (value) {
   var options = null;
 
   if (args.length === 1) {
-    if (typeof args[0] === 'string') {
+    if (isString(args[0])) {
       key = args[0];
     } else if (isObject(args[0])) {
       if (args[0].locale) {
@@ -3189,17 +3510,17 @@ VueI18n.prototype.n = function n (value) {
       options = Object.keys(args[0]).reduce(function (acc, key) {
           var obj;
 
-        if (numberFormatKeys.includes(key)) {
+        if (includes(numberFormatKeys, key)) {
           return Object.assign({}, acc, ( obj = {}, obj[key] = args[0][key], obj ))
         }
         return acc
       }, null);
     }
   } else if (args.length === 2) {
-    if (typeof args[0] === 'string') {
+    if (isString(args[0])) {
       key = args[0];
     }
-    if (typeof args[1] === 'string') {
+    if (isString(args[1])) {
       locale = args[1];
     }
   }
@@ -3254,7 +3575,7 @@ Object.defineProperty(VueI18n, 'availabilities', {
 });
 
 VueI18n.install = install;
-VueI18n.version = '8.15.0';
+VueI18n.version = '8.26.7';
 
 /* harmony default export */ __webpack_exports__["default"] = (VueI18n);
 
@@ -3272,7 +3593,7 @@ VueI18n.version = '8.15.0';
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
+var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
@@ -3284,13 +3605,13 @@ var render = function() {
           staticClass: "btn btn-success btn-sm btn-search-report",
           attrs: { type: "button" },
           on: {
-            click: function($event) {
+            click: function ($event) {
               return _vm.searchReport()
-            }
-          }
+            },
+          },
         },
         [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Search\n        ")]
-      )
+      ),
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "panel-body p-b-15" }, [
@@ -3299,7 +3620,7 @@ var render = function() {
           ? _c("div", { staticClass: "col-md-3" }, [
               _c("div", { staticClass: "form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
-                  _vm._v(_vm._s(_vm.$t("Company")))
+                  _vm._v(_vm._s(_vm.$t("Company"))),
                 ]),
                 _vm._v(" "),
                 _c(
@@ -3314,25 +3635,25 @@ var render = function() {
                         "option-height": 104,
                         searchable: true,
                         "allow-empty": true,
-                        placeholder: _vm.$t("Select a company")
+                        placeholder: _vm.$t("Select a company"),
                       },
                       on: {
-                        input: function($event) {
+                        input: function ($event) {
                           return _vm.getSearchParams()
-                        }
+                        },
                       },
                       model: {
                         value: _vm.search.company,
-                        callback: function($$v) {
+                        callback: function ($$v) {
                           _vm.$set(_vm.search, "company", $$v)
                         },
-                        expression: "search.company"
-                      }
-                    })
+                        expression: "search.company",
+                      },
+                    }),
                   ],
                   1
-                )
-              ])
+                ),
+              ]),
             ])
           : _vm._e(),
         _vm._v(" "),
@@ -3352,31 +3673,31 @@ var render = function() {
                     "option-height": 104,
                     searchable: true,
                     "allow-empty": true,
-                    placeholder: _vm.$t("Select a vehicle")
+                    placeholder: _vm.$t("Select a vehicle"),
                   },
                   on: {
-                    input: function($event) {
+                    input: function ($event) {
                       return _vm.searchReport()
-                    }
+                    },
                   },
                   model: {
                     value: _vm.search.vehicle,
-                    callback: function($$v) {
+                    callback: function ($$v) {
                       _vm.$set(_vm.search, "vehicle", $$v)
                     },
-                    expression: "search.vehicle"
-                  }
-                })
+                    expression: "search.vehicle",
+                  },
+                }),
               ],
               1
-            )
-          ])
+            ),
+          ]),
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-md-3" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { staticClass: "control-label" }, [
-              _vm._v("Date report")
+              _vm._v("Date report"),
             ]),
             _vm._v(" "),
             _c(
@@ -3388,28 +3709,28 @@ var render = function() {
                     valueType: "format",
                     "first-day-of-week": 1,
                     lang: "es",
-                    width: "100%"
+                    width: "100%",
                   },
                   on: {
-                    change: function($event) {
+                    change: function ($event) {
                       return _vm.searchReport()
-                    }
+                    },
                   },
                   model: {
                     value: _vm.search.date,
-                    callback: function($$v) {
+                    callback: function ($$v) {
                       _vm.$set(_vm.search, "date", $$v)
                     },
-                    expression: "search.date"
-                  }
-                })
+                    expression: "search.date",
+                  },
+                }),
               ],
               1
-            )
-          ])
-        ])
-      ])
-    ])
+            ),
+          ]),
+        ]),
+      ]),
+    ]),
   ])
 }
 var staticRenderFns = []
@@ -3493,7 +3814,12 @@ function normalizeComponent (
     options._ssrRegister = hook
   } else if (injectStyles) {
     hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      ? function () {
+        injectStyles.call(
+          this,
+          (options.functional ? this.parent : this).$root.$options.shadowRoot
+        )
+      }
       : injectStyles
   }
 
@@ -3502,7 +3828,7 @@ function normalizeComponent (
       // for template-only hot-reload because in that case the render fn doesn't
       // go through the normalizer
       options._injectStyles = hook
-      // register for functioal component in vue file
+      // register for functional component in vue file
       var originalRender = options.render
       options.render = function renderWithStyleInjection (h, context) {
         hook.call(context)
@@ -3537,8 +3863,8 @@ function normalizeComponent (
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../style-loader!../../css-loader??ref--6-1!../../vue-loader/lib/loaders/stylePostLoader.js!../../postcss-loader/src??ref--6-2!./vue-multiselect.min.css?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _style_loader_index_js_css_loader_index_js_ref_6_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_6_2_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
 
 /***/ }),
 
@@ -15546,7 +15872,7 @@ if (false) {} else {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-!function(e,t){ true?module.exports=t():undefined}(window,function(){return function(e){var t={};function n(a){if(t[a])return t[a].exports;var i=t[a]={i:a,l:!1,exports:{}};return e[a].call(i.exports,i,i.exports,n),i.l=!0,i.exports}return n.m=e,n.c=t,n.d=function(e,t,a){n.o(e,t)||Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:a})},n.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=3)}([function(e,t,n){var a;!function(i){"use strict";var r={},s=/d{1,4}|M{1,4}|YY(?:YY)?|S{1,3}|Do|ZZ|([HhMsDm])\1?|[aA]|"[^"]*"|'[^']*'/g,o=/\d\d?/,l=/[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i,u=/\[([^]*?)\]/gm,c=function(){};function d(e,t){for(var n=[],a=0,i=e.length;a<i;a++)n.push(e[a].substr(0,t));return n}function h(e){return function(t,n,a){var i=a[e].indexOf(n.charAt(0).toUpperCase()+n.substr(1).toLowerCase());~i&&(t.month=i)}}function p(e,t){for(e=String(e),t=t||2;e.length<t;)e="0"+e;return e}var f=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],m=["January","February","March","April","May","June","July","August","September","October","November","December"],g=d(m,3),v=d(f,3);r.i18n={dayNamesShort:v,dayNames:f,monthNamesShort:g,monthNames:m,amPm:["am","pm"],DoFn:function(e){return e+["th","st","nd","rd"][e%10>3?0:(e-e%10!=10)*e%10]}};var y={D:function(e){return e.getDate()},DD:function(e){return p(e.getDate())},Do:function(e,t){return t.DoFn(e.getDate())},d:function(e){return e.getDay()},dd:function(e){return p(e.getDay())},ddd:function(e,t){return t.dayNamesShort[e.getDay()]},dddd:function(e,t){return t.dayNames[e.getDay()]},M:function(e){return e.getMonth()+1},MM:function(e){return p(e.getMonth()+1)},MMM:function(e,t){return t.monthNamesShort[e.getMonth()]},MMMM:function(e,t){return t.monthNames[e.getMonth()]},YY:function(e){return String(e.getFullYear()).substr(2)},YYYY:function(e){return p(e.getFullYear(),4)},h:function(e){return e.getHours()%12||12},hh:function(e){return p(e.getHours()%12||12)},H:function(e){return e.getHours()},HH:function(e){return p(e.getHours())},m:function(e){return e.getMinutes()},mm:function(e){return p(e.getMinutes())},s:function(e){return e.getSeconds()},ss:function(e){return p(e.getSeconds())},S:function(e){return Math.round(e.getMilliseconds()/100)},SS:function(e){return p(Math.round(e.getMilliseconds()/10),2)},SSS:function(e){return p(e.getMilliseconds(),3)},a:function(e,t){return e.getHours()<12?t.amPm[0]:t.amPm[1]},A:function(e,t){return e.getHours()<12?t.amPm[0].toUpperCase():t.amPm[1].toUpperCase()},ZZ:function(e){var t=e.getTimezoneOffset();return(t>0?"-":"+")+p(100*Math.floor(Math.abs(t)/60)+Math.abs(t)%60,4)}},x={D:[o,function(e,t){e.day=t}],Do:[new RegExp(o.source+l.source),function(e,t){e.day=parseInt(t,10)}],M:[o,function(e,t){e.month=t-1}],YY:[o,function(e,t){var n=+(""+(new Date).getFullYear()).substr(0,2);e.year=""+(t>68?n-1:n)+t}],h:[o,function(e,t){e.hour=t}],m:[o,function(e,t){e.minute=t}],s:[o,function(e,t){e.second=t}],YYYY:[/\d{4}/,function(e,t){e.year=t}],S:[/\d/,function(e,t){e.millisecond=100*t}],SS:[/\d{2}/,function(e,t){e.millisecond=10*t}],SSS:[/\d{3}/,function(e,t){e.millisecond=t}],d:[o,c],ddd:[l,c],MMM:[l,h("monthNamesShort")],MMMM:[l,h("monthNames")],a:[l,function(e,t,n){var a=t.toLowerCase();a===n.amPm[0]?e.isPm=!1:a===n.amPm[1]&&(e.isPm=!0)}],ZZ:[/([\+\-]\d\d:?\d\d|Z)/,function(e,t){"Z"===t&&(t="+00:00");var n,a=(t+"").match(/([\+\-]|\d\d)/gi);a&&(n=60*a[1]+parseInt(a[2],10),e.timezoneOffset="+"===a[0]?n:-n)}]};x.dd=x.d,x.dddd=x.ddd,x.DD=x.D,x.mm=x.m,x.hh=x.H=x.HH=x.h,x.MM=x.M,x.ss=x.s,x.A=x.a,r.masks={default:"ddd MMM DD YYYY HH:mm:ss",shortDate:"M/D/YY",mediumDate:"MMM D, YYYY",longDate:"MMMM D, YYYY",fullDate:"dddd, MMMM D, YYYY",shortTime:"HH:mm",mediumTime:"HH:mm:ss",longTime:"HH:mm:ss.SSS"},r.format=function(e,t,n){var a=n||r.i18n;if("number"==typeof e&&(e=new Date(e)),"[object Date]"!==Object.prototype.toString.call(e)||isNaN(e.getTime()))throw new Error("Invalid Date in fecha.format");var i=[];return(t=(t=(t=r.masks[t]||t||r.masks.default).replace(u,function(e,t){return i.push(t),"??"})).replace(s,function(t){return t in y?y[t](e,a):t.slice(1,t.length-1)})).replace(/\?\?/g,function(){return i.shift()})},r.parse=function(e,t,n){var a=n||r.i18n;if("string"!=typeof t)throw new Error("Invalid format in fecha.parse");if(t=r.masks[t]||t,e.length>1e3)return!1;var i=!0,o={};if(t.replace(s,function(t){if(x[t]){var n=x[t],r=e.search(n[0]);~r?e.replace(n[0],function(t){return n[1](o,t,a),e=e.substr(r+t.length),t}):i=!1}return x[t]?"":t.slice(1,t.length-1)}),!i)return!1;var l,u=new Date;return!0===o.isPm&&null!=o.hour&&12!=+o.hour?o.hour=+o.hour+12:!1===o.isPm&&12==+o.hour&&(o.hour=0),null!=o.timezoneOffset?(o.minute=+(o.minute||0)-+o.timezoneOffset,l=new Date(Date.UTC(o.year||u.getFullYear(),o.month||0,o.day||1,o.hour||0,o.minute||0,o.second||0,o.millisecond||0))):l=new Date(o.year||u.getFullYear(),o.month||0,o.day||1,o.hour||0,o.minute||0,o.second||0,o.millisecond||0),l},void 0!==e&&e.exports?e.exports=r:void 0===(a=function(){return r}.call(t,n,t,e))||(e.exports=a)}()},function(e,t){var n=/^(attrs|props|on|nativeOn|class|style|hook)$/;function a(e,t){return function(){e&&e.apply(this,arguments),t&&t.apply(this,arguments)}}e.exports=function(e){return e.reduce(function(e,t){var i,r,s,o,l;for(s in t)if(i=e[s],r=t[s],i&&n.test(s))if("class"===s&&("string"==typeof i&&(l=i,e[s]=i={},i[l]=!0),"string"==typeof r&&(l=r,t[s]=r={},r[l]=!0)),"on"===s||"nativeOn"===s||"hook"===s)for(o in r)i[o]=a(i[o],r[o]);else if(Array.isArray(i))e[s]=i.concat(r);else if(Array.isArray(r))e[s]=[i].concat(r);else for(o in r)i[o]=r[o];else e[s]=t[s];return e},{})}},function(e,t,n){"use strict";function a(e,t){for(var n=[],a={},i=0;i<t.length;i++){var r=t[i],s=r[0],o={id:e+":"+i,css:r[1],media:r[2],sourceMap:r[3]};a[s]?a[s].parts.push(o):n.push(a[s]={id:s,parts:[o]})}return n}n.r(t),n.d(t,"default",function(){return f});var i="undefined"!=typeof document;if("undefined"!=typeof DEBUG&&DEBUG&&!i)throw new Error("vue-style-loader cannot be used in a non-browser environment. Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.");var r={},s=i&&(document.head||document.getElementsByTagName("head")[0]),o=null,l=0,u=!1,c=function(){},d=null,h="data-vue-ssr-id",p="undefined"!=typeof navigator&&/msie [6-9]\b/.test(navigator.userAgent.toLowerCase());function f(e,t,n,i){u=n,d=i||{};var s=a(e,t);return m(s),function(t){for(var n=[],i=0;i<s.length;i++){var o=s[i];(l=r[o.id]).refs--,n.push(l)}t?m(s=a(e,t)):s=[];for(i=0;i<n.length;i++){var l;if(0===(l=n[i]).refs){for(var u=0;u<l.parts.length;u++)l.parts[u]();delete r[l.id]}}}}function m(e){for(var t=0;t<e.length;t++){var n=e[t],a=r[n.id];if(a){a.refs++;for(var i=0;i<a.parts.length;i++)a.parts[i](n.parts[i]);for(;i<n.parts.length;i++)a.parts.push(v(n.parts[i]));a.parts.length>n.parts.length&&(a.parts.length=n.parts.length)}else{var s=[];for(i=0;i<n.parts.length;i++)s.push(v(n.parts[i]));r[n.id]={id:n.id,refs:1,parts:s}}}}function g(){var e=document.createElement("style");return e.type="text/css",s.appendChild(e),e}function v(e){var t,n,a=document.querySelector("style["+h+'~="'+e.id+'"]');if(a){if(u)return c;a.parentNode.removeChild(a)}if(p){var i=l++;a=o||(o=g()),t=b.bind(null,a,i,!1),n=b.bind(null,a,i,!0)}else a=g(),t=function(e,t){var n=t.css,a=t.media,i=t.sourceMap;a&&e.setAttribute("media",a);d.ssrId&&e.setAttribute(h,t.id);i&&(n+="\n/*# sourceURL="+i.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(i))))+" */");if(e.styleSheet)e.styleSheet.cssText=n;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(n))}}.bind(null,a),n=function(){a.parentNode.removeChild(a)};return t(e),function(a){if(a){if(a.css===e.css&&a.media===e.media&&a.sourceMap===e.sourceMap)return;t(e=a)}else n()}}var y,x=(y=[],function(e,t){return y[e]=t,y.filter(Boolean).join("\n")});function b(e,t,n,a){var i=n?"":a.css;if(e.styleSheet)e.styleSheet.cssText=x(t,i);else{var r=document.createTextNode(i),s=e.childNodes;s[t]&&e.removeChild(s[t]),s.length?e.insertBefore(r,s[t]):e.appendChild(r)}}},function(e,t,n){"use strict";n.r(t);var a=n(0),i=n.n(a),r=void 0,s=function(e){return r=e.target},o={bind:function(e,t,n){e["@clickoutside"]=function(a){var i=a.target,s=n&&n.context&&n.context.popupElm;!r||!i||e.contains(i)||e.contains(r)||s&&(s.contains(r)||s.contains(i))||!t.expression||!n.context[t.expression]||t.value()},document.addEventListener("mousedown",s),document.addEventListener("mouseup",e["@clickoutside"])},unbind:function(e){document.removeEventListener("mousedown",s),document.removeEventListener("mouseup",e["@clickoutside"])}};function l(e){return"[object Object]"===Object.prototype.toString.call(e)}function u(e){return e instanceof Date}function c(e){return null!==e&&void 0!==e&&!isNaN(new Date(e).getTime())}function d(e){var t=(e||"").split(":");return t.length>=2?{hours:parseInt(t[0],10),minutes:parseInt(t[1],10)}:null}function h(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"24",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"a",a=e.hours,i=(a=(a="24"===t?a:a%12||12)<10?"0"+a:a)+":"+(e.minutes<10?"0"+e.minutes:e.minutes);if("12"===t){var r=e.hours>=12?"pm":"am";"A"===n&&(r=r.toUpperCase()),i=i+" "+r}return i}function p(e,t){if(!e)return"";try{return i.a.format(new Date(e),t)}catch(e){return""}}var f={date:{value2date:function(e){return c(e)?new Date(e):null},date2value:function(e){return e}},timestamp:{value2date:function(e){return c(e)?new Date(e):null},date2value:function(e){return e&&new Date(e).getTime()}}},m={zh:{days:["日","一","二","三","四","五","六"],months:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],pickers:["未来7天","未来30天","最近7天","最近30天"],placeholder:{date:"请选择日期",dateRange:"请选择日期范围"}},en:{days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],pickers:["next 7 days","next 30 days","previous 7 days","previous 30 days"],placeholder:{date:"Select Date",dateRange:"Select Date Range"}},ro:{days:["Lun","Mar","Mie","Joi","Vin","Sâm","Dum"],months:["Ian","Feb","Mar","Apr","Mai","Iun","Iul","Aug","Sep","Oct","Noi","Dec"],pickers:["urmatoarele 7 zile","urmatoarele 30 zile","ultimele 7 zile","ultimele 30 zile"],placeholder:{date:"Selectați Data",dateRange:"Selectați Intervalul De Date"}},fr:{days:["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"],months:["Jan","Fev","Mar","Avr","Mai","Juin","Juil","Aout","Sep","Oct","Nov","Dec"],pickers:["7 jours suivants","30 jours suivants","7 jours précédents","30 jours précédents"],placeholder:{date:"Sélectionnez une date",dateRange:"Sélectionnez une période"}},es:{days:["Dom","Lun","mar","Mie","Jue","Vie","Sab"],months:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],pickers:["próximos 7 días","próximos 30 días","7 días anteriores","30 días anteriores"],placeholder:{date:"Seleccionar fecha",dateRange:"Seleccionar un rango de fechas"}},"pt-br":{days:["Dom","Seg","Ter","Qua","Quin","Sex","Sáb"],months:["Jan","Fev","Mar","Abr","Maio","Jun","Jul","Ago","Set","Out","Nov","Dez"],pickers:["próximos 7 dias","próximos 30 dias","7 dias anteriores"," 30 dias anteriores"],placeholder:{date:"Selecione uma data",dateRange:"Selecione um período"}},ru:{days:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],months:["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],pickers:["след. 7 дней","след. 30 дней","прош. 7 дней","прош. 30 дней"],placeholder:{date:"Выберите дату",dateRange:"Выберите период"}},de:{days:["So","Mo","Di","Mi","Do","Fr","Sa"],months:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],pickers:["nächsten 7 Tage","nächsten 30 Tage","vorigen 7 Tage","vorigen 30 Tage"],placeholder:{date:"Datum auswählen",dateRange:"Zeitraum auswählen"}},it:{days:["Dom","Lun","Mar","Mer","Gio","Ven","Sab"],months:["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],pickers:["successivi 7 giorni","successivi 30 giorni","precedenti 7 giorni","precedenti 30 giorni"],placeholder:{date:"Seleziona una data",dateRange:"Seleziona un intervallo date"}},cs:{days:["Ned","Pon","Úte","Stř","Čtv","Pát","Sob"],months:["Led","Úno","Bře","Dub","Kvě","Čer","Čerc","Srp","Zář","Říj","Lis","Pro"],pickers:["příštích 7 dní","příštích 30 dní","předchozích 7 dní","předchozích 30 dní"],placeholder:{date:"Vyberte datum",dateRange:"Vyberte časové rozmezí"}},sl:{days:["Ned","Pon","Tor","Sre","Čet","Pet","Sob"],months:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],pickers:["naslednjih 7 dni","naslednjih 30 dni","prejšnjih 7 dni","prejšnjih 30 dni"],placeholder:{date:"Izberite datum",dateRange:"Izberite razpon med 2 datumoma"}}},g=m.zh,v={methods:{t:function(e){for(var t=this,n=t.$options.name;t&&(!n||"DatePicker"!==n);)(t=t.$parent)&&(n=t.$options.name);for(var a=t&&t.language||g,i=e.split("."),r=a,s=void 0,o=0,l=i.length;o<l;o++){if(s=r[i[o]],o===l-1)return s;if(!s)return"";r=s}return""}}};function y(e,t){if(t){for(var n=[],a=t.offsetParent;a&&e!==a&&e.contains(a);)n.push(a),a=a.offsetParent;var i=t.offsetTop+n.reduce(function(e,t){return e+t.offsetTop},0),r=i+t.offsetHeight,s=e.scrollTop,o=s+e.clientHeight;i<s?e.scrollTop=i:r>o&&(e.scrollTop=r-e.clientHeight)}else e.scrollTop=0}var x=n(1),b=n.n(x);function w(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)}function D(e,t,n,a,i,r,s,o){var l,u="function"==typeof e?e.options:e;if(t&&(u.render=t,u.staticRenderFns=n,u._compiled=!0),a&&(u.functional=!0),r&&(u._scopeId="data-v-"+r),s?(l=function(e){(e=e||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(e=__VUE_SSR_CONTEXT__),i&&i.call(this,e),e&&e._registeredComponents&&e._registeredComponents.add(s)},u._ssrRegister=l):i&&(l=o?function(){i.call(this,this.$root.$options.shadowRoot)}:i),l)if(u.functional){u._injectStyles=l;var c=u.render;u.render=function(e,t){return l.call(t),c(e,t)}}else{var d=u.beforeCreate;u.beforeCreate=d?[].concat(d,l):[l]}return{exports:e,options:u}}var M=D({name:"CalendarPanel",components:{PanelDate:{name:"panelDate",mixins:[v],props:{value:null,startAt:null,endAt:null,dateFormat:{type:String,default:"YYYY-MM-DD"},calendarMonth:{default:(new Date).getMonth()},calendarYear:{default:(new Date).getFullYear()},firstDayOfWeek:{default:7,type:Number,validator:function(e){return e>=1&&e<=7}},disabledDate:{type:Function,default:function(){return!1}}},methods:{selectDate:function(e){var t=e.year,n=e.month,a=e.day,i=new Date(t,n,a);this.disabledDate(i)||this.$emit("select",i)},getDays:function(e){var t=this.t("days"),n=parseInt(e,10);return t.concat(t).slice(n,n+7)},getDates:function(e,t,n){var a=[],i=new Date(e,t);i.setDate(0);for(var r=(i.getDay()+7-n)%7+1,s=i.getDate()-(r-1),o=0;o<r;o++)a.push({year:e,month:t-1,day:s+o});i.setMonth(i.getMonth()+2,0);for(var l=i.getDate(),u=0;u<l;u++)a.push({year:e,month:t,day:1+u});i.setMonth(i.getMonth()+1,1);for(var c=42-(r+l),d=0;d<c;d++)a.push({year:e,month:t+1,day:1+d});return a},getCellClasses:function(e){var t=e.year,n=e.month,a=e.day,i=[],r=new Date(t,n,a).getTime(),s=(new Date).setHours(0,0,0,0),o=this.value&&new Date(this.value).setHours(0,0,0,0),l=this.startAt&&new Date(this.startAt).setHours(0,0,0,0),u=this.endAt&&new Date(this.endAt).setHours(0,0,0,0);return n<this.calendarMonth?i.push("last-month"):n>this.calendarMonth?i.push("next-month"):i.push("cur-month"),r===s&&i.push("today"),this.disabledDate(r)&&i.push("disabled"),o&&(r===o?i.push("actived"):l&&r<=o?i.push("inrange"):u&&r>=o&&i.push("inrange")),i},getCellTitle:function(e){var t=e.year,n=e.month,a=e.day;return p(new Date(t,n,a),this.dateFormat)}},render:function(e){var t=this,n=this.getDays(this.firstDayOfWeek).map(function(t){return e("th",[t])}),a=this.getDates(this.calendarYear,this.calendarMonth,this.firstDayOfWeek),i=Array.apply(null,{length:6}).map(function(n,i){var r=a.slice(7*i,7*i+7).map(function(n){var a={class:t.getCellClasses(n)};return e("td",b()([{class:"cell"},a,{attrs:{"data-year":n.year,"data-month":n.month,title:t.getCellTitle(n)},on:{click:t.selectDate.bind(t,n)}}]),[n.day])});return e("tr",[r])});return e("table",{class:"mx-panel mx-panel-date"},[e("thead",[e("tr",[n])]),e("tbody",[i])])}},PanelYear:{name:"panelYear",props:{value:null,firstYear:Number,disabledYear:Function},methods:{isDisabled:function(e){return!("function"!=typeof this.disabledYear||!this.disabledYear(e))},selectYear:function(e){this.isDisabled(e)||this.$emit("select",e)}},render:function(e){var t=this,n=10*Math.floor(this.firstYear/10),a=this.value&&new Date(this.value).getFullYear(),i=Array.apply(null,{length:10}).map(function(i,r){var s=n+r;return e("span",{class:{cell:!0,actived:a===s,disabled:t.isDisabled(s)},on:{click:t.selectYear.bind(t,s)}},[s])});return e("div",{class:"mx-panel mx-panel-year"},[i])}},PanelMonth:{name:"panelMonth",mixins:[v],props:{value:null,calendarYear:{default:(new Date).getFullYear()},disabledMonth:Function},methods:{isDisabled:function(e){return!("function"!=typeof this.disabledMonth||!this.disabledMonth(e))},selectMonth:function(e){this.isDisabled(e)||this.$emit("select",e)}},render:function(e){var t=this,n=this.t("months"),a=this.value&&new Date(this.value).getFullYear(),i=this.value&&new Date(this.value).getMonth();return n=n.map(function(n,r){return e("span",{class:{cell:!0,actived:a===t.calendarYear&&i===r,disabled:t.isDisabled(r)},on:{click:t.selectMonth.bind(t,r)}},[n])}),e("div",{class:"mx-panel mx-panel-month"},[n])}},PanelTime:{name:"panelTime",props:{timePickerOptions:{type:[Object,Function],default:function(){return null}},minuteStep:{type:Number,default:0,validator:function(e){return e>=0&&e<=60}},value:null,timeType:{type:Array,default:function(){return["24","a"]}},disabledTime:Function},computed:{currentHours:function(){return this.value?new Date(this.value).getHours():0},currentMinutes:function(){return this.value?new Date(this.value).getMinutes():0},currentSeconds:function(){return this.value?new Date(this.value).getSeconds():0}},methods:{stringifyText:function(e){return("00"+e).slice(String(e).length)},selectTime:function(e){"function"==typeof this.disabledTime&&this.disabledTime(e)||this.$emit("select",new Date(e))},pickTime:function(e){"function"==typeof this.disabledTime&&this.disabledTime(e)||this.$emit("pick",new Date(e))},getTimeSelectOptions:function(){var e=[],t=this.timePickerOptions;if(!t)return[];if("function"==typeof t)return t()||[];var n=d(t.start),a=d(t.end),i=d(t.step);if(n&&a&&i)for(var r=n.minutes+60*n.hours,s=a.minutes+60*a.hours,o=i.minutes+60*i.hours,l=Math.floor((s-r)/o),u=0;u<=l;u++){var c=r+u*o,p={hours:Math.floor(c/60),minutes:c%60};e.push({value:p,label:h.apply(void 0,[p].concat(w(this.timeType)))})}return e}},render:function(e){var t=this,n=this.value?new Date(this.value):(new Date).setHours(0,0,0,0),a="function"==typeof this.disabledTime&&this.disabledTime,i=this.getTimeSelectOptions();if(Array.isArray(i)&&i.length)return i=i.map(function(i){var r=i.value.hours,s=i.value.minutes,o=new Date(n).setHours(r,s,0);return e("li",{class:{"mx-time-picker-item":!0,cell:!0,actived:r===t.currentHours&&s===t.currentMinutes,disabled:a&&a(o)},on:{click:t.pickTime.bind(t,o)}},[i.label])}),e("div",{class:"mx-panel mx-panel-time"},[e("ul",{class:"mx-time-list"},[i])]);var r=Array.apply(null,{length:24}).map(function(i,r){var s=new Date(n).setHours(r);return e("li",{class:{cell:!0,actived:r===t.currentHours,disabled:a&&a(s)},on:{click:t.selectTime.bind(t,s)}},[t.stringifyText(r)])}),s=this.minuteStep||1,o=parseInt(60/s),l=Array.apply(null,{length:o}).map(function(i,r){var o=r*s,l=new Date(n).setMinutes(o);return e("li",{class:{cell:!0,actived:o===t.currentMinutes,disabled:a&&a(l)},on:{click:t.selectTime.bind(t,l)}},[t.stringifyText(o)])}),u=Array.apply(null,{length:60}).map(function(i,r){var s=new Date(n).setSeconds(r);return e("li",{class:{cell:!0,actived:r===t.currentSeconds,disabled:a&&a(s)},on:{click:t.selectTime.bind(t,s)}},[t.stringifyText(r)])}),c=[r,l];return 0===this.minuteStep&&c.push(u),c=c.map(function(t){return e("ul",{class:"mx-time-list",style:{width:100/c.length+"%"}},[t])}),e("div",{class:"mx-panel mx-panel-time"},[c])}}},mixins:[v,{methods:{dispatch:function(e,t,n){for(var a=this.$parent||this.$root,i=a.$options.name;a&&(!i||i!==e);)(a=a.$parent)&&(i=a.$options.name);i&&i===e&&(a=a||this).$emit.apply(a,[t].concat(n))}}}],props:{value:{default:null,validator:function(e){return null===e||c(e)}},startAt:null,endAt:null,visible:{type:Boolean,default:!1},type:{type:String,default:"date"},dateFormat:{type:String,default:"YYYY-MM-DD"},index:Number,defaultValue:{validator:function(e){return c(e)}},firstDayOfWeek:{default:7,type:Number,validator:function(e){return e>=1&&e<=7}},notBefore:{default:null,validator:function(e){return!e||c(e)}},notAfter:{default:null,validator:function(e){return!e||c(e)}},disabledDays:{type:[Array,Function],default:function(){return[]}},minuteStep:{type:Number,default:0,validator:function(e){return e>=0&&e<=60}},timePickerOptions:{type:[Object,Function],default:function(){return null}}},data:function(){var e=this.getNow(this.value),t=e.getFullYear();return{panel:"NONE",dates:[],calendarMonth:e.getMonth(),calendarYear:t,firstYear:10*Math.floor(t/10)}},computed:{now:{get:function(){return new Date(this.calendarYear,this.calendarMonth).getTime()},set:function(e){var t=new Date(e);this.calendarYear=t.getFullYear(),this.calendarMonth=t.getMonth()}},timeType:function(){return[/h+/.test(this.$parent.format)?"12":"24",/A/.test(this.$parent.format)?"A":"a"]},timeHeader:function(){return"time"===this.type?this.$parent.format:this.value&&p(this.value,this.dateFormat)},yearHeader:function(){return this.firstYear+" ~ "+(this.firstYear+9)},months:function(){return this.t("months")},notBeforeTime:function(){return this.getCriticalTime(this.notBefore)},notAfterTime:function(){return this.getCriticalTime(this.notAfter)}},watch:{value:{immediate:!0,handler:"updateNow"},visible:{immediate:!0,handler:"init"},panel:{handler:"handelPanelChange"}},methods:{handelPanelChange:function(e,t){var n=this;this.dispatch("DatePicker","panel-change",[e,t]),"YEAR"===e?this.firstYear=10*Math.floor(this.calendarYear/10):"TIME"===e&&this.$nextTick(function(){for(var e=n.$el.querySelectorAll(".mx-panel-time .mx-time-list"),t=0,a=e.length;t<a;t++){var i=e[t];y(i,i.querySelector(".actived"))}})},init:function(e){if(e){var t=this.type;"month"===t?this.showPanelMonth():"year"===t?this.showPanelYear():"time"===t?this.showPanelTime():this.showPanelDate()}else this.showPanelNone(),this.updateNow(this.value)},getNow:function(e){return e?new Date(e):this.defaultValue&&c(this.defaultValue)?new Date(this.defaultValue):new Date},updateNow:function(e){var t=this.now;this.now=this.getNow(e),this.visible&&this.now!==t&&this.dispatch("DatePicker","calendar-change",[new Date(this.now),new Date(t)])},getCriticalTime:function(e){if(!e)return null;var t=new Date(e);return"year"===this.type?new Date(t.getFullYear(),0).getTime():"month"===this.type?new Date(t.getFullYear(),t.getMonth()).getTime():"date"===this.type?t.setHours(0,0,0,0):t.getTime()},inBefore:function(e,t){return void 0===t&&(t=this.startAt),this.notBeforeTime&&e<this.notBeforeTime||t&&e<this.getCriticalTime(t)},inAfter:function(e,t){return void 0===t&&(t=this.endAt),this.notAfterTime&&e>this.notAfterTime||t&&e>this.getCriticalTime(t)},inDisabledDays:function(e){var t=this;return Array.isArray(this.disabledDays)?this.disabledDays.some(function(n){return t.getCriticalTime(n)===e}):"function"==typeof this.disabledDays&&this.disabledDays(new Date(e))},isDisabledYear:function(e){var t=new Date(e,0).getTime(),n=new Date(e+1,0).getTime()-1;return this.inBefore(n)||this.inAfter(t)||"year"===this.type&&this.inDisabledDays(t)},isDisabledMonth:function(e){var t=new Date(this.calendarYear,e).getTime(),n=new Date(this.calendarYear,e+1).getTime()-1;return this.inBefore(n)||this.inAfter(t)||"month"===this.type&&this.inDisabledDays(t)},isDisabledDate:function(e){var t=new Date(e).getTime(),n=new Date(e).setHours(23,59,59,999);return this.inBefore(n)||this.inAfter(t)||this.inDisabledDays(t)},isDisabledTime:function(e,t,n){var a=new Date(e).getTime();return this.inBefore(a,t)||this.inAfter(a,n)||this.inDisabledDays(a)},selectDate:function(e){if("datetime"===this.type){var t=new Date(e);return u(this.value)&&t.setHours(this.value.getHours(),this.value.getMinutes(),this.value.getSeconds()),this.isDisabledTime(t)&&(t.setHours(0,0,0,0),this.notBefore&&t.getTime()<new Date(this.notBefore).getTime()&&(t=new Date(this.notBefore)),this.startAt&&t.getTime()<new Date(this.startAt).getTime()&&(t=new Date(this.startAt))),this.selectTime(t),void this.showPanelTime()}this.$emit("select-date",e)},selectYear:function(e){if(this.changeCalendarYear(e),"year"===this.type.toLowerCase())return this.selectDate(new Date(this.now));this.dispatch("DatePicker","select-year",[e,this.index]),this.showPanelMonth()},selectMonth:function(e){if(this.changeCalendarMonth(e),"month"===this.type.toLowerCase())return this.selectDate(new Date(this.now));this.dispatch("DatePicker","select-month",[e,this.index]),this.showPanelDate()},selectTime:function(e){this.$emit("select-time",e,!1)},pickTime:function(e){this.$emit("select-time",e,!0)},changeCalendarYear:function(e){this.updateNow(new Date(e,this.calendarMonth))},changeCalendarMonth:function(e){this.updateNow(new Date(this.calendarYear,e))},getSibling:function(){var e=this,t=this.$parent.$children.filter(function(t){return t.$options.name===e.$options.name});return t[1^t.indexOf(this)]},handleIconMonth:function(e){var t=this.calendarMonth;this.changeCalendarMonth(t+e),this.$parent.$emit("change-calendar-month",{month:t,flag:e,vm:this,sibling:this.getSibling()})},handleIconYear:function(e){if("YEAR"===this.panel)this.changePanelYears(e);else{var t=this.calendarYear;this.changeCalendarYear(t+e),this.$parent.$emit("change-calendar-year",{year:t,flag:e,vm:this,sibling:this.getSibling()})}},handleBtnYear:function(){this.showPanelYear()},handleBtnMonth:function(){this.showPanelMonth()},handleTimeHeader:function(){"time"!==this.type&&this.showPanelDate()},changePanelYears:function(e){this.firstYear=this.firstYear+10*e},showPanelNone:function(){this.panel="NONE"},showPanelTime:function(){this.panel="TIME"},showPanelDate:function(){this.panel="DATE"},showPanelYear:function(){this.panel="YEAR"},showPanelMonth:function(){this.panel="MONTH"}}},function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",{staticClass:"mx-calendar",class:"mx-calendar-panel-"+e.panel.toLowerCase()},[n("div",{staticClass:"mx-calendar-header"},[n("a",{directives:[{name:"show",rawName:"v-show",value:"TIME"!==e.panel,expression:"panel !== 'TIME'"}],staticClass:"mx-icon-last-year",on:{click:function(t){e.handleIconYear(-1)}}},[e._v("«")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],staticClass:"mx-icon-last-month",on:{click:function(t){e.handleIconMonth(-1)}}},[e._v("‹")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"TIME"!==e.panel,expression:"panel !== 'TIME'"}],staticClass:"mx-icon-next-year",on:{click:function(t){e.handleIconYear(1)}}},[e._v("»")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],staticClass:"mx-icon-next-month",on:{click:function(t){e.handleIconMonth(1)}}},[e._v("›")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],staticClass:"mx-current-month",on:{click:e.handleBtnMonth}},[e._v(e._s(e.months[e.calendarMonth]))]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel||"MONTH"===e.panel,expression:"panel === 'DATE' || panel === 'MONTH'"}],staticClass:"mx-current-year",on:{click:e.handleBtnYear}},[e._v(e._s(e.calendarYear))]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"YEAR"===e.panel,expression:"panel === 'YEAR'"}],staticClass:"mx-current-year"},[e._v(e._s(e.yearHeader))]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"TIME"===e.panel,expression:"panel === 'TIME'"}],staticClass:"mx-time-header",on:{click:e.handleTimeHeader}},[e._v(e._s(e.timeHeader))])]),e._v(" "),n("div",{staticClass:"mx-calendar-content"},[n("panel-date",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],attrs:{value:e.value,"date-format":e.dateFormat,"calendar-month":e.calendarMonth,"calendar-year":e.calendarYear,"start-at":e.startAt,"end-at":e.endAt,"first-day-of-week":e.firstDayOfWeek,"disabled-date":e.isDisabledDate},on:{select:e.selectDate}}),e._v(" "),n("panel-year",{directives:[{name:"show",rawName:"v-show",value:"YEAR"===e.panel,expression:"panel === 'YEAR'"}],attrs:{value:e.value,"disabled-year":e.isDisabledYear,"first-year":e.firstYear},on:{select:e.selectYear}}),e._v(" "),n("panel-month",{directives:[{name:"show",rawName:"v-show",value:"MONTH"===e.panel,expression:"panel === 'MONTH'"}],attrs:{value:e.value,"disabled-month":e.isDisabledMonth,"calendar-year":e.calendarYear},on:{select:e.selectMonth}}),e._v(" "),n("panel-time",{directives:[{name:"show",rawName:"v-show",value:"TIME"===e.panel,expression:"panel === 'TIME'"}],attrs:{"minute-step":e.minuteStep,"time-picker-options":e.timePickerOptions,value:e.value,"disabled-time":e.isDisabledTime,"time-type":e.timeType},on:{select:e.selectTime,pick:e.pickTime}})],1)])},[],!1,null,null,null).exports,T=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var a in n)Object.prototype.hasOwnProperty.call(n,a)&&(e[a]=n[a])}return e},k=D({fecha:i.a,name:"DatePicker",components:{CalendarPanel:M},mixins:[v],directives:{clickoutside:o},props:{value:null,valueType:{default:"date",validator:function(e){return-1!==["timestamp","format","date"].indexOf(e)||l(e)}},placeholder:{type:String,default:null},lang:{type:[String,Object],default:"zh"},format:{type:[String,Object],default:"YYYY-MM-DD"},dateFormat:{type:String},type:{type:String,default:"date"},range:{type:Boolean,default:!1},rangeSeparator:{type:String,default:"~"},width:{type:[String,Number],default:null},confirmText:{type:String,default:"OK"},confirm:{type:Boolean,default:!1},editable:{type:Boolean,default:!0},disabled:{type:Boolean,default:!1},clearable:{type:Boolean,default:!0},shortcuts:{type:[Boolean,Array],default:!0},inputName:{type:String,default:"date"},inputClass:{type:[String,Array],default:"mx-input"},inputAttr:Object,appendToBody:{type:Boolean,default:!1},popupStyle:{type:Object}},data:function(){return{currentValue:this.range?[null,null]:null,userInput:null,popupVisible:!1,position:{}}},watch:{value:{immediate:!0,handler:"handleValueChange"},popupVisible:function(e){e?this.initCalendar():(this.userInput=null,this.blur())}},computed:{transform:function(){var e=this.valueType;return l(e)?T({},f.date,e):"format"===e?{value2date:this.parse.bind(this),date2value:this.stringify.bind(this)}:f[e]||f.date},language:function(){return l(this.lang)?T({},m.en,this.lang):m[this.lang]||m.en},innerPlaceholder:function(){return"string"==typeof this.placeholder?this.placeholder:this.range?this.t("placeholder.dateRange"):this.t("placeholder.date")},text:function(){if(null!==this.userInput)return this.userInput;var e=this.transform.value2date;return this.range?this.isValidRangeValue(this.value)?this.stringify(e(this.value[0]))+" "+this.rangeSeparator+" "+this.stringify(e(this.value[1])):"":this.isValidValue(this.value)?this.stringify(e(this.value)):""},computedWidth:function(){return"number"==typeof this.width||"string"==typeof this.width&&/^\d+$/.test(this.width)?this.width+"px":this.width},showClearIcon:function(){return!this.disabled&&this.clearable&&(this.range?this.isValidRangeValue(this.value):this.isValidValue(this.value))},innerType:function(){return String(this.type).toLowerCase()},innerShortcuts:function(){if(Array.isArray(this.shortcuts))return this.shortcuts;if(!1===this.shortcuts)return[];var e=this.t("pickers");return[{text:e[0],onClick:function(e){e.currentValue=[new Date,new Date(Date.now()+6048e5)],e.updateDate(!0)}},{text:e[1],onClick:function(e){e.currentValue=[new Date,new Date(Date.now()+2592e6)],e.updateDate(!0)}},{text:e[2],onClick:function(e){e.currentValue=[new Date(Date.now()-6048e5),new Date],e.updateDate(!0)}},{text:e[3],onClick:function(e){e.currentValue=[new Date(Date.now()-2592e6),new Date],e.updateDate(!0)}}]},innerDateFormat:function(){return this.dateFormat?this.dateFormat:"string"!=typeof this.format?"YYYY-MM-DD":"date"===this.innerType?this.format:this.format.replace(/[Hh]+.*[msSaAZ]|\[.*?\]/g,"").trim()||"YYYY-MM-DD"},innerPopupStyle:function(){return T({},this.position,this.popupStyle)}},mounted:function(){var e,t,n,a,i=this;this.appendToBody&&(this.popupElm=this.$refs.calendar,document.body.appendChild(this.popupElm)),this._displayPopup=(e=function(){i.popupVisible&&i.displayPopup()},t=200,n=0,a=null,function(){var i=this;if(!a){var r=arguments,s=function(){n=Date.now(),a=null,e.apply(i,r)};Date.now()-n>=t?s():a=setTimeout(s,t)}}),window.addEventListener("resize",this._displayPopup),window.addEventListener("scroll",this._displayPopup)},beforeDestroy:function(){this.popupElm&&this.popupElm.parentNode===document.body&&document.body.removeChild(this.popupElm),window.removeEventListener("resize",this._displayPopup),window.removeEventListener("scroll",this._displayPopup)},methods:{initCalendar:function(){this.handleValueChange(this.value),this.displayPopup()},stringify:function(e){return l(this.format)&&"function"==typeof this.format.stringify?this.format.stringify(e):p(e,this.format)},parse:function(e){return l(this.format)&&"function"==typeof this.format.parse?this.format.parse(e):function(e,t){try{return i.a.parse(e,t)||null}catch(e){return null}}(e,this.format)},isValidValue:function(e){return c((0,this.transform.value2date)(e))},isValidRangeValue:function(e){var t=this.transform.value2date;return Array.isArray(e)&&2===e.length&&this.isValidValue(e[0])&&this.isValidValue(e[1])&&t(e[1]).getTime()>=t(e[0]).getTime()},dateEqual:function(e,t){return u(e)&&u(t)&&e.getTime()===t.getTime()},rangeEqual:function(e,t){var n=this;return Array.isArray(e)&&Array.isArray(t)&&e.length===t.length&&e.every(function(e,a){return n.dateEqual(e,t[a])})},selectRange:function(e){"function"==typeof e.onClick?!1!==e.onClick(this)&&this.closePopup():(this.currentValue=[new Date(e.start),new Date(e.end)],this.updateDate(!0),this.closePopup())},clearDate:function(){var e=this.range?[null,null]:null;this.currentValue=e,this.updateDate(!0),this.$emit("clear")},confirmDate:function(){var e;(this.range?(e=this.currentValue,Array.isArray(e)&&2===e.length&&c(e[0])&&c(e[1])&&new Date(e[1]).getTime()>=new Date(e[0]).getTime()):c(this.currentValue))&&this.updateDate(!0),this.emitDate("confirm"),this.closePopup()},updateDate:function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return!(this.confirm&&!e||this.disabled)&&((this.range?!this.rangeEqual(this.value,this.currentValue):!this.dateEqual(this.value,this.currentValue))&&(this.emitDate("input"),this.emitDate("change"),!0))},emitDate:function(e){var t=this.transform.date2value,n=this.range?this.currentValue.map(t):t(this.currentValue);this.$emit(e,n)},handleValueChange:function(e){var t=this.transform.value2date;this.range?this.currentValue=this.isValidRangeValue(e)?e.map(t):[null,null]:this.currentValue=this.isValidValue(e)?t(e):null},selectDate:function(e){this.currentValue=e,this.updateDate()&&this.closePopup()},selectStartDate:function(e){this.$set(this.currentValue,0,e),this.currentValue[1]&&this.updateDate()},selectEndDate:function(e){this.$set(this.currentValue,1,e),this.currentValue[0]&&this.updateDate()},selectTime:function(e,t){this.currentValue=e,this.updateDate()&&t&&this.closePopup()},selectStartTime:function(e){this.selectStartDate(e)},selectEndTime:function(e){this.selectEndDate(e)},showPopup:function(){this.disabled||(this.popupVisible=!0)},closePopup:function(){this.popupVisible=!1},getPopupSize:function(e){var t=e.style.display,n=e.style.visibility;e.style.display="block",e.style.visibility="hidden";var a=window.getComputedStyle(e),i={width:e.offsetWidth+parseInt(a.marginLeft)+parseInt(a.marginRight),height:e.offsetHeight+parseInt(a.marginTop)+parseInt(a.marginBottom)};return e.style.display=t,e.style.visibility=n,i},displayPopup:function(){var e=document.documentElement.clientWidth,t=document.documentElement.clientHeight,n=this.$el.getBoundingClientRect(),a=this._popupRect||(this._popupRect=this.getPopupSize(this.$refs.calendar)),i={},r=0,s=0;this.appendToBody&&(r=window.pageXOffset+n.left,s=window.pageYOffset+n.top),e-n.left<a.width&&n.right<a.width?i.left=r-n.left+1+"px":n.left+n.width/2<=e/2?i.left=r+"px":i.left=r+n.width-a.width+"px",n.top<=a.height&&t-n.bottom<=a.height?i.top=s+t-n.top-a.height+"px":n.top+n.height/2<=t/2?i.top=s+n.height+"px":i.top=s-a.height+"px",i.top===this.position.top&&i.left===this.position.left||(this.position=i)},blur:function(){this.$refs.input.blur()},handleBlur:function(e){this.$emit("blur",e)},handleFocus:function(e){this.popupVisible||this.showPopup(),this.$emit("focus",e)},handleKeydown:function(e){var t=e.keyCode;9!==t&&13!==t||(e.stopPropagation(),this.handleChange(),this.userInput=null,this.closePopup())},handleInput:function(e){this.userInput=e.target.value},handleChange:function(){if(this.editable&&null!==this.userInput){var e=this.text,t=this.$refs.calendarPanel.isDisabledTime;if(!e)return void this.clearDate();if(this.range){var n=e.split(" "+this.rangeSeparator+" ");if(2===n.length){var a=this.parse(n[0]),i=this.parse(n[1]);if(a&&i&&!t(a,null,i)&&!t(i,a,null))return this.currentValue=[a,i],this.updateDate(!0),void this.closePopup()}}else{var r=this.parse(e);if(r&&!t(r,null,null))return this.currentValue=r,this.updateDate(!0),void this.closePopup()}this.$emit("input-error",e)}}}},function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",{directives:[{name:"clickoutside",rawName:"v-clickoutside",value:e.closePopup,expression:"closePopup"}],staticClass:"mx-datepicker",class:{"mx-datepicker-range":e.range,disabled:e.disabled},style:{width:e.computedWidth}},[n("div",{staticClass:"mx-input-wrapper",on:{click:function(t){return t.stopPropagation(),e.showPopup(t)}}},[n("input",e._b({ref:"input",class:e.inputClass,attrs:{name:e.inputName,type:"text",autocomplete:"off",disabled:e.disabled,readonly:!e.editable,placeholder:e.innerPlaceholder},domProps:{value:e.text},on:{keydown:e.handleKeydown,focus:e.handleFocus,blur:e.handleBlur,input:e.handleInput,change:e.handleChange}},"input",e.inputAttr,!1)),e._v(" "),e.showClearIcon?n("span",{staticClass:"mx-input-append mx-clear-wrapper",on:{click:function(t){return t.stopPropagation(),e.clearDate(t)}}},[e._t("mx-clear-icon",[n("i",{staticClass:"mx-input-icon mx-clear-icon"})])],2):e._e(),e._v(" "),n("span",{staticClass:"mx-input-append"},[e._t("calendar-icon",[n("svg",{staticClass:"mx-calendar-icon",attrs:{xmlns:"http://www.w3.org/2000/svg",version:"1.1",viewBox:"0 0 200 200"}},[n("rect",{attrs:{x:"13",y:"29",rx:"14",ry:"14",width:"174",height:"158",fill:"transparent"}}),e._v(" "),n("line",{attrs:{x1:"46",x2:"46",y1:"8",y2:"50"}}),e._v(" "),n("line",{attrs:{x1:"154",x2:"154",y1:"8",y2:"50"}}),e._v(" "),n("line",{attrs:{x1:"13",x2:"187",y1:"70",y2:"70"}}),e._v(" "),n("text",{attrs:{x:"50%",y:"135","font-size":"90","stroke-width":"1","text-anchor":"middle","dominant-baseline":"middle"}},[e._v(e._s((new Date).getDate()))])])])],2)]),e._v(" "),n("div",{directives:[{name:"show",rawName:"v-show",value:e.popupVisible,expression:"popupVisible"}],ref:"calendar",staticClass:"mx-datepicker-popup",style:e.innerPopupStyle,on:{click:function(e){e.stopPropagation(),e.preventDefault()}}},[e._t("header",[e.range&&e.innerShortcuts.length?n("div",{staticClass:"mx-shortcuts-wrapper"},e._l(e.innerShortcuts,function(t,a){return n("button",{key:a,staticClass:"mx-shortcuts",attrs:{type:"button"},on:{click:function(n){e.selectRange(t)}}},[e._v(e._s(t.text))])})):e._e()]),e._v(" "),e.range?n("div",{staticClass:"mx-range-wrapper"},[n("calendar-panel",e._b({ref:"calendarPanel",staticStyle:{"box-shadow":"1px 0 rgba(0, 0, 0, .1)"},attrs:{index:0,type:e.innerType,"date-format":e.innerDateFormat,value:e.currentValue[0],"end-at":e.currentValue[1],"start-at":null,visible:e.popupVisible},on:{"select-date":e.selectStartDate,"select-time":e.selectStartTime}},"calendar-panel",e.$attrs,!1)),e._v(" "),n("calendar-panel",e._b({attrs:{index:1,type:e.innerType,"date-format":e.innerDateFormat,value:e.currentValue[1],"start-at":e.currentValue[0],"end-at":null,visible:e.popupVisible},on:{"select-date":e.selectEndDate,"select-time":e.selectEndTime}},"calendar-panel",e.$attrs,!1))],1):n("calendar-panel",e._b({ref:"calendarPanel",attrs:{index:-1,type:e.innerType,"date-format":e.innerDateFormat,value:e.currentValue,visible:e.popupVisible},on:{"select-date":e.selectDate,"select-time":e.selectTime}},"calendar-panel",e.$attrs,!1)),e._v(" "),e._t("footer",[e.confirm?n("div",{staticClass:"mx-datepicker-footer"},[n("button",{staticClass:"mx-datepicker-btn mx-datepicker-btn-confirm",attrs:{type:"button"},on:{click:e.confirmDate}},[e._v(e._s(e.confirmText))])]):e._e()],{confirm:e.confirmDate})],2)])},[],!1,null,null,null).exports;n(6);k.install=function(e){e.component(k.name,k)},"undefined"!=typeof window&&window.Vue&&k.install(window.Vue);t.default=k},function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var n=this[t];n[2]?e.push("@media "+n[2]+"{"+n[1]+"}"):e.push(n[1])}return e.join("")},e.i=function(t,n){"string"==typeof t&&(t=[[null,t,""]]);for(var a={},i=0;i<this.length;i++){var r=this[i][0];"number"==typeof r&&(a[r]=!0)}for(i=0;i<t.length;i++){var s=t[i];"number"==typeof s[0]&&a[s[0]]||(n&&!s[2]?s[2]=n:n&&(s[2]="("+s[2]+") and ("+n+")"),e.push(s))}},e}},function(e,t,n){(e.exports=n(4)()).push([e.i,"@charset \"UTF-8\";\n.mx-datepicker {\n  position: relative;\n  display: inline-block;\n  width: 210px;\n  color: #73879c;\n  font: 14px/1.5 'Helvetica Neue', Helvetica, Arial, 'Microsoft Yahei', sans-serif; }\n  .mx-datepicker * {\n    -webkit-box-sizing: border-box;\n            box-sizing: border-box; }\n  .mx-datepicker.disabled {\n    opacity: 0.7;\n    cursor: not-allowed; }\n\n.mx-datepicker-range {\n  width: 320px; }\n\n.mx-datepicker-popup {\n  position: absolute;\n  margin-top: 1px;\n  margin-bottom: 1px;\n  border: 1px solid #d9d9d9;\n  background-color: #fff;\n  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);\n          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);\n  z-index: 1000; }\n\n.mx-input-wrapper {\n  position: relative; }\n  .mx-input-wrapper .mx-clear-wrapper {\n    display: none; }\n  .mx-input-wrapper:hover .mx-clear-wrapper {\n    display: block; }\n  .mx-input-wrapper:hover .mx-clear-wrapper + .mx-input-append {\n    display: none; }\n\n.mx-input {\n  display: inline-block;\n  width: 100%;\n  height: 34px;\n  padding: 6px 30px;\n  padding-left: 10px;\n  font-size: 14px;\n  line-height: 1.4;\n  color: #555;\n  background-color: #fff;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }\n  .mx-input:disabled, .mx-input.disabled {\n    opacity: 0.7;\n    cursor: not-allowed; }\n  .mx-input:focus {\n    outline: none; }\n  .mx-input::-ms-clear {\n    display: none; }\n\n.mx-input-append {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 30px;\n  height: 100%;\n  padding: 6px; }\n\n.mx-input-icon {\n  display: inline-block;\n  width: 100%;\n  height: 100%;\n  font-style: normal;\n  color: #555;\n  text-align: center;\n  cursor: pointer; }\n\n.mx-calendar-icon {\n  width: 100%;\n  height: 100%;\n  color: #555;\n  stroke-width: 8px;\n  stroke: currentColor;\n  fill: currentColor; }\n\n.mx-clear-icon::before {\n  display: inline-block;\n  content: '\\2716';\n  vertical-align: middle; }\n\n.mx-clear-icon::after {\n  content: '';\n  display: inline-block;\n  width: 0;\n  height: 100%;\n  vertical-align: middle; }\n\n.mx-range-wrapper {\n  width: 496px;\n  overflow: hidden; }\n\n.mx-shortcuts-wrapper {\n  text-align: left;\n  padding: 0 12px;\n  line-height: 34px;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.05); }\n  .mx-shortcuts-wrapper .mx-shortcuts {\n    background: none;\n    outline: none;\n    border: 0;\n    color: #48576a;\n    margin: 0;\n    padding: 0;\n    white-space: nowrap;\n    cursor: pointer; }\n    .mx-shortcuts-wrapper .mx-shortcuts:hover {\n      color: #419dec; }\n    .mx-shortcuts-wrapper .mx-shortcuts:after {\n      content: '|';\n      margin: 0 10px;\n      color: #48576a; }\n    .mx-shortcuts-wrapper .mx-shortcuts:last-child::after {\n      display: none; }\n\n.mx-datepicker-footer {\n  padding: 4px;\n  clear: both;\n  text-align: right;\n  border-top: 1px solid rgba(0, 0, 0, 0.05); }\n\n.mx-datepicker-btn {\n  font-size: 12px;\n  line-height: 1;\n  padding: 7px 15px;\n  margin: 0 5px;\n  cursor: pointer;\n  background-color: transparent;\n  outline: none;\n  border: none;\n  border-radius: 3px; }\n\n.mx-datepicker-btn-confirm {\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  color: #73879c; }\n  .mx-datepicker-btn-confirm:hover {\n    color: #1284e7;\n    border-color: #1284e7; }\n\n/* 日历组件 */\n.mx-calendar {\n  float: left;\n  color: #73879c;\n  padding: 6px 12px;\n  font: 14px/1.5 Helvetica Neue, Helvetica, Arial, Microsoft Yahei, sans-serif; }\n  .mx-calendar * {\n    -webkit-box-sizing: border-box;\n            box-sizing: border-box; }\n\n.mx-calendar-header {\n  padding: 0 4px;\n  height: 34px;\n  line-height: 34px;\n  text-align: center;\n  overflow: hidden; }\n  .mx-calendar-header > a {\n    color: inherit;\n    text-decoration: none;\n    cursor: pointer; }\n    .mx-calendar-header > a:hover {\n      color: #419dec; }\n  .mx-icon-last-month, .mx-icon-last-year,\n  .mx-icon-next-month,\n  .mx-icon-next-year {\n    padding: 0 6px;\n    font-size: 20px;\n    line-height: 30px;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n        -ms-user-select: none;\n            user-select: none; }\n  .mx-icon-last-month, .mx-icon-last-year {\n    float: left; }\n  \n  .mx-icon-next-month,\n  .mx-icon-next-year {\n    float: right; }\n\n.mx-calendar-content {\n  width: 224px;\n  height: 224px; }\n  .mx-calendar-content .cell {\n    vertical-align: middle;\n    cursor: pointer; }\n    .mx-calendar-content .cell:hover {\n      background-color: #eaf8fe; }\n    .mx-calendar-content .cell.actived {\n      color: #fff;\n      background-color: #1284e7; }\n    .mx-calendar-content .cell.inrange {\n      background-color: #eaf8fe; }\n    .mx-calendar-content .cell.disabled {\n      cursor: not-allowed;\n      color: #ccc;\n      background-color: #f3f3f3; }\n\n.mx-panel {\n  width: 100%;\n  height: 100%;\n  text-align: center; }\n\n.mx-panel-date {\n  table-layout: fixed;\n  border-collapse: collapse;\n  border-spacing: 0; }\n  .mx-panel-date td,\n  .mx-panel-date th {\n    font-size: 12px;\n    width: 32px;\n    height: 32px;\n    padding: 0;\n    overflow: hidden;\n    text-align: center; }\n  .mx-panel-date td.today {\n    color: #2a90e9; }\n  .mx-panel-date td.last-month, .mx-panel-date td.next-month {\n    color: #ddd; }\n\n.mx-panel-year {\n  padding: 7px 0; }\n  .mx-panel-year .cell {\n    display: inline-block;\n    width: 40%;\n    margin: 1px 5%;\n    line-height: 40px; }\n\n.mx-panel-month .cell {\n  display: inline-block;\n  width: 30%;\n  line-height: 40px;\n  margin: 8px 1.5%; }\n\n.mx-time-list {\n  position: relative;\n  float: left;\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  width: 100%;\n  height: 100%;\n  border-top: 1px solid rgba(0, 0, 0, 0.05);\n  border-left: 1px solid rgba(0, 0, 0, 0.05);\n  overflow-y: auto;\n  /* 滚动条滑块 */ }\n  .mx-time-list .mx-time-picker-item {\n    display: block;\n    text-align: left;\n    padding-left: 10px; }\n  .mx-time-list:first-child {\n    border-left: 0; }\n  .mx-time-list .cell {\n    width: 100%;\n    font-size: 12px;\n    height: 30px;\n    line-height: 30px; }\n  .mx-time-list::-webkit-scrollbar {\n    width: 8px;\n    height: 8px; }\n  .mx-time-list::-webkit-scrollbar-thumb {\n    background-color: rgba(0, 0, 0, 0.05);\n    border-radius: 10px;\n    -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);\n            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1); }\n  .mx-time-list:hover::-webkit-scrollbar-thumb {\n    background-color: rgba(0, 0, 0, 0.2); }\n",""])},function(e,t,n){var a=n(5);"string"==typeof a&&(a=[[e.i,a,""]]),a.locals&&(e.exports=a.locals);(0,n(2).default)("511dbeb0",a,!0,{})}])});
+!function(e,t){ true?module.exports=t():undefined}(window,function(){return function(e){var t={};function n(a){if(t[a])return t[a].exports;var i=t[a]={i:a,l:!1,exports:{}};return e[a].call(i.exports,i,i.exports,n),i.l=!0,i.exports}return n.m=e,n.c=t,n.d=function(e,t,a){n.o(e,t)||Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:a})},n.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=3)}([function(e,t,n){var a;!function(i){"use strict";var r={},s=/d{1,4}|M{1,4}|YY(?:YY)?|S{1,3}|Do|ZZ|([HhMsDm])\1?|[aA]|"[^"]*"|'[^']*'/g,o=/\d\d?/,l=/[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i,u=/\[([^]*?)\]/gm,c=function(){};function d(e,t){for(var n=[],a=0,i=e.length;a<i;a++)n.push(e[a].substr(0,t));return n}function h(e){return function(t,n,a){var i=a[e].indexOf(n.charAt(0).toUpperCase()+n.substr(1).toLowerCase());~i&&(t.month=i)}}function p(e,t){for(e=String(e),t=t||2;e.length<t;)e="0"+e;return e}var m=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],f=["January","February","March","April","May","June","July","August","September","October","November","December"],g=d(f,3),v=d(m,3);r.i18n={dayNamesShort:v,dayNames:m,monthNamesShort:g,monthNames:f,amPm:["am","pm"],DoFn:function(e){return e+["th","st","nd","rd"][e%10>3?0:(e-e%10!=10)*e%10]}};var y={D:function(e){return e.getDate()},DD:function(e){return p(e.getDate())},Do:function(e,t){return t.DoFn(e.getDate())},d:function(e){return e.getDay()},dd:function(e){return p(e.getDay())},ddd:function(e,t){return t.dayNamesShort[e.getDay()]},dddd:function(e,t){return t.dayNames[e.getDay()]},M:function(e){return e.getMonth()+1},MM:function(e){return p(e.getMonth()+1)},MMM:function(e,t){return t.monthNamesShort[e.getMonth()]},MMMM:function(e,t){return t.monthNames[e.getMonth()]},YY:function(e){return String(e.getFullYear()).substr(2)},YYYY:function(e){return p(e.getFullYear(),4)},h:function(e){return e.getHours()%12||12},hh:function(e){return p(e.getHours()%12||12)},H:function(e){return e.getHours()},HH:function(e){return p(e.getHours())},m:function(e){return e.getMinutes()},mm:function(e){return p(e.getMinutes())},s:function(e){return e.getSeconds()},ss:function(e){return p(e.getSeconds())},S:function(e){return Math.round(e.getMilliseconds()/100)},SS:function(e){return p(Math.round(e.getMilliseconds()/10),2)},SSS:function(e){return p(e.getMilliseconds(),3)},a:function(e,t){return e.getHours()<12?t.amPm[0]:t.amPm[1]},A:function(e,t){return e.getHours()<12?t.amPm[0].toUpperCase():t.amPm[1].toUpperCase()},ZZ:function(e){var t=e.getTimezoneOffset();return(t>0?"-":"+")+p(100*Math.floor(Math.abs(t)/60)+Math.abs(t)%60,4)}},b={D:[o,function(e,t){e.day=t}],Do:[new RegExp(o.source+l.source),function(e,t){e.day=parseInt(t,10)}],M:[o,function(e,t){e.month=t-1}],YY:[o,function(e,t){var n=+(""+(new Date).getFullYear()).substr(0,2);e.year=""+(t>68?n-1:n)+t}],h:[o,function(e,t){e.hour=t}],m:[o,function(e,t){e.minute=t}],s:[o,function(e,t){e.second=t}],YYYY:[/\d{4}/,function(e,t){e.year=t}],S:[/\d/,function(e,t){e.millisecond=100*t}],SS:[/\d{2}/,function(e,t){e.millisecond=10*t}],SSS:[/\d{3}/,function(e,t){e.millisecond=t}],d:[o,c],ddd:[l,c],MMM:[l,h("monthNamesShort")],MMMM:[l,h("monthNames")],a:[l,function(e,t,n){var a=t.toLowerCase();a===n.amPm[0]?e.isPm=!1:a===n.amPm[1]&&(e.isPm=!0)}],ZZ:[/([\+\-]\d\d:?\d\d|Z)/,function(e,t){"Z"===t&&(t="+00:00");var n,a=(t+"").match(/([\+\-]|\d\d)/gi);a&&(n=60*a[1]+parseInt(a[2],10),e.timezoneOffset="+"===a[0]?n:-n)}]};b.dd=b.d,b.dddd=b.ddd,b.DD=b.D,b.mm=b.m,b.hh=b.H=b.HH=b.h,b.MM=b.M,b.ss=b.s,b.A=b.a,r.masks={default:"ddd MMM DD YYYY HH:mm:ss",shortDate:"M/D/YY",mediumDate:"MMM D, YYYY",longDate:"MMMM D, YYYY",fullDate:"dddd, MMMM D, YYYY",shortTime:"HH:mm",mediumTime:"HH:mm:ss",longTime:"HH:mm:ss.SSS"},r.format=function(e,t,n){var a=n||r.i18n;if("number"==typeof e&&(e=new Date(e)),"[object Date]"!==Object.prototype.toString.call(e)||isNaN(e.getTime()))throw new Error("Invalid Date in fecha.format");var i=[];return(t=(t=(t=r.masks[t]||t||r.masks.default).replace(u,function(e,t){return i.push(t),"??"})).replace(s,function(t){return t in y?y[t](e,a):t.slice(1,t.length-1)})).replace(/\?\?/g,function(){return i.shift()})},r.parse=function(e,t,n){var a=n||r.i18n;if("string"!=typeof t)throw new Error("Invalid format in fecha.parse");if(t=r.masks[t]||t,e.length>1e3)return!1;var i=!0,o={};if(t.replace(s,function(t){if(b[t]){var n=b[t],r=e.search(n[0]);~r?e.replace(n[0],function(t){return n[1](o,t,a),e=e.substr(r+t.length),t}):i=!1}return b[t]?"":t.slice(1,t.length-1)}),!i)return!1;var l,u=new Date;return!0===o.isPm&&null!=o.hour&&12!=+o.hour?o.hour=+o.hour+12:!1===o.isPm&&12==+o.hour&&(o.hour=0),null!=o.timezoneOffset?(o.minute=+(o.minute||0)-+o.timezoneOffset,l=new Date(Date.UTC(o.year||u.getFullYear(),o.month||0,o.day||1,o.hour||0,o.minute||0,o.second||0,o.millisecond||0))):l=new Date(o.year||u.getFullYear(),o.month||0,o.day||1,o.hour||0,o.minute||0,o.second||0,o.millisecond||0),l},void 0!==e&&e.exports?e.exports=r:void 0===(a=function(){return r}.call(t,n,t,e))||(e.exports=a)}()},function(e,t){var n=/^(attrs|props|on|nativeOn|class|style|hook)$/;function a(e,t){return function(){e&&e.apply(this,arguments),t&&t.apply(this,arguments)}}e.exports=function(e){return e.reduce(function(e,t){var i,r,s,o,l;for(s in t)if(i=e[s],r=t[s],i&&n.test(s))if("class"===s&&("string"==typeof i&&(l=i,e[s]=i={},i[l]=!0),"string"==typeof r&&(l=r,t[s]=r={},r[l]=!0)),"on"===s||"nativeOn"===s||"hook"===s)for(o in r)i[o]=a(i[o],r[o]);else if(Array.isArray(i))e[s]=i.concat(r);else if(Array.isArray(r))e[s]=[i].concat(r);else for(o in r)i[o]=r[o];else e[s]=t[s];return e},{})}},function(e,t,n){"use strict";function a(e,t){for(var n=[],a={},i=0;i<t.length;i++){var r=t[i],s=r[0],o={id:e+":"+i,css:r[1],media:r[2],sourceMap:r[3]};a[s]?a[s].parts.push(o):n.push(a[s]={id:s,parts:[o]})}return n}n.r(t),n.d(t,"default",function(){return m});var i="undefined"!=typeof document;if("undefined"!=typeof DEBUG&&DEBUG&&!i)throw new Error("vue-style-loader cannot be used in a non-browser environment. Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.");var r={},s=i&&(document.head||document.getElementsByTagName("head")[0]),o=null,l=0,u=!1,c=function(){},d=null,h="data-vue-ssr-id",p="undefined"!=typeof navigator&&/msie [6-9]\b/.test(navigator.userAgent.toLowerCase());function m(e,t,n,i){u=n,d=i||{};var s=a(e,t);return f(s),function(t){for(var n=[],i=0;i<s.length;i++){var o=s[i];(l=r[o.id]).refs--,n.push(l)}t?f(s=a(e,t)):s=[];for(i=0;i<n.length;i++){var l;if(0===(l=n[i]).refs){for(var u=0;u<l.parts.length;u++)l.parts[u]();delete r[l.id]}}}}function f(e){for(var t=0;t<e.length;t++){var n=e[t],a=r[n.id];if(a){a.refs++;for(var i=0;i<a.parts.length;i++)a.parts[i](n.parts[i]);for(;i<n.parts.length;i++)a.parts.push(v(n.parts[i]));a.parts.length>n.parts.length&&(a.parts.length=n.parts.length)}else{var s=[];for(i=0;i<n.parts.length;i++)s.push(v(n.parts[i]));r[n.id]={id:n.id,refs:1,parts:s}}}}function g(){var e=document.createElement("style");return e.type="text/css",s.appendChild(e),e}function v(e){var t,n,a=document.querySelector("style["+h+'~="'+e.id+'"]');if(a){if(u)return c;a.parentNode.removeChild(a)}if(p){var i=l++;a=o||(o=g()),t=x.bind(null,a,i,!1),n=x.bind(null,a,i,!0)}else a=g(),t=function(e,t){var n=t.css,a=t.media,i=t.sourceMap;a&&e.setAttribute("media",a);d.ssrId&&e.setAttribute(h,t.id);i&&(n+="\n/*# sourceURL="+i.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(i))))+" */");if(e.styleSheet)e.styleSheet.cssText=n;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(n))}}.bind(null,a),n=function(){a.parentNode.removeChild(a)};return t(e),function(a){if(a){if(a.css===e.css&&a.media===e.media&&a.sourceMap===e.sourceMap)return;t(e=a)}else n()}}var y,b=(y=[],function(e,t){return y[e]=t,y.filter(Boolean).join("\n")});function x(e,t,n,a){var i=n?"":a.css;if(e.styleSheet)e.styleSheet.cssText=b(t,i);else{var r=document.createTextNode(i),s=e.childNodes;s[t]&&e.removeChild(s[t]),s.length?e.insertBefore(r,s[t]):e.appendChild(r)}}},function(e,t,n){"use strict";n.r(t);var a=n(0),i=n.n(a);function r(e){return"[object Object]"===Object.prototype.toString.call(e)}function s(e){return e instanceof Date}function o(e){return null!==e&&void 0!==e&&!isNaN(new Date(e).getTime())}function l(e){var t=(e||"").split(":");return t.length>=2?{hours:parseInt(t[0],10),minutes:parseInt(t[1],10)}:null}function u(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"24",n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"a",a=e.hours,i=(a=(a="24"===t?a:a%12||12)<10?"0"+a:a)+":"+(e.minutes<10?"0"+e.minutes:e.minutes);if("12"===t){var r=e.hours>=12?"pm":"am";"A"===n&&(r=r.toUpperCase()),i=i+" "+r}return i}function c(e,t){if(!e)return"";try{return i.a.format(new Date(e),t)}catch(e){return""}}var d={date:{value2date:function(e){return o(e)?new Date(e):null},date2value:function(e){return e}},timestamp:{value2date:function(e){return o(e)?new Date(e):null},date2value:function(e){return e&&new Date(e).getTime()}}},h={zh:{days:["日","一","二","三","四","五","六"],months:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],pickers:["未来7天","未来30天","最近7天","最近30天"],placeholder:{date:"请选择日期",dateRange:"请选择日期范围"}},en:{days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],pickers:["next 7 days","next 30 days","previous 7 days","previous 30 days"],placeholder:{date:"Select Date",dateRange:"Select Date Range"}},ro:{days:["Dum","Lun","Mar","Mie","Joi","Vin","Sâm"],months:["Ian","Feb","Mar","Apr","Mai","Iun","Iul","Aug","Sep","Oct","Noi","Dec"],pickers:["urmatoarele 7 zile","urmatoarele 30 zile","ultimele 7 zile","ultimele 30 zile"],placeholder:{date:"Selectați Data",dateRange:"Selectați Intervalul De Date"}},fr:{days:["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"],months:["Jan","Fev","Mar","Avr","Mai","Juin","Juil","Aout","Sep","Oct","Nov","Dec"],pickers:["7 jours suivants","30 jours suivants","7 jours précédents","30 jours précédents"],placeholder:{date:"Sélectionnez une date",dateRange:"Sélectionnez une période"}},es:{days:["Dom","Lun","Mar","Mie","Jue","Vie","Sab"],months:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],pickers:["próximos 7 días","próximos 30 días","7 días anteriores","30 días anteriores"],placeholder:{date:"Seleccionar fecha",dateRange:"Seleccionar un rango de fechas"}},"pt-br":{days:["Dom","Seg","Ter","Qua","Quin","Sex","Sáb"],months:["Jan","Fev","Mar","Abr","Maio","Jun","Jul","Ago","Set","Out","Nov","Dez"],pickers:["próximos 7 dias","próximos 30 dias","7 dias anteriores"," 30 dias anteriores"],placeholder:{date:"Selecione uma data",dateRange:"Selecione um período"}},ru:{days:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],months:["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],pickers:["след. 7 дней","след. 30 дней","прош. 7 дней","прош. 30 дней"],placeholder:{date:"Выберите дату",dateRange:"Выберите период"}},de:{days:["So","Mo","Di","Mi","Do","Fr","Sa"],months:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],pickers:["nächsten 7 Tage","nächsten 30 Tage","vorigen 7 Tage","vorigen 30 Tage"],placeholder:{date:"Datum auswählen",dateRange:"Zeitraum auswählen"}},it:{days:["Dom","Lun","Mar","Mer","Gio","Ven","Sab"],months:["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],pickers:["successivi 7 giorni","successivi 30 giorni","precedenti 7 giorni","precedenti 30 giorni"],placeholder:{date:"Seleziona una data",dateRange:"Seleziona un intervallo date"}},cs:{days:["Ned","Pon","Úte","Stř","Čtv","Pát","Sob"],months:["Led","Úno","Bře","Dub","Kvě","Čer","Čerc","Srp","Zář","Říj","Lis","Pro"],pickers:["příštích 7 dní","příštích 30 dní","předchozích 7 dní","předchozích 30 dní"],placeholder:{date:"Vyberte datum",dateRange:"Vyberte časové rozmezí"}},sl:{days:["Ned","Pon","Tor","Sre","Čet","Pet","Sob"],months:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],pickers:["naslednjih 7 dni","naslednjih 30 dni","prejšnjih 7 dni","prejšnjih 30 dni"],placeholder:{date:"Izberite datum",dateRange:"Izberite razpon med 2 datumoma"}}},p=h.zh,m={methods:{t:function(e){for(var t=this,n=t.$options.name;t&&(!n||"DatePicker"!==n);)(t=t.$parent)&&(n=t.$options.name);for(var a=t&&t.language||p,i=e.split("."),r=a,s=void 0,o=0,l=i.length;o<l;o++){if(s=r[i[o]],o===l-1)return s;if(!s)return"";r=s}return""}}};function f(e,t){if(t){for(var n=[],a=t.offsetParent;a&&e!==a&&e.contains(a);)n.push(a),a=a.offsetParent;var i=t.offsetTop+n.reduce(function(e,t){return e+t.offsetTop},0),r=i+t.offsetHeight,s=e.scrollTop,o=s+e.clientHeight;i<s?e.scrollTop=i:r>o&&(e.scrollTop=r-e.clientHeight)}else e.scrollTop=0}var g=n(1),v=n.n(g),y={name:"panelDate",mixins:[m],props:{value:null,startAt:null,endAt:null,dateFormat:{type:String,default:"YYYY-MM-DD"},calendarMonth:{default:(new Date).getMonth()},calendarYear:{default:(new Date).getFullYear()},firstDayOfWeek:{default:7,type:Number,validator:function(e){return e>=1&&e<=7}},disabledDate:{type:Function,default:function(){return!1}}},methods:{selectDate:function(e){var t=e.year,n=e.month,a=e.day,i=new Date(t,n,a);this.disabledDate(i)||this.$emit("select",i)},getDays:function(e){var t=this.t("days"),n=parseInt(e,10);return t.concat(t).slice(n,n+7)},getDates:function(e,t,n){var a=[],i=new Date(e,t);i.setDate(0);for(var r=(i.getDay()+7-n)%7+1,s=i.getDate()-(r-1),o=0;o<r;o++)a.push({year:e,month:t-1,day:s+o});i.setMonth(i.getMonth()+2,0);for(var l=i.getDate(),u=0;u<l;u++)a.push({year:e,month:t,day:1+u});i.setMonth(i.getMonth()+1,1);for(var c=42-(r+l),d=0;d<c;d++)a.push({year:e,month:t+1,day:1+d});return a},getCellClasses:function(e){var t=e.year,n=e.month,a=e.day,i=[],r=new Date(t,n,a).getTime(),s=(new Date).setHours(0,0,0,0),o=this.value&&new Date(this.value).setHours(0,0,0,0),l=this.startAt&&new Date(this.startAt).setHours(0,0,0,0),u=this.endAt&&new Date(this.endAt).setHours(0,0,0,0);return n<this.calendarMonth?i.push("last-month"):n>this.calendarMonth?i.push("next-month"):i.push("cur-month"),r===s&&i.push("today"),this.disabledDate(r)&&i.push("disabled"),o&&(r===o?i.push("actived"):l&&r<=o?i.push("inrange"):u&&r>=o&&i.push("inrange")),i},getCellTitle:function(e){var t=e.year,n=e.month,a=e.day;return c(new Date(t,n,a),this.dateFormat)}},render:function(e){var t=this,n=this.getDays(this.firstDayOfWeek).map(function(t){return e("th",[t])}),a=this.getDates(this.calendarYear,this.calendarMonth,this.firstDayOfWeek),i=Array.apply(null,{length:6}).map(function(n,i){var r=a.slice(7*i,7*i+7).map(function(n){var a={class:t.getCellClasses(n)};return e("td",v()([{class:"cell"},a,{attrs:{"data-year":n.year,"data-month":n.month,title:t.getCellTitle(n)},on:{click:t.selectDate.bind(t,n)}}]),[n.day])});return e("tr",[r])});return e("table",{class:"mx-panel mx-panel-date"},[e("thead",[e("tr",[n])]),e("tbody",[i])])}},b={name:"panelYear",props:{value:null,firstYear:Number,disabledYear:Function},methods:{isDisabled:function(e){return!("function"!=typeof this.disabledYear||!this.disabledYear(e))},selectYear:function(e){this.isDisabled(e)||this.$emit("select",e)}},render:function(e){var t=this,n=10*Math.floor(this.firstYear/10),a=this.value&&new Date(this.value).getFullYear(),i=Array.apply(null,{length:10}).map(function(i,r){var s=n+r;return e("span",{class:{cell:!0,actived:a===s,disabled:t.isDisabled(s)},on:{click:t.selectYear.bind(t,s)}},[s])});return e("div",{class:"mx-panel mx-panel-year"},[i])}},x={name:"panelMonth",mixins:[m],props:{value:null,calendarYear:{default:(new Date).getFullYear()},disabledMonth:Function},methods:{isDisabled:function(e){return!("function"!=typeof this.disabledMonth||!this.disabledMonth(e))},selectMonth:function(e){this.isDisabled(e)||this.$emit("select",e)}},render:function(e){var t=this,n=this.t("months"),a=this.value&&new Date(this.value).getFullYear(),i=this.value&&new Date(this.value).getMonth();return n=n.map(function(n,r){return e("span",{class:{cell:!0,actived:a===t.calendarYear&&i===r,disabled:t.isDisabled(r)},on:{click:t.selectMonth.bind(t,r)}},[n])}),e("div",{class:"mx-panel mx-panel-month"},[n])}},w=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var a in n)Object.prototype.hasOwnProperty.call(n,a)&&(e[a]=n[a])}return e},D="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};function M(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)}function T(e,t,n,a,i,r,s,o){var l,u="function"==typeof e?e.options:e;if(t&&(u.render=t,u.staticRenderFns=n,u._compiled=!0),a&&(u.functional=!0),r&&(u._scopeId="data-v-"+r),s?(l=function(e){(e=e||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(e=__VUE_SSR_CONTEXT__),i&&i.call(this,e),e&&e._registeredComponents&&e._registeredComponents.add(s)},u._ssrRegister=l):i&&(l=o?function(){i.call(this,this.$root.$options.shadowRoot)}:i),l)if(u.functional){u._injectStyles=l;var c=u.render;u.render=function(e,t){return l.call(t),c(e,t)}}else{var d=u.beforeCreate;u.beforeCreate=d?[].concat(d,l):[l]}return{exports:e,options:u}}var S=T({name:"CalendarPanel",components:{PanelDate:y,PanelYear:b,PanelMonth:x,PanelTime:{name:"panelTime",props:{timePickerOptions:{type:[Object,Function],default:function(){return null}},timeSelectOptions:{type:Object,default:function(){return null}},minuteStep:{type:Number,default:0,validator:function(e){return e>=0&&e<=60}},value:null,timeType:{type:Array,default:function(){return["24","a"]}},disabledTime:Function},computed:{currentHours:function(){return this.value?new Date(this.value).getHours():0},currentMinutes:function(){return this.value?new Date(this.value).getMinutes():0},currentSeconds:function(){return this.value?new Date(this.value).getSeconds():0}},methods:{stringifyText:function(e){return("00"+e).slice(String(e).length)},selectTime:function(e){"function"==typeof this.disabledTime&&this.disabledTime(e)||this.$emit("select",new Date(e))},pickTime:function(e){"function"==typeof this.disabledTime&&this.disabledTime(e)||this.$emit("pick",new Date(e))},getTimePickerOptions:function(){var e=[],t=this.timePickerOptions;if(!t)return[];if("function"==typeof t)return t()||[];var n=l(t.start),a=l(t.end),i=l(t.step);if(n&&a&&i)for(var r=n.minutes+60*n.hours,s=a.minutes+60*a.hours,o=i.minutes+60*i.hours,c=Math.floor((s-r)/o),d=0;d<=c;d++){var h=r+d*o,p={hours:Math.floor(h/60),minutes:h%60};e.push({value:p,label:u.apply(void 0,[p].concat(M(this.timeType)))})}return e}},render:function(e){var t=this,n=this.value?new Date(this.value):(new Date).setHours(0,0,0,0),a="function"==typeof this.disabledTime&&this.disabledTime,i=this.getTimePickerOptions();if(Array.isArray(i)&&i.length)return i=i.map(function(i){var r=i.value.hours,s=i.value.minutes,o=new Date(n).setHours(r,s,0);return e("li",{class:{"mx-time-picker-item":!0,cell:!0,actived:r===t.currentHours&&s===t.currentMinutes,disabled:a&&a(o)},on:{click:t.pickTime.bind(t,o)}},[i.label])}),e("div",{class:"mx-panel mx-panel-time"},[e("ul",{class:"mx-time-list"},[i])]);var r=this.minuteStep||1,s=parseInt(60/r),o={hours:Array.apply(null,{length:24}).map(function(e,t){return t}),minutes:Array.apply(null,{length:s}).map(function(e,t){return t*r}),seconds:0===this.minuteStep?Array.apply(null,{length:60}).map(function(e,t){return t}):[]};this.timeSelectOptions&&"object"===D(this.timeSelectOptions)&&(o=w({},o,this.timeSelectOptions));var l=[o.hours.map(function(i){var r=new Date(n).setHours(i);return e("li",{class:{cell:!0,actived:i===t.currentHours,disabled:a&&a(r)},on:{click:t.selectTime.bind(t,r)}},[t.stringifyText(i)])}),o.minutes.map(function(i){var r=new Date(n).setMinutes(i);return e("li",{class:{cell:!0,actived:i===t.currentMinutes,disabled:a&&a(r)},on:{click:t.selectTime.bind(t,r)}},[t.stringifyText(i)])}),o.seconds.map(function(i){var r=new Date(n).setSeconds(i);return e("li",{class:{cell:!0,actived:i===t.currentSeconds,disabled:a&&a(r)},on:{click:t.selectTime.bind(t,r)}},[t.stringifyText(i)])})].filter(function(e){return e.length>0});return l=l.map(function(t){return e("ul",{class:"mx-time-list",style:{width:100/l.length+"%"}},[t])}),e("div",{class:"mx-panel mx-panel-time"},[l])}}},mixins:[m,{methods:{dispatch:function(e,t,n){for(var a=this.$parent||this.$root,i=a.$options.name;a&&(!i||i!==e);)(a=a.$parent)&&(i=a.$options.name);i&&i===e&&(a=a||this).$emit.apply(a,[t].concat(n))}}}],props:{value:{default:null,validator:function(e){return null===e||o(e)}},startAt:null,endAt:null,visible:{type:Boolean,default:!1},type:{type:String,default:"date"},dateFormat:{type:String,default:"YYYY-MM-DD"},index:Number,defaultValue:{validator:function(e){return o(e)}},firstDayOfWeek:{default:7,type:Number,validator:function(e){return e>=1&&e<=7}},notBefore:{default:null,validator:function(e){return!e||o(e)}},notAfter:{default:null,validator:function(e){return!e||o(e)}},disabledDays:{type:[Array,Function],default:function(){return[]}},minuteStep:{type:Number,default:0,validator:function(e){return e>=0&&e<=60}},timeSelectOptions:{type:Object,default:function(){return null}},timePickerOptions:{type:[Object,Function],default:function(){return null}}},data:function(){var e=this.getNow(this.value),t=e.getFullYear();return{panel:"NONE",dates:[],calendarMonth:e.getMonth(),calendarYear:t,firstYear:10*Math.floor(t/10)}},computed:{now:{get:function(){return new Date(this.calendarYear,this.calendarMonth).getTime()},set:function(e){var t=new Date(e);this.calendarYear=t.getFullYear(),this.calendarMonth=t.getMonth()}},timeType:function(){return[/h+/.test(this.$parent.format)?"12":"24",/A/.test(this.$parent.format)?"A":"a"]},timeHeader:function(){return"time"===this.type?this.$parent.format:this.value&&c(this.value,this.dateFormat)},yearHeader:function(){return this.firstYear+" ~ "+(this.firstYear+9)},months:function(){return this.t("months")},notBeforeTime:function(){return this.getCriticalTime(this.notBefore)},notAfterTime:function(){return this.getCriticalTime(this.notAfter)}},watch:{value:{immediate:!0,handler:"updateNow"},defaultValue:{handler:"updateNow"},visible:{immediate:!0,handler:"init"},panel:{handler:"handelPanelChange"}},methods:{handelPanelChange:function(e,t){var n=this;this.dispatch("DatePicker","panel-change",[e,t]),"YEAR"===e?this.firstYear=10*Math.floor(this.calendarYear/10):"TIME"===e&&this.$nextTick(function(){for(var e=n.$el.querySelectorAll(".mx-panel-time .mx-time-list"),t=0,a=e.length;t<a;t++){var i=e[t];f(i,i.querySelector(".actived"))}})},init:function(e){if(e){var t=this.type;"month"===t?this.showPanelMonth():"year"===t?this.showPanelYear():"time"===t?this.showPanelTime():this.showPanelDate()}else this.showPanelNone(),this.updateNow(this.value)},getNow:function(e){return e?new Date(e):this.defaultValue&&o(this.defaultValue)?new Date(this.defaultValue):new Date},updateNow:function(e){var t=this.now;this.now=this.getNow(e),this.visible&&this.now!==t&&this.dispatch("DatePicker","calendar-change",[new Date(this.now),new Date(t)])},getCriticalTime:function(e){if(!e)return null;var t=new Date(e);return"year"===this.type?new Date(t.getFullYear(),0).getTime():"month"===this.type?new Date(t.getFullYear(),t.getMonth()).getTime():"date"===this.type?t.setHours(0,0,0,0):t.getTime()},inBefore:function(e,t){return void 0===t&&(t=this.startAt),this.notBeforeTime&&e<this.notBeforeTime||t&&e<this.getCriticalTime(t)},inAfter:function(e,t){return void 0===t&&(t=this.endAt),this.notAfterTime&&e>this.notAfterTime||t&&e>this.getCriticalTime(t)},inDisabledDays:function(e){var t=this;return Array.isArray(this.disabledDays)?this.disabledDays.some(function(n){return t.getCriticalTime(n)===e}):"function"==typeof this.disabledDays&&this.disabledDays(new Date(e))},isDisabledYear:function(e){var t=new Date(e,0).getTime(),n=new Date(e+1,0).getTime()-1;return this.inBefore(n)||this.inAfter(t)||"year"===this.type&&this.inDisabledDays(t)},isDisabledMonth:function(e){var t=new Date(this.calendarYear,e).getTime(),n=new Date(this.calendarYear,e+1).getTime()-1;return this.inBefore(n)||this.inAfter(t)||"month"===this.type&&this.inDisabledDays(t)},isDisabledDate:function(e){var t=new Date(e).getTime(),n=new Date(e).setHours(23,59,59,999);return this.inBefore(n)||this.inAfter(t)||this.inDisabledDays(t)},isDisabledTime:function(e,t,n){var a=new Date(e).getTime();return this.inBefore(a,t)||this.inAfter(a,n)||this.inDisabledDays(a)},selectDate:function(e){if("datetime"===this.type){var t=new Date(e);return s(this.value)&&t.setHours(this.value.getHours(),this.value.getMinutes(),this.value.getSeconds()),this.isDisabledTime(t)&&(t.setHours(0,0,0,0),this.notBefore&&t.getTime()<new Date(this.notBefore).getTime()&&(t=new Date(this.notBefore)),this.startAt&&t.getTime()<new Date(this.startAt).getTime()&&(t=new Date(this.startAt))),this.selectTime(t),void this.showPanelTime()}this.$emit("select-date",e)},selectYear:function(e){if(this.changeCalendarYear(e),"year"===this.type.toLowerCase())return this.selectDate(new Date(this.now));this.dispatch("DatePicker","select-year",[e,this.index]),this.showPanelMonth()},selectMonth:function(e){if(this.changeCalendarMonth(e),"month"===this.type.toLowerCase())return this.selectDate(new Date(this.now));this.dispatch("DatePicker","select-month",[e,this.index]),this.showPanelDate()},selectTime:function(e){this.$emit("select-time",e,!1)},pickTime:function(e){this.$emit("select-time",e,!0)},changeCalendarYear:function(e){this.updateNow(new Date(e,this.calendarMonth))},changeCalendarMonth:function(e){this.updateNow(new Date(this.calendarYear,e))},getSibling:function(){var e=this,t=this.$parent.$children.filter(function(t){return t.$options.name===e.$options.name});return t[1^t.indexOf(this)]},handleIconMonth:function(e){var t=this.calendarMonth;this.changeCalendarMonth(t+e),this.$parent.$emit("change-calendar-month",{month:t,flag:e,vm:this,sibling:this.getSibling()})},handleIconYear:function(e){if("YEAR"===this.panel)this.changePanelYears(e);else{var t=this.calendarYear;this.changeCalendarYear(t+e),this.$parent.$emit("change-calendar-year",{year:t,flag:e,vm:this,sibling:this.getSibling()})}},handleBtnYear:function(){this.showPanelYear()},handleBtnMonth:function(){this.showPanelMonth()},handleTimeHeader:function(){"time"!==this.type&&this.showPanelDate()},changePanelYears:function(e){this.firstYear=this.firstYear+10*e},showPanelNone:function(){this.panel="NONE"},showPanelTime:function(){this.panel="TIME"},showPanelDate:function(){this.panel="DATE"},showPanelYear:function(){this.panel="YEAR"},showPanelMonth:function(){this.panel="MONTH"}}},function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",{staticClass:"mx-calendar",class:"mx-calendar-panel-"+e.panel.toLowerCase()},[n("div",{staticClass:"mx-calendar-header"},[n("a",{directives:[{name:"show",rawName:"v-show",value:"TIME"!==e.panel,expression:"panel !== 'TIME'"}],staticClass:"mx-icon-last-year",on:{click:function(t){e.handleIconYear(-1)}}},[e._v("«")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],staticClass:"mx-icon-last-month",on:{click:function(t){e.handleIconMonth(-1)}}},[e._v("‹")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"TIME"!==e.panel,expression:"panel !== 'TIME'"}],staticClass:"mx-icon-next-year",on:{click:function(t){e.handleIconYear(1)}}},[e._v("»")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],staticClass:"mx-icon-next-month",on:{click:function(t){e.handleIconMonth(1)}}},[e._v("›")]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],staticClass:"mx-current-month",on:{click:e.handleBtnMonth}},[e._v(e._s(e.months[e.calendarMonth]))]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel||"MONTH"===e.panel,expression:"panel === 'DATE' || panel === 'MONTH'"}],staticClass:"mx-current-year",on:{click:e.handleBtnYear}},[e._v(e._s(e.calendarYear))]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"YEAR"===e.panel,expression:"panel === 'YEAR'"}],staticClass:"mx-current-year"},[e._v(e._s(e.yearHeader))]),e._v(" "),n("a",{directives:[{name:"show",rawName:"v-show",value:"TIME"===e.panel,expression:"panel === 'TIME'"}],staticClass:"mx-time-header",on:{click:e.handleTimeHeader}},[e._v(e._s(e.timeHeader))])]),e._v(" "),n("div",{staticClass:"mx-calendar-content"},[n("panel-date",{directives:[{name:"show",rawName:"v-show",value:"DATE"===e.panel,expression:"panel === 'DATE'"}],attrs:{value:e.value,"date-format":e.dateFormat,"calendar-month":e.calendarMonth,"calendar-year":e.calendarYear,"start-at":e.startAt,"end-at":e.endAt,"first-day-of-week":e.firstDayOfWeek,"disabled-date":e.isDisabledDate},on:{select:e.selectDate}}),e._v(" "),n("panel-year",{directives:[{name:"show",rawName:"v-show",value:"YEAR"===e.panel,expression:"panel === 'YEAR'"}],attrs:{value:e.value,"disabled-year":e.isDisabledYear,"first-year":e.firstYear},on:{select:e.selectYear}}),e._v(" "),n("panel-month",{directives:[{name:"show",rawName:"v-show",value:"MONTH"===e.panel,expression:"panel === 'MONTH'"}],attrs:{value:e.value,"disabled-month":e.isDisabledMonth,"calendar-year":e.calendarYear},on:{select:e.selectMonth}}),e._v(" "),n("panel-time",{directives:[{name:"show",rawName:"v-show",value:"TIME"===e.panel,expression:"panel === 'TIME'"}],attrs:{"minute-step":e.minuteStep,"time-picker-options":e.timePickerOptions,"time-select-options":e.timeSelectOptions,value:e.value,"disabled-time":e.isDisabledTime,"time-type":e.timeType},on:{select:e.selectTime,pick:e.pickTime}})],1)])},[],!1,null,null,null).exports,Y=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var a in n)Object.prototype.hasOwnProperty.call(n,a)&&(e[a]=n[a])}return e},k=T({fecha:i.a,name:"DatePicker",components:{CalendarPanel:S},mixins:[m],props:{value:null,valueType:{default:"date",validator:function(e){return-1!==["timestamp","format","date"].indexOf(e)||r(e)}},placeholder:{type:String,default:null},lang:{type:[String,Object],default:"zh"},format:{type:[String,Object],default:"YYYY-MM-DD"},dateFormat:{type:String},type:{type:String,default:"date"},range:{type:Boolean,default:!1},rangeSeparator:{type:String,default:"~"},width:{type:[String,Number],default:null},confirmText:{type:String,default:"OK"},confirm:{type:Boolean,default:!1},editable:{type:Boolean,default:!0},disabled:{type:Boolean,default:!1},clearable:{type:Boolean,default:!0},shortcuts:{type:[Boolean,Array],default:!0},inputName:{type:String,default:"date"},inputClass:{default:"mx-input"},inputAttr:Object,appendToBody:{type:Boolean,default:!1},popupStyle:{type:Object},iconDay:{type:[Number,String]}},data:function(){return{currentValue:this.range?[null,null]:null,userInput:null,popupVisible:!1,position:{}}},watch:{value:{immediate:!0,handler:"handleValueChange"},popupVisible:function(e){e?this.initCalendar():(this.userInput=null,this.blur())}},computed:{transform:function(){var e=this.valueType;return r(e)?Y({},d.date,e):"format"===e?{value2date:this.parse.bind(this),date2value:this.stringify.bind(this)}:d[e]||d.date},language:function(){return r(this.lang)?Y({},h.en,this.lang):h[this.lang]||h.en},innerPlaceholder:function(){return"string"==typeof this.placeholder?this.placeholder:this.range?this.t("placeholder.dateRange"):this.t("placeholder.date")},text:function(){if(null!==this.userInput)return this.userInput;var e=this.transform.value2date;return this.range?this.isValidRangeValue(this.value)?this.stringify(e(this.value[0]))+" "+this.rangeSeparator+" "+this.stringify(e(this.value[1])):"":this.isValidValue(this.value)?this.stringify(e(this.value)):""},computedWidth:function(){return"number"==typeof this.width||"string"==typeof this.width&&/^\d+$/.test(this.width)?this.width+"px":this.width},showClearIcon:function(){return!this.disabled&&this.clearable&&(this.range?this.isValidRangeValue(this.value):this.isValidValue(this.value))},innerType:function(){return String(this.type).toLowerCase()},innerShortcuts:function(){if(Array.isArray(this.shortcuts))return this.shortcuts;if(!1===this.shortcuts)return[];var e=this.t("pickers");return[{text:e[0],onClick:function(e){e.currentValue=[new Date,new Date(Date.now()+6048e5)],e.updateDate(!0)}},{text:e[1],onClick:function(e){e.currentValue=[new Date,new Date(Date.now()+2592e6)],e.updateDate(!0)}},{text:e[2],onClick:function(e){e.currentValue=[new Date(Date.now()-6048e5),new Date],e.updateDate(!0)}},{text:e[3],onClick:function(e){e.currentValue=[new Date(Date.now()-2592e6),new Date],e.updateDate(!0)}}]},innerDateFormat:function(){return this.dateFormat?this.dateFormat:"string"!=typeof this.format?"YYYY-MM-DD":"date"===this.innerType?this.format:this.format.replace(/[Hh]+.*[msSaAZ]|\[.*?\]/g,"").trim()||"YYYY-MM-DD"},innerPopupStyle:function(){return Y({},this.position,this.popupStyle)}},mounted:function(){var e=this;this.appendToBody&&(this.popupElm=this.$refs.calendar,document.body.appendChild(this.popupElm));var t,n,a,i,r=void 0;this._bindDocmentMousedown=function(e){r=e.target},this._bindDocumentMouseup=function(t){var n=t.target,a=e.$el,i=e.popupElm;!r||!n||a.contains(r)||a.contains(n)||i&&(i.contains(r)||i.contains(n))||(r=null,e.closePopup())},this._startEvt="mousedown",this._endEvt="mouseup","ontouchend"in document&&(this._startEvt="touchstart",this._endEvt="touchend"),document.addEventListener(this._startEvt,this._bindDocmentMousedown),document.addEventListener(this._endEvt,this._bindDocumentMouseup),this._displayPopup=(t=function(){e.popupVisible&&e.displayPopup()},n=200,a=0,i=null,function(){var e=this;if(!i){var r=arguments,s=function(){a=Date.now(),i=null,t.apply(e,r)};Date.now()-a>=n?s():i=setTimeout(s,n)}}),window.addEventListener("resize",this._displayPopup),window.addEventListener("scroll",this._displayPopup)},beforeDestroy:function(){this.popupElm&&this.popupElm.parentNode===document.body&&document.body.removeChild(this.popupElm),document.removeEventListener(this._startEvt,this._bindDocmentMousedown),document.removeEventListener(this._endEvt,this._bindDocumentMouseup),window.removeEventListener("resize",this._displayPopup),window.removeEventListener("scroll",this._displayPopup)},methods:{initCalendar:function(){this.handleValueChange(this.value),this.displayPopup()},stringify:function(e){return r(this.format)&&"function"==typeof this.format.stringify?this.format.stringify(e):c(e,this.format)},parse:function(e){return r(this.format)&&"function"==typeof this.format.parse?this.format.parse(e):function(e,t){try{return i.a.parse(e,t)||null}catch(e){return null}}(e,this.format)},isValidValue:function(e){return o((0,this.transform.value2date)(e))},isValidRangeValue:function(e){var t=this.transform.value2date;return Array.isArray(e)&&2===e.length&&this.isValidValue(e[0])&&this.isValidValue(e[1])&&t(e[1]).getTime()>=t(e[0]).getTime()},dateEqual:function(e,t){return s(e)&&s(t)&&e.getTime()===t.getTime()},rangeEqual:function(e,t){var n=this;return Array.isArray(e)&&Array.isArray(t)&&e.length===t.length&&e.every(function(e,a){return n.dateEqual(e,t[a])})},selectRange:function(e){"function"==typeof e.onClick?!1!==e.onClick(this)&&this.closePopup():(this.currentValue=[new Date(e.start),new Date(e.end)],this.updateDate(!0),this.closePopup())},clearDate:function(){var e=this.range?[null,null]:null;this.currentValue=e,this.updateDate(!0),this.$emit("clear")},confirmDate:function(){var e;(this.range?(e=this.currentValue,Array.isArray(e)&&2===e.length&&o(e[0])&&o(e[1])&&new Date(e[1]).getTime()>=new Date(e[0]).getTime()):o(this.currentValue))&&this.updateDate(!0),this.emitDate("confirm"),this.closePopup()},updateDate:function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return!(this.confirm&&!e||this.disabled)&&((this.range?!this.rangeEqual(this.value,this.currentValue):!this.dateEqual(this.value,this.currentValue))&&(this.emitDate("input"),this.emitDate("change"),!0))},emitDate:function(e){var t=this.transform.date2value,n=this.range?this.currentValue.map(t):t(this.currentValue);this.$emit(e,n)},handleValueChange:function(e){var t=this.transform.value2date;this.range?this.currentValue=this.isValidRangeValue(e)?e.map(t):[null,null]:this.currentValue=this.isValidValue(e)?t(e):null},selectDate:function(e){this.currentValue=e,this.updateDate()&&this.closePopup()},selectStartDate:function(e){this.$set(this.currentValue,0,e),this.currentValue[1]&&this.updateDate()},selectEndDate:function(e){this.$set(this.currentValue,1,e),this.currentValue[0]&&this.updateDate()},selectTime:function(e,t){this.currentValue=e,this.updateDate()&&t&&this.closePopup()},selectStartTime:function(e){this.selectStartDate(e)},selectEndTime:function(e){this.selectEndDate(e)},showPopup:function(){this.disabled||(this.popupVisible=!0)},closePopup:function(){this.popupVisible=!1},getPopupSize:function(e){var t=e.style.display,n=e.style.visibility;e.style.display="block",e.style.visibility="hidden";var a=window.getComputedStyle(e),i={width:e.offsetWidth+parseInt(a.marginLeft)+parseInt(a.marginRight),height:e.offsetHeight+parseInt(a.marginTop)+parseInt(a.marginBottom)};return e.style.display=t,e.style.visibility=n,i},displayPopup:function(){var e=document.documentElement.clientWidth,t=document.documentElement.clientHeight,n=this.$el.getBoundingClientRect(),a=this._popupRect||(this._popupRect=this.getPopupSize(this.$refs.calendar)),i={},r=0,s=0;this.appendToBody&&(r=window.pageXOffset+n.left,s=window.pageYOffset+n.top),e-n.left<a.width&&n.right<a.width?i.left=r-n.left+1+"px":n.left+n.width/2<=e/2?i.left=r+"px":i.left=r+n.width-a.width+"px",n.top<=a.height&&t-n.bottom<=a.height?i.top=s+t-n.top-a.height+"px":n.top+n.height/2<=t/2?i.top=s+n.height+"px":i.top=s-a.height+"px",i.top===this.position.top&&i.left===this.position.left||(this.position=i)},blur:function(){this.$refs.input.blur()},handleBlur:function(e){this.$emit("blur",e)},handleFocus:function(e){this.popupVisible||this.showPopup(),this.$emit("focus",e)},handleKeydown:function(e){var t=e.keyCode;9!==t&&13!==t||(this.handleChange(),this.userInput=null,this.closePopup())},handleInput:function(e){this.userInput=e.target.value},handleChange:function(){if(this.editable&&null!==this.userInput){var e=this.text,t=this.$refs.calendarPanel.isDisabledTime;if(!e)return void this.clearDate();if(this.range){var n=e.split(" "+this.rangeSeparator+" ");if(2===n.length){var a=this.parse(n[0]),i=this.parse(n[1]);if(a&&i&&!t(a,null,i)&&!t(i,a,null))return this.currentValue=[a,i],this.updateDate(!0),void this.closePopup()}}else{var r=this.parse(e);if(r&&!t(r,null,null))return this.currentValue=r,this.updateDate(!0),void this.closePopup()}this.$emit("input-error",e)}}}},function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",{staticClass:"mx-datepicker",class:{"mx-datepicker-range":e.range,disabled:e.disabled},style:{width:e.computedWidth},on:{mousedown:e.showPopup,touchstart:e.showPopup}},[n("div",{staticClass:"mx-input-wrapper"},[n("input",e._b({ref:"input",class:e.inputClass,attrs:{name:e.inputName,type:"text",autocomplete:"off",disabled:e.disabled,readonly:!e.editable,placeholder:e.innerPlaceholder},domProps:{value:e.text},on:{keydown:e.handleKeydown,focus:e.handleFocus,blur:e.handleBlur,input:e.handleInput,change:e.handleChange}},"input",e.inputAttr,!1)),e._v(" "),e.showClearIcon?n("span",{staticClass:"mx-input-append mx-clear-wrapper",on:{mousedown:function(t){return t.stopPropagation(),e.clearDate(t)}}},[e._t("mx-clear-icon",[n("i",{staticClass:"mx-input-icon mx-clear-icon"})])],2):e._e(),e._v(" "),n("span",{staticClass:"mx-input-append"},[e._t("calendar-icon",[n("svg",{staticClass:"mx-calendar-icon",attrs:{xmlns:"http://www.w3.org/2000/svg",version:"1.1",viewBox:"0 0 200 200"}},[n("rect",{attrs:{x:"13",y:"29",rx:"14",ry:"14",width:"174",height:"158",fill:"transparent"}}),e._v(" "),n("line",{attrs:{x1:"46",x2:"46",y1:"8",y2:"50"}}),e._v(" "),n("line",{attrs:{x1:"154",x2:"154",y1:"8",y2:"50"}}),e._v(" "),n("line",{attrs:{x1:"13",x2:"187",y1:"70",y2:"70"}}),e._v(" "),n("text",{attrs:{x:"50%",y:"135","font-size":"90","stroke-width":"1","text-anchor":"middle","dominant-baseline":"middle"}},[e._v(e._s(e.iconDay))])])])],2)]),e._v(" "),n("div",{directives:[{name:"show",rawName:"v-show",value:e.popupVisible,expression:"popupVisible"}],ref:"calendar",staticClass:"mx-datepicker-popup",style:e.innerPopupStyle,on:{click:function(e){e.stopPropagation(),e.preventDefault()}}},[e._t("header",[e.range&&e.innerShortcuts.length?n("div",{staticClass:"mx-shortcuts-wrapper"},e._l(e.innerShortcuts,function(t,a){return n("button",{key:a,staticClass:"mx-shortcuts",attrs:{type:"button"},on:{click:function(n){e.selectRange(t)}}},[e._v(e._s(t.text))])})):e._e()]),e._v(" "),e.range?n("div",{staticClass:"mx-range-wrapper"},[n("calendar-panel",e._b({ref:"calendarPanel",staticStyle:{"box-shadow":"1px 0 rgba(0, 0, 0, .1)"},attrs:{index:0,type:e.innerType,"date-format":e.innerDateFormat,value:e.currentValue[0],"end-at":e.currentValue[1],"start-at":null,visible:e.popupVisible},on:{"select-date":e.selectStartDate,"select-time":e.selectStartTime}},"calendar-panel",e.$attrs,!1)),e._v(" "),n("calendar-panel",e._b({attrs:{index:1,type:e.innerType,"date-format":e.innerDateFormat,value:e.currentValue[1],"start-at":e.currentValue[0],"end-at":null,visible:e.popupVisible},on:{"select-date":e.selectEndDate,"select-time":e.selectEndTime}},"calendar-panel",e.$attrs,!1))],1):n("calendar-panel",e._b({ref:"calendarPanel",attrs:{index:-1,type:e.innerType,"date-format":e.innerDateFormat,value:e.currentValue,visible:e.popupVisible},on:{"select-date":e.selectDate,"select-time":e.selectTime}},"calendar-panel",e.$attrs,!1)),e._v(" "),e._t("footer",[e.confirm?n("div",{staticClass:"mx-datepicker-footer"},[n("button",{staticClass:"mx-datepicker-btn mx-datepicker-btn-confirm",attrs:{type:"button"},on:{click:e.confirmDate}},[e._v(e._s(e.confirmText))])]):e._e()],{confirm:e.confirmDate})],2)])},[],!1,null,null,null).exports;n(6);k.install=function(e){e.component(k.name,k)},"undefined"!=typeof window&&window.Vue&&k.install(window.Vue);t.default=k},function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var n=this[t];n[2]?e.push("@media "+n[2]+"{"+n[1]+"}"):e.push(n[1])}return e.join("")},e.i=function(t,n){"string"==typeof t&&(t=[[null,t,""]]);for(var a={},i=0;i<this.length;i++){var r=this[i][0];"number"==typeof r&&(a[r]=!0)}for(i=0;i<t.length;i++){var s=t[i];"number"==typeof s[0]&&a[s[0]]||(n&&!s[2]?s[2]=n:n&&(s[2]="("+s[2]+") and ("+n+")"),e.push(s))}},e}},function(e,t,n){(e.exports=n(4)()).push([e.i,"@charset \"UTF-8\";\n.mx-datepicker {\n  position: relative;\n  display: inline-block;\n  width: 210px;\n  color: #73879c;\n  font: 14px/1.5 'Helvetica Neue', Helvetica, Arial, 'Microsoft Yahei', sans-serif; }\n  .mx-datepicker * {\n    -webkit-box-sizing: border-box;\n            box-sizing: border-box; }\n  .mx-datepicker.disabled {\n    opacity: 0.7;\n    cursor: not-allowed; }\n\n.mx-datepicker-range {\n  width: 320px; }\n\n.mx-datepicker-popup {\n  position: absolute;\n  margin-top: 1px;\n  margin-bottom: 1px;\n  border: 1px solid #d9d9d9;\n  background-color: #fff;\n  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);\n          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);\n  z-index: 1000; }\n\n.mx-input-wrapper {\n  position: relative; }\n  .mx-input-wrapper .mx-clear-wrapper {\n    display: none; }\n  .mx-input-wrapper:hover .mx-clear-wrapper {\n    display: block; }\n  .mx-input-wrapper:hover .mx-clear-wrapper + .mx-input-append {\n    display: none; }\n\n.mx-input {\n  display: inline-block;\n  width: 100%;\n  height: 34px;\n  padding: 6px 30px;\n  padding-left: 10px;\n  font-size: 14px;\n  line-height: 1.4;\n  color: #555;\n  background-color: #fff;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }\n  .mx-input:disabled, .mx-input.disabled {\n    opacity: 0.7;\n    cursor: not-allowed; }\n  .mx-input:focus {\n    outline: none; }\n  .mx-input::-ms-clear {\n    display: none; }\n\n.mx-input-append {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 30px;\n  height: 100%;\n  padding: 6px; }\n\n.mx-input-icon {\n  display: inline-block;\n  width: 100%;\n  height: 100%;\n  font-style: normal;\n  color: #555;\n  text-align: center;\n  cursor: pointer; }\n\n.mx-calendar-icon {\n  width: 100%;\n  height: 100%;\n  color: #555;\n  stroke-width: 8px;\n  stroke: currentColor;\n  fill: currentColor; }\n\n.mx-clear-icon::before {\n  display: inline-block;\n  content: '\\2716';\n  vertical-align: middle; }\n\n.mx-clear-icon::after {\n  content: '';\n  display: inline-block;\n  width: 0;\n  height: 100%;\n  vertical-align: middle; }\n\n.mx-range-wrapper {\n  width: 496px;\n  overflow: hidden; }\n\n.mx-shortcuts-wrapper {\n  text-align: left;\n  padding: 0 12px;\n  line-height: 34px;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.05); }\n  .mx-shortcuts-wrapper .mx-shortcuts {\n    background: none;\n    outline: none;\n    border: 0;\n    color: #48576a;\n    margin: 0;\n    padding: 0;\n    white-space: nowrap;\n    cursor: pointer; }\n    .mx-shortcuts-wrapper .mx-shortcuts:hover {\n      color: #419dec; }\n    .mx-shortcuts-wrapper .mx-shortcuts:after {\n      content: '|';\n      margin: 0 10px;\n      color: #48576a; }\n    .mx-shortcuts-wrapper .mx-shortcuts:last-child::after {\n      display: none; }\n\n.mx-datepicker-footer {\n  padding: 4px;\n  clear: both;\n  text-align: right;\n  border-top: 1px solid rgba(0, 0, 0, 0.05); }\n\n.mx-datepicker-btn {\n  font-size: 12px;\n  line-height: 1;\n  padding: 7px 15px;\n  margin: 0 5px;\n  cursor: pointer;\n  background-color: transparent;\n  outline: none;\n  border: none;\n  border-radius: 3px; }\n\n.mx-datepicker-btn-confirm {\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  color: #73879c; }\n  .mx-datepicker-btn-confirm:hover {\n    color: #1284e7;\n    border-color: #1284e7; }\n\n/* 日历组件 */\n.mx-calendar {\n  float: left;\n  color: #73879c;\n  padding: 6px 12px;\n  font: 14px/1.5 Helvetica Neue, Helvetica, Arial, Microsoft Yahei, sans-serif; }\n  .mx-calendar * {\n    -webkit-box-sizing: border-box;\n            box-sizing: border-box; }\n\n.mx-calendar-header {\n  padding: 0 4px;\n  height: 34px;\n  line-height: 34px;\n  text-align: center;\n  overflow: hidden; }\n  .mx-calendar-header > a {\n    color: inherit;\n    text-decoration: none;\n    cursor: pointer; }\n    .mx-calendar-header > a:hover {\n      color: #419dec; }\n  .mx-icon-last-month, .mx-icon-last-year,\n  .mx-icon-next-month,\n  .mx-icon-next-year {\n    padding: 0 6px;\n    font-size: 20px;\n    line-height: 30px;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n        -ms-user-select: none;\n            user-select: none; }\n  .mx-icon-last-month, .mx-icon-last-year {\n    float: left; }\n  \n  .mx-icon-next-month,\n  .mx-icon-next-year {\n    float: right; }\n\n.mx-calendar-content {\n  width: 224px;\n  height: 224px; }\n  .mx-calendar-content .cell {\n    vertical-align: middle;\n    cursor: pointer; }\n    .mx-calendar-content .cell:hover {\n      background-color: #eaf8fe; }\n    .mx-calendar-content .cell.actived {\n      color: #fff;\n      background-color: #1284e7; }\n    .mx-calendar-content .cell.inrange {\n      background-color: #eaf8fe; }\n    .mx-calendar-content .cell.disabled {\n      cursor: not-allowed;\n      color: #ccc;\n      background-color: #f3f3f3; }\n\n.mx-panel {\n  width: 100%;\n  height: 100%;\n  text-align: center; }\n\n.mx-panel-date {\n  table-layout: fixed;\n  border-collapse: collapse;\n  border-spacing: 0; }\n  .mx-panel-date td,\n  .mx-panel-date th {\n    font-size: 12px;\n    width: 32px;\n    height: 32px;\n    padding: 0;\n    overflow: hidden;\n    text-align: center; }\n  .mx-panel-date td.today {\n    color: #2a90e9; }\n  .mx-panel-date td.last-month, .mx-panel-date td.next-month {\n    color: #ddd; }\n\n.mx-panel-year {\n  padding: 7px 0; }\n  .mx-panel-year .cell {\n    display: inline-block;\n    width: 40%;\n    margin: 1px 5%;\n    line-height: 40px; }\n\n.mx-panel-month .cell {\n  display: inline-block;\n  width: 30%;\n  line-height: 40px;\n  margin: 8px 1.5%; }\n\n.mx-time-list {\n  position: relative;\n  float: left;\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  width: 100%;\n  height: 100%;\n  border-top: 1px solid rgba(0, 0, 0, 0.05);\n  border-left: 1px solid rgba(0, 0, 0, 0.05);\n  overflow-y: auto;\n  /* 滚动条滑块 */ }\n  .mx-time-list .mx-time-picker-item {\n    display: block;\n    text-align: left;\n    padding-left: 10px; }\n  .mx-time-list:first-child {\n    border-left: 0; }\n  .mx-time-list .cell {\n    width: 100%;\n    font-size: 12px;\n    height: 30px;\n    line-height: 30px; }\n  .mx-time-list::-webkit-scrollbar {\n    width: 8px;\n    height: 8px; }\n  .mx-time-list::-webkit-scrollbar-thumb {\n    background-color: rgba(0, 0, 0, 0.05);\n    border-radius: 10px;\n    -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);\n            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1); }\n  .mx-time-list:hover::-webkit-scrollbar-thumb {\n    background-color: rgba(0, 0, 0, 0.2); }\n",""])},function(e,t,n){var a=n(5);"string"==typeof a&&(a=[[e.i,a,""]]),a.locals&&(e.exports=a.locals);(0,n(2).default)("511dbeb0",a,!0,{})}])});
 
 /***/ }),
 
@@ -15766,7 +16092,7 @@ module.exports = JSON.parse("{\"Home\":\"Inicio\",\"Create\":\"Crear\",\"Update\
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/oscar/PCWDev/pcw_mov_server_web_beta/resources/js/reports/apps/main.js */"./resources/js/reports/apps/main.js");
+module.exports = __webpack_require__(/*! /var/www/pcw_mov_server_web_beta/resources/js/reports/apps/main.js */"./resources/js/reports/apps/main.js");
 
 
 /***/ })
