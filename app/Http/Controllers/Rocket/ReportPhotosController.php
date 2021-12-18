@@ -60,10 +60,10 @@ class ReportPhotosController extends Controller
 
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
+                    $photos = $this->photoService->for($vehicle, $camera, null, null, $date)->getHistoric();
                     $response->photos = $photos->sortByDesc('time')->values();
 
-                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
+                    $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;
                 } else {
                     $response->success = false;
                     $response->message = __('Vehicle not found');
@@ -111,7 +111,7 @@ class ReportPhotosController extends Controller
                 $photo = null;
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle, $camera)->getHistoric($date);
+                    $photos = $this->photoService->for($vehicle, $camera, null, null, $date)->getHistoric();
 
                     if ($photos->count()) {
                         $photo = Photo::find($photos->last()->id);
@@ -129,7 +129,7 @@ class ReportPhotosController extends Controller
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
 
-                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
+                    $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;
                 } else {
                     $response->success = false;
                     $response->message = __('Vehicle not found');

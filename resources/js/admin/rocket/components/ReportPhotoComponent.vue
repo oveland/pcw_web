@@ -58,7 +58,7 @@
         },
         watch: {
             searchParams() {
-                this.load();
+                //this.load();
             }
         },
         methods: {

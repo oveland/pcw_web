@@ -47,6 +47,11 @@ class PhotoService
     public $camera = 'all';
 
     /**
+     * @var string
+     */
+    public $date = null;
+
+    /**
      * @var SeatOccupationService
      */
     private $seatOccupationService;
@@ -72,6 +77,11 @@ class PhotoService
         $this->vehicle = $vehicle;
     }
 
+    function setDate($date)
+    {
+        $this->date = $date ? : Carbon::now()->toDateString();
+    }
+
     function setCamera($camera)
     {
         if ($camera !== '' && $camera !== null) {
@@ -84,7 +94,7 @@ class PhotoService
     {
         if ($this->camera !== '' && $this->camera !== null) {
 
-            $profileSeating = $this->vehicle->getProfileSeating($this->camera);
+            $profileSeating = $this->vehicle->getProfileSeating($this->camera, $this->date);
             $profileSeating->setPersistence($this->persistence);
 
             $this->seatOccupationService = new SeatOccupationService($profileSeating);
@@ -103,18 +113,12 @@ class PhotoService
         }
     }
 
-    /**
-     * @param Vehicle $vehicle
-     * @param $camera
-     * @param null $persistenceActivate
-     * @param null $persistenceRelease
-     * @return $this
-     */
-    function for(Vehicle $vehicle, $camera, $persistenceActivate = null, $persistenceRelease = null)
+    function for(Vehicle $vehicle, $camera, $persistenceActivate = null, $persistenceRelease = null, $date = null)
     {
         $this->setPersistence($persistenceActivate, $persistenceRelease);
 
         $this->setVehicle($vehicle);
+        $this->setDate($date);
         $this->setCamera($camera);
 
         return $this;
@@ -193,14 +197,10 @@ class PhotoService
         ];
     }
 
-    /**
-     * @param null $date
-     * @return object
-     */
-    function notifyToMap($date = null)
+    function notifyToMap()
     {
         $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
-        $historic = $this->getHistoric($date);
+        $historic = $this->getHistoric();
 
         event(new PhotoMapEvent($this->vehicle,
             [
@@ -389,11 +389,11 @@ class PhotoService
         return [0];
     }
 
-    function getPhotos($date = null, $camera = null)
+    function getPhotos($camera = null)
     {
         $this->setCamera($camera);
 
-        return Photo::whereVehicleAndDateAndSide($this->vehicle, $date ? $date : Carbon::now(), $this->camera)
+        return Photo::whereVehicleAndDateAndSide($this->vehicle, $this->date ? $this->date : Carbon::now(), $this->camera)
 //            ->whereBetween('id', [104073, 104173])
             //->where('id', 53717);
 //            ->where('dispatch_register_id', '>', 1833559)
@@ -401,10 +401,10 @@ class PhotoService
             ->get();
     }
 
-    function processCount($date, $withHistoricPassengers = true)
+    function processCount($withHistoricPassengers = true)
     {
         $totalByCameras = 0;
-        $allPhotos = $this->getPhotos($date);
+        $allPhotos = $this->getPhotos();
         $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
 
         $historicByCameras = collect([]);
@@ -431,7 +431,7 @@ class PhotoService
         if ($withHistoricPassengers) {
             $historic = $historicByCameras->collapse()->collapse();
 
-            DB::delete("DELETE FROM passengers WHERE date::DATE = '$date' AND vehicle_id = " . $this->vehicle->id);
+            DB::delete("DELETE FROM passengers WHERE date::DATE = '$this->date' AND vehicle_id = " . $this->vehicle->id);
 
             foreach ($drIds as $drId) {
                 $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
@@ -480,7 +480,7 @@ class PhotoService
                             $occupation->prev->push(explode(', ', $prevDetails->occupation->seatingOccupiedStr));
                         }
 
-                        $profileSeating = $this->vehicle->getProfileSeating($camera);
+                        $profileSeating = $this->vehicle->getProfileSeating($camera, $this->date);
                         $totalSeating += $profileSeating->occupation->count();
                     }
 
@@ -538,13 +538,9 @@ class PhotoService
         ]);
     }
 
-    /**
-     * @param $date
-     * @return Collection
-     */
-    function getHistoric($date)
+    function getHistoric()
     {
-        $photos = ($this->camera != null && $this->camera != 'all') ? $this->getPhotos($date) : collect([]);
+        $photos = ($this->camera != null && $this->camera != 'all') ? $this->getPhotos() : collect([]);
         return $this->processPhotos($photos);
     }
 

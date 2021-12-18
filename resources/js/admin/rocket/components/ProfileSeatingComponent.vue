@@ -1,24 +1,32 @@
 <template>
 
     <div class="zone-seating-component" :style="`width: ${image.size.width}px; margin: auto`">
-        <div v-if="photo">
-            <photo-details-component :photo="photo"></photo-details-component>
-
-            <photo-persons-component :photo="photo" :seating="seating" :fixed-seating="false"></photo-persons-component>
+        <div>
+			<div v-if="photo">
+				<photo-details-component :photo="photo"></photo-details-component>
+				<photo-persons-component :photo="photo" :seating="seating" :fixed-seating="false"></photo-persons-component>
+			</div>
 
             <div class="container-actions col-md-12 text-center">
                 <button class="btn btn-default btn-sm btn-action" @click="load">
                     <i class="fa fa-refresh"></i>
                 </button>
-                <button class="btn btn-info btn-sm btn-action" @click="addSeat">
-                    <i class="fa fa-plus-square"></i>
-                </button>
-                <button class="btn btn-success btn-sm btn-action" @click="save">
-                    <i class="fa fa-save"></i>
-                </button>
-                <button :disabled="!selected" class="btn btn-warning btn-sm btn-action m-l-20" @click="deleteSeating">
+				<button class="btn btn-info btn-sm btn-action" @click="addSeat">
+					<i class="fa fa-plus-square"></i>
+				</button>
+				<button :disabled="!selected" class="btn btn-danger btn-sm btn-action m-l-20" @click="deleteSeating">
                     <i class="fa fa-trash"></i>
                 </button>
+				<div>
+					<hr>
+					<small>Guardar por:</small>
+				</div>
+				<button class="btn btn-success btn-sm btn-action tooltips" @click="save()" title="Aplica solo para la fecha seleccionada">
+					<i class="fa fa-save"></i> Fecha
+				</button>
+				<button class="btn btn-warning btn-sm btn-action tooltips" @click="save(true)" title="Aplica para todas las fechas donde no se define una topología">
+					<i class="fa fa-save"></i> Defecto
+				</button>
             </div>
         </div>
 
@@ -129,7 +137,7 @@
                     Swal.close();
                 });
             },
-            save() {
+            save(global) {
                 Swal.fire({
                     title: this.$t('Processing'),
                     text: this.$t('Please wait'),
@@ -145,6 +153,7 @@
                 axios.post(`${this.apiUrl}/params/occupation/save`, {
                     vehicle: this.searchParams.vehicle,
 					camera: this.searchParams.camera,
+					date: !global ? this.searchParams.date : null,
                     seating: this.seating,
                 }).then(response => {
                     const data = response.data;

@@ -63,17 +63,20 @@ class RocketController extends Controller
                     $persistenceActivate = $request->get('activate');
                     $persistenceRelease = $request->get('release');
                     $photos = collect([]);
+
+                    $service = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date);
+
                     if ($camera == 'all') {
-                        $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->processCount($date, false);
+                        $service->processCount(false);
                     } else {
-                        $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->getHistoric($date);
+                        $photos = $service->getHistoric();
                     }
                     
                     $response->photos = $photos
 //                        ->where('drId', '<>', null)
                         ->sortByDesc('time')->values();
 
-                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
+                    $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;
                     $response->maxRecognitions = $this->processMaxRecognitions($photos);
                 } else {
                     $response->success = false;
@@ -153,7 +156,7 @@ class RocketController extends Controller
                     $date = $request->get('date');
                     $persistenceActivate = $request->get('activate');
                     $persistenceRelease = $request->get('release');
-                    $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->getHistoric($date);
+                    $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->getHistoric();
 
                     if ($photos->count()) {
                         $photo = Photo::find($photos->last()->id);
@@ -165,7 +168,7 @@ class RocketController extends Controller
                         $response->photo = $this->photoService->getPhotoData($photo, $photos);
                     }
 
-                    $response->seating = $vehicle->getProfileSeating($camera)->occupation;
+                    $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;
                 } else {
                     $response->success = false;
                     $response->message = __('Vehicle not found');
@@ -196,10 +199,11 @@ class RocketController extends Controller
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
                 $camera = $request->get('camera');
+                $date = $request->get('date');
                 if ($vehicle) {
                     $seating = collect($request->get('seating'));
 
-                    $profileSeat = $vehicle->getProfileSeating($camera);
+                    $profileSeat = $vehicle->getProfileSeating($camera, $date);
                     $profileSeat->occupation = $seating->transform(function ($seat) {
                         $seat['selected'] = false;
                         return $seat;

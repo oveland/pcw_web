@@ -58,7 +58,7 @@ class CountCommand extends Command
 
             if ($vehicle) {
                 $this->log("Start process count: Vehicle = $vehicle->number • Camera = $camera • Date = $date");
-                $response = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease)->processCount($date);
+                $response = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->processCount();
                 $this->log($response->toJson());
                 $this->log("Count finished! **** ");
             } else {

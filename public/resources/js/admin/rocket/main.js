@@ -453,6 +453,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -555,7 +563,7 @@ __webpack_require__.r(__webpack_exports__);
         sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.close();
       });
     },
-    save: function save() {
+    save: function save(global) {
       var _this3 = this;
 
       sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
@@ -573,6 +581,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post("".concat(this.apiUrl, "/params/occupation/save"), {
         vehicle: this.searchParams.vehicle,
         camera: this.searchParams.camera,
+        date: !global ? this.searchParams.date : null,
         seating: this.seating
       }).then(function (response) {
         var data = response.data;
@@ -667,8 +676,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   watch: {
-    searchParams: function searchParams() {
-      this.load();
+    searchParams: function searchParams() {//this.load();
     }
   },
   methods: {
@@ -8583,66 +8591,91 @@ var render = function () {
       style: "width: " + _vm.image.size.width + "px; margin: auto",
     },
     [
-      _vm.photo
-        ? _c(
-            "div",
-            [
-              _c("photo-details-component", { attrs: { photo: _vm.photo } }),
-              _vm._v(" "),
-              _c("photo-persons-component", {
-                attrs: {
-                  photo: _vm.photo,
-                  seating: _vm.seating,
-                  "fixed-seating": false,
+      _c("div", [
+        _vm.photo
+          ? _c(
+              "div",
+              [
+                _c("photo-details-component", { attrs: { photo: _vm.photo } }),
+                _vm._v(" "),
+                _c("photo-persons-component", {
+                  attrs: {
+                    photo: _vm.photo,
+                    seating: _vm.seating,
+                    "fixed-seating": false,
+                  },
+                }),
+              ],
+              1
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "container-actions col-md-12 text-center" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-default btn-sm btn-action",
+              on: { click: _vm.load },
+            },
+            [_c("i", { staticClass: "fa fa-refresh" })]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-info btn-sm btn-action",
+              on: { click: _vm.addSeat },
+            },
+            [_c("i", { staticClass: "fa fa-plus-square" })]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-danger btn-sm btn-action m-l-20",
+              attrs: { disabled: !_vm.selected },
+              on: { click: _vm.deleteSeating },
+            },
+            [_c("i", { staticClass: "fa fa-trash" })]
+          ),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success btn-sm btn-action tooltips",
+              attrs: { title: "Aplica solo para la fecha seleccionada" },
+              on: {
+                click: function ($event) {
+                  return _vm.save()
                 },
-              }),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "container-actions col-md-12 text-center" },
-                [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-default btn-sm btn-action",
-                      on: { click: _vm.load },
-                    },
-                    [_c("i", { staticClass: "fa fa-refresh" })]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm btn-action",
-                      on: { click: _vm.addSeat },
-                    },
-                    [_c("i", { staticClass: "fa fa-plus-square" })]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-success btn-sm btn-action",
-                      on: { click: _vm.save },
-                    },
-                    [_c("i", { staticClass: "fa fa-save" })]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-warning btn-sm btn-action m-l-20",
-                      attrs: { disabled: !_vm.selected },
-                      on: { click: _vm.deleteSeating },
-                    },
-                    [_c("i", { staticClass: "fa fa-trash" })]
-                  ),
-                ]
-              ),
-            ],
-            1
-          )
-        : _vm._e(),
+              },
+            },
+            [_c("i", { staticClass: "fa fa-save" }), _vm._v(" Fecha\n\t\t\t\t")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-warning btn-sm btn-action tooltips",
+              attrs: {
+                title:
+                  "Aplica para todas las fechas donde no se define una topología",
+              },
+              on: {
+                click: function ($event) {
+                  return _vm.save(true)
+                },
+              },
+            },
+            [
+              _c("i", { staticClass: "fa fa-save" }),
+              _vm._v(" Defecto\n\t\t\t\t"),
+            ]
+          ),
+        ]),
+      ]),
       _vm._v(" "),
       !_vm.photo
         ? _c("div", { staticClass: "col-md-12 text-center p-40" }, [
@@ -8660,7 +8693,18 @@ var render = function () {
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c("hr"),
+      _vm._v(" "),
+      _c("small", [_vm._v("Guardar por:")]),
+    ])
+  },
+]
 render._withStripped = true
 
 
