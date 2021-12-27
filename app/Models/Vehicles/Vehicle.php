@@ -314,9 +314,9 @@ class Vehicle extends Model
     public function getProfileSeating($camera = 'all', $date = null)
     {
         $profileSeat = $this->profileSeat()
-            ->with('vehicle', 'vehicle.configProfile')
-            ->where('camera', $camera)
             ->where('date', $date)
+            ->where('camera', $camera)
+            ->with('vehicle', 'vehicle.configProfile')
             ->first();
         
         if (!$profileSeat) {
@@ -327,6 +327,17 @@ class Vehicle extends Model
             $profileSeat->occupation = [];
             $profileSeat->save();
         }
+
+        if(!count($profileSeat->occupation)){
+            $profileSeatDefault = $this->profileSeat()
+                ->where('date', null)
+                ->where('camera', $camera)
+                ->first();
+
+            $profileSeat->occupation = $profileSeatDefault ? $profileSeatDefault->occupation : [];
+            $profileSeat->save();
+        }
+
         return $profileSeat;
     }
 }

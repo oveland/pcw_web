@@ -1,8 +1,8 @@
 <template>
 
     <div class="zone-seating-component" :style="`width: ${image.size.width}px; margin: auto`">
-        <div>
-			<div v-if="photo">
+        <div v-if="photo">
+			<div>
 				<photo-details-component :photo="photo"></photo-details-component>
 				<photo-persons-component :photo="photo" :seating="seating" :fixed-seating="false"></photo-persons-component>
 			</div>
@@ -168,6 +168,7 @@
                     console.log(error);
                 }).then(() => {
                     Swal.close();
+					if (global) this.save(false);
                 });
             },
         },

@@ -153,7 +153,7 @@ trait PhotoEncode
             $font->size(12);
         });
 
-        $profileSeat = $this->vehicle->getProfileSeating($this->side);
+        $profileSeat = $this->vehicle->getProfileSeating($this->side, $this->date->toDateString());
         if ($profileSeat && $withSeating) {
             $countedSeating = request()->get('counted');
             $countedSeating = collect($countedSeating ? explode(',', $countedSeating) : []);

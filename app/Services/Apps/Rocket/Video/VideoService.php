@@ -120,7 +120,7 @@ class VideoService
     {
         $videoPath = $this->folder . "video/" . $this->videoName;
 
-        if (Carbon::createFromFormat('Y-m-d', $this->date)->isToday() || !Storage::exists($videoPath)) {
+        if (Carbon::createFromFormat('Y-m-d', $this->date)->isToday() || true || !Storage::exists($videoPath)) {
             $this->downloadPhotos();
             $totalPhotos = $this->processPhotos();
 
