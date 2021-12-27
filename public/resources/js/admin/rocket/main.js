@@ -596,6 +596,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       }).then(function () {
         sweetalert2_dist_sweetalert2_min__WEBPACK_IMPORTED_MODULE_3___default.a.close();
+        if (global) _this3.save(false);
       });
     }
   },
@@ -676,7 +677,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   watch: {
-    searchParams: function searchParams() {//this.load();
+    searchParams: function searchParams() {
+      this.load();
     }
   },
   methods: {
@@ -8591,9 +8593,9 @@ var render = function () {
       style: "width: " + _vm.image.size.width + "px; margin: auto",
     },
     [
-      _c("div", [
-        _vm.photo
-          ? _c(
+      _vm.photo
+        ? _c("div", [
+            _c(
               "div",
               [
                 _c("photo-details-component", { attrs: { photo: _vm.photo } }),
@@ -8607,75 +8609,82 @@ var render = function () {
                 }),
               ],
               1
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c("div", { staticClass: "container-actions col-md-12 text-center" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-default btn-sm btn-action",
-              on: { click: _vm.load },
-            },
-            [_c("i", { staticClass: "fa fa-refresh" })]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-info btn-sm btn-action",
-              on: { click: _vm.addSeat },
-            },
-            [_c("i", { staticClass: "fa fa-plus-square" })]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-danger btn-sm btn-action m-l-20",
-              attrs: { disabled: !_vm.selected },
-              on: { click: _vm.deleteSeating },
-            },
-            [_c("i", { staticClass: "fa fa-trash" })]
-          ),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-success btn-sm btn-action tooltips",
-              attrs: { title: "Aplica solo para la fecha seleccionada" },
-              on: {
-                click: function ($event) {
-                  return _vm.save()
-                },
-              },
-            },
-            [_c("i", { staticClass: "fa fa-save" }), _vm._v(" Fecha\n\t\t\t\t")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-warning btn-sm btn-action tooltips",
-              attrs: {
-                title:
-                  "Aplica para todas las fechas donde no se define una topología",
-              },
-              on: {
-                click: function ($event) {
-                  return _vm.save(true)
-                },
-              },
-            },
-            [
-              _c("i", { staticClass: "fa fa-save" }),
-              _vm._v(" Defecto\n\t\t\t\t"),
-            ]
-          ),
-        ]),
-      ]),
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "container-actions col-md-12 text-center" },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default btn-sm btn-action",
+                    on: { click: _vm.load },
+                  },
+                  [_c("i", { staticClass: "fa fa-refresh" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-info btn-sm btn-action",
+                    on: { click: _vm.addSeat },
+                  },
+                  [_c("i", { staticClass: "fa fa-plus-square" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger btn-sm btn-action m-l-20",
+                    attrs: { disabled: !_vm.selected },
+                    on: { click: _vm.deleteSeating },
+                  },
+                  [_c("i", { staticClass: "fa fa-trash" })]
+                ),
+                _vm._v(" "),
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success btn-sm btn-action tooltips",
+                    attrs: { title: "Aplica solo para la fecha seleccionada" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.save()
+                      },
+                    },
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-save" }),
+                    _vm._v(" Fecha\n\t\t\t\t"),
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-warning btn-sm btn-action tooltips",
+                    attrs: {
+                      title:
+                        "Aplica para todas las fechas donde no se define una topología",
+                    },
+                    on: {
+                      click: function ($event) {
+                        return _vm.save(true)
+                      },
+                    },
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-save" }),
+                    _vm._v(" Defecto\n\t\t\t\t"),
+                  ]
+                ),
+              ]
+            ),
+          ])
+        : _vm._e(),
       _vm._v(" "),
       !_vm.photo
         ? _c("div", { staticClass: "col-md-12 text-center p-40" }, [

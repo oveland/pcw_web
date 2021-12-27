@@ -159,7 +159,8 @@ class RocketController extends Controller
                     $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->getHistoric();
 
                     if ($photos->count()) {
-                        $photo = Photo::find($photos->last()->id);
+                        //$photo = Photo::find($photos->last()->id);
+                        $photo = Photo::find($photos->get(intval($photos->count()/2))->id);
 
 //                    $photo = Photo::find(77176);
 //                    $photo->processRekognition(true, 'persons_and_faces');
