@@ -143,10 +143,17 @@
                     $maxInvalidGPSPercent = $invalidGPSPercent;
                 }
             }
+
+        $color = $offRoadPercent > 50 ? 'red-sunglo' : ($dispatchRegister->complete() ? 'inverse' : ($dispatchRegister->isCancelled() ? 'yellow-crusta' : 'yellow-soft'));
         @endphp
         <tr>
-            <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
-            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+            <th width="5%" class="bg-{{ $color }} text-white text-center">
+                {{ $dispatchRegister->date }}
+                @if( Auth::user()->isSuperAdmin() )
+                <div class="text-muted text-sm">{{ $dispatchRegister->id }}</div>
+                @endif
+            </th>
+            <th width="10%" class="bg-{{ $color }} text-white text-center">
 
                 <span class="m-b-5">
                     @if($dispatchRegister->processedByARD())
@@ -160,10 +167,9 @@
                     @endif
                 </span>
 
-
                 @if($dispatchRegister->hasValidOffRoad() && $offRoadPercent)
                     <div class="m-t-1">
-                        <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
+                        <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger bg-red-mint p-5') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
                             {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
                         </label>
                     </div>
@@ -178,14 +184,14 @@
                 </div>
                 @endif
             </th>
-            <th width="5%" class="bg-{{ $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+            <th width="5%" class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->round_trip }}<br>
                 <small>{{ $dispatchRegister->status }}</small>
                 <br>
                 <small>{{ $dispatchRegister->getRouteDistance(true) }} Km</small>
             </th>
-            <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
-            <th width="5%" class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
+            <th width="5%" class="bg-{{ $color }} text-white text-center">{{ $dispatchRegister->turn }}</th>
+            <th width="5%" class="bg-{{ $color }} text-white text-center">{{ $vehicle->number }}</th>
 
             @if( $company->hasDriverRegisters() )
             <td width="25%" class="text-uppercase">

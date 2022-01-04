@@ -65,6 +65,7 @@ class DispatchRouteService
             ->orderBy('date')
             ->orderBy('departure_time');
 
+
         return $q->get();
     }
 

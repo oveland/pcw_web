@@ -2,6 +2,7 @@
 
 namespace App\Models\Routes;
 
+use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
@@ -22,6 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -178,6 +180,19 @@ class DispatchRegister extends Model
     const CANCELLED = "No terminó";
     const TAKINGS = "takings";
 
+    protected function newRelatedInstance($class)
+    {
+        if ($class instanceof Model) {
+            return $class;
+        }
+
+        return tap(new $class, function ($instance) {
+            if (!$instance->getConnectionName()) {
+                $instance->setConnection($this->connection);
+            }
+        });
+    }
+
     function getDateFormat()
     {
         return config('app.simple_date_time_format');
@@ -222,7 +237,9 @@ class DispatchRegister extends Model
      */
     public function locations($order = 'asc')
     {
-        return $this->hasMany(new Location(), 'dispatch_register_id', 'id')->orderBy('date', $order);
+        $location = new Location();
+        $location->forDate($this->date);
+        return $this->hasMany($location, 'dispatch_register_id', 'id')->orderBy('date', $order);
     }
 
     /**
@@ -230,7 +247,9 @@ class DispatchRegister extends Model
      */
     public function offRoads()
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->where('off_road', true)->orderBy('date', 'asc');
+        $location = new Location();
+        $location->forDate($this->date);
+        return $this->hasMany($location, 'dispatch_register_id', 'id')->where('off_road', true)->orderBy('date', 'asc');
     }
 
     /**
@@ -266,7 +285,6 @@ class DispatchRegister extends Model
             return $q->where('driver_code', $driver->code)->orWhere('driver_id', $driver->id);
         });
 
-//        dd($query->toSql(), $query->getBindings(), $query->get());
         return $query;
     }
 
@@ -326,12 +344,18 @@ class DispatchRegister extends Model
     public function scopeActive($query, $completedTurns = null)
     {
         if ($completedTurns) {
-            return $query->completed();
-        }
+            return $query->completed()->where(function ($query) {
+                $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
+            });
+        } else {
+            $companiesThatIncludesCanceledTurns = collect(
+                Company::all()->filter(function (Company $company) {
+                    return $company->hasADD();
+                })
+            )->implode(', ');
 
-        return $query->where(function ($query) {
-            $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
-        });
+            return $query->whereRaw("((SELECT company_id FROM vehicles v WHERE v.id = vehicle_id LIMIT 1) IN ($companiesThatIncludesCanceledTurns) AND (SELECT get_route_distance_from_dr(id)) > 2000 AND (SELECT get_total_locations_from_dr(id) > 50))");
+        }
     }
 
     public function complete()
@@ -342,6 +366,11 @@ class DispatchRegister extends Model
     public function isActive()
     {
         return $this->status == $this::COMPLETE || $this->status == $this::IN_PROGRESS;
+    }
+
+    public function isCancelled()
+    {
+        return Str::contains($this->status, $this::CANCELLED);
     }
 
     public function inProgress()
@@ -736,8 +765,9 @@ class DispatchRegister extends Model
     {
         $totalLocations = $this->locations()->count();
         $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
+        $totalLocations = $totalLocations < 1000 ? $totalLocations : $totalLocations * 5;
 
-        return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0;
+        return min([$totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0, 100]);
     }
 
     public function invalidGPSPercent()
@@ -762,12 +792,13 @@ class DispatchRegister extends Model
 
     public function getTotalOffRoad()
     {
-        if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
+        return $this->offRoads()->count();
 
-
-        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
-
-        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
+//        if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
+//
+//        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
+//
+//        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
     public function getTotalOffRoadAttribute()

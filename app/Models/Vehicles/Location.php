@@ -42,7 +42,7 @@ trait BindsDynamically
         $indexViewFd = $this->getIndexView($finalDate);
 
         $tableName = "locations";
-        if ($indexViewId === $indexViewFd) {
+        if ($indexViewId === $indexViewFd || !$finalDate) {
             $tableName = "locations$indexViewId";
         }
 
@@ -166,7 +166,8 @@ class Location extends Model
      */
     public function dispatchRegister()
     {
-        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id')->active();
+//        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id')->active();
+        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id');
     }
 
     /**
@@ -287,11 +288,20 @@ class Location extends Model
 
     public function getTotalOffRoad($routeId)
     {
-        $routeId = $routeId ? $routeId : ($this->dispatch_register_id ? $this->dispatchRegister->route->id : 'empty');
+        if ($this->dispatch_register_id && $this->dispatchRegister->route_id == $routeId) {
+            return $this->dispatchRegister->offRoads()->count();
+        }
 
-        $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
+//        $routeId = $routeId ? $routeId : ($this->dispatch_register_id ? $this->dispatchRegister->route->id : 'empty');
+//        $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
+//
+//        if (isset($ardOffRoad[$routeId])) {
+//            return intval($ardOffRoad[$routeId]['tt']);
+//        } else if ($this->dispatchRegister) {
+//            return $this->dispatchRegister->locations()->withOffRoads()->count();
+//        }
 
-        return isset($ardOffRoad[$routeId]) ? $ardOffRoad[$routeId]['tt'] : 0;
+        return 0;
     }
 
     public function photo()
