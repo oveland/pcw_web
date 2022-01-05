@@ -29,10 +29,10 @@ class SeatOccupationService
      * @param false $withOverlap
      * @param $statusDispatch
      */
-    public function processPersistenceSeating(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch)
+    public function processPersistenceSeating(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch, $routeId = null)
     {
-        $this->persistenceRelease($currentOccupied, $prevOccupied, $withOverlap, $statusDispatch);
-        $this->persistenceActivate($currentOccupied, $prevOccupied, false, $statusDispatch);
+        $this->persistenceRelease($currentOccupied, $prevOccupied, $withOverlap, $statusDispatch, $routeId);
+        $this->persistenceActivate($currentOccupied, $prevOccupied, false, $statusDispatch, $routeId);
     }
 
     /**
@@ -41,13 +41,23 @@ class SeatOccupationService
      * @param bool $withOverlap
      * @param $statusDispatch
      */
-    private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch)
+    private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch, $routeId = null)
     {
         if (!$withOverlap) {
             foreach ($prevOccupied as $seat => $data) {
+                $configSeat = $this->configSeating[$seat];
 
-                $seatReleaseThreshold = $this->configSeating[$seat]['persistence']['release'];
-                $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
+                $seatReleaseThreshold = $configSeat['persistence']['release'];
+                $seatActivateThreshold = $configSeat['persistence']['activate'];
+
+                $a = $seatReleaseThreshold;
+
+                if($routeId && $configSeat['persistenceRoutes'] && isset($configSeat['persistenceRoutes'][$routeId])) {
+                    $seatReleaseThreshold = $configSeat['persistenceRoutes'][$routeId]['r'];
+                    $seatActivateThreshold = $configSeat['persistenceRoutes'][$routeId]['a'];
+                }
+
+                //if($a != $seatReleaseThreshold) dd("Change release: $a by $seatReleaseThreshold on route $routeId");
 
                 $newData = collect($data);
 
@@ -83,13 +93,18 @@ class SeatOccupationService
      * @param bool $withOverlap
      * @param $statusDispatch
      */
-    private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch)
+    private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false, $statusDispatch, $routeId = null)
     {
         if (!$withOverlap) {
             $currentOccupiedClone = clone $currentOccupied;
             $currentOccupied = collect([]);
             foreach ($currentOccupiedClone as $seat => $data) {
-                $seatActivateThreshold = $this->configSeating[$seat]['persistence']['activate'];
+                $configSeat = $this->configSeating[$seat];
+
+                $seatActivateThreshold = $configSeat['persistence']['activate'];
+                if($routeId && $configSeat['persistenceRoutes'] && isset($configSeat['persistenceRoutes'][$routeId])) {
+                    $seatActivateThreshold = $configSeat['persistenceRoutes'][$routeId]['a'];
+                }
 
                 $newData = collect($data);
 

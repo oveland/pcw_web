@@ -623,6 +623,8 @@ class PhotoService
                     $prevPhoto->dispatch_register_id = null;
                 }
 
+                $dr = $photo->dispatchRegister;
+                $routeId = $dr ? $dr->route_id : null;
                 if ($photo->dispatchRegister && !$photo->dispatchRegister->isActive()) {
                     $photo->dispatch_register_id = null;
                 }
@@ -638,7 +640,7 @@ class PhotoService
                 $ini = Carbon::now();
 
                 $statusDispatch = $this->processStatusDispatch($photo, $prevPhoto);
-                $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDispatch);
+                $this->seatOccupationService->processPersistenceSeating($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDispatch, $routeId);
 
                 $seatingActivated = $this->seatOccupationService->getSeatingActivated($currentOccupation->seatingOccupied, $currentOccupation->withOverlap);
                 $seatingReleased = $this->seatOccupationService->getSeatingReleased($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap);

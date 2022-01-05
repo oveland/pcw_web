@@ -119,9 +119,22 @@ class ConfigProfileService
 //                $activate = $rActivate ? $rActivate : 1;
 //                $release = $rActivate ? $rActivate : 3;
 //            }
+            $persistenceRoutes = null;
+            if ($this->vehicle->id == 2357) {
+                $persistenceRoutes = [
+                    279 => ['a' => 3, 'r' => 20],
+                    280 => ['a' => 3, 'r' => 20],
+
+                    285 => ['a' => 10, 'r' => 80],
+                    286 => ['a' => 10, 'r' => 80],
+                    287 => ['a' => 10, 'r' => 80],
+                    288 => ['a' => 10, 'r' => 80],
+                ];
+            }
 
             $seatingConfig[$number] = [
-                'persistence' => compact(['activate', 'release'])
+                'persistence' => compact(['activate', 'release']),
+                'persistenceRoutes' => $persistenceRoutes
             ];
         }
 
