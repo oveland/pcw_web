@@ -519,7 +519,7 @@ class DispatchRegister extends Model
                 'arrival_time_scheduled' => $this->arrival_time_scheduled,
                 'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-                'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
+                'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
                 'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
                 'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
@@ -551,7 +551,7 @@ class DispatchRegister extends Model
             'arrival_time_scheduled' => $this->arrival_time_scheduled,
             'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-            'arrival_time' => $this->onlyControlTakings() ? '' : $this->complete() ? $this->arrival_time : '--:--:--',
+            'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
             'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
             'difference_time' => $this->arrival_time_difference,

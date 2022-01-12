@@ -146,7 +146,7 @@
         @endphp
         <tr>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
-            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : ($dispatchRegister->complete() ? 'inverse' : 'warning') }} text-white text-center">
 
                 <span class="m-b-5">
                     @if($dispatchRegister->processedByARD())

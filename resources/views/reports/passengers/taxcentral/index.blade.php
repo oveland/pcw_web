@@ -54,7 +54,35 @@
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
-                        <div class="col-md-4">
+                        @if(Auth::user()->isAdmin())
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="company-report"
+                                           class="control-label field-required">@lang('Company')</label>
+                                    <div class="form-group">
+                                        <select name="company-report" id="company-report"
+                                                class="default-select2 form-control col-md-12">
+                                            <option value="null">@lang('Select an option')</option>
+                                            @foreach($companies as $company)
+                                                <option value="{{$company->id}}">{{ $company->short_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
+                                <div class="form-group">
+                                    <select name="route-report" id="route-report"
+                                            class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="date-report"
                                        class="control-label field-required">@lang('Date report')</label>
@@ -64,34 +92,6 @@
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
-                                </div>
-                            </div>
-                        </div>
-                        @if(Auth::user()->isAdmin())
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="company-report"
-                                       class="control-label field-required">@lang('Company')</label>
-                                <div class="form-group">
-                                    <select name="company-report" id="company-report"
-                                            class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select an option')</option>
-                                        @foreach($companies as $company)
-                                            <option value="{{$company->id}}">{{ $company->short_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
-                                <div class="form-group">
-                                    <select name="route-report" id="route-report"
-                                            class="default-select2 form-control col-md-12">
-                                        <option value="null">@lang('Select a company')</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -110,15 +110,12 @@
     <div class="modal modal-message fade" id="modal-passengers-route-report">
         <div class="modal-dialog modal-full">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <div class="modal-header hide">
+                    <button type="button" class="close" >
                         <i class="fa fa-times"></i>
                     </button>
                     <div class="row">
-                        <blockquote class="m-0">
-                            <h3 class="m-3">@lang('Passengers report by route')</h3>
-                        </blockquote>
-                        <hr class="col-md-12 col-xs-12 col-sm-12 p-0">
+                        <h3 class="m-3">@lang('Seating report')</h3>
                     </div>
                 </div>
                 <div class="modal-body">

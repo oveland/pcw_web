@@ -33,6 +33,8 @@ class TaxCentralPassengerReportController extends Controller
     {
         $dateReport = $request->get('date-report');
         $routeId = $request->get('route-report');
+        $vehicleReport = $request->get('vehicle-report');
+        $vehicleReport = 1873;
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $vehiclesForCompany = $company->activeVehicles->pluck('plate');
 
@@ -40,11 +42,12 @@ class TaxCentralPassengerReportController extends Controller
         $location_dispatch = null;
 
         if ($routeId != 'all') {
-            $roundTripDispatchRegisters = DispatchRegister::where('date', '=', $dateReport)
-                ->where('route_id', '=', $routeId)//->where('status','=',DispatchRegister::COMPLETE)
-                ->orderBy('round_trip')->get()->groupBy('round_trip');
+            $dispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $routeId, $vehicleReport)
+                ->completed()
+                ->orderBy('departure_time')
+                ->get();
 
-            return view('reports.passengers.taxcentral.passengersReportByRoute', compact('roundTripDispatchRegisters'));
+            return view('reports.passengers.taxcentral.passengersReportByRoute', compact('dispatchRegisters'));
         }
         //$historySeats = $historySeats->whereBetween('active_time',[$dateReport.' '.$dispatchRegister->departure_time,$dateReport.' '.$dispatchRegister->arrival_time_scheduled]);
 
@@ -74,7 +77,7 @@ class TaxCentralPassengerReportController extends Controller
 
         $routeDistance = $dispatchRegister->route->distance * 1000;
 
-        foreach ($historySeats as $historySeat) {
+        foreach ($historySeats as &$historySeat) {
             if ($historySeat->complete == 1) {
                 //$busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);                
                 $historySeat->active_km = $historySeat->active_km < $dispatchRegister->start_odometer ? 0 : ($historySeat->active_km - $dispatchRegister->start_odometer);
@@ -85,6 +88,8 @@ class TaxCentralPassengerReportController extends Controller
                 $historySeat->busy_km = $historySeat->inactive_km - $historySeat->active_km;
             }
         }
+
+        $historySeats = $historySeats->sortBy('active_km');
         
         if ($request->get('export')) $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
 
