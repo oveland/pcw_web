@@ -50,6 +50,11 @@ trait PhotoGlobals
         return $this->belongsTo(Vehicle::class);
     }
 
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
     /**
      * @return BelongsTo | DispatchRegister
      */
@@ -86,8 +91,9 @@ trait PhotoGlobals
                 'arrival_time' => $dispatchRegister->arrival_time,
                 'route' => (object)[
                     'id' => $dispatchRegister->route_id,
-                    'name' => $dispatchRegister->route->name
-                ]
+                    'name' => $dispatchRegister->route->name,
+                ],
+                'distance' => $dispatchRegister->getRouteDistance(),
             ];
         }
 

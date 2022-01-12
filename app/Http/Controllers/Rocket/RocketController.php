@@ -64,6 +64,7 @@ class RocketController extends Controller
                     $persistenceRelease = $request->get('release');
                     $photos = collect([]);
 
+                    // $camera = 'all';
                     $service = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date);
 
                     if ($camera == 'all') {

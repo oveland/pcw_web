@@ -23,6 +23,7 @@ use Illuminate\Support\Collection;
 use Image;
 use Storage;
 use Validator;
+use App\Models\Vehicles\Location;
 
 class PhotoService
 {
@@ -401,19 +402,114 @@ class PhotoService
             ->get();
     }
 
-    function processCount($withHistoricPassengers = true)
+    function processMultiTariff(Collection $allHistoric) {
+        DB::statement("DELETE FROM history_seats WHERE date::DATE = '$this->date' AND vehicle_id = " . $this->vehicle->id);
+        $historicByDr = $allHistoric->groupBy('drId');
+
+        //dd($allHistoric->first());
+
+        $countTotal = 0;
+        $countByTurn = 0;
+
+        foreach ($historicByDr as $drId => $historic) {
+            // echo "<br><br>";
+            $countByTurn = 0;
+            $registers = collect([]);
+
+            foreach ($historic->sortBy('time') as $photo) {
+                $vehicle = $this->vehicle;
+                $details = $photo->details;
+                $dr = $details->dispatchRegister;
+                $ddr = DispatchRegister::find($drId);
+                // $drId = $dr ? $dr->id : null;
+
+                $info =" $ddr->status > " . $dr->route->name . " $dr->round_trip ";
+
+                $date = Carbon::make($details->date);
+                $time = $date->toTimeString();
+
+                $location = Location::select('distance')->where('id', $details->location_id)->first();
+                $occupation = $details->occupation;
+
+                $seatingActivated = explode(', ', $occupation->seatingActivatedStr);
+                $seatingReleased = explode(', ', $occupation->seatingReleaseStr);
+
+                if($occupation->seatingActivatedStr) {
+                    foreach ($seatingActivated as $seat) {
+                        $countByTurn ++;
+                        $countTotal++;
+
+                        // echo "Active seat = $seat at $date | $info | Count = $countByTurn <br>";
+                        $seat = intval($seat);
+
+                        $insert = DB::select("
+                            INSERT INTO history_seats (plate, seat, date, time, active_time, active_km, vehicle_id, dispatch_register_id) 
+                            VALUES ('$vehicle->plate', $seat, '$this->date', '$time', '$date', $location->distance, $vehicle->id, $drId) RETURNING id
+                        ");
+                        $id = collect($insert)->first()->id;
+
+                        $registers->put($seat, (object) [
+                            'id' => $id,
+                            'seat' => $seat,
+                            'arrivedTime' => $this->date . " " . $dr->arrival_time,
+                            'routeDistance' => $dr->distance,
+                        ]);
+                    }
+                }
+
+                if($occupation->seatingReleaseStr) {
+                    foreach ($seatingReleased as $seat) {
+                        if($registers->get($seat)){
+                            $register = $registers->get($seat);
+                            // echo ".............. Release seat = $seat at $date | $info | $countByTurn <br>";
+                            if($register) {
+                                $id = $register->id;
+                                if($id) {
+                                    DB::statement("UPDATE history_seats SET inactive_time = '$date', inactive_km = $location->distance WHERE id = $id");
+                                }
+                            }
+
+                            $registers->forget($seat);
+                        }
+                    }
+                }
+            }
+
+            foreach ($registers as $register) {
+                $id = $register->id;
+                $arrivedTime = $register->arrivedTime;
+                $routeDistance = $register->routeDistance;
+                $seat = $register->seat;
+
+                // echo "''''''''''''''' Release seat = $seat at $arrivedTime <br>";
+
+                DB::statement("UPDATE history_seats SET inactive_time = '$arrivedTime', inactive_km = $routeDistance WHERE id = $id");
+            }
+        }
+
+
+        dd('Total count '.$countTotal);
+    }
+
+    function processCount($withHistoricPassengers = true, $withMultiTariff = false)
     {
         $totalByCameras = 0;
         $allPhotos = $this->getPhotos();
         $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
 
+        $historic = collect([]);
         $historicByCameras = collect([]);
-
         foreach ($this->getVehicleCameras() as $sideCamera) {
             $this->setCamera($sideCamera); // Important for setProfileSeating() routine
             $data = $this->processPhotos($allPhotos->where('side', $sideCamera)->values())->where('drId', '<>', null);
 
+            $historic->push($data);
             $historicByCameras->push($data->groupBy('drId'));
+        }
+        $historic = $historic->collapse();
+
+        if($withMultiTariff || true) {
+            $this->processMultiTariff($historic);
         }
 
         foreach ($drIds as $drId) {
@@ -428,11 +524,11 @@ class PhotoService
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
         }
 
-        if ($withHistoricPassengers) {
-            $historic = $historicByCameras->collapse()->collapse();
 
+        if ($withHistoricPassengers) {
             DB::delete("DELETE FROM passengers WHERE date::DATE = '$this->date' AND vehicle_id = " . $this->vehicle->id);
 
+            //$historic = $historicByCameras->collapse()->collapse();
             foreach ($drIds as $drId) {
                 $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
                 $historicDrByLocation = $historicDr->groupBy('details.location_id');

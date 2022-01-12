@@ -106,7 +106,7 @@
             $offRoadPercent = $dispatchRegister->getOffRoadPercent();
         @endphp
         <tr>
-            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : $dispatchRegister->complete() ?'inverse':'warning' }} text-white text-center">
+            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : ($dispatchRegister->complete() ? 'inverse' : 'warning') }} text-white text-center">
                 {{ $route->name }}
                 @if($offRoadPercent)
                     <div class="m-t-10">
