@@ -5,6 +5,7 @@ namespace App\Services\GPS\Syrus;
 
 
 use App\Models\Apps\Rocket\Photo;
+use App\Models\Apps\Rocket\PhotoEvent;
 use App\Models\Vehicles\GpsVehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use Carbon\Carbon;
@@ -57,9 +58,14 @@ class SyrusService
 
                 }
 
+                $date = Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString();
+
+                $photoEvent = PhotoEvent::whereImei($imei)->whereUid($fileName)->first();
+                if($photoEvent) $date = $photoEvent->date;
+
                 if (!$fileHasError) {
                     $process = $service->saveImageData([
-                        'date' => Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString(),
+                        'date' => $date,
                         'img' => Image::make($storage->get($file))->encode('data-url'),
                         'type' => 'syrus',
                         'side' => $side,
@@ -68,6 +74,7 @@ class SyrusService
 
                     if ($process->response->success === true) {
                         $storage->delete($file);
+                        if($photoEvent) $photoEvent->delete();
                     }
 
                     $saveFiles->push($process->response->message);
