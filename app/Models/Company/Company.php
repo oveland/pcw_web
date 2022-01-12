@@ -66,6 +66,7 @@ use Auth;
 class Company extends Model
 {
     const PCW = 6;
+    const TRANSPUBENZA = 2;
     const COOTRANSOL = 12;
     const ALAMEDA = 14;
     const MONTEBELLO = 21;
@@ -217,7 +218,13 @@ class Company extends Model
      */
     public function hasSensorCounter()
     {
-        return collect([self::YUMBENOS, self::ALAMEDA, self::EXPRESO_PALMIRA, self::MONTEBELLO])->contains($this->id) || auth()->user()->isAdmin();
+        return collect([
+                self::YUMBENOS,
+                self::ALAMEDA,
+                self::EXPRESO_PALMIRA,
+                self::MONTEBELLO,
+                self::TRANSPUBENZA
+            ])->contains($this->id) || auth()->user()->isAdmin();
     }
 
     /*

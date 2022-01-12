@@ -107,7 +107,8 @@ class User extends Authenticatable
         return $this->isAdmin() && (
                 $this->id == 625565             // OVELAND
                 || $this->id == 940736          // OMAR
-                || $this->id == 1130648973      // BRIAN
+//                || $this->id == 1130648973      // BRIAN
+                || $this->id == 2018101255      // LEANDRO
             );
     }
 
