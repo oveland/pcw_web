@@ -62,6 +62,7 @@ use Illuminate\Database\Eloquent\Model;
 class RouteTaking extends Model
 {
     const STATIONS_FUEL = [
+        0 => '',
         1 => 'EDS Alameda',
         2 => 'EDS Cerros',
         3 => 'Otra',
