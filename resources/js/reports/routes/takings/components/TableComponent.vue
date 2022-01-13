@@ -42,12 +42,12 @@
 					<div class="col-md-12 p-0">
 						<div class="col-md-6 col-sm-6 col-xs-6">
 							<small>
-								<i class="fa fa-dollar"></i> 1600
+								TRF 1
 							</small>
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6">
 							<small>
-								<i class="fa fa-dollar"></i> 2100
+								TRF 2
 							</small>
 						</div>
 					</div>
