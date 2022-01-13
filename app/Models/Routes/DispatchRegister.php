@@ -407,7 +407,7 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensorTotalAttribute()
     {
-        if ($this->inProgress()) {
+        if ($this->inProgress() && false) {
             $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
 
             if (!$lastPassenger) {
@@ -777,7 +777,7 @@ class DispatchRegister extends Model
 
     public function getPassengersByRecorder()
     {
-        if ($this->route && $this->route->company_id == Company::YUMBENOS) {
+        if ($this->route && $this->route->company->hasSeatSensorCounter()) {
             return $this->getPassengersBySensor();
         }
 
@@ -797,13 +797,13 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensor()
     {
-        /*$tariffs = collect(\DB::select("
+        $tariffs = collect(\DB::select("
             SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
             FROM passengers
             WHERE dispatch_register_id = $this->id
             GROUP BY tariff
             ORDER BY tariff
-        "));*/
+        "));
 
 
         $default = (object)[
@@ -811,7 +811,7 @@ class DispatchRegister extends Model
             'totalCounted' => 0,
             'totalCharge' => 0,
         ];
-        $tariffs = collect([$default, $default]);
+        //$tariffs = collect([$default, $default]);
 
         return (object)[
             'start' => $this->initial_sensor_counter,
@@ -846,14 +846,9 @@ class DispatchRegister extends Model
             $passengers = $this->getPassengersByRecorder()->count;
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
-
-            if (!$takings->isTaken() && $this->date >= '2021-05-01' && $this->date <= '2021-05-13') {
-                $takings->passenger_tariff = 2200;
-            }
-
             $totalProduction = $takings->passenger_tariff * $passengers;
 
-            if ($this->route && $this->route->company_id == Company::YUMBENOS) {
+            if ($this->route && $this->route->company->hasSeatSensorCounter()) {
                 $totalProduction = $this->final_charge - $this->initial_charge;
             }
 

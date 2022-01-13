@@ -203,7 +203,7 @@ class Company extends Model
     */
     public function hasSeatSensorCounter()
     {
-        return collect([self::YUMBENOS])->contains($this->id);
+        return collect([self::YUMBENOS, self::MONTEBELLO])->contains($this->id);
     }
 
     /**
