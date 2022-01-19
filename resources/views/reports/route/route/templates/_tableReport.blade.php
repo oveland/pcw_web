@@ -187,11 +187,11 @@
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->turn }}</th>
             <th width="5%" class="bg-inverse text-white text-center">{{ $vehicle->number }}</th>
 
-            @if( $company->hasDriverRegisters() )
+            @if($company->hasDriverRegisters())
             <td width="25%" class="text-uppercase">
-                @if( Auth::user()->isSuperAdmin() )
+                @if(Auth::user()->canEditDrivers())
                     @php
-                        $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code;
+                        $driverInfo = $driver ? $driver->fullName() : $dispatchRegister->driver_code;
                     @endphp
                     <div class="tooltips box-edit" data-title="@lang('Driver')">
                         <span class="box-info">
@@ -201,14 +201,14 @@
                         </span>
                         <div class="box-edit" style="display: none">
                             <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                   data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('driver_code')"
+                                   data-url="{{ route('report-passengers-manage-update', ['action' => 'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('driver_code')"
                                    class="input-sm form-control edit-input-recorder" value="{{ $dispatchRegister->driver_code }}">
                         </div>
                     </div>
                 @else
-                    {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
+                    {{ $driver ? $driver->fullName():$dispatchRegister->driver_code }}
                 @endif
-                @if( $dispatchRegister->user )
+                @if($dispatchRegister->user)
                     <hr class="m-0">
                     <small class="text-muted tooltips" data-title="@lang('User') @lang('Dispatcher')" data-placement="bottom">
                         {{ $dispatchRegister->user->name }}

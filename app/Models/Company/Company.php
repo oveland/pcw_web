@@ -257,7 +257,7 @@ class Company extends Model
     */
     public function hasSeatSensorCounter()
     {
-        return collect([self::COOTRANSOL])->contains($this->id);
+        return collect([self::MONTEBELLO])->contains($this->id);
     }
 
     /**
