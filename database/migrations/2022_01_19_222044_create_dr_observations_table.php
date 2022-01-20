@@ -17,10 +17,13 @@ class CreateDrObservationsTable extends Migration
             $table->increments('id');
             $table->string('field');
             $table->string('value')->nullable();
+            $table->string('old_value')->nullable();
             $table->string('observation');
             $table->unsignedBigInteger('dispatch_register_id');
+            $table->unsignedBigInteger('user_id');
 
             $table->foreign('dispatch_register_id')->references('id_registro')->on('registrodespacho')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -906,9 +906,15 @@ class DispatchRegister extends Model
         $drObs = $this->hasOne(DrObservation::class)->where('field', $field)->first();
 
         if(!$drObs) {
+            $user = Auth::user();
             $drObs = new DrObservation();
             $drObs->field = $field;
             $drObs->dispatchRegister()->associate($this);
+            $drObs->user()->associate($user);
+
+            if($user->isSuperAdmin()) {
+                $drObs->observation = 'Por solicitud grupo de soporte';
+            }
         }
 
         return $drObs;

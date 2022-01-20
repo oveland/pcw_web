@@ -200,12 +200,19 @@
                             </span>
                         </span>
                         <div class="box-edit" style="display: none">
+                            @php
+                                $obs = $dispatchRegister->getObservation('driver_code');
+                            @endphp
                             <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
                                    data-url="{{ route('report-passengers-manage-update', ['action' => 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="driver_code"
                                    class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $dispatchRegister->driver_code }}">
                             <div class="box-obs">
                                 <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
-                                >{{ $dispatchRegister->getObservation('driver_code')->observation }}</textarea>
+                                >{{ $obs->observation }}</textarea>
+                                <div class="text-muted text-center box-audit">
+                                    <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
+                                    <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                </div>
                                 <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
                                     <i class="fa fa-times"></i>
                                 </button>
@@ -271,6 +278,9 @@
             @if( $company->hasRecorderCounter() )
                 <td width="10%" class="p-r-0 p-l-0 text-center">
                     @if( Auth::user()->canEditRecorders() )
+                        @php
+                            $obs = $dispatchRegister->getObservation('start_recorder');
+                        @endphp
                         <div class="tooltips box-edit" data-title="@lang('Start Recorder')">
                             <span class="box-info">
                                 <span class="">
@@ -283,7 +293,11 @@
                                        class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $startRecorder }}">
                                 <div class="box-obs">
                                     <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
-                                    >{{ $dispatchRegister->getObservation('start_recorder')->observation }}</textarea>
+                                    >{{ $obs->observation }}</textarea>
+                                    <div class="text-muted text-center box-audit">
+                                        <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
+                                        <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                    </div>
                                     <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
                                         <i class="fa fa-times"></i>
                                     </button>
@@ -298,6 +312,9 @@
                     @endif
                     <hr class="m-0">
                     @if( Auth::user()->canEditRecorders() )
+                        @php
+                            $obs = $dispatchRegister->getObservation('end_recorder');
+                        @endphp
                         <div class="tooltips box-edit" data-title="@lang('End Recorder')">
                             <span class="box-info">
                                 <span class="">
@@ -310,7 +327,11 @@
                                        class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $endRecorder }}">
                                 <div class="box-obs">
                                     <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
-                                    >{{ $dispatchRegister->getObservation('end_recorder')->observation }}</textarea>
+                                    >{{ $obs->observation }}</textarea>
+                                    <div class="text-muted text-center box-audit">
+                                        <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
+                                        <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                    </div>
                                     <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
                                         <i class="fa fa-times"></i>
                                     </button>
@@ -534,9 +555,14 @@
         text-align: center;
         position: absolute;
         z-index: 1000;
-        background: lightgrey;
+        background: #e7e5e5;
         border-radius: 10px;
         padding-bottom: 5px;
         border-bottom: 4px solid rgb(143, 146, 149);
+    }
+
+    .box-audit {
+        white-space: nowrap;
+        padding: 0 20px 0 20px;
     }
 </style>

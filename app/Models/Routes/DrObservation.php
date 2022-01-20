@@ -2,6 +2,7 @@
 
 namespace App\Models\Routes;
 
+use App\Models\Users\User;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,8 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property string $field
  * @property string|null $value
+ * @property string|null $old_value
  * @property string $observation
  * @property int $dispatch_register_id
+ * @property DispatchRegister $dispatchRegister
+ * @property int $user_id
+ * @property User $user
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|DrObservation whereCreatedAt($value)
@@ -32,5 +37,10 @@ class DrObservation extends Model
     function dispatchRegister(): BelongsTo
     {
         return $this->belongsTo(DispatchRegister::class);
+    }
+
+    function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
