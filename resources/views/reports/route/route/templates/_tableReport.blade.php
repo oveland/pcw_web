@@ -201,8 +201,18 @@
                         </span>
                         <div class="box-edit" style="display: none">
                             <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                   data-url="{{ route('report-passengers-manage-update', ['action' => 'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('driver_code')"
-                                   class="input-sm form-control edit-input-recorder" value="{{ $dispatchRegister->driver_code }}">
+                                   data-url="{{ route('report-passengers-manage-update', ['action' => 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="driver_code"
+                                   class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $dispatchRegister->driver_code }}">
+                            <div class="box-obs">
+                                <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                >{{ $dispatchRegister->getObservations('driver_code') }}</textarea>
+                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <button class="btn btn-xs btn-success m-5 edit-btn-save">
+                                    <i class="fa fa-save"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @else
@@ -269,8 +279,18 @@
                             </span>
                             <div class="box-edit" style="display: none">
                                 <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('start_recorder')"
-                                       class="input-sm form-control edit-input-recorder" value="{{ $startRecorder }}">
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="start_recorder"
+                                       class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $startRecorder }}">
+                                <div class="box-obs">
+                                    <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                    >{{ $dispatchRegister->getObservations('start_recorder') }}</textarea>
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save">
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @else
@@ -286,8 +306,18 @@
                             </span>
                             <div class="box-edit" style="display: none">
                                 <input id="edit-end-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('end_recorder')"
-                                       class="input-sm form-control edit-input-recorder" value="{{ $endRecorder }}">
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="end_recorder"
+                                       class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $endRecorder }}">
+                                <div class="box-obs">
+                                    <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                    >{{ $dispatchRegister->getObservations('end_recorder') }}</textarea>
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save">
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @else
@@ -493,5 +523,20 @@
 
     .label-lg {
         font-size: 1.4rem !important;
+    }
+
+    .box-edit {
+        position: relative;
+        width: 100%;
+    }
+
+    .box-obs {
+        text-align: center;
+        position: absolute;
+        z-index: 1000;
+        background: lightgrey;
+        border-radius: 10px;
+        padding-bottom: 5px;
+        border-bottom: 4px solid rgb(143, 146, 149);
     }
 </style>
