@@ -901,8 +901,17 @@ class DispatchRegister extends Model
         return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')->where('dispatch_id', $this->dispatch_id);
     }
 
-    function getObservations($field) {
-        return $field;
+    function getObservation($field = null):DrObservation {
+        $field = __($field);
+        $drObs = $this->hasOne(DrObservation::class)->where('field', $field)->first();
+
+        if(!$drObs) {
+            $drObs = new DrObservation();
+            $drObs->field = $field;
+            $drObs->dispatchRegister()->associate($this);
+        }
+
+        return $drObs;
     }
 
     const CREATED_AT = 'date_created';

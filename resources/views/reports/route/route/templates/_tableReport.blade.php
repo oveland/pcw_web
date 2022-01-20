@@ -205,7 +205,7 @@
                                    class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $dispatchRegister->driver_code }}">
                             <div class="box-obs">
                                 <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
-                                >{{ $dispatchRegister->getObservations('driver_code') }}</textarea>
+                                >{{ $dispatchRegister->getObservation('driver_code')->observation }}</textarea>
                                 <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
                                     <i class="fa fa-times"></i>
                                 </button>
@@ -283,7 +283,7 @@
                                        class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $startRecorder }}">
                                 <div class="box-obs">
                                     <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
-                                    >{{ $dispatchRegister->getObservations('start_recorder') }}</textarea>
+                                    >{{ $dispatchRegister->getObservation('start_recorder')->observation }}</textarea>
                                     <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
                                         <i class="fa fa-times"></i>
                                     </button>
@@ -310,7 +310,7 @@
                                        class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $endRecorder }}">
                                 <div class="box-obs">
                                     <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
-                                    >{{ $dispatchRegister->getObservations('end_recorder') }}</textarea>
+                                    >{{ $dispatchRegister->getObservation('end_recorder')->observation }}</textarea>
                                     <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
                                         <i class="fa fa-times"></i>
                                     </button>

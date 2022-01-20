@@ -25,12 +25,19 @@ class ManagePassengersByRecorderController extends Controller
                     $id = $request->get('id');
                     $field = __($request->get('field'));
                     $value = $request->get('value');
+                    $observation = $request->get('obs');
 
                     $success = DB::update("UPDATE registrodespacho SET $field = $value, edit_user_id = $user->id, edited_info = edited_info || 'User $user->id > $field = $value, ', ignore_trigger = TRUE WHERE id_registro = $id");
 
-                    $dr = DispatchRegister::find($id);
+                    if($success) {
+                        $dr = DispatchRegister::find($id);
 
-                    $drObs = $dr->getObservations($field);
+                        $drObs = $dr->getObservation($field);
+                        $drObs->value = $value;
+                        $drObs->observation = $observation;
+
+                        $success = $drObs->save();
+                    }
 
                     return Response::json([
                         'success' => $success,
