@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Syrus;
 
+use App\Models\Company\Company;
 use App\Services\GPS\Syrus\SyrusService;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -13,7 +14,7 @@ class SyncPhotoCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'syrus:sync-photos {--imei=357042066532541}';
+    protected $signature = 'syrus:sync-photos {--imei=357042066532541} {--company=}';
 
     /**
      * The console command description.
@@ -48,8 +49,24 @@ class SyncPhotoCommand extends Command
     public function handle()
     {
         $imei = $this->option('imei');
-        $response = $this->syrusService->syncPhoto($imei);
+        $company = $this->option('company');
 
-        $this->info($response);
+        if ($company) {
+            $company = Company::find($company);
+
+            $vehicles = $company->activeVehicles;
+
+            foreach ($vehicles as $vehicle) {
+                $gps = $vehicle->gpsVehicle;
+                if ($gps) {
+                    dump("Sync vehicle $vehicle->number imei $gps->imei");
+                    $response = $this->syrusService->syncPhoto($gps->imei);
+                    $this->info($response);
+                }
+            }
+        } else if ($imei) {
+            $response = $this->syrusService->syncPhoto($imei);
+            $this->info($response);
+        }
     }
 }
