@@ -61,7 +61,11 @@ class SyrusService
                 $date = Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString();
 
                 $photoEvent = PhotoEvent::whereImei($imei)->whereUid($fileName)->first();
-                if($photoEvent) $date = $photoEvent->date;
+                if($photoEvent) {
+                	$date = $photoEvent->date->toDateTimeString();                
+                }
+                
+                dump($date);
 
                 if (!$fileHasError) {
                     $process = $service->saveImageData([

@@ -34,9 +34,19 @@ use Illuminate\Database\Eloquent\Builder;
 class PhotoEvent extends Model
 {
     protected $table = 'app_photo_events';
+    
+    //protected $dates = ['date'];
 
     function getDateFormat()
     {
-        return config('app.date_time_format');
+        return config('app.simple_date_time_format');
+    }
+    
+    function getDateAttribute($date)
+    {
+ 	  return Carbon::createFromFormat(
+        	$this->getDateFormat(),
+        	$date
+         );
     }
 }

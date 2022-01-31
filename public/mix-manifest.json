@@ -1,12 +1,12 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/resources/js/admin/rocket/main.js": "/resources/js/admin/rocket/main.js",
-    "/resources/js/example/main.js": "/resources/js/example/main.js",
-    "/resources/js/reports/apps/main.js": "/resources/js/reports/apps/main.js",
-    "/resources/js/reports/liquidation/main.js": "/resources/js/reports/liquidation/main.js",
-    "/resources/js/reports/passengers/photos/main.js": "/resources/js/reports/passengers/photos/main.js",
-    "/resources/js/reports/passengers/sensors/cameras/main.js": "/resources/js/reports/passengers/sensors/cameras/main.js",
-    "/resources/js/reports/routes/takings/main.js": "/resources/js/reports/routes/takings/main.js",
-    "/resources/js/takings/passengers/liquidation/main.js": "/resources/js/takings/passengers/liquidation/main.js"
+    "/js/app.js": "/js/app.js?id=ce65c52ac52207ee19f8",
+    "/css/app.css": "/css/app.css?id=3e94de755a9390a2423e",
+    "/resources/js/admin/rocket/main.js": "/resources/js/admin/rocket/main.js?id=48e9de8880d8f0a7261f",
+    "/resources/js/example/main.js": "/resources/js/example/main.js?id=debd8132aa28801b1519",
+    "/resources/js/reports/apps/main.js": "/resources/js/reports/apps/main.js?id=b4f49e93ba8101b9e474",
+    "/resources/js/reports/liquidation/main.js": "/resources/js/reports/liquidation/main.js?id=9d3198e9bf87b4be7a3d",
+    "/resources/js/reports/passengers/photos/main.js": "/resources/js/reports/passengers/photos/main.js?id=e76a4107bc64a5fe2137",
+    "/resources/js/reports/passengers/sensors/cameras/main.js": "/resources/js/reports/passengers/sensors/cameras/main.js?id=7dd737eed8385156c389",
+    "/resources/js/reports/routes/takings/main.js": "/resources/js/reports/routes/takings/main.js?id=be0eb7569ee9d05a30ad",
+    "/resources/js/takings/passengers/liquidation/main.js": "/resources/js/takings/passengers/liquidation/main.js?id=3cb3373fc013b8f86d47"
 }

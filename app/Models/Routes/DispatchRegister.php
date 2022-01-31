@@ -839,6 +839,10 @@ class DispatchRegister extends Model
 
         if (!$takings) {
             $takings = new RouteTaking();
+            if($this->route && $this->route->company->hasSeatSensorCounter()) {
+                $takings->station_fuel_id = 0;
+            }
+            $takings->updated_at = Carbon::now();
             $takings->dispatchRegister()->associate($this);
         }
 
