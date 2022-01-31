@@ -64,8 +64,6 @@ class SyrusService
                 if($photoEvent) {
                 	$date = $photoEvent->date->toDateTimeString();                
                 }
-                
-                dump($date);
 
                 if (!$fileHasError) {
                     $process = $service->saveImageData([
