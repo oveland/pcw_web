@@ -34,6 +34,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class DrObservation extends Model
 {
+    public function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
     function dispatchRegister(): BelongsTo
     {
         return $this->belongsTo(DispatchRegister::class);

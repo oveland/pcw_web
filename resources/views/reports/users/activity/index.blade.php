@@ -58,7 +58,7 @@
                             </div>
                         @endif
 
-                        <div class="col-md-2">
+                        <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">
                                     @lang('Date')
@@ -74,7 +74,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 date-end-container" style="display: none">
+                        <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 date-end-container" style="display: none">
                             <div class="form-group">
                                 <label for="date-end-report" class="control-label">@lang('Date end')</label>
                                 <div class="input-group date" id="datetimepicker-report">

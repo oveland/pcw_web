@@ -275,8 +275,12 @@ class User extends Authenticatable
     {
         $usersCan = [
             #ALAMEDA:
-            //2018101180, // DIEGOE
-            //2018101181, // GUSTAVO
+            999457, // GERENCIALAMEDA
+            98914189, // JEFE OPERATIVO
+            2018101214, // JORGEPB
+            31580814, // JEFE RRHH
+            2018101243, // ALEXANDERAL
+            2018101262, // WILSONAL
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
@@ -286,8 +290,12 @@ class User extends Authenticatable
     {
         $usersCan = [
             #ALAMEDA:
-            //2018101180, // DIEGOE
-            //2018101181, // GUSTAVO
+            999457, // GERENCIALAMEDA
+            98914189, // JEFE OPERATIVO
+            2018101214, // JORGEPB
+            31580814, // JEFE RRHH
+            2018101243, // ALEXANDERAL
+            2018101262, // WILSONAL
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();

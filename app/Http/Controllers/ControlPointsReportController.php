@@ -147,7 +147,7 @@ class ControlPointsReportController extends Controller
             $dataExcel[] = collect([
                 __('N°') => count($dataExcel) + 1,                                          # A CELL
                 __('Date') => $dispatchRegister->date,                                          # A CELL
-                __('Vehicle') => intval($vehicle->number),                                  # B CELL
+                __('Vehicle') => $vehicle->number,                                  # B CELL
                 __('Route') => $dispatchRegister->route->name,                                  # B CELL
                 __('Round trip') => $dispatchRegister->round_trip,                                  # B CELL
                 __('Driver') => $report->driverName,                                        # D CELL
