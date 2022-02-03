@@ -89,6 +89,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/', 'ProprietaryController@index')->name('admin-proprietaries-manage');
             Route::get('/show', 'ProprietaryController@show')->name('admin-proprietaries-show');
         });
+
+        Route::prefix(__('routes'))->group(function () {
+            Route::prefix(__('control-points'))->group(function () {
+                Route::get('/{route}', 'Admin\ControlPointsController@all')->name('admin.routes.control-points');
+            });
+        });
     });
 
     /* Routes for operation pages */

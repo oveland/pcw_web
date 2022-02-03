@@ -805,6 +805,7 @@
 
             form.submit(function (e) {
                 let btnExport = $('.btn-export').fadeOut();
+                const routeSelect = $('#route-report');
                 e.preventDefault();
                 if (form.isValid()) {
                     stop();
@@ -835,6 +836,9 @@
                                     play();
                                 }
                                 btnExport.attr('href', report.exportLink);
+
+                                drawControlPoints(routeSelect.val());
+                                drawKml(routeSelect.find('option:selected').data('kmz-url'));
                             },1000);
 
                             hideSideBar();
@@ -1021,6 +1025,28 @@
             }
 
             $slider.append(html);
+        }
+
+        function drawKml(url) {
+            reportRouteHistoric.removeKml();
+            if (url) reportRouteHistoric.addKml(url);
+        }
+
+        function drawControlPoints(routeId) {
+            let urlControlPoints = '{{ route('admin.routes.control-points', ['route' => 'ID']) }}';
+
+            reportRouteHistoric.removeControlPoints();
+
+            if (routeId != 'all') {
+                $.ajax({
+                    url: urlControlPoints.replace('ID', routeId),
+                    dataType: 'json',
+                    contentType: "application/json",
+                    success(data) {
+                        reportRouteHistoric.addControlPoints(data);
+                    }
+                });
+            }
         }
 
         function play() {
