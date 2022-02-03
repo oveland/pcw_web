@@ -53,7 +53,7 @@ class MaintenanceCommand extends Command
 //                    ],
 //                ]
 //            ],
-            [
+            /*[
                 'from' => '2021-07-01',
                 'to' => '2021-07-31',
                 'tables' => [
@@ -84,10 +84,10 @@ class MaintenanceCommand extends Command
                         'restore' => false,
                     ],
                 ]
-            ],
+            ],*/
             [
                 'from' => '2021-09-01',
-                'to' => '2021-08-30',
+                'to' => '2021-09-30',
                 'tables' => [
                     'locations' => [
                         'release' => true,
@@ -101,7 +101,7 @@ class MaintenanceCommand extends Command
                     ],
                 ]
             ],
-            [
+            /*[
                 'from' => '2021-10-01',
                 'to' => '2021-10-31',
                 'tables' => [
@@ -148,7 +148,7 @@ class MaintenanceCommand extends Command
                         'restore' => false,
                     ],
                 ]
-            ],
+            ],*/
         ]);
     }
 

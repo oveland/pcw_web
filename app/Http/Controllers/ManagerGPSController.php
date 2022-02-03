@@ -283,7 +283,7 @@ class ManagerGPSController extends Controller
                 }
 
                 $imei = "";
-                if (Auth::user()->isSuperAdmin2() && $gpsVehicle) {
+                if (Auth::user()->isSuperAdmin() && $gpsVehicle) {
                     $imei = "(<b>$gpsVehicle->imei</b>)";
                 }
 

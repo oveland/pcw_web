@@ -73,7 +73,7 @@
                 </small>
             </th>
 
-            <th class="hide">
+            <th class="{{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}">
                 <i class="fa fa-users text-muted"></i><br>
                 <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
                 <small class="text-muted">
@@ -146,7 +146,7 @@
         @endphp
         <tr>
             <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
-            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : ($dispatchRegister->complete() ? 'inverse' : 'warning') }} text-white text-center">
+            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'inverse' : ($dispatchRegister->complete() ? 'inverse' : 'warning') }} text-white text-center">
 
                 <span class="m-b-5">
                     @if($dispatchRegister->processedByARD())
@@ -209,14 +209,16 @@
                             <div class="box-obs">
                                 <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
                                 >{{ $obs->observation }}</textarea>
+                                @if($obs->updated_at)
                                 <div class="text-muted text-center box-audit">
                                     <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
                                     <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
                                 </div>
-                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
+                                @endif
+                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
                                     <i class="fa fa-times"></i>
                                 </button>
-                                <button class="btn btn-xs btn-success m-5 edit-btn-save">
+                                <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
                                     <i class="fa fa-save"></i>
                                 </button>
                             </div>
@@ -294,14 +296,16 @@
                                 <div class="box-obs">
                                     <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
                                     >{{ $obs->observation }}</textarea>
+                                    @if($obs->updated_at)
                                     <div class="text-muted text-center box-audit">
                                         <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
                                         <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
                                     </div>
-                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
+                                    @endif
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
                                         <i class="fa fa-times"></i>
                                     </button>
-                                    <button class="btn btn-xs btn-success m-5 edit-btn-save">
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -328,14 +332,16 @@
                                 <div class="box-obs">
                                     <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
                                     >{{ $obs->observation }}</textarea>
+                                    @if($obs->updated_at)
                                     <div class="text-muted text-center box-audit">
                                         <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
                                         <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
                                     </div>
-                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel">
+                                    @endif
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
                                         <i class="fa fa-times"></i>
                                     </button>
-                                    <button class="btn btn-xs btn-success m-5 edit-btn-save">
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -373,7 +379,7 @@
                     </small>
                 </td>
 
-                <td width="10%" class="text-center hide">
+                <td width="10%" class="text-center {{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}">
                     <span class="tooltips {{ $dispatchRegister->passengersBySensorTotal > 30 ? 'label label-warning' : '' }} " data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
                         {{ $dispatchRegister->passengersBySensorTotal }}
                     </span>
