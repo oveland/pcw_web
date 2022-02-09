@@ -36,7 +36,7 @@ trait PhotoEncode
 
         $originalPath = $this->getOriginalPath();
 
-        if ($this->disk == 'local' || !Str::contains($originalPath, "-")) return $originalPath;
+        if ($this->disk == 'local' || (!Str::contains($originalPath, "-") && $originalPath)) return $originalPath;
 
         $date = $this->attributes['date'] ? $this->date : Carbon::now();
 
