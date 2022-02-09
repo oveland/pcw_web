@@ -39,8 +39,9 @@ trait PhotoEncode
 
         $dateString = $date->format('Ymd');
         $timeString = $date->format('His');
+        $side = $this->side;
 
-        return self::BASE_PATH . "$this->vehicle_id/$dateString/$timeString.jpeg";
+        return self::BASE_PATH . "$this->vehicle_id/$dateString/$timeString.$side.jpeg";
     }
 
     function getOriginalPath()
