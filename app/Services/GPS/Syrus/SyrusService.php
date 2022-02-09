@@ -31,7 +31,7 @@ class SyrusService
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
         $vehicle = $gpsVehicle->vehicle;
-        
+
         $response = collect([
             'success' => true,
             'message' => "Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id",
@@ -61,14 +61,19 @@ class SyrusService
                 $date = Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString();
 
                 $photoEvent = PhotoEvent::whereImei($imei)->whereUid($fileName)->first();
-                if($photoEvent) {
-                	$date = $photoEvent->date->toDateTimeString();                
+                if ($photoEvent) {
+                    $date = $photoEvent->date->toDateTimeString();
                 }
 
                 if (!$fileHasError) {
+                    $image = Image::make($storage->get($file));
+
+                    if ($vehicle->id == 1873 && intval($side) === 2) {
+                        $image = $image->rotate(180);
+                    }
                     $process = $service->saveImageData([
                         'date' => $date,
-                        'img' => Image::make($storage->get($file))->encode('data-url'),
+                        'img' => $image->encode('data-url'),
                         'type' => 'syrus',
                         'side' => $side,
                         'uid' => $fileName
@@ -76,7 +81,7 @@ class SyrusService
 
                     if ($process->response->success === true) {
                         $storage->delete($file);
-                        if($photoEvent) $photoEvent->delete();
+                        if ($photoEvent) $photoEvent->delete();
                     }
 
                     $saveFiles->push($process->response->message);
