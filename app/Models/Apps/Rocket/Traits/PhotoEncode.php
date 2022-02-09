@@ -8,6 +8,7 @@ use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Image;
 use Storage;
 
@@ -33,7 +34,9 @@ trait PhotoEncode
     {
         $this->disk = $disk;
 
-        if ($this->disk == 'local') return $this->getOriginalPath();
+        $originalPath = $this->getOriginalPath();
+
+        if ($this->disk == 'local' || !Str::contains($originalPath, "-")) return $originalPath;
 
         $date = $this->attributes['date'] ? $this->date : Carbon::now();
 
@@ -41,7 +44,7 @@ trait PhotoEncode
         $timeString = $date->format('His');
         $side = $this->side;
 
-        return self::BASE_PATH . "$this->vehicle_id/$dateString/$timeString.$side.jpeg";
+        return self::BASE_PATH . "$this->vehicle_id/$dateString/$timeString-$side.jpeg";
     }
 
     function getOriginalPath()
