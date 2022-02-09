@@ -61,16 +61,19 @@ trait PhotoEncode
 
     /**
      * @param string $encode
-     * @param bool $withEffects
-     * @return Image|string
+     * @param false $withEffects
+     * @param false $withMask
+     * @return \Intervention\Image\Image|string|null
      */
-    function encode($encode = "webp", $withEffects = false)
+    function encode($encode = "webp", $withEffects = false, $withMask = false)
     {
         if ($encode == "url") {
-            return config('app.url') . "/api/v2/files/rocket/get-photo?id=$this->id" . ($this->effects && $withEffects ? "&with-effect=true" : "");
+            $effects = $this->effects && $withEffects ? true : "";
+            $mask = $withMask ? true : "";
+            return config('app.url') . "/api/v2/files/rocket/get-photo?id=$this->id&with-effect=$effects&mask=$mask";
         }
 
-        return $this->getImage($encode, $withEffects);
+        return $this->getImage($encode, $withEffects, $withMask);
     }
 
     function processImage(\Intervention\Image\Image $image, $encode = null, $withEffects = false, $withMask = false, $withTitle = false, $withSeating = false)
@@ -143,13 +146,11 @@ trait PhotoEncode
             if (Storage::exists($pathMaskDate)) {
                 $mask = Image::make(Storage::path($pathMaskDate));
                 $image->insert($mask, 'center');
-            }
-            elseif (Storage::exists($pathMask)) {
+            } elseif (Storage::exists($pathMask)) {
                 $mask = Image::make(Storage::path($pathMask));
                 $image->insert($mask, 'center');
             }
         }
-
         $image->text("PCW @ " . Carbon::now()->format('Y') . "", $image->width() / 2, $image->height() - 10, function ($font) {
             $font->color('#7980ff');
             $font->align('center');
