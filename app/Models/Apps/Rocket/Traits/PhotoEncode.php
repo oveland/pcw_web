@@ -3,8 +3,6 @@
 
 namespace App\Models\Apps\Rocket\Traits;
 
-use App\Models\Apps\Rocket\ProfileSeat;
-use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
@@ -49,7 +47,7 @@ trait PhotoEncode
 
     function getOriginalPath()
     {
-        return $this->attributes['path'];
+        return $this->attributes['path'] ?? '';
     }
 
     function getPathAttribute($path)
@@ -146,11 +144,13 @@ trait PhotoEncode
             if (Storage::exists($pathMaskDate)) {
                 $mask = Image::make(Storage::path($pathMaskDate));
                 $image->insert($mask, 'center');
-            } elseif (Storage::exists($pathMask)) {
+            }
+            elseif (Storage::exists($pathMask)) {
                 $mask = Image::make(Storage::path($pathMask));
                 $image->insert($mask, 'center');
             }
         }
+
         $image->text("PCW @ " . Carbon::now()->format('Y') . "", $image->width() / 2, $image->height() - 10, function ($font) {
             $font->color('#7980ff');
             $font->align('center');
