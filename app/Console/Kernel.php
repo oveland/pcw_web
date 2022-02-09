@@ -28,6 +28,8 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('04:00', '23:59'); // Vehicle 02 Aeropuerto
             $schedule->command('rocket:count --vehicle-plate=SKR-579 --pa=1 --pr=5')->everyTenMinutes();
+
+            $schedule->command('syrus:sync-photos --company=2')->everyTwoMinutes(); // Sync photos on Transpubenza
         } else {
             $schedule->command('log:parked-vehicles')->everyMinute();
 
