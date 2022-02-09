@@ -238,7 +238,7 @@ class PhotoService
         $historic = $historic->where('id', '<=', $photo->id);
         $lastPhoto = $historic->last();
 
-        $details = $photo->getAPIFields('data-url');
+        $details = $photo->getAPIFields('url', true, true);
         $details->occupation = $this->getOccupation($photo);
 
         $personsByRoundTrips = collect([]);

@@ -81,9 +81,11 @@ interface PhotoInterface
 
     /**
      * @param string $encodeImage
-     * @return object
+     * @param bool $withEffects
+     * @param false $withMask
+     * @return mixed
      */
-    public function getAPIFields($encodeImage = 'url');
+    public function getAPIFields($encodeImage = 'url', $withEffects = true, $withMask = false);
 
     /**
      * @param $data

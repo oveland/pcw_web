@@ -75,9 +75,11 @@ trait PhotoGlobals
 
     /**
      * @param string $encodeImage
+     * @param bool $withEffects
+     * @param false $withMask
      * @return object
      */
-    public function getAPIFields($encodeImage = 'url')
+    public function getAPIFields($encodeImage = 'url', $withEffects = true, $withMask = false)
     {
         $dispatchRegister = $this->dispatchRegister;
 
@@ -99,7 +101,7 @@ trait PhotoGlobals
 
         return (object)[
             'id' => $this->id,
-            'url' => $this->encode($encodeImage, true),
+            'url' => $this->encode($encodeImage, $withEffects, $withMask),
             'path' => $this->getOriginalPath(),
             'date' => $this->date->toDateTimeString(),
             'side' => Str::ucfirst(__($this->side)),
