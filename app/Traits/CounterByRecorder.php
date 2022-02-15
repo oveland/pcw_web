@@ -71,14 +71,15 @@ trait CounterByRecorder
                 $passengersByRoundTrip = 0;
                 $endRecorder = 0;
 
-                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
+//                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
+                $startRecorder = $dispatchRegister->start_recorder;
 
                 if ($dispatchRegister->complete()) {
                     $endRecorder = $dispatchRegister->end_recorder;
 //                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
 
 
-                    if ($startRecorder == 0 || true) {
+                    if ($startRecorder == 0 && false ) { // Commented with false, this logic is controlled by trigger on registrodespacho table
                         if ($classifyByRoute || true) {
                             $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
                                 ->where('date', '=', $dispatchRegister->date)
@@ -105,7 +106,7 @@ trait CounterByRecorder
 //                        $startRecorder = 0; // For search a properly value in the next logic
 //                    }
 
-                    if ($startRecorder == 0) {
+                    if ($startRecorder == 0 && false) { // Commented with false, this logic is controlled by trigger on registrodespacho table
                         $startRecorder = DispatchRegister::active()
                                 ->where('vehicle_id', $vehicleId)
                                 ->where('date', '=', $dispatchRegister->date)
@@ -161,7 +162,7 @@ trait CounterByRecorder
 
                 $issues = self::processIssues($vehicleId, $issues, $startRecorder, $endRecorder, $passengersByRoundTrip, $dispatchRegister, $lastDispatchRegister);
                 // The next Start recorder is the last end recorder
-                $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
+//                $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
 
                 // Save the last dispatch register
                 if ($dispatchRegister->complete()) $lastDispatchRegister = $dispatchRegister;
@@ -206,7 +207,7 @@ trait CounterByRecorder
         $issueField = null;
         $badStartRecorder = false;
         if ($dispatchRegister->complete()) {
-            if ($startRecorder <= 0) {
+            if ($startRecorder <= 0 && false) { // Commented with false, this logic is controlled by trigger on registrodespacho table
                 $issueField = __('Start Recorder');
             } else if ($endRecorder <= 0) {
                 $issueField = __('End Recorder');

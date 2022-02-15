@@ -25,11 +25,11 @@
                             <input type="hidden" id="gps-type" name="gps-type" value="" data-reset-command="">
                         </div>
                         <div class="row">
-                            <div class="col-md-6 col-sm-12 col-xs-12 p-0">
+                            <div class="col-md-4 col-sm-12 col-xs-12 p-0">
                                 <div class="form-group col-md-12 has-success has-feedback">
-                                    <i class="fa fa-signal f-s-17" aria-hidden="true"></i>
+                                    <i class="fa fa-car f-s-17" aria-hidden="true"></i>
                                     <label for="sim-gps" class="control-label field-required">
-                                        @lang('SIM GPS')
+                                        GPS @lang('Vehicle')
                                     </label>
                                 </div>
                                 <div class="col-md-12">
@@ -41,7 +41,7 @@
                                                     data-reset-command="{{ $simGPS->getResetCommand() }}"
                                                             data-gps-type="{{ $simGPS->gps_type }}"
                                                             data-vehicle-id="{{ $simGPS->vehicle->id ?? null }}">
-                                                        {{ $simGPS->gps_type }}: {{ $simGPS->sim }} | #{{ $simGPS->vehicle->number ?? 'NONE'  }} ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
+                                                        {{ $simGPS->gps_type }}: #{{ $simGPS->vehicle->number ?? 'NONE'  }} ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12 col-xs-12 p-0">
+                            <div class="col-md-8 col-sm-12 col-xs-12 p-0">
                                 <div class="info-gps">
                                     @if( $simGPSList )
                                         <div class="col-md-12">
@@ -70,7 +70,7 @@
                                             </label>
                                         </div>
                                         <div class="col-md-12">
-                                            <pre class="col-md-12 text-info status-gps-container text-center" style="overflow: inherit">@lang('Select a SIM number')</pre>
+                                            <pre class="col-md-12 text-info status-gps-container text-center" style="overflow: auto">@lang('Select a SIM number')</pre>
                                         </div>
                                     @endif
                                 </div>
@@ -567,35 +567,6 @@
                 },500);
             }
         });
-    });
-
-    $('#sim-gps').change(function(){
-        let simGPS = $(this);
-        let simNumber = simGPS.val();
-        let statusGPSContainer = $('.status-gps-container');
-        if( !simGPS.data('any-gps') ){
-            statusGPSContainer.parent().slideDown();
-            if( is_not_null(simNumber) ){
-
-                $.ajax({
-                    url: '{{ route('admin-gps-get-vehicle-status') }}',
-                    data:{
-                        simGPSList: simGPS.val()
-                    },
-                    success:function(data){
-                        statusGPSContainer.html(data);
-                    },error:function(){
-                        statusGPSContainer.empty();
-                        gerror('@lang('An error occurred in the process. Contact your administrator')');
-                    }
-                });
-
-            }else{
-                statusGPSContainer.html('@lang('Select a SIM number')');
-            }
-        }else{
-            statusGPSContainer.parent().slideUp();
-        }
     });
 
     $('.set-reset-command').click(function(){
