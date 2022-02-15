@@ -267,27 +267,29 @@ class ManagerGPSController extends Controller
 
             //dd($currentLocationGPS);
 
-            $classStatus = null;
+            $classStatus = "btn btn-xs btn-default p-2 text-bold";
             if ($currentLocationGPS) {
                 $vehicleStatus = $currentLocationGPS->vehicleStatus;
                 $timePeriod = $currentLocationGPS->getTimePeriod();
                 if ($vehicleStatus->id == VehicleStatus::OK || $vehicleStatus->id == VehicleStatus::PARKED || $vehicleStatus->id == VehicleStatus::POWER_OFF
                     || $vehicleStatus->id == VehicleStatus::WITHOUT_GPS_SIGNAL) {
-                    if ($timePeriod >= '00:00:00' && $timePeriod <= "00:00:25") {
-                        $classStatus = "btn btn-xs btn-success p-2 text-white text-bold";
+                    if ($timePeriod >= '00:00:00' && $timePeriod <= "00:02:25") {
+                        $classStatus .= " btn-success text-white";
                         $totalFrequencyOK++;
                     } else {
-                        $classStatus = "btn btn-xs p-2";
+                        $classStatus .= " text-info";
                     }
                     $totalOK++;
+                } else {
+                    $classStatus .= " text-gray";
                 }
 
                 $imei = "";
                 if (Auth::user()->isSuperAdmin() && $gpsVehicle) {
-                    $imei = "(<b>$gpsVehicle->imei</b>)";
+                    $imei = "(<b>$gpsVehicle->imei</b> • $simGPS->sim)";
                 }
 
-                $statusList .= $vehicleStatus ? "<a href='tel:$simGPS->sim' class='tooltips click col-md-12' title='$vehicleStatus->des_status' data-placement='left' style='border: 1px solid grey;height: 30px;padding: 5px;'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $currentLocationGPS->date <span class='$classStatus'>$timePeriod</span> $imei</a><br><br>" : "********";
+                $statusList .= $vehicleStatus ? "<div style='margin: 0;border-top: 1px solid lightgrey !important;padding: 5px'><a href='tel:$simGPS->sim' class='tooltips click' title='$vehicleStatus->des_status' data-placement='left'><i class='text-$vehicleStatus->main_class $vehicleStatus->icon_class' style='width: 15px'></i> <span class='' style='width: 20px; border-radius: 5px'>$vehicle->number</span> $imei > $currentLocationGPS->date • <small class='$classStatus'>$timePeriod</small></a></div>" : "********";
 
                 $reportsStatus->push((object)[
                     'statusId' => $vehicleStatus->id,

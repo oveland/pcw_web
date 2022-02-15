@@ -281,7 +281,7 @@
                 }
             });
 
-            $('#company-report,#gps-report,input[name="option-selection"], .vehicle-options').change(function () {
+            $('#company-report, #gps-report, input[name="option-selection"], .vehicle-options').change(function () {
                 mainContainer.slideUp();
                 if (form.isValid(false)) {
                     form.submit();
@@ -293,7 +293,7 @@
 
         setTimeout(function(){
             setInterval(function () {
-                $('#sim-gps').change();
+                checkSelectedSIM();
             },10000);
         },1000);
 
@@ -301,6 +301,41 @@
         $('#company-report').change(function () {
             loadRouteReport($(this).val());
         });
+
+        $('body').on('change', '#sim-gps', function(){
+            checkSelectedSIM();
+        }).on("select2:open", '#sim-gps', function (e) { console.log("select2:open"); })
+        .on("select2:close", '#sim-gps', function (e) { console.log("select2:close"); })
+        .on('select2:selecting', '#sim-gps', function (e) { console.log("'select2:selecting'"); });
+
+        function checkSelectedSIM() {
+            let simGPS = $('#sim-gps');
+            let simNumber = simGPS.val();
+            let statusGPSContainer = $('.status-gps-container');
+            if( !simGPS.data('any-gps') ){
+                statusGPSContainer.parent().slideDown();
+                if( is_not_null(simNumber) ){
+
+                    $.ajax({
+                        url: '{{ route('admin-gps-get-vehicle-status') }}',
+                        data:{
+                            simGPSList: simGPS.val()
+                        },
+                        success:function(data){
+                            statusGPSContainer.html(data);
+                        },error:function(){
+                            statusGPSContainer.empty();
+                            gerror('@lang('An error occurred in the process. Contact your administrator')');
+                        }
+                    });
+
+                }else{
+                    statusGPSContainer.html('@lang('Select a SIM number')');
+                }
+            }else{
+                statusGPSContainer.parent().slideUp();
+            }
+        }
 
         @if(!Auth::user()->isAdmin())
         loadRouteReport(null);
