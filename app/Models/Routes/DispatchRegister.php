@@ -396,13 +396,20 @@ class DispatchRegister extends Model
 
     public function getPassengersBySensorAttribute()
     {
+        $initialCount = $this->initial_sensor_counter;
+        $finalCount = $this->final_sensor_counter;
+
         $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
-        if ($this->inProgress() && $currentSensor && isset($currentSensor->sensorCounter)) {
-            $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
-            return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
-        }
-        $hasReset = ($this->final_sensor_counter < $this->initial_sensor_counter);
-        return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
+        if ($this->inProgress() && $this->getParsedDate()->isToday() && $currentSensor && isset($currentSensor->sensorCounter)) $finalCount = $currentSensor->sensorCounter;
+
+        $firstPassenger = Passenger::where('dispatch_register_id', $this->id)->orderBy('date')->first();
+        $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
+
+        if ($firstPassenger) $initialCount = $firstPassenger->total_prev;
+        if ($lastPassenger && !$finalCount) $finalCount = $lastPassenger->total;
+
+        $hasReset = $finalCount < $initialCount;
+        return $finalCount - ($hasReset ? 0 : $initialCount);
     }
 
     public function getPassengersBySensorTotalAttribute()
@@ -901,18 +908,19 @@ class DispatchRegister extends Model
         return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')->where('dispatch_id', $this->dispatch_id);
     }
 
-    function getObservation($field = null):DrObservation {
+    function getObservation($field = null): DrObservation
+    {
         $field = __($field);
         $drObs = $this->hasOne(DrObservation::class)->where('field', $field)->first();
 
-        if(!$drObs) {
+        if (!$drObs) {
             $user = Auth::user();
             $drObs = new DrObservation();
             $drObs->field = $field;
             $drObs->dispatchRegister()->associate($this);
             $drObs->user()->associate($user);
 
-            if($user->isSuperAdmin()) {
+            if ($user->isSuperAdmin()) {
                 $drObs->observation = 'Por solicitud grupo de soporte';
             }
         }

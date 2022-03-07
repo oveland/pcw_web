@@ -326,14 +326,22 @@ class MigrationController extends Controller
     public function migrateUsers(Request $request)
     {
         if ($request->get('delete')) {
-            $deleted = DB::delete('DELETE FROM users');
-            dd($deleted . ' registers has ben deleted!');
+//            $deleted = DB::delete('DELETE FROM users');
+//            dd($deleted . ' registers has ben deleted!');
+            dd('Not allowed');
         }
 
         $totalCreated = 0;
         $totalUpdated = 0;
         $totalErrors = 0;
         $users = DB::table(self::OLD_TABLES['users'])->get();
+
+        $migrateCompany = $request->get('company');
+
+        if ($migrateCompany) {
+            $users = $users->where('id_empresa', $migrateCompany);
+        }
+
         foreach ($users as $userOLD) {
             $new = false;
             $user = User::find($userOLD->id_usuario);
