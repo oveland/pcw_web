@@ -147,6 +147,7 @@
         $color = $offRoadPercent > 50 ? 'red-sunglo' : ($dispatchRegister->complete() ? 'inverse' : ($dispatchRegister->isCancelled() ? 'yellow-crusta' : 'yellow-soft'));
         @endphp
         <tr>
+<<<<<<< HEAD
             <th width="5%" class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->date }}
                 @if( Auth::user()->isSuperAdmin() )
@@ -154,6 +155,10 @@
                 @endif
             </th>
             <th width="10%" class="bg-{{ $color }} text-white text-center">
+=======
+            <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
+            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : ($dispatchRegister->complete() ? 'inverse' : 'warning') }} text-white text-center">
+>>>>>>> 64b4d0cedcfc973cd928dec958c9725344616586
 
                 <span class="m-b-5">
                     @if($dispatchRegister->processedByARD())
