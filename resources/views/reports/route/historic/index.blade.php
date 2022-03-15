@@ -861,8 +861,8 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312 || $(this).val() == 1357 || $(this).val() == 1351 || $(this).val() == 1873 || $(this).val() == 2357 || $(this).val() == 2358
-                    || $(this).val() == 2296 || {{ Auth::user()->company_id }} == 2
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312 || $(this).val() == 1357 || $(this).val() == 1351 || $(this).val() == 1873 || $(this).val() == 2357 || $(this).val() == 2358 || $(this).val() == 2372
+                    || $(this).val() == 2296 || {{ Auth::user()->company_id }} == 2 || {{ Auth::user()->isSuperAdmin() ? 'true' : 'false' }}
                 ) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
