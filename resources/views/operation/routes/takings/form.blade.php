@@ -213,7 +213,7 @@
                 </div>
             </div>
 
-            @if($processTakings || true)
+            @if($processTakings)
                 <hr>
                 <div class="form-group">
                     <div class="col-md-offset-5 col-md-7">

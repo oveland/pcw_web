@@ -76,7 +76,9 @@ class PassengerReportCounterController extends Controller
 
                 $passengers->appends($request->all());
 
-                $initialPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')->limit(1)->get()->first();
+                //$initialPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')->limit(1)->get()->first();
+                $initialPassengerCount = Passenger::whereVehicleId($vehicle->id)->where('date', '<', $initialDate)->orderByDesc('date')->limit(1)->get()->first();
+                $initialPassengerCount = $initialPassengerCount ?: Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')->limit(1)->get()->first();
                 $lastPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderByDesc('id')->limit(1)->get()->first();
 
                 return view('admin.counter.report.listHistory', compact('passengers'))->with([

@@ -588,10 +588,10 @@
                     @if(Auth::user()->company->hasSensorCounter())
                         <div class="m-t-5 p-20 p-t-0 p-b-0 info-trips-container show-info">
                             <h5 class="text-bold m-b-0">
-                                <i class="fa fa-users"></i> @lang('Histórico de pasajeros'):
+                                <i class="fa fa-users"></i> @lang('Pasajeros rutas'):
                                 <span class="info-trips-total">0</span>
-                                <span class="hide">
-                                        (<span class="passengers-total"></span>
+                                <span class="{{ Auth::user()->company_id == 2 ? '' : 'hide' }}">
+                                        (Sensor reg: <span class="passengers-total"></span>
                                         <small class="text-lime hide">
                                             <i class="fa fa-angle-double-up"></i> <span class="passengers-total-ascents"></span>
                                         </small>
@@ -805,6 +805,7 @@
 
             form.submit(function (e) {
                 let btnExport = $('.btn-export').fadeOut();
+                const routeSelect = $('#route-report');
                 e.preventDefault();
                 if (form.isValid()) {
                     stop();
@@ -835,6 +836,9 @@
                                     play();
                                 }
                                 btnExport.attr('href', report.exportLink);
+
+                                drawControlPoints(routeSelect.val());
+                                drawKml(routeSelect.find('option:selected').data('kmz-url'));
                             },1000);
 
                             hideSideBar();
@@ -857,7 +861,9 @@
                 const infoRoute = $('.show-info-route');
                 const infoTrips = $('.info-trips-container');
 
-                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312 || $(this).val() == 1357 || $(this).val() == 1351 || $(this).val() == 1873 || $(this).val() == 2357) {
+                if($(this).val() == 1199 || $(this).val() == 1217 || $(this).val() == 1233 || $(this).val() == 1893 || $(this).val() == 2312 || $(this).val() == 1357 || $(this).val() == 1351 || $(this).val() == 1873 || $(this).val() == 2357 || $(this).val() == 2358 || $(this).val() == 2372
+                    || $(this).val() == 2296 || {{ Auth::user()->company_id }} == 2 || {{ Auth::user()->isSuperAdmin() ? 'true' : 'false' }}
+                ) {
                     infoRoute.slideUp(100);
                     infoTrips.slideDown();
 
@@ -1019,6 +1025,28 @@
             }
 
             $slider.append(html);
+        }
+
+        function drawKml(url) {
+            reportRouteHistoric.removeKml();
+            if (url) reportRouteHistoric.addKml(url);
+        }
+
+        function drawControlPoints(routeId) {
+            let urlControlPoints = '{{ route('admin.routes.control-points', ['route' => 'ID']) }}';
+
+            reportRouteHistoric.removeControlPoints();
+
+            if (routeId != 'all') {
+                $.ajax({
+                    url: urlControlPoints.replace('ID', routeId),
+                    dataType: 'json',
+                    contentType: "application/json",
+                    success(data) {
+                        reportRouteHistoric.addControlPoints(data);
+                    }
+                });
+            }
         }
 
         function play() {

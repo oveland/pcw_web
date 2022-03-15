@@ -53,9 +53,73 @@ class MaintenanceCommand extends Command
 //                    ],
 //                ]
 //            ],
+            /*[
+                'from' => '2021-07-01',
+                'to' => '2021-07-31',
+                'tables' => [
+                    'locations' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                    'reports' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                ]
+            ],
             [
-                'from' => '2021-04-01',
-                'to' => '2021-04-30',
+                'from' => '2021-08-01',
+                'to' => '2021-08-31',
+                'tables' => [
+                    'locations' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                    'reports' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                ]
+            ],*/
+            [
+                'from' => '2021-09-01',
+                'to' => '2021-09-30',
+                'tables' => [
+                    'locations' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                    'reports' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                ]
+            ],
+            /*[
+                'from' => '2021-10-01',
+                'to' => '2021-10-31',
+                'tables' => [
+                    'locations' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                    'reports' => [
+                        'release' => true,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                ]
+            ],
+            [
+                'from' => '2021-11-01',
+                'to' => '2021-11-30',
                 'tables' => [
                     'locations' => [
                         'release' => false,
@@ -70,8 +134,8 @@ class MaintenanceCommand extends Command
                 ]
             ],
             [
-                'from' => '2021-05-01',
-                'to' => '2021-05-31',
+                'from' => '2021-12-01',
+                'to' => '2021-12-31',
                 'tables' => [
                     'locations' => [
                         'release' => false,
@@ -84,23 +148,7 @@ class MaintenanceCommand extends Command
                         'restore' => false,
                     ],
                 ]
-            ],
-            [
-                'from' => '2021-06-01',
-                'to' => '2021-06-30',
-                'tables' => [
-                    'locations' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
+            ],*/
         ]);
     }
 

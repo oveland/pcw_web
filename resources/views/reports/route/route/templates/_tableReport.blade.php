@@ -73,7 +73,7 @@
                 </small>
             </th>
 
-            <th class="hide">
+            <th class="{{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}">
                 <i class="fa fa-users text-muted"></i><br>
                 <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
                 <small class="text-muted">
@@ -147,7 +147,6 @@
         $color = $offRoadPercent > 50 ? 'red-sunglo' : ($dispatchRegister->complete() ? 'inverse' : ($dispatchRegister->isCancelled() ? 'yellow-crusta' : 'yellow-soft'));
         @endphp
         <tr>
-<<<<<<< HEAD
             <th width="5%" class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->date }}
                 @if( Auth::user()->isSuperAdmin() )
@@ -155,11 +154,6 @@
                 @endif
             </th>
             <th width="10%" class="bg-{{ $color }} text-white text-center">
-=======
-            <th width="5%" class="bg-inverse text-white text-center">{{ $dispatchRegister->date }}</th>
-            <th width="10%" class="bg-{{ $offRoadPercent > 50 ? 'error' : ($dispatchRegister->complete() ? 'inverse' : 'warning') }} text-white text-center">
->>>>>>> 64b4d0cedcfc973cd928dec958c9725344616586
-
                 <span class="m-b-5">
                     @if($dispatchRegister->processedByARD())
                         @php
@@ -198,11 +192,11 @@
             <th width="5%" class="bg-{{ $color }} text-white text-center">{{ $dispatchRegister->turn }}</th>
             <th width="5%" class="bg-{{ $color }} text-white text-center">{{ $vehicle->number }}</th>
 
-            @if( $company->hasDriverRegisters() )
+            @if($company->hasDriverRegisters())
             <td width="25%" class="text-uppercase">
-                @if( Auth::user()->isSuperAdmin() )
+                @if(Auth::user()->canEditDrivers())
                     @php
-                        $driverInfo = $driver?$driver->fullName():$dispatchRegister->driver_code;
+                        $driverInfo = $driver ? $driver->fullName() : $dispatchRegister->driver_code;
                     @endphp
                     <div class="tooltips box-edit" data-title="@lang('Driver')">
                         <span class="box-info">
@@ -211,15 +205,34 @@
                             </span>
                         </span>
                         <div class="box-edit" style="display: none">
+                            @php
+                                $obs = $dispatchRegister->getObservation('driver_code');
+                            @endphp
                             <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                   data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('driver_code')"
-                                   class="input-sm form-control edit-input-recorder" value="{{ $dispatchRegister->driver_code }}">
+                                   data-url="{{ route('report-passengers-manage-update', ['action' => 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="driver_code"
+                                   class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $dispatchRegister->driver_code }}">
+                            <div class="box-obs">
+                                <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                >{{ $obs->observation }}</textarea>
+                                @if($obs->updated_at)
+                                <div class="text-muted text-center box-audit">
+                                    <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
+                                    <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                </div>
+                                @endif
+                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
+                                    <i class="fa fa-save"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @else
-                    {{ $driver?$driver->fullName():$dispatchRegister->driver_code }}
+                    {{ $driver ? $driver->fullName():$dispatchRegister->driver_code }}
                 @endif
-                @if( $dispatchRegister->user )
+                @if($dispatchRegister->user)
                     <hr class="m-0">
                     <small class="text-muted tooltips" data-title="@lang('User') @lang('Dispatcher')" data-placement="bottom">
                         {{ $dispatchRegister->user->name }}
@@ -272,6 +285,9 @@
             @if( $company->hasRecorderCounter() )
                 <td width="10%" class="p-r-0 p-l-0 text-center">
                     @if( Auth::user()->canEditRecorders() )
+                        @php
+                            $obs = $dispatchRegister->getObservation('start_recorder');
+                        @endphp
                         <div class="tooltips box-edit" data-title="@lang('Start Recorder')">
                             <span class="box-info">
                                 <span class="">
@@ -280,8 +296,24 @@
                             </span>
                             <div class="box-edit" style="display: none">
                                 <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('start_recorder')"
-                                       class="input-sm form-control edit-input-recorder" value="{{ $startRecorder }}">
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="start_recorder"
+                                       class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $startRecorder }}">
+                                <div class="box-obs">
+                                    <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                    >{{ $obs->observation }}</textarea>
+                                    @if($obs->updated_at)
+                                    <div class="text-muted text-center box-audit">
+                                        <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
+                                        <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                    </div>
+                                    @endif
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @else
@@ -289,6 +321,9 @@
                     @endif
                     <hr class="m-0">
                     @if( Auth::user()->canEditRecorders() )
+                        @php
+                            $obs = $dispatchRegister->getObservation('end_recorder');
+                        @endphp
                         <div class="tooltips box-edit" data-title="@lang('End Recorder')">
                             <span class="box-info">
                                 <span class="">
@@ -297,8 +332,24 @@
                             </span>
                             <div class="box-edit" style="display: none">
                                 <input id="edit-end-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=>'editRecorders']) }}" data-id="{{ $dispatchRegister->id }}" data-field="@lang('end_recorder')"
-                                       class="input-sm form-control edit-input-recorder" value="{{ $endRecorder }}">
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="end_recorder"
+                                       class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $endRecorder }}">
+                                <div class="box-obs">
+                                    <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                    >{{ $obs->observation }}</textarea>
+                                    @if($obs->updated_at)
+                                    <div class="text-muted text-center box-audit">
+                                        <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
+                                        <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                    </div>
+                                    @endif
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @else
@@ -333,7 +384,7 @@
                     </small>
                 </td>
 
-                <td width="10%" class="text-center hide">
+                <td width="10%" class="text-center {{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}">
                     <span class="tooltips {{ $dispatchRegister->passengersBySensorTotal > 30 ? 'label label-warning' : '' }} " data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
                         {{ $dispatchRegister->passengersBySensorTotal }}
                     </span>
@@ -504,5 +555,25 @@
 
     .label-lg {
         font-size: 1.4rem !important;
+    }
+
+    .box-edit {
+        position: relative;
+        width: 100%;
+    }
+
+    .box-obs {
+        text-align: center;
+        position: absolute;
+        z-index: 1000;
+        background: #e7e5e5;
+        border-radius: 10px;
+        padding-bottom: 5px;
+        border-bottom: 4px solid rgb(143, 146, 149);
+    }
+
+    .box-audit {
+        white-space: nowrap;
+        padding: 0 20px 0 20px;
     }
 </style>

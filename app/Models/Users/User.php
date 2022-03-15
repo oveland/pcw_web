@@ -96,7 +96,7 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return $this->company ? $this->company->id === Company::PCW : false;
+        return $this->company_id === Company::PCW;
     }
 
     /**
@@ -107,7 +107,8 @@ class User extends Authenticatable
         return $this->isAdmin() && (
                 $this->id == 625565             // OVELAND
                 || $this->id == 940736          // OMAR
-                || $this->id == 1130648973      // BRIAN
+                //|| $this->id == 1130648973    // BRIAN
+                || $this->id == 2018101255      // LEANDRO
             );
     }
 
@@ -273,9 +274,28 @@ class User extends Authenticatable
     public function canEditRecorders()
     {
         $usersCan = [
-            // ALAMEDA:
-//            2018101180, // DIEGOE
-            2018101181, // GUSTAVO
+            #ALAMEDA:
+            999457, // GERENCIALAMEDA
+            98914189, // JEFE OPERATIVO
+            2018101214, // JORGEPB
+            31580814, // JEFE RRHH
+            2018101243, // ALEXANDERAL
+            2018101262, // WILSONAL
+        ];
+
+        return in_array($this->id, $usersCan) || $this->isAdmin();
+    }
+
+    public function canEditDrivers()
+    {
+        $usersCan = [
+            #ALAMEDA:
+            999457, // GERENCIALAMEDA
+            98914189, // JEFE OPERATIVO
+            2018101214, // JORGEPB
+            31580814, // JEFE RRHH
+            2018101243, // ALEXANDERAL
+            2018101262, // WILSONAL
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();

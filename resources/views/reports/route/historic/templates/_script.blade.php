@@ -8,6 +8,7 @@
 
             this.currentLocation = null;
             this.historicLocations = [];
+            this.controlPoints = [];
             this.markerBus = null;
 
             this.historicPath = null;
@@ -21,6 +22,10 @@
             this.iconPassenger = 'M96 0c35.346 0 64 28.654 64 64s-28.654 64-64 64-64-28.654-64-64S60.654 0 96 0m48 144h-11.36c-22.711 10.443-49.59 10.894-73.28 0H48c-26.51 0-48 21.49-48 48v136c0 13.255 10.745 24 24 24h16v136c0 13.255 10.745 24 24 24h64c13.255 0 24-10.745 24-24V352h16c13.255 0 24-10.745 24-24V192c0-26.51-21.49-48-48-48z';
             this.iconPassengerInOut = 'M96,128A64,64,0,1,0,32,64,64,64,0,0,0,96,128Zm0,176.08a44.11,44.11,0,0,1,13.64-32L181.77,204c1.65-1.55,3.77-2.31,5.61-3.57A63.91,63.91,0,0,0,128,160H64A64,64,0,0,0,0,224v96a32,32,0,0,0,32,32V480a32,32,0,0,0,32,32h64a32,32,0,0,0,32-32V383.61l-50.36-47.53A44.08,44.08,0,0,1,96,304.08ZM480,128a64,64,0,1,0-64-64A64,64,0,0,0,480,128Zm32,32H448a63.91,63.91,0,0,0-59.38,40.42c1.84,1.27,4,2,5.62,3.59l72.12,68.06a44.37,44.37,0,0,1,0,64L416,383.62V480a32,32,0,0,0,32,32h64a32,32,0,0,0,32-32V352a32,32,0,0,0,32-32V224A64,64,0,0,0,512,160ZM444.4,295.34l-72.12-68.06A12,12,0,0,0,352,236v36H224V236a12,12,0,0,0-20.28-8.73L131.6,295.34a12.4,12.4,0,0,0,0,17.47l72.12,68.07A12,12,0,0,0,224,372.14V336H352v36.14a12,12,0,0,0,20.28,8.74l72.12-68.07A12.4,12.4,0,0,0,444.4,295.34Z';
 
+            this.controlPointIcon = [
+                '{{ asset('img/control-point-0.png') }}',
+                '{{ asset('img/control-point-1.png') }}'
+            ];
 
             this.showInfo = $('.show-info');
 
@@ -170,17 +175,46 @@
                 this.updateBusMarker(report.total - 1);
                 setTimeout(() => {
                     $("html, body").animate({scrollTop: $(".range-reports").offset().top}, 1000);
-                    const kmzUrl = $('#route-report').find('option:selected').data('kmz-url');
-                    if (kmzUrl) {
-                        this.kmlLayer = new google.maps.KmlLayer({
-                            url: kmzUrl,
-                            map: this.map
-                        });
-                    }
                 }, 1500);
             } else {
                 gwarning("@lang("No registers found")");
             }
+        }
+
+        addKml(url) {
+            this.kmlLayer = new google.maps.KmlLayer({
+                url,
+                map: this.map
+            });
+        }
+
+        removeKml() {
+            if (this.kmlLayer) {
+                this.kmlLayer.setMap(null);
+                this.kmlLayer = null;
+            }
+        }
+
+        addControlPoints(list) {
+            this.removeControlPoints();
+
+            for(let controlPoint of list) {
+                this.controlPoints.push(new google.maps.Marker({
+                    map: this.map,
+                    position: {lat: parseFloat(controlPoint.latitude), lng: parseFloat(controlPoint.longitude)},
+                    icon: this.controlPointIcon[controlPoint.trajectory],
+                    title: controlPoint.name,
+                    zIndex: 10000,
+                }));
+            }
+        }
+
+        removeControlPoints() {
+            for(let controlPoint of this.controlPoints) {
+                controlPoint.setMap(null);
+            }
+
+            this.controlPoints = [];
         }
 
         addHistoricMarker(r) {
@@ -242,10 +276,7 @@
                 this.markerBus = null;
             }
 
-            if (this.kmlLayer) {
-                this.kmlLayer.setMap(null);
-                this.kmlLayer = null;
-            }
+            this.removeKml();
 
             if (this.historicPath) {
                 this.historicPath.setMap(null);

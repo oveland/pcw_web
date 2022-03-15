@@ -66,6 +66,7 @@ use Auth;
 class Company extends Model
 {
     const PCW = 6;
+    const TRANSPUBENZA = 2;
     const COOTRANSOL = 12;
     const ALAMEDA = 14;
     const MONTEBELLO = 21;
@@ -207,7 +208,7 @@ class Company extends Model
      */
     public function hasRecorderCounter()
     {
-        return collect([self::ALAMEDA, self::TUPAL])->contains($this->id);
+        return collect([self::ALAMEDA, self::TUPAL, self::PCW, self::TRANSPUBENZA])->contains($this->id);
     }
 
     /*
@@ -217,7 +218,13 @@ class Company extends Model
      */
     public function hasSensorCounter()
     {
-        return collect([self::YUMBENOS, self::ALAMEDA, self::EXPRESO_PALMIRA, self::MONTEBELLO])->contains($this->id) || auth()->user()->isAdmin();
+        return collect([
+                self::YUMBENOS,
+                self::ALAMEDA,
+                self::EXPRESO_PALMIRA,
+                self::MONTEBELLO,
+                self::TRANSPUBENZA
+            ])->contains($this->id) || auth()->user()->isAdmin();
     }
 
     /*
@@ -242,7 +249,7 @@ class Company extends Model
      */
     public function hasDriverRegisters()
     {
-        return collect([self::ALAMEDA])->contains($this->id);
+        return collect([self::ALAMEDA, self::TRANSPUBENZA])->contains($this->id);
     }
 
     /*
@@ -250,7 +257,7 @@ class Company extends Model
     */
     public function hasSeatSensorCounter()
     {
-        return collect([self::COOTRANSOL])->contains($this->id);
+        return collect([self::MONTEBELLO, self::TRANSPUBENZA])->contains($this->id);
     }
 
     /**

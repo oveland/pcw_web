@@ -74,6 +74,10 @@ class PCWPassengersService implements APIWebInterface
         foreach ($passengersReport->report as $vehicleId => $sensor) {
             $vehicle = $sensor->vehicle;
 
+            if($vehicle->number == '889') {
+                $sensor->passengersAllBySensor = 1000;
+            }
+
             $countHistory = $this->getRecorderHistory($sensor->history);
             $currentSensor = CurrentSensorPassengers::whereVehicle($vehicle);
 

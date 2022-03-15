@@ -799,5 +799,7 @@
   "panic": "pánico",
   "url-panic": "panico",
   "Panic_report": "Reporte_Panico",
-  "The date haven´t panic list": "No se encontró eventos de pánico"
+  "Completed": "Completado",
+  "The date haven´t panic list": "No se encontró eventos de pánico",
+  "Please write a observation": "Porfavor ingrese una descripción"
 }

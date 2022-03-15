@@ -526,19 +526,21 @@ class PassengersRecordersReportController extends Controller
                 __('Mileage programmed') => $report->programmedMileage,     # J CELL
                 __('Difference mileage') => $report->differenceMileage,     # K CELL
                 __('Recorder') => $report->totalByRecorder,                 # L CELL
-                __('IPK') => $report->IPK,                                  # M CELL
+                __('Sensor') => $report->totalBySensor,                     # M CELL
+                __('Sensor TOTAL') => $report->totalAllBySensor,            # N CELL
+                __('IPK') => $report->IPK,                                  # O CELL
             ]);
 //            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
             $dataExcel[] = $data->toArray();
         }
 
-        $infoVehicle = $vehicle ? __("Vehicle") . " " . $vehicle->number : "";
+        $infoVehicle = $vehicle ? " " . $vehicle->number : "";
         $infoDriver = $driver ? "C$driver->code: $driver->fullName" : "";
 
         PCWExporterService::excel([
-            'fileName' => str_limit(str_limit($infoDriver, 3) . " $infoVehicle" . __('Passengers per dates'), 28),
-            'title' => str_limit(($infoDriver ? "$infoDriver\n" : "") . ($infoVehicle ? "$infoVehicle | " : "") . " $dateReport - $dateEndReport", 100),
-            'subTitle' => str_limit(__("Passengers per dates"), 28),
+            'fileName' => __('Passengers report'),
+            'title' => str_limit(($infoDriver ? "$infoDriver\n" : "") . ($infoVehicle ? "$infoVehicle | " : "") . " $dateReport - $dateEndReport", 100). "\nExportado ". Carbon::now()->format("Y-m-d h:i:s a"),
+            'subTitle' => str_limit(__("Passengers report"), 28),
             'data' => $dataExcel,
             'type' => 'passengerReportByRangeTotalFooter'
         ], [

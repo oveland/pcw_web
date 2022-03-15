@@ -129,12 +129,6 @@ class ReportRouteHistoricController extends Controller
 
         $photos = [];
 
-        if ($dateReport < '2021-09-03') { // TODO: Delete on 2022
-            $locations = $locations->filter(function (Location $l) {
-                return !Str::contains($l->status, 'X');
-            })->values();
-        }
-
         foreach ($locations as $index => $location) {
             $dispatchRegister = $location->dispatchRegister;
             $inRoute = $dispatchRegister && $dispatchRegister->isActive();

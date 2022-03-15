@@ -247,6 +247,7 @@
                             let offRoads = [];
                             let speeding = [];
                             let speedingLabel = [];
+                            let controlPointNames = [];
                             let speed = [];
                             let averageSpeed = [];
 
@@ -281,6 +282,7 @@
                                 averageSpeed[i] = report.averageSpeed;
                                 speeding[i] = report.speeding ? 'speeding':'none';
                                 speedingLabel[i] = report.speeding ? 'label-danger' : '';
+                                controlPointNames[i] = report.controlPointName;
 
                                 const svg = processSVGIcon(report);
 
@@ -341,6 +343,10 @@
                                 panelOffRoad.find('.no-off-road').slideDown();
                             }
 
+                            @php
+                                $showLastCP = Auth::user()->isSuperAdmin();
+                            @endphp
+
                             chartRouteReport.empty().hide().sparkline(dataValues, {
                                 type: 'line',
                                 width: (window.innerWidth-50)+'px',
@@ -354,30 +360,32 @@
                                 spotRadius: 7,
                                 normalRangeMin: -50, normalRangeMax: 50,
                                 tooltipFormat: "<?='<div class=\'info-route-report\' style=\'position: static !important;z-index: auto !important;\'>"+
-                                        "<span class=\'{{offset:offRoads}}\'><span class=\'label label-danger f-s-10 m-b-10\'>"+
+                                        "<span class=\'{{offset:offRoad}}\'><span class=\'label label-danger f-s-10 m-b-10\'>"+
                                         "    <i class=\'ion-merge m-r-5 fs-12 fa-fw\'></i> '.__('Off road vehicle').'</span><hr class=\'m-5\'>"+
                                         "</span>"+
-                                        "<b class=\'m-t-10\'>'.__('Status').':</b> {{offset:timesReports}} <br>"+
-                                        "<b>'.__('Time').':</b> {{offset:times}} <br>"+
+                                        "<b class=\'m-t-10\'>'.__('Status').':</b> {{offset:timeReport}} <br>"+
+                                        "<b>'.__('Time').':</b> {{offset:time}} <br>"+
                                         "<b>'.__('Traveled').':</b> {{offset:distance}} m <br>"+
                                         "<b>'.__('Completed').':</b> <span class=\'route-percent\'>{{offset:percent}}</span>%<br>"+
                                         "<span class=\'label p-0 {{offset:speedingLabel}} speed\' data-speed=\'{{offset:speed}}\' data-average=\'{{offset:averageSpeed}}\'><b>'.__('Speed').':</b> {{offset:speed}} Km/h <br></span>"+
+                                        "<span class=\'label '.($showLastCP ? '' : 'hide').' p-0\'>{{offset:controlPointName}}<br></span>"+
                                         "<span class=\'hide latitude\'>{{offset:latitude}}</span><br>"+
                                         "<span class=\'hide longitude\'>{{offset:longitude}}</span>"+
                                         "<span class=\'hide orientation\'>{{offset:orientation}}</span>"+
                                         "<span class=\'hide speeding\'>{{offset:speeding}}</span>"+
-                                        "<span class=\'hide off-road\'>{{offset:offRoads}}</span>"+
+                                        "<span class=\'hide off-road\'>{{offset:offRoad}}</span>"+
                                         "<span class=\'hide vehicle-status-id\'>{{offset:vehicleStatusId}}</span>"+
                                     "</div>'?>",
                                 tooltipValueLookups: {
-                                    'offRoads': offRoads,
-                                    'timesReports': dataTimesReports,
-                                    'times': dataTimes,
+                                    'offRoad': offRoads,
+                                    'timeReport': dataTimesReports,
+                                    'time': dataTimes,
                                     'distance': dataDistances,
                                     'speed': speed,
                                     'averageSpeed': averageSpeed,
                                     'speeding': speeding,
                                     'speedingLabel': speedingLabel,
+                                    'controlPointName': controlPointNames,
                                     'percent': completedPercent,
                                     'latitude': latitudes,
                                     'longitude': longitudes,

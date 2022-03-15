@@ -43,7 +43,7 @@
                 <td class="text-center" width="5%">{{ $loop->index + $passengers->firstItem() }}</td>
                 <td class="text-center">{{ $passenger->date }}</td>
                 <td class="text-center">{{ $passenger->hexSeats }}</td>
-                <td class="text-center">{{ ($passenger->total - $initialPassengerCount->total ) }}</td>
+                <td class="text-center">{{ ($passenger->total - ($initialPassengerCount->total) ) }}</td>
                 <td class="text-center">{{ $passenger->total }}</td>
                 <td class="text-center">
                     @if($dispatchRegister)
@@ -64,11 +64,15 @@
                             data-content="
                                 <div style='width:200px'>
                                     <strong>@lang('Departure Time'):</strong> {{ $strTime::toString($dispatchRegister->departure_time) }}<br>
-                                    <strong>@lang('Arrival Time'):</strong> {{ $strTime::toString($dispatchRegister->arrival_time) }}<br>
-                                    @if($dispatchRegister->complete())<strong>@lang('Arrival Time Difference'):</strong> {{ $strTime::toString($dispatchRegister->arrival_time_difference) }}@endif
+                                    @if($dispatchRegister->complete())
+                                        <strong>@lang('Arrival time'):</strong> {{ $strTime::toString($dispatchRegister->arrival_time) }}
+                                        <strong>@lang('Arrival Time Difference'):</strong> {{ $strTime::toString($dispatchRegister->arrival_time_difference) }}
+                                    @else
+                                        <strong class='text-warning'>@lang('Arrival Time Scheduled'):</strong> {{ $strTime::toString($dispatchRegister->arrival_time_scheduled) }}<br>
+                                    @endif
                              </div>"
                         >
-                            {{ $dispatchRegister->route->name }}
+                            {{ $dispatchRegister->route->name }} • @lang('Round trip') {{ $dispatchRegister->round_trip }}
                         </div>
                     @else
                         ----
@@ -81,7 +85,7 @@
                             @lang('Issues')
                         </button>
                     @endif
-                    <button class="btn btn-sm btn-primary" data-toggle="collapse" data-target="#frame-{{ $passenger->id }}">
+                    <button class="btn btn-sm btn-default btn-block" data-toggle="collapse" data-target="#frame-{{ $passenger->id }}">
                         <i class="ion-ios-search"></i>
                         @lang('See frame')
                     </button>

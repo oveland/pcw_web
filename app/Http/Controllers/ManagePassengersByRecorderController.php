@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Routes\DispatchRegister;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -16,15 +17,33 @@ class ManagePassengersByRecorderController extends Controller
     public function ajax($action, Request $request)
     {
         switch ($action) {
+            case 'editField':
             case 'editRecorders':
                 $user = Auth::user();
 
                 if ($user->canEditRecorders()) {
                     $id = $request->get('id');
-                    $field = $request->get('field');
+                    $field = __($request->get('field'));
                     $value = $request->get('value');
+                    $observation = $request->get('obs');
 
-                    $success = DB::update("UPDATE registrodespacho SET $field = $value, edit_user_id = $user->id, edited_info = edited_info || 'User $user->id > $field = $value, ', ignore_trigger = TRUE WHERE id_registro = $id");
+                    $dr = DispatchRegister::find($id);
+
+                    if($dr) {
+                        $success = DB::update("UPDATE registrodespacho SET $field = $value, edit_user_id = $user->id, edited_info = edited_info || 'User $user->id > $field = $value, ', ignore_trigger = TRUE WHERE id_registro = $id");
+
+                        if($success) {
+                            $field = $request->get('field');
+
+                            $drObs = $dr->getObservation($field);
+                            $drObs->old_value = $dr->$field;
+                            $drObs->value = $value;
+                            $drObs->observation = $observation;
+                            $dr->user()->associate($user);
+
+                            $success = $drObs->save();
+                        }
+                    }
 
                     return Response::json([
                         'success' => $success,

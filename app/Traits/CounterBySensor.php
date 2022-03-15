@@ -85,7 +85,8 @@ trait CounterBySensor
                 $passengersByRoundTrip = 0;
                 $endRecorder = 0;
 
-                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
+//                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
+                $startRecorder = $dispatchRegister->start_recorder;
 
                 if ($dispatchRegister->complete()) {
                     $endRecorder = $dispatchRegister->end_recorder;
@@ -142,7 +143,7 @@ trait CounterBySensor
 
 //                $issues = self::processIssues($vehicleId, $issues, $startRecorder, $endRecorder, $passengersByRoundTrip, $dispatchRegister, $lastDispatchRegister);
                 // The next Start recorder is the last end recorder
-                $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
+//                $startRecorder = $endRecorder > 0 ? $endRecorder : $startRecorder;
 
                 // Save the last dispatch register
                 if ($dispatchRegister->complete()) $lastDispatchRegister = $dispatchRegister;
@@ -194,7 +195,7 @@ trait CounterBySensor
         $issueField = null;
         $badStartRecorder = false;
         if ($dispatchRegister->complete()) {
-            if ($startRecorder <= 0) {
+            if ($startRecorder <= 0 && false) { // Commented with false, this logic is controlled by trigger on registrodespacho table
                 $issueField = __('Start Recorder');
             } else if ($endRecorder <= 0) {
                 $issueField = __('End Recorder');
@@ -203,7 +204,8 @@ trait CounterBySensor
             } else if ($passengersByRoundTrip < 0) {
                 $issueField = __('A negative count');
             } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder
-                && $startRecorder != 66600 && $dispatchRegister->id != 1624106 && $dispatchRegister->id != 1633048 && $dispatchRegister->id != 1941775
+                && $startRecorder != 66600 && $dispatchRegister->id != 1624106 && $dispatchRegister->id != 1633048 && $dispatchRegister->id != 1941775 &&
+                $dispatchRegister->id != 2114035
             ) {
                 $start = $startRecorder;
                 $endLast = $lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 ? $lastDispatchRegister->end_recorder : 0;

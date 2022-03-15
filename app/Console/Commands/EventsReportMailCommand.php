@@ -106,7 +106,7 @@ class EventsReportMailCommand extends Command
                         'accidentes@alameda.com.co',
 
                         'olatorre22@hotmail.com',
-                        'oscarivelan@gmail.com'
+                        'operativojefe778@gmail.com'
                        // 'oiva.pcw@gmail.com'
                     ];
 

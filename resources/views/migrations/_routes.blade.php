@@ -1,5 +1,5 @@
 <!-- begin panel -->
-<div class="panel panel-inverse overflow-hidden">
+<div class="panel panel-inverse overflow-hidden" style="opacity: {{ $route->active ? 100 : 40 }}%">
     <div class="panel-heading">
         <h3 class="panel-title" aria-expanded="false">
             <div class="accordion-toggle accordion-toggle-styled collapsed row">
@@ -13,6 +13,10 @@
                     <samp class="{{ $route->controlPoints->count() ? 'text-white text-bold' : 'text-muted' }}">
                         {{ $route->controlPoints->count() }} @lang('Control Points')
                     </samp>
+                </div>
+
+                <div class="col-md-4 text-right">
+                    {{ $route->active ? '': 'INACTIVA' }}
                 </div>
             </div>
         </h3>
