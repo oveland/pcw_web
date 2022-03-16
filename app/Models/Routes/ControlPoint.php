@@ -2,13 +2,16 @@
 
 namespace App\Models\Routes;
 
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\Routes\ControlPoint
  *
- * @property-read \App\Models\Routes\Route $route
- * @mixin \Eloquent
+ * @property-read Route $route
+ * @mixin Eloquent
  * @property int $id
  * @property string $latitude
  * @property string $longitude
@@ -19,22 +22,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $distance_from_dispatch
  * @property int $distance_next_point
  * @property int $route_id
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereDistanceFromDispatch($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereDistanceNextPoint($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereLatitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereLongitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereRouteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereTrajectory($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereUpdatedAt($value)
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|ControlPoint whereCreatedAt($value)
+ * @method static Builder|ControlPoint whereDistanceFromDispatch($value)
+ * @method static Builder|ControlPoint whereDistanceNextPoint($value)
+ * @method static Builder|ControlPoint whereId($value)
+ * @method static Builder|ControlPoint whereLatitude($value)
+ * @method static Builder|ControlPoint whereLongitude($value)
+ * @method static Builder|ControlPoint whereName($value)
+ * @method static Builder|ControlPoint whereOrder($value)
+ * @method static Builder|ControlPoint whereRouteId($value)
+ * @method static Builder|ControlPoint whereTrajectory($value)
+ * @method static Builder|ControlPoint whereType($value)
+ * @method static Builder|ControlPoint whereUpdatedAt($value)
  * @property bool $reportable
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Routes\ControlPoint whereReportable($value)
+ * @method static Builder|ControlPoint whereReportable($value)
  */
 class ControlPoint extends Model
 {
@@ -49,7 +52,7 @@ class ControlPoint extends Model
 
     public function times()
     {
-        $this->hasMany(ControlPointTimeReport::class)->orderBy('day_type_id','asc');
+        $this->hasMany(ControlPointTimeReport::class)->orderBy('day_type_id');
     }
 
     public function route()

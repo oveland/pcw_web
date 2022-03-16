@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 26/05/2017
- * Time: 8:14 PM
- */
 
-namespace app;
+namespace App;
 
 
 trait Mapping

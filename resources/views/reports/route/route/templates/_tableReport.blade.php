@@ -150,7 +150,7 @@
             <th width="5%" class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->date }}
                 @if( Auth::user()->isSuperAdmin() )
-                <div class="text-muted text-sm">{{ $dispatchRegister->id }}</div>
+                <div class="text-sm"><small>{{ $dispatchRegister->id }}</small></div>
                 @endif
             </th>
             <th width="10%" class="bg-{{ $color }} text-white text-center">

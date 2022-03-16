@@ -359,6 +359,7 @@ class MigrationController extends Controller
             $user->company_id = $userOLD->id_empresa;
             $user->role_id = $userOLD->nivel;
             $user->vehicle_tags = $userOLD->vehicle_tags;
+            $user->permissions = $userOLD->menureporte;
 
             try {
                 $user->save();

@@ -26,6 +26,7 @@ use Illuminate\Support\Collection;
  * @property string $password
  * @property string|null $remember_token
  * @property string|null $role
+ * @property Collection $permissions
  * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -326,5 +327,11 @@ class User extends Authenticatable
     public function userVehicles()
     {
         return $this->hasMany(UserVehicle::class);
+    }
+
+    function getPermissionsAttribute() {
+        return collect(explode(',', $this->attributes['permissions']))->map(function ($p) {
+            return intval(trim($p));
+        });
     }
 }
