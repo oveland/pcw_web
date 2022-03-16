@@ -46,7 +46,7 @@ class ViewPermission extends Model
         $user = \Auth::user();
         $permissionProfile = ViewPermission::migrated()->where('url', 'like', "%$path%")->get()->first();
 
-        if ($user->isAdmin() || !$permissionProfile || $path == '/') return true;
+        if (!$user || $user->isAdmin() || !$permissionProfile || $path == '/') return true;
 
         return $user->permissions->contains($permissionProfile->id) || $user->permissions->contains(777);
     }
