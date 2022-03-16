@@ -2,7 +2,6 @@
 
 namespace App\Models\Routes;
 
-use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
@@ -344,18 +343,12 @@ class DispatchRegister extends Model
     public function scopeActive($query, $completedTurns = null)
     {
         if ($completedTurns) {
-            return $query->completed()->where(function ($query) {
-                $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
-            });
-        } else {
-            $companiesThatIncludesCanceledTurns = collect(
-                Company::all()->filter(function (Company $company) {
-                    return $company->hasADD();
-                })
-            )->implode(', ');
-
-            return $query->whereRaw("((SELECT company_id FROM vehicles v WHERE v.id = vehicle_id LIMIT 1) IN ($companiesThatIncludesCanceledTurns) AND (SELECT get_route_distance_from_dr(id)) > 2000 AND (SELECT get_total_locations_from_dr(id) > 50))");
+            return $query->completed();
         }
+
+        return $query->where(function ($query) {
+            $query->where('status', $this::COMPLETE)->orWhere('status', $this::IN_PROGRESS);
+        });
     }
 
     public function complete()
@@ -772,7 +765,6 @@ class DispatchRegister extends Model
     {
         $totalLocations = $this->locations()->count();
         $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
-        $totalLocations = $totalLocations < 1000 ? $totalLocations : $totalLocations * 5;
 
         return min([$totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0, 100]);
     }
@@ -799,13 +791,12 @@ class DispatchRegister extends Model
 
     public function getTotalOffRoad()
     {
-        return $this->offRoads()->count();
+        if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
 
-//        if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
-//
-//        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
-//
-//        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
+
+        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
+
+        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
     public function getTotalOffRoadAttribute()
