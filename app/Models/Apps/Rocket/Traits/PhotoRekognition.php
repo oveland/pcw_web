@@ -65,7 +65,7 @@ trait PhotoRekognition
         $column = "data_$type";
 
 //        if ($this->dispatchRegister && $this->dispatchRegister->isActive() || true) {
-        if ($this->vehicle->company_id != 2 && $this->dispatchRegister && $this->dispatchRegister->isActive()) {
+        if ($this->vehicle->company_id != 2 && $this->dispatchRegister && $this->dispatchRegister->isActive() || $this->vehicle->company_id == 41) {
             $rekognition = new RekognitionService();
             $this->$column = $rekognition->sefFile($image)->process($type);
         }

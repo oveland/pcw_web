@@ -72,7 +72,7 @@ class RocketController extends Controller
                     } else {
                         $photos = $service->getHistoric();
                     }
-                    
+
                     $response->photos = $photos
 //                        ->where('drId', '<>', null)
                         ->sortByDesc('time')->values();
@@ -161,7 +161,8 @@ class RocketController extends Controller
 
                     if ($photos->count()) {
                         //$photo = Photo::find($photos->last()->id);
-                        $photo = Photo::find($photos->get(intval(intval($photos->count() * 0.9)))->id);
+//                        $photo = Photo::find($photos->get(intval(intval($photos->count() * 0.9)))->id);
+                        $photo = Photo::find($photos->last()->id);
 
 //                    $photo = Photo::find(77176);
 //                    $photo->processRekognition(true, 'persons_and_faces');
