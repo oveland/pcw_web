@@ -88,7 +88,7 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-2" style="width: 200px !important;">
+                            <div class="col-md-1">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
@@ -104,13 +104,13 @@
                             </div>
                         @endif
 
-                        <div class="col-md-2" style="width: 200px !important;">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="date-report" class="control-label field-required">
                                     @lang('Date')
                                 </label>
                                 <label class="text-bold">
-                                    &nbsp;| <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
+                                    <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('Range')
                                 </label>
                                 <div class="input-group date" id="datetimepicker-report">
                                     <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
@@ -120,7 +120,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 p-l-0 date-end-container" style="display: none; width: 200px !important;">
+
+                        <div class="col-md-2 date-end-container" style="display: none;">
                             <div class="form-group">
                                 <label for="date-end-report" class="control-label">@lang('Date end')</label>
                                 <div class="input-group date" id="datetimepicker-report">
@@ -132,7 +133,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-1" style="width: 180px !important;">
+                        <div class="col-md-1">
                             <div class="form-group">
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
@@ -143,40 +144,38 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="col-md-4 p-l-0">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
-                                    <label for="route-report" class="control-label field-required">@lang('Route')</label>
-                                    <div class="form-group">
-                                        <select name="route-report" id="route-report"
-                                                class="default-select2 form-control col-md-12">
-                                            <option value="null">@lang('Select a company')</option>
-                                        </select>
-                                    </div>
+                                    <select name="route-report" id="route-report"
+                                            class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a company')</option>
+                                    </select>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-md-4">
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label for="fringe-report" class="control-label">@lang('Fringe')</label>
                                 <div class="form-group">
-                                    <label for="fringe-report" class="control-label">@lang('Fringe')</label>
-                                    <div class="form-group">
-                                        <select name="fringe-report" id="fringe-report"
-                                                class="default-select2 form-control col-md-12">
-                                            <option value="null">@lang('Select a route')</option>
-                                        </select>
-                                    </div>
+                                    <select name="fringe-report" id="fringe-report"
+                                            class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a route')</option>
+                                    </select>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-md-4 p-r-0">
+                        <div class="col-md-3 hide">
+                            <div class="form-group">
+                                <label for="control-point-report" class="control-label">@lang('Control points')</label>
                                 <div class="form-group">
-                                    <label for="control-point-report" class="control-label">@lang('Control points')</label>
-                                    <div class="form-group">
-                                        <select name="control-points-report[]" id="control-point-report" multiple
-                                                class="default-select2 form-control col-md-12">
-                                            <option value="null">@lang('Select a route')</option>
-                                        </select>
-                                    </div>
+                                    <select name="control-points-report[]" id="control-point-report" multiple
+                                            class="default-select2 form-control col-md-12">
+                                        <option value="null">@lang('Select a route')</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +195,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-4 col-xs-12">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
@@ -206,18 +205,31 @@
                                                 <input id="active-vehicles" class="vehicle-options" name="ascendant" type="checkbox" value="active-vehicles"> @lang('Ascendant')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="exclude-in-repair" class="vehicle-options" name="paint-profile" type="checkbox" value="exclude-in-repair"> @lang('Paint profile')
+                                                <input id="exclude-in-repair" class="vehicle-options" name="paint-profile" type="checkbox" value="exclude-in-repair"> @lang('Profile')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="show-details" class="vehicle-options" name="show-details" type="checkbox" value="show-details"> @lang('Show details')
+                                                <input id="show-details" class="vehicle-options" name="show-details" type="checkbox" value="show-details"> @lang('Details')
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="col-md-1 tooltips container-threshold-averages" title="@lang('Defines the threshold difference (+ or - in minutes) to calculates average values and correction factor')" style="display: none">
+                            <div class="form-group">
+                                <label for="threshold-averages" class="control-label">@lang('Threshold averages')</label>
+                                <div class="form-group">
+                                    <select name="threshold-averages" id="threshold-averages" class="default-select2 form-control col-md-12">
+                                        @foreach(range(1, 60) as $minutes)
+                                            <option value="{{ $minutes }}">+ - {{ $minutes }} min</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         </form>
         <!-- end search form -->
@@ -291,6 +303,16 @@
                 loadSelectFringesReport($(this).val());
                 reportContainer.slideUp(100);
             }).change();
+
+            $('#fringe-report').change(function () {
+                if($(this).val()) {
+                    $('.container-threshold-averages').fadeIn();
+                } else {
+                    $('.container-threshold-averages').slideUp();
+                }
+            });
+
+            $('#threshold-averages').val(10);
         });
 
         $('#with-end-date').change(function(){

@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Utils;
 
 
+use Illuminate\Support\Str;
+
 class StrTime
 {
     static function intervalToTime($interval)
@@ -16,16 +18,21 @@ class StrTime
         return self::segToStrTime(self::toSeg($interval));
     }
 
-    static function toSeg($strTime)
+    static function toSeg($strTime, $withSign = false)
     {
         if ($strTime == '--:--:--') return 0;
         $strTimeArray = explode(":", $strTime);
 
-        if (count($strTimeArray) == 2) {
-            return $strTimeArray[0] * 60 + $strTimeArray[1];
+        $sign = 1;
+        if($withSign) {
+            $sign = Str::startsWith($strTime, '-') ? -1 : 1;
         }
-        return $strTimeArray[0] * 3600 + $strTimeArray[1] * 60 + $strTimeArray[2];
 
+        if (count($strTimeArray) == 2) {
+            return ($strTimeArray[0] * 60 + $strTimeArray[1]) * $sign;
+        }
+
+        return ($strTimeArray[0] * 3600 + $strTimeArray[1] * 60 + $strTimeArray[2]) * $sign;
     }
 
     static function segToStrTime($seconds)

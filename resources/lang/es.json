@@ -704,6 +704,11 @@
   "Averages": "Promedios",
   "Scheduled time from dispatch": "Tiempo programado desde despacho",
   "Average time from dispatch": "Tiempo promedio desde despacho",
+
+  "Scheduled time from prev point": "Tiempo programado desde punto anterior",
+  "Average time from prev point": "Tiempo promedio desde punto anterior",
+  "Correction factor": "Factor de correción",
+
   "Takings receipt": "Recibo de Recaudo",
   "Dates": "Fechas",
   "Group by vehicle": "Agrupar por vehículo",
@@ -801,5 +806,12 @@
   "Panic_report": "Reporte_Panico",
   "Completed": "Completado",
   "The date haven´t panic list": "No se encontró eventos de pánico",
-  "Please write a observation": "Porfavor ingrese una descripción"
+  "Please write a observation": "Porfavor ingrese una descripción",
+  "Threshold averages": "Umbral para promedios",
+  "Defines the threshold difference (+ or - in minutes) to calculates average values and correction factor": "Define el umbral diferencia (+ ó - en minutos) para calcular los promedios de tiempos y el factor de corrección",
+  "Measured time from prev": "Tiempo medido desde punto anterior",
+  "Difference time from prev": "Diferencia desde punto anterior",
+  "Absolute difference from dispatch": "Diferencia absoluta desde despacho",
+  "Scheduled time - Measured time": "Tiempo programado - Tiempo medido entre puntos",
+  "Average excluded": "Excluido de promedios"
 }

@@ -40,12 +40,18 @@ class ControlPointService
             ->orderByDesc('departure_time')
             ->get();
 
+
         if ($fringeReport) {
             $dispatchRegisters = $dispatchRegisters->where('departure_fringe_id', $fringeReport);
         }
 
         $allReportsByControlPoints = ControlPointTimeReport::whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
-        ->with('dispatchRegister');
+        ->with([
+            'dispatchRegister',
+            'dispatchRegister.route',
+            'dispatchRegister.vehicle',
+            'dispatchRegister.driver',
+        ]);
 
         if (is_array($controlPointReport)) {
             $allReportsByControlPoints = $allReportsByControlPoints->whereIn('control_point_id', $controlPointReport);
@@ -67,7 +73,7 @@ class ControlPointService
 
         $reportsByControlPoints = collect([]);
         foreach ($reportsByDispatchRegister as $dispatchRegisterId => $reportByDispatchRegister) {
-            $dispatchRegister = DispatchRegister::find($dispatchRegisterId);
+            $dispatchRegister = $reportByDispatchRegister->first()->dispatchRegister;
             $reportsByControlPoints->push($this->buildControlPointReportsByDispatchRegister($dispatchRegister, $reportByDispatchRegister, $controlPointReport));
         }
 
@@ -163,7 +169,7 @@ class ControlPointService
                 }
 
                 if (StrTime::subStrTime($measuredControlPointTime, $scheduledControlPointTime) > '00:01:00') {
-                    $isFast = StrTime::timeAGreaterThanTimeB($scheduledControlPointTime, $measuredControlPointTime);
+                    $isFast = StrTime::timeAGreaterThanTimeB($measuredControlPointTime, $scheduledControlPointTime);
                     $statusColor = $isFast ? 'primary' : 'danger';
                     $statusText = __($isFast ? 'fast' : 'slow');
                 }
@@ -181,6 +187,7 @@ class ControlPointService
                 'dispatchRegisterId' => $dispatchRegister->id,
                 'fringeName' => $departureFringe ? $departureFringe->name : "--:--",
                 'controlPoint' => $controlPoint,
+                'controlPointTime' => $controlPointTime,
                 'hasReport' => $hasReport,
                 'statusColor' => $statusColor,
                 'statusText' => $statusText,
