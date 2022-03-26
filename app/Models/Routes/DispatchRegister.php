@@ -794,9 +794,11 @@ class DispatchRegister extends Model
         if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
 
 
-        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
+        return $this->offRoads()->count();
 
-        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
+//        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
+//
+//        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
     }
 
     public function getTotalOffRoadAttribute()

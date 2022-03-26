@@ -9,6 +9,92 @@
             font-weight: bold;
             text-shadow: #111111 1px 1px 4px;
         }
+
+        .info-correction-factor {
+            background: #184b61;
+            padding: 7px 30px 7px 30px !important;
+            color: white !important;
+        }
+
+        .info-correction-factor-ok {
+            box-shadow: -4px 0px 0px 0px #008000b3 !important;
+        }
+
+        .info-correction-factor-up {
+            box-shadow: -4px 0px 0px 0px #10c1e0 !important;
+        }
+
+        .info-correction-factor-down {
+            box-shadow: -4px 0px 0px 0px #cd762e !important;
+        }
+
+        .info-correction-factor:hover {
+            color: white !important;
+        }
+
+        .label-time-between {
+            color: #0b7d95;
+            margin-bottom: 20px;
+        }
+
+        .label-time-between-scheduled {
+            color: #078769;
+            padding: 3px 35px 3px 35px !important;
+        }
+
+        .cursor-pointer {
+            cursor: pointer !important;
+        }
+
+        .table-bordered, .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+            border: 1px solid #d7d6d6 !important;
+        }
+
+        .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th {
+            border: 1px solid white !important;
+        }
+
+        .table thead {
+            background: white;
+        }
+
+        @media (min-width: 600px) {
+            .table {
+                position: relative !important;
+                background: white;
+                border: 1px  black !important;
+            }
+
+            .table th {
+                position: sticky !important;
+                position: -webkit-sticky !important;
+                z-index: 2 !important;
+                top: 47px !important; /* Don't forget this, required for the stickiness */
+                box-shadow: -3px 6px 6px 1px rgba(0, 0, 0, 0.8);
+                border: 1px #2b3643 !important;
+            }
+
+            .table tfoot td, .table tfoot th {
+                position: sticky !important;
+                position: -webkit-sticky !important;
+                z-index: 2 !important;
+                bottom: 30px !important; /* Don't forget this, required for the stickiness */
+                box-shadow: -3px 6px 6px 1px rgba(0, 0, 0, 0.8);
+                background: #2b3643f7;
+                border: 1px #2b3643 !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .table-responsive-xs {
+                overflow-x: auto !important;
+            }
+        }
+
+        hr.divider {
+            margin: 5px 20% 0 20%;
+            border-color: #e1dede;
+        }
     </style>
 
     <div class="panel panel-inverse">
@@ -31,10 +117,10 @@
         <div class="tab-content panel">
             <div id="report-tab" class="tab-pane fade active in report-tab-cp">
                 <div class="">
-                    <div class="table-responsive col-md-12 p-0" style="padding-bottom: 90px;height: 1000px">
+                    <div class="table-responsive-xs col-md-12 p-0">
                         <table class="table table-bordered table-condensed table-hover table-valign-middle table-report-control-point data-table-report">
                             <thead>
-                            <tr class="">
+                            <tr class="sticky">
                                 <th class="text-center bg-inverse-dark text-muted">
                                     <i class="fa fa-list-ol"></i>
                                 </th>
@@ -48,7 +134,7 @@
                                 </th>
                                 <th class="text-center bg-inverse-dark text-muted">
                                     <i class="fa fa-car"></i>
-                                    @lang('Vehicle')
+                                    @lang('Vh.')
                                 </th>
                                 <th class="text-center bg-inverse-dark text-muted hide">
                                     <i class="fa fa-user"></i>
@@ -63,13 +149,12 @@
                                     @lang('Fringe')
                                 </th>
                                 @php
-                                    $controlPointAverage = collect([]);
+                                    $controlPointsDurations = collect([]);
                                     $lastScheduled = collect([]);
                                 @endphp
                                 @foreach($reportsByControlPoints->first()->reportsByControlPoint as $reportByControlPoint)
                                     @php
                                         $controlPoint =  $reportByControlPoint->controlPoint;
-                                        $controlPointAverage->put($controlPoint->id, 0);
                                         $lastScheduled->put($controlPoint->id, "");
                                     @endphp
                                     <th class="{{ $controlPoint->trajectory == 0 ? 'info':'danger' }}" style="">
@@ -114,7 +199,7 @@
                                     <th class="text-capitalize text-muted bg-{{ $dispatchRegister->inProgress() ? 'warning':'inverse' }}">
                                         {{ $dispatchRegister->round_trip }}<br>
                                         <small>@lang('Turn') {{ $dispatchRegister->turn }}</small><br>
-                                        <small class="status-html">{!! $dispatchRegister->status !!}</small>
+                                        <small class="status-html" style="font-size: 0.95rem">{!! $dispatchRegister->status !!}</small>
                                         @if($offRoadPercent)
                                             <div class="m-t-1">
                                                 <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
@@ -149,49 +234,80 @@
                                         {{ $dispatchRegister->departureFringe->name }} <br>
                                         <small>{{ $dispatchRegister->departureFringe->dayType->description }}</small>
                                     </th>
+                                    @php
+                                        $prevReport = $reportsByControlPoint->reportsByControlPoint->first();
+                                    @endphp
                                     @foreach($reportsByControlPoint->reportsByControlPoint as $reportByControlPoint)
                                         @php
                                             $controlPoint = $reportByControlPoint->controlPoint;
-                                            $controlPointAverage->put($controlPoint->id, $controlPointAverage->get($controlPoint->id) + $reportByControlPoint->timeMeasuredInSeconds);
                                             if( $reportByControlPoint->hasReport ){
                                                 $lastScheduled->put($controlPoint->id, $reportByControlPoint->timeScheduled);
                                             }
+
+                                            $prevMeasuredControlPointTime = $prevReport->measuredControlPointTime;
+                                            $hasPreviousReference = $prevMeasuredControlPointTime != '--:--:--';
+
+                                            $timeFromPrev = $hasPreviousReference ? $strTime::subStrTime($reportByControlPoint->measuredControlPointTime, $prevMeasuredControlPointTime) : '--:--:--';
+                                            $diffBetween = $hasPreviousReference ? $strTime::difference($timeFromPrev, $reportByControlPoint->controlPointTime->time) : '--:--:--';
+
+                                            $thresholdAverages = intval(request()->get('threshold-averages'));
+                                            $showAverages = $thresholdAverages && request()->get('fringe-report');
+                                            $includesForAverages = $thresholdAverages && abs($strTime::toSeg($diffBetween) / 60) <= $thresholdAverages;
+
+                                            if($includesForAverages && $hasPreviousReference) {
+                                                $current = collect($controlPointsDurations->get($controlPoint->id) ?? []);
+                                                $current->push($strTime::toSeg($timeFromPrev));
+                                                $controlPointsDurations->put($controlPoint->id, $current);
+                                            }
+
+                                            $prevReport = $reportByControlPoint;
                                         @endphp
                                         @if( $reportByControlPoint->hasReport )
                                             <td class="text-center td-info" style="background: {{  $query->paintProfile ? $reportByControlPoint->backgroundProfile : "white" }};">
                                                 <div class="tooltipss" data-title="{{ $controlPoint->name }}">
-                                                    @if($query->showDetails)
-                                                    <div class="measured-time {{ $query->paintProfile ? "measured-time-dark" : ""  }}">
+                                                    @if($query->showDetails && $hasPreviousReference)
+                                                    <div class="measured-time">
                                                         <h6 class="m-0">
-                                                            <small class="faa-parent animated-hover tooltips" title="@lang('Measured')" data-placement="left">
-                                                                <i class="fa fa-dot-circle-o faa-burst green"></i> {{ $reportByControlPoint->timeMeasured }}
-                                                            </small>
-                                                        </h6>
-                                                        <h6 class="m-0">
-                                                            <small class="tooltips" title="@lang('Scheduled')" data-placement="left">
-                                                                <i class="ion-android-stopwatch"></i> {{ $reportByControlPoint->timeScheduled }}
-                                                            </small>
+                                                            <span class="cursor-pointer tooltips" data-html="true" title="{{ $showAverages && !$includesForAverages ? "<span class='text-warning'>".__('Average excluded')."</span>" : '' }}">
+                                                                <small class="tooltips label-time-between" title="@lang('Measured time from prev') {{ $reportByControlPoint->measuredControlPointTime }} - {{ $prevMeasuredControlPointTime }}" data-placement="left">
+                                                                    <i class="ion-android-stopwatch faa-flash animated"></i> {{ $timeFromPrev }}
+                                                                </small>
+                                                                <small class="tooltips {{ $showAverages && !$includesForAverages ? 'text-muted' : '' }}" data-html="true" title="@lang('Difference time from prev') <br> <span style='color: #078769'>{{ $reportByControlPoint->controlPointTime->time }}</span> - <span style='color: #0b7d95'>{{ $timeFromPrev }}</span> <br> @lang('Scheduled time - Measured time')" data-placement="right">
+                                                                    (
+                                                                    <span>
+                                                                        {{ $diffBetween }}
+                                                                        @if($showAverages)
+                                                                            <span class="{{ $includesForAverages ? 'text-lime' : 'text-danger' }}">•</span>
+                                                                        @endif
+                                                                    </span>
+                                                                    )
+                                                                </small>
+                                                            </span>
                                                         </h6>
                                                     </div>
+                                                    <hr class="divider">
                                                     @endif
 
                                                     <span class="f-s-12 btn-circle btn btn-{{ $reportByControlPoint->statusColor }} tooltips m-5"
-                                                            type="button" data-html="true" title="<i class='fa fa-map-marker text-muted'></i>  {{ $controlPoint->name }}"
+                                                            type="button" data-html="true" title="@lang('Absolute difference from dispatch') {{ $reportByControlPoint->scheduledControlPointTime }} - {{ $reportByControlPoint->measuredControlPointTime }} <br><i class='fa fa-map-marker text-muted'></i>  {{ $controlPoint->name }}"
                                                             style="{{ "background: $reportByControlPoint->backgroundProfile !important;" . ($query->paintProfile ? "border: 1px solid white !important" : "") }};height: 23px;padding: 3px 6px; font-weight: bold">
                                                         <span>{{ $reportByControlPoint->difference }}</span>
                                                     </span>
+
                                                     @if($query->showDetails)
                                                     <div class="measured-time {{ $query->paintProfile ? "measured-time-dark" : ""  }}">
-                                                        <h6 class="m-0">
-                                                            <small class="faa-parent animated-hover tooltips" title="@lang('GPS time')" data-placement="left">
-                                                                <i class="fa fa-dot-circle-o faa-burst green"></i> {{ $reportByControlPoint->measuredControlPointTime }}
+                                                        <h6 class="m-0 cursor-pointer">
+                                                            <span>
+                                                                <small class="tooltips" title="@lang('Scheduled Time')" data-placement="left">
+                                                                    <i class="fa fa-clock-o"></i> {{ $reportByControlPoint->scheduledControlPointTime }}
+                                                                </small>
+                                                            </span>
+                                                            <small>vs</small>
+                                                            <span>
+                                                                <small class="faa-parent animated tooltips" title="@lang('GPS time')" data-placement="right">
+                                                                <i class="fa fa-dot-circle-o faa-burst green animated"></i> {{ $reportByControlPoint->measuredControlPointTime }}
                                                             </small>
-                                                        </h6>
-                                                        <h6 class="m-0">
-                                                            <i class="ion-android-stopwatch"></i>
-                                                            <small class="tooltips" title="@lang('Scheduled Time')" data-placement="left">
-                                                                {{ $reportByControlPoint->scheduledControlPointTime }}
-                                                            </small>
+                                                            </span>
                                                         </h6>
                                                     </div>
                                                     @endif
@@ -212,9 +328,9 @@
                                            data-original-title="@lang('Graph report detail')">
                                             <i class="fa fa-area-chart faa-pulse"></i>
                                         </a>
-                                        @if( Auth::user()->isSuperAdmin() )
-                                            @php( $totalLocations = \DB::select("SELECT count(1) total FROM locations WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
-                                            @php( $totalReports = \DB::select("SELECT count(1) total FROM reports WHERE dispatch_register_id = $dispatchRegister->id")[0]->total )
+                                        @if( Auth::user()->isSuperAdmin() && false )
+                                            @php( $totalLocations = $dispatchRegister->locations()->count() )
+                                            @php( $totalReports = $dispatchRegister->reports()->count() )
                                             <hr class="hr no-padding">
                                             <small class="badge tooltips" data-original-title="@lang('Locations') / @lang('Reports')" data-placement="bottom">{!! $totalLocations !!} / {!! $totalReports !!}</small>
                                         @endif
@@ -224,7 +340,11 @@
                             </tbody>
                             <tfoot>
                             @if($reportsByControlPoints->count() && $query->fringeReport)
-                                <tr>
+                                @php
+                                    $fringeName = $reportsByControlPoints->last()->dispatchRegister->departureFringe->name;
+                                    $typeDay = $reportsByControlPoints->last()->dispatchRegister->departureFringe->dayType->description;
+                                @endphp
+                                <tr class="sticky">
                                     <th class="bg-inverse text-muted text-right text-uppercase" colspan="4">
                                         <span class="pull-right">@lang('Averages')</span>
                                     </th>
@@ -232,26 +352,41 @@
                                         {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$reportsByControlPoints->count()) }}
                                     </th>
                                     <th class="bg-inverse text-muted">
-                                            {{ $reportsByControlPoints->last()->dispatchRegister->departureFringe->name }}<br>
-                                            <small>{{ $reportsByControlPoints->last()->dispatchRegister->departureFringe->dayType->description }}</small>
+                                            {{ $fringeName }}<br>
+                                            <small>{{ $typeDay }}</small>
                                     </th>
                                     @foreach($reportsByControlPoints->first()->reportsByControlPoint as $reportByControlPoint)
-                                        @php($controlPoint =  $reportByControlPoint->controlPoint)
-                                        <th class="{{ $controlPoint->trajectory == 0 ? 'info':'danger' }}" style="">
-                                            <small>{{ $controlPoint->name }}</small>
-                                            <hr>
-                                            <small>
-                                                <span class="tooltips" title="@lang('Average time from dispatch')">
-                                                    {{ $strTime::segToStrTime($controlPointAverage->get($controlPoint->id) / $reportsByControlPoints->count()) }}
-                                                </span>
+                                        @php
+                                            $controlPoint =  $reportByControlPoint->controlPoint;
+
+                                            $cpDurations = collect($controlPointsDurations->get($controlPoint->id));
+
+                                            $averageTimeSecondsBetween = $cpDurations->average();
+
+                                            $correctionFactor = $averageTimeSecondsBetween ? $strTime::difference($reportByControlPoint->controlPointTime->time, $strTime::segToStrTime($averageTimeSecondsBetween)) : '--:--:--';
+                                            $correctionFactorInSeconds = $strTime::toSeg($correctionFactor, true);
+                                        @endphp
+                                        <th class="{{ $controlPoint->trajectory == 0 ? 'info':'danger' }}" style="" rowspan="2">
+                                            <span class="cursor-pointer">
+                                                <small class="tooltips label-time-between" title="@lang('Average time from prev point')">
+                                                    {{ $averageTimeSecondsBetween ? $strTime::segToStrTime($averageTimeSecondsBetween) : '--:--:--' }}
+                                                </small>
                                                 <br>
-                                                <span class="tooltips" title="@lang('Scheduled time from dispatch')" data-placement="bottom">
-                                                    {{ $lastScheduled->get($controlPoint->id) }}
+                                                <span class="tooltips btn btn-circle label-time-between-scheduled" title="@lang('Scheduled time from prev point')" data-placement="bottom">
+                                                    {{ $reportByControlPoint->controlPointTime->time }}
                                                 </span>
-                                            </small>
+                                            </span>
+                                            <hr>
+                                            <span class="tooltips btn btn-circle info-correction-factor cursor-pointer info-correction-factor-{{ abs($correctionFactorInSeconds) <= 60 ? 'ok' : ($correctionFactorInSeconds > 60 ? 'up' : 'down') }}" title="@lang('Correction factor') {{ $controlPoint->name }} @lang('Fringe'): {{ $fringeName }} {{ $typeDay }}">
+                                                <strong class="text-bold">{{ $correctionFactor }}</strong>
+                                            </span>
                                         </th>
                                     @endforeach
-                                    <th class="">
+                                    <th class="bg-inverse" rowspan="2"></th>
+                                </tr>
+                                <tr class="sticky bottom">
+                                    <th class="bg-inverse text-muted text-right text-uppercase" colspan="6" style="height: 0">
+                                        <strong class="pull-right text-bold">@lang('Correction factor') </strong>
                                     </th>
                                 </tr>
                             @endif
