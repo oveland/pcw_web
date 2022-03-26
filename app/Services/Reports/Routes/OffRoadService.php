@@ -32,7 +32,11 @@ class OffRoadService
 
         $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
             $totalLocations = $dr->locations()->count();
-            $lastLocation = collect(\DB::select("SELECT distance, latitude, longitude FROM locations WHERE dispatch_register_id = $dr->id ORDER BY date DESC LIMIT 1"))->first();
+//            $lastLocation = collect(\DB::select("SELECT distance, latitude, longitude FROM locations WHERE dispatch_register_id = $dr->id ORDER BY date DESC LIMIT 1"))->first();
+            $lastLocation = $dr->locations('desc')->first();
+
+            if(!$lastLocation) return false;
+
             $d = $dr->route->dispatch;
 
             $LinealTraveled = intval(intval(Geolocation::getDistance($d->latitude, $d->longitude, $lastLocation->latitude, $lastLocation->longitude)) / 1000);

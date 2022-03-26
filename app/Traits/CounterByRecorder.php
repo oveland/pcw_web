@@ -217,7 +217,7 @@ trait CounterByRecorder
                 $issueField = __('A negative count');
             } else if ($lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 && $startRecorder < $lastDispatchRegister->end_recorder
                 && $startRecorder != 66600 && $dispatchRegister->id != 1624106 && $dispatchRegister->id != 1633048 && $dispatchRegister->id != 1941775 &&
-                $dispatchRegister->id != 2114035
+                $dispatchRegister->id != 2114035 && $dispatchRegister->id != 2222105
             ) {
                 $start = $startRecorder;
                 $endLast = $lastDispatchRegister && $lastDispatchRegister->end_recorder > 0 ? $lastDispatchRegister->end_recorder : 0;

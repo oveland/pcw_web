@@ -129,6 +129,7 @@ class PCWPassengersService implements APIWebInterface
         $recorderHistory = collect([]);
         foreach ($history as $item){
             $recorderHistory->push([
+                'departureTime' => $item->departureTime,
                 'routeId' => $item->routeId,
                 'routeName' => $item->routeName,
                 'roundTrip' => $item->roundTrip,

@@ -66,7 +66,9 @@ class DispatchRouteService
             ->orderBy('departure_time');
 
 
-        return $q->get();
+        return $q->get()->sortBy(function (DispatchRegister $d) {
+            return $d->departure_time . $d->id;
+        });
     }
 
     /**

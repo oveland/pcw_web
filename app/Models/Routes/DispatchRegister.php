@@ -427,7 +427,7 @@ class DispatchRegister extends Model
         $firstPassenger = Passenger::where('dispatch_register_id', $this->id)->orderBy('date')->first();
         $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
 
-        if ($firstPassenger) $initialCount = $firstPassenger->total_prev;
+        if ($firstPassenger && !$finalCount) $initialCount = $firstPassenger->total_prev;
         if ($lastPassenger && !$finalCount) $finalCount = $lastPassenger->total;
 
         $hasReset = $finalCount < $initialCount;

@@ -456,33 +456,41 @@ class ManagerGPSController extends Controller
 
             $created = false;
             try {
+                $message = "";
+
                 $checkGPS = SimGPS::where('sim', $sim)->get()->first();
                 $checkImei = GpsVehicle::where('imei', $imei)->where('imei', '<>', $vehicle->plate)->get()->first();
 
-
                 if ($checkGPS) {
                     $companyVehicleCheck = $checkGPS->vehicle->company->short_name;
-                    $message = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
-                } elseif ($checkImei) {
+                    $message .= __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck) <br><br>";
+                }
+
+                if($checkImei) {
                     $companyVehicleCheck = $checkImei->vehicle ? $checkImei->vehicle->company->short_name : "";
-                    $message = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
+                    $message .= __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck) <br><br>";
+                }
+
+                if($checkGPS || $checkImei) {
+                    $this->deleteCurrent($sim, $imei);
+                    $message .= "<br> • Se ha eliminado registro anterior<br><br>";
+                }
+
+                $gpsVehicle->imei = $imei;
+
+                if ($gpsVehicle->save()) {
+                    $simGPS = new SimGPS();
+                    $simGPS->sim = $sim;
+                    $simGPS->vehicle_id = $vehicle->id;
+                    $simGPS->gps_type = $gpsType;
+
+                    $message .= __('Register created successfully');
+
+                    $simGPS->save();
+                    $created = true;
+                    \DB::update("UPDATE crear_vehiculo SET imei_gps = '$gpsVehicle->imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
                 } else {
-                    $gpsVehicle->imei = $imei;
-
-                    if ($gpsVehicle->save()) {
-                        $simGPS = new SimGPS();
-                        $simGPS->sim = $sim;
-                        $simGPS->vehicle_id = $vehicle->id;
-                        $simGPS->gps_type = $gpsType;
-
-                        $message = __('Register created successfully');
-
-                        $simGPS->save();
-                        $created = true;
-                        \DB::update("UPDATE crear_vehiculo SET imei_gps = '$gpsVehicle->imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
-                    } else {
-                        $message = __('Error');
-                    }
+                    $message .= __('Error');
                 }
             } catch (Exception $exception) {
                 $message = $exception->getMessage();
@@ -515,38 +523,47 @@ class ManagerGPSController extends Controller
                 $gpsVehicle->vehicle_id = $vehicle->id;
             }
 
-            $error = "";
             $updated = false;
             try {
+                $message = "";
+
                 $checkGPS = SimGPS::where('id', '<>', $simGPS->id)->where('sim', $sim)->get()->first();
                 $checkImei = GpsVehicle::where('id', '<>', $gpsVehicle->id)->where('imei', $imei)->get()->first();
 
                 if ($checkGPS) {
                     $companyVehicleCheck = $checkGPS->vehicle ? $checkGPS->vehicle->company->short_name : "SimGPS with ID $checkGPS->id";
-                    $error = __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
-                } elseif ($checkImei) {
-                    $companyVehicleCheck = $checkImei->vehicle->company->short_name;
-                    $error = __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck)";
-                } else {
-                    $gpsVehicle->imei = $imei;
-                    $gpsVehicle->save();
-
-                    $simGPS->sim = $sim;
-                    $simGPS->gps_type = $gpsType;
-                    $simGPS->updated_at = Carbon::now();
-                    $simGPS->save();
-
-                    $updated = true;
-
-                    \DB::update("UPDATE crear_vehiculo SET imei_gps = '$imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
+                    $message .= __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck) <br><br>";
                 }
+
+                if ($checkImei) {
+                    $companyVehicleCheck = $checkImei->vehicle->company->short_name;
+                    $message .= __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck) <br><br>";
+                }
+
+                if($checkGPS || $checkImei) {
+                    $this->deleteCurrent($sim, $imei);
+                    $message .= "<br> • Se ha eliminado registro anterior<br><br>";
+                }
+
+                $gpsVehicle->imei = $imei;
+                $gpsVehicle->save();
+
+                $simGPS->sim = $sim;
+                $simGPS->gps_type = $gpsType;
+                $simGPS->updated_at = Carbon::now();
+                $simGPS->save();
+
+                $updated = true;
+                $message .= "Actualizado correctamente";
+
+                \DB::update("UPDATE crear_vehiculo SET imei_gps = '$imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
             } catch (\Exception $exception) {
                 $error = $exception->getMessage();
             }
 
             return (object)[
                 'updated' => $updated,
-                'error' => $error,
+                'error' => $message,
             ];
         });
 
@@ -564,12 +581,12 @@ class ManagerGPSController extends Controller
         if ($user->isSuperAdmin() || $user->id == 2018101054) {
             $deleted = false;
             try {
-//                $vehicle = $simGPS->vehicle;
-//                $gpsVehicle = $vehicle->gpsVehicle;
+                $vehicle = $simGPS->vehicle;
+                $gpsVehicle = $vehicle->gpsVehicle;
                 $deleted = ($simGPS->delete() > 0);
-//                if ($gpsVehicle) {
-//                    $deleted = ($gpsVehicle->delete() > 0);
-//                }
+                if ($gpsVehicle) {
+                    $deleted = ($gpsVehicle->delete() > 0);
+                }
                 if ($deleted) $message = __('Register deleted successfully');
                 else $message = __('Error');
             } catch (Exception $exception) {
@@ -579,7 +596,15 @@ class ManagerGPSController extends Controller
         } else {
             return response()->json(['message' => 'Acceso restringido']);
         }
+    }
 
+    public function deleteCurrent($imei, $sim)
+    {
+        $checkGPS = SimGPS::where('sim', $sim)->get()->first();
+        $checkImei = GpsVehicle::where('imei', $imei)->get()->first();
+
+        if($checkGPS) $checkGPS->delete();
+        if($checkImei) $checkGPS->delete();
     }
 
     public function getScript($device)
