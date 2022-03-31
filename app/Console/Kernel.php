@@ -69,7 +69,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('gps:check-status')->everyMinute();
 
 //        $schedule->command('gps:check-server')->everyFiveMinutes();
-        $schedule->command('gps:check-server')->cron("*/3 * * * *");
+        $schedule->command('gps:check-server')->cron("*/5 * * * *");
 
         /* Route report for TUPAL (CompanyId = 28) */
         //$schedule->command('mail-routes:events --company=28 --prod=true')->dailyAt('04:00');

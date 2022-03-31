@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Dompdf\Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Storage;
 
 class ManagerGPSController extends Controller
@@ -472,7 +473,8 @@ class ManagerGPSController extends Controller
                 }
 
                 if($checkGPS || $checkImei) {
-                    $this->deleteCurrent($sim, $imei);
+//                    dump($imei, $sim);
+                    $this->deleteCurrent($imei, $sim);
                     $message .= "<br> • Se ha eliminado registro anterior<br><br>";
                 }
 
@@ -489,6 +491,8 @@ class ManagerGPSController extends Controller
                     $simGPS->save();
                     $created = true;
                     \DB::update("UPDATE crear_vehiculo SET imei_gps = '$gpsVehicle->imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
+
+                    DB::commit();
                 } else {
                     $message .= __('Error');
                 }
@@ -604,7 +608,7 @@ class ManagerGPSController extends Controller
         $checkImei = GpsVehicle::where('imei', $imei)->get()->first();
 
         if($checkGPS) $checkGPS->delete();
-        if($checkImei) $checkGPS->delete();
+        if($checkImei) $checkImei->delete();
     }
 
     public function getScript($device)

@@ -110,6 +110,7 @@ class User extends Authenticatable
                 || $this->id == 940736          // OMAR
                 //|| $this->id == 1130648973    // BRIAN
                 || $this->id == 2018101255      // LEANDRO
+                || $this->id == 2018101280      // OLMER
             );
     }
 
@@ -118,7 +119,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin2()
     {
-        return $this->id == 625565;     // OVELAND
+        return $this->id == 625565 || $this->id == 2018101280;     // OVELAND, OLMER
     }
 
     /**
