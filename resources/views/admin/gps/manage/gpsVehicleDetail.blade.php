@@ -25,8 +25,8 @@
     </span>
 </td>
 <td width="20%" class="text-center">
-    <span class="{{ $gpsVehicle->hasValidImei()?'':'text-danger text-bold tooltips' }}" data-title="@lang('The imei must have a length of 15 characters')">
-        {{ $gpsVehicle->imei }}
+    <span class="{{ $gpsVehicle && $gpsVehicle->hasValidImei() ? '' : 'text-danger text-bold tooltips' }}" data-title="@lang('The imei must have a length of 15 characters')">
+        {{ $gpsVehicle ? $gpsVehicle->imei : '' }}
     </span>
 </td>
 <td class="text-center" width="20%">
@@ -49,7 +49,7 @@
     @if($error)
         <script>gerror('{{ $error }}')</script>
     @elseif($updated)
-        <script>gsuccess('@lang('Data updated successfully')')</script>
+        <script>gsuccess('{{ $message }}')</script>
     @endif
 </td>
 

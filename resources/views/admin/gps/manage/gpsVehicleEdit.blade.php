@@ -30,7 +30,7 @@
             </div>
             <div class="col-md-4 text-center ">
                 <div class="form-group has-success has-feedback m-b-0">
-                    <input name="imei" type="text" class="form-control input-sm" value="{{ $gpsVehicle->imei }}" placeholder="Imei" style="border-radius: 50px">
+                    <input name="imei" type="text" class="form-control input-sm" value="{{ $gpsVehicle ? $gpsVehicle->imei : '' }}" placeholder="Imei" style="border-radius: 50px">
                     <span class="fa fa-tag form-control-feedback"></span>
                 </div>
             </div>

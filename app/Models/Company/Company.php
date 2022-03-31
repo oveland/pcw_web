@@ -77,7 +77,7 @@ class Company extends Model
     const BOOTHS = 34;
     const SOTRAVALLE = 35;
     const EXPRESO_PALMIRA = 39;
-    const VALLEDUPAR = 39;
+    const VALLEDUPAR = 41;
 
     /**
      * @return mixed|string
@@ -300,7 +300,8 @@ class Company extends Model
      */
     public function hasADD()
     {
-        return collect([self::MONTEBELLO, self::VALLEDUPAR])->contains($this->id);
+//        return collect([self::MONTEBELLO, self::EXPRESO_PALMIRA, self::VALLEDUPAR])->contains($this->id);
+        return collect([self::MONTEBELLO, self::EXPRESO_PALMIRA])->contains($this->id);
     }
 
     public function countMileageByMax()

@@ -528,6 +528,8 @@ class ManagerGPSController extends Controller
             }
 
             $updated = false;
+            $error = "";
+
             try {
                 $message = "";
 
@@ -537,17 +539,17 @@ class ManagerGPSController extends Controller
                 if ($checkGPS) {
                     $companyVehicleCheck = $checkGPS->vehicle ? $checkGPS->vehicle->company->short_name : "SimGPS with ID $checkGPS->id";
                     $message .= __('The SIM number :sim is already associated with another GPS (Vehicle :vehicle)', ['sim' => $sim, 'vehicle' => $checkGPS->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck) <br><br>";
+                    $checkGPS->delete();
+                    $message .= "<br> • Se ha eliminado registro anterior<br><br>";
                 }
 
                 if ($checkImei) {
                     $companyVehicleCheck = $checkImei->vehicle->company->short_name;
                     $message .= __('The Imei number :imei is already associated to vehicle :vehicle', ['imei' => $imei, 'vehicle' => $checkImei->vehicle->number ?? 'NONE']) . " ($companyVehicleCheck) <br><br>";
-                }
-
-                if($checkGPS || $checkImei) {
-                    $this->deleteCurrent($sim, $imei);
+                    $checkImei->delete();
                     $message .= "<br> • Se ha eliminado registro anterior<br><br>";
                 }
+
 
                 $gpsVehicle->imei = $imei;
                 $gpsVehicle->save();
@@ -563,11 +565,13 @@ class ManagerGPSController extends Controller
                 \DB::update("UPDATE crear_vehiculo SET imei_gps = '$imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
             } catch (\Exception $exception) {
                 $error = $exception->getMessage();
+                DB::rollBack();
             }
 
             return (object)[
                 'updated' => $updated,
-                'error' => $message,
+                'error' => $error,
+                'message' => $message,
             ];
         });
 
@@ -575,8 +579,9 @@ class ManagerGPSController extends Controller
         $gpsVehicle = $simGPS->vehicle->gpsVehicle->fresh();
         $updated = $transaction->updated;
         $error = $transaction->error;
+        $message = $transaction->message;
 
-        return view('admin.gps.manage.gpsVehicleDetail', compact(['simGPS', 'updated', 'error', 'gpsVehicle']));
+        return view('admin.gps.manage.gpsVehicleDetail', compact(['simGPS', 'updated', 'error', 'message', 'gpsVehicle']));
     }
 
     public function deleteSIMGPS(SimGPS $simGPS, Request $request)
@@ -604,11 +609,17 @@ class ManagerGPSController extends Controller
 
     public function deleteCurrent($imei, $sim)
     {
-        $checkGPS = SimGPS::where('sim', $sim)->get()->first();
-        $checkImei = GpsVehicle::where('imei', $imei)->get()->first();
+        $simGPSList = SimGPS::where('sim', $sim)->get();
+        $gpsVehicleList = GpsVehicle::where('imei', $imei)->get();
 
-        if($checkGPS) $checkGPS->delete();
-        if($checkImei) $checkImei->delete();
+        $simGPSList->each(function (SimGPS $simGPS) {
+            $simGPS->delete();
+        });
+
+        $gpsVehicleList->each(function (GpsVehicle $gpsVehicle) {
+            $gpsVehicle->delete();
+        });
+
     }
 
     public function getScript($device)
