@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Log;
 class GPSCheckServerCommand extends Command
 {
     const ALERT_SMS_NUMBERS = [
-        3145224312
+        3145224312,
+        3108844273
     ];
 
     private $issues = [];
