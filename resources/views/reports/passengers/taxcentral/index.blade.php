@@ -2,22 +2,7 @@
 
 @section('stylesheets')
     <style>
-        .progress {
-            height: 20px !important;
-        }
 
-        .progress.progress-lg .progress-bar {
-            font-size: 18px !important;
-        }
-
-        .bg-warning-dark {
-            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c41111+0,ff7c4c+36,fc7120+67,e01008+100 */
-            background: #c41111 !important; /* Old browsers */
-            background: -moz-linear-gradient(left, #c41111 0%, #ff7c4c 36%, #fc7120 67%, #e01008 100%) !important; /* FF3.6-15 */
-            background: -webkit-linear-gradient(left, #c41111 0%,#ff7c4c 36%,#fc7120 67%,#e01008 100%) !important; /* Chrome10-25,Safari5.1-6 */
-            background: linear-gradient(to right, #c41111 0%,#ff7c4c 36%,#fc7120 67%,#e01008 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c41111', endColorstr='#e01008',GradientType=1 ) !important; /* IE6-9 */
-        }
     </style>
 @endsection
 

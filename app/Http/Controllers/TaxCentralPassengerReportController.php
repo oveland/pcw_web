@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
+use App\Models\Routes\ControlPointsTariff;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Passengers\HistorySeat;
 use App\Http\Controllers\Utils\Geolocation;
@@ -77,6 +78,11 @@ class TaxCentralPassengerReportController extends Controller
 
         $routeDistance = $dispatchRegister->route->distance * 1000;
 
+        $cpT = ControlPointsTariff::forRoute($route->id)->with([
+            'fromControlPoint',
+            'toControlPoint',
+        ])->get();
+
         foreach ($historySeats as &$historySeat) {
             if ($historySeat->complete == 1) {
                 //$busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);                
@@ -87,10 +93,25 @@ class TaxCentralPassengerReportController extends Controller
 
                 $historySeat->busy_km = $historySeat->inactive_km - $historySeat->active_km;
             }
+
+            $tariff = $cpT->map(function (ControlPointsTariff $t) use ($historySeat) {
+                $distanceToInitial = abs($historySeat->active_km - $t->fromControlPoint->distance_from_dispatch);
+                $distanceToFinal = abs($historySeat->inactive_km - $t->toControlPoint->distance_from_dispatch);
+
+                return (object) [
+                    'id' => $t->id,
+                    'difference' => $distanceToInitial + $distanceToFinal
+                ];
+            });
+
+            if($tariff->count()) {
+                $historySeat->tariff = $cpT->where('id', $tariff->sortBy('difference')->first()->id)->first();
+            }
+
         }
 
         $historySeats = $historySeats->sortBy('active_km');
-        
+
         if ($request->get('export')) $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
 
         return view('reports.passengers.taxcentral.passengersReport', compact(['historySeats', 'dispatchRegister', 'dispatchArrivaltime']));

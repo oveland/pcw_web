@@ -2,6 +2,7 @@
 
 namespace App\Models\Passengers;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -69,5 +70,28 @@ class HistorySeat extends Model
     public function getInactiveKmAttribute($value)
     {
         return intval($value);
+    }
+
+    function getTime($type, $short = false) {
+        switch ($type) {
+            case 'active':
+                $date = $this->parseDate($this->active_time);
+                return $short ? $date->toTimeString() : $date->toDateTimeString();
+                break;
+            case 'inactive':
+                $date = $this->parseDate($this->inactive_time);
+                return $short ? $date->toTimeString() : $date->toDateTimeString();
+                break;
+            default:
+                return '';
+        }
+    }
+
+    /**
+     * @param $value
+     * @return Carbon
+     */
+    function parseDate($value) {
+        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $value)[0]);
     }
 }
