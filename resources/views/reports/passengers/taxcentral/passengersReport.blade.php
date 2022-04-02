@@ -1,6 +1,7 @@
 @if(count($historySeats))
     @php
-        $threshold_km = 1000;
+        $threshold_km = 0;
+        $controlPoints = $dispatchRegister->route->controlPoints;
     @endphp
     <div class="panel panel-inverse col-md-12">
         <div class="panel-heading">
@@ -14,9 +15,9 @@
                     <h5 class="text-white m-t-10">
                         <i class="fa fa-user-circle" aria-hidden="true"></i>
                         {{ $dispatchRegister->route->name }} <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                        {{ collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->count())[0] }} @lang('passengers')
+                        {{ collect($historySeats->where('busy_km','>=',$threshold_km)->pluck('busy_km')->count())[0] }} @lang('passengers')
                         <br>
-                        <small class="text-white">{{ number_format(collect($historySeats->where('busy_km','>',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')</small>
+                        <small class="text-white">{{ number_format(collect($historySeats->where('busy_km','>=',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')</small>
                         <br>
                         <small class="text-white">@lang('Between') {{ $dispatchRegister->departure_time }} @lang('to') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivaltime }}</small>
                     </h5>
@@ -57,101 +58,140 @@
                 @if($reference_location)
                     <div class="row p-20">
                         @php
-                            //$historySeats->groupBy('seat')
+                            $historyBySeats = $historySeats->groupBy('seat')
                         @endphp
 
-                        @foreach($historySeats as $historySeat)
+                        <div class="progress progress-striped p-0 m-0 no-rounded-corner progress-lg active">
+                            <div class="progress-bar progress-bar-route p-0" style="width: 100%">
+                                <b class="" style="font-size: 1.4rem">
+                                    @lang('Total route distance') {{ $routeDistance/1000 }} Km
+                                </b>
+                            </div>
+                        </div>
+
+                        <div class="progress p-0 m-0 no-rounded-corner progress-lg" style="height: 60px !important;">
+                        @foreach($controlPoints as $controlPoint)
+                            @php
+                                $width = ($controlPoint->distance_next_point * 100 / $routeDistance) - 0.05;
+                                $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
+                                $width = $loop->last ? 0 : $width;
+                                //$trajectory = $controlPoint->name . ' ➤ '.($loop->index+1<count($controlPoints)?$controlPoints[$loop->index + 1]->name : '');
+                                $trajectory = "$controlPoint->name";
+                            @endphp
+                            <div class="progress-bar {{ $loop->index % 2 == 0 || true ? 'bg-cp-1' : 'bg-cp-2' }} p-t-5 text-left" style="border-left: 3px solid red;width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
+                                 data-toggle="tooltip" data-html="true" data-placement="top"
+                                 data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
+                                 title="{{ '<i class="fa fa-map-signs"></i> '.$trajectory }}"
+                            >
+                                <b class="{{ $loop->first ? 'cp-first' : ($loop->last ? 'cp-last' : 'cp-normal')  }} text-center">
+                                    {{ $trajectory }} <br> {{ $cpDistance }} Km
+                                </b>
+                            </div>
+                        @endforeach
+                        </div>
+
+                        @foreach($historyBySeats as $historySeats)
                             <div class="col-md-12 p-0">
-                                @php
-                                    $activeSeatRouteDistance = $historySeat->active_km;
-                                    $inactiveSeatRouteDistance = $historySeat->inactive_km;
-
-                                    $inactivePercent = number_format($activeSeatRouteDistance*100/$routeDistance,'2','.','');
-                                    $activePercent = number_format($historySeat->busy_km*100/$routeDistance,'2','.','');
-                                    $activeKm = intval($historySeat->busy_km/1000);
-                                    $activeTimeBy = explode('.', $historySeat->busy_time)[0];
-                                    $activeTimeFrom = $historySeat->getTime('active', true);
-                                    $activeTimeTo = $historySeat->getTime('inactive', true);
-                                    $activeSeatRouteKm = intval($activeSeatRouteDistance/1000);
-                                    $inactiveSeatRouteKm = intval($inactiveSeatRouteDistance/1000);
-
-                                    $controlPoints = $dispatchRegister->route->controlPoints;
-
-                                    $tariff = $historySeat->tariff;
-                                    $tariffValue = $tariff ? $tariff->value : 0;
-                                    $fromCP = $tariff ? $tariff->fromControlPoint->name : '--';
-                                    $toCP = $tariff ? $tariff->toControlPoint->name : '--';
-
-                                    $html_tooltip = "
-                                    <div class='text-left'>
-                                        <div>
-                                            <b class='text-warning'>".__('Seat')."</b> $historySeat->seat
-                                        </div>
-                                        <br><br>
-                                        <div>
-                                            <b class='text-warning'>".__('Tariff')."</b> $$tariffValue<br>
-                                            <b class='text-muted'>".__('From')."</b> $fromCP <b class='text-muted'>".__('to')."</b> $toCP
-                                        </div>
-                                        <br><br>
-                                        <div>
-                                            <b class='text-warning'>".__('Active time')."</b> $activeTimeBy<br>
-                                            <b class='text-muted'>".__('From')."</b> $activeTimeFrom <b class='text-muted'>".__('to')."</b> $activeTimeTo
-                                        </div>
-                                        <br><br>
-                                        <div>
-                                            <b class='text-warning'>".__('Active by')."</b> $activeKm Km<br>
-                                            <b class='text-muted'>".__('From')."</b> $activeSeatRouteKm Km <b class='text-muted'>".__('to')."</b> $inactiveSeatRouteKm Km
-                                        </div>
-                                    </div>
-                                    ";
-                                @endphp
                                 <div class="bg-white p-0" style="height: auto;padding: 5px;">
-                                    @if($loop->first)
-                                        <div class="progress progress-striped p-0 m-0 no-rounded-corner progress-lg active">
-                                            <div class="progress-bar progress-bar-route p-0" style="width: 100%">
-                                                <b class="" style="font-size: 1.4rem">
-                                                    @lang('Total route distance') {{ $routeDistance/1000 }} Km
-                                                </b>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    <div class="progress p-0 m-0 no-rounded-corner progress-{{$loop->first ? 'lg' : 'xs' }}" style="opacity: {{ $loop->first ? 1 : 0.8 }};height: {{ $loop->first ? 60 : 2 }}px !important;">
+                                    <div class="progress p-0 m-0 no-rounded-corner progress-xs" style="height: 8px !important;">
                                         @php
                                             $parentLoop = $loop;
                                             $width = 0;
-                                        @endphp
-                                        @foreach($controlPoints as $controlPoint)
-                                            @php
-                                                $width = ($controlPoint->distance_next_point * 100 / $routeDistance) - 0.02;
-                                                $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
-                                                $width = $loop->last ? 0 : $width;
-                                                //$trajectory = $controlPoint->name . ' ➤ '.($loop->index+1<count($controlPoints)?$controlPoints[$loop->index + 1]->name : '');
-                                                $trajectory = "$controlPoint->name";
                                             @endphp
-                                            <div class="progress-bar {{ $loop->index % 2 == 0 ? 'bg-cp-1' : 'bg-cp-2' }} p-t-5 text-left" style="width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
-                                                 data-toggle="tooltip" data-html="true" data-placement="top"
-                                                 data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
+                                            @foreach($controlPoints as $controlPoint)
+                                                @php
+                                                    $width = ($controlPoint->distance_next_point * 100 / $routeDistance) - 0.05;
+                                                    $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
+                                                    $width = $loop->last ? 0 : $width;
+                                                    $trajectory = "$controlPoint->name";
+                                                @endphp
+                                                <div class="progress-bar {{ $loop->index % 2 == 0 || true ? 'bg-cp-1' : 'bg-cp-2' }} p-t-5 text-left" style="border-left: 3px solid yellow;width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
+                                                     data-toggle="tooltip" data-html="true" data-placement="top"
+                                                     data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                                  title="{{ '<i class="fa fa-map-signs"></i> '.$trajectory }}"
                                             >
-                                                <b class="{{ $parentLoop->first ? '' : 'hide' }} {{ $loop->first ? 'cp-first' : ($loop->last ? 'cp-last' : 'cp-normal')  }} text-center">
-                                                    {{ $trajectory }} <br> {{ $cpDistance }} Km
-                                                </b>
                                             </div>
                                         @endforeach
                                     </div>
-                                    <div class="progress m-0 p-1 progress-md">
-                                        <div class="progress-bar" style="width: {{ $inactivePercent }}%;background: #2a2222 !important;">
-                                            <span class="pull-left label label-sm label-inverse" style="margin-left: 5px;margin-top: 5px">@lang('Seat') {{ $historySeat->seat }}</span>
-                                        </div>
-                                        <div class="progress-bar bg-{{ $historySeat->busy_km>$threshold_km ? 'seat-active' : 'danger' }} active--" style="width: {{ $activePercent }}%"
-                                             data-toggle="tooltip" data-html="true" data-placement="bottom"
-                                             data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
-                                             title="{{ $html_tooltip }}">
-                                            <b class="m-l-10 pull-left">{{$activeSeatRouteKm}} Km</b>
-                                            <b class="m-t-20 text-white"><label class="label label-lime label-sm">{{ $historySeat->seat }}</label> {{ $activeKm }} <small>Km</small> • <label class="label label-danger label-lg">${{ $tariffValue }}</label></b>
-                                            <b class="m-r-10 pull-right">{{$inactiveSeatRouteKm}} Km</b>
-                                        </div>
-                                        <div class="progress-bar " style="width: {{ (100-($inactivePercent+$activePercent)) }}%;background: #2a2222 !important;"></div>
+
+                                    <div class="progress m-0 progress-md">
+                                        @php
+                                            $prevInactiveTotal = 0;
+                                        @endphp
+                                        @foreach($historySeats as $historySeat)
+                                            @php
+                                                $first = $loop->iteration == 1;
+                                                $last = $loop->iteration == $historySeats->count();
+
+                                                $nextHistorySeat = $historySeats->get( $loop->index + 1 );
+                                                $nextActiveKmPercent = number_format(($nextHistorySeat ? $nextHistorySeat->active_km : 0) * 100 / $routeDistance, '2', '.', '');
+
+                                                $activeSeatRouteDistance = $historySeat->active_km;
+                                                $inactiveSeatRouteDistance = $historySeat->inactive_km;
+
+                                                $initialInactivePercent = $first ? number_format($activeSeatRouteDistance * 100 / $routeDistance,'2', '.', '') : 0;
+                                                $busyPercent = number_format($historySeat->busy_km * 100 / $routeDistance, '2', '.', '');
+                                                $inactivePercent = number_format($historySeat->inactive_km * 100 / $routeDistance, '2', '.', '');
+
+                                                $inactiveAbsolute = floatval($initialInactivePercent) + floatval($busyPercent);
+
+                                                $finalInactivePercent = $last ? 100 - (floatval($inactivePercent) + 0.05) : (floatval($nextActiveKmPercent) - $inactivePercent);
+
+                                                $activeKm = intval($historySeat->busy_km / 1000);
+                                                $activeTimeBy = explode('.', $historySeat->busy_time)[0];
+                                                $activeTimeFrom = $historySeat->getTime('active', true);
+                                                $activeTimeTo = $historySeat->getTime('inactive', true);
+                                                $activeSeatRouteKm = intval($activeSeatRouteDistance / 1000);
+                                                $inactiveSeatRouteKm = intval($inactiveSeatRouteDistance / 1000);
+
+                                                $tariff = $historySeat->tariff;
+                                                $tariffValue = $tariff ? $tariff->value : 0;
+                                                $fromCP = $tariff ? $tariff->fromControlPoint->name : '--';
+                                                $toCP = $tariff ? $tariff->toControlPoint->name : '--';
+
+                                                $html_tooltip = "
+                                                <div class='text-left'>
+                                                    <div>
+                                                        <b class='text-warning'>".__('Seat')."</b> $historySeat->seat
+                                                    </div>
+                                                    <br><br>
+                                                    <div>
+                                                        <b class='text-warning'>".__('Tariff')."</b> $$tariffValue<br>
+                                                        <b class='text-muted'>".__('From')."</b> $fromCP <b class='text-muted'>".__('to')."</b> $toCP
+                                                    </div>
+                                                    <br><br>
+                                                    <div>
+                                                        <b class='text-warning'>".__('Active time')."</b> $activeTimeBy<br>
+                                                        <b class='text-muted'>".__('From')."</b> $activeTimeFrom <b class='text-muted'>".__('to')."</b> $activeTimeTo
+                                                    </div>
+                                                    <br><br>
+                                                    <div>
+                                                        <b class='text-warning'>".__('Active by')."</b> $activeKm Km<br>
+                                                        <b class='text-muted'>".__('From')."</b> $activeSeatRouteKm Km <b class='text-muted'>".__('to')."</b> $inactiveSeatRouteKm Km
+                                                    </div>
+                                                </div>
+                                                ";
+
+                                                $prevInactiveTotal = $inactiveAbsolute;
+                                            @endphp
+
+                                            <div class="progress-bar" style="width: {{ $initialInactivePercent }}%;background: #0c0c0c !important;">
+                                                <span class="pull-left label label-inverse {{ $first ? '' : 'hide' }}" style="margin-left: 5px;margin-top: 5px">
+                                                    @lang('Seat') {{ $historySeat->seat }} ({{ $historySeats->count() }})
+                                                </span>
+                                            </div>
+
+                                            <div class="progress-bar bg-{{ $historySeat->busy_km>=$threshold_km ? 'seat-active' : 'danger' }} active--" style="width: {{ $busyPercent }}%"
+                                                 data-toggle="tooltip" data-html="true" data-placement="bottom"
+                                                 data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
+                                                 title="{{ $html_tooltip }}">
+                                                <b class="m-l-10 pull-left text-sm">{{$activeSeatRouteKm}} Km</b>
+                                                <b class="m-t-20 text-white text-sm"><label class="label label-lime label-sm hide">{{ $historySeat->seat }}</label> {{ $activeKm }} <small>Km</small> • <label class="label label-lime label-lg">${{ number_format($tariffValue, 0, ',', '.') }}</label></b>
+                                                <b class="m-r-10 pull-right text-sm">{{$inactiveSeatRouteKm}} Km</b>
+                                            </div>
+
+                                            <div class="progress-bar " style="width: {{ $finalInactivePercent }}%;background: #0c0c0c !important;"></div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +238,7 @@
                             $activeSeatRouteKm = number_format($activeSeatRouteDistance/1000,'2',',','.');
                         @endphp
 
-                        <tr class="{{ $historySeat->busy_km>$threshold_km?'':'text-danger' }}">
+                        <tr class="{{ $historySeat->busy_km>=$threshold_km?'':'text-danger' }}">
                             <td>{{$loop->index+1}}</td>
                             <td>{{$historySeat->plate}}</td>
                             <td>{{$historySeat->seat}}</td>
@@ -217,9 +257,9 @@
                                 <td>{{date('H:i:s',strtotime($historySeat->busy_time))}}</td>
                                 @php
                                     $km=$historySeat->busy_km/1000;
-                                    $historySeat->busy_km>$threshold_km?($totalKm += $km):null;
+                                    $historySeat->busy_km>=$threshold_km?($totalKm += $km):null;
                                 @endphp
-                                <td class="{{ $historySeat->busy_km>$threshold_km?'':'danger' }}">{{number_format($km, 2, ',', '.')}}</td>
+                                <td class="{{ $historySeat->busy_km>=$threshold_km?'':'danger' }}">{{number_format($km, 2, ',', '.')}}</td>
                             @else
                                 <td class="text-center" colspan="3">@lang('Still busy')</td>
                             @endif
@@ -315,6 +355,10 @@
 
         .label-lime {
             background: #528700;
+        }
+
+        .text-sm {
+            font-size: 0.9rem !important;
         }
     </style>
 
