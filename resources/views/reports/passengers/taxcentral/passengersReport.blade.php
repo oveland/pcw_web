@@ -27,7 +27,7 @@
                         <div class="hide">
                             <small class="text-white">{{ number_format(collect($historySeats->where('busy_km','>=',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')</small>
                         </div>
-                        <div class="hide">
+                        <div class="">
                             <small class="text-white">
                                 <i class="fa fa-clock-o"></i>
                                 {{ $dispatchRegister->departure_time }} @lang('to') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivaltime }}
