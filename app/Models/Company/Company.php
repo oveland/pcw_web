@@ -250,7 +250,7 @@ class Company extends Model
      */
     public function hasDriverRegisters()
     {
-        return collect([self::ALAMEDA, self::TRANSPUBENZA])->contains($this->id);
+        return collect([self::ALAMEDA, self::TRANSPUBENZA, self::PCW])->contains($this->id);
     }
 
     /*
@@ -258,7 +258,7 @@ class Company extends Model
     */
     public function hasSeatSensorCounter()
     {
-        return collect([self::MONTEBELLO, self::TRANSPUBENZA])->contains($this->id);
+        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW])->contains($this->id);
     }
 
     /**

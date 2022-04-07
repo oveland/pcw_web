@@ -407,11 +407,13 @@
             @endif
 
             <td width="15%" class="text-center">
+                @if( Auth::user()->company->hasSeatSensorCounter())
                 <a href="#modal-seating-profile" data-toggle="modal" title="@lang('See profile seating report')"
                    data-url="{{ route('report-passengers-taxcentral-by-dispatch',['id'=>$dispatchRegister->id]) }}"
                    class="btn yellow-crusta faa-parent animated-hover btn-show-chart-route-report btn-circle btn-outline tooltips btn-show-seating-profile">
                     <i class="fa fa-users faa-pulse"></i>
                 </a>
+                @endif
 
                 @if( Auth::user()->canMakeTakings() )
                 <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal" onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
