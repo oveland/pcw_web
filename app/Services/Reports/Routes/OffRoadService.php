@@ -28,29 +28,41 @@ class OffRoadService
      */
     function all(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
     {
-        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)->orderBy('departure_time')->get();
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $initialDate, $finalDate, $routeReport, $vehicleReport)
+            ->orderBy('departure_time')
+            ->completed()
+            ->get();
 
-        $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
-            $totalLocations = $dr->locations()->count();
-//            $lastLocation = collect(\DB::select("SELECT distance, latitude, longitude FROM locations WHERE dispatch_register_id = $dr->id ORDER BY date DESC LIMIT 1"))->first();
-            $lastLocation = $dr->locations('desc')->first();
+//        $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
+//
+//            $totalLocations = 0;
+//            $LinealTraveled = 0;
+//
+//            if ($dr->getParsedDate()->isToday()) {
+//                $totalLocations = $dr->locations()->count();
+////            $lastLocation = collect(\DB::select("SELECT distance, latitude, longitude FROM locations WHERE dispatch_register_id = $dr->id ORDER BY date DESC LIMIT 1"))->first();
+//                $lastLocation = $dr->locations('desc')->first();
+//
+//                if (!$lastLocation) return false;
+//
+//                $d = $dr->route->dispatch;
+//
+//                $LinealTraveled = intval(intval(Geolocation::getDistance($d->latitude, $d->longitude, $lastLocation->latitude, $lastLocation->longitude)) / 1000);
+//            }
+//
+//            return $dr->complete() || ($totalLocations > 50 && $LinealTraveled > 2);
+//        });
 
-            if(!$lastLocation) return false;
-
-            $d = $dr->route->dispatch;
-
-            $LinealTraveled = intval(intval(Geolocation::getDistance($d->latitude, $d->longitude, $lastLocation->latitude, $lastLocation->longitude)) / 1000);
-
-            return $dr->complete() || ($totalLocations > 50 && $LinealTraveled > 2);
-        });
-
-        return Location::withOffRoads()
+        $query = Location::withOffRoads()
             ->forDate($initialDate, $finalDate)
             ->whereBetween('date', [$initialDate, $finalDate])
             ->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'))
             ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.route', 'dispatchRegister.driver'])
-            ->orderBy('date')
-            ->get()->filter(function (Location $o) use ($initialDate, $finalDate) {
+            ->orderBy('date');
+
+
+        return $query->get()
+            ->filter(function (Location $o) use ($initialDate, $finalDate) {
                 $time = $o->date->toTimeString();
                 $initialTime = collect(explode(' ', $initialDate))->get(1);
                 $finalTime = collect(explode(' ', $finalDate))->get(1);

@@ -38,6 +38,8 @@ class MaintenanceCommand extends Command
         $from = $this->option('from');
         $to = $this->option('to');
 
+        dd(['Ejecuta comando', 'Ejecuta comando', 'Ejecuta comando']);
+
         return collect([
 //            [
 //                'from' => $from,
@@ -53,73 +55,9 @@ class MaintenanceCommand extends Command
 //                    ],
 //                ]
 //            ],
-            /*[
-                'from' => '2021-07-01',
-                'to' => '2021-07-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
             [
-                'from' => '2021-08-01',
-                'to' => '2021-08-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],*/
-            [
-                'from' => '2021-09-01',
-                'to' => '2021-09-30',
-                'tables' => [
-                    'locations' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            /*[
-                'from' => '2021-10-01',
-                'to' => '2021-10-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => true,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2021-11-01',
-                'to' => '2021-11-30',
+                'from' => '2022-01-01',
+                'to' => '2022-01-31',
                 'tables' => [
                     'locations' => [
                         'release' => false,
@@ -134,8 +72,8 @@ class MaintenanceCommand extends Command
                 ]
             ],
             [
-                'from' => '2021-12-01',
-                'to' => '2021-12-31',
+                'from' => '2022-02-01',
+                'to' => '2022-02-28',
                 'tables' => [
                     'locations' => [
                         'release' => false,
@@ -148,7 +86,23 @@ class MaintenanceCommand extends Command
                         'restore' => false,
                     ],
                 ]
-            ],*/
+            ],
+            [
+                'from' => '2022-03-01',
+                'to' => '2022-01-31',
+                'tables' => [
+                    'locations' => [
+                        'release' => false,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                    'reports' => [
+                        'release' => false,
+                        'hasBackup' => false,
+                        'restore' => false,
+                    ],
+                ]
+            ],
         ]);
     }
 

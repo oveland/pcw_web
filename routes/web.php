@@ -22,6 +22,10 @@ Route::get('/metronic', function () {
 })->name('metronic');
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('/phpinfo', function () {
+        phpinfo();
+    })->name('phpinfo');
+
     Route::get('/', function () {
         return redirect(route('report-route'));
     })->name('index');

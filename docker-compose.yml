@@ -1,0 +1,34 @@
+version: '3.8'
+
+networks:
+  pcw:
+    name: pcw.net
+    external: true
+
+services:
+  ne_web:
+    container_name: ${APP_NICK}
+    networks:
+      - pcw
+    build:
+      context: .docker
+      args:
+        - php_version=${DOCKER_PHP_VERSION}
+        - ng_root=${DOCKER_NG_ROOT}
+        - time_zone=${APP_TIMEZONE}
+    environment:
+      #PHP
+      PHP_VERSION: ${DOCKER_PHP_VERSION}
+      PHP_TIMEZONE: ${APP_TIMEZONE}
+
+      # Nginx
+      NG_HOST: ${DOCKER_NG_HOST}
+      NG_PORT: ${DOCKER_NG_PORT}
+      NG_EXTERNAL_PORT: ${DOCKER_NG_EXTERNAL_PORT}
+      NG_ROOT: ${DOCKER_NG_ROOT}
+    ports:
+      - ${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}
+    volumes:
+      - ./:/var/www/${DOCKER_NG_ROOT}/
+    restart: always
+    command: /bin/bash -c "/tmp/configure.sh && tail -f /dev/null"
