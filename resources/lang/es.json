@@ -813,5 +813,6 @@
   "Difference time from prev": "Diferencia desde punto anterior",
   "Absolute difference from dispatch": "Diferencia absoluta desde despacho",
   "Scheduled time - Measured time": "Tiempo programado - Tiempo medido entre puntos",
-  "Average excluded": "Excluido de promedios"
+  "Average excluded": "Excluido de promedios",
+  "See profile seating report": "Ver reporte de perfil de asientos"
 }

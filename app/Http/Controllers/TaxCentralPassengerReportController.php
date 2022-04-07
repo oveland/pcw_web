@@ -94,7 +94,7 @@ class TaxCentralPassengerReportController extends Controller
                 $historySeat->busy_km = $historySeat->inactive_km - $historySeat->active_km;
             }
 
-            $tariff = $cpT->map(function (ControlPointsTariff $t) use ($historySeat) {
+            $tariffs = $cpT->map(function (ControlPointsTariff $t) use ($historySeat) {
                 $distanceToInitial = abs($historySeat->active_km - $t->fromControlPoint->distance_from_dispatch);
                 $distanceToFinal = abs($historySeat->inactive_km - $t->toControlPoint->distance_from_dispatch);
 
@@ -104,13 +104,15 @@ class TaxCentralPassengerReportController extends Controller
                 ];
             });
 
-            if($tariff->count()) {
-                $historySeat->tariff = $cpT->where('id', $tariff->sortBy('difference')->first()->id)->first();
+            if($tariffs->count()) {
+                $tariff = $cpT->where('id', $tariffs->sortBy('difference')->first()->id)->first();
+                $historySeat->tariff = $tariff;
             }
 
         }
 
-        $historySeats = $historySeats->sortBy('active_km');
+        $historySeats = $historySeats->sortBy('tariff.fromControlPoint.order');
+
 
         if ($request->get('export')) $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
 

@@ -375,7 +375,7 @@
 
             @if($company->hasSensorCounter())
                 <td width="10%" class="text-center">
-                    <span class="tooltips {{ $dispatchRegister->passengersBySensor > 30 ? 'label label-warning' : '' }} " data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
+                    <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
                         {{ $dispatchRegister->passengersBySensor }}
                     </span>
                     <hr class="m-0">
@@ -385,7 +385,7 @@
                 </td>
 
                 <td width="10%" class="text-center {{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}">
-                    <span class="tooltips {{ $dispatchRegister->passengersBySensorTotal > 30 ? 'label label-warning' : '' }} " data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
+                    <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
                         {{ $dispatchRegister->passengersBySensorTotal }}
                     </span>
                     <hr class="m-0">
@@ -407,6 +407,12 @@
             @endif
 
             <td width="15%" class="text-center">
+                <a href="#modal-seating-profile" data-toggle="modal" title="@lang('See profile seating report')"
+                   data-url="{{ route('report-passengers-taxcentral-by-dispatch',['id'=>$dispatchRegister->id]) }}"
+                   class="btn yellow-crusta faa-parent animated-hover btn-show-chart-route-report btn-circle btn-outline tooltips btn-show-seating-profile">
+                    <i class="fa fa-users faa-pulse"></i>
+                </a>
+
                 @if( Auth::user()->canMakeTakings() )
                 <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal" onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
                    class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"

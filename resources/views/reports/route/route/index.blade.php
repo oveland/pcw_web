@@ -228,7 +228,7 @@
 
 
     @if( Auth::user()->canMakeTakings() )
-        <div class="modal fade" id="modal-takings-passengers" style="background: #535353;opacity: 0.96;">
+        <div class="modal fade" id="modal-takings-passengers" style="background: rgba(181, 181, 181, 0.72);">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header p-20">
@@ -244,6 +244,12 @@
             </div>
         </div>
     @endif
+
+    <div class="modal modal-message fade" id="modal-seating-profile" style="background: rgba(0,0,0,0.72)">
+        <div class="modal-dialog modal-full">
+            <div class="modal-content">
+            </div>
+        </div>
 @endsection
 
 @section('scripts')
@@ -334,6 +340,29 @@
             setTimeout(function(){
                 $('.btn-show-off-road-report').click();
             },500);
+
+            $('body').on('click', '.btn-show-seating-profile', function () {
+                let contentReport = $("#modal-seating-profile .modal-content");
+                contentReport.html(loading);
+                $.ajax({
+                    url: $(this).data('url'),
+                    success: function (data) {
+                        contentReport.hide().html(data).fadeIn();
+                        if (!data.empty) {
+
+                        } else {
+                            gerror('@lang('No passengers report found for this vehicle')');
+                            $('.report-info').empty();
+                            $('.modal').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        contentReport.empty();
+                        $('.modal').modal('hide');
+                        gerror('@lang('Oops, something went wrong!')');
+                    }
+                });
+            });
         });
 
         $('#with-end-date').change(function(){
