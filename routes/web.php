@@ -17,6 +17,11 @@ use App\Models\Users\User;
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
+
+    Route::get('/phpinfo', function () {
+        phpinfo();
+    })->name('phpinfo');
+
     Route::get('/', function () {
         return redirect(route('report-route'));
     })->name('home');

@@ -50,6 +50,13 @@ return [
             'level' => 'debug',
         ],
 
+        'rocket' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/rocket.log'),
+            'level' => 'debug',
+            'days' => 1,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

@@ -8,6 +8,7 @@ use Log;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
 //                );
 //            }
 //        });
+
+        if(env('APP_ENV') !== 'local')
+        {
+            URL::forceScheme('https');
+        }
 
         Paginator::useBootstrapThree();
     }

@@ -17,6 +17,7 @@ use Image;
 use Intervention\Image\Exception\NotReadableException;
 use Storage;
 use Symfony\Component\ErrorHandler\Error\FatalError;
+use Log;
 
 class SyrusService
 {
@@ -32,9 +33,13 @@ class SyrusService
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
         $vehicle = $gpsVehicle->vehicle;
 
+        $message = "Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id";
+
+        Log::info($message);
+
         $response = collect([
             'success' => true,
-            'message' => "Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id",
+            'message' => $message,
         ]);
 
         $path = "$imei/images";
