@@ -1,16 +1,42 @@
 @if(count($historySeats))
     @php
-        $threshold_km = 0;
+        $threshold_km = $thresholdKm ?? 0;
         $controlPoints = $dispatchRegister->route->controlPoints;
-        $totalCash = $historySeats->sum('tariff.value');
+
+
+        $truncateCounts = $historySeats->where('busy_km','>=',$threshold_km);
+
+        $totalCash = $truncateCounts->sum('tariff.value');
+
         $totalCashStr = number_format($totalCash, 0, ',', '.');
+
+        $historyBySeats = $historySeats->groupBy('seat');
+
+
+        $routeDistance = $dispatchRegister->route->distance * 1000;
+
+        $reference_location = $dispatchRegister->locations->first();
+
+        $correction = 0.08;
+
+        function percentTo($km, $routeDistance) {
+            return $km * 100 / $routeDistance;
+        }
+
+        function formatW($value) {
+            return number_format($value - 0.08, 2, '.', ',');
+        }
     @endphp
     <div class="panel-inverse col-md-12">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-12">
                     <div style="position: absolute; right: 10px">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" style="margin-top: 8px !important;" data-dismiss="modal" aria-hidden="true" title="@lang('Expand / Compress')">
+                        <span style="color: black">
+                            <input class="threshold-km" type="number" value="{{ $threshold_km }}"/>
+                            <button onclick="loadSeatingProfile('{{ route('report-passengers-taxcentral-by-dispatch',['id'=>$dispatchRegister->id]) }}')">Cargar</button>
+                        </span>
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" style="margin: 8px 8px !important;" data-dismiss="modal" aria-hidden="true" title="@lang('Expand / Compress')">
                             <i class="fa fa-times"></i>
                         </a>
                     </div>
@@ -22,15 +48,15 @@
                             <hr>
                         </div>
                         <div>
-                            {{ $historySeats->count() }} @lang('passengers') • ${{ $totalCashStr }}
+                            {{ $truncateCounts->count() }} @lang('passengers') • ${{ $totalCashStr }}
                         </div>
-                        <div class="hide">
-                            <small class="text-white">{{ number_format(collect($historySeats->where('busy_km','>=',$threshold_km)->pluck('busy_km')->sum())[0]/1000,'2',',','.') }} @lang('Km in total')</small>
+                        <div>
+                            <small>{{ $historyBySeats->count() }} @lang('seats')</small>
                         </div>
                         <div class="">
                             <small class="text-white">
                                 <i class="fa fa-clock-o"></i>
-                                {{ $dispatchRegister->departure_time }} @lang('to') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivaltime }}
+                                {{ $dispatchRegister->departure_time }} @lang('to') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivalTime }}
                             </small>
                         </div>
                     </div>
@@ -39,22 +65,16 @@
         </div>
         <div class="tab-content p-0">
             <div id="report-tab-chart" class="tab-pane active fade in">
-                @php
-                    $routeDistance = $dispatchRegister->route->distance*1000;
-                    $reference_location = $dispatchRegister->locations->first()
-                @endphp
-
                 @if($reference_location)
                     <div class="">
                         @php
-                            $historyBySeats = $historySeats->groupBy('seat');
                             $historyByCP = $historySeats->groupBy('tariff.from_control_point_id');
                         @endphp
 
                         <div class="progress progress-striped p-0 m-0 no-rounded-corner progress-lg active">
                             <div class="progress-bar progress-bar-route p-0" style="width: 100%">
                                 <b class="" style="font-size: 1.4rem">
-                                    @lang('Total route distance') {{ $routeDistance/1000 }} Km
+                                    @lang('Total route distance') {{ $routeDistance / 1000 }} Km
                                 </b>
                             </div>
                         </div>
@@ -62,7 +82,7 @@
                         <div class="progress p-0 m-0 no-rounded-corner progress-lg" style="height: 60px !important;">
                         @foreach($controlPoints as $controlPoint)
                             @php
-                                $width = ($controlPoint->distance_next_point * 100 / $routeDistance) - 0.05;
+                                $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction;
                                 $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
                                 $width = $loop->last ? 0 : $width;
                                 //$trajectory = $controlPoint->name . ' ➤ '.($loop->index+1<count($controlPoints)?$controlPoints[$loop->index + 1]->name : '');
@@ -95,10 +115,14 @@
                                         @php
                                             $parentLoop = $loop;
                                             $width = 0;
+
+                                            $historySeats = $historySeats->sortBy('active_time')->values();
+
+
                                             @endphp
                                             @foreach($controlPoints as $controlPoint)
                                                 @php
-                                                    $width = ($controlPoint->distance_next_point * 100 / $routeDistance) - 0.05;
+                                                    $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction;
                                                     $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
                                                     $width = $loop->last ? 0 : $width;
                                                     $trajectory = "$controlPoint->name";
@@ -107,28 +131,29 @@
                                                      data-toggle="tooltip" data-html="true" data-placement="top"
                                                      data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                                  title="{{ '<i class="fa fa-map-signs"></i> '.$trajectory }}"
-                                            >
-                                            </div>
-                                        @endforeach
+                                                >
+                                                </div>
+                                            @endforeach
                                     </div>
 
-                                    <div class="progress m-0 progress-md">
+                                    <div class="progress m-0 progress-md" style="border-top: 1px solid #3b3a3a">
                                         @foreach($historySeats as $historySeat)
                                             @php
                                                 $first = $loop->iteration == 1;
                                                 $last = $loop->iteration == $historySeats->count();
 
                                                 $nextHistorySeat = $historySeats->get( $loop->index + 1 );
-                                                $nextActiveKmPercent = number_format(($nextHistorySeat ? $nextHistorySeat->active_km : 0) * 100 / $routeDistance, '2', '.', '');
+                                                $nextActiveKmPercent = $nextHistorySeat ? percentTo($nextHistorySeat->active_km, $routeDistance) : 100;
 
                                                 $activeSeatRouteDistance = $historySeat->active_km;
                                                 $inactiveSeatRouteDistance = $historySeat->inactive_km;
 
-                                                $initialInactivePercent = $first ? number_format($activeSeatRouteDistance * 100 / $routeDistance,'2', '.', '') : 0;
-                                                $busyPercent = number_format($historySeat->busy_km * 100 / $routeDistance, '2', '.', '');
-                                                $inactivePercent = number_format($historySeat->inactive_km * 100 / $routeDistance, '2', '.', '');
+                                                $initialInactivePercent = $first ? percentTo($activeSeatRouteDistance, $routeDistance) : 0;
+                                                $busyPercent = percentTo($historySeat->busy_km, $routeDistance);
+                                                $inactivePercent = percentTo($historySeat->inactive_km, $routeDistance);
 
-                                                $finalInactivePercent = $last ? 100 - (floatval($inactivePercent) + 0.05) : (floatval($nextActiveKmPercent) - $inactivePercent);
+                                                //$finalInactivePercent = $last ? (100 - $inactivePercent) : $nextActiveKmPercent - $inactivePercent;
+                                                $finalInactivePercent = $last ? (100 - $inactivePercent) : percentTo($nextHistorySeat ? $nextHistorySeat->active_km - $historySeat->inactive_km : 0, $routeDistance);
 
                                                 $activeKm = intval($historySeat->busy_km / 1000);
                                                 $activeTimeBy = explode('.', $historySeat->busy_time)[0];
@@ -166,13 +191,13 @@
                                                 ";
                                             @endphp
 
-                                            <div class="progress-bar" style="width: {{ $initialInactivePercent }}%;background: #0c0c0c !important;">
+                                            <div class="progress-bar initial-inactive" style="width: {{ formatW($initialInactivePercent) }}%;background: #0c0c0c !important;">
                                                 <span class="pull-left label label-inverse {{ $first ? '' : 'hide' }}" style="margin-left: 5px;margin-top: 5px">
                                                     @lang('Seat') {{ $historySeat->seat }} ({{ $historySeats->count() }})
                                                 </span>
                                             </div>
 
-                                            <div class="progress-bar bg-{{ $historySeat->busy_km>=$threshold_km ? 'seat-active' : 'danger' }} active--" style="width: {{ $busyPercent }}%"
+                                            <div class="progress-bar bg-{{ $historySeat->busy_km >= $threshold_km ? 'seat-active' : 'danger' }} active--" style="width: {{ formatW($busyPercent) }}%;box-shadow: inset -10px -4px 15px -9px #000000;"
                                                  data-toggle="tooltip" data-html="true" data-placement="bottom"
                                                  data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                                  title="{{ $html_tooltip }}">
@@ -181,7 +206,9 @@
                                                 <b class="m-r-10 pull-right text-sm">{{ $inactiveSeatRouteKm }} Km</b>
                                             </div>
 
-                                            <div class="progress-bar " style="width: {{ $finalInactivePercent }}%;background: #0c0c0c !important;"></div>
+                                            <div class="progress-bar final-inactive" style="width: {{ formatW($finalInactivePercent) }}%;background: #0c0c0c !important;">
+                                                <small class="hide">{{  $historySeat->inactive_km .' • '. ($nextHistorySeat ? $nextHistorySeat->active_km : '---') }}</small>
+                                            </div>
                                         @endforeach
                                     </div>
                                 </div>

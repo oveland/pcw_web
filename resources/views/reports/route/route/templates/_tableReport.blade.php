@@ -408,9 +408,8 @@
 
             <td width="15%" class="text-center">
                 @if( Auth::user()->company->hasSeatSensorCounter())
-                <a href="#modal-seating-profile" data-toggle="modal" title="@lang('See profile seating report')"
-                   data-url="{{ route('report-passengers-taxcentral-by-dispatch',['id'=>$dispatchRegister->id]) }}"
-                   class="btn yellow-crusta faa-parent animated-hover btn-show-chart-route-report btn-circle btn-outline tooltips btn-show-seating-profile">
+                <a href="#modal-seating-profile" data-toggle="modal" title="@lang('See profile seating report')" onclick="loadSeatingProfile('{{ route('report-passengers-taxcentral-by-dispatch',['id'=>$dispatchRegister->id]) }}')"
+                   class="btn yellow-crusta faa-parent animated-hover btn-circle btn-outline tooltips">
                     <i class="fa fa-users faa-pulse"></i>
                 </a>
                 @endif
