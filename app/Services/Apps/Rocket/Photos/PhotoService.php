@@ -420,10 +420,10 @@ class PhotoService
                 $vehicle = $this->vehicle;
                 $details = $photo->details;
                 $dr = $details->dispatchRegister;
-                $ddr = DispatchRegister::find($drId);
+//                $ddr = DispatchRegister::find($drId);
                 // $drId = $dr ? $dr->id : null;
 
-                $info =" $ddr->status > " . $dr->route->name . " $dr->round_trip ";
+//                $info =" $ddr->status > " . $dr->route->name . " $dr->round_trip ";
 
                 $date = Carbon::make($details->date);
                 $time = $date->toTimeString();
@@ -455,7 +455,7 @@ class PhotoService
                             'id' => $id,
                             'seat' => $seat,
                             'arrivedTime' => $this->date . " " . $dr->arrival_time,
-                            'routeDistance' => $dr->distance,
+                            'routeDistance' => $dr->route->distance,
                         ]);
                     }
                 }
@@ -598,9 +598,6 @@ class PhotoService
                     $occupation->released = trim($occupation->released->implode(' '));
                     $occupation->prev = trim($occupation->prev->implode(' '));
 
-                    if ($drId == 1920798) { // Temporal fot vehicle 02 Montebello
-                        $totalInRoundTrip = $totalInRoundTrip - 1;
-                    }
 
                     $totalByCameras = max([$totalByCameras, $totalByCamerasPrev]);
                     $totalInRoundTrip = max([$totalInRoundTrip, $totalByRoundTripPrev]);
@@ -821,9 +818,9 @@ class PhotoService
                 $durations->put('processRekognitionCounts', intval(Carbon::now()->diffInMicroseconds($ini) / 1000));
                 $ini = Carbon::now();
 
-                $criteriaCount = 'topologies';
                 $criteriaCount = 'max';
                 $criteriaCount = 'averages';
+                $criteriaCount = 'topologies';
 
                 switch ($criteriaCount) {
                     case 'averages':

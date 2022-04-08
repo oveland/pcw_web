@@ -6,6 +6,7 @@ namespace App\Models\Apps\Rocket\Traits;
 
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Photos\PhotoRekognitionService;
 use Illuminate\Database\Eloquent\Builder;
@@ -83,6 +84,8 @@ trait PhotoGlobals
     {
         $dispatchRegister = $this->dispatchRegister;
 
+        $location = Location::select(['distance','date'])->where('id', $this->location_id)->first();
+
         if ($dispatchRegister) {
             $dispatchRegister = (object)[
                 'id' => $dispatchRegister->id,
@@ -93,7 +96,8 @@ trait PhotoGlobals
                 'arrival_time' => $dispatchRegister->arrival_time,
                 'route' => (object)[
                     'id' => $dispatchRegister->route_id,
-                    'name' => $dispatchRegister->route->name,
+                    'name' => $dispatchRegister->route->name . " • $location->distance",
+                    'distance' => $dispatchRegister->route->distance_in_meters,
                 ],
                 'distance' => $dispatchRegister->getRouteDistance(),
             ];
