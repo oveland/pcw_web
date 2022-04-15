@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  web_server:
+    container_name: beta_web_server
+    network_mode: host
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    build:
+      context: .docker
+      args:
+        - php_version=${DOCKER_PHP_VERSION}
+        - ng_root=${DOCKER_NG_ROOT}
+        - time_zone=${APP_TIMEZONE}
+    environment:
+      #PHP
+      PHP_VERSION: ${DOCKER_PHP_VERSION}
+      PHP_TIMEZONE: ${APP_TIMEZONE}
+
+      # Nginx
+      NG_HOST: ${DOCKER_NG_HOST}
+      NG_PORT: ${DOCKER_NG_PORT}
+      NG_EXTERNAL_PORT: ${DOCKER_NG_EXTERNAL_PORT}
+      NG_ROOT: ${DOCKER_NG_ROOT}
+#    ports:
+#      - "${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}"
+    volumes:
+      - ./:/var/www/${DOCKER_NG_ROOT}/
+      - ${GPS_DEVICES_SYRUS_FTP_BASE_PATH}:${GPS_DEVICES_SYRUS_FTP_BASE_PATH}
+      - ./docker/home:/home/root/
+    restart: always
+    command: /bin/bash -c "/tmp/configure.sh && tail -f /dev/null"
