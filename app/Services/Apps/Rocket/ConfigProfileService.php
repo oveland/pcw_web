@@ -120,7 +120,7 @@ class ConfigProfileService
 //                $release = $rActivate ? $rActivate : 3;
 //            }
             $persistenceRoutes = null;
-            if ($this->vehicle->id == 2357) {
+        /*    if ($this->vehicle->id == 2357) {
                 $persistenceRoutes = [
                     279 => ['a' => 3, 'r' => 20],
                     280 => ['a' => 3, 'r' => 20],
@@ -130,7 +130,7 @@ class ConfigProfileService
                     287 => ['a' => 10, 'r' => 80],
                     288 => ['a' => 10, 'r' => 80],
                 ];
-            }
+            }*/
 
             $seatingConfig[$number] = [
                 'persistence' => compact(['activate', 'release']),
