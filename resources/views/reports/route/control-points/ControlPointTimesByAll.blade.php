@@ -248,7 +248,7 @@
                                             $hasPreviousReference = $prevMeasuredControlPointTime != '--:--:--';
 
                                             $timeFromPrev = $hasPreviousReference ? $strTime::subStrTime($reportByControlPoint->measuredControlPointTime, $prevMeasuredControlPointTime) : '--:--:--';
-                                            $diffBetween = $hasPreviousReference ? $strTime::difference($timeFromPrev, $reportByControlPoint->controlPointTime->time) : '--:--:--';
+                                            $diffBetween = $hasPreviousReference && $reportByControlPoint->controlPointTime ? $strTime::difference($timeFromPrev, $reportByControlPoint->controlPointTime->time) : '--:--:--';
 
                                             $thresholdAverages = intval(request()->get('threshold-averages'));
                                             $showAverages = $thresholdAverages && request()->get('fringe-report');
