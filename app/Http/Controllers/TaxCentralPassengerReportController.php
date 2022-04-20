@@ -62,14 +62,16 @@ class TaxCentralPassengerReportController extends Controller
 
     public function showByDispatch(DispatchRegister $dispatchRegister, Request $request)
     {
+        $thresholdKm = request()->get('thresholdKm');
+
         $route = $dispatchRegister->route;
         $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
 
-        $dispatchArrivaltime = (DispatchRegister::COMPLETE == $dispatchRegister->status) ? $dispatchRegister->arrival_time : $dispatchRegister->arrival_time_scheduled;
-        $dispatchArrivaltime = ($dispatchArrivaltime > "23:59:59") ? "23:59:59" : $dispatchArrivaltime;
+        $dispatchArrivalTime = (DispatchRegister::COMPLETE == $dispatchRegister->status) ? $dispatchRegister->arrival_time : $dispatchRegister->arrival_time_scheduled;
+        $dispatchArrivalTime = ($dispatchArrivalTime > "23:59:59") ? "23:59:59" : $dispatchArrivalTime;
 
         $initialTimeRange = StrTime::subStrTime($dispatchRegister->departure_time, '00:30:00');
-        $finalTimeRange = StrTime::addStrTime(($dispatchRegister->canceled ? $dispatchRegister->time_canceled : $dispatchArrivaltime), '00:30:00');
+        $finalTimeRange = StrTime::addStrTime(($dispatchRegister->canceled ? $dispatchRegister->time_canceled : $dispatchArrivalTime), '00:30:00');
 
         $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
             ->where('date', '=', $dispatchRegister->date)
@@ -116,7 +118,7 @@ class TaxCentralPassengerReportController extends Controller
 
         if ($request->get('export')) $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
 
-        return view('reports.passengers.taxcentral.passengersReport', compact(['historySeats', 'dispatchRegister', 'dispatchArrivaltime']));
+        return view('reports.passengers.taxcentral.passengersReport', compact(['historySeats', 'dispatchRegister', 'dispatchArrivalTime', 'thresholdKm']));
     }
 
     /**

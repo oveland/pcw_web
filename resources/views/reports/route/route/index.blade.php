@@ -340,30 +340,34 @@
             setTimeout(function(){
                 $('.btn-show-off-road-report').click();
             },500);
-
-            $('body').on('click', '.btn-show-seating-profile', function () {
-                let contentReport = $("#modal-seating-profile .modal-content");
-                contentReport.html(loading);
-                $.ajax({
-                    url: $(this).data('url'),
-                    success: function (data) {
-                        contentReport.hide().html(data).fadeIn();
-                        if (!data.empty) {
-
-                        } else {
-                            gerror('@lang('No passengers report found for this vehicle')');
-                            $('.report-info').empty();
-                            $('.modal').modal('hide');
-                        }
-                    },
-                    error: function () {
-                        contentReport.empty();
-                        $('.modal').modal('hide');
-                        gerror('@lang('Oops, something went wrong!')');
-                    }
-                });
-            });
         });
+
+        function loadSeatingProfile(url) {
+            let contentReport = $("#modal-seating-profile .modal-content");
+            const thresholdKm = $('.threshold-km').val();
+            contentReport.html(loading);
+            $.ajax({
+                url: url,
+                data: {
+                    thresholdKm
+                },
+                success: function (data) {
+                    contentReport.hide().html(data).fadeIn();
+                    if (!data.empty) {
+
+                    } else {
+                        gerror('@lang('No passengers report found for this vehicle')');
+                        $('.report-info').empty();
+                        $('.modal').modal('hide');
+                    }
+                },
+                error: function () {
+                    contentReport.empty();
+                    $('.modal').modal('hide');
+                    gerror('@lang('Oops, something went wrong!')');
+                }
+            });
+        }
 
         $('#with-end-date').change(function(){
             const dec =  $('.date-end-container').slideUp();

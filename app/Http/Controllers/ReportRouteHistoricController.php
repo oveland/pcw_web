@@ -128,6 +128,11 @@ class ReportRouteHistoricController extends Controller
         $newTurn = true;
 
         $photos = [];
+        $prevEvents = [
+            'alerts' => [],
+            'countedStr' => '',
+            'types' => [],
+        ];
 
         foreach ($locations as $index => $location) {
             $dispatchRegister = $location->dispatchRegister;
@@ -146,7 +151,7 @@ class ReportRouteHistoricController extends Controller
 //                $dispatchRegister = $passenger->dispatchRegister;
 
                 if ($dispatchRegister) {
-                    $newTurn = $prevDr ? $dispatchRegister->id != $prevDr->id : true;
+                    $newTurn = !$prevDr || $dispatchRegister->id != $prevDr->id;
                     $prevDr = $dispatchRegister;
                 }
 
@@ -285,6 +290,9 @@ class ReportRouteHistoricController extends Controller
                 $photos = $location->photos->toArray();
             }
 
+            $photoEvents = $this->processPhotoEvents($location->photo, $photoTags, $seatingCounted);
+            if (!count($photoEvents->alerts)) $photoEvents = $prevEvents;
+
             $dataLocations->push((object)[
                 'id' => $location->id,
                 'inRoute' => $inRoute,
@@ -336,13 +344,15 @@ class ReportRouteHistoricController extends Controller
                     'index' => $index,
                     'passengers' => $totalPassengersOnPhoto,
                     'passengersTrip' => $passengersTripOnPhoto,
-                    "events" => $this->processPhotoEvents($location->photo, $photoTags, $seatingCounted)
+                    "events" => $photoEvents
                 ],
                 'photos' => $photos
             ]);
 
             $prevTotalPassengers = $totalPassengers;
             $lastLocation = $location;
+
+            $prevEvents = $photoEvents;
         }
 
         $totalLocations = $dataLocations->count();
@@ -362,17 +372,6 @@ class ReportRouteHistoricController extends Controller
                 ]
             ]
         ];
-    }
-
-    function processPhotoEventTypes($photoAlerts)
-    {
-        $photoAlerts = collect($photoAlerts);
-        $withEvents = $photoAlerts->where('total', '>', 0);
-
-        $events = $withEvents->pluck('event');
-        if ($withEvents->count() > 1) $events->push(3);
-
-        return $events;
     }
 
     function processPhotoEvents($photo, $photoTags, &$seatingCounted)
@@ -429,7 +428,7 @@ class ReportRouteHistoricController extends Controller
                 if ($type == 'activated' && $total) {
                     foreach ($seatingList as $activated) {
                         $seatingCounted[$activated] = [
-                            'total' => (intval($seatingCounted[$activated] ?? 0)) + 1,
+                            'total' => (intval( isset($seatingCounted[$activated]) ? $seatingCounted[$activated]['total'] : 0 )) + 1,
                             'new' => true
                         ];
                     }
@@ -469,7 +468,7 @@ class ReportRouteHistoricController extends Controller
             }
         }
 
-        if(!Auth::user()->isSuperAdmin()) {
+        if (!Auth::user()->isSuperAdmin()) {
             $alerts = collect([]);
         }
 
@@ -478,6 +477,17 @@ class ReportRouteHistoricController extends Controller
             'countedStr' => $countedSeating->implode(','),
             'types' => $this->processPhotoEventTypes($alerts->toArray())
         ];
+    }
+
+    function processPhotoEventTypes($photoAlerts)
+    {
+        $photoAlerts = collect($photoAlerts);
+        $withEvents = $photoAlerts->where('total', '>', 0);
+
+        $events = $withEvents->pluck('event');
+        if ($withEvents->count() > 1) $events->push(3);
+
+        return $events;
     }
 
     /**
