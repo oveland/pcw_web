@@ -1,4 +1,5 @@
-@extends(Auth::user()->isProprietary() || $hideMenu ? 'layouts.blank' : 'layout')
+{{--@extends(Auth::user()->isProprietary() || $hideMenu ? 'layouts.blank' : 'layout')--}}
+@extends( $hideMenu ? 'layouts.blank' : 'layout')
 
 @section('stylesheets')
     <!-- BEGIN PAGE LEVEL PLUGINS -->

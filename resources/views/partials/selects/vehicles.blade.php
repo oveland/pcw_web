@@ -25,6 +25,6 @@
     @endphp
 
     @foreach($vehicles as $vehicle)
-        <option value="{{ $vehicle->id }}" {{ $selected == $vehicle->id ? 'selected' : '' }}>#{{ $vehicle->number }} | {{ $vehicle->plate }}</option>
+        <option value="{{ $vehicle->id }}" {{ $selected == $vehicle->id ? 'selected' : '' }} data-company="{{ $vehicle->company_id }}">#{{ $vehicle->number }} | {{ $vehicle->plate }}</option>
     @endforeach
 @endif

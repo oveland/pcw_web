@@ -38,8 +38,6 @@ class MaintenanceCommand extends Command
         $from = $this->option('from');
         $to = $this->option('to');
 
-        dd(['Ejecuta comando', 'Ejecuta comando', 'Ejecuta comando']);
-
         return collect([
 //            [
 //                'from' => $from,
