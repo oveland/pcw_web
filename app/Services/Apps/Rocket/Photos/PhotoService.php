@@ -631,9 +631,9 @@ class PhotoService
         ]);
     }
 
-    function getHistoric()
+    function getHistoric($forReportPhotos = false)
     {
-        $photos = ($this->camera != null && $this->camera != 'all') ? $this->getPhotos() : collect([]);
+        $photos = ($this->camera != null && $this->camera != 'all' || $forReportPhotos) ? $this->getPhotos() : collect([]);
         return $this->processPhotos($photos);
     }
 

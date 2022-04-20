@@ -52,15 +52,28 @@
 						</div>
 					</div>
 				</div>
+				
+				<div class="col-md-2">
+					<div class="form-group">
+						<label class="control-label">{{ $t('Camera') }}</label>
+						<div class="form-group">
+							<multiselect track-by="id" label="name" :options="search.cameras"
+										 v-model="search.camera"
+										 :option-height="104" :searchable="false" :allow-empty="false"
+										 :placeholder="$t('Select a camera')"></multiselect>
+						</div>
+					</div>
+				</div>
+
                 <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">&nbsp;</label>
                         <div class="input-group col-md-12">
-                            <button type="button" class="btn green-haze btn-outline btn-light btn-search-report hidden" @click="setSearch()">
+                            <button type="button" class="btn green-haze btn-outline btn-light btn-search-report" @click="setSearch()">
                                 <i class="fa fa-search"></i> {{ $t('Search photos') }}
                             </button>
 
-                            <button type="button" class="btn m-l-10 red-mint btn-outline btn-light btn-search-report" @click="searchVideo()">
+                            <button type="button" class="btn m-l-10 red-mint btn-outline btn-light btn-search-report hidden" @click="searchVideo()">
                                 <i class="fa fa-file-movie-o "></i> {{ $t('Search video') }}
                             </button>
                         </div>

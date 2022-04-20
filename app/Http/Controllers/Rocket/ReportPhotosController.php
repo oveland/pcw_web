@@ -56,11 +56,14 @@ class ReportPhotosController extends Controller
         switch ($name) {
             case 'historic':
                 $vehicle = Vehicle::find($request->get('vehicle'));
-                $camera = $request->get('camera') ?? 'all';
+                $camera = $request->get('camera');
 
                 if ($vehicle) {
                     $date = $request->get('date');
-                    $photos = $this->photoService->for($vehicle, $camera, null, null, $date)->getHistoric();
+                    $persistenceActivate = $request->get('activate');
+                    $persistenceRelease = $request->get('release');
+
+                    $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->getHistoric(true);
                     $response->photos = $photos->sortByDesc('time')->values();
 
                     $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;

@@ -31,10 +31,34 @@ let adminRocketView = new Vue({
             vehicles: [],
             vehicle: {},
             date: moment().format("YYYY-MM-DD"),
-            loadPhotos: false
+            loadPhotos: false,
+            activate: null,
+            release: null,
+            camera: {
+                id: '1',
+                name: 'Cámara 1'
+            },
+            cameras: [
+                {
+                    id: 'all',
+                    name: 'Todas'
+                },
+                {
+                    id: '1',
+                    name: 'Cámara 1'
+                },
+                {
+                    id: '2',
+                    name: 'Cámara 2'
+                },
+                {
+                    id: '3',
+                    name: 'Cámara 3'
+                }
+            ]
         },
         searchParams: {},
-        videoSrc: null
+        videoSrc: null,
     },
     computed: {
 
@@ -49,7 +73,10 @@ let adminRocketView = new Vue({
         setSearch: function () {
             this.searchParams = {
                 date: this.search.date,
-                vehicle: this.search.vehicle.id
+                vehicle: this.search.vehicle.id,
+                activate: this.search.activate,
+                release: this.search.release,
+                camera: this.search.camera.id
             };
         },
         searchVideo() {

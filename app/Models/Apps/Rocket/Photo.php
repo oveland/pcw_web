@@ -96,6 +96,13 @@ class Photo extends Model implements PhotoInterface
         $query = $query->whereVehicleAndDate($vehicle, $date);
 
         if ($side !== null && $side != 'all' && $side !== "") {
+
+            if($side == '1') {
+                return $query->where(function ($q) {
+                    $q->where('side', '0')->orWhere('side', '1');
+                });
+            }
+
             return $query->where('side', $side);
         }
         return $query;

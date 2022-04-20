@@ -20,15 +20,15 @@
                         <span class="detail">{{ $t('Turn') }} {{ photo.details.dispatchRegister.turn }}</span>
                     </p>
                 </div>
-                <div class="passengers">
-                    <p class="detail" v-if="false">
+                <div class="passengers" v-if="false">
+                    <p class="detail">
                         {{ $t('Bearding passengers') }}: <span v-if="photo.details.occupation && photo.details.occupation.count">{{ photo.details.occupation.persons }}</span>
                         <span v-if="!photo.details.occupation.count">{{ $t('Paused count') }}</span>
                     </p>
-                    <p class="detail" v-if="false">
+                    <p class="detail">
                         {{ $t('Seating') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.seatingOccupiedStr }}</span>
                     </p>
-                    <p class="detail text-bold text-uppercase" v-if="false"
+                    <p class="detail text-bold text-uppercase"
                        :class="`percent-level-${photo.details.occupation.percentLevel}`">
                         {{ $t('Occupation') }}: <span v-if="photo.details.occupation">{{ photo.details.occupation.percent | numberFormat('0.0') }}%</span>
 
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-sm-6 col-xs-12 text-right" style="">
+            <div class="col-md-6 col-sm-6 col-xs-12 text-right" v-if="false">
                 <div class="photo">
                     <p>
                     <span class="title">

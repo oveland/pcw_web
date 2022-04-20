@@ -96,7 +96,7 @@ trait PhotoGlobals
                 'arrival_time' => $dispatchRegister->arrival_time,
                 'route' => (object)[
                     'id' => $dispatchRegister->route_id,
-                    'name' => $dispatchRegister->route->name . " • $location->distance",
+                    'name' => $dispatchRegister->route->name . ($location ? " • $location->distance" : ''),
                     'distance' => $dispatchRegister->route->distance_in_meters,
                 ],
                 'distance' => $dispatchRegister->getRouteDistance(),
