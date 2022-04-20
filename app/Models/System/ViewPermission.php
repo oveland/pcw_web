@@ -50,4 +50,16 @@ class ViewPermission extends Model
 
         return $user->permissions->contains($permissionProfile->id) || $user->permissions->contains(777);
     }
+
+    static function canOperation() {
+        $user = \Auth::user();
+
+        return $user && !$user->isProprietary();
+    }
+
+    static function canAdmin() {
+        $user = \Auth::user();
+
+        return $user && !$user->isProprietary();
+    }
 }

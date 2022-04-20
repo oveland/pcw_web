@@ -6,6 +6,7 @@ use \App\Models\System\ViewPermission;
 use App\Models\Routes\Route;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class Permissions
 {
@@ -18,10 +19,27 @@ class Permissions
      */
     public function handle($request, Closure $next)
     {
-        $grant = ViewPermission::includes($request->path());
+        $path = $request->path();
 
-        if(!$grant) abort(403);
+        if (!$this->passUrlPermission($path) || !$this->passAdmin($path) || !$this->passOperation($path)) abort(403);
 
         return $next($request);
+    }
+
+    function passUrlPermission($path)
+    {
+        return ViewPermission::includes($path);
+    }
+
+    function passAdmin($path)
+    {
+        $checkUrl = Str::startsWith($path, __('url-administration'));
+        return ViewPermission::canAdmin() || !$checkUrl;
+    }
+
+    function passOperation($path)
+    {
+        $checkUrl = Str::startsWith($path, __('url-operation'));
+        return ViewPermission::canOperation() || !$checkUrl;
     }
 }
