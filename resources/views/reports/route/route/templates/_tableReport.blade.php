@@ -197,11 +197,12 @@
                 @if(Auth::user()->canEditDrivers())
                     @php
                         $driverInfo = $driver ? $driver->fullName() : $dispatchRegister->driver_code;
+                        $driverInfo = trim($driverInfo);
                     @endphp
                     <div class="tooltips box-edit" data-title="@lang('Driver')">
                         <span class="box-info">
                             <span class="{{ !$driverInfo?'text-danger text-bold':'' }} text-capitalize">
-                                {{ $driverInfo?$driverInfo:__('Empty') }}
+                                {{ $driverInfo ?: __('None') }}
                             </span>
                         </span>
                         <div class="box-edit" style="display: none">
