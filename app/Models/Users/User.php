@@ -283,9 +283,6 @@ class User extends Authenticatable
             31580814, // JEFE RRHH
             2018101243, // ALEXANDERAL
             2018101262, // WILSONAL
-
-            #TRANSPUBENZA
-            2018101273, // SIMONTP
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
@@ -307,6 +304,10 @@ class User extends Authenticatable
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
+    }
+
+    function canEditFields() {
+        return $this->canEditRecorders() || $this->canEditDrivers();
     }
 
     public function getVehicleTags()

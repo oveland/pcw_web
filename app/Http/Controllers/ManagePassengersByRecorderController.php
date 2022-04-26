@@ -21,7 +21,7 @@ class ManagePassengersByRecorderController extends Controller
             case 'editRecorders':
                 $user = Auth::user();
 
-                if ($user->canEditRecorders()) {
+                if ($user->canEditFields()) {
                     $id = $request->get('id');
                     $field = __($request->get('field'));
                     $value = $request->get('value');

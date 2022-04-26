@@ -1,4 +1,4 @@
-@if(Auth::user() && Auth::user()->canEditRecorders() )
+@if(Auth::user() && (Auth::user()->canEditFields()) )
     <script type="application/javascript">
 
         $(document).ready(function () {
