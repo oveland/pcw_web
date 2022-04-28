@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\Company\Company;
+use App\Models\System\ViewPermission;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use DB;
@@ -71,7 +72,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'username', 'password',
     ];
-    
+
 
     /**
      * The attributes that should be hidden for arrays.
@@ -193,7 +194,7 @@ class User extends Authenticatable
 
     public function canMakeTakings()
     {
-        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE || $this->role_id == self::TAKINGS_ROLE;
+        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE || $this->role_id == self::TAKINGS_ROLE || ($this->permissions->contains(500) && $this->company_id == Company::TRANSPUBENZA);
     }
 
     /**
@@ -298,7 +299,7 @@ class User extends Authenticatable
             31580814, // JEFE RRHH
             2018101243, // ALEXANDERAL
             2018101262, // WILSONAL
-            
+
             #TRANSPUBENZA
             2018101273, // SIMONTP
         ];
@@ -306,7 +307,8 @@ class User extends Authenticatable
         return in_array($this->id, $usersCan) || $this->isAdmin();
     }
 
-    function canEditFields() {
+    function canEditFields()
+    {
         return $this->canEditRecorders() || $this->canEditDrivers();
     }
 
@@ -337,7 +339,8 @@ class User extends Authenticatable
         return $this->hasMany(UserVehicle::class);
     }
 
-    function getPermissionsAttribute() {
+    function getPermissionsAttribute()
+    {
         return collect(explode(',', $this->attributes['permissions']))->map(function ($p) {
             return intval(trim($p));
         });
