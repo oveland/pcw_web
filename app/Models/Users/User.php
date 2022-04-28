@@ -194,7 +194,11 @@ class User extends Authenticatable
 
     public function canMakeTakings()
     {
-        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE || $this->role_id == self::TAKINGS_ROLE || ($this->permissions->contains(500) && $this->company_id == Company::TRANSPUBENZA);
+        if ($this->company_id == Company::TRANSPUBENZA) {
+            return $this->role_id == self::ADMIN_ROLE || $this->permissions->contains(500);
+        }
+
+        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE || $this->role_id == self::TAKINGS_ROLE;
     }
 
     /**
