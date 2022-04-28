@@ -69,6 +69,7 @@
                     <div class="">
                         @php
                             $historyByCP = $historySeats->groupBy('tariff.from_control_point_id');
+                            $totalW = 0;
                         @endphp
 
                         <div class="progress progress-striped p-0 m-0 no-rounded-corner progress-lg active">
@@ -89,6 +90,11 @@
                                 $trajectory = "$controlPoint->name";
 
                                 $seatsByCP = $historyByCP->get($controlPoint->id);
+
+                                if($width + $totalW >= 100) {
+                                    $width = 100 - $totalW - 0.2;
+                                }
+                                $totalW += $width;
                             @endphp
                             <div class="progress-bar {{ $loop->index % 2 == 0 || true ? 'bg-cp-1' : 'bg-cp-2' }} p-t-5 text-left" style="border-left: 3px solid red;width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
                                  data-toggle="tooltip" data-html="true" data-placement="top"
@@ -117,8 +123,7 @@
                                             $width = 0;
 
                                             $historySeats = $historySeats->sortBy('active_time')->values();
-
-
+                                            $totalW = 0;
                                             @endphp
                                             @foreach($controlPoints as $controlPoint)
                                                 @php
@@ -126,6 +131,11 @@
                                                     $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
                                                     $width = $loop->last ? 0 : $width;
                                                     $trajectory = "$controlPoint->name";
+
+                                                    if($width + $totalW >= 100) {
+                                                        $width = 100 - $totalW;
+                                                    }
+                                                    $totalW += $width;
                                                 @endphp
                                                 <div class="progress-bar bg-cp-1 p-t-5 text-left" style="border-left: 3px solid yellow;width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
                                                      data-toggle="tooltip" data-html="true" data-placement="top"

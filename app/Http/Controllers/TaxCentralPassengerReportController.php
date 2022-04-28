@@ -75,6 +75,7 @@ class TaxCentralPassengerReportController extends Controller
 
         $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
             ->where('date', '=', $dispatchRegister->date)
+            ->where('dispatch_register_id', '=', $dispatchRegister->id)
             ->whereBetween('time',[$initialTimeRange,$finalTimeRange])
             ->get()->sortBy('active_time');
 
