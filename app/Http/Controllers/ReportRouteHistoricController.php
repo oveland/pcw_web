@@ -249,7 +249,7 @@ class ReportRouteHistoricController extends Controller
                     $totalDescentsInRoundTrip = 0;
                 }
 
-                if ($dispatchRegister) {
+                if ($dispatchRegister && $dispatchRegister->isActive()) {
                     $trips[$dispatchRegister->id] = (object)[
                         "index" => $index,
                         "routeName" => $dispatchRegister->route->name,
