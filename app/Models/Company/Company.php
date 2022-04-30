@@ -152,16 +152,9 @@ class Company extends Model
         $user = Auth::user();
         $routes = $this->hasMany(Route::class)->orderBy('name');
 
-        if ($user) {
-            if ($user->isProprietary()) {
-                $assignedVehicles = $user->assignedVehicles(null, true);
-                $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
-            } else {
-                if (!$user->isAdmin()) {
-                    $userRoutes = $user->getUserRoutes($this);
-                    $routes = $routes->whereIn('id', $userRoutes->pluck('id'));
-                }
-            }
+        if ($user && !$user->isAdmin()) {
+            $userRoutes = $user->getUserRoutes($this);
+            $routes = $routes->whereIn('id', $userRoutes->pluck('id'));
         }
 
         return $routes;
