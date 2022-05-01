@@ -31,8 +31,11 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557100774424')->everyMinute()->between('00:00', '23:59'); // Vehicle 6841 Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=ETK-185 --pa=5 --pr=20')->everyTenMinutes();
 
-            $schedule->command('syrus:sync-photos --imei=352557100791261')->everyMinute()->between('00:00', '23:59'); // Vehicle 9011 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=SMN-884 --pa=5 --pr=20')->everyTenMinutes();
+            // $schedule->command('syrus:sync-photos --imei=352557100791261')->everyMinute()->between('00:00', '23:59'); // Vehicle 9011 Valledupar - vehiculo sale de circulacion
+           // $schedule->command('rocket:count --vehicle-plate=SMN-884 --pa=2 --pr=10')->everyTenMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557100791261')->everyMinute()->between('00:00', '23:59'); // Vehicle 5017 Valledupar
+            $schedule->command('rocket:count --vehicle-plate=FXS-240 --pa=2 --pr=10')->everyTenMinutes();
 
 
             $schedule->command('syrus:sync-photos --imei=352557100781619')->everyMinute()->between('00:00', '23:59'); // Vehicle 02 Aeropuerto

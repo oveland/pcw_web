@@ -101,6 +101,15 @@ class SyrusService
 
     function getSide($fileName, $imei)
     {
+        if ($imei == '352557100791261') {
+            if (Str::startsWith($fileName, '1')) {
+                return '2';
+            } else if (Str::startsWith($fileName, '2')) {
+                return '1';
+            } else if (Str::startsWith($fileName, '3')) {
+                return '3';
+            }
+        }
         if (Str::startsWith($fileName, '1')) {
             return '1';
         } else if (Str::startsWith($fileName, '2')) {
