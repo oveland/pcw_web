@@ -714,8 +714,10 @@ class DispatchRegister extends Model
             return $query;
         });
 
+        $user = Auth::user();
+
         $route = Route::find(intval($routeId));
-        if ($route && $vehicleId == 'all') {
+        if ($route && $vehicleId == 'all' && $user && !$user->isProprietary()) {
             $query = $query->orWhereIn('route_id', $route->subRoutes->pluck('id'));
         }
 
