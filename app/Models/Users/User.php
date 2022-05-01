@@ -3,11 +3,13 @@
 namespace App\Models\Users;
 
 use App\Models\Company\Company;
+use App\Models\System\ViewPermission;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use DB;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -28,6 +30,7 @@ use Laravel\Passport\Token;
  * @property string $password
  * @property string|null $remember_token
  * @property string|null $role
+ * @property Collection $permissions
  * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -48,19 +51,16 @@ use Laravel\Passport\Token;
  * @mixin Eloquent
  * @property int $role_id
  * @method static Builder|User whereRoleId($value)
- * @method static Builder|User newModelQuery()
- * @method static Builder|User newQuery()
- * @method static Builder|User query()
  * @property string|null $vehicle_tags
  * @property-read mixed $user_routes
  * @property-read Collection $userRoutes
  * @method static Builder|User whereVehicleTags($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|UserVehicle[] $userVehicles
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Client[] $clients
  * @property-read int|null $clients_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Token[] $tokens
  * @property-read int|null $tokens_count
- * @property-read \Illuminate\Database\Eloquent\Collection|UserVehicle[] $userVehicles
  * @property-read int|null $user_vehicles_count
  */
 class User extends Authenticatable
@@ -69,6 +69,7 @@ class User extends Authenticatable
     const SYSTEM_ROLE = 2;
     const PROPRIETARY_ROLE = 3;
     const DISPATCHER_ROLE = 4;
+    const TAKINGS_ROLE = 5;
     const ANALYST_ML_ROLE = 5;
 
     use HasApiTokens, Notifiable;
@@ -82,6 +83,7 @@ class User extends Authenticatable
         'name', 'username', 'password',
     ];
 
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -89,6 +91,8 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
     function getDateFormat()
@@ -97,7 +101,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {
@@ -109,7 +113,7 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return $this->company ? $this->company->id === Company::PCW : false;
+        return $this->company_id === Company::PCW;
     }
 
     /**
@@ -120,7 +124,9 @@ class User extends Authenticatable
         return $this->isAdmin() && (
                 $this->id == 625565             // OVELAND
                 || $this->id == 940736          // OMAR
-                || $this->id == 1130648973      // BRIAN
+                //|| $this->id == 1130648973    // BRIAN
+                || $this->id == 2018101255      // LEANDRO
+                || $this->id == 2018101280      // OLMER
             );
     }
 
@@ -129,7 +135,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin2()
     {
-        return $this->id == 625565;     // OVELAND
+        return $this->id == 625565 || $this->id == 2018101280;     // OVELAND, OLMER
     }
 
     /**
@@ -194,6 +200,7 @@ class User extends Authenticatable
             523994798,
             423994798,
             2018101065,
+            723994798
         ];
 
         return in_array($this->id, $usersCanAdmin) || $this->isAdmin();
@@ -202,7 +209,11 @@ class User extends Authenticatable
 
     public function canMakeTakings()
     {
-        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE;
+        if ($this->company_id == Company::TRANSPUBENZA) {
+            return $this->role_id == self::ADMIN_ROLE || $this->permissions->contains(500);
+        }
+
+        return $this->role_id == self::ADMIN_ROLE || $this->role_id == self::SYSTEM_ROLE || $this->role_id == self::TAKINGS_ROLE;
     }
 
     /**
@@ -223,6 +234,7 @@ class User extends Authenticatable
             523994798,
             423994798,
             2018101065,
+            723994798
         ];
 
         return (in_array($this->id, $usersCanSendSMS) && $this->canAdminGPS()) || $this->isSuperAdmin();
@@ -273,6 +285,57 @@ class User extends Authenticatable
         return $assignedVehicles;
     }
 
+    /**
+     * @return bool
+     */
+    public function canViewAllRoutes()
+    {
+        return !($this->belongsToMontebello() && $this->isProprietary());
+    }
+
+    public function canEditRecorders()
+    {
+        $usersCan = [
+            #ALAMEDA:
+            999457, // GERENCIALAMEDA
+            98914189, // JEFE OPERATIVO
+            2018101214, // JORGEPB
+            31580814, // JEFE RRHH
+            2018101243, // ALEXANDERAL
+            2018101262, // WILSONAL
+        ];
+
+        return in_array($this->id, $usersCan) || $this->isAdmin();
+    }
+
+    public function canEditDrivers()
+    {
+        $usersCan = [
+            #ALAMEDA:
+            999457, // GERENCIALAMEDA
+            98914189, // JEFE OPERATIVO
+            2018101214, // JORGEPB
+            31580814, // JEFE RRHH
+            2018101243, // ALEXANDERAL
+            2018101262, // WILSONAL
+
+            #TRANSPUBENZA
+            2018101273, // SIMONTP
+        ];
+
+        return in_array($this->id, $usersCan) || $this->isAdmin();
+    }
+
+    function canEditFields()
+    {
+        return $this->canEditRecorders() || $this->canEditDrivers();
+    }
+
+    public function getVehicleTags()
+    {
+        return collect($this->vehicle_tags ? explode(',', $this->vehicle_tags) : []);
+    }
+
     public function canML($roleName)
     {
         switch ($roleName) {
@@ -312,6 +375,13 @@ class User extends Authenticatable
     public function userVehicles()
     {
         return $this->hasMany(UserVehicle::class);
+    }
+
+    function getPermissionsAttribute()
+    {
+        return collect(explode(',', $this->attributes['permissions']))->map(function ($p) {
+            return intval(trim($p));
+        });
     }
 
     public function toArray($short = false)

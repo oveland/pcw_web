@@ -4,7 +4,6 @@ namespace App\Models\Company;
 
 use App\Models\LM\Config;
 use App\Models\Drivers\Driver;
-use App\Models\Drivers\Drivers;
 use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\Dispatch;
 use App\Models\Routes\DispatcherVehicle;
@@ -12,20 +11,21 @@ use App\Models\Routes\Route;
 use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
+use DB;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
 /**
  * App\Models\Company\Company
  *
  * @property-read Collection|Vehicle[] $activeVehicles
  * @property-read Collection|Vehicle[] $vehicles
- * @property-read Collection|Drivers[] $drivers
- * @property-read Collection|Drivers[] $activeDrivers
+ * @property-read Collection|Driver[] $drivers
+ * @property-read Collection|Driver[] $activeDrivers
  * @property-read Collection|Dispatch[] $dispatches
  * @mixin Eloquent
  * @property int $id
@@ -62,26 +62,23 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder|Company whereSpeedingThreshold($value)
  * @property string|null $default_kmz_url
  * @method static Builder|Company whereDefaultKmzUrl($value)
- * @property-read int|null $active_drivers_count
- * @property-read int|null $active_routes_count
- * @property-read int|null $active_vehicles_count
- * @property-read int|null $dispatches_count
- * @property-read int|null $drivers_count
- * @property-read int|null $proprietaries_count
- * @property-read int|null $routes_count
- * @property-read int|null $vehicles_count
+ * @property-read Collection|User[] $users
  */
 class Company extends Model
 {
     const PCW = 6;
+    const TRANSPUBENZA = 2;
     const COOTRANSOL = 12;
     const ALAMEDA = 14;
     const MONTEBELLO = 21;
+    const URBANUS_MONTEBELLO = 31;
     const TUPAL = 28;
     const YUMBENOS = 17;
     const COODETRANS = 30;
-    const PAPAGAYO = 24;
+    const BOOTHS = 34;
+    const SOTRAVALLE = 35;
     const EXPRESO_PALMIRA = 39;
+    const VALLEDUPAR = 41;
 
     /**
      * @return mixed|string
@@ -96,15 +93,27 @@ class Company extends Model
      */
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class)->orderBy('number');
-    }
+        $user = Auth::user();
 
-    /**
-     * @return HasMany
-     */
-    public function users()
-    {
-        return $this->hasMany(User::class)->orderBy('name');
+        $vehicles = $this->hasMany(Vehicle::class)->orderBy('number');
+
+        if ($user) {
+            if (!$user->isAdmin()) {
+                $userVehicleTags = $user->getVehicleTags();
+
+                if ($userVehicleTags->isNotEmpty()) {
+                    $vehicles->where(function ($query) use ($userVehicleTags) {
+                        foreach ($userVehicleTags as $tag) {
+                            $query->where('tags', 'like', "%$tag%");
+                        }
+                    });
+                }
+            } else if (!$user->isSuperAdmin()) {
+                $vehicles->where('id', '<>', 1873); // Exclude vh 02 copied from company PARTICULARES. TODO: Delete when tests for GPS Syrus ends
+            }
+        }
+
+        return $vehicles;
     }
 
     /**
@@ -127,7 +136,9 @@ class Company extends Model
             $route = Route::find($routeId);
             if ($route) {
                 $vehiclesIdFromDispatcherVehicles = DispatcherVehicle::whereIn('route_id', $route->subRoutes->pluck('id'))->get()->pluck('vehicle_id');
-                $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+                if ($vehiclesIdFromDispatcherVehicles->count()) {
+                    $vehicles = $vehicles->whereIn('id', $vehiclesIdFromDispatcherVehicles);
+                }
             }
         }
 
@@ -142,9 +153,9 @@ class Company extends Model
         $user = Auth::user();
         $routes = $this->hasMany(Route::class)->orderBy('name');
 
-        if ($user && $user->isProprietary()) {
-            $assignedVehicles = $user->assignedVehicles(null, true);
-            $routes->whereIn('id', DispatcherVehicle::whereIn('vehicle_id', $assignedVehicles->pluck('id'))->pluck('route_id'));
+        if ($user && !$user->isAdmin()) {
+            $userRoutes = $user->getUserRoutes($this);
+            $routes = $routes->whereIn('id', $userRoutes->pluck('id'));
         }
 
         return $routes;
@@ -178,13 +189,54 @@ class Company extends Model
 
     /*
      * What companies that have seat sensor counter
+     * @return bool
+     */
+    public function isIntermunicipal()
+    {
+        return collect([self::MONTEBELLO])->contains($this->id);
+    }
+
+    /*
+     * What companies that have seat sensor counter
      *
-     * Alameda
-     *
-    */
+     * @return bool
+     */
     public function hasRecorderCounter()
     {
-        return collect([self::ALAMEDA, self::YUMBENOS])->contains($this->id);
+        return collect([self::ALAMEDA, self::TUPAL, self::PCW, self::TRANSPUBENZA])->contains($this->id);
+    }
+
+    /*
+     * What companies that have sensor counter
+     *
+     * @return bool
+     */
+    public function hasSensorCounter()
+    {
+        return collect([
+                self::YUMBENOS,
+                self::ALAMEDA,
+                self::EXPRESO_PALMIRA,
+                self::MONTEBELLO,
+                self::TRANSPUBENZA
+            ])->contains($this->id) || auth()->user()->isAdmin();
+    }
+
+    /*
+     * What companies that have Control Point Events Active for send mail report events daily
+    */
+    public function hasControlPointEventsActive()
+    {
+        return collect([])->contains($this->id);
+    }
+
+    /*
+     * What companies that have Control Point Events Active for send mail report events daily
+    */
+    public function hasSpeedingEventsActive()
+    {
+        return $this->id != self::ALAMEDA;
+//        return collect([])->contains($this->id);
     }
 
     /**
@@ -192,18 +244,15 @@ class Company extends Model
      */
     public function hasDriverRegisters()
     {
-        return collect([self::ALAMEDA])->contains($this->id);
+        return collect([self::ALAMEDA, self::TRANSPUBENZA, self::PCW])->contains($this->id);
     }
 
     /*
      * What companies that have seat sensor counter
-     *
-     * Cootransol
-     *
     */
     public function hasSeatSensorCounter()
     {
-        return collect([self::YUMBENOS, self::MONTEBELLO])->contains($this->id);
+        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW])->contains($this->id);
     }
 
     /**
@@ -245,7 +294,36 @@ class Company extends Model
      */
     public function hasADD()
     {
-        return collect([self::MONTEBELLO])->contains($this->id);
+//        return collect([self::MONTEBELLO, self::EXPRESO_PALMIRA, self::VALLEDUPAR])->contains($this->id);
+        return collect([self::MONTEBELLO, self::EXPRESO_PALMIRA])->contains($this->id);
+    }
+
+    public function countMileageByMax()
+    {
+        return collect([self::ALAMEDA])->contains($this->id);
+    }
+
+    /**
+     * @return HasMany | User []
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class)->where('active', true);
+    }
+
+    function getMaxDailyMileage()
+    {
+        switch ($this->id) {
+            case self::MONTEBELLO:
+                return 900000;
+                break;
+            case self::YUMBENOS:
+                return 500000;
+                break;
+            default:
+                return 400000;
+                break;
+        }
     }
 
     /**

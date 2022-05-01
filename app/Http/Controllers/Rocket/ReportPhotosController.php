@@ -96,7 +96,7 @@ class ReportPhotosController extends Controller
 
                 return response()->json([
                     'company' => $company,
-                    'vehicles' => $company->vehicles,
+                    'vehicles' => $company->userVehicles(),
                     'companies' => $access->companies
                 ]);
                 break;
