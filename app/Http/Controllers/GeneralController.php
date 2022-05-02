@@ -169,6 +169,9 @@ class GeneralController extends Controller
 
     public static function getVehiclesFromCompany(Company $company = null)
     {
+        $user = Auth::user();
+        if ($user) return $user->assignedVehicles($company);
+
         return ($company ? $company->vehicles->sortBy('number') : []);
     }
 }

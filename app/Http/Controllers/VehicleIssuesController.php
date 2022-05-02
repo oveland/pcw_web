@@ -49,7 +49,7 @@ class VehicleIssuesController extends Controller
         $access = $this->auth->access();
 
         $companies = $access->companies;
-        $vehicles = $access->company->vehicles;
+        $vehicles = $access->vehicles;
 
         return view('operation.vehicles.issues.index', compact(['companies', 'vehicles']));
     }
