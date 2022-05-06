@@ -231,7 +231,7 @@
         <div class="modal fade" id="modal-takings-passengers" style="background: rgba(181, 181, 181, 0.72);">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header p-20">
+                    <div class="modal-header well m-b-5">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="fa fa-times"></i>
                         </button>

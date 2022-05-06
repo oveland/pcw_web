@@ -286,6 +286,22 @@ class Location extends Model
         return $addressLocation ? $addressLocation->address : $address;
     }
 
+    public function getAPIFields()
+    {
+        return (object)[
+            'id' => $this->id,
+            'date' => $this->date->toDateTimeString(),
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'orientation' => $this->orientation,
+            'speed' => $this->speed,
+            'odometer' => $this->odometer,
+            'offRoad' => $this->off_road,
+            'speeding' => $this->speeding,
+            'vehicleStatus' => $this->vehicleStatus,
+        ];
+    }
+
     public function getTotalOffRoad($routeId)
     {
         if ($this->dispatch_register_id && $this->dispatchRegister->route_id == $routeId) {

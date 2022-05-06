@@ -2,12 +2,13 @@
 
 namespace App\Models\Routes;
 
-use App\Models\Company\Company;
+use App\Models\Operation\FuelStation;
 use App\Models\Users\User;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Routes\RouteTaking
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|RouteTaking whereUpdatedAt($value)
  * @mixin Eloquent
  * @property-read DispatchRegister $dispatchRegister
+ * @property-read FuelStation $fuelStation
  * @property bool $taken
  * @method static Builder|RouteTaking newModelQuery()
  * @method static Builder|RouteTaking newQuery()
@@ -50,10 +52,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $user_id
  * @method static Builder|RouteTaking whereUserId($value)
  * @property-read User|null $user
- * @property int|null $station_fuel_id
+ * @property int|null $fuel_station_id
  * @method static Builder|RouteTaking whereStationFuelId($value)
  * @property int|null $advance
  * @property int|null $balance
+ * @property string $counter
+ * @property string $type
+ * @property int|null $parent_takings_id
+ * @property-read RouteTaking $parent
  * @method static Builder|RouteTaking whereAdvance($value)
  * @method static Builder|RouteTaking whereBalance($value)
  * @property-read mixed $passengers_advance
@@ -61,16 +67,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class RouteTaking extends Model
 {
-    const STATIONS_FUEL = [
-        1 => 'EDS Alameda',
-        2 => 'EDS Cerros',
-        3 => 'Otra',
-    ];
+    const TAKING_BY_ROUND_TRIP = 1;
+    const TAKING_BY_ALL = 2;
 
     protected $guarded = ['total_production', 'fuel_gallons', 'net_production'];
-    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "advance", "balance", "observations", "station_fuel_id"];
+    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "advance", "balance", "observations", "fuel_station_id", "counter", "type", "parent_takings_id"];
 
-    public function getDateFormat()
+    function getDateFormat()
     {
         return config('app.simple_date_time_format');
     }
@@ -84,17 +87,27 @@ class RouteTaking extends Model
         return self::where('dispatch_register_id', $dr->id)->get()->first();
     }
 
-    public function dispatchRegister()
+    function dispatchRegister()
     {
         return $this->belongsTo(DispatchRegister::class)->with('route');
     }
 
-    public function user()
+    function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function isTaken()
+    function parent()
+    {
+        return $this->belongsTo(RouteTaking::class, 'parent_takings_id', 'id');
+    }
+
+    function hasParent()
+    {
+        return !!$this->parent_takings_id;
+    }
+
+    function isTaken()
     {
         return $this->taken;
     }
@@ -117,19 +130,15 @@ class RouteTaking extends Model
         return $route ? $route->tariff->fuel : 0;
     }
 
-    public function getTotalProductionAttribute()
+    function getTotalProductionAttribute()
     {
         return $this->dispatchRegister && $this->dispatchRegister->complete() ? intval($this->attributes['total_production']) : 0;
     }
 
-    public function getPassengersAdvanceAttribute()
+    function getPassengersBalanceAttribute()
     {
-        $passengerTariff = $this->passenger_tariff;
-        return $passengerTariff ? intval($this->advance) / intval($passengerTariff) : 0;
-    }
+        if ($this->dispatchRegister->vehicle->process_takings) return 0;
 
-    public function getPassengersBalanceAttribute()
-    {
         $totalPassengers = $this->dispatchRegister->passengers->recorders->count;
         return intval($totalPassengers) - $this->passengers_advance;
     }
@@ -144,10 +153,22 @@ class RouteTaking extends Model
         return intval($this->net_production) - intval($this->advance);
     }
 
+    function getPassengersTaken()
+    {
+        $totalAmount = intval($this->advance) + $this->getTotalDiscounts();
+
+        return $this->passenger_tariff ? $totalAmount / $this->passenger_tariff : 0;
+    }
+
+    function getTotalDiscounts()
+    {
+        return intval($this->control) + intval($this->fuel) + intval($this->bonus) + intval($this->others);
+    }
+
     /**
      * @return object
      */
-    public function getAPIFields()
+    function getAPIFields()
     {
         return (object)[
             'passengerTariff' => $this->passenger_tariff,
@@ -159,31 +180,26 @@ class RouteTaking extends Model
             'others' => $this->others,
             'bonus' => $this->bonus,
             'advance' => $this->advance,
-            'passengersAdvance' => $this->passengers_advance,
+            'counter' => $this->counter,
+            'totalDiscounts' => $this->getTotalDiscounts(),
+            'passengersTaken' => $this->getPassengersTaken(),
             'passengersBalance' => $this->passengers_balance,
             'balance' => $this->balance,
             'netProduction' => $this->net_production,
             'observations' => $this->observations,
-            'user' => $this->user,
+            'user' => $this->user ? $this->user->toArray(true) : null,
             'isTaken' => $this->isTaken(),
-            'stationFuel' => $this->stationFuel()
+            'fuelStation' => $this->fuelStation->toArray(),
+            'hasParent' => $this->hasParent(),
+            'updatedAt' => $this->updated_at->toDateTimeString()
         ];
     }
 
     /**
-     * @return string
+     * @return BelongsTo|FuelStation
      */
-    public function stationFuel()
+    function fuelStation()
     {
-        $stations = self::STATIONS_FUEL;
-
-//        if ($this->dispatchRegister->route && $this->dispatchRegister->route->company->id == Company::YUMBENOS) {
-//            $stations = ['Estación 1', 'Estación 2', 'Estación 3'];
-//        }
-
-        if ($this->station_fuel_id) {
-            return $stations[$this->station_fuel_id];
-        }
-        return "";
+        return $this->belongsTo(FuelStation::class);
     }
 }

@@ -142,6 +142,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/{dispatchRegister}', 'Operation\Routes\Takings\RouteTakingsController@form')->name('operation-routes-takings-form');
                 Route::get('/{vehicle}/{date}', 'Operation\Routes\Takings\RouteTakingsController@formCreate')->name('operation-routes-takings-form-create');
                 Route::post('/{dispatchRegister}/taking', 'Operation\Routes\Takings\RouteTakingsController@taking')->name('operation-routes-takings-taking');
+                Route::delete('/{dispatchRegister}/delete', 'Operation\Routes\Takings\RouteTakingsController@delete')->name('operation-routes-takings-delete');
             });
         });
     });

@@ -90,7 +90,7 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function vehicles()
+    function vehicles()
     {
         $user = Auth::user();
 
@@ -118,7 +118,7 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function activeVehicles()
+    function activeVehicles()
     {
         return $this->vehicles()->where('active', true)->orderBy('number');
     }
@@ -127,7 +127,7 @@ class Company extends Model
      * @param null $routeId
      * @return Vehicle|Vehicle[]
      */
-    public function userVehicles($routeId = null)
+    function userVehicles($routeId = null)
     {
         $user = Auth::user();
         $vehicles = $user ? $user->assignedVehicles($this) : $this->activeVehicles;
@@ -147,7 +147,7 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function routes()
+    function routes()
     {
         $user = Auth::user();
         $routes = $this->hasMany(Route::class)->orderBy('name');
@@ -163,7 +163,7 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function activeRoutes()
+    function activeRoutes()
     {
         return $this->routes()->where('active', true)->orderBy('name');
     }
@@ -172,7 +172,7 @@ class Company extends Model
      * @param Eloquent $query
      * @return mixed
      */
-    public function scopeActive($query)
+    function scopeActive($query)
     {
         return $query->where('active', '=', true)->orderBy('short_name');
     }
@@ -181,7 +181,7 @@ class Company extends Model
      * @param Eloquent $query
      * @return mixed
      */
-    public function scopeFindAllActive($query)
+    function scopeFindAllActive($query)
     {
         return $query->where('active', '=', true)->orderBy('short_name', 'asc')->get();
     }
@@ -190,7 +190,7 @@ class Company extends Model
      * What companies that have seat sensor counter
      * @return bool
      */
-    public function isIntermunicipal()
+    function isIntermunicipal()
     {
         return collect([self::MONTEBELLO])->contains($this->id);
     }
@@ -200,7 +200,7 @@ class Company extends Model
      *
      * @return bool
      */
-    public function hasRecorderCounter()
+    function hasRecorderCounter()
     {
         return collect([self::ALAMEDA, self::TUPAL, self::PCW, self::TRANSPUBENZA])->contains($this->id);
     }
@@ -210,11 +210,10 @@ class Company extends Model
      *
      * @return bool
      */
-    public function hasSensorCounter()
+    function hasSensorCounter()
     {
         return collect([
                 self::YUMBENOS,
-                self::ALAMEDA,
                 self::EXPRESO_PALMIRA,
                 self::MONTEBELLO,
                 self::TRANSPUBENZA
@@ -222,9 +221,43 @@ class Company extends Model
     }
 
     /*
+     * What companies that have seat sensor recorder counter
+     *
+     * @return bool
+     */
+    function hasSensorRecorderCounter()
+    {
+        return collect([self::TRANSPUBENZA])->contains($this->id);
+    }
+    
+    function getTypeCounters() {
+        $counters = collect([]);
+
+        if ($this->hasRecorderCounter()) $counters->push((object)['name' => 'recorders', 'icon' => 'icon-compass']);
+        if ($this->hasSensorCounter()) $counters->push((object)['name' => 'sensor', 'icon' => 'fa fa-crosshairs']);
+        if ($this->hasSensorRecorderCounter()) $counters->push((object)['name' => 'takings', 'icon' => 'icon-briefcase']);
+
+        return $counters;
+    }
+
+    function getSensorRecorderCounterLabel()
+    {
+        $label = __('Sensor recorder');
+
+
+        if(collect([
+            self::TRANSPUBENZA
+        ])->contains($this->id)) {
+            $label = __('Taken passengers');
+        }
+
+        return $label;
+    }
+
+    /*
      * What companies that have Control Point Events Active for send mail report events daily
     */
-    public function hasControlPointEventsActive()
+    function hasControlPointEventsActive()
     {
         return collect([])->contains($this->id);
     }
@@ -232,7 +265,7 @@ class Company extends Model
     /*
      * What companies that have Control Point Events Active for send mail report events daily
     */
-    public function hasSpeedingEventsActive()
+    function hasSpeedingEventsActive()
     {
         return $this->id != self::ALAMEDA;
 //        return collect([])->contains($this->id);
@@ -241,7 +274,7 @@ class Company extends Model
     /**
      * @return bool
      */
-    public function hasDriverRegisters()
+    function hasDriverRegisters()
     {
         return collect([self::ALAMEDA, self::TRANSPUBENZA, self::PCW])->contains($this->id);
     }
@@ -249,7 +282,7 @@ class Company extends Model
     /*
      * What companies that have seat sensor counter
     */
-    public function hasSeatSensorCounter()
+    function hasSeatSensorCounter()
     {
         return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW])->contains($this->id);
     }
@@ -257,7 +290,7 @@ class Company extends Model
     /**
      * @return HasMany | Driver
      */
-    public function drivers()
+    function drivers()
     {
         return $this->hasMany(Driver::class)->orderBy('first_name');
     }
@@ -265,7 +298,7 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function activeDrivers()
+    function activeDrivers()
     {
         return $this->drivers()->active();
     }
@@ -273,7 +306,7 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function dispatches()
+    function dispatches()
     {
         return $this->hasMany(Dispatch::class)->orderBy('name');
     }
@@ -281,7 +314,7 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function proprietaries()
+    function proprietaries()
     {
         return $this->hasMany(Proprietary::class);
     }
@@ -291,13 +324,13 @@ class Company extends Model
      *
      * @return bool
      */
-    public function hasADD()
+    function hasADD()
     {
 //        return collect([self::MONTEBELLO, self::EXPRESO_PALMIRA, self::VALLEDUPAR])->contains($this->id);
         return collect([self::MONTEBELLO, self::EXPRESO_PALMIRA])->contains($this->id);
     }
 
-    public function countMileageByMax()
+    function countMileageByMax()
     {
         return collect([self::ALAMEDA])->contains($this->id);
     }
@@ -305,7 +338,7 @@ class Company extends Model
     /**
      * @return HasMany | User []
      */
-    public function users()
+    function users()
     {
         return $this->hasMany(User::class)->where('active', true);
     }
@@ -323,5 +356,14 @@ class Company extends Model
                 return 400000;
                 break;
         }
+    }
+
+    function hasRouteTakings()
+    {
+        return collect([self::ALAMEDA, self::TRANSPUBENZA])->contains($this->id);
+    }
+
+    function canTakingsByAll() {
+        return collect([self::TRANSPUBENZA])->contains($this->id);
     }
 }

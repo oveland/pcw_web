@@ -704,11 +704,9 @@
   "Averages": "Promedios",
   "Scheduled time from dispatch": "Tiempo programado desde despacho",
   "Average time from dispatch": "Tiempo promedio desde despacho",
-
   "Scheduled time from prev point": "Tiempo programado desde punto anterior",
   "Average time from prev point": "Tiempo promedio desde punto anterior",
-  "Correction factor": "Factor de correción",
-
+  "Correction factor": "Factor de corrección",
   "Takings receipt": "Recibo de Recaudo",
   "Dates": "Fechas",
   "Group by vehicle": "Agrupar por vehículo",
@@ -814,5 +812,19 @@
   "Absolute difference from dispatch": "Diferencia absoluta desde despacho",
   "Scheduled time - Measured time": "Tiempo programado - Tiempo medido entre puntos",
   "Average excluded": "Excluido de promedios",
-  "See profile seating report": "Ver reporte de perfil de asientos"
+  "See profile seating report": "Ver reporte de perfil de asientos",
+  "Taken passengers": "Pasajeros recaudo",
+  "Invalid count": "Conteo no válido",
+  "Please verify recorder or sensor values": "Porfavor verifique los valores de registradora o de sensor",
+  "Excluded for taken": "Excluido para recaudo",
+  "Turn not completed": "Turno no completado",
+  "Please insert value for takings": "Ingrese el valor a recaudar en dinero",
+  "Already taken turns": "Turnos ya recaudados",
+  "Will taken turns": "Turnos a recaudar",
+  "Takings not deleted": "Recaudo no eliminado",
+  "Error deleting takings": "Error eliminando recaudo",
+  "Takings deleted successfully": "Recaudo eliminado correctamente",
+  "Excludes already takings": "Excluye turnos ya recaudados",
+  "Invalid passenger tariff": "Tarifa de pasajero no válida",
+  "Please verify passenger tariff for route :route": "Porfavor verifique el valor de la tarifa de pasajeros para la ruta :route"
 }

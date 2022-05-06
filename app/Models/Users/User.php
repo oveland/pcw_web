@@ -288,6 +288,10 @@ class User extends Authenticatable
             31580814, // JEFE RRHH
             2018101243, // ALEXANDERAL
             2018101262, // WILSONAL
+
+            #TRANSPUBENZA
+            2018101273, // SIMONTP
+            2018100998, // TPSIS Local
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
@@ -348,5 +352,18 @@ class User extends Authenticatable
         return collect(explode(',', $this->attributes['permissions']))->map(function ($p) {
             return intval(trim($p));
         });
+    }
+
+    public function toArray($short = false)
+    {
+        if ($short) {
+            return (object)[
+                'id' => $this->id,
+                'name' => $this->name,
+                'username' => $this->username,
+            ];
+        }
+
+        return collect(parent::toArray())->put('tag', "$this->username • $this->name")->toArray();
     }
 }

@@ -71,22 +71,17 @@
                 <small class="text-muted">
                     @lang('Sensor')
                 </small>
-            </th>
-
-            <th class="{{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}">
-                <i class="fa fa-users text-muted"></i><br>
-                <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
-                <small class="text-muted">
-                    @lang('Sensor TOTAL')
+                |
+                <small class="text-muted tooltips" data-title="Sumatoria del conteo enviado por el sensor independiente de los turnos/despachos realizados en el día">
+                    @lang('Sensor total')
                 </small>
             </th>
         @endif
-        @if(false)
+        @if($company->hasSensorRecorderCounter())
             <th>
                 <i class="fa fa-users text-muted"></i><br>
-                <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
-                <small class="text-muted">
-                    @lang('Sensor') @lang('Recorder')
+                <small>
+                    {{ $company->getSensorRecorderCounterLabel() }}
                 </small>
             </th>
         @endif
@@ -321,7 +316,7 @@
                         {{ $startRecorder }}
                     @endif
                     <hr class="m-0">
-                    @if( Auth::user()->canEditRecorders() )
+                    @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
                         @php
                             $obs = $dispatchRegister->getObservation('end_recorder');
                         @endphp
@@ -376,26 +371,29 @@
 
             @if($company->hasSensorCounter())
                 <td width="10%" class="text-center">
-                    <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
-                        {{ $dispatchRegister->passengersBySensor }}
-                    </span>
-                    <hr class="m-0">
-                    <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
-                        {{ $totalPassengersBySensor }}
-                    </small>
-                </td>
-
-                <td width="10%" class="text-center {{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}">
-                    <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
-                        {{ $dispatchRegister->passengersBySensorTotal }}
-                    </span>
-                    <hr class="m-0">
-                    <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
-                        {{ $totalPassengersBySensorTotal }}
-                    </small>
+                    <div style="display: flex;">
+                        <div style="width: 50%">
+                            <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
+                                {{ $dispatchRegister->passengersBySensor }}
+                            </span>
+                            <hr class="m-0">
+                            <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
+                                {{ $totalPassengersBySensor }}
+                            </small>
+                        </div>
+                        <div class="{{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}" style="width: 50%">
+                            <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
+                                {{ $dispatchRegister->passengersBySensorTotal }}
+                            </span>
+                            <hr class="m-0">
+                            <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
+                                {{ $totalPassengersBySensorTotal }}
+                            </small>
+                        </div>
+                    </div>
                 </td>
             @endif
-            @if( false )
+            @if($company->hasSensorRecorderCounter())
                 <td width="10%" class="text-center">
                     <span class="tooltips" data-title="@lang('Round trip')">
                         {{ $dispatchRegister->passengersBySensorRecorder }}

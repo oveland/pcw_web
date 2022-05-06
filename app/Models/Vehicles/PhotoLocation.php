@@ -3,6 +3,8 @@
 namespace App\Models\Vehicles;
 
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -27,26 +29,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $data_faces
  * @property string|null $data_properties
  * @property int|null $uid
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereData($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereDataFaces($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereDataPersons($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereDataProperties($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereDisk($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereDispatchRegisterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereEffects($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation wherePath($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation wherePersons($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereRekognition($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereSide($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereUid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\PhotoLocation whereVehicleId($value)
- * @mixin \Eloquent
+ * @method static Builder|PhotoLocation whereCreatedAt($value)
+ * @method static Builder|PhotoLocation whereData($value)
+ * @method static Builder|PhotoLocation whereDataFaces($value)
+ * @method static Builder|PhotoLocation whereDataPersons($value)
+ * @method static Builder|PhotoLocation whereDataProperties($value)
+ * @method static Builder|PhotoLocation whereDate($value)
+ * @method static Builder|PhotoLocation whereDisk($value)
+ * @method static Builder|PhotoLocation whereDispatchRegisterId($value)
+ * @method static Builder|PhotoLocation whereEffects($value)
+ * @method static Builder|PhotoLocation whereId($value)
+ * @method static Builder|PhotoLocation whereLocationId($value)
+ * @method static Builder|PhotoLocation wherePath($value)
+ * @method static Builder|PhotoLocation wherePersons($value)
+ * @method static Builder|PhotoLocation whereRekognition($value)
+ * @method static Builder|PhotoLocation whereSide($value)
+ * @method static Builder|PhotoLocation whereType($value)
+ * @method static Builder|PhotoLocation whereUid($value)
+ * @method static Builder|PhotoLocation whereUpdatedAt($value)
+ * @method static Builder|PhotoLocation whereVehicleId($value)
+ * @mixin Eloquent
  */
 class PhotoLocation extends Model
 {

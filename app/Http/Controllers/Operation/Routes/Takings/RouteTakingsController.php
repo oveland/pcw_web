@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Operation\Routes\Takings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company\Company;
+use App\Models\Operation\FuelStation;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\RouteTaking;
 use App\Models\Vehicles\Vehicle;
@@ -43,12 +44,7 @@ class RouteTakingsController extends Controller
     public function form(DispatchRegister $dispatchRegister)
     {
         $company = $dispatchRegister->route->company;
-
-        $fuelStations = RouteTaking::STATIONS_FUEL;
-
-        if( $company->id == Company::YUMBENOS ){
-            $fuelStations = ['Estación 1', 'Estación 2', 'Estación 3'];
-        }
+        $fuelStations = $this->routeService->takings->getFuelStations($company);
 
         return view('operation.routes.takings.form', compact(['dispatchRegister', 'fuelStations']));
     }
@@ -88,6 +84,15 @@ class RouteTakingsController extends Controller
     public function taking(Request $request, DispatchRegister $dispatchRegister)
     {
         return response()->json($this->routeService->takings->taking($dispatchRegister, $request->all()));
+    }
+
+    /**
+     * @param DispatchRegister $dispatchRegister
+     * @return object
+     */
+    public function delete(DispatchRegister $dispatchRegister)
+    {
+        return response()->json($this->routeService->takings->deleteTakings($dispatchRegister));
     }
 
     /**
