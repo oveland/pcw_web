@@ -189,7 +189,7 @@ class RouteTaking extends Model
             'observations' => $this->observations,
             'user' => $this->user ? $this->user->toArray(true) : null,
             'isTaken' => $this->isTaken(),
-            'fuelStation' => $this->fuelStation->toArray(),
+            'fuelStation' => $this->fuelStation? $this->fuelStation->toArray() : (object)['name' => ''],
             'hasParent' => $this->hasParent(),
             'updatedAt' => $this->updated_at->toDateTimeString()
         ];
