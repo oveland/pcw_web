@@ -3,6 +3,7 @@
 namespace App\Models\Vehicles;
 
 use App\Http\Controllers\Utils\Geolocation;
+use App\Models\Passengers\Passenger;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
 use Carbon\Carbon;
@@ -11,13 +12,72 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
+trait BindsDynamically
+{
+    protected $connection = null;
+    protected $table = null;
+
+    public function bind(string $connection, string $table)
+    {
+        $this->setConnection($connection);
+        $this->setTable($table);
+    }
+
+    public function newInstance($attributes = [], $exists = false)
+    {
+        // Overridden in order to allow for late table binding.
+
+        $model = parent::newInstance($attributes, $exists);
+        $model->setTable($this->table);
+
+        return $model;
+    }
+
+    public function scopeForDate(Builder $query, $initialDate, $finalDate = null)
+    {
+        $indexViewId = $this->getIndexView($initialDate);
+        $indexViewFd = $this->getIndexView($finalDate);
+
+        $tableName = "locations";
+        if ($indexViewId === $indexViewFd || !$finalDate) {
+            $tableName = "locations$indexViewId";
+        }
+
+        $this->setTable($tableName);
+        return $query->from($tableName);
+    }
+
+    function getIndexView($forDate)
+    {
+        if (!$forDate) return null;
+
+        $indexView = "";
+
+        $forDate = explode(' ', $forDate)[0];
+
+        $format = Str::contains($forDate, "-") ? 'Y-m-d' : 'd/m/Y';
+        $date = Carbon::createFromFormat($format, $forDate);
+
+        $diffDays = Carbon::now()->diffInDays($date);
+
+        $indexNumber = $diffDays > 0 ? (floor(($diffDays - 1) / config('database.maintenance.locations.fragments.days')) + 1) : 0;
+        if ($indexNumber <= config('database.maintenance.locations.fragments.tables')) {
+            $indexView .= "_$indexNumber";
+        }
+
+        return $indexView;
+    }
+}
 
 /**
  * App\Models\Vehicles\Location
  *
  * @property int $id
  * @property int $version
- * @property string|null $date
+ * @property string|null| Carbon $date
  * @property Carbon $date_created
  * @property int|null $dispatch_register_id
  * @property float|null $distance
@@ -49,7 +109,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @mixin Eloquent
  * @property int|null $vehicle_status_id
  * @method static Builder|Location whereVehicleStatusId($value)
- * @method static Builder|DispatchRegister witOffRoads()
+ * @method static Builder|Location withOffRoads()
+ * @method static Builder|Location withPanic()
+ * @method static Builder|Location forDate($initialDate, $finalDate = null)
  * @property bool|null $speeding
  * @property-read DispatchRegister|null $dispatchRegister
  * @method static Builder|Location validCoordinates()
@@ -59,23 +121,24 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Vehicle|null $vehicle
  * @property-read VehicleStatus|null $vehicleStatus
  * @method static Builder|Location whereCurrentMileage($value)
- * @method static Builder|Location witSpeeding()
+ * @method static Builder|Location withSpeeding()
  * @property-read AddressLocation $addressLocation
- * @method static Builder|Location newModelQuery()
- * @method static Builder|Location newQuery()
- * @method static Builder|Location query()
+ * @property-read Passenger $passenger
  * @property string|null $ard_off_road
  * @method static Builder|Location whereArdOffRoad($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\Location withSpeeding()
+ * @property-read PhotoLocation $photo
+ * @property-read PhotoLocation[]|Collection $photos
  */
 class Location extends Model
 {
+    use BindsDynamically;
+
     const CREATED_AT = 'date_created';
     const UPDATED_AT = 'last_updated';
 
     protected $fillable = ['vehicle_id', 'date', 'latitude', 'longitude', 'orientation', 'odometer', 'status', 'speed', 'speeding', 'vehicle_status_id', 'distance', 'dispatch_register_id', 'off_road'];
 
-    function getDateFormat()
+    protected function getDateFormat()
     {
         return config('app.date_time_format');
     }
@@ -103,7 +166,8 @@ class Location extends Model
      */
     public function dispatchRegister()
     {
-        return $this->belongsTo(DispatchRegister::class);
+//        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id')->active();
+        return $this->belongsTo(DispatchRegister::class, 'dispatch_register_id', 'id');
     }
 
     /**
@@ -113,7 +177,7 @@ class Location extends Model
      */
     public function isValid()
     {
-        return ($this->latitude != 0 && $this->longitude != 0) ? true : false;
+        return $this->latitude != 0 && $this->longitude != 0;
     }
 
     /**
@@ -129,9 +193,18 @@ class Location extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWitOffRoads($query)
+    public function scopeWithOffRoads($query)
     {
         return $query->where('off_road', true);
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWithPanic($query)
+    {
+        return $query->where('vehicle_status_id', VehicleStatus::PANIC);
     }
 
     /**
@@ -145,7 +218,7 @@ class Location extends Model
 
     public function vehicle()
     {
-        return $this->belongsTo(Vehicle::class);
+        return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
     }
 
     public function vehicleStatus()
@@ -181,21 +254,33 @@ class Location extends Model
      */
     public function addressLocation()
     {
-        return $this->hasOne(AddressLocation::class);
+        return $this->hasOne(AddressLocation::class, 'location_id', 'id');
     }
 
-    public function getAddress($refresh = false)
+    /**
+     * @return HasOne
+     */
+    public function passenger()
+    {
+        return $this->hasOne(Passenger::class, 'location_id', 'id')->orderByDesc('id');
+    }
+
+    public function getAddress($refresh = false, $force = false)
     {
         $addressLocation = $this->addressLocation;
         return "";
 
-        if ($refresh && !$addressLocation) {
-            $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude);
-            $this->addressLocation()->create([
-                'address' => $address,
-                'status' => 0,
-            ]);
-            sleep(0.1);
+        if ($refresh || !$addressLocation || !$addressLocation->address) {
+            $address = Geolocation::getAddressFromCoordinates($this->latitude, $this->longitude, $force);
+            if ($addressLocation) {
+                $addressLocation->address = $address;
+                $addressLocation->save();
+            } else {
+                $this->addressLocation()->create([
+                    'address' => $address,
+                    'status' => 0,
+                ]);
+            }
         }
 
         return $addressLocation ? $addressLocation->address : $address;
@@ -219,10 +304,29 @@ class Location extends Model
 
     public function getTotalOffRoad($routeId)
     {
-        $routeId = $routeId ? $routeId : ($this->dispatch_register_id ? $this->dispatchRegister->route->id : 'empty');
-        
-        $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
+        if ($this->dispatch_register_id && $this->dispatchRegister->route_id == $routeId) {
+            return $this->dispatchRegister->offRoads()->count();
+        }
 
-        return isset($ardOffRoad[$routeId]) ? $ardOffRoad[$routeId]['tt'] : 0;
+//        $routeId = $routeId ? $routeId : ($this->dispatch_register_id ? $this->dispatchRegister->route->id : 'empty');
+//        $ardOffRoad = $this->ard_off_road ? json_decode($this->ard_off_road, true) : [];
+//
+//        if (isset($ardOffRoad[$routeId])) {
+//            return intval($ardOffRoad[$routeId]['tt']);
+//        } else if ($this->dispatchRegister) {
+//            return $this->dispatchRegister->locations()->withOffRoads()->count();
+//        }
+
+        return 0;
+    }
+
+    public function photo()
+    {
+        return $this->hasOne(PhotoLocation::class);
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(PhotoLocation::class)->orderBy('side');
     }
 }

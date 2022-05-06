@@ -62,7 +62,7 @@ class VehicleTotalsSheet implements FromCollection, ShouldAutoSize, Responsable,
                 __('Others') => intval($totals->others),                                                        # O CELL
                 __('Net production') => intval($totals->netProduction),                                         # P CELL
                 __('Advance') => intval($totals->advance),                                                      # Q CELL
-                __('Passengers advance') => intval($totals->passengersAdvance),                                 # R CELL
+                __('Passengers taken') => intval($totals->passengersTaken),                                   # R CELL
                 __('Balance') => intval($totals->balance),                                                      # S CELL
                 __('Passengers balance') => intval($totals->passengersBalance),                                 # T CELL
                 __('Observations') => $observations,                                                            # U CELL

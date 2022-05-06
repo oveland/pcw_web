@@ -118,6 +118,8 @@ class DispatchService
             'options' => [
                 'showRecorders' => $this->company->hasRecorderCounter(),
                 'showSensor' => $this->company->hasSeatSensorCounter(),
+                'showSensorRecorder' => $this->company->hasSensorRecorderCounter(),
+                'sensorRecorderLabel' => $this->company->getSensorRecorderCounterLabel(),
             ],
             'report' => $onlyTotals ? [] : $dispatchRegisters,
             'totals' => $this->getTotals($dispatchRegisters),
@@ -141,6 +143,9 @@ class DispatchService
 
         return [
             'passengers' => (object)[
+                'count' => intval($dispatchRegisters->sum(function ($d) {
+                    return $d->passengers->taken->count;
+                })),
                 'recorders' => (object)[
                     'count' => $dispatchRegisters->sum(function ($d) {
                         return $d->passengers->recorders->count;
@@ -149,26 +154,13 @@ class DispatchService
                 'sensor' => [
                     'count' => $dispatchRegisters->sum(function ($d) {
                         return $d->passengers->sensor->count;
-                    }),
-                    'tariff' => (object)[
-                        'a' => (object)[
-                            'totalCharge' => $dispatchRegisters->sum(function ($d) {
-                                return $d->passengers->sensor->tariff->a->totalCharge;
-                            }),
-                            'totalCounted' => $dispatchRegisters->sum(function ($d) {
-                                return $d->passengers->sensor->tariff->a->totalCounted;
-                            })
-                        ],
-                        'b' => (object)[
-                            'totalCharge' => $dispatchRegisters->sum(function ($d) {
-                                return $d->passengers->sensor->tariff->b->totalCharge;
-                            }),
-                            'totalCounted' => $dispatchRegisters->sum(function ($d) {
-                                return $d->passengers->sensor->tariff->b->totalCounted;
-                            })
-                        ],
-                    ]
-                ]
+                    })
+                ],
+                'takings' => (object)[
+                    'count' => $dispatchRegisters->sum(function ($d) {
+                        return $d->passengers->takings->count;
+                    })
+                ],
             ],
             'totalProduction' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->totalProduction;
@@ -197,8 +189,8 @@ class DispatchService
             'balance' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->balance;
             }),
-            'passengersAdvance' => $dispatchRegisters->sum(function ($d) {
-                return $d->takings->passengersAdvance;
+            'passengersTaken' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->passengersTaken;
             }),
             'passengersBalance' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->passengersBalance;
@@ -221,6 +213,9 @@ class DispatchService
     {
         return [
             'passengers' => (object)[
+                'count' => intval($dispatchRegisters->average(function ($d) {
+                    return $d->passengers->taken->count;
+                })),
                 'recorders' => (object)[
                     'count' => intval($dispatchRegisters->average(function ($d) {
                         return $d->passengers->recorders->count;
@@ -229,26 +224,13 @@ class DispatchService
                 'sensor' => (object)[
                     'count' => intval($dispatchRegisters->average(function ($d) {
                         return $d->passengers->sensor->count;
-                    })),
-                    'tariff' => (object)[
-                        'a' => (object)[
-                            'totalCharge' => $dispatchRegisters->average(function ($d) {
-                                return $d->passengers->sensor->tariff->a->totalCharge;
-                            }),
-                            'totalCounted' => intval($dispatchRegisters->average(function ($d) {
-                                return $d->passengers->sensor->tariff->a->totalCounted;
-                            }))
-                        ],
-                        'b' => (object)[
-                            'totalCharge' => $dispatchRegisters->average(function ($d) {
-                                return $d->passengers->sensor->tariff->b->totalCharge;
-                            }),
-                            'totalCounted' => intval($dispatchRegisters->average(function ($d) {
-                                return $d->passengers->sensor->tariff->b->totalCounted;
-                            }))
-                        ],
-                    ]
-                ]
+                    }))
+                ],
+                'takings' => (object)[
+                    'count' => intval($dispatchRegisters->average(function ($d) {
+                        return $d->passengers->takings->count;
+                    }))
+                ],
             ],
             'totalProduction' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->totalProduction;
@@ -274,8 +256,8 @@ class DispatchService
             'advance' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->advance;
             }),
-            'passengersAdvance' => $dispatchRegisters->average(function ($d) {
-                return $d->takings->passengersAdvance;
+            'passengersTaken' => $dispatchRegisters->average(function ($d) {
+                return $d->takings->passengersTaken;
             }),
             'passengersBalance' => $dispatchRegisters->average(function ($d) {
                 return $d->takings->passengersBalance;

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueI18n from "vue-i18n";
 
 // WARNING: file es.json is a symbolic link to PATH_TO_LARAVEL)PROJECT/resources/lang/es.json
-import ES from './es';
+import ES from './../../lang/es.json';
 
 Vue.use(VueI18n);
 

@@ -2,7 +2,8 @@
 
 namespace App\Models\Vehicles;
 
-use const Grpc\CALL_OK;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,21 +11,19 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int|null $id_status
  * @property string|null $des_status
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereDesStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereIdStatus($value)
- * @mixin \Eloquent
+ * @method static Builder|VehicleStatus whereDesStatus($value)
+ * @method static Builder|VehicleStatus whereIdStatus($value)
+ * @mixin Eloquent
  * @property string|null $main_class
  * @property string|null $icon_class
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereIconClass($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereMainClass($value)
+ * @method static Builder|VehicleStatus whereIconClass($value)
+ * @method static Builder|VehicleStatus whereMainClass($value)
  * @property-read mixed $id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus query()
  * @property int|null $order
+ * @method static Builder|VehicleStatus whereOrder($value)
  * @property bool|null $show_filter
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Vehicles\VehicleStatus whereShowFilter($value)
+ * @method static Builder|VehicleStatus visibleFilter()
+ * @method static Builder|VehicleStatus whereShowFilter($value)
  */
 class VehicleStatus extends Model
 {
@@ -34,6 +33,7 @@ class VehicleStatus extends Model
     const POWER_OFF = 6;
     const PARKED = 3;
     const IN_REPAIR = 31;
+    const PANIC = 4;
 
     protected $table = 'status_vehi';
 
@@ -72,5 +72,14 @@ class VehicleStatus extends Model
     public function isWithoutGPSSignal()
     {
         return $this->id == self::WITHOUT_GPS_SIGNAL;
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeVisibleFilter($query)
+    {
+        return $query->where('show_filter', true);
     }
 }

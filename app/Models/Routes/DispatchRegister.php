@@ -5,6 +5,7 @@ namespace App\Models\Routes;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
+use App\Models\Operation\FuelStation;
 use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Passengers\Passenger;
 use App\Models\Users\User;
@@ -173,10 +174,26 @@ use Illuminate\Support\Str;
  */
 class DispatchRegister extends Model
 {
+    const CREATED_AT = 'date_created';
+    const UPDATED_AT = 'last_updated';
+
     const IN_PROGRESS = "En camino";
     const COMPLETE = "Terminó";
     const CANCELLED = "No terminó";
     const TAKINGS = "takings";
+
+    protected function newRelatedInstance($class)
+    {
+        if ($class instanceof Model) {
+            return $class;
+        }
+
+        return tap(new $class, function ($instance) {
+            if (!$instance->getConnectionName()) {
+                $instance->setConnection($this->connection);
+            }
+        });
+    }
 
     function getDateFormat()
     {
@@ -187,7 +204,7 @@ class DispatchRegister extends Model
      * @param $date
      * @return string
      */
-    public function getDateAttribute($date)
+    function getDateAttribute($date)
     {
         if (Str::contains($date, '-')) {
             return Carbon::createFromFormat('Y-m-d', explode(' ', $date)[0])->toDateString();
@@ -196,22 +213,22 @@ class DispatchRegister extends Model
         return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0])->toDateString();
     }
 
-    public function getTimeAttribute($time)
+    function getTimeAttribute($time)
     {
         return explode('.', $time)[0];
     }
 
-    public function getDepartureTimeAttribute($departure_time)
+    function getDepartureTimeAttribute($departure_time)
     {
         return StrTime::toString($departure_time);
     }
 
-    public function getArrivalTimeAttribute($arrival_time)
+    function getArrivalTimeAttribute($arrival_time)
     {
         return StrTime::toString($arrival_time);
     }
 
-    public function reports()
+    function reports()
     {
         return $this->hasMany(Report::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
@@ -220,23 +237,27 @@ class DispatchRegister extends Model
      * @param string $order
      * @return HasMany
      */
-    public function locations($order = 'asc')
+    function locations($order = 'asc')
     {
-        return $this->hasMany(new Location(), 'dispatch_register_id', 'id')->orderBy('date', $order);
+        $location = new Location();
+        $location->forDate($this->date);
+        return $this->hasMany($location, 'dispatch_register_id', 'id')->orderBy('date', $order);
     }
 
     /**
      * @return HasMany
      */
-    public function offRoads()
+    function offRoads()
     {
-        return $this->hasMany(Location::class, 'dispatch_register_id', 'id')->where('off_road', true)->orderBy('date', 'asc');
+        $location = new Location();
+        $location->forDate($this->date);
+        return $this->hasMany($location, 'dispatch_register_id', 'id')->where('off_road', true)->orderBy('date', 'asc');
     }
 
     /**
      * @return BelongsTo
      */
-    public function route()
+    function route()
     {
         return $this->belongsTo(Route::class);
     }
@@ -244,48 +265,47 @@ class DispatchRegister extends Model
     /**
      * @return BelongsTo
      */
-    public function vehicle()
+    function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function getParsedDate()
+    function getParsedDate()
     {
         return Carbon::createFromFormat('Y-m-d', $this->date);
     }
 
-    public function scopeWhereVehicle($query, Vehicle $vehicle = null)
+    function scopeWhereVehicle($query, Vehicle $vehicle = null)
     {
         if ($vehicle) $query = $query->where('vehicle_id', $vehicle->id);
         return $query;
     }
 
-    public function scopeWhereDriver($query, Driver $driver = null)
+    function scopeWhereDriver($query, Driver $driver = null)
     {
         if ($driver) $query = $query->where(function ($q) use ($driver) {
             return $q->where('driver_code', $driver->code)->orWhere('driver_id', $driver->id);
         });
 
-//        dd($query->toSql(), $query->getBindings(), $query->get());
         return $query;
     }
 
-    public function driver()
+    function driver()
     {
         return $this->belongsTo(Driver::class, 'driver_code', 'code');
     }
 
-    public function driverName()
+    function driverName()
     {
         $driver = $this->driver;
         return $driver ? $driver->fullName() : ($this->driver_code ? $this->driver_code : __('Not assigned'));
     }
 
     /**
-     * @param DispatchRegister $query
+     * @param DispatchRegister|Builder $query
      * @return mixed
      */
-    public function scopeCompleted($query)
+    function scopeCompleted(Builder $query)
     {
         return $query->where('status', $this::COMPLETE);
     }
@@ -295,7 +315,7 @@ class DispatchRegister extends Model
      * @param $type
      * @return mixed
      */
-    public function scopeType($query, $type)
+    function scopeType($query, $type)
     {
         switch ($type) {
             case 'completed':
@@ -318,12 +338,12 @@ class DispatchRegister extends Model
         }
     }
 
-    public function scopeCancelled($query)
+    function scopeCancelled($query)
     {
         return $query->where('status', 'like', $this::CANCELLED . '%');
     }
 
-    public function scopeActive($query, $completedTurns = null)
+    function scopeActive($query, $completedTurns = null)
     {
         if ($completedTurns) {
             return $query->completed();
@@ -334,78 +354,90 @@ class DispatchRegister extends Model
         });
     }
 
-    public function complete()
+    function complete()
     {
         return $this->status == $this::COMPLETE;
     }
 
-    public function isActive()
+    function isActive()
     {
         return $this->status == $this::COMPLETE || $this->status == $this::IN_PROGRESS;
     }
 
-    public function inProgress()
+    function isCancelled()
+    {
+        return Str::contains($this->status, $this::CANCELLED);
+    }
+
+    function inProgress()
     {
         return $this->status == $this::IN_PROGRESS;
     }
 
-    public function speedingReport()
+    function speedingReport()
     {
         return $this->hasMany(Speeding::class)->orderBy('date', 'asc');
     }
 
-    public function parkingReport()
+    function parkingReport()
     {
         return $this->hasMany(ParkingReport::class)->orderBy('date', 'asc');
     }
 
-    public function controlPointTimeReports()
+    function controlPointTimeReports()
     {
         return $this->hasMany(ControlPointTimeReport::class)->orderBy('date', 'asc');
     }
 
-    public function getRouteTime($withZero = false)
+    function getRouteTime($withZero = false)
     {
         return $this->complete() ? StrTime::subStrTime($this->arrival_time, $this->departure_time) : ($withZero ? '00:00:00' : '--:--:--');
     }
 
-    public function getRouteTimeAttribute()
+    function getRouteTimeAttribute()
     {
         return $this->getRouteTime(true);
     }
 
-    public function departureFringe()
+    function departureFringe()
     {
         return $this->belongsTo(Fringe::class, 'departure_fringe_id', 'id');
     }
 
-    public function arrivalFringe()
+    function arrivalFringe()
     {
         return $this->belongsTo(Fringe::class, 'arrival_fringe_id', 'id');
     }
 
-    public function getStatusString()
+    function getStatusString()
     {
         return explode('.', $this->status)[0];
     }
 
-    public function user()
+    function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function getPassengersBySensorAttribute()
+    function getPassengersBySensorAttribute()
     {
+        $initialCount = $this->initial_sensor_counter;
+        $finalCount = $this->final_sensor_counter;
+
         $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
-        if ($this->inProgress() && $currentSensor && isset($currentSensor->sensorCounter)) {
-            $hasReset = ($currentSensor->sensorCounter < $this->initial_sensor_counter);
-            return $currentSensor->sensorCounter - ($hasReset ? 0 : $this->initial_sensor_counter);
-        }
-        $hasReset = ($this->final_sensor_counter < $this->initial_sensor_counter);
-        return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_sensor_counter));
+        if ($this->inProgress() && $this->getParsedDate()->isToday() && $currentSensor && isset($currentSensor->sensorCounter)) $finalCount = $currentSensor->sensorCounter;
+
+        $firstPassenger = Passenger::where('dispatch_register_id', $this->id)->orderBy('date')->first();
+        $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
+
+        if ($firstPassenger && !$finalCount) $initialCount = $firstPassenger->total_prev;
+        if ($lastPassenger && !$finalCount) $finalCount = $lastPassenger->total;
+
+        $hasReset = $finalCount < $initialCount;
+        return $finalCount - ($hasReset ? 0 : $initialCount);
     }
 
-    public function getPassengersBySensorTotalAttribute()
+    function getPassengersBySensorTotalAttribute()
     {
         if ($this->inProgress() && false) {
             $lastPassenger = Passenger::where('dispatch_register_id', $this->id)->orderByDesc('date')->first();
@@ -420,18 +452,18 @@ class DispatchRegister extends Model
         return ($this->final_sensor_counter - ($hasReset ? 0 : $this->initial_front_sensor_counter));
     }
 
-    public function getInitialPassengersBySensorRecorderAttribute()
+    function getInitialPassengersBySensorRecorderAttribute()
     {
         $hasReset = ($this->final_sensor_recorder < $this->initial_sensor_recorder);
         return $hasReset ? 0 : $this->initial_sensor_recorder;
     }
 
-    public function getFinalPassengersBySensorRecorderAttribute()
+    function getFinalPassengersBySensorRecorderAttribute()
     {
         return $this->final_sensor_recorder;
     }
 
-    public function getPassengersBySensorRecorderAttribute()
+    function getPassengersBySensorRecorderAttribute()
     {
         if ($this->inProgress()) {
             $currentSensor = CurrentSensorPassengers::whereVehicle($this->vehicle);
@@ -447,7 +479,7 @@ class DispatchRegister extends Model
         return ($this->final_sensor_recorder - ($hasReset ? 0 : $this->initial_sensor_recorder));
     }
 
-    public function calculateErrorPercent($reference, $value)
+    function calculateErrorPercent($reference, $value)
     {
         if (!$reference || $reference == 0) $reference = 1;
         return number_format((100 - $value * 100 / $reference), 1, '.', '');
@@ -461,7 +493,7 @@ class DispatchRegister extends Model
      * @param $routeId
      * @return mixed
      */
-    public function scopeFindAllByDateAndVehicleAndRoute($query, $date, $vehicleId = null, $routeId = null)
+    function scopeFindAllByDateAndVehicleAndRoute($query, $date, $vehicleId = null, $routeId = null)
     {
         return $query->completed()
             ->whereDateOrRange($date)
@@ -471,65 +503,69 @@ class DispatchRegister extends Model
             ->get();
     }
 
-    public function onlyControlTakings()
+    function onlyControlTakings()
     {
         return $this->status === self::TAKINGS;
     }
 
-    public function forNormalTakings()
+    function forNormalTakings()
     {
         return !$this->onlyControlTakings();
     }
 
-    public function getRouteFields()
+    function getRouteFields()
     {
         $driver = $this->driver;
-        $driveName = $driver ? $driver->fullName() : __('Unassigned');
+        $driveName = $driver ? $driver->fullName() : $this->driver_code;
+        $driveName = $driveName ?? __('Unassigned');
+
         return (object)[
             'id' => $this->id,
             'turn' => $this->turn,
-            'roundTrip' => $this->round_trip,
-            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
-            'driverName' => $driveName,
-            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+            'trip' => $this->round_trip,
+            'departure' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+            'driver' => $driveName,
+            'route' => $this->onlyControlTakings() ? [] : $this->route->name,
         ];
     }
 
-    public function getAPIFields($short = false)
+    function getAPIFields($short = false)
     {
         $passengers = $this->passengers;
         $takings = $this->takings;
 
-        if ($short) return (object)[
-            'id' => $this->id,
-            'date' => $this->getParsedDate()->toDateString(),
-            'turn' => $this->turn,
+        if ($short) {
+            return (object)[
+                'id' => $this->id,
+                'date' => $this->getParsedDate()->toDateString(),
+                'turn' => $this->turn,
 
-            'round_trip' => $this->round_trip,
-            'roundTrip' => $this->round_trip,
+                'round_trip' => $this->round_trip,
+                'roundTrip' => $this->round_trip,
 
-            'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
-            'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+                'departure_time' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
+                'departureTime' => $this->onlyControlTakings() ? $this->time : $this->departure_time,
 
-            'routeTime' => $this->getRouteTime(),
+                'routeTime' => $this->getRouteTime(),
 
-            'arrival_time_scheduled' => $this->arrival_time_scheduled,
-            'arrivalTimeScheduled' => $this->arrival_time_scheduled,
+                'arrival_time_scheduled' => $this->arrival_time_scheduled,
+                'arrivalTimeScheduled' => $this->arrival_time_scheduled,
 
-            'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
-            'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+                'arrival_time' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
+                'arrivalTime' => $this->onlyControlTakings() ? '' : ($this->complete() ? $this->arrival_time : '--:--:--'),
 
-            'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
+                'route' => $this->onlyControlTakings() ? [] : $this->route->getAPIFields(true),
 
-            'passengers' => $passengers,
-            'takings' => $takings && $this->vehicle->company->hasRouteTakings() ? $takings->getAPIFields() : [],
-            'onlyControlTakings' => $this->onlyControlTakings(),
-            'forNormalTakings' => $this->forNormalTakings(),
-            'processTakings' => $this->processTakings(),
+                'passengers' => $passengers,
+                'takings' => $takings && $this->vehicle->company->hasRouteTakings() ? $takings->getAPIFields() : [],
+                'onlyControlTakings' => $this->onlyControlTakings(),
+                'forNormalTakings' => $this->forNormalTakings(),
+                'processTakings' => $this->processTakings(),
 
-            'forTakings' => $this->onlyControlTakings(),
-            'mileage' => $this->mileage
-        ];
+                'forTakings' => $this->onlyControlTakings(),
+                'mileage' => $this->mileage
+            ];
+        }
 
         $driver = $this->driver;
         $driveName = $driver ? $driver->fullName() : __('Unassigned');
@@ -579,7 +615,7 @@ class DispatchRegister extends Model
         ];
     }
 
-    public function displayObservationsCounter($observationsCounter)
+    function displayObservationsCounter($observationsCounter)
     {
         $observationsCounterDisplay = '';
         if ($observationsCounter) {
@@ -598,17 +634,17 @@ class DispatchRegister extends Model
         return $observationsCounterDisplay;
     }
 
-    public function displayInitialObservationsCounter()
+    function displayInitialObservationsCounter()
     {
         return $this->displayObservationsCounter($this->initial_counter_obs);
     }
 
-    public function displayFinalObservationsCounter()
+    function displayFinalObservationsCounter()
     {
         return $this->displayObservationsCounter($this->final_counter_obs);
     }
 
-    public function hasObservationCounter()
+    function hasObservationCounter()
     {
         return $this->vehicle->plate == 'VCK-531';
     }
@@ -619,7 +655,7 @@ class DispatchRegister extends Model
      * @param string | null $finalDate
      * @return DispatchRegister | Builder
      */
-    public function scopeWhereDateOrRange($query, $initialDate, $finalDate = null)
+    function scopeWhereDateOrRange($query, $initialDate, $finalDate = null)
     {
         if ($finalDate) {
             $query = $query->whereBetween('date', [explode(' ', $initialDate)[0], explode(' ', $finalDate)[0]]);
@@ -636,7 +672,7 @@ class DispatchRegister extends Model
      * @param $routeId
      * @return Builder | DispatchRegister
      */
-    public function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
+    function scopeWhereCompanyAndRouteId($query, Company $company, $routeId = null)
     {
         return $query->whereCompanyAndRouteAndVehicle($company, $routeId);
     }
@@ -648,41 +684,49 @@ class DispatchRegister extends Model
      * @param $vehicleId
      * @return Builder | DispatchRegister
      */
-    public function scopeWhereCompanyAndRouteAndVehicle($query, Company $company, $routeId = null, $vehicleId = null)
+    function scopeWhereCompanyAndRouteAndVehicle($query, Company $company, $routeId = null, $vehicleId = null)
     {
-        return $query
-            ->where(function ($query) use ($company, $routeId, $vehicleId) {
-                if ($vehicleId == 'all' || $vehicleId == null) {
-                    $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
-                } else if ($vehicleId) {
-                    $query = $query->where('vehicle_id', $vehicleId);
+        $query = $query->where(function ($query) use ($company, $routeId, $vehicleId) {
+            if ($vehicleId == 'all' || $vehicleId == null) {
+                $query = $query->whereIn('vehicle_id', $company->userVehicles($routeId)->pluck('id'));
+            } else if ($vehicleId) {
+                $query = $query->where('vehicle_id', $vehicleId);
+            }
+
+            $query->where(function (Builder $subQuery) use ($company, $routeId, $vehicleId) {
+                $user = Auth::user();
+
+                if ($user && $routeId == 'all') {
+                    $subQuery = $subQuery->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
                 }
 
-                $query->where(function (Builder $subQuery) use ($company, $routeId, $vehicleId) {
-                    $user = Auth::user();
+                if ($routeId != null && $routeId != 'all') {
+                    if ($company->hasADD() && $vehicleId == 'all') {
+                        $subQuery = $subQuery->orWhere('route_id', intval($routeId));
+                    } else {
+                        $subQuery = $subQuery->where('route_id', intval($routeId));
 
-                    if ($user && $routeId == 'all') {
-                        $subQuery = $subQuery->whereIn('route_id', $user->getUserRoutes($company)->pluck('id'));
-                    }
-
-                    if ($routeId != null && $routeId != 'all') {
-                        if ($company->hasADD() && $vehicleId == 'all') {
-                            $subQuery = $subQuery->orWhere('route_id', intval($routeId));
-                        } else {
-                            $subQuery = $subQuery->where('route_id', intval($routeId));
-                        }
-
-                        $route = Route::find($routeId);
-                        if ($route->as_group) {
+                        $route = Route::find(intval($routeId));
+                        if ($route) {
                             $subQuery = $subQuery->orWhereIn('route_id', $route->subRoutes->pluck('id'));
                         }
                     }
+                }
 
-                    return $subQuery;
-                });
-
-                return $query;
+                return $subQuery;
             });
+
+            return $query;
+        });
+
+        $user = Auth::user();
+
+        $route = Route::find(intval($routeId));
+        if ($route && $vehicleId == 'all' && $user && !$user->isProprietary()) {
+            $query = $query->orWhereIn('route_id', $route->subRoutes->pluck('id'));
+        }
+
+        return $query;
     }
 
     /**
@@ -693,7 +737,7 @@ class DispatchRegister extends Model
      * @param null $vehicleId
      * @return DispatchRegister | Builder
      */
-    public function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
+    function scopeWhereCompanyAndDateAndRouteIdAndVehicleId($query, Company $company, $date, $routeId = null, $vehicleId = null)
     {
         return $query->whereDateOrRange($date)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId);
     }
@@ -707,7 +751,7 @@ class DispatchRegister extends Model
      * @param null $vehicleId
      * @return DispatchRegister | Builder
      */
-    public function scopeWhereCompanyAndDateRangeAndRouteIdAndVehicleId($query, Company $company, $initialDate, $finalDate = null, $routeId = null, $vehicleId = null)
+    function scopeWhereCompanyAndDateRangeAndRouteIdAndVehicleId($query, Company $company, $initialDate, $finalDate = null, $routeId = null, $vehicleId = null)
     {
         return $query->whereDateOrRange($initialDate, $finalDate)->whereCompanyAndRouteAndVehicle($company, $routeId, $vehicleId)
             ->with('vehicle')
@@ -716,7 +760,7 @@ class DispatchRegister extends Model
             ->with('user');
     }
 
-    public function hasValidOffRoad()
+    function hasValidOffRoad()
     {
         $offRoadPercent = $this->getOffRoadPercent();
         $invalidGPSPercent = $this->invalidGPSPercent();
@@ -724,15 +768,15 @@ class DispatchRegister extends Model
         return $offRoadPercent < 2 && $invalidGPSPercent < 2 || $offRoadPercent >= 2;
     }
 
-    public function getOffRoadPercent()
+    function getOffRoadPercent()
     {
         $totalLocations = $this->locations()->count();
         $totalOffRoad = $totalLocations ? $this->getTotalOffRoad() : 0;
 
-        return $totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0;
+        return min([$totalOffRoad ? number_format(100 * $totalOffRoad / $totalLocations, 1, '.', '') : 0, 100]);
     }
 
-    public function invalidGPSPercent()
+    function invalidGPSPercent()
     {
         $totalLocations = $this->locations()->count();
         $totalInvalidGPS = $totalLocations ? $this->locations()->where('vehicle_status_id', VehicleStatus::WITHOUT_GPS_SIGNAL)->count() : 0;
@@ -740,7 +784,7 @@ class DispatchRegister extends Model
         return $totalInvalidGPS ? number_format(100 * $totalInvalidGPS / $totalLocations, 1, '.', '') : 0;
     }
 
-    public function getRouteDistance($withFormat = false)
+    function getRouteDistance($withFormat = false)
     {
         if ($this->inProgress()) return 0;
 
@@ -752,32 +796,43 @@ class DispatchRegister extends Model
         return $routeDistance;
     }
 
-    public function getTotalOffRoad()
+    function getTotalOffRoad()
     {
         if ($this->inProgress() || $this->getRouteDistance() < 5000) return 0;
 
-
-        $lastLocation = $this->locations('desc')->limit(1)->get()->first();
-
-        return $lastLocation ? $lastLocation->getTotalOffRoad($this->route->id) : 0;
+        return $this->offRoads()->count();
     }
 
-    public function getTotalOffRoadAttribute()
+    function getTotalOffRoadAttribute()
     {
         return $this->getTotalOffRoad();
     }
 
-    public function getPassengersAttribute()
+    function getPassengersAttribute()
     {
-        return (object)[
-            'recorders' => $this->getPassengersByRecorder(),
-            'sensor' => $this->getPassengersBySensor()
-        ];
+        $passengers = collect([
+           'recorders' => $this->getPassengersByRecorder(),
+           'sensor' => $this->getPassengersBySensor(),
+           'takings' => $this->getPassengersByTakings(),
+        ]);
+        $counter = $this->getCounterForTakings();
+        $passengers->put('taken', $passengers->get($counter));
+
+        return (object) $passengers->toArray();
     }
 
-    public function getPassengersByRecorder()
+    function getPassengersTakings() {
+        $counter = $this->getCounterForTakings();
+        return $this->passengers->$counter;
+    }
+
+    function getPassengersBy($counter) {
+        return $this->passengers->$counter;
+    }
+
+    function getPassengersByRecorder()
     {
-        if ($this->route && $this->route->company->hasSeatSensorCounter()) {
+        if ($this->route && $this->route->company_id == Company::YUMBENOS) {
             return $this->getPassengersBySensor();
         }
 
@@ -795,23 +850,14 @@ class DispatchRegister extends Model
         ];
     }
 
-    public function getPassengersBySensor()
+    function getPassengersBySensor()
     {
-        $tariffs = collect(\DB::select("
-            SELECT tariff, sum(counted) \"totalCounted\", tariff * sum(counted) \"totalCharge\"
-            FROM passengers
-            WHERE dispatch_register_id = $this->id
-            GROUP BY tariff
-            ORDER BY tariff
-        "));
-
-
         $default = (object)[
             'tariff' => 0,
             'totalCounted' => 0,
             'totalCharge' => 0,
         ];
-        //$tariffs = collect([$default, $default]);
+        $tariffs = collect([$default, $default]);
 
         return (object)[
             'start' => $this->initial_sensor_counter,
@@ -825,7 +871,21 @@ class DispatchRegister extends Model
         ];
     }
 
-    public function routeTakings()
+    function getPassengersByTakings() {
+        return $this->getPassengersBySensorRecorder();
+    }
+
+    function getPassengersBySensorRecorder()
+    {
+        return (object)[
+            'start' => $this->initial_sensor_recorder,
+            'end' => $this->final_sensor_recorder,
+            'count' => $this->passengersBySensorRecorder,
+            'mileage' => $this->mileage,
+        ];
+    }
+
+    function routeTakings()
     {
         return $this->hasOne(RouteTaking::class);
     }
@@ -833,26 +893,26 @@ class DispatchRegister extends Model
     /**
      * @return RouteTaking
      */
-    public function getTakingsAttribute()
+    function getTakingsAttribute()
     {
+        $this->refresh();
         $takings = $this->routeTakings;
 
         if (!$takings) {
             $takings = new RouteTaking();
-            if($this->route && $this->route->company->hasSeatSensorCounter()) {
-                $takings->station_fuel_id = 0;
-            }
-            $takings->updated_at = Carbon::now();
             $takings->dispatchRegister()->associate($this);
+
+            $fuelStations = FuelStation::allByCompany($this->route->company);
+            $takings->fuelStation()->associate($fuelStations->first());
         }
 
         if (!$this->onlyControlTakings()) {
-            $passengers = $this->getPassengersByRecorder()->count;
+            $passengers = $this->getPassengersBy( $this->getCounterForTakings() )->count;
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
             $totalProduction = $takings->passenger_tariff * $passengers;
 
-            if ($this->route && $this->route->company->hasSeatSensorCounter()) {
+            if ($this->route && $this->route->company_id == Company::YUMBENOS) {
                 $totalProduction = $this->final_charge - $this->initial_charge;
             }
 
@@ -873,7 +933,7 @@ class DispatchRegister extends Model
             $takings->control = 0;
             $takings->fuel = 0;
             $takings->fuel_gallons = 0;
-            $takings->station_fuel_id = null;
+            $takings->fuel_station_id = null;
             $takings->bonus = 0;
             $takings->others = 0;
             $takings->net_production = 0;
@@ -890,7 +950,7 @@ class DispatchRegister extends Model
         return !(!$this->vehicle->process_takings && ($this->date > $this->vehicle->to_date_takings || !$this->vehicle->to_date_takings));
     }
 
-    public function getMileageAttribute()
+    function getMileageAttribute()
     {
 //        return ($this->end_odometer - $this->start_odometer) / 1000;
         if (!$this->route) return 0;
@@ -899,7 +959,7 @@ class DispatchRegister extends Model
         return $lastControlPoint ? $lastControlPoint->distance_from_dispatch / 1000 : 0;
     }
 
-    public function processedByARD()
+    function processedByARD()
     {
         return $this->ard_route_id && $this->ard_route_id != $this->route_id && auth()->user()->isAdmin();
     }
@@ -907,11 +967,99 @@ class DispatchRegister extends Model
     /**
      * @return HasOne | DispatcherVehicle
      */
-    public function dispatcherVehicle()
+    function dispatcherVehicle()
     {
         return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')->where('dispatch_id', $this->dispatch_id);
     }
 
-    const CREATED_AT = 'date_created';
-    const UPDATED_AT = 'last_updated';
+    function getObservation($field = null): DrObservation
+    {
+        $field = __($field);
+        $drObs = $this->hasOne(DrObservation::class)->where('field', $field)->first();
+
+        if (!$drObs) {
+            $user = Auth::user();
+            $drObs = new DrObservation();
+            $drObs->field = $field;
+            $drObs->dispatchRegister()->associate($this);
+            $drObs->user()->associate($user);
+
+            if ($user->isSuperAdmin()) {
+                $drObs->observation = 'Por solicitud grupo de soporte';
+            }
+        }
+
+        return $drObs;
+    }
+
+    function getPassengersAccumulated($from = null)
+    {
+
+        $from = $from ?: $this->date;
+
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->route->company, $from, null, $this->route_id, $this->vehicle_id)
+            ->completed()
+            ->where('id', '<=', $this->id)
+            ->get();
+
+        $dispatchRegistersNoTaken = $dispatchRegisters->filter(function (DispatchRegister $dispatchRegister) {
+            return !$dispatchRegister->takings->isTaken() // Exclude turns already taken
+                || $dispatchRegister->id == $this->id // Includes current turn
+                || $dispatchRegister->takings->parent_takings_id == $this->takings->id; // Includes turn related with current takings
+        });
+
+        $dispatchRegistersTaken = $dispatchRegisters->filter(function (DispatchRegister $dispatchRegister) {
+            return $dispatchRegister->takings->isTaken() && $dispatchRegister->id != $this->id;
+        });
+
+        $accumulated = $dispatchRegistersNoTaken->reduce(function ($carry, DispatchRegister $dispatchRegister) {
+            $prev = collect($carry);
+            return collect([
+                'recorders' => intval($prev->get('recorders')) + $dispatchRegister->passengers->recorders->count,
+                'sensor' => intval($prev->get('sensor')) + $dispatchRegister->passengers->sensor->count,
+                'takings' => intval($prev->get('takings')) + $dispatchRegister->passengers->takings->count
+            ]);
+        });
+
+        $accumulated = collect($accumulated);
+
+        $accumulated->put('taken', $dispatchRegistersTaken->sortBy('departure_time')->map(function (DispatchRegister $dispatchRegister) {
+
+            return (object)[
+                'roundTrip' => $dispatchRegister->round_trip,
+                'routeName' => $dispatchRegister->route->name,
+            ];
+        }));
+
+        $accumulated->put('noTaken', $dispatchRegistersNoTaken->sortBy('departure_time')->map(function (DispatchRegister $dispatchRegister) {
+            return (object)[
+                'roundTrip' => $dispatchRegister->round_trip,
+                'routeName' => $dispatchRegister->route->name,
+            ];
+        }));
+
+        return (object) $accumulated->toArray();
+    }
+
+    /**
+     * Define cuál conteo (Por sensor o registradora) será tenido en cuenta para el proceso de recaudo
+     * Para los turnos que ya han sido recaudados se retorna el contador guardado en el momento de guardar el recaudo
+     * En caso contrario se retorna un valor por defecto
+     * @return string
+     */
+    function getCounterForTakings() {
+        $counterTakings = $this->routeTakings;
+
+        if($counterTakings && $counterTakings->isTaken()) return $counterTakings->counter;
+
+        return 'recorders'; // TODO: Se debe cambiar dinámicamente según el tipo de contador que tenga el vehículo
+    }
+
+    function getBonusLabel() {
+        return $this->route->company_id == Company::ALAMEDA ? 'Various' : 'Bonus';
+    }
+
+    function getTypeCounters() {
+        return $this->route->company->getTypeCounters();
+    }
 }

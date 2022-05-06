@@ -1,12 +1,12 @@
 {
-    "/js/app.js": "/js/app.js?id=ce65c52ac52207ee19f8",
-    "/css/app.css": "/css/app.css?id=3e94de755a9390a2423e",
-    "/resources/js/admin/rocket/main.js": "/resources/js/admin/rocket/main.js?id=48e9de8880d8f0a7261f",
-    "/resources/js/example/main.js": "/resources/js/example/main.js?id=debd8132aa28801b1519",
-    "/resources/js/reports/apps/main.js": "/resources/js/reports/apps/main.js?id=b4f49e93ba8101b9e474",
-    "/resources/js/reports/liquidation/main.js": "/resources/js/reports/liquidation/main.js?id=9d3198e9bf87b4be7a3d",
-    "/resources/js/reports/passengers/photos/main.js": "/resources/js/reports/passengers/photos/main.js?id=6a2db88c278337fbf8d8",
-    "/resources/js/reports/passengers/sensors/cameras/main.js": "/resources/js/reports/passengers/sensors/cameras/main.js?id=7dd737eed8385156c389",
-    "/resources/js/reports/routes/takings/main.js": "/resources/js/reports/routes/takings/main.js?id=be0eb7569ee9d05a30ad",
-    "/resources/js/takings/passengers/liquidation/main.js": "/resources/js/takings/passengers/liquidation/main.js?id=3cb3373fc013b8f86d47"
+    "/js/app.js": "/js/app.js?id=31bf7db27b5d2c14023d",
+    "/css/app.css": "/css/app.css?id=caf210c6a564e0c4820f",
+    "/resources/js/admin/rocket/main.js": "/resources/js/admin/rocket/main.js?id=4eba2b235c686446fc08",
+    "/resources/js/example/main.js": "/resources/js/example/main.js?id=ce4b4ccfc1898e603af1",
+    "/resources/js/reports/apps/main.js": "/resources/js/reports/apps/main.js?id=1bc55786f0e7f7ec01c6",
+    "/resources/js/reports/liquidation/main.js": "/resources/js/reports/liquidation/main.js?id=6300444c8b6959d5e481",
+    "/resources/js/reports/passengers/photos/main.js": "/resources/js/reports/passengers/photos/main.js?id=a00099d2f268071acdfb",
+    "/resources/js/reports/passengers/sensors/cameras/main.js": "/resources/js/reports/passengers/sensors/cameras/main.js?id=aba94f902ea2dfc19645",
+    "/resources/js/reports/routes/takings/main.js": "/resources/js/reports/routes/takings/main.js?id=7140ebbce3ec0cf0c1db",
+    "/resources/js/takings/passengers/liquidation/main.js": "/resources/js/takings/passengers/liquidation/main.js?id=d3ab46f87f922f3b95ea"
 }

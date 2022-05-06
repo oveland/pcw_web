@@ -303,6 +303,10 @@ class User extends Authenticatable
             31580814, // JEFE RRHH
             2018101243, // ALEXANDERAL
             2018101262, // WILSONAL
+
+            #TRANSPUBENZA
+            2018101273, // SIMONTP
+            2018100998, // TPSIS Local
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();

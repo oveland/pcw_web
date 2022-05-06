@@ -62,12 +62,12 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
                 __('Control') => intval($report->takings->control),                                                 # K CELL
                 __('Fuel') => intval($report->takings->fuel),                                                       # L CELL
                 __('Fuel gallons') => number_format($report->takings->fuelGallons, 2),                     # M CELL
-                __('Station') => $report->takings->stationFuel,                                                     # N CELL
+                __('Station') => $report->takings->fuelStation->name,                                               # N CELL
                 __('Various') => intval($report->takings->bonus),                                                   # O CELL
                 __('Others') => intval($report->takings->others),                                                   # P CELL
                 __('Net production') => intval($report->takings->netProduction),                                    # Q CELL
                 __('Advance') => intval($report->takings->advance),                                                 # R CELL
-                __('Passengers advance') => intval($report->takings->passengersAdvance),                            # S CELL
+                __('Passengers taken') => intval($report->takings->passengersTaken),                                # S CELL
                 __('Balance') => intval($report->takings->balance),                                                 # T CELL
                 __('Passengers balance') => intval($report->takings->passengersBalance),                            # U CELL
                 __('Observations') => $observations,                                                                # V CELL
