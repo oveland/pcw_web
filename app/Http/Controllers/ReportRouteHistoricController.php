@@ -6,6 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\LocationToday;
 use App\Models\Vehicles\Vehicle;
+use App\Models\Vehicles\VehicleStatus;
 use App\Services\Auth\PCWAuthService;
 use App\Services\PCWExporterService;
 use Auth;
@@ -87,6 +88,7 @@ class ReportRouteHistoricController extends Controller
 
         $locations = Location::forDate($dateReport)->whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
             ->where('vehicle_id', $vehicleReport)
+            ->where('vehicle_status_id', '<>', 2) // Excludes status disengaged
             ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.driver', 'vehicleStatus', 'passenger', 'photo', 'photos'])
             ->orderBy('date');
         $locations = $locations->get();
