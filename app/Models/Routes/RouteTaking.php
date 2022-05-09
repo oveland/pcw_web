@@ -191,7 +191,7 @@ class RouteTaking extends Model
             'isTaken' => $this->isTaken(),
             'fuelStation' => $this->fuelStation? $this->fuelStation->toArray() : (object)['name' => ''],
             'hasParent' => $this->hasParent(),
-            'updatedAt' => $this->updated_at->toDateTimeString()
+            'updatedAt' => $this->updated_at ? $this->updated_at->toDateTimeString() : ""
         ];
     }
 
