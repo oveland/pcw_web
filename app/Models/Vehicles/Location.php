@@ -133,19 +133,39 @@ class Location extends Model
 {
     use BindsDynamically;
 
-    const CREATED_AT = 'date_created';
-    const UPDATED_AT = 'last_updated';
+//    const CREATED_AT = 'date_created';
+//    const UPDATED_AT = 'last_updated';
 
     protected $fillable = ['vehicle_id', 'date', 'latitude', 'longitude', 'orientation', 'odometer', 'status', 'speed', 'speeding', 'vehicle_status_id', 'distance', 'dispatch_register_id', 'off_road'];
 
     protected function getDateFormat()
     {
-        return config('app.date_time_format');
+        return config('app.simple_date_time_format');
     }
 
     public function getDateAttribute($date)
     {
-        return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $date)[0]);
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
+    }
+
+    public function getCreatedAtAttribute($date)
+    {
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
+    }
+
+    public function getUpdatedAtAttribute($date)
+    {
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
+    }
+
+    public function getLastUpdatedAttribute($date)
+    {
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
+    }
+
+    public function getDateCreatedAttribute($date)
+    {
+        return Carbon::createFromFormat($this->getDateFormat(), explode('.', $date)[0]);
     }
 
     public function getTimeAttribute()
