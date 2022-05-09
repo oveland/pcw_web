@@ -108,12 +108,12 @@ class MaintenanceCommand extends Command
                     'locations' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => false,
+                        'restore' => true,
                     ],
                     'reports' => [
                         'release' => false,
                         'hasBackup' => false,
-                        'restore' => false,
+                        'restore' => true,
                     ],
                 ]
             ],
