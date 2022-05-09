@@ -60,12 +60,12 @@ class MaintenanceCommand extends Command
 //                    'locations' => [
 //                        'release' => false,
 //                        'hasBackup' => false,
-//                        'restore' => false,
+//                        'restore' => true,
 //                    ],
 //                    'reports' => [
 //                        'release' => false,
 //                        'hasBackup' => false,
-//                        'restore' => false,
+//                        'restore' => true,
 //                    ],
 //                ]
 //            ],
@@ -76,34 +76,18 @@ class MaintenanceCommand extends Command
 //                    'locations' => [
 //                        'release' => false,
 //                        'hasBackup' => false,
-//                        'restore' => false,
+//                        'restore' => true,
 //                    ],
 //                    'reports' => [
 //                        'release' => false,
 //                        'hasBackup' => false,
-//                        'restore' => false,
-//                    ],
-//                ]
-//            ],
-//            [
-//                'from' => '2022-04-01',
-//                'to' => '2022-04-30',
-//                'tables' => [
-//                    'locations' => [
-//                        'release' => false,
-//                        'hasBackup' => false,
-//                        'restore' => false,
-//                    ],
-//                    'reports' => [
-//                        'release' => false,
-//                        'hasBackup' => false,
-//                        'restore' => false,
+//                        'restore' => true,
 //                    ],
 //                ]
 //            ],
             [
-                'from' => '2022-05-01',
-                'to' => '2022-05-09',
+                'from' => '2022-04-01',
+                'to' => '2022-04-30',
                 'tables' => [
                     'locations' => [
                         'release' => false,
