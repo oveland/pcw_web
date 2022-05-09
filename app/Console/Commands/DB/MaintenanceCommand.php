@@ -53,41 +53,57 @@ class MaintenanceCommand extends Command
 //                    ],
 //                ]
 //            ],
+//            [
+//                'from' => '2022-02-01',
+//                'to' => '2022-02-28',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                    'reports' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                ]
+//            ],
+//            [
+//                'from' => '2022-03-01',
+//                'to' => '2022-03-31',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                    'reports' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                ]
+//            ],
+//            [
+//                'from' => '2022-04-01',
+//                'to' => '2022-04-30',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                    'reports' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                ]
+//            ],
             [
-                'from' => '2022-02-01',
-                'to' => '2022-02-28',
-                'tables' => [
-                    'locations' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2022-03-01',
-                'to' => '2022-03-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2022-04-01',
-                'to' => '2022-04-30',
+                'from' => '2022-05-01',
+                'to' => '2022-05-09',
                 'tables' => [
                     'locations' => [
                         'release' => false,
