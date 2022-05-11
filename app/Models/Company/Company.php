@@ -216,7 +216,8 @@ class Company extends Model
                 self::YUMBENOS,
                 self::EXPRESO_PALMIRA,
                 self::MONTEBELLO,
-                self::TRANSPUBENZA
+                self::TRANSPUBENZA,
+                self::VALLEDUPAR
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
 
