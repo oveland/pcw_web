@@ -25,7 +25,7 @@
                     <span>{{ $dispatchRegister->date }}</span>
                 </h4>
             </div>
-            @if(!$dispatchRegister->onlyControlTakings())
+            @if(!$dispatchRegister->onlyControlTakings() && $dispatchRegister->complete())
                 <div class="col-md-12 no-padding m-t-10 form-takings-type">
                     <div class="form-takings_card form-takings_card_passengers form-takings_card_passengers__activated" data-type="{{ \App\Models\Routes\RouteTaking::TAKING_BY_ROUND_TRIP }}"
                          data-passengers-recorders="{{ $dispatchRegister->passengers->recorders->count }}"
@@ -150,7 +150,7 @@
         <div class="bg-green-dark text-white p-10 text-center" style="display: flow-root">
             <i class="fa fa-exclamation-circle faa-ring animated"></i> <strong>{{ $dispatchRegister->takings->observations }}</strong>
         </div>
-    @else
+    @elseif($dispatchRegister->complete())
         <div class="col-md-8 col-md-offset-2 p-t-15">
             <form class="form-horizontal form-taking-passengers" role="form" action="{{ route('operation-routes-takings-taking', ['dispatchRegister' => $dispatchRegister->id]) }}" data-dr="{{ $dispatchRegister->id }}">
                 <input type="hidden" id="tariff_passenger" value="{{ intval($dispatchRegister->takings->passenger_tariff) }}" class="form-control">

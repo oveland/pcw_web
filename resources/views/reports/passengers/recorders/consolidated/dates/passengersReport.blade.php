@@ -50,16 +50,16 @@
             </div>
             <h5 class="text-white m-t-10">
 
-                @if($company->hasRecorderCounter())
-                    <soan class="text-bold text-white">
-                        <i class="fa fa-users" aria-hidden="true"></i> {{ $passengerReport->totalRecorder }}
-                    </soan>
-                @endif
-                @if($company->hasSensorCounter())
-                    <soan class="text-bold text-white">
-                        <i class="fa fa-users" aria-hidden="true"></i> {{ $passengerReport->totalSensor }}
-                    </soan>
-                @endif
+{{--                @if($company->hasRecorderCounter())--}}
+{{--                    <soan class="text-bold text-white">--}}
+{{--                        <i class="fa fa-users" aria-hidden="true"></i> {{ $passengerReport->totalRecorder }}--}}
+{{--                    </soan>--}}
+{{--                @endif--}}
+{{--                @if($company->hasSensorCounter())--}}
+{{--                    <soan class="text-bold text-white">--}}
+{{--                        <i class="fa fa-users" aria-hidden="true"></i> {{ $passengerReport->totalSensor }}--}}
+{{--                    </soan>--}}
+{{--                @endif--}}
 
                 @if($passengerReport->route)
                     <small class="text-white text-bold" style="font-size: 1em">
@@ -136,18 +136,31 @@
                                 <i class="fa fa-crosshairs" aria-hidden="true"></i> <i class="fa fa-compass" aria-hidden="true"></i><br> @lang('Sensor recorder')
                             </th>
                             <th class="text-center recorder">
-                                <i class="fa fa-compass" aria-hidden="true"></i><br> @lang('Passengers') <br> @lang('Recorder')
+                                <i class="fa fa-compass" aria-hidden="true"></i>
+                                <i class="icon-users text-muted"></i>
+                                <br> @lang('Passengers') <br> @lang('Recorder')
                             </th>
                         @endif
 
                         @if($company->hasSensorCounter())
                             <th class="text-center sensor">
-                                <i class="fa fa-crosshairs" aria-hidden="true"></i><br> @lang('Sensor')
+                                <i class="fa fa-crosshairs" aria-hidden="true"></i>
+                                <i class="icon-users text-muted"></i>
+                                <br> @lang('Sensor')
                             </th>
                         @endif
-                        @if($company->hasSensorCounter() && $company->id <> 21)
+                        @if($company->hasSensorCounter())
                             <th class="text-center sensor">
-                                <i class="fa fa-crosshairs" aria-hidden="true"></i><br> @lang('Sensor TOTAL')
+                                <i class="fa fa-crosshairs" aria-hidden="true"></i>
+                                <i class="icon-users text-muted"></i>
+                                <br> @lang('Sensor TOTAL')
+                            </th>
+                        @endif
+                        @if($company->hasSensorRecorderCounter())
+                            <th class="text-center sensor">
+                                <i class="fa fa-dollar text-muted"></i>
+                                <i class="icon-users text-muted"></i>
+                                <br> {{ $company->getSensorRecorderCounterLabel() }}
                             </th>
                         @endif
 
@@ -196,8 +209,6 @@
                             @if($company->hasRecorderCounter())
                                 <td>{{ number_format($report->programmedMileage, 1) }} </td>
                                 <td>{{ number_format($report->differenceMileage, 1) }} </td>
-                                <td class="hide">
-                                {{ $sensorRecorder }}</td>
                                 <td class="recorder text-center">
                                     <span class="{{ count($issuesByVehicles) ? "text-warning click tooltips":""  }}" data-html="true" data-title="@lang('Error in') {{ $issuesByVehicles->first()[0]->field ?? '' }}"
                                           onclick="{{ count($issuesByVehicles) ? "$('#issue-$date').collapse('show');":""  }}">
@@ -209,8 +220,11 @@
                             @if($company->hasSensorCounter())
                                 <td class="sensor">{{ $sensor }}</td>
                             @endif
-                            @if($company->hasSensorCounter() && $company->id <> 21)
+                            @if($company->hasSensorCounter())
                                 <td class="sensor">{{ $allSensor }}</td>
+                            @endif
+                            @if($company->hasSensorRecorderCounter())
+                                <td class="sensor-recorder">{{ $sensorRecorder }}</td>
                             @endif
 
                             @if($company->hasRecorderCounter())
@@ -284,14 +298,18 @@
                         @if($company->hasSensorCounter())
                             <td class="text-center sensor">{{ $totalSensor->sum() }}</td>
                         @endif
-                        @if($company->hasSensorCounter() && $company->id <> 21)
+                        @if($company->hasSensorCounter())
                             <td class="text-center sensor">{{ $totalAllSensor->sum() }}</td>
+                        @endif
+                        @if($company->hasSensorRecorderCounter())
+                            <td class="text-center sensor">{{ $totalSensorRecorder->sum() }}</td>
                         @endif
 
                         @if($company->hasRecorderCounter())
                             <td class="text-center recorder">{{ number_format($passengerReport->IPK,2) }}</td>
                             <td class="text-center {{ $passengerReport->canLiquidate ? '' : 'hide' }}"></td>
                         @endif
+                        <td class="text-center"></td>
                     </tr>
                     </tfoot>
                 </table>

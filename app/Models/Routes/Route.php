@@ -128,6 +128,9 @@ class Route extends Model
                 'company' => (object)[
                     'short_name' => $this->company->short_name
                 ],
+                'dispatch' => (object)[
+                    'name' => $this->dispatch->name
+                ],
             ];
         }
 

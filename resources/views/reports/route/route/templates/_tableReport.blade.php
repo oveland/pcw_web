@@ -56,7 +56,7 @@
                 </small>
             </th>
             <th class="text-center">
-                <i class="fa fa-users text-muted"></i><br>
+                <i class="icon-users text-muted"></i><br>
                 <small><i class="fa fa-compass text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
                 <small class="text-muted">
                     @lang('Recorder')
@@ -66,7 +66,8 @@
 
         @if($company->hasSensorCounter())
             <th>
-                <i class="fa fa-users text-muted"></i><br>
+                <i class="icon-users text-muted"></i>
+                <br>
                 <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
                 <small class="text-muted">
                     @lang('Sensor')
@@ -79,7 +80,9 @@
         @endif
         @if($company->hasSensorRecorderCounter())
             <th>
-                <i class="fa fa-users text-muted"></i><br>
+                <i class="fa fa-dollar text-muted"></i>
+                <i class="icon-users text-muted"></i>
+                <br>
                 <small>
                     {{ $company->getSensorRecorderCounterLabel() }}
                 </small>
