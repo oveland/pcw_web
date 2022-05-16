@@ -287,9 +287,15 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/seat/show/{historySeat}', 'TaxCentralPassengerReportController@showHistorySeat')->name('report-passengers-taxcentral-seat-detail');
             });
 
+            Route::prefix(__('consolidated'))->group(function () {
+                Route::get('/', 'PassengersRecordersReportController@index')->name('report-passengers-consolidated');
+            });
+
             /* Router for recorders reports */
             Route::prefix(__('recorders'))->group(function () {
-                Route::get('/', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated');
+                Route::get('/', function () {
+                    return redirect(route('report-passengers-consolidated'));
+                })->name('report-passengers-recorders-consolidated');
                 Route::get('/range', 'PassengersRecordersReportController@index')->name('report-passengers-recorders-consolidated-date-range');
                 Route::get('/show', 'PassengersRecordersReportController@show')->name('report-passengers-recorders-consolidated-date-range-search');
                 Route::get('/export', 'PassengersRecordersReportController@export')->name('report-passengers-recorders-consolidated-date-range-export');

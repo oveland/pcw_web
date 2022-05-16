@@ -9,12 +9,12 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Passengers')</a></li>
-        <li class="active">@lang('Recorders')</li>
+        <li class="active">@lang('Consolidado')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
     <h1 class="page-header"><i class="fa fa-users" aria-hidden="true"></i> @lang('Passengers report')
-        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Recorders')</small>
+        <small><i class="fa fa-hand-o-right" aria-hidden="true"></i> @lang('Consolidado')</small>
     </h1>
 
     <!-- end page-header -->
