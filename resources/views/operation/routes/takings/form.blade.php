@@ -114,7 +114,7 @@
         </div>
     </div>
 
-    @if($dispatchRegister->takings->passenger_tariff <= 0)
+    @if($dispatchRegister->takings->passenger_tariff <= 0 && $dispatchRegister->route)
         <div class="bg-red text-white p-10 text-center" style="display: flow-root">
             <i class="fa fa-warning faa-passing animated"></i> <strong>@lang('Invalid passenger tariff')</strong>
             <div>
@@ -150,7 +150,7 @@
         <div class="bg-green-dark text-white p-10 text-center" style="display: flow-root">
             <i class="fa fa-exclamation-circle faa-ring animated"></i> <strong>{{ $dispatchRegister->takings->observations }}</strong>
         </div>
-    @elseif($dispatchRegister->complete())
+    @elseif($dispatchRegister->complete() || $dispatchRegister->onlyControlTakings())
         <div class="col-md-8 col-md-offset-2 p-t-15">
             <form class="form-horizontal form-taking-passengers" role="form" action="{{ route('operation-routes-takings-taking', ['dispatchRegister' => $dispatchRegister->id]) }}" data-dr="{{ $dispatchRegister->id }}">
                 <input type="hidden" id="tariff_passenger" value="{{ intval($dispatchRegister->takings->passenger_tariff) }}" class="form-control">

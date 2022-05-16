@@ -1056,10 +1056,10 @@ class DispatchRegister extends Model
     }
 
     function getBonusLabel() {
-        return $this->route->company_id == Company::ALAMEDA ? 'Various' : 'Bonus';
+        return !$this->route || $this->route->company_id != Company::ALAMEDA  ? 'Bonus' : 'Various';
     }
 
     function getTypeCounters() {
-        return $this->route->company->getTypeCounters();
+        return $this->route ? $this->route->company->getTypeCounters() : collect([]);
     }
 }
