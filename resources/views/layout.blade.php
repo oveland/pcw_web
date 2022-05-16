@@ -226,7 +226,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END INBOX DROPDOWN -->
 
                 <li class="dropdown tooltips" data-title="@lang('Passengers report')" data-placement="bottom">
-                    <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="dropdown-toggle p-10 faa-parent animated-hover">
+                    <a href="{{ route('report-passengers-consolidated')  }}" class="dropdown-toggle p-10 faa-parent animated-hover">
                         <i class="fa fa-users"></i>
                     </a>
                 </li>
@@ -641,9 +641,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </li>
                                 @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter()) )
                                     <li class="nav-item menu-passengers-recorders">
-                                        <a href="{{ route('report-passengers-recorders-consolidated')  }}" class="faa-parent animated-hover nav-link">
-                                            <i class="fa fa-compass faa-vertical"></i>
-                                            @lang('Recorders')
+                                        <a href="{{ route('report-passengers-consolidated')  }}" class="faa-parent animated-hover nav-link">
+                                            <i class="fa fa-users faa-vertical"></i>
+                                            @lang('Consolidated')
                                         </a>
                                     </li>
                                     <li class="nav-item menu-passengers-fringes">
