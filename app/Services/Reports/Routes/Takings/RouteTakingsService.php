@@ -114,7 +114,7 @@ class RouteTakingsService
     {
         $from = $from ?: $dispatchRegister->date;
 
-        return DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($dispatchRegister->route->company, $from, null, $dispatchRegister->route_id, $dispatchRegister->vehicle_id)
+        return DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($dispatchRegister->route->company, $from, null, null, $dispatchRegister->vehicle_id)
             ->completed()
             ->where('id', '<', $dispatchRegister->id)
             ->get()
