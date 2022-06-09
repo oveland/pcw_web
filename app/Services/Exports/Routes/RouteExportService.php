@@ -80,7 +80,7 @@ class RouteExportService
                 $excel = PCWExporterService::createHeaders($excel, $dataExport);
                 $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
-        })->export('xlsx');
+        })->download('xlsx');
     }
 
     /**
@@ -191,7 +191,7 @@ class RouteExportService
             return "$excelFile->storagePath/$fileName.$fileExtension";
         }
 
-        return $excelFile->export($fileExtension);
+        return $excelFile->download($fileExtension);
     }
 
     /**
@@ -289,7 +289,7 @@ class RouteExportService
             return $pathsToConsolidatesReportFiles;
         }
 
-        return $excel->export($fileExtension);
+        return $excel->download($fileExtension);
     }
 
     /**
@@ -404,7 +404,7 @@ class RouteExportService
             return "$excelFile->storagePath/$fileName.$fileExtension";
         }
 
-        return $excelFile->export($fileExtension);
+        return $excelFile->download($fileExtension);
     }
 
     /**
@@ -477,6 +477,6 @@ class RouteExportService
             return "$excelFile->storagePath/$fileName.$fileExtension";
         }
 
-        return $excelFile->export($fileExtension);
+        return $excelFile->download($fileExtension);
     }
 }
