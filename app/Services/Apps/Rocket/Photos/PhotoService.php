@@ -16,6 +16,7 @@ use App\Services\Apps\Rocket\Photos\Rekognition\Zone;
 use App\Services\Apps\Rocket\SeatOccupationService;
 use Carbon\Carbon;
 use DB;
+use Exception;
 use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -80,7 +81,7 @@ class PhotoService
 
     function setDate($date)
     {
-        $this->date = $date ? : Carbon::now()->toDateString();
+        $this->date = $date ?: Carbon::now()->toDateString();
     }
 
     function setCamera($camera)
@@ -127,9 +128,11 @@ class PhotoService
 
     /**
      * @param $data
+     * @param false $withPhoto
      * @return object
+     * @throws Exception
      */
-    function saveImageData($data)
+    function saveImageData($data, $withPhoto = false)
     {
         $data = collect($data);
         $success = false;
@@ -164,29 +167,39 @@ class PhotoService
 
             $image = $this->decodeImageData($data->get('img'));
 
-            $storageResponse = $this->storage->put($photo->path, $image);
 
-            if ($photo->save() && $storageResponse) {
-                $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
-                $currentPhoto->fill($data->toArray());
-                $currentPhoto->disk = $photo->disk;
-                $currentPhoto->date = $photo->date;
-                $currentPhoto->data = $photo->data;
-                $currentPhoto->persons = $photo->persons;
-                $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
-                $currentPhoto->location_id = $photo->location_id;
-                $currentPhoto->path = $photo->path;
+            try {
+                $storageResponse = $this->storage->put($photo->path, $image);
 
-                $success = $currentPhoto->save();
-                if ($success) $message = "Photo saved successfully";
+                if ($photo->save() && $storageResponse) {
+                    $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
+                    $currentPhoto->fill($data->toArray());
+                    $currentPhoto->disk = $photo->disk;
+                    $currentPhoto->date = $photo->date;
+                    $currentPhoto->data = $photo->data;
+                    $currentPhoto->persons = $photo->persons;
+                    $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
+                    $currentPhoto->location_id = $photo->location_id;
+                    $currentPhoto->path = $photo->path;
 
-                if (!App::environment('local')) {
+                    $success = $currentPhoto->save();
+                    if ($success) $message = "Photo saved successfully";
+
+                    if (!App::environment('local')) {
 //                    $this->notifyToMap();
+                    }
+                } else {
+                    if (!$storageResponse) $message = "Image has invalid format!";
+                    else $message = "Error saving data";
                 }
+
+            } catch (Exception $e) {
+                throw $e;
+                $message = "Error saving file: " . $e;
             }
         } else {
-            $success = true;
-            $message = collect($validator->errors())->flatten()->implode(' ');
+            $success = false;
+            $message = 'Error saving photo: ' . collect($validator->errors())->flatten()->implode(' ');
         }
 
         return (object)[
@@ -194,7 +207,7 @@ class PhotoService
                 'success' => $success,
                 'message' => $message,
             ],
-//            'photo' => $success ? $photo->getAPIFields() : null
+            'photo' => $success && $withPhoto ? $photo->getAPIFields() : null
         ];
     }
 
@@ -402,7 +415,8 @@ class PhotoService
             ->get();
     }
 
-    function processMultiTariff(Collection $allHistoric) {
+    function processMultiTariff(Collection $allHistoric)
+    {
         DB::statement("DELETE FROM history_seats WHERE date::DATE = '$this->date' AND vehicle_id = " . $this->vehicle->id);
         $historicByDr = $allHistoric->groupBy('drId');
 
@@ -431,15 +445,19 @@ class PhotoService
                 $location = Location::select(['distance', 'latitude', 'longitude'])->where('id', $details->location_id)->first();
                 $occupation = $details->occupation;
 
-                $latitude = $location->latitude ? : 'null';
-                $longitude = $location->longitude ? : 'null';
+                if (request()->get('d') && !$location) {
+                    dd($photo);
+                }
+
+                $latitude = $location->latitude ?: 'null';
+                $longitude = $location->longitude ?: 'null';
 
                 $seatingActivated = explode(', ', $occupation->seatingActivatedStr);
                 $seatingReleased = explode(', ', $occupation->seatingReleaseStr);
 
-                if($occupation->seatingActivatedStr) {
+                if ($occupation->seatingActivatedStr) {
                     foreach ($seatingActivated as $seat) {
-                        $countByTurn ++;
+                        $countByTurn++;
                         $countTotal++;
 
                         // echo "Active seat = $seat at $date | $info | Count = $countByTurn <br>";
@@ -451,7 +469,7 @@ class PhotoService
                         ");
                         $id = collect($insert)->first()->id;
 
-                        $registers->put($seat, (object) [
+                        $registers->put($seat, (object)[
                             'id' => $id,
                             'seat' => $seat,
                             'arrivedTime' => $this->date . " " . $dr->arrival_time,
@@ -460,14 +478,14 @@ class PhotoService
                     }
                 }
 
-                if($occupation->seatingReleaseStr) {
+                if ($occupation->seatingReleaseStr) {
                     foreach ($seatingReleased as $seat) {
-                        if($registers->get($seat)){
+                        if ($registers->get($seat)) {
                             $register = $registers->get($seat);
                             // echo ".............. Release seat = $seat at $date | $info | $countByTurn <br>";
-                            if($register) {
+                            if ($register) {
                                 $id = $register->id;
-                                if($id) {
+                                if ($id) {
                                     DB::statement("UPDATE history_seats SET inactive_time = '$date', inactive_km = $location->distance, inactive_latitude = $latitude, inactive_longitude = $longitude WHERE id = $id");
                                 }
                             }
@@ -508,7 +526,7 @@ class PhotoService
         }
         $historic = $historic->collapse();
 
-        if($withMultiTariff || true) {
+        if ($withMultiTariff || true) {
             $this->processMultiTariff($historic);
         }
 
@@ -1040,7 +1058,12 @@ class PhotoService
     private function decodeImageData($base64)
     {
         $image_parts = explode(";base64,", $base64);
-        return base64_decode($image_parts[1]);
+
+        if (isset($image_parts[1])) {
+            return base64_decode($image_parts[1]);
+        }
+
+        return $image_parts[0];
     }
 
     /**

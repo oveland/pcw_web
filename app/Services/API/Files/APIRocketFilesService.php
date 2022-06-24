@@ -92,7 +92,7 @@ class APIRocketFilesService implements APIFilesInterface
                 $this->request->get('encode') ?? 'png',
                 $this->request->get('with-effect') ?? $this->request->get('effect'),
                 $this->request->get('mask') ?? false,
-                $this->request->get('title') ?? false,
+                $this->request->get('title') ?? false
             );
         } else {
             return $this->photoService->notFoundImage();

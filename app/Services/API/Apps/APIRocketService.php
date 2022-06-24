@@ -64,7 +64,7 @@ class APIRocketService implements APIAppsInterface
         $this->request = request();
         $this->service = $service ?? $this->request->get('action');
         $this->vehicle = Vehicle::where('plate', $this->request->get('vehicle'))->first();
-        $this->vehicle = $this->vehicle ? $this->vehicle : Vehicle::find($this->request->get('vehicle'));
+        $this->vehicle = $this->vehicle ?: Vehicle::find(intval($this->request->get('vehicle')));
         if ($this->vehicle) $this->currentLocation = CurrentLocation::findByVehicle($this->vehicle);
 
         $this->photoService = new PhotoService();
@@ -95,7 +95,7 @@ class APIRocketService implements APIAppsInterface
                     break;
 
                 case 'check-online':
-                    Storage::disk('local')->append('rocket.log', '✅️ '.$this->vehicle->plate.' | '. $this->request->get('date') . ' >> Check online');
+                    Storage::disk('local')->append('rocket.log', '✅️ ' . $this->vehicle->plate . ' | ' . $this->request->get('date') . ' >> Check online');
 
                     return response()->json([
                         'success' => true,
@@ -123,14 +123,14 @@ class APIRocketService implements APIAppsInterface
     public function savePhoto()
     {
         $process = $this->photoService
-            ->for($this->vehicle)
-            ->saveImageData($this->request->all());
+            ->for($this->vehicle, $this->request->get('side') ?? '1')
+            ->saveImageData($this->request->all(), true);
 
         if ($process->response->success) {
             $photo = $process->photo;
             Storage::disk('local')->append('photo.log', $this->vehicle->plate . " | $photo->date | $photo->type >> $photo->url&encode=jpg");
         } else {
-            Storage::disk('local')->append('photo.log', "Error saving photo: " . $process->response->message . ". Data > " . $this->request->except('img')->toJson());
+            Storage::disk('local')->append('photo.log', "Error saving photo: " . $process->response->message . ". Data > " . collect($this->request->except('img'))->toJson());
         }
 
         return response()->json($process->response);
