@@ -87,4 +87,10 @@ RUN apt -y install cron
 
 COPY config/crontab /etc/crontabs/root
 
+RUN apt-get update \
+	&& apt-get install -y php${php_version}-interbase
+RUN apt -y install alien
+RUN #docker-php-ext-install interbase
+RUN #docker-php-ext-install pdo_firebird
+
 WORKDIR /var/www/${ng_root}

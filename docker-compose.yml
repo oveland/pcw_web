@@ -1,9 +1,19 @@
 version: '3.8'
 
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 9001
+
 services:
   web_server:
-    container_name: beta_web_server
-    network_mode: host
+    hostname: s
+    container_name: beta
+    networks:
+      - default
+    extra_hosts:
+      - main:192.168.12.43
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     build:
@@ -22,8 +32,8 @@ services:
       NG_PORT: ${DOCKER_NG_PORT}
       NG_EXTERNAL_PORT: ${DOCKER_NG_EXTERNAL_PORT}
       NG_ROOT: ${DOCKER_NG_ROOT}
-#    ports:
-#      - "${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}"
+    ports:
+      - "${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}"
     volumes:
       - ./:/var/www/${DOCKER_NG_ROOT}/
       - ${GPS_DEVICES_SYRUS_FTP_BASE_PATH}:${GPS_DEVICES_SYRUS_FTP_BASE_PATH}

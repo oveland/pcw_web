@@ -63,7 +63,8 @@ class BEASyncService extends SyncService
         $maxSequence = collect(DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
 
-        $vehicles = BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS");
+        $vehicles = BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_NUMECONOM like '%20%'");
+        dd($vehicles->pluck('CAU_NUMECONOM'));
 
         $this->log("Sync " . $vehicles->count() . " vehicles from LM");
 
@@ -107,6 +108,7 @@ class BEASyncService extends SyncService
         DB::statement("ALTER SEQUENCE routes_id_seq RESTART WITH $maxSequence");
 
         $routes = BEADB::for($this->company)->select("SELECT * FROM C_RUTA");
+        #dd($routes->pluck('CRU_DESCRIPCION'));
 
         $this->log("Sync " . $routes->count() . " routes from LM");
 
@@ -129,6 +131,7 @@ class BEASyncService extends SyncService
 
 
         $trajectories = BEADB::for($this->company)->select("SELECT * FROM C_DERROTERO");
+        //dd($trajectories->pluck('CDR_DESCRIPCION'));
 
         $this->log("Sync " . $trajectories->count() . " trajectories from LM");
 
@@ -168,7 +171,11 @@ class BEASyncService extends SyncService
                 ->whereDate('date', $this->date)
                 ->get()->pluck('bea_id');
 
-            $duplicatedIdsPCW = $marksIdsPCW->diff($markIdsBEA)->implode(',');
+            $duplicatedIdsPCW = $marksIdsPCW->diff($markIdsBEA)
+                ->map(function ($m) {
+                    return "$m::VARCHAR";
+                })
+                ->implode(',');
             if ($duplicatedIdsPCW) {
                 $companyId = $this->company->id;
                 DB::statement("UPDATE bea_marks SET duplicated = TRUE WHERE company_id = $companyId AND bea_id IN ($duplicatedIdsPCW)");

@@ -22,7 +22,7 @@ class DBService extends LMDatabase
             $this->connection = new \PDO("firebird:dbname=" . $cx['path'], $cx['username'], $cx['password']);
         } catch (Exception $x) {
             $this->connection = null;
-            Log::channel('lm')->error('Error on database connection. Params = ' . json_encode($cx) . '. Message: ' . $x->getMessage());
+            Log::channel('lm')->error('Error on database connection. Path = ' . $cx['path'] . '. Message: ' . $x->getMessage());
         }
 
         if (!$this->connection) {
