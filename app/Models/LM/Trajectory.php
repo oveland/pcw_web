@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property-read Route $route
  * @method static Builder|Trajectory whereRouteId($value)
  * @property int|null $bea_id
+ * @property int|null $db_id
  * @property int $company_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LM\Trajectory whereBeaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LM\Trajectory whereCompanyId($value)

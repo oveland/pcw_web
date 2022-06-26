@@ -88,6 +88,7 @@ use Illuminate\Support\Collection;
  * @property bool $duplicated
  * @property int|null $duplicated_mark_id
  * @property int|null $bea_id
+ * @property int|null $db_id
  * @property int $company_id
  * @method static Builder|Mark enabled()
  * @method static Builder|Mark whereBeaId($value)

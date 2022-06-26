@@ -244,6 +244,7 @@ class BEASyncService extends SyncService
 
         $mark->company_id = $this->company->id;
         $mark->bea_id = $markBEA->AMR_IDMARCA;
+        $mark->db_id = $this->dbId;
         $mark->turn_id = $turn->id;
         $mark->trajectory_id = $trajectory ? $trajectory->id : null;
         $mark->date = $dateTime->format(config('app.simple_date_time_format'));
@@ -293,6 +294,7 @@ class BEASyncService extends SyncService
                     $vehicle = $this->validateVehicle($turnBEA->ATR_IDAUTOBUS);
                     $turn->company_id = $this->company->id;
                     $turn->bea_id = $turnBEA->ATR_IDTURNO;
+                    $turn->db_id = $this->dbId;
                     $turn->route_id = $route->id;
                     $turn->driver_id = $driver ? $driver->id : null;
                     $turn->vehicle_id = $vehicle->id;
@@ -329,6 +331,7 @@ class BEASyncService extends SyncService
                 $trajectory = new Trajectory();
                 $trajectory->company_id = $this->company->id;
                 $trajectory->bea_id = $trajectoryBEA->CDR_IDDERROTERO;
+                $trajectory->db_id = $this->dbId;
                 $trajectory->name = $trajectoryBEA->CDR_DESCRIPCION;
                 $trajectory->route_id = $route->id;
                 $trajectory->description = "$trajectoryBEA->CDR_DESCRIPCION";

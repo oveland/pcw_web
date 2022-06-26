@@ -52,10 +52,6 @@ class SyncCommand extends Command
 
         $this->info("LM sync for company: $company->name");
 
-        $route = App\Models\Routes\Route::whereId(2);
-
-        dd($route->toSql(), $route->getBindings());
-
         if ($company) {
             $beaService = App::makeWith('lm.service', ['company' => $company->id, 'console' => true]);
 
@@ -94,7 +90,7 @@ class SyncCommand extends Command
     public function info($string = null, $verbosity = null)
     {
         if ($string) {
-            parent::info($string, $verbosity);
+            parent::info("$string\n", $verbosity);
             Log::channel('lm')->info($string);
         }
     }

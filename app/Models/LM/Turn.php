@@ -35,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property-read mixed $a_p_i
  * @property int|null $bea_id
+ * @property int|null $db_id
  * @property int $company_id
  * @method static Builder|Turn whereBeaId($value)
  * @method static Builder|Turn whereCompanyId($value)

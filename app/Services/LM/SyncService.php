@@ -263,6 +263,6 @@ abstract class SyncService
     {
         $now = Carbon::now();
         echo "$now • $message";
-        Log::channel('lm')->info($this->company->short_name . " • $this->type • " . $message);
+        Log::channel('lm')->info($this->company->short_name . " • $this->type • $message \n");
     }
 }

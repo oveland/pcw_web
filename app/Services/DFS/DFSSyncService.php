@@ -395,6 +395,7 @@ class DFSSyncService extends SyncService
         $dateTime = $initialTime->toDateString() == $finalTime->toDateString() ? $initialTime : $finalTime;
 
         $mark->company_id = $this->company->id;
+        $mark->db_id = $this->dbId;
         $mark->bea_id = $markDFS->ID;
         $mark->turn_id = $turn->id;
         $mark->trajectory_id = $trajectory ? $trajectory->id : null;
@@ -444,6 +445,7 @@ class DFSSyncService extends SyncService
                     $vehicle = $this->validateVehicle($turnDFS->V_ID, $data);
                     $turn->company_id = $this->company->id;
                     $turn->bea_id = $turnDFS->TRN_ID;
+                    $turn->db_id = $this->dbId;
                     $turn->route_id = $route->id;
                     $turn->driver_id = $driver ? $driver->id : null;
                     $turn->vehicle_id = $vehicle->id;
@@ -480,6 +482,7 @@ class DFSSyncService extends SyncService
                 $trajectory = new Trajectory();
                 $trajectory->company_id = $this->company->id;
                 $trajectory->bea_id = $trajectoryDFS->TRJ_ID;
+                $trajectory->db_id = $this->dbId;
                 $trajectory->name = $trajectoryDFS->R_NAME;
                 $trajectory->route_id = $route->id;
                 $trajectory->description = "$trajectoryDFS->R_NAME";
