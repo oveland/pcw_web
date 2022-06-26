@@ -55,6 +55,7 @@ use Sofa\Eloquence\Mappable;
  * @property-read GpsVehicle $gpsVehicle
  * @property-read DispatcherVehicle $dispatcherVehicles
  * @property int|null $bea_id
+ * @property int $db_id
  * @property int|null $driver_id
  * @property int|null $proprietary_id
  * @method static Builder|Vehicle whereBeaId($value)

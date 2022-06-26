@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $company_id
  * @property int $dispatch_id
  * @property int $bea_id
+ * @property int $db_id
  * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

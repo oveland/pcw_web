@@ -24,7 +24,7 @@ class BEASyncService extends SyncService
 
     function locations(Vehicle $vehicle, $date)
     {
-        
+
     }
 
     /**
@@ -36,7 +36,7 @@ class BEASyncService extends SyncService
     {
         $lastIdMigrated = Turn::where('company_id', $this->company->id)->max('bea_id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
-        $turns = BEADB::for($this->company)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
+        $turns = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
 
         $maxSequence = collect(DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
@@ -63,8 +63,7 @@ class BEASyncService extends SyncService
         $maxSequence = collect(DB::select("SELECT max(id_crear_vehiculo) max FROM crear_vehiculo"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE vehicles_id_seq RESTART WITH $maxSequence");
 
-        $vehicles = BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_NUMECONOM like '%20%'");
-        dd($vehicles->pluck('CAU_NUMECONOM'));
+        $vehicles = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_AUTOBUS WHERE CAU_NUMECONOM like '%20%'");
 
         $this->log("Sync " . $vehicles->count() . " vehicles from LM");
 
@@ -107,8 +106,7 @@ class BEASyncService extends SyncService
         $maxSequence = collect(DB::select("SELECT max(id_rutas) max FROM ruta"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE routes_id_seq RESTART WITH $maxSequence");
 
-        $routes = BEADB::for($this->company)->select("SELECT * FROM C_RUTA");
-        #dd($routes->pluck('CRU_DESCRIPCION'));
+        $routes = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_RUTA");
 
         $this->log("Sync " . $routes->count() . " routes from LM");
 
@@ -130,8 +128,7 @@ class BEASyncService extends SyncService
         DB::statement("ALTER SEQUENCE bea_trajectories_id_seq RESTART WITH $maxSequence");
 
 
-        $trajectories = BEADB::for($this->company)->select("SELECT * FROM C_DERROTERO");
-        //dd($trajectories->pluck('CDR_DESCRIPCION'));
+        $trajectories = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_DERROTERO");
 
         $this->log("Sync " . $trajectories->count() . " trajectories from LM");
 
@@ -153,7 +150,7 @@ class BEASyncService extends SyncService
 
         $queryVehicle = $this->vehicle ? "AND AMR_IDTURNO IN (SELECT ATR_IDTURNO FROM A_TURNO WHERE ATR_IDAUTOBUS = " . ($this->vehicle->bea_id ?? 0) . ")" : "";
         $queryMarks = "SELECT * FROM A_MARCA WHERE (AMR_FHINICIO > " . ($this->date ? "'$this->date'" : 'current_date - 30') . ") $queryVehicle";
-        $marks = BEADB::for($this->company)->select($queryMarks);
+        $marks = BEADB::for($this->company, $this->dbId)->select($queryMarks);
 
         foreach ($marks as $markBEA) {
             DB::transaction(function () use ($markBEA) {
@@ -263,7 +260,7 @@ class BEASyncService extends SyncService
         $turn = Turn::where('bea_id', $turnBEAId)->where('company_id', $this->company->id)->first();
 
         if ($turnBEAId) {
-            $turnBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO = $turnBEAId")->first();
+            $turnBEA = $data ? $data : BEADB::for($this->company, $this->dbId)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO = $turnBEAId")->first();
             if ($turnBEA) {
                 if (!$turn) {
                     $turn = new Turn();
@@ -300,7 +297,7 @@ class BEASyncService extends SyncService
         $trajectory = Trajectory::where('bea_id', $trajectoryBEAId)->where('company_id', $this->company->id)->first();
 
         if (!$trajectory && $trajectoryBEAId) {
-            $trajectoryBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_DERROTERO WHERE CDR_IDDERROTERO = $trajectoryBEAId")->first();
+            $trajectoryBEA = $data ?: BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_DERROTERO WHERE CDR_IDDERROTERO = $trajectoryBEAId")->first();
 
             if ($trajectoryBEA) {
                 $route = $this->validateRoute($trajectoryBEA->CDR_IDRUTA);
@@ -329,10 +326,12 @@ class BEASyncService extends SyncService
      */
     private function validateRoute($routeBEAId, $data = null)
     {
-        $route = Route::where('bea_id', $routeBEAId)->where('company_id', $this->company->id)->first();
+        $route = Route::where('bea_id', $routeBEAId)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)->first();
 
         if (!$route && $routeBEAId) {
-            $routeBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_RUTA WHERE CRU_IDRUTA = $routeBEAId")->first();
+            $routeBEA = $data ?: BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_RUTA WHERE CRU_IDRUTA = $routeBEAId")->first();
             if ($routeBEA) {
                 $route = new Route();
                 $route->bea_id = $routeBEA->CRU_IDRUTA;
@@ -367,10 +366,12 @@ class BEASyncService extends SyncService
     {
         $driver = null;
         if ($driverBEAId) {
-            $driver = Driver::where('bea_id', $driverBEAId)->where('company_id', $this->company->id)->first();
+            $driver = Driver::where('bea_id', $driverBEAId)
+                ->where('db_id', $this->dbId)
+                ->where('company_id', $this->company->id)->first();
 
             if (!$driver) {
-                $driverBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverBEAId")->first();
+                $driverBEA = $data ?: BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_CONDUCTOR WHERE CCO_IDCONDUCTOR = $driverBEAId")->first();
 
                 if ($driverBEA) {
 
@@ -422,10 +423,12 @@ class BEASyncService extends SyncService
 
         $vehicle = null;
         if ($vehicleBEAId) {
-            $vehicle = Vehicle::where('bea_id', $vehicleBEAId)->where('company_id', $this->company->id)->first();
+            $vehicle = Vehicle::where('bea_id', $vehicleBEAId)
+                ->where('db_id', $this->dbId)
+                ->where('company_id', $this->company->id)->first();
 
             if (!$vehicle) {
-                $vehicleBEA = $data ? $data : BEADB::for($this->company)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
+                $vehicleBEA = $data ?: BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_AUTOBUS WHERE CAU_IDAUTOBUS = $vehicleBEAId")->first();
 
                 if ($vehicleBEA) {
                     if ($onlyMigrate) {
@@ -454,7 +457,7 @@ class BEASyncService extends SyncService
                         $this->log("  Vehicle with bea_id $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS is not migrated yet");
 
                         $vehicle = new Vehicle();
-                        $duplicatedPlates = BEADB::for($this->company)->select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
+                        $duplicatedPlates = BEADB::for($this->company, $this->dbId)->select("SELECT count(1) TOTAL FROM C_AUTOBUS WHERE CAU_PLACAS = '$vehicleBEA->CAU_PLACAS'")->first();
 
                         if ($duplicatedPlates->TOTAL > 1) $vehicleBEA->CAU_PLACAS = "$vehicleBEA->CAU_PLACAS-$vehicleBEA->CAU_NUMECONOM";
 

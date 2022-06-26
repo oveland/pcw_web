@@ -26,7 +26,7 @@ class DBService extends LMDatabase
         }
 
         if (!$this->connection) {
-            $this->throwException("No connection with LM DB. Company ID $this->company");
+            $this->throwException("No connection with LM DB. Company ID $this->company and dbId = $this->dbId");
         }
     }
 

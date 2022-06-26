@@ -10,12 +10,18 @@ use Log;
 
 class SyncCommand extends Command
 {
+
+    /**
+     * @var App\Services\BEA\BEASyncService
+     */
+    private $sync;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'bea:sync {--company=21} {--type=all}';
+    protected $signature = 'bea:sync {--company=21} {--type=all} {--db-id=1}';
 
     /**
      * The console command description.
@@ -51,19 +57,22 @@ class SyncCommand extends Command
 
             $type = $this->option('type');
 
-            if ($type === 'all') {
-                $beaService->sync->routes();
-                $beaService->sync->vehicles();
-                $beaService->sync->drivers();
+            $this->sync = $beaService->sync;
+            $this->sync->for(null, null, $this->option('db-id'));
 
-                $beaService->sync->trajectories();
+            if ($type === 'all') {
+                $this->sync->routes();
+                $this->sync->vehicles();
+                $this->sync->drivers();
+
+                $this->sync->trajectories();
 
                 $vehicles = $beaService->repository->getAllVehicles();
                 foreach ($vehicles as $vehicle) {
-                    $beaService->sync->checkVehicleParams($vehicle);
+                    $this->sync->checkVehicleParams($vehicle);
                 }
             } else {
-                $beaService->sync->$type();
+                $this->sync->$type();
             }
 
 

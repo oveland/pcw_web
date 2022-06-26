@@ -96,6 +96,7 @@ return [
 
         'BEA' => [
             'COODETRANS' => [
+                'db_id' => 1,
                 'company_id' => App\Models\Company\Company::COODETRANS,
                 'driver' => 'firebird',
                 'path' => env('BEADB_PATH'),
@@ -103,7 +104,17 @@ return [
                 'password' => env('BEADB_PASSWORD', 'bea00001'),
             ],
 
+            'COODETRANS_RUTA_NORTE' => [
+                'db_id' => 2,
+                'company_id' => App\Models\Company\Company::COODETRANS,
+                'driver' => 'firebird',
+                'path' => env('BEADB_PATH_RUTA_NORTE'),
+                'username' => env('BEADB_USERNAME', 'BEADMIN'),
+                'password' => env('BEADB_PASSWORD', 'bea00001'),
+            ],
+
             'MONTEBELLO' => [
+                'db_id' => 1,
                 'company_id' => App\Models\Company\Company::MONTEBELLO,
                 'driver' => 'firebird',
                 'path' => env('BEADB_PATH_MONTEBELLO'),
@@ -112,6 +123,7 @@ return [
             ],
 
             'ALAMEDA' => [
+                'db_id' => 1,
                 'company_id' => App\Models\Company\Company::ALAMEDA,
                 'driver' => 'firebird',
                 'path' => env('BEADB_PATH_ALAMEDA'),
@@ -120,6 +132,7 @@ return [
             ],
 
             'PCW' => [
+                'db_id' => 1,
                 'company_id' => App\Models\Company\Company::PCW,
                 'driver' => 'firebird',
                 'path' => env('BEADB_PATH_MONTEBELLO'),

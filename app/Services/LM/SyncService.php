@@ -10,7 +10,6 @@ use App\Models\LM\ManagementCost;
 use App\Models\LM\Penalty;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
-use App\Services\LM\LMRepository;
 use Carbon\Carbon;
 use Log;
 
@@ -19,22 +18,29 @@ abstract class SyncService
     protected $type;
 
     /**
+     * @var Company $company
+     */
+    public $company;
+
+    /**
+     * @var LMRepository
+     */
+    protected $repository;
+
+    /**
      * @var Vehicle
      */
     protected $vehicle;
+
     /**
      * @var string
      */
     protected $date;
 
     /**
-     * @var Company $company
+     * @var int
      */
-    public $company;
-    /**
-     * @var LMRepository
-     */
-    protected $repository;
+    protected $dbId;
 
     /**
      * BEASyncService constructor.
@@ -47,10 +53,11 @@ abstract class SyncService
         $this->repository = $repository;
     }
 
-    public function for($vehicleId, $date)
+    public function for($vehicleId, $date, $dbId = 1)
     {
         $this->vehicle = Vehicle::find($vehicleId);
         $this->date = $date;
+        $this->dbId = $dbId;
 
         return $this;
     }
