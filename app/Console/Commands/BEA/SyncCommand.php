@@ -12,9 +12,9 @@ class SyncCommand extends Command
 {
 
     /**
-     * @var App\Services\BEA\BEASyncService
+     * @var App\Services\LM\LMService
      */
-    private $sync;
+    private $service;
 
     /**
      * The name and signature of the console command.
@@ -48,17 +48,22 @@ class SyncCommand extends Command
      */
     public function handle()
     {
+        $dbId = $this->option('db-id');
         $company = Company::find($this->option('company'));
 
         $this->info("LM sync for company: $company->name");
 
         if ($company) {
-            $beaService = App::makeWith('lm.service', ['company' => $company->id, 'console' => true]);
+            $beaService = App::makeWith('lm.service', [
+                'company' => $company->id,
+                'db_id' => $dbId,
+                'console' => true
+            ]);
 
             $type = $this->option('type');
 
             $this->sync = $beaService->sync;
-            $this->sync->for(null, null, $this->option('db-id'));
+            $this->sync->for(null, null, $dbId);
 
             if ($type === 'all') {
                 $this->sync->routes();

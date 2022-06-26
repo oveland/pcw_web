@@ -35,6 +35,9 @@ class BEAServiceProvider extends ServiceProvider
         $this->app->bind('bea.service', function ($app, $params) {
             $user = Auth::user();
             $dbId = $user ? $user->show_db_id : 1;
+            if(isset($params['db_id']) && $params['db_id']) {
+                $dbId = $params['db_id'];
+            }
 
             $company = !$user || $user->isAdmin() || isset($params['console']) ? Company::find($params['company']) : $user->company;
             $repository = new LMRepository($company, $dbId);
