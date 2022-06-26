@@ -45,7 +45,7 @@ class AddColumnDbIdToBeaTables extends Migration
         Schema::table('routes', function (Blueprint $table) {
             $table->dropUnique(['company_id', 'bea_id', 'db_id']);
 //            $table->unique(['company_id', 'bea_id'], 'routes_company_id_bea_id_uindex');
-            DB::statement('CREATE UNIQUE INDEX routes_company_id_bea_id_uindex ON vehicles (company_id, bea_id)');
+            DB::statement('CREATE UNIQUE INDEX routes_company_id_bea_id_uindex ON routes (company_id, bea_id)');
             $table->dropColumn('db_id');
         });
 

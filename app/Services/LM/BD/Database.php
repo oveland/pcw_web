@@ -17,9 +17,9 @@ abstract class Database
     function for(Company $company, $dbId = 1)
     {
         $this->company = $company->id;
-        $this->$dbId = $dbId;
+        $this->dbId = $dbId;
         $this->prepareConnection();
-
+        
         return $this;
     }
 

@@ -108,6 +108,8 @@ class BEASyncService extends SyncService
 
         $routes = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_RUTA");
 
+//        dd($routes->pluck('CRU_DESCRIPCION', 'CRU_IDRUTA'));
+
         $this->log("Sync " . $routes->count() . " routes from LM");
 
         foreach ($routes as $routeBEA) {
@@ -326,26 +328,33 @@ class BEASyncService extends SyncService
      */
     private function validateRoute($routeBEAId, $data = null)
     {
-        $route = Route::where('bea_id', $routeBEAId)
-            ->where('db_id', $this->dbId)
-            ->where('company_id', $this->company->id)->first();
-
-        if (!$route && $routeBEAId) {
+        $route = null;
+        if ($routeBEAId) {
             $routeBEA = $data ?: BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_RUTA WHERE CRU_IDRUTA = $routeBEAId")->first();
             if ($routeBEA) {
-                $route = new Route();
-                $route->bea_id = $routeBEA->CRU_IDRUTA;
-                $route->name = "BEA | $routeBEA->CRU_DESCRIPCION";
-                $route->distance = 0;
-                $route->road_time = 0;
-                $route->url = 'none';
-                $route->company_id = $this->company->id;
-                $route->dispatch_id = 46;
-                $route->active = true;
-                $route->created_at = Carbon::now();
-                $route->updated_at = Carbon::now();
 
-                $this->log("Migrated route with bea_id = $route->bea_id");
+                $route = Route::where('bea_id', $routeBEAId)
+                    ->where('db_id', $this->dbId)
+                    ->where('company_id', $this->company->id)->first();
+
+                if (!$route) {
+                    $route = new Route();
+                    $route->dispatch_id = 46;
+                    $route->distance = 0;
+                    $route->road_time = 0;
+                    $route->url = 'none';
+                    $route->active = true;
+                    $route->company_id = $this->company->id;
+                    $route->created_at = Carbon::now();
+
+                    $this->log("Migrated route with bea_id = $route->bea_id");
+                }
+
+                $route->bea_id = $routeBEA->CRU_IDRUTA;
+                $route->db_id = $this->dbId;
+                $route->name = "BEA | $routeBEA->CRU_DESCRIPCION";
+
+                $route->updated_at = Carbon::now();
 
                 if (!$route->save()) {
                     throw new Exception("Error on validation save ROUTE with id: $routeBEA->CRU_IDRUTA");
@@ -383,12 +392,14 @@ class BEASyncService extends SyncService
                         $this->log("  Driver for bea_id = $driverBEAId, code $driverBEA->CCO_CLAVECOND >> SYNC driver: id $driver->id, code $driver->code ($driver->full_name)");
 
                         $driver->bea_id = $driverBEAId;
+                        $driver->db_id = $this->dbId;
                         $driver->saveData();
                     } else {
                         $this->log("  Driver with bea_id $driverBEAId, code $driverBEA->CCO_CLAVECOND is not migrated yet");
 
                         $driver = new Driver();
                         $driver->bea_id = $driverBEA->CCO_IDCONDUCTOR;
+                        $driver->db_id = $this->dbId;
                         $driver->first_name = $driverBEA->CCO_NOMBRE;
                         $driver->last_name = "$driverBEA->CCO_APELLIDOP $driverBEA->CCO_APELLIDOM";
                         $driver->identity = $driverBEA->CCO_CLAVECOND;
@@ -448,6 +459,7 @@ class BEASyncService extends SyncService
                         $this->log("  Vehicle For bea_id = $vehicleBEAId, number $vehicleBEA->CAU_NUMECONOM and plate $vehicleBEA->CAU_PLACAS >> SYNC vehicle: id $vehicle->id, number $vehicle->number ($vehicle->plate) and Route = $routeDefault " . ($duplicated ? " ***** DUPLICATED *******" : ""));
 
                         $vehicle->bea_id = $vehicleBEAId;
+                        $vehicle->db_id = $this->dbId;
                         $vehicle->save();
 
                         if ($detectedVehicles) {
@@ -464,6 +476,7 @@ class BEASyncService extends SyncService
                         if ($vehicleBEA->CAU_PLACAS) {
                             $vehicle->id = Vehicle::max('id') + 1;
                             $vehicle->bea_id = $vehicleBEA->CAU_IDAUTOBUS;
+                            $vehicle->db_id = $this->dbId;
                             $vehicle->plate = $vehicleBEA->CAU_PLACAS;
                             $vehicle->number = $vehicleBEA->CAU_NUMECONOM;
                             $vehicle->company_id = $this->company->id;
