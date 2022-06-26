@@ -27,7 +27,6 @@ use Illuminate\View\View;
 use PDF;
 use Storage;
 use Validator;
-use App\Facades\DFSDB;
 
 class TakingsPassengersLiquidationController extends Controller
 {
@@ -246,7 +245,9 @@ class TakingsPassengersLiquidationController extends Controller
         switch ($options->for->trajectories) {
             case 'all':
                 $routes = $discount->vehicle->company->activeRoutes;
-                $trajectories = Trajectory::whereIn('route_id', $routes->pluck('id'))->get();
+                $trajectories = Trajectory::whereIn('route_id', $routes->pluck('id'))
+                    ->where('db_id', $this->lmService->dbId)
+                    ->get();
                 break;
             case 'custom':
                 foreach ($options->trajectories as $trajectoriesId) {
@@ -507,6 +508,7 @@ class TakingsPassengersLiquidationController extends Controller
         $dateQuery = $liquidation->date->toDateString();
 
         $lastMarksNoLiquidated = Mark::where('date', '<', $dateQuery)
+            ->where('db_id', $this->lmService->dbId)
             ->whereHas('turn', function ($turn) use ($vehicle) {
                 return $turn->where('vehicle_id', $vehicle->id);
             })

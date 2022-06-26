@@ -34,7 +34,10 @@ class BEASyncService extends SyncService
      */
     public function turns()
     {
-        $lastIdMigrated = Turn::where('company_id', $this->company->id)->max('bea_id');
+        $lastIdMigrated = Turn::where('company_id', $this->company->id)
+            ->where('db_id', $this->dbId)
+            ->max('bea_id');
+
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
         $turns = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO > $lastIdMigrated");
 
@@ -108,8 +111,6 @@ class BEASyncService extends SyncService
 
         $routes = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_RUTA");
 
-//        dd($routes->pluck('CRU_DESCRIPCION', 'CRU_IDRUTA'));
-
         $this->log("Sync " . $routes->count() . " routes from LM");
 
         foreach ($routes as $routeBEA) {
@@ -163,10 +164,15 @@ class BEASyncService extends SyncService
         if ($this->vehicle && $this->date) {
             $markIdsBEA = $marks->pluck('AMR_IDMARCA');
 
-            $turns = Turn::where('company_id', $this->company->id)->where('vehicle_id', $this->vehicle->id)->get();
+            $turns = Turn::where('company_id', $this->company->id)
+                ->where('db_id', $this->dbId)
+                ->where('vehicle_id', $this->vehicle->id)
+                ->get();
+
             $marksIdsPCW = Mark::where('company_id', $this->company->id)
                 ->whereIn('turn_id', $turns->pluck('id'))
                 ->where('liquidated', false)
+                ->where('db_id', $this->dbId)
                 ->whereDate('date', $this->date)
                 ->get()->pluck('bea_id');
 
@@ -191,7 +197,10 @@ class BEASyncService extends SyncService
      */
     function validateMark($markBEA)
     {
-        $mark = Mark::where('company_id', $this->company->id)->where('bea_id', $markBEA->AMR_IDMARCA)->first();
+        $mark = Mark::where('company_id', $this->company->id)
+            ->where('bea_id', $markBEA->AMR_IDMARCA)
+            ->where('db_id', $this->dbId)
+            ->first();
 
         if (!$mark) $mark = new Mark();
         else if ($mark->liquidated) return null;
@@ -215,10 +224,17 @@ class BEASyncService extends SyncService
         }
 
         // Synchronized models
-        $turn = Turn::where('bea_id', $markBEA->AMR_IDTURNO)->where('company_id', $this->company->id)->first();
+        $turn = Turn::where('bea_id', $markBEA->AMR_IDTURNO)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)
+            ->first();
         if (!$turn) $turn = $this->validateTurn($markBEA->AMR_IDTURNO);
 
-        $trajectory = Trajectory::where('bea_id', $markBEA->AMR_IDDERROTERO)->where('company_id', $this->company->id)->first();
+        $trajectory = Trajectory::where('bea_id', $markBEA->AMR_IDDERROTERO)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)
+            ->first();
+
         if (!$trajectory) $trajectory = $this->validateTrajectory($markBEA->AMR_IDDERROTERO);
 
         $initialTime = Carbon::createFromFormat("Y-m-d H:i:s", $markBEA->AMR_FHINICIO);
@@ -259,7 +275,10 @@ class BEASyncService extends SyncService
      */
     public function validateTurn($turnBEAId, $data = null)
     {
-        $turn = Turn::where('bea_id', $turnBEAId)->where('company_id', $this->company->id)->first();
+        $turn = Turn::where('bea_id', $turnBEAId)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)
+            ->first();
 
         if ($turnBEAId) {
             $turnBEA = $data ? $data : BEADB::for($this->company, $this->dbId)->select("SELECT * FROM A_TURNO WHERE ATR_IDTURNO = $turnBEAId")->first();
@@ -296,7 +315,10 @@ class BEASyncService extends SyncService
      */
     public function validateTrajectory($trajectoryBEAId, $data = null)
     {
-        $trajectory = Trajectory::where('bea_id', $trajectoryBEAId)->where('company_id', $this->company->id)->first();
+        $trajectory = Trajectory::where('bea_id', $trajectoryBEAId)
+            ->where('company_id', $this->company->id)
+            ->where('db_id', $this->dbId)
+            ->first();
 
         if (!$trajectory && $trajectoryBEAId) {
             $trajectoryBEA = $data ?: BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_DERROTERO WHERE CDR_IDDERROTERO = $trajectoryBEAId")->first();

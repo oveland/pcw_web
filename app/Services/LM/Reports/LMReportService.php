@@ -8,6 +8,7 @@ use App\Exports\LM\DailyReportExport;
 use App\Models\LM\Mark;
 use App\Models\LM\Turn;
 use App\Models\Company\Company;
+use Auth;
 use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -17,6 +18,13 @@ use function collect;
 
 class LMReportService
 {
+    protected $dbId;
+
+    public function __construct($dbId = 1)
+    {
+        $this->dbId = $dbId ?? 1;
+    }
+
     /**
      * @param Company $company
      * @param $date
@@ -26,9 +34,12 @@ class LMReportService
     {
         $vehicles = $company->vehicles;
 
-        $vehicleTurns = Turn::whereIn('vehicle_id', $vehicles->pluck('id'))->get();
+        $vehicleTurns = Turn::whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->where('db_id', $this->dbId)
+            ->get();
 
         $marks = Mark::enabled()
+            ->where('db_id', $this->dbId)
             ->whereIn('turn_id', $vehicleTurns->pluck('id'))
             ->where('liquidated', true)
             //->where('taken', false)

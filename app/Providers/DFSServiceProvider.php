@@ -35,12 +35,13 @@ class DFSServiceProvider extends ServiceProvider
     {
         $this->app->bind('dfs.service', function ($app, $params) {
             $user = Auth::user();
+            $dbId = $user ? $user->show_db_id : 1;
 
             $company = !$user || $user->isAdmin() || isset($params['console']) ? Company::find($params['company']) : $user->company;
-            $repository = new LMRepository($company);
-            $report = new LMReportService();
+            $repository = new LMRepository($company, $dbId);
+            $report = new LMReportService($dbId);
 
-            return new LMService(new DFSSyncService($company, $repository), $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
+            return new LMService(new DFSSyncService($company, $repository), $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository), $dbId);
         });
     }
 }

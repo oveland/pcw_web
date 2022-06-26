@@ -33,6 +33,15 @@ class AddColumnDbIdToBeaTables extends Migration
             $table->dropIndex('conductor_empresa_bea_id_uindex');
             $table->unique(['empresa', 'bea_id', 'db_id']);
         });
+
+
+        foreach (['bea_marks', 'bea_trajectories', 'bea_turns'] as $bea_table) {
+            Schema::table($bea_table, function (Blueprint $table) {
+                $table->integer('db_id')->default(1);
+                $table->dropUnique(['company_id', 'bea_id']);
+                $table->unique(['company_id', 'bea_id', 'db_id']);
+            });
+        }
     }
 
     /**
@@ -65,5 +74,13 @@ class AddColumnDbIdToBeaTables extends Migration
             DB::statement('CREATE UNIQUE INDEX conductor_empresa_bea_id_uindex ON conductor (empresa, bea_id)');
             $table->dropColumn('db_id');
         });
+
+        foreach (['bea_marks', 'bea_trajectories', 'bea_turns'] as $bea_table) {
+            Schema::table($bea_table, function (Blueprint $table) {
+                $table->dropUnique(['company_id', 'bea_id', 'db_id']);
+                $table->unique(['company_id', 'bea_id']);
+                $table->dropColumn('db_id');
+            });
+        }
     }
 }

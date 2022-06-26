@@ -50,6 +50,7 @@ use Laravel\Passport\Token;
  * @method static Builder|User whereUsername($value)
  * @mixin Eloquent
  * @property int $role_id
+ * @property int $show_db_id
  * @method static Builder|User whereRoleId($value)
  * @property string|null $vehicle_tags
  * @property-read mixed $user_routes

@@ -52,6 +52,10 @@ class SyncCommand extends Command
 
         $this->info("LM sync for company: $company->name");
 
+        $route = App\Models\Routes\Route::whereId(2);
+
+        dd($route->toSql(), $route->getBindings());
+
         if ($company) {
             $beaService = App::makeWith('lm.service', ['company' => $company->id, 'console' => true]);
 

@@ -45,9 +45,10 @@ class LMServiceProvider extends ServiceProvider
 
         $this->app->bind('lm.service', function ($app, $params) {
             $user = Auth::user();
+            $dbId = $user ? $user->show_db_id : 1;
 
             $company = !$user || $user->isAdmin() || isset($params['console']) ? Company::find($params['company']) : $user->company;
-            $repository = new LMRepository($company);
+            $repository = new LMRepository($company, $dbId);
             $report = new LMReportService();
 
             $syncService = null;
@@ -60,7 +61,7 @@ class LMServiceProvider extends ServiceProvider
                     break;
             }
 
-            return new LMService($syncService, $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository));
+            return new LMService($syncService, $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository), $dbId);
         });
     }
 }

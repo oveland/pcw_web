@@ -95,7 +95,9 @@ class DFSSyncService extends SyncService
      */
     function turns()
     {
-        $lastIdMigrated = Turn::where('company_id', $this->company->id)->max('bea_id');
+        $lastIdMigrated = Turn::where('company_id', $this->company->id)
+            ->where('db_id', $this->dbId)
+            ->max('bea_id');
         $lastIdMigrated = $lastIdMigrated ? $lastIdMigrated : 0;
 
         $turns = DFSDB::select("
@@ -323,8 +325,13 @@ class DFSSyncService extends SyncService
         if ($this->vehicle && $this->date) {
             $markIdsDFS = $marks->pluck('ID');
 
-            $turns = Turn::where('company_id', $this->company->id)->where('vehicle_id', $this->vehicle->id)->get();
+            $turns = Turn::where('company_id', $this->company->id)
+                ->where('db_id', $this->dbId)
+                ->where('vehicle_id', $this->vehicle->id)
+                ->get();
+
             $marksIdsPCW = Mark::where('company_id', $this->company->id)
+                ->where('db_id', $this->dbId)
                 ->whereIn('turn_id', $turns->pluck('id'))
                 ->where('liquidated', false)
                 ->whereDate('date', $this->date)
@@ -347,7 +354,9 @@ class DFSSyncService extends SyncService
      */
     function validateMark($markDFS)
     {
-        $mark = Mark::where('company_id', $this->company->id)->where('bea_id', $markDFS->ID)->first();
+        $mark = Mark::where('company_id', $this->company->id)
+            ->where('db_id', $this->dbId)
+            ->where('bea_id', $markDFS->ID)->first();
 
         if (!$mark) $mark = new Mark();
         else if ($mark->liquidated) return null;
@@ -366,10 +375,18 @@ class DFSSyncService extends SyncService
         $passengersDFS = $markDFS->PASSENGERS;
         $totalDFS = intval($markDFS->TOTAL);
 
-        $turn = Turn::where('bea_id', $markDFS->TRN_ID)->where('company_id', $this->company->id)->first();
+        $turn = Turn::where('bea_id', $markDFS->TRN_ID)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)
+            ->first();
+
         if (!$turn) $turn = $this->validateTurn($markDFS->TRN_ID, $markDFS);
 
-        $trajectory = Trajectory::where('bea_id', $markDFS->TRJ_ID)->where('company_id', $this->company->id)->first();
+        $trajectory = Trajectory::where('bea_id', $markDFS->TRJ_ID)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)
+            ->first();
+
         if (!$trajectory) $trajectory = $this->validateTrajectory($markDFS->TRJ_ID, $markDFS);
 
         $initialTime = Carbon::createFromFormat("Y-m-d H:i:s", explode('.', $markDFS->INITIAL_DATE)[0]);
@@ -410,7 +427,9 @@ class DFSSyncService extends SyncService
      */
     function validateTurn($turnDFSId, $data = null)
     {
-        $turn = Turn::where('bea_id', $turnDFSId)->where('company_id', $this->company->id)->first();
+        $turn = Turn::where('bea_id', $turnDFSId)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)->first();
 
         if ($turnDFSId) {
             $turnDFS = $data;
@@ -450,6 +469,7 @@ class DFSSyncService extends SyncService
         $route = $this->validateRoute($data->R_ID);
 
         $trajectory = Trajectory::where('name', $data->R_NAME)
+            ->where('db_id', $this->dbId)
             ->where('route_id', $route->id)
             ->where('company_id', $this->company->id)->first();
 

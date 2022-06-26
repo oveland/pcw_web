@@ -3,6 +3,7 @@
 
 namespace App\Services\LM;
 
+use App\Models\Drivers\Driver;
 use App\Models\LM\DiscountType;
 use App\Models\LM\ManagementCost;
 use App\Models\LM\Trajectory;
@@ -16,11 +17,20 @@ use function collect;
 
 class LMRepository
 {
+    /**
+     * @var integer
+     */
+    public $dbId;
+
+    /**
+     * @var Company|null
+     */
     public $company;
 
-    public function __construct(Company $company = null)
+    public function __construct(Company $company = null, $dbId = 1)
     {
         $this->company = $company;
+        $this->dbId = $dbId;
     }
 
     public function forCompany(Company $company)
@@ -33,10 +43,11 @@ class LMRepository
      */
     function getAllVehicles($onlyMigrated = false): Collection
     {
-        $query = $this->company->activeVehicles();
+        $query = $this->company->activeVehicles()->where('db_id', $this->dbId);
 
         if ($onlyMigrated) {
-            $query = $query->where('bea_id', '>', 0);
+            $query = $query
+                ->where('bea_id', '>', 0);
         }
 
         return $query->get();
@@ -49,6 +60,7 @@ class LMRepository
     function getTrajectoriesByRoute($routeId): Collection
     {
         return Trajectory::with('route')
+            ->where('db_id', $this->dbId)
             ->where('route_id', $routeId)
             ->whereIn('route_id', $this->getAllRoutes()->pluck('id'))
             ->get();
@@ -62,6 +74,7 @@ class LMRepository
         $trajectories = collect([]);
 
         $trajectoriesDB = Trajectory::with('route')
+            ->where('db_id', $this->dbId)
             ->whereIn('route_id', $this->getAllRoutes()->pluck('id'))
             ->get();
         foreach ($trajectoriesDB as $trajectory) {
@@ -83,15 +96,20 @@ class LMRepository
      */
     function getAllRoutes(): Collection
     {
-        return collect($this->company->activeRoutes->where('bea_id', '<>', null)->values());
+        $routes = $this->company->activeRoutes
+            ->where('db_id', $this->dbId)
+            ->where('bea_id', '<>', null)
+            ->values();
+        return collect($routes);
     }
 
     /**
-     * @return Drivers[]
+     * @return Driver[]
      */
     function getAllDrivers()
     {
-        return $this->company->activeDrivers;
+
+        return $this->company->activeDrivers->where('db_id', $this->dbId);
     }
 
     /**

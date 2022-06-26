@@ -17,6 +17,11 @@ use function collect;
 class LMService
 {
     /**
+     * @var integer
+     */
+    public $dbId;
+
+    /**
      * @var DiscountService
      */
     public $discount;
@@ -49,8 +54,9 @@ class LMService
      * @param DiscountService $discountService
      * @param CommissionService $commissionService
      * @param PenaltyService $penaltyService
+     * @param $dbId
      */
-    public function __construct(SyncService $sync = null, LMReportService $report, LMRepository $repository, DiscountService $discountService, CommissionService $commissionService, PenaltyService $penaltyService)
+    public function __construct(SyncService $sync = null, LMReportService $report, LMRepository $repository, DiscountService $discountService, CommissionService $commissionService, PenaltyService $penaltyService, $dbId)
     {
         $this->repository = $repository;
         $this->discount = $discountService;
@@ -58,6 +64,7 @@ class LMService
         $this->penalty = $penaltyService;
         $this->sync = $sync;
         $this->report = $report;
+        $this->dbId = $dbId;
     }
 
     /**
@@ -211,7 +218,7 @@ class LMService
     {
         if (!$this->sync) return collect([]);
 
-        $this->sync->for($vehicleId, $date)->last();
+        $this->sync->for($vehicleId, $date, $this->dbId)->last();
 
         $vehicle = Vehicle::find($vehicleId);
         $this->sync->checkDiscountsFor($vehicle);
@@ -220,9 +227,12 @@ class LMService
         $this->sync->checkManagementCostsFor($vehicle);
 
         if (!$vehicle) return collect([]);
-        $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)->get();
+        $vehicleTurns = Turn::where('vehicle_id', $vehicle->id)
+            ->where('db_id', $this->dbId)
+            ->get();
 
         $marks = Mark::enabled()
+            ->where('db_id', $this->dbId)
             ->whereIn('turn_id', $vehicleTurns->pluck('id'))
             ->where('liquidated', false)
             ->where('taken', false)

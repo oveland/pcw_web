@@ -40,7 +40,7 @@ abstract class SyncService
     /**
      * @var int
      */
-    protected $dbId;
+    protected $dbId = 1;
 
     /**
      * BEASyncService constructor.
@@ -57,7 +57,7 @@ abstract class SyncService
     {
         $this->vehicle = Vehicle::find($vehicleId);
         $this->date = $date;
-        $this->dbId = $dbId;
+        $this->dbId = $dbId ?? 1;
 
         return $this;
     }
