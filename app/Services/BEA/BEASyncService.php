@@ -473,7 +473,7 @@ class BEASyncService extends SyncService
                         }
                     }
 
-                    $vehicle = $this->company->vehicles->filter(function (Vehicle $v) use ($vehicleBEA) {
+                    $vehicle = $this->company->vehicles->where('db_id', $this->dbId)->filter(function (Vehicle $v) use ($vehicleBEA) {
                         return Str::upper(str_replace('-', '', $v->plate)) == Str::upper(str_replace('-', '', $vehicleBEA->CAU_PLACAS)) || Str::upper($v->number) == Str::upper($vehicleBEA->CAU_NUMECONOM);
                     })->first();
 
