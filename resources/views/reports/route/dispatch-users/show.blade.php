@@ -99,17 +99,13 @@
                                     <td>{{ $counterByRecorderByVehicle->passengersByRecorder ?? 'NONOE' }}</td>
                                     <td class="text-center details">
                                         <button class="btn btn-sm btn-link" data-toggle="collapse" data-target="#vehicle-{{ $vehicleId }}-{{ $userId }}">
-                                            <i class="fa fa-eye"></i> @lang('Details')
+                                            <i class="fa fa-eye"></i> @lang('Details') ({{ count($dispatchRegistersByVehicle) }})
                                         </button>
                                     </td>
                                 </tr>
                                 <tr id="vehicle-{{ $vehicleId }}-{{ $userId }}" class="collapse fade">
                                     <td colspan="6">
                                         <div class="row">
-                                            @if( $loop->last && $loop->parent->last )
-                                                {{ dd($report->dispatchRegistersByVehicles[$vehicleId]->toArray(), $report->counterByRecorderByVehicles[$vehicleId]) }}
-                                                {{ dd($issues) }}
-                                            @endif
                                             <div class="col-md-12 p-0">
                                                 @if($issues->isNotEmpty())
                                                     <div class="alert alert-warning alert-bordered fade in m-b-0" style="border-radius: 0px">
@@ -128,6 +124,10 @@
                                                 <table class="table table-bordered table-striped table-hover table-valign-middle table-report">
                                                     <thead>
                                                     <tr class="inverse">
+                                                        <th class="text-center">
+                                                            <i class="fa fa-car" aria-hidden="true"></i><br>
+                                                            @lang('Vehicle')
+                                                        </th>
                                                         <th class="text-center">
                                                             <i class="fa fa-flag" aria-hidden="true"></i><br>
                                                             @lang('Route')
@@ -169,22 +169,28 @@
                                                     </thead>
                                                     <tbody>
                                                     @foreach($dispatchRegistersByVehicle as $dispatchRegister)
-                                                        @php( $dispatchRegisterCounter = $counterByRecorderByVehicle->history[$dispatchRegister->id] )
+                                                        @php
+                                                            $dispatchRegisterCounter = $counterByRecorderByVehicle->history[$dispatchRegister->id];
+                                                            $bgClass = $dispatchRegister->complete() ? "bg-inverse" : "bg-yellow-soft";
+                                                        @endphp
                                                         <tr>
-                                                            <th width="20%" class="bg-inverse text-white text-center">
+                                                            <th width="10%" class="{{ $bgClass }} text-white text-center">
+                                                                {{ $dispatchRegister->vehicle->number }}
+                                                            </th>
+                                                            <th width="10%" class="{{ $bgClass }} text-white text-center">
                                                                 {{ $dispatchRegister->route->name }}
                                                             </th>
-                                                            <th width="5%" class="bg-inverse text-white text-center">
+                                                            <th width="5%" class="{{ $bgClass }} text-white text-center">
                                                                 <small class="tooltips" data-title="@lang('Departure time')">{{ $dispatchRegister->departure_time }}</small><br>
                                                                 <small class="tooltips" data-title="@lang('Arrival time')">{{ $dispatchRegister->arrival_time }}</small>
                                                                 <hr class="hr">
                                                                 <small class="tooltips" data-title="@lang('Route time')">{{ $dispatchRegister->getRouteTime() }}</small>
                                                             </th>
-                                                            <th width="5%" class="bg-inverse text-white text-center">
+                                                            <th width="5%" class="{{ $bgClass }} text-white text-center">
                                                                 {{ $dispatchRegister->round_trip }}<br>
                                                                 <small>{{ $dispatchRegister->status }}</small>
                                                             </th>
-                                                            <th width="5%" class="bg-inverse text-white text-center">
+                                                            <th width="5%" class="{{ $bgClass }} text-white text-center">
                                                                 {{ $dispatchRegister->turn }}
                                                             </th>
                                                             <td width="5%" class="text-center">

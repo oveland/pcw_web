@@ -58,7 +58,7 @@ class ReportRouteDispatchUsersController extends Controller
      */
     public function buildDispatchUsersReport(Company $company = null, $dateReport)
     {
-        $dispatchRegistersByUsers = DispatchRegister::completed()
+        $dispatchRegistersByUsers = DispatchRegister::active()
             ->whereIn('vehicle_id', $company->vehicles->pluck('id'))
             ->where('date', $dateReport)
             ->orderBy('id')
