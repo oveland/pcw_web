@@ -185,7 +185,8 @@ class User extends Authenticatable
             523994798,
             423994798,
             2018101065,
-            723994798
+            723994798,
+            1818275091 // RICARDO
         ];
 
         return in_array($this->id, $usersCanAdmin) || $this->isAdmin();

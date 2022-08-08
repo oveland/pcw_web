@@ -58,11 +58,11 @@
                             <label for="gps-report" class="control-label field-required text-bold">@lang('GPS')</label>
                             <div class="form-group">
                                 <select name="gps-report" id="gps-report" class="default-select2 form-control col-md-12">
-                                    @if(Auth::user()->isSuperAdmin())
-                                        <option value="all" data-reset-command="">@lang('All')</option>
-                                    @endif
+                                    <option value="all" data-reset-command="">@lang('All')</option>
                                     @foreach( \App\Models\Vehicles\SimGPS::DEVICES as $device )
-                                        <option value="{{ $device }}" data-reset-command="{{ \App\Models\Vehicles\SimGPS::RESET_COMMAND[ $device ] }}">{{ $device }}</option>
+                                        <option value="{{ $device }}" data-reset-command="{{ \App\Models\Vehicles\SimGPS::RESET_COMMAND[ $device ] }}">
+                                            {{ $device }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

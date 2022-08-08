@@ -470,7 +470,7 @@ class ReportRouteHistoricController extends Controller
             }
         }
 
-        if (!Auth::user()->isSuperAdmin()) {
+        if (!Auth::user()->isSuperAdmin() && !Auth::user()->company_id == 39) {
             $alerts = collect([]);
         }
 

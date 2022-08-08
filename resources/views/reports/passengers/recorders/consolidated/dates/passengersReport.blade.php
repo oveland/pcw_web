@@ -124,7 +124,7 @@
                         <th class="text-center">
                             <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage round trips')
                         </th>
-                        @if($company->hasRecorderCounter())
+                        @if($company->hasMileageScheduled())
                             <th class="text-center">
                                 <i class="fa fa-road" aria-hidden="true"></i><br> @lang('Mileage programmed')
                             </th>
@@ -206,7 +206,7 @@
                             <td>{{ $report->totalDates }} </td>
                             <td>{{ $report->roundTrips }} </td>
                             <td>{{ number_format($report->mileage, 1) }} </td>
-                            @if($company->hasRecorderCounter())
+                            @if($company->hasMileageScheduled())
                                 <td>{{ number_format($report->programmedMileage, 1) }} </td>
                                 <td>{{ number_format($report->differenceMileage, 1) }} </td>
                                 <td class="recorder text-center">
@@ -288,7 +288,7 @@
                         </td>
                         <td class="text-center recorder">{{ $passengerReport->totalRoundTrips }}</td>
                         <td class="text-center recorder">{{ number_format($passengerReport->totalMileage,1) }}</td>
-                        @if($company->hasRecorderCounter())
+                        @if($company->hasMileageScheduled())
                             <td class="text-center recorder">{{ number_format($passengerReport->totalProgrammedMileage,1) }}</td>
                             <td class="text-center recorder">{{ number_format($passengerReport->totalDifferenceMileage,1) }}</td>
                             <td class="text-center sensor recorder hide">{{ $totalSensorRecorder->sum() }}</td>

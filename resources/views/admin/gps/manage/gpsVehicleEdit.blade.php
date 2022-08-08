@@ -45,13 +45,13 @@
 </td>
 <td class="text-center" colspan="2">
     <button type="button" class="btn btn-sm btn-default tooltips btn-rounded" onclick="$('#detail-{{ $id }}').removeClass('hide');$('#edit-{{ $id }}').addClass('hide');" data-title="@lang('Cancel')">
-        <i class="fa fa-undo"></i>
+        <i class="fa fa-times"></i>
     </button>
-    <button type="button" class="btn btn-sm btn-success tooltips btn-rounded" onclick="$('#form-edit-sim-gps-{{ $id }}').submit()" data-title="@lang('Update')">
+    <button type="button" class="btn btn-sm btn-lime tooltips btn-rounded" onclick="$('#form-edit-sim-gps-{{ $id }}').submit()" data-title="@lang('Update')">
         <i class="fa fa-floppy-o"></i>
     </button>
-    <button type="button" class="btn btn-sm btn-danger tooltips btn-rounded m-l-20" onclick="$('#form-delete-sim-gps-{{ $id }}').submit()" data-title="@lang('Delete')">
-        <i class="fa fa-times"></i>
+    <button type="button" class="btn btn-sm btn-danger tooltips btn-rounded m-l-40" onclick="$('#form-delete-sim-gps-{{ $id }}').submit()" data-title="@lang('Delete')">
+        <i class="fa fa-trash"></i>
     </button>
     <form id="form-delete-sim-gps-{{ $id }}" class="form-delete-sim-gps" action="{{ route('admin-gps-manage-delete-sim-gps',['simGPS' => $id]) }}">
         {{ csrf_field() }}

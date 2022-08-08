@@ -206,6 +206,16 @@ class Company extends Model
     }
 
     /*
+     * What companies that have scheduled mileage
+     *
+     * @return bool
+     */
+    function hasMileageScheduled()
+    {
+        return collect([self::ALAMEDA])->contains($this->id);
+    }
+
+    /*
      * What companies that have sensor counter
      *
      * @return bool

@@ -168,7 +168,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 hide">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="control-point-report" class="control-label">@lang('Control points')</label>
                                 <div class="form-group">

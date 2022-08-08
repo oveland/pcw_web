@@ -100,7 +100,7 @@ class SimGPS extends Model
         return $this->belongsTo(User::class);
     }
 
-    const DEVICES = [self::SKYPATROL, self::SKYPATROL_OLD, self::COBAN, self::RUPTELA, self::MEITRACK, self::ANTARES, self::ANDROID];
+    const DEVICES = [self::SKYPATROL, self::SKYPATROL_OLD, self::COBAN, self::RUPTELA, self::MEITRACK, self::ANTARES];
 
     protected $table = 'sim_gps';
 
