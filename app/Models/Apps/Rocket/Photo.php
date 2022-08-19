@@ -79,7 +79,7 @@ class Photo extends Model implements PhotoInterface
     {
         parent::boot();
         static::saving(function (Photo $photo) {
-            $photo->processRekognition($photo->rekognition);
+            //$photo->processRekognition($photo->rekognition);
         });
     }
 

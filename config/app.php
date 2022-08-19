@@ -4,6 +4,7 @@ use App\Providers\APIProvider;
 use App\Providers\BEAServiceProvider;
 use App\Providers\DFSServiceProvider;
 use App\Providers\LMServiceProvider;
+use App\Providers\RecognitionProvider;
 use App\Providers\ReportsServiceProvider;
 use App\Providers\RocketServiceProvider;
 
@@ -199,6 +200,7 @@ return [
         ReportsServiceProvider::class,
         RocketServiceProvider::class,
         APIProvider::class,
+        RecognitionProvider::class,
 
         LMServiceProvider::class,
         BEAServiceProvider::class,

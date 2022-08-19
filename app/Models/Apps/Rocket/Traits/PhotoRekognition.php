@@ -1,21 +1,22 @@
 <?php
 
-
 namespace App\Models\Apps\Rocket\Traits;
 
-
-use App\Models\Company\Company;
-use App\Services\AWS\RekognitionService;
-use Image;
-use Storage;
+use App;
+use App\Services\Recognition\Recognition;
 
 trait PhotoRekognition
 {
     /**
+     * @var Recognition
+     */
+    protected $recognitionService;
+
+    /**
      * @param false $force
      * @param null $type
      */
-    public function processRekognition($force = false, $type = null)
+    public function processRekognition($force = false, $type = null, $save = false)
     {
         $type = $this->getType($type);
         $this->rekognition = $type;
@@ -33,6 +34,11 @@ trait PhotoRekognition
                         break;
                 }
             }
+        }
+
+        if ($save) {
+            $this->save();
+            $this->refresh();
         }
     }
 
@@ -54,20 +60,21 @@ trait PhotoRekognition
     private function process($type)
     {
         $config = $this->photoRekognitionService($type)->config;
+        if (isset($config->photo)) $this->effects = $config->photo->effects;
 
-        if (isset($config->photo)) {
-            $this->effects = $config->photo->effects;
+        if ($this->canProcessRecognition()) {
+//            $this->recognitionService = app('recognition.aws');
+            $this->recognitionService = app('recognition.opencv');
+
+            $column = "data_$type";
+            $this->$column = $this->recognitionService->setPhoto($this)->process($type);
         }
+    }
 
-        $image = $this->getImage('png', true, true);
-        $image = Image::make($image)->encode('png'); // It's necessary because image has a Mask
-
-        $column = "data_$type";
-
-//        if ($this->dispatchRegister && $this->dispatchRegister->isActive() || true) {
-        if ($this->vehicle->company_id != 2 && $this->dispatchRegister && $this->dispatchRegister->isActive() || $this->vehicle->company_id == 41) {
-            $rekognition = new RekognitionService();
-            $this->$column = $rekognition->sefFile($image)->process($type);
-        }
+    private function canProcessRecognition()
+    {
+        return $this->vehicle->company->canPhotoRecognition()
+            && $this->dispatchRegister
+            && $this->dispatchRegister->isActive();
     }
 }

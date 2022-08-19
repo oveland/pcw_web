@@ -2,18 +2,20 @@
 
 namespace App\Services\AWS;
 
+use App\Models\Apps\Rocket\Photo;
+use App\Services\Recognition\Recognition;
 use Aws\Credentials\Credentials;
 use Aws\Rekognition\RekognitionClient;
 use Illuminate\Support\Collection;
-use Intervention\Image\Image;
+use Image;
 
-class RekognitionService
+class RekognitionService implements Recognition
 {
     public $file;
 
     private $rekognition;
 
-    public function __construct()
+    function __construct()
     {
         $options = [
             'credentials' => new Credentials(config('aws.credentials.rekognition.key'), config('aws.credentials.rekognition.secret')),
@@ -24,26 +26,34 @@ class RekognitionService
         $this->rekognition = new RekognitionClient($options);
     }
 
-    /**
-     * @param Image $file
-     * @return $this
-     */
-    public function sefFile($file)
+    function sefFile($file)
     {
         $this->file = $file;
 
         return $this;
     }
 
-    public function process($type = 'persons')
+    /**
+     * @param Photo $photo
+     * @return $this
+     */
+    function setPhoto(Photo $photo)
     {
-        $data = null;
+        $file = Image::make($photo->getImage('png', true, true))->encode('png');
+
+        $this->sefFile($file);
+
+        return $this;
+    }
+
+    function process($type = 'persons')
+    {
         switch ($type) {
             case 'persons':
-                $data = $this->persons();
+                return $this->persons();
                 break;
             case 'faces':
-                $data = $this->faces();
+                return $this->faces();
                 break;
                 break;
             default:
@@ -51,12 +61,10 @@ class RekognitionService
                 break;
         }
 
-        // $data->count = collect($data->draws)->where('count', true)->count();
-
         return $data;
     }
 
-    public function faces()
+    function faces()
     {
         $result = collect($this->rekognition->detectFaces(array(
                 'Image' => array(
@@ -72,7 +80,7 @@ class RekognitionService
     /**
      * @return object
      */
-    public function persons()
+    function persons()
     {
         $result = collect($this->rekognition->detectLabels([
                 'Image' => [
@@ -88,7 +96,7 @@ class RekognitionService
     /**
      * @return object
      */
-    public function custom()
+    function custom()
     {
         $result = collect($this->rekognition->detectCustomLabels([
                 'Image' => [

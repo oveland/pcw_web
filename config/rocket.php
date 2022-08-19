@@ -578,16 +578,16 @@ return [
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [30, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [58, 100],
@@ -621,6 +621,8 @@ return [
         ],
         'faces' => [
             'photo' => [
+
+
                 'effects' => [
                     'brightness' => [
                         [
@@ -654,7 +656,7 @@ return [
                             'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [58, 100],
@@ -675,7 +677,7 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 200,                            # Percent of height when Normal Detection
+                            'nd' => 300,                            # Percent of height when Normal Detection
                             'ld' => 200                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
@@ -1081,7 +1083,7 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 200,                            # Percent of height when Normal Detection
+                            'nd' => 500,                            # Percent of height when Normal Detection
                             'ld' => 200                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [

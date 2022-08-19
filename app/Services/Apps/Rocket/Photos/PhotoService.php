@@ -183,6 +183,9 @@ class PhotoService
                     $currentPhoto->path = $photo->path;
 
                     $success = $currentPhoto->save();
+
+                    $photo->processRekognition(false, null, true);
+
                     if ($success) $message = "Photo saved successfully";
 
                     if (!App::environment('local')) {

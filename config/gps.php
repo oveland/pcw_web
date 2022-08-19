@@ -10,7 +10,8 @@ return [
 
     'server' => [
         'url' => env('GPS_SERVER_URL', 'http://localhost:8181'),
-        'urlAPI' => env('GPS_SERVER_URL', 'http://localhost:8181')."/api"
+        'urlAPI' => env('GPS_SERVER_URL', 'http://localhost:8181')."/api",
+        'recognitionUrlAPI' => env('RECOGNITION_SERVER_URL', 'http://localhost:5000')."/api",
     ],
 
     /*

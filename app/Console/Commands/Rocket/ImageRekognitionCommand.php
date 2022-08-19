@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Rocket;
 
 use App\Models\Apps\Rocket\Photo;
+use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use Illuminate\Console\Command;
 
@@ -48,9 +49,10 @@ class ImageRekognitionCommand extends Command
 
             if ($vehicle) {
                 $photos = Photo::whereVehicleAndDateAndSide($vehicle, $date, $camera)
-//                    ->where('dispatch_register_id', '>', 0)
+                    ->where('dispatch_register_id', '>', 0)
+                    ->whereHas('dispatchRegister', function ($dr) { return $dr->completed(); })
 //                    ->where('id', '<=', 117340)
-                    ->where('date', '>=', '2022-02-09 15:00:00')
+//                    ->where('date', '>=', '2022-02-09 15:00:00')
                     ->orderBy('date')
                     ->get();
 
