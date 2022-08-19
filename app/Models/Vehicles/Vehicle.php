@@ -5,6 +5,7 @@ namespace App\Models\Vehicles;
 use App\LastLocation;
 use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
+use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\LM\ManagementCost;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
@@ -319,7 +320,7 @@ class Vehicle extends Model
             ->where('camera', $camera)
             ->with('vehicle', 'vehicle.configProfile')
             ->first();
-        
+
         if (!$profileSeat) {
             $profileSeat = new ProfileSeat();
             $profileSeat->vehicle()->associate($this);
@@ -340,5 +341,9 @@ class Vehicle extends Model
         }
 
         return $profileSeat;
+    }
+
+    function cameras() {
+        return $this->hasMany(VehicleCamera::class);
     }
 }

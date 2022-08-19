@@ -808,7 +808,6 @@ class PhotoService
                         $personsByRoundTripT += $newPersons;
                     }
                 }
-
                 if ($photo->dispatch_register_id) {
                     $roundTrip = $dr->round_trip;
                     $routeName = $dr->route->name;

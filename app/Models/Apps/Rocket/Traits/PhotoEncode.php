@@ -34,10 +34,6 @@ trait PhotoEncode
 
         $originalPath = $this->getOriginalPath();
 
-        if($originalPath && $this->date->toDateString() == '2022-02-15') {
-            return $originalPath;
-        }
-
         if ($this->disk == 'local' || (!Str::contains($originalPath, "-") && $originalPath)) return $originalPath;
 
         $date = $this->attributes['date'] ? $this->date : Carbon::now();
@@ -204,6 +200,10 @@ trait PhotoEncode
         try {
             if ($this->storageDriver()->exists($this->path)) {
                 $file = Image::make($this->storageDriver()->get($this->path));
+                if ($this->vehicle_id == 1873 && intval($this->side) === 2
+                    && $this->date->toDateString()>='2022-08-02' && $this->date->toDateString()<='2022-08-10') { // Corrige el giro de la c?mara vh 02 Montebello
+                    $file = $file->rotate(180);
+                }
                 $image = $this->processImage($file, $encode, $withEffects, $withMask, $withTitle, $withSeating);
             }
         } catch (FileNotFoundException $e) {
