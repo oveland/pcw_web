@@ -73,9 +73,10 @@ class SyrusService
                 if (!$fileHasError) {
                     $image = Image::make($storage->get($file));
 
-                    if ($vehicle->id == 1873 && intval($side) === 2) {
+                    /*if ($vehicle->id == 1873 && intval($side) === 2) { // Corrige el giro de la c?mara vh 02 Montebello
                         $image = $image->rotate(180);
-                    }
+                    }*/
+
                     $process = $service->saveImageData([
                         'date' => $date,
                         'img' => $image->encode('data-url'),
@@ -101,15 +102,22 @@ class SyrusService
 
     function getSide($fileName, $imei)
     {
+        $numberCamerasVehicle = 0;
+        $gps = GpsVehicle::where('imei', $imei)->first();
+        if ($gps) $numberCamerasVehicle = $gps->vehicle->cameras()->count();
+
+        if($numberCamerasVehicle == 1) return '1';
+
         if ($imei == '352557100791261') {
             if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
                 return '1';
             } else if (Str::startsWith($fileName, '3')) {
+                return '2';
+            } else if (Str::startsWith($fileName, '2')) {
                 return '3';
             }
         }
+
         if (Str::startsWith($fileName, '1')) {
             return '1';
         } else if (Str::startsWith($fileName, '2')) {

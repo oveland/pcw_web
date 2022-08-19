@@ -87,7 +87,7 @@ class ConfigProfileService
             $activate = $rActivate ?: self::THRESHOLD_ACTIVATE;
             $release = $rRelease ?: self::THRESHOLD_RELEASE;
 
-            if ($this->vehicle->id == 1873) {
+            if ($this->vehicle->id == 1873 && false) {
                 if ($this->profileSeat->camera == '1') {
                     $activate = 3;
                     $release = 4;
