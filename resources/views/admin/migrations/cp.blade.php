@@ -46,7 +46,7 @@
                             <div class="panel-group" id="accordion-{{$company->id}}">
                                 @if($company->routes)
                                     @foreach($company->routes->where('as_group', false)->sortBy('name') as $route)
-                                        @include('migrations._routes')
+                                        @include('admin.migrations._routes')
                                     @endforeach
                                     @php
                                         $groups = $company->routes->where('as_group', true);
@@ -55,7 +55,7 @@
                                         <hr class="hr">
                                         <h2>@lang('GROUPS'):</h2>
                                         @foreach($groups->sortBy('name') as $route)
-                                            @include('migrations._routes')
+                                            @include('admin.migrations._routes')
                                         @endforeach
                                     @endif
                                 @else

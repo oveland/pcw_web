@@ -14,12 +14,12 @@
             </div>
             <h5 class="text-white label-vehicles m-b-0">
                 <i class="ion-flag"></i> @lang('List counter passengers by route')
-                @include('admin.counter.report.totalInfo')
+                @include('reports.passengers.sensors.totalInfo')
                 @include('partials.pagination.totalInfo',['paginator' => $passengers ])
             </h5>
         </div>
         <div class="tab-content panel p-0">
-            @include('admin.counter.report._tableHistory')
+            @include('reports.passengers.sensors._tableHistory')
             <div class="col-md-12 p-0">{{ $passengers->links() }}</div>
         </div>
     </div>

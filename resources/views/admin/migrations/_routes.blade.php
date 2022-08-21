@@ -93,7 +93,7 @@
                 </div>
 
                 @if($route->controlPoints && !$route->as_group)
-                    @include('migrations._controlPoints')
+                    @include('admin.migrations._controlPoints')
                 @endif
 
                 <div class="compare-{{ $route->id }} text-left"></div>

@@ -51,7 +51,7 @@ class TakingsPassengersLiquidationController extends Controller
 
         $beaMarks = $this->beaService->getBEAMarksFrom($vehicleReport);
 
-        return view('takings.passengers.liquidation.show', compact('beaMarks'));
+        return view('operation.passengers.takings.liquidation.show', compact('beaMarks'));
     }
 
 

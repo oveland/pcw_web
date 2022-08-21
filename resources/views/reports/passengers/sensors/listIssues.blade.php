@@ -55,7 +55,7 @@
                             </thead>
                             <tbody>
                             @foreach($counterIssues as $counterIssue)
-                                @include('admin.counter.report._issue')
+                                @include('reports.passengers.sensors._issue')
                             @endforeach
                             </tbody>
                         </table>

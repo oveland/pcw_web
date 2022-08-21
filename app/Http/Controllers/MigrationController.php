@@ -129,7 +129,7 @@ class MigrationController extends Controller
             'total_migrated' => ControlPointTime::whereIn('control_point_id', ControlPoint::whereIn('route_id', $this->getRoutesForMigrate($request))->get()->pluck('id'))->count()
         ]);
 
-        return view('migrations.tables', compact(['tables', 'route']));
+        return view('admin.migrations.tables', compact(['tables', 'route']));
     }
 
 

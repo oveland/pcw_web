@@ -34,7 +34,7 @@ class MigrationControlPointController extends Controller
         if ($company) $companies = $companies->where('id', $company);
         $companyRequest = $company;
 
-        return view('migrations.cp', compact(['companies', 'companyRequest', 'route']));
+        return view('admin.migrations.cp', compact(['companies', 'companyRequest', 'route']));
     }
 
     public function uploadKmz(Request $request)

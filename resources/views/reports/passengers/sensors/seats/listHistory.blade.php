@@ -9,7 +9,7 @@
             </div>
             <h5 class="text-white label-vehicles m-b-0">
                 <i class="ion-clipboard"></i> @lang('List counter passengers')
-                @include('admin.counter.report.totalInfo')
+                @include('reports.passengers.sensors.totalInfo')
                 @include('partials.pagination.totalInfo',['paginator' => $passengers ])
             </h5>
         </div>

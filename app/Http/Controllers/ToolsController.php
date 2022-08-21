@@ -52,7 +52,7 @@ class ToolsController extends Controller
             WHERE sg.number IN $gpsLimbo[$on] ORDER BY sg.hardware_name DESC, sg.number::INTEGER
         ");
 
-        return view('tools.gpsLimbo', compact('simGPSLimbo'));
+        return view('admin.tools.gpsLimbo', compact('simGPSLimbo'));
     }
 
     public function gpsTotalFrames(Company $company, Request $request)
@@ -204,7 +204,7 @@ class ToolsController extends Controller
             ]);
         }
 
-        return view('tools.tablePeriods', compact('measures'));
+        return view('admin.tools.tablePeriods', compact('measures'));
     }
 
     /**
@@ -214,7 +214,7 @@ class ToolsController extends Controller
     public function map(Request $request)
     {
 
-        return view('tools.map');
+        return view('admin.tools.map');
     }
 
     public function smartRecovery(Request $request)
@@ -339,7 +339,7 @@ class ToolsController extends Controller
         if (!\File::exists(public_path($fileName))) return view('errors.404');
         $scriptText = \File::get(public_path($fileName));
         $scriptText = trim($scriptText);
-        return view('tools.scripts', compact(['scriptText', 'gps']));
+        return view('admin.tools.scripts', compact(['scriptText', 'gps']));
     }
 
     function sendMailReports(Request $request)

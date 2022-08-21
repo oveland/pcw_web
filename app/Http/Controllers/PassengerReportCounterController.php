@@ -19,7 +19,7 @@ class PassengerReportCounterController extends Controller
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
-        return view('admin.counter.report.index', compact('companies'));
+        return view('reports.passengers.sensors.index', compact('companies'));
     }
 
     public function list(Request $request)
@@ -64,7 +64,7 @@ class PassengerReportCounterController extends Controller
 
                 $counterIssues->appends($request->all());
 
-                return view('admin.counter.report.listIssues', compact('counterIssues'));
+                return view('reports.passengers.sensors.listIssues', compact('counterIssues'));
                 break;
             case 'history':
                 $initialDate = $request->get('initial-date');
@@ -81,7 +81,7 @@ class PassengerReportCounterController extends Controller
                 $initialPassengerCount = $initialPassengerCount ?: Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderBy('id')->limit(1)->get()->first();
                 $lastPassengerCount = Passenger::findAllByDateRange($vehicle->id, $initialDate, $finalDate)->orderByDesc('id')->limit(1)->get()->first();
 
-                return view('admin.counter.report.listHistory', compact('passengers'))->with([
+                return view('reports.passengers.sensors.listHistory', compact('passengers'))->with([
                     'initialPassengerCount' => $initialPassengerCount,
                     'lastPassengerCount' => $lastPassengerCount,
                 ]);
@@ -103,7 +103,7 @@ class PassengerReportCounterController extends Controller
 
                 $initialPassengerCount->total = $initialPassengerCount->dispatchRegister->initial_sensor_counter;
 
-                return view('admin.counter.report.listByRoute', compact('passengers'))->with([
+                return view('reports.passengers.sensors.listByRoute', compact('passengers'))->with([
                     'initialPassengerCount' => $initialPassengerCount,
                     'lastPassengerCount' => $lastPassengerCount,
                 ]);
@@ -113,7 +113,7 @@ class PassengerReportCounterController extends Controller
 
     public function showCounterIssue(CounterIssue $counterIssue)
     {
-        return view('admin.counter.report._issue', compact('counterIssue'));
+        return view('reports.passengers.sensors._issue', compact('counterIssue'));
     }
 
     public static function compareChangeFrames($currentFrame, $prevFrame)

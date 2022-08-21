@@ -73,7 +73,7 @@ class SeatReportController extends Controller
                 $initialPassengerCount = Passenger::findAllByRoundTrip($vehicle->id, $route->id, $routeRoundTrip, $routeReportDate)->orderBy('passengers.id')->limit(1)->get()->first();
                 $lastPassengerCount = Passenger::findAllByRoundTrip($vehicle->id, $route->id, $routeRoundTrip, $routeReportDate)->orderByDesc('passengers.id')->limit(1)->get()->first();
 
-                return view('admin.counter.report.listByRoute', compact('passengers'))->with([
+                return view('reports.passengers.sensors.listByRoute', compact('passengers'))->with([
                     'initialPassengerCount' => $initialPassengerCount,
                     'lastPassengerCount' => $lastPassengerCount,
                 ]);
