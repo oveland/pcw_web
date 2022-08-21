@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('stylesheets')
     <link href="{{ asset('assets/plugins/bootstrap-slider/bootstrap-slider.min.css') }}" rel="stylesheet">
@@ -144,7 +144,7 @@
 @endsection
 
 @section('scripts')
-    @include('template.google.maps')
+    @include('layouts.template.google.maps')
 
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
     <script src="{{ asset('assets/plugins/bootstrap-slider/bootstrap-slider.min.js') }}"></script>

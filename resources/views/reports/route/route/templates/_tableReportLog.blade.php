@@ -1,4 +1,4 @@
-@include('template.header')
+@include('layouts.template.header')
 
 @if($locationsReports->notEmpty)
 
@@ -112,7 +112,7 @@
     </div>
 </div>
 
-@include('template.plugins')
+@include('layouts.template.plugins')
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <script src="{{asset('assets/plugins/bootstrap-calendar/js/bootstrap_calendar.min.js')}}"></script>

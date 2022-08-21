@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.blank')
 
 @section('login-style')
     <style type="text/css">

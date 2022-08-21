@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('stylesheets')
     <style>
@@ -132,7 +132,7 @@
 @endsection
 
 @section('scripts')
-    @include('template.google.maps')
+    @include('layouts.template.google.maps')
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 

@@ -13,7 +13,7 @@
 @endsection
 
 @section('templateScripts')
-    @include('template.google.maps')
+    @include('layouts.template.google.maps')
 
     <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 

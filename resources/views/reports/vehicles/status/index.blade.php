@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('stylesheets')
     <!-- BEGIN PAGE LEVEL PLUGINS -->

@@ -17,9 +17,12 @@ use App\Models\Vehicles\Vehicle;
 
 Auth::routes();
 
-Route::get('/metronic', function () {
-    return view('metronic');
-})->name('metronic');
+Route::get('/register', function () {
+    return redirect('login');
+});
+Route::get('/password/reset', function () {
+    return redirect('login');
+});
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/phpinfo', function () {

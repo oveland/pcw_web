@@ -1,4 +1,4 @@
-@extends( Session::has('hide-menu') ? 'layouts.blank' : 'layout')
+@extends( Session::has('hide-menu') ? 'layouts.blank' : 'layouts.app')
 
 @section('stylesheets')
     <style>

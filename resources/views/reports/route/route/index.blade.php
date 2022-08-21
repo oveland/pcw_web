@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('stylesheets')
     <link href="{{ asset('assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.css') }}" rel="stylesheet" type="text/css" />

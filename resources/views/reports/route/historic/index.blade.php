@@ -1,5 +1,5 @@
 {{--@extends(Auth::user()->isProprietary() || $hideMenu ? 'layouts.blank' : 'layout')--}}
-@extends( $hideMenu ? 'layouts.blank' : 'layout')
+@extends( $hideMenu ? 'layouts.blank' : 'layouts.app')
 
 @section('stylesheets')
     <!-- BEGIN PAGE LEVEL PLUGINS -->
@@ -713,7 +713,7 @@
     <script src="{{ asset('assets/global/plugins/bootstrap-summernote/summernote.min.js') }}" type="text/javascript"></script>
     <!-- END PAGE LEVEL PLUGINS -->
 
-    @include('template.google.maps')
+    @include('layouts.template.google.maps')
 
     @include('reports.route.historic.templates._script')
 

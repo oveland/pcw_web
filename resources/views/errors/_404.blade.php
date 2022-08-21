@@ -1,5 +1,5 @@
 @if( !Auth::user() )
-    @include('template.header')
+    @include('layouts.template.header')
 @endif
 <!-- begin error -->
 <div class="error">

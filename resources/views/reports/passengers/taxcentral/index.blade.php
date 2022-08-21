@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('stylesheets')
     <style>
@@ -199,7 +199,7 @@
 
 @section('scripts')
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
-    @include('template.google.maps')
+    @include('layouts.template.google.maps')
 
     <script type="application/javascript">
         $('.menu-passengers, .menu-passengers-taxcentral').addClass('active-animated');

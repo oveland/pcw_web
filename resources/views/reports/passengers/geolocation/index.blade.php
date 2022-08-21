@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('stylesheets')
     <style>
@@ -111,7 +111,7 @@
 
 
 @section('scripts')
-    @include('template.google.maps')
+    @include('layouts.template.google.maps')
     @include('reports.passengers.geolocation.templates.geolocationScript')
 
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>

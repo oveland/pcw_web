@@ -1,6 +1,6 @@
-@extends('layout')
+@extends('layouts.app')
 
-@include('template.google.maps')
+@include('layouts.template.google.maps')
 
 @section('content')
     <!-- begin breadcrumb -->
