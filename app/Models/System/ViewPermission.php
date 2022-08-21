@@ -2,7 +2,7 @@
 
 namespace App\Models\System;
 
-use App\Mapping;
+use App\Traits\Mapping;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;

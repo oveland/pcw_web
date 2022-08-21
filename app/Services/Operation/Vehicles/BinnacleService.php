@@ -2,7 +2,7 @@
 
 namespace App\Services\Operation\Vehicles;
 
-use App\LastLocation;
+use App\Models\Vehicles\LastLocation;
 use App\Mail\Vehicles\Binnacles\NotificationMail;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;

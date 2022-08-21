@@ -2,7 +2,7 @@
 
 namespace App\Models\Vehicles;
 
-use App\LastLocation;
+use App\Models\Vehicles\LastLocation;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Proprietaries\Proprietary;

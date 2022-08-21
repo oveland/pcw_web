@@ -2,7 +2,7 @@
 
 namespace App\Models\Routes;
 
-use App\Mapping;
+use App\Traits\Mapping;
 use Illuminate\Database\Eloquent\Model;
 
 /**

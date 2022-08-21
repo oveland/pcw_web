@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Utils\StrTime;
-use App\LastLocation;
+use App\Models\Vehicles\LastLocation;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
 use App\Models\Vehicles\Location;

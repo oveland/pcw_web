@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\LastLocation;
+use App\Models\Vehicles\LastLocation;
 use App\Models\Company\Company;
 use App\Models\Vehicles\VehicleStatus;
 use App\Models\Vehicles\Vehicle;

@@ -2,7 +2,7 @@
 
 namespace App\Models\Vehicles\Binnacles;
 
-use App\LastLocation;
+use App\Models\Vehicles\LastLocation;
 use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;

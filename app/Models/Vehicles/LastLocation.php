@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Vehicles;
 
 use App\Models\Company\Company;
 use App\Models\Vehicles\Vehicle;
