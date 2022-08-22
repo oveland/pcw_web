@@ -138,6 +138,18 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/complete/{binnacle}', 'Operation\Vehicles\Binnacle\BinnacleController@complete')->name('operation-vehicles-binnacle-complete');
                 Route::get('/show', 'Operation\Vehicles\Binnacle\BinnacleController@show')->name('operation-vehicles-binnacle-show');
             });
+
+            Route::prefix(__('memo'))->group(function () {
+                Route::get('/', 'Operation\Vehicles\Memo\MemoController@index')->name('operation-vehicles-memo');
+                Route::post('/form/create', 'Operation\Vehicles\Memo\MemoController@formCreate')->name('operation-vehicles-memo-form-create');
+                Route::post('/form/detail/{memo}', 'Operation\Vehicles\Memo\MemoController@detail')->name('operation-vehicles-memo-form-detail');
+                Route::post('/form/edit/{memo}', 'Operation\Vehicles\Memo\MemoController@formEdit')->name('operation-vehicles-memo-form-edit');
+                Route::post('/form/delete/{memo}', 'Operation\Vehicles\Memo\MemoController@formDelete')->name('operation-vehicles-memo-form-delete');
+                Route::post('/create', 'Operation\Vehicles\Memo\MemoController@create')->name('operation-vehicles-memo-create');
+                Route::post('/update/{memo}', 'Operation\Vehicles\Memo\MemoController@update')->name('operation-vehicles-memo-update');
+                Route::delete('/delete/{memo}', 'Operation\Vehicles\Memo\MemoController@delete')->name('operation-vehicles-memo-delete');
+                Route::get('/show', 'Operation\Vehicles\Memo\MemoController@show')->name('operation-vehicles-memo-show');
+            });
         });
 
         Route::prefix(__('routes'))->group(function () {

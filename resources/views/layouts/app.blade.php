@@ -488,6 +488,12 @@
                                         @lang('Binnacle')
                                     </a>
                                 </li>
+                                <li class="nav-item menu-operation-vehicles-memo">
+                                    <a href="{{ route('operation-vehicles-memo') }}" class="faa-parent animated-hover nav-link">
+                                        <i class="fa fa-warning faa-tada" aria-hidden="true"></i>
+                                        @lang('Memo')
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>

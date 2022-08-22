@@ -750,6 +750,7 @@
   "Binnacle vehicle notifications": "Notificaciones bitácora de vehículos",
   "Vehicle notifications": "Notificaciones de vehículos",
   "Sort by date": "Ordenar por fecha",
+  "Sort by date desc": "Fecha descendente",
   "Count passengers": "Conteo de pasajeros",
   "Backward": "Retroceder",
   "Forward": "Adelantar",
@@ -826,5 +827,9 @@
   "Takings deleted successfully": "Recaudo eliminado correctamente",
   "Excludes already takings": "Excluye turnos ya recaudados",
   "Invalid passenger tariff": "Tarifa de pasajero no válida",
-  "Please verify passenger tariff for route :route": "Porfavor verifique el valor de la tarifa de pasajeros para la ruta :route"
+  "Please verify passenger tariff for route :route": "Porfavor verifique el valor de la tarifa de pasajeros para la ruta :route",
+  "Memos": "Memorandos",
+  "Memo": "Memorandum",
+  "memo": "memorandum",
+  "Vehicles memo": "Memorandum de vehiculo"
 }
