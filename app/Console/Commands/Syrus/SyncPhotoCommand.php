@@ -59,7 +59,9 @@ class SyncPhotoCommand extends Command
             foreach ($vehicles as $vehicle) {
                 $gps = $vehicle->gpsVehicle;
                 if ($gps) {
-                    dump("Sync vehicle $vehicle->number imei $gps->imei");
+                    $message = "Sync vehicle $vehicle->number imei $gps->imei";
+                    dump($message);
+                    $this->info($message);
                     $response = $this->syrusService->syncPhoto($gps->imei);
                     $this->info($response);
                 }

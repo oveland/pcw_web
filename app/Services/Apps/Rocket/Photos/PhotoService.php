@@ -138,6 +138,7 @@ class PhotoService
         $success = false;
         $message = "";
         $photo = null;
+        $uid = $data['uid'];
 
         $validator = Validator::make($data->toArray(), [
             'date' => 'required',
@@ -182,27 +183,32 @@ class PhotoService
                     $currentPhoto->location_id = $photo->location_id;
                     $currentPhoto->path = $photo->path;
 
-                    $success = $currentPhoto->save();
+                    $currentPhoto->save();
 
-                    $photo->processRekognition(false, null, true);
+                    $success = $photo->processRekognition(false, null, true);
 
-                    if ($success) $message = "Photo saved successfully";
-
-                    if (!App::environment('local')) {
-//                    $this->notifyToMap();
-                    }
+                    if ($success) $message = "Photo $uid saved successfully";
+                    else $message = "Photo $uid saved successfully with error in processRekognition";
                 } else {
-                    if (!$storageResponse) $message = "Image has invalid format!";
-                    else $message = "Error saving data";
+                    if (!$storageResponse) $message = "Image $uid has invalid format!";
+                    else $message = "Error saving data $uid";
                 }
 
             } catch (Exception $e) {
                 throw $e;
-                $message = "Error saving file: " . $e;
+                $message = "Error saving file $uid: " . $e;
             }
         } else {
-            $success = false;
-            $message = 'Error saving photo: ' . collect($validator->errors())->flatten()->implode(' ');
+            $photoSaved = Photo::where('uid', $uid)->first();
+
+            if ($uid) {
+                $success = $photoSaved->processRekognition(false, null, true);
+                if ($success === true) $message = "Photo $uid updated successfully";
+                else $message = "Photo $uid is currently saved but processRekognition has error";
+            } else {
+                $success = false;
+                $message = "Error saving photo $uid: " . collect($validator->errors())->flatten()->implode(' ');
+            }
         }
 
         return (object)[

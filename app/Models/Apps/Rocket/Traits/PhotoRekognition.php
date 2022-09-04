@@ -4,6 +4,8 @@ namespace App\Models\Apps\Rocket\Traits;
 
 use App;
 use App\Services\Recognition\Recognition;
+use Exception;
+use Log;
 
 trait PhotoRekognition
 {
@@ -15,9 +17,11 @@ trait PhotoRekognition
     /**
      * @param false $force
      * @param null $type
+     * @return boolean
      */
     public function processRekognition($force = false, $type = null, $save = false)
     {
+        $success = true;
         $type = $this->getType($type);
         $this->rekognition = $type;
 
@@ -26,11 +30,11 @@ trait PhotoRekognition
             if ($this->path && $vehicle) {
                 switch ($type) {
                     case 'persons_and_faces':
-                        $this->process('persons');
-                        $this->process('faces');
+                        $success = $this->process('persons');
+                        $success = $success && $this->process('faces');
                         break;
                     default:
-                        $this->process($type);
+                        $success = $this->process($type);
                         break;
                 }
             }
@@ -40,6 +44,8 @@ trait PhotoRekognition
             $this->save();
             $this->refresh();
         }
+
+        return $success;
     }
 
     /**
@@ -59,16 +65,25 @@ trait PhotoRekognition
      */
     private function process($type)
     {
-        $config = $this->photoRekognitionService($type)->config;
-        if (isset($config->photo)) $this->effects = $config->photo->effects;
+        try {
+            $config = $this->photoRekognitionService($type)->config;
+            if (isset($config->photo)) $this->effects = $config->photo->effects;
 
-        if ($this->canProcessRecognition()) {
+            if ($this->canProcessRecognition()) {
 //            $this->recognitionService = app('recognition.aws');
-            $this->recognitionService = app('recognition.opencv');
+                $this->recognitionService = app('recognition.opencv');
 
-            $column = "data_$type";
-            $this->$column = $this->recognitionService->setPhoto($this)->process($type);
+                $column = "data_$type";
+                $this->$column = $this->recognitionService->setPhoto($this)->process($type);
+            }
+
+            $success = true;
+        } catch (Exception $e) {
+            $success = false;
+            Log::error("??? ERROR ON processRekognition ", $e->getMessage());
         }
+
+        return $success;
     }
 
     private function canProcessRecognition()

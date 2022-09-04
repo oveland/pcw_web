@@ -59,6 +59,7 @@ class ImageRekognitionCommand extends Command
                 $total = $photos->count();
                 $index = 1;
 
+                $this->info("Process vehicle: $vehicle->number with  id $vehicle->id");
                 $this->info("Process $total photos with method: $type");
 
                 foreach ($photos as $photo) {

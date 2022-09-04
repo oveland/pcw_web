@@ -39,21 +39,21 @@ class RecognitionService implements Recognition
 
         $data = json_decode($response->getBody()->getContents());
 
-        return $this->formatResponse($data);
+        return $this->formatResponse($data, $type);
     }
 
     /**
      * @param object $result
      * @return object
      */
-    private function formatResponse($result)
+    private function formatResponse($result, $type)
     {
         $draws = collect($result)->map(function ($draw) {
             return $this->fillBox($draw->box, $draw->confidence);
         });
 
         return (object)[
-            'type' => 'persons',
+            'type' => $type,
             'draws' => $draws->toArray()
         ];
     }

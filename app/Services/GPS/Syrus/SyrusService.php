@@ -31,10 +31,16 @@ class SyrusService
 
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
+
+        if (!$gpsVehicle) return collect([
+            'success' => false,
+            'message' => "Imei $imei is not associated with a vehicle",
+        ]);
+
         $vehicle = $gpsVehicle->vehicle;
 
         $message = "Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id";
-
+        sleep(random_int(0, 240));
         Log::info($message);
 
         $response = collect([
@@ -48,9 +54,12 @@ class SyrusService
         $storage = Storage::disk('syrus');
         $files = collect($storage->files($path));
 
+        Log::info("         • Vehicle #$vehicle->number total FPT photos: " . $files->count());
+
         $saveFiles = collect([]);
-        foreach ($files as $file) {
+        foreach ($files as $index => $file) {
             $fileName = collect(explode('/', $file))->last();
+
             if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
@@ -85,11 +94,15 @@ class SyrusService
                         'uid' => $fileName
                     ]);
 
+                    $extra = "";
                     if ($process->response->success === true) {
                         $storage->delete($file);
                         if ($photoEvent) $photoEvent->delete();
+                    } else {
+                        $extra = $process->response->message;
                     }
-
+                    Log::info("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count(). " $extra");
+                    
                     $saveFiles->push($process->response->message);
                 }
             }
@@ -106,7 +119,7 @@ class SyrusService
         $gps = GpsVehicle::where('imei', $imei)->first();
         if ($gps) $numberCamerasVehicle = $gps->vehicle->cameras()->count();
 
-        if($numberCamerasVehicle == 1) return '1';
+        if ($numberCamerasVehicle == 1) return '1';
 
         if ($imei == '352557100791261') {
             if (Str::startsWith($fileName, '1')) {

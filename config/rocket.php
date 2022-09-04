@@ -30,22 +30,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [58, 100],
@@ -97,22 +97,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [58, 100],
@@ -167,22 +167,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [58, 100],
@@ -234,22 +234,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 58],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [58, 100],
@@ -300,13 +300,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 50],
+                            'range' => [15, 50],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
@@ -367,13 +367,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 50],
+                            'range' => [15, 50],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
@@ -436,22 +436,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 60],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [60, 100],
@@ -503,22 +503,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 50],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [50, 100],
@@ -572,7 +572,7 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
@@ -641,16 +641,16 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 58],
@@ -710,22 +710,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 60],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [60, 100],
@@ -777,22 +777,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 50],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [50, 100],
@@ -917,13 +917,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 60],
+                            'range' => [15, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
@@ -980,22 +980,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 60],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [60, 100],
@@ -1047,22 +1047,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 50],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [50, 100],
@@ -1116,22 +1116,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
-                            'color' => 'red',
+                            'range' => [0, 15],
+                            'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 60],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [60, 100],
@@ -1141,7 +1141,7 @@ return [
                         ]
                     ],
                     'box' => [
-                        'ld' => 3.5,                                # Min relation height/width for Large Detection
+                        'ld' => 5,                                # Min relation height/width for Large Detection
                         'mld' => 10,                                # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
@@ -1183,22 +1183,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
-                            'color' => 'red',
+                            'range' => [0, 15],
+                            'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 50],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [50, 100],
@@ -1324,13 +1324,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 60],
+                            'range' => [15, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
@@ -1458,13 +1458,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 60],
+                            'range' => [15, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
@@ -1522,22 +1522,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 90],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [90, 100],
@@ -1589,22 +1589,22 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 25],
+                            'range' => [0, 15],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [25, 40],
+                            'range' => [15, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [40, 90],
                             'color' => 'yellow',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [90, 100],
