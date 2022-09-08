@@ -69,7 +69,7 @@ trait PhotoRekognition
             $config = $this->photoRekognitionService($type)->config;
             if (isset($config->photo)) $this->effects = $config->photo->effects;
 
-            if ($this->canProcessRecognition()) {
+            if ($this->canProcessRecognition() && $this->vehicle->company_id != 2) {
 //            $this->recognitionService = app('recognition.aws');
                 $this->recognitionService = app('recognition.opencv');
 

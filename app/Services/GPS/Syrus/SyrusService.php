@@ -18,17 +18,40 @@ use Intervention\Image\Exception\NotReadableException;
 use Storage;
 use Symfony\Component\ErrorHandler\Error\FatalError;
 use Log;
+use App\Models\Apps\Rocket\SyncStatus;
 
 class SyrusService
 {
+    function readyToSync($imei)
+    {
+        $syncStatus = SyncStatus::where('imei', $imei)->first();
+        if (!$syncStatus) return true;
+
+        return !$syncStatus->busy || $syncStatus->updated_at->diffInMinutes() > 30;
+    }
+
+    function setStatus($imei, $busy)
+    {
+        $syncStatus = SyncStatus::where('imei', $imei)->first();
+        if (!$syncStatus) $syncStatus = new SyncStatus(['imei' => $imei]);
+        $syncStatus->busy = $busy;
+        $syncStatus->save();
+    }
+
     /**
      * @throws FileNotFoundException
      * @throws Exception
      */
     function syncPhoto($imei): Collection
     {
-        $service = new PhotoService();
+        if (!$this->readyToSync($imei)) return collect([
+            'success' => false,
+            'message' => " ~~~~ $imei is not ready to Sync",
+        ]);
 
+        $this->setStatus($imei, true);
+
+        $service = new PhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
 
@@ -39,13 +62,14 @@ class SyrusService
 
         $vehicle = $gpsVehicle->vehicle;
 
-        $message = "Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id";
-        sleep(random_int(0, 240));
-        Log::info($message);
+        $waitSeconds = random_int(0, 240);
+        Log::info("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
+        sleep($waitSeconds);
+        Log::info("        • Start sync for vehicle $vehicle->number");
 
         $response = collect([
             'success' => true,
-            'message' => $message,
+            'message' => "Success sync",
         ]);
 
         $path = "$imei/images";
@@ -101,14 +125,19 @@ class SyrusService
                     } else {
                         $extra = $process->response->message;
                     }
-                    Log::info("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count(). " $extra");
-                    
+                    Log::info("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
+
                     $saveFiles->push($process->response->message);
+                } else {
+                    $storage->delete($file);
+                    if ($photoEvent) $photoEvent->delete();
                 }
             }
         }
 
         $response->put('sync', $saveFiles);
+
+        $this->setStatus($imei, false);
 
         return $response;
     }
