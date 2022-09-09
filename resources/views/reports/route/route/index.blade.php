@@ -137,19 +137,26 @@
                             <div class="form-group">
                                 <label for="type-report" class="control-label">@lang('Options')</label>
                                 <div class="form-group">
-                                    <div class="has-warning">
+                                    <div class="has-warning options-report">
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
                                                 <input id="type-report" name="type-report" type="checkbox" value="group-vehicles" checked> @lang('Group')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="completed-turns" name="completed-turns" type="checkbox" value="completed-turns"> @lang('Completed turns')
-                                            </label>
-                                            <label class="text-bold">
                                                 <input id="no-taken-turns" name="no-taken-turns" type="checkbox" value="no-taken-turns"> @lang('No taken turns')
                                             </label>
-                                            <label class="text-bold">
+                                            <label class="text-bold hide">
                                                 <input id="last-laps" name="last-laps" type="checkbox" value="true"> @lang('Last laps')
+                                            </label>
+                                            |
+                                            <label class="text-bold">
+                                                <input id="completed-turns" name="completed-turns" checked type="checkbox" value="true"> @lang('Completed')
+                                            </label>
+                                            <label class="text-bold">
+                                                <input id="active-turns" name="active-turns" checked type="checkbox" value="true"> @lang('Active')
+                                            </label>
+                                            <label class="text-bold">
+                                                <input id="cancelled-turns" name="cancelled-turns" type="checkbox" value="true"> @lang('Cancelled')
                                             </label>
                                         </div>
                                     </div>
@@ -373,6 +380,13 @@
             const dec =  $('.date-end-container').slideUp();
             if ($(this).is(':checked')) {
                 dec.slideDown();
+            }
+        });
+
+        $('#cancelled-turns').click(function (el) {
+            if($(this).is(':checked')) {
+                $('#completed-turns').prop('checked', false);
+                $('#active-turns').prop('checked', false);
             }
         });
 

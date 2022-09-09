@@ -56,12 +56,14 @@ class DispatchRouteService
      * @param string $routeReport
      * @param string $vehicleReport
      * @param bool $completedTurns
-     * @return DispatchRegister[]|Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @param bool $activeTurns
+     * @param false $cancelledTurns
+     * @return DispatchRegister[]|Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
      */
-    public function all($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true)
+    public function all($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $activeTurns = true, $cancelledTurns = false)
     {
         $q = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport)
-            ->active($completedTurns)
+            ->whereStatusType($completedTurns, $activeTurns, $cancelledTurns)
             ->orderBy('date')
             ->orderBy('departure_time');
 
@@ -82,9 +84,9 @@ class DispatchRouteService
      * @param string $finaTime
      * @return DispatchRegister[]|Builder[]|Collection
      */
-    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false, $initialTime = '00:00', $finaTime = '23:59')
+    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false, $initialTime = '00:00', $finaTime = '23:59', $activeTurns = true, $cancelledTurns = false)
     {
-        $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns);
+        $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $activeTurns, $cancelledTurns);
 
         $dispatchRegisters = $dispatchRegisters->where('departure_time', '>=', "$initialTime:00")->where('departure_time', '<=', "$finaTime:00");
 

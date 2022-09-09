@@ -136,7 +136,9 @@
 
             $offRoadPercent = $dispatchRegister->getOffRoadPercent();
 
-            $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true));
+            if($dispatchRegister->complete()) {
+                $averageRouteTime = $strTime::addStrTime($averageRouteTime, $dispatchRegister->getRouteTime(true));
+            }
 
 
             $invalidGPSPercent = 0;
@@ -150,7 +152,7 @@
 
         $color = $offRoadPercent > 50 ? 'red-sunglo' : ($dispatchRegister->complete() ? 'inverse' : ($dispatchRegister->isCancelled() ? 'yellow-crusta' : 'yellow-soft'));
         @endphp
-        <tr>
+        <tr class="{{ $dispatchRegister->isCancelled() ? 'row-turn-cancelled' : '' }}">
             <th width="5%"
                 class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->date }}
@@ -204,10 +206,14 @@
                 class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->round_trip }}
                 <br>
-                <small>{{ $dispatchRegister->status }}</small>
-                <br>
-                <small>{{ $dispatchRegister->getRouteDistance(true) }}
-                    Km</small>
+                <small class="html-observations">{!! $dispatchRegister->status !!}</small>
+                @if($dispatchRegister->isCancelled())
+                    <small>{{ $dispatchRegister->time_canceled }}</small>
+                @endif
+                <hr>
+                <small>
+                    {{ $dispatchRegister->getRouteDistance(true) }} Km
+                </small>
             </th>
             <th width="5%"
                 class="bg-{{ $color }} text-white text-center">{{ $dispatchRegister->turn }}</th>
@@ -676,6 +682,11 @@
         modalBody.html($('.loading').html()).load(url);
     }
     @endif
+
+    $('.html-observations').each(function (i, el) {
+        const content = $(el).find('a').data('content');
+        $(el).html($(el).text() + (content && content !== undefined ? '<br><span>' + content + '</span>' : '') )
+    });
 </script>
 
 <style>
@@ -709,5 +720,19 @@
     .box-audit {
         white-space: nowrap;
         padding: 0 20px 0 20px;
+    }
+
+    .html-observations span {
+        display: block;
+        background: #0a2a34;
+        color: white;
+        padding: 2px;
+        font-family: Consolas, monaco, monospace;
+        border-radius: 3px;
+    }
+
+    .row-turn-cancelled td {
+        opacity: 50%;
+        background: rgba(239, 203, 155, 0.48) !important;
     }
 </style>

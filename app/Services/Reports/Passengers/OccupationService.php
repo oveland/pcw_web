@@ -2,7 +2,6 @@
 
 namespace App\Services\Reports\Passengers;
 
-use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Passengers\HistorySeat;
 use App\Models\Routes\ControlPointsTariff;
@@ -13,7 +12,6 @@ class OccupationService
     function getReportByDispatch(DispatchRegister $dispatchRegister, $thresholdKm = 0)
     {
         $route = $dispatchRegister->route;
-        $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
 
         $dispatchArrivalTime = $dispatchRegister->complete() ? $dispatchRegister->arrival_time : $dispatchRegister->arrival_time_scheduled;
         $dispatchArrivalTime = ($dispatchArrivalTime > "23:59:59") ? "23:59:59" : $dispatchArrivalTime;
@@ -33,7 +31,6 @@ class OccupationService
 
         foreach ($historySeats as &$historySeat) {
             if ($historySeat->complete == 1) {
-                //$busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);
                 $historySeat->active_km = $historySeat->active_km < $dispatchRegister->start_odometer ? 0 : ($historySeat->active_km - $dispatchRegister->start_odometer);
 
                 $historySeat->inactive_km = $historySeat->inactive_km - $dispatchRegister->start_odometer;

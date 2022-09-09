@@ -78,6 +78,8 @@ class ReportRouteController extends Controller
         $routeReport = $request->get('route-report');
         $vehicleReport = $request->get('vehicle-report');
         $completedTurns = $request->get('completed-turns');
+        $activeTurns = $request->get('active-turns');
+        $cancelledTurns = $request->get('cancelled-turns');
         $noTakenTurns = $request->get('no-taken-turns');
 
         $timeReport = $request->get('time-range-report');
@@ -89,7 +91,7 @@ class ReportRouteController extends Controller
 
         if ($routeReport == 'none') return $this->showReportWithOutRoute($request);
 
-        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime);
+        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime, $activeTurns, $cancelledTurns);
 
         if ($onlyLastLap) {
             $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->mapWithKeys(function ($drs, $vehicleId) {
@@ -115,7 +117,21 @@ class ReportRouteController extends Controller
 
         }
 
-        return view($view, compact(['dispatchRegistersByVehicles', 'reportsByVehicle', 'company', 'dateReport', 'dateEndReport', 'withEndDate', 'routeReport', 'vehicleReport', 'typeReport', 'completedTurns', 'timeReport']));
+        return view($view, compact([
+            'dispatchRegistersByVehicles',
+            'reportsByVehicle',
+            'company',
+            'dateReport',
+            'dateEndReport',
+            'withEndDate',
+            'routeReport',
+            'vehicleReport',
+            'typeReport',
+            'completedTurns',
+            'activeTurns',
+            'cancelledTurns',
+            'timeReport'
+        ]));
     }
 
     public function showReportWithOutRoute(Request $request)

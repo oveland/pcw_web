@@ -1925,3 +1925,16 @@ div.radio span.checked {
     border-radius: 10px;
     border: 4px solid #003f049e;
 }
+
+.options-report div.checker input,
+.options-report input[type="search"],
+.options-report input[type="search"]:active {
+    -moz-appearance: checkbox !important;
+    -webkit-appearance: checkbox !important;
+    width: 15px !important;
+    height: 15px !important;
+    opacity: 1 !important;
+    top: 2px;
+    left: 10px !important;
+    position: relative !important;
+}

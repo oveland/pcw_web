@@ -838,5 +838,7 @@
   "Manual count information": "Información conteo manual",
   "url-occupation": "ocupacion",
   "Occupation": "Ocupación",
-  "occupation": "ocupación"
+  "occupation": "ocupación",
+  "Cancelled": "Cancelado",
+  "Active": "Activo"
 }
