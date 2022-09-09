@@ -206,7 +206,7 @@
                 class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->round_trip }}
                 <br>
-                <small class="html-observations">{!! $dispatchRegister->status !!}</small>
+                <small class="html-observations {{ $dispatchRegister->isCancelled() ? 'cancelled' : '' }}">{!! $dispatchRegister->status !!}</small>
                 @if($dispatchRegister->isCancelled())
                     <small>{{ $dispatchRegister->time_canceled }}</small>
                 @endif
@@ -722,7 +722,7 @@
         padding: 0 20px 0 20px;
     }
 
-    .html-observations span {
+    .html-observations.cancelled {
         display: block;
         background: #0a2a34;
         color: white;
