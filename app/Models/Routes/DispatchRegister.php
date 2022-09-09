@@ -93,6 +93,7 @@ use Illuminate\Support\Str;
  * @method static Builder|DispatchRegister type($type)
  * @method static Builder|DispatchRegister completed()
  * @method static Builder|DispatchRegister cancelled()
+ * @method static Builder|DispatchRegister whereStatusType($completedTurns = true, $activeTurns = true, $cancelledTurns = false)
  * @property int|null $available_vehicles
  * @property int|null $initial_sensor_counter
  * @property string|null $initial_frame_sensor_counter
@@ -308,6 +309,25 @@ class DispatchRegister extends Model
     function scopeCompleted(Builder $query)
     {
         return $query->where('status', $this::COMPLETE);
+    }
+
+    /**
+     * @param DispatchRegister|Builder $query
+     * @return mixed
+     */
+    function scopeWhereStatusType(Builder $query, $completedTurns = true, $activeTurns = true, $cancelledTurns = false)
+    {
+        $q = $query->where(function (Builder $subQuery) use ($completedTurns, $activeTurns, $cancelledTurns) {
+            if ($completedTurns) $subQuery->orWhere('status', $this::COMPLETE);
+            if ($activeTurns) $subQuery->orWhere('status', $this::IN_PROGRESS);
+            if ($cancelledTurns) $subQuery->orWhere('status', 'like', $this::CANCELLED . '%');
+
+            $subQuery->where('status', 'not like', '%Falsa salida de despacho%')
+                ->where('status', 'not like', '%Duplicado.%')
+                ->where('status', 'not like', '%Cancelado NE%');
+
+            return $subQuery;
+        });
     }
 
     /**
