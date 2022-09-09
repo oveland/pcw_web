@@ -322,8 +322,9 @@ class DispatchRegister extends Model
             if ($activeTurns) $subQuery->orWhere('status', $this::IN_PROGRESS);
             if ($cancelledTurns) $subQuery->orWhere('status', 'like', $this::CANCELLED . '%');
 
-            $subQuery->where('status', 'not like', '%Falsa%')
-                ->where('status', 'not like', '%Duplicado%');
+            $subQuery->where('status', 'not like', '%Falsa salida de despacho%')
+                ->where('status', 'not like', '%Duplicado.%')
+                ->where('status', 'not like', '%Cancelado NE%');
 
             return $subQuery;
         });
